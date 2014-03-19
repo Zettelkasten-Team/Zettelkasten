@@ -4,3 +4,6 @@
 *.jar
 *.war
 *.ear
+/dist/
+/store/
+/build/classes/
