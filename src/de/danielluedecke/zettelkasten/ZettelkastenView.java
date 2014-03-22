@@ -5531,12 +5531,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // list, but we may not set *all* keywords as children of "node", but only the
         // new ones - which start in this list at the index "previousSize".
         int previousSize = kws.size();
-        // get all entries of the list and add additional keywords of those
-        // entries, which are not already set as this node or one of its
-        // parent, as children for this node
-        for (int cnt=0; cnt<clusterList.size(); cnt++) {
+        for (String clusterList1 : clusterList) {
             // get each entry-number of the list
-            int nr = Integer.parseInt(clusterList.get(cnt).toString());
+            int nr = Integer.parseInt(clusterList1);
             // get the entry's keywords
             String[] entrykws = data.getKeywords(nr);
             // go through all keywords of this array
@@ -5549,7 +5546,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             String[] children = new String[kws.size()-previousSize];
             // receive all new element of that list
             // and copy them to the string array
-            for (int cnt=0; cnt<(kws.size()-previousSize); cnt++) children[cnt] = kws.get(cnt+previousSize).toString();
+            for (int cnt=0; cnt<(kws.size()-previousSize); cnt++) children[cnt] = kws.get(cnt+previousSize);
             // sort the array
             if (children!=null && children.length>0) Arrays.sort(children, new Comparer());
             // add each item as child of note
@@ -6576,7 +6573,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             if (null==updateinfo || updateinfo.isEmpty()) return null;
             // retrieve update info and split them into an array. this array will hold the latest
             // build-version-number in the first field, and the type of update in the 2. field.
-            String[] updateversion = updateinfo.toString().split("\n");
+            String[] updateversion = updateinfo.split("\n");
             // check whether we have a valid array with content
             if (updateversion!=null && updateversion.length>0) {
                 // retrieve start-index of the build-number within the version-string.
@@ -6597,7 +6594,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     if (null==updateinfo || updateinfo.isEmpty()) return null;
                     // retrieve update info and split them into an array. this array will hold the latest
                     // build-version-number in the first field, and the type of update in the 2. field.
-                    updateversion = updateinfo.toString().split("\n");
+                    updateversion = updateinfo.split("\n");
                     if (updateversion!=null && updateversion.length>0) {
                         updateavailable = (curversion.compareTo(updateversion[0])<0);
                         if (updateavailable) updateURI = Constants.UPDATE_NIGHTLY_URI;
@@ -7388,9 +7385,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                                                                JOptionPane.PLAIN_MESSAGE,                           // type of dialog
                                                                null,                                                // icon
                                                                null,                                                // array of selection values.
-                                                                                                                    // must be null to get an input-field.
-                                                                                                                    // providing an array here would create a dropdown-combobox
-                                                               sdf.format(l).toString());                           // initial value, date of importfile
+                                                               // must be null to get an input-field.
+                                                               // providing an array here would create a dropdown-combobox
+                                                               sdf.format(l));                           // initial value, date of importfile
                         // now convert the timestamp into something
                         // therefore, check whether we have any valid input at all, if we have the correct length (8 chars)
                         // and if we have to "." at the right position. A valid input would be e.g. "31.12.08" (dd.mm.yy)
