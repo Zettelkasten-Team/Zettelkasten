@@ -1425,7 +1425,7 @@ public class Tools {
      * and checks whether it is a "navigation" key like arrows, page up/down, home etc.
      *
      * @param keyCode the keycode of the pressed or releases key
-     * @return true if it is a navigation key, false otherwise.
+     * @return {@code true} if it is a navigation key, false otherwise.
      */
     public static boolean isNavigationKey(int keyCode) {
         return (KeyEvent.VK_HOME==keyCode ||

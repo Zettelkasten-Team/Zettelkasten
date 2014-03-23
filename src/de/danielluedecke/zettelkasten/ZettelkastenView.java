@@ -4968,7 +4968,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * @param bms one or more bookmarks (entry-numbers) stored in an integer-array
      * @param edit true when existing bookmarks should be edited, false if new bookmarks
      * should be added.
-     * @return true if bookmarks have been successfully added, false if an error occured
+     * @return {@code true} if bookmarks have been successfully added, false if an error occured
      */
     public boolean addToBookmarks(int[] bms, boolean edit) {
         // return false on null or empty array
@@ -7140,7 +7140,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * 
      * @param entries an int-array conatining the entry-numbers of those entries that should
      * be added as follower-entries
-     * @return true if everything went ok, false if an error occured
+     * @return {@code true} if everything went ok, false if an error occured
      */
     public boolean addToLuhmann(int[] entries) {
         if ((null==entries)||(entries.length<1)||(-1==entries[0])) return false;
@@ -8094,7 +8094,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      *
      * @param entries an int-array conatining the entry-numbers of those entries that should
      * be added as manual links
-     * @return true if entries have been successfully added, false if an error occured
+     * @return {@code true} if entries have been successfully added, false if an error occured
      */
     public boolean addToManLinks(int[] entries) {
         return addToManLinks(displayedZettel, entries);
@@ -8117,7 +8117,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * @param activatedEntry the entry-number where the manual links should be added to...
      * @param entries an int-array conatining the entry-numbers of those entries that should
      * be added as manual links
-     * @return true if entries have been successfully added, false if an error occured
+     * @return {@code true} if entries have been successfully added, false if an error occured
      */
     private boolean addToManLinks(int activatedEntry, int[] entries) {
         if ((null==entries)||(entries.length<1)||(-1==entries[0])) return false;
@@ -8601,7 +8601,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * This method saves the data under a new filename. This method will always be
      * called when no filepath is set in the dataobject.
      * 
-     * @return true, when a valid filename was given. false otherwise, or when cancelled
+     * @return {@code true}, when a valid filename was given. false otherwise, or when cancelled
      */
     @Action(enabledProperty = "entriesAvailable")
     public boolean saveDocumentAs() {
@@ -9424,7 +9424,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * should be applied to. use {@code null} to find and replace in <i>all</i> entries. else, if
      * replacements should only be done within certain entries (e.g. search results), simply pass
      * the entries' numbers as integer-array.
-     * @return true if replacement was done, false if it was cancelled.
+     * @return {@code true} if replacement was done, false if it was cancelled.
      */
     public boolean replace(JFrame frame, String initSearchTerm, int[] replaceentries) {
         // if dialog window isn't already created, do this now

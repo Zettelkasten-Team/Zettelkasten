@@ -324,7 +324,7 @@ public class SearchRequests {
      * This method retrieves the searchterms for a given search-request.
      *
      * @param nr The number of the search request
-     * @return true if the search was a synonym-search, false otherweise
+     * @return {@code true} if the search was a synonym-search, false otherweise
      */
     public boolean isSynonymSearch(int nr) {
         // get the element
@@ -347,7 +347,7 @@ public class SearchRequests {
      * as search terms or "normal" search terms
      *
      * @param nr The number of the search request
-     * @return true if the search was a regular-expression-search, false otherweise
+     * @return {@code true} if the search was a regular-expression-search, false otherweise
      */
     public boolean isRegExSearch(int nr) {
         // get the element
@@ -504,7 +504,7 @@ public class SearchRequests {
      * @param nr the number of the currently used search request. usually, this number corresponds
      * to the combobox-selection of the CSearchResults-frame.
      * Remember that this value has a range from 0 to ({@link #getCount() getCount()}-1)
-     * @return true is current-searchindex could be successfully set, false if an error occured
+     * @return {@code true} is current-searchindex could be successfully set, false if an error occured
      */
     public boolean setCurrentSearch(int nr) {
         // check whether "nr" is within valid bounds
@@ -728,7 +728,7 @@ public class SearchRequests {
     }
     /**
      * Gets the modified state
-     * @return true if we have any changes to the search requests, false otherwise
+     * @return {@code true} if we have any changes to the search requests, false otherwise
      */
     public boolean isModified() {
         return modified;

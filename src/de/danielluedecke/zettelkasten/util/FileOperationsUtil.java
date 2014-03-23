@@ -796,7 +796,7 @@ public class FileOperationsUtil {
      * common things like "http:" etc.
      *
      * @param linktype the clicked "hyperlink" from the hyperlink-event, as string
-     * @return true if the string seems to be a hyperlink, false otherwise
+     * @return {@code true} if the string seems to be a hyperlink, false otherwise
      */
     public static boolean isHyperlink(String linktype) {
         return linktype.toLowerCase().startsWith("http://") || linktype.toLowerCase().startsWith("https://") || linktype.toLowerCase().startsWith("ftp://") || linktype.toLowerCase().startsWith("webdav://") || linktype.toLowerCase().startsWith("news:") || linktype.toLowerCase().startsWith("outlook:");

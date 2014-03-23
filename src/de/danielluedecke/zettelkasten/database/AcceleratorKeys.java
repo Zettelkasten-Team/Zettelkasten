@@ -1551,7 +1551,7 @@ public class AcceleratorKeys {
      * 
      * @param doc (the xml-document where to look for the attribute)
      * @param attr (the attribute we want to find)
-     * @return true if we have an element that contains that attribute, false otherwise
+     * @return {@code true} if we have an element that contains that attribute, false otherwise
      */
     private boolean findElement(int what, String attr) {
         // create a list of all elements from the acceleratorkeys xml file

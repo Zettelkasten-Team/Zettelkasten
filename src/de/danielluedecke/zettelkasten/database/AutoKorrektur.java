@@ -154,7 +154,7 @@ public class AutoKorrektur {
      * Checks whether the value passed by the parameter "e" already exists in the
      * data. Therefore, each element's id-attribute is compared to the parameter "e".
      * @param e the string we want to look for if it exists
-     * @return true if we found it, false if it doesn't exist
+     * @return {@code true} if we found it, false if it doesn't exist
      */
     public boolean exists(String e) {
         // get all elements

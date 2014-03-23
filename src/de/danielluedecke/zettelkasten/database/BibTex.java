@@ -163,7 +163,7 @@ public class BibTex {
     }
     /**
      * Checks whether the datafile is modified
-     * @return true if it is modified, false otherwise
+     * @return {@code true} if it is modified, false otherwise
      */
     public boolean isModified() {
         return modified;

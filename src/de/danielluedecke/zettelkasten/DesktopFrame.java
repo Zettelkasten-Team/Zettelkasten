@@ -131,39 +131,39 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      * Reference to the main data class.
      */
-    private Daten dataObj;
+    private final Daten dataObj;
     /**
      * 
      */
-    private TasksData taskdata;
+    private final TasksData taskdata;
     /**
      * Reference to the desktop data class.
      */
-    private DesktopData desktopObj;
+    private final DesktopData desktopObj;
     /**
      * Reference to the bookmarks data class.
      */
-    private Bookmarks bookmarksObj;
+    private final Bookmarks bookmarksObj;
     /**
      * Reference to the settings class.
      */
-    private Settings settingsObj;
+    private final Settings settingsObj;
     /**
      *
      */
-    private BibTex bibtexObj;
+    private final BibTex bibtexObj;
     /**
      *
      */
-    private AutoKorrektur spellObj;
+    private final AutoKorrektur spellObj;
     /**
      *
      */
-    private StenoData stenoObj;
+    private final StenoData stenoObj;
     /**
      * CAccelerator object, which contains the XML data of the accelerator table for the menus
      */
-    private AcceleratorKeys accKeys;
+    private final AcceleratorKeys accKeys;
     /**
      * 
      */
@@ -229,7 +229,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      *
      */
-    private String lineseparator;
+    private final String lineseparator;
     /**
      *
      */
@@ -237,7 +237,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      * Reference to the main frame.
      */
-    private ZettelkastenView zknframe;
+    private final ZettelkastenView zknframe;
     /**
      *
      */
@@ -250,7 +250,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * create a new stringbuilder that will contain the plain text of
      * entries in the editorpane, so we can count the words
      */
-    private StringBuilder sbWordCountDisplayTask = new StringBuilder("");
+    private final StringBuilder sbWordCountDisplayTask = new StringBuilder("");
     /**
      *
      */
@@ -259,21 +259,21 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * This variable gets the graphic device and ist needed for full-screen-functionality. see
      * {@link #viewFullScreen() viewFullScreen()} for more details.
      */
-    private GraphicsDevice graphicdevice = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    private final GraphicsDevice graphicdevice = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     /**
      *
      */
-    private JFrame mainframe;
+    private final JFrame mainframe;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap = 
+    private final org.jdesktop.application.ResourceMap resourceMap = 
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(DesktopFrame.class);
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap toolbarResourceMap = 
+    private final org.jdesktop.application.ResourceMap toolbarResourceMap = 
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(ToolbarIcons.class);
 
@@ -281,11 +281,15 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      *
      * @param zkn
+     * @param td
      * @param d
+     * @param bm
      * @param dk
      * @param s
      * @param ak
      * @param bt
+     * @param st
+     * @param auk
      */
     @SuppressWarnings("LeakingThisInConstructor")
     public DesktopFrame(ZettelkastenView zkn, TasksData td, Daten d, Bookmarks bm, DesktopData dk, Settings s, AcceleratorKeys ak, BibTex bt, AutoKorrektur auk, StenoData st) {
@@ -644,15 +648,12 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                         if (entries!=null && entries.length>0) {
                             // get converted entry
                             StringBuilder text = new StringBuilder("");
-                            // copy all elements of the integer-array-list to our integer array
-                            for (int cnt=0; cnt<entries.length; cnt++) {
+                            for (String entrie : entries) {
                                 try {
-                                    text.append(dataObj.getZettelContentAsHtml(Integer.parseInt(entries[cnt])));
+                                    text.append(dataObj.getZettelContentAsHtml(Integer.parseInt(entrie)));
                                     text.append(lineseparator);
-                                }
-                                catch (NumberFormatException ex) {
-                                }
-                                catch (IndexOutOfBoundsException ex) {
+                                }catch (NumberFormatException ex) {
+                                }catch (IndexOutOfBoundsException ex) {
                                 }
                             }
                             // add content to editor pane
@@ -1312,9 +1313,9 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // go through all entries and check, whether they exists. if so, remove them from the list,
         // so only valid entries are dropped...
         StringBuilder sb = new StringBuilder("");
-        for (int cnt=0; cnt<singleentry.length; cnt++) {
-            if (!entryExists(Integer.parseInt(singleentry[cnt]),parent)) {
-                sb.append(singleentry[cnt]).append(",");
+        for (String singleentry1 : singleentry) {
+            if (!entryExists(Integer.parseInt(singleentry1), parent)) {
+                sb.append(singleentry1).append(",");
             }
         }
         // delete last comma
@@ -1928,7 +1929,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 }
                 else {
                     // now we know we have an entry. so get the entry number...
-                    int nr = Integer.parseInt(e.getAttributeValue("id").toString());
+                    int nr = Integer.parseInt(e.getAttributeValue("id"));
                     // get the zettel title
                     String title = TreeUtil.retrieveNodeTitle(dataObj, settingsObj.getShowDesktopEntryNumber(), String.valueOf(nr));
                     // create a new node
@@ -1993,7 +1994,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 }
                 else {
                     // now we know we have an entry. so get the entry number...
-                    int nr = Integer.parseInt(e.getAttributeValue("id").toString());
+                    int nr = Integer.parseInt(e.getAttributeValue("id"));
                     liste.add(nr);
                 }
                 // when the new element also has children, call this method again,
@@ -2301,7 +2302,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      *
      * @param newBullet the name of the new bullet that should be inserted as child of {@code insert}
      * @param insert the parent-bullet, where the bullet {@code newBullet} should be added to
-     * @return true if a bullet which name equals {@code newBullet} already exists, false if {@code newBullet}
+     * @return {@code true} if a bullet which name equals {@code newBullet} already exists, false if {@code newBullet}
      * does not exist and can successfully be added/inserted.
      */
     private boolean checkIfBulletExists(String newBullet) {
@@ -2643,7 +2644,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * 
      * @param parent the insert-parent, where the entry should be inserted as child
      * @param nr the number of the entry that should be inserted
-     * @return true if the entry "nr" already exists as child of "parent".
+     * @return {@code true} if the entry "nr" already exists as child of "parent".
      */
     private boolean noDoubleEntries(DefaultMutableTreeNode parent, int nr) {
         // got through all parent's children
@@ -3069,7 +3070,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * This methods checks whether a selected entry is the last entry in the list of a bullet's
      * child-nodes.
      * 
-     * @return true if the selected entry is the last entry in a list of child-nodes, false otherwise
+     * @return {@code true} if the selected entry is the last entry in a list of child-nodes, false otherwise
      */
     private boolean isLastNode() {
         // if no node selected, return...
@@ -3105,7 +3106,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * This methods checks whether a selected entry is the first entry in the list of a bullet's
      * child-nodes.
      * 
-     * @return true if the selected entry is the first entry in a list of child-nodes, false otherwise
+     * @return {@code true} if the selected entry is the first entry in a list of child-nodes, false otherwise
      */
     private boolean isFirstNode() {
         // if no node selected, return...
@@ -4806,13 +4807,15 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      * This variable indicates whether the selection in the jtree is a bullet-point
      * or not, and no root-element
+     * @return Returns true, if a bullet-point (except root element) is selected in the tree view.
      */
     public boolean isBulletSelected() {
         return bulletSelected;
     }
     /**
      * This variable indicates whether the selection in the jtree is a bullet-point
-     * or not, and no root-element
+     * or not, and no root-element. Triggers a property change to (de-)activate menu items.
+     * @param b true, if a bullet point is selected.
      */
     public void setBulletSelected(boolean b) {
         boolean old = isBulletSelected();
@@ -4827,13 +4830,16 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      * This variable indicates whether the selection in the jtree is a
      * child-note (entry), i.e. no bullet and no root-element
+     * @return 
      */
     public boolean isEntryNodeSelected() {
         return entryNodeSelected;
     }
     /**
      * This variable indicates whether the selection in the jtree is a
-     * child-note (entry), i.e. no bullet and no root-element
+     * child-note (entry), i.e. no bullet and no root-element.
+     * Triggers a property change to (de-)activate menu items.
+     * @param b
      */
     public void setEntryNodeSelected(boolean b) {
         boolean old = isEntryNodeSelected();
@@ -4848,6 +4854,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      * This variable indicates whether the selection in the jtree is a
      * child-note (entry), i.e. no bullet and no root-element
+     * @return 
      */
     public boolean isNodeSelected() {
         return nodeSelected;
@@ -4855,6 +4862,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      * This variable indicates whether the selection in the jtree is a
      * child-note (entry), i.e. no bullet and no root-element
+     * @param b
      */
     public void setNodeSelected(boolean b) {
         boolean old = isNodeSelected();
@@ -4869,6 +4877,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      * This variable indicates whether the we have any selection in the jtree,
      * i.e. a bullet, a child-node or a root-element
+     * @return 
      */
     public boolean isAnyNodeSelected() {
         return anyNodeSelected;
@@ -4876,6 +4885,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      * This variable indicates whether the we have any selection in the jtree,
      * i.e. a bullet, a child-node or a root-element
+     * @param b
      */
     public void setAnyNodeSelected(boolean b) {
         boolean old = isAnyNodeSelected();
@@ -4888,12 +4898,14 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     private boolean modifiedEntryNode = false;
     /**
      * This variable indicates whether the selected entry was modified or not.
+     * @return 
      */
     public boolean isModifiedEntryNode() {
         return modifiedEntryNode;
     }
     /**
      * This variable indicates whether the selected entry was modified or not.
+     * @param b
      */
     public void setModifiedEntryNode(boolean b) {
         boolean old = isModifiedEntryNode();
@@ -4908,6 +4920,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      * This variable indicates whether the selected node is a child-note (entry)
      * and also has luhmann-numbers (followers)
+     * @return 
      */
     public boolean isLuhmannNodeSelected() {
         return luhmannNodeSelected;
@@ -4915,6 +4928,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      * This variable indicates whether the selected node is a child-note (entry)
      * and also has luhmann-numbers (followers)
+     * @param b
      */
     public void setLuhmannNodeSelected(boolean b) {
         boolean old = isLuhmannNodeSelected();
@@ -4927,12 +4941,14 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     private boolean clipFilled = false;
     /**
      * This variable indicates whether we have any entries or bullets in the clipboard
+     * @return 
      */
     public boolean isClipFilled() {
         return clipFilled;
     }
     /**
      * This variable indicates whether we have any entries or bullets in the clipboard
+     * @param b
      */
     public void setClipFilled(boolean b) {
         boolean old = isClipFilled();

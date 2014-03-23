@@ -3866,7 +3866,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      * is found within the author-textfield, this method returns true, false otherwise.
      * 
      * @param kw (the author which should be looked for)
-     * @return true when the author already exists, false otherwise
+     * @return {@code true} when the author already exists, false otherwise
      */
     private boolean checkForDoubleAuthors(String au) {
         // retrieve the text from the author textfield
@@ -3894,7 +3894,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      * is found within the keywordlist, this method returns true, false otherwise.
      * 
      * @param kw (the keyword which should be looked for)
-     * @return true when the keyword already exists, false otherwise
+     * @return {@code true} when the keyword already exists, false otherwise
      */
     private boolean isDoubleKeywords(String kw) {
         // when the list is empty, no double keyword can be found

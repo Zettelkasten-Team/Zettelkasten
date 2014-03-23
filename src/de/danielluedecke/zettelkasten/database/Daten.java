@@ -713,8 +713,6 @@ public class Daten {
      * to an existing, opened data file.
      * 
      * @param zkd the zettelkasten-data in xml-document-format
-     * @param removedentrynumbers a linked list with entry-numbers that have been removed
-     * during the import because they already existed in the data file.
      */
     public void appendZknData(Document zkd) {
         // get current count, so we know at which position new entry were added
@@ -2223,7 +2221,7 @@ public class Daten {
      * @param log_and whether we have logical-and-search (<i>all</i> keywords of "kws" must exist
      * in that entry) or logical-or-search (<i>at least one</i> keyword of "kws" exists in entry.
      * @param matchcase whether the checking for keywords should be case-sensitive (true) or not (false)
-     * @return true if the entry contains <b>all</b> keywords when we have logical-and-search, or
+     * @return {@code true} if the entry contains <b>all</b> keywords when we have logical-and-search, or
      * true when the entry contains <b>at least one</b> keyword when we have logical-or-search.
      * false otherwise
      */
@@ -2277,7 +2275,7 @@ public class Daten {
      * @param kw the keyword which should be checked for whether it already exists or not
      * @param nr the index-number of the entry we want to know from whether it contains the keyword
      * @param matchcase whether the check-for-keywords shoould be case sensitive (true) or not (false)
-     * @return true if keyword already exists in the entry <i>nr</i>, false otherwise
+     * @return {@code true} if keyword already exists in the entry <i>nr</i>, false otherwise
      */
     public boolean existsInKeywords(String kw, int nr, boolean matchcase) {
         // get the keyword-index-nunbers from the related entry
@@ -3468,7 +3466,7 @@ public class Daten {
      * 
      * @param entry the entry where the related insert-entry-index-number should be added to
      * @param addvalue the index-number of the inserted entry
-     * @return true if everything was ok, false if the addvalue already existed or if the entry
+     * @return {@code true} if everything was ok, false if the addvalue already existed or if the entry
      * indicated by "addvalue" itself already contains the entry "entry". in this case, we would
      * have an infinitive loop, with entry A having a sub-entry B, and B having a sub-entry A again
      * and so on...
@@ -3566,7 +3564,7 @@ public class Daten {
      * 
      * @param entry the entry where the referred entry-number should be added to
      * @param addvalue the index-number of the referred entry
-     * @return true if everything was ok, false if the addvalue already existed or other errors occured.
+     * @return {@code true} if everything was ok, false if the addvalue already existed or other errors occured.
      */
     public boolean addManualLink(int entry, int addvalue) {
         // first, add current entry as manual link to the referred entry - we need this to
@@ -3613,7 +3611,7 @@ public class Daten {
      * 
      * @param entry the entry where the referred entry-number should be added to
      * @param addvalue the index-number of the referred entry
-     * @return true if everything was ok, false if the addvalue already existed or other errors occured.
+     * @return {@code true} if everything was ok, false if the addvalue already existed or other errors occured.
      */
     private boolean addManLink(int entry, int addvalue) {
         // check whether entry and addvalue are identical
@@ -3777,8 +3775,9 @@ public class Daten {
             }
             // create stringbuilder
             StringBuilder sb = new StringBuilder("");
-            // iterare list
-            for (int cnt=0; cnt<luhmannnrs.size(); cnt++) sb.append(luhmannnrs.get(cnt)).append(",");
+            for (String luhmannnr : luhmannnrs) {
+                sb.append(luhmannnr).append(",");
+            }
             // finally, remove trailing comma
             if (sb.length()>1) sb.setLength(sb.length()-1);
             // and set the new string to the luhmann-tag
@@ -4083,7 +4082,7 @@ public class Daten {
      * @param entry (the entry which luhmann-tag we want to check)
      * @param checkvalue (the entry which may not part of entry's luhmann-tag)
      * @param found (whether the checkvalue already exists in the enry's luhmann-tag or not, initially should be "false")
-     * @return true when the checkvalue exists, false otherwise. actually the "found"-value is returned
+     * @return {@code true} when the checkvalue exists, false otherwise. actually the "found"-value is returned
      */
     private boolean existsInLuhmann(int entry, int checkvalue, boolean found) {
         // if we found anything by now, return true
@@ -4526,7 +4525,7 @@ public class Daten {
     /**
      * Checks whether an entry at the given {@code pos} is empty (thus deleted) or not.
      * @param pos the entry-number of that entry which has to be checked
-     * @return true when the entry with the number {@code pos} is empty, false otherwise
+     * @return {@code true} when the entry with the number {@code pos} is empty, false otherwise
      */
     public boolean isEmpty(int pos) {
         // retrieve the entry
@@ -4539,7 +4538,7 @@ public class Daten {
     /**
      * Checks whether an entry at the given {@code pos} is empty (thus deleted) or not.
      * @param entry
-     * @return true when the entry with the number {@code pos} is empty, false otherwise
+     * @return {@code true} when the entry with the number {@code pos} is empty, false otherwise
      */
     public boolean isEmpty(Element entry) {
         // if no element exists, return false
@@ -4550,7 +4549,7 @@ public class Daten {
     /**
      * Checks whether an entry at the given {@code pos} is deleted or not.
      * @param pos the entry-number of that entry which has to be checked
-     * @return true when the entry with the number {@code pos} is deleted, false otherwise
+     * @return {@code true} when the entry with the number {@code pos} is deleted, false otherwise
      */
     public boolean isDeleted(int pos) {
         return isEmpty(pos);
@@ -4558,7 +4557,7 @@ public class Daten {
     /**
      * Checks whether an entry at the given {@code pos} is deleted or not.
      * @param entry the entry-element of that entry which has to be checked
-     * @return true when the entry with the number {@code pos} is deleted, false otherwise
+     * @return {@code true} when the entry with the number {@code pos} is deleted, false otherwise
      */
     public boolean isDeleted(Element entry) {
         return isEmpty(entry);
@@ -4936,7 +4935,7 @@ public class Daten {
      *
      * @param pos the entry from which we want to change the remarks
      * @param remarks the new remarks-content
-     * @return true if remarks have been successfully changed, false otherwise
+     * @return {@code true} if remarks have been successfully changed, false otherwise
      */
     public boolean setRemarks(int pos, String remarks) {
         // retrieve the element from the main xml-file
@@ -5155,14 +5154,14 @@ public class Daten {
     }
     /**
      * Indicates whether the history-back function is possible or not.
-     * @return true, if the histor-back-function is enabled, false otherwise
+     * @return {@code true}, if the histor-back-function is enabled, false otherwise
      */
     public boolean canHistoryBack() {
         return (historyPosition>0);
     }
     /**
      * Indicates whether the history-fore function is possible or not.
-     * @return true, if the histor-fore-function is enabled, false otherwise
+     * @return {@code true}, if the histor-fore-function is enabled, false otherwise
      */
     public boolean canHistoryFore() {
         return (historyPosition<(historyCount-1));
@@ -5836,7 +5835,7 @@ public class Daten {
      * to {@link #getCount(int) getCount(CDaten.ZKNCOUNT)}.
      * @param content the new content of the entry
      * @param changetimestamp {@code true} if the entry's modified-timestamp should be updated
-     * @return true if content was successfully changed, false otherwise
+     * @return {@code true} if content was successfully changed, false otherwise
      */
     public boolean setZettelContent(int pos, String content, boolean changetimestamp) {
         // retrieve the element from the main xml-file
@@ -5997,11 +5996,10 @@ public class Daten {
         if (entrynumbers!=null && entrynumbers.size()>0) {
             // create "empty" XML JDom objects
             zknFileExport = new Document(new Element(DOCUMENT_ZETTELKASTEN));
-            // iterate all entry-numbers that should be exported
-            for (int cnt=0; cnt<entrynumbers.size(); cnt++) {
+            for (Integer entrynumber : entrynumbers) {
                 // create new zettel element
                 // and clone content from requested zettel to our element
-                Element zettel = (Element)retrieveZettel(entrynumbers.get(cnt)).clone();
+                Element zettel = (Element) retrieveZettel(entrynumber).clone();
                 // retrieve content of entry and convert all author footnotes, which
                 // contain author-index-numbers, into the related author-IDs.
                 String content = zettel.getChild(ELEMENT_CONTENT).getText();

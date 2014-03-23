@@ -74,27 +74,27 @@ public class Settings {
     /**
      * A reference to the accelerator keys class
      */
-    private AcceleratorKeys acceleratorKeys;
+    private final AcceleratorKeys acceleratorKeys;
     /**
      * A reference to the auto-correction class
      */
-    private AutoKorrektur autoKorrekt;
+    private final AutoKorrektur autoKorrekt;
     /**
      * A reference to the synonyms-class
      */
-    private Synonyms synonyms;
+    private final Synonyms synonyms;
     /**
      * A reference to the steno class
      */
-    private StenoData steno;
+    private final StenoData steno;
     /**
      * Stores the filepath of the currently in use settings file
      */
-    private File filepath;
+    private final File filepath;
     /**
      * Stores the filepath of the currently in use metadatafile
      */
-    private File datafilepath;
+    private final File datafilepath;
     /**
      * XML-Document that stores the settings-information
      */
@@ -112,7 +112,7 @@ public class Settings {
      * 
      * See method "loadSettings" below for more details.
      */
-    private List<String> filesToLoad = new ArrayList<String>();
+    private final List<String> filesToLoad = new ArrayList<String>();
     /**
      * Stores the files which we want to retrieve from the meta-data-file (zettelkasten-data.zkd3).
      * This file is a zip-container with the file-extension ".zkd3" and contains several XML-Files.
@@ -122,17 +122,18 @@ public class Settings {
      * 
      * See method "loadSettings" below for more details.
      */
-    private List<String> dataFilesToLoad = new ArrayList<String>();
+    private final List<String> dataFilesToLoad = new ArrayList<String>();
     /**
      * Indicates whether the programm is running on a mac with aqua-look and feel or not...
+     * @return {@code true}, if the programm is running on a mac with aqua-look and feel
      */
     public boolean isMacAqua() {
         return PlatformUtil.isMacOS() & getLookAndFeel().contains("Aqua");
     }
     /**
-     * Indicates whether the programm is either running on a mac with aqua-look and feel or
-     * whether the user wishes mac-styles for certain components - independent from whether a
-     * mac os is used or not.
+     * Indicates whether the programm is either running on a mac with aqua-look and feel.
+     * @return {@code true}, if the programm is running on a mac with aqua-look and feel
+     * @deprecated Use {@link #isMacAqua()} instead.
      */
     public boolean isMacStyle() {
         return isMacAqua();
@@ -331,7 +332,7 @@ public class Settings {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(ZettelkastenView.class);
 
@@ -347,6 +348,10 @@ public class Settings {
      * "zettelkasten-settings.zks3". here we store the settings as xml-file, the foreign-words-file,
      * the synonyms-file and several xml-files that store the accelerator-keys for the different
      * windows.
+     * @param ak
+     * @param ac
+     * @param syn
+     * @param stn
      */
     public Settings(AcceleratorKeys ak, AutoKorrektur ac, Synonyms syn, StenoData stn) {
         // first of all, store the reference to the CAcceleratorKeys-class, because we
@@ -1675,11 +1680,7 @@ public class Settings {
             // it is better to have them separated, in the base-zkn-directory (zkn-path) if possible,
             // so whenever the user removes the program directory, the other data is still there.
             try {
-                // it looks like the SAXBuilder is closing an input stream. So we have to
-                // re-open the ZIP-file each time we want to retrieve an XML-file from it
-                // this is necessary, because we want tot retrieve the zipped xml-files
-                // *without* temporarily saving them to harddisk
-                for (int cnt=0; cnt<filesToLoad.size(); cnt++) {
+                for (String filesToLoad1 : filesToLoad) {
                     // open the zip-file
                     ZipInputStream zip = new ZipInputStream(new FileInputStream(filepath));
                     ZipEntry entry;
@@ -1687,7 +1688,7 @@ public class Settings {
                     while ((entry=zip.getNextEntry())!=null) {
                         String entryname = entry.getName();
                         // if the found file matches the requested one, start the SAXBuilder
-                        if (entryname.equals(filesToLoad.get(cnt))) {
+                        if (entryname.equals(filesToLoad1)) {
                             try {
                                 SAXBuilder builder = new SAXBuilder();
                                 // Document doc = new Document();
@@ -1720,11 +1721,7 @@ public class Settings {
         if (datafilepath!=null && datafilepath.exists()) {
             // now we load the meta-data. see comment above for more information...
             try {
-                // it looks like the SAXBuilder is closing an input stream. So we have to
-                // re-open the ZIP-file each time we want to retrieve an XML-file from it
-                // this is necessary, because we want tot retrieve the zipped xml-files
-                // *without* temporarily saving them to harddisk
-                for (int cnt=0; cnt<dataFilesToLoad.size(); cnt++) {
+                for (String dataFilesToLoad1 : dataFilesToLoad) {
                     // open the zip-file
                     ZipInputStream zip = new ZipInputStream(new FileInputStream(datafilepath));
                     ZipEntry entry;
@@ -1732,7 +1729,7 @@ public class Settings {
                     while ((entry=zip.getNextEntry())!=null) {
                         String entryname = entry.getName();
                         // if the found file matches the requested one, start the SAXBuilder
-                        if (entryname.equals(dataFilesToLoad.get(cnt))) {
+                        if (entryname.equals(dataFilesToLoad1)) {
                             try {
                                 SAXBuilder builder = new SAXBuilder();
                                 // Document doc = new Document();
@@ -1762,6 +1759,8 @@ public class Settings {
     
     /**
      * Saves the settings file
+     * 
+     * @return 
      */
     public boolean saveSettings() {
         // initial value
@@ -1975,7 +1974,7 @@ public class Settings {
     }
     /**
      * Sets the filepath of the last used image path when inserting images to a new entry
-     * @param the filepath of the last opened image directory
+     * @param fp the filepath of the last opened image directory
      */
     public void setLastOpenedImageDir(File fp) {
         // try to find filepath-element
@@ -2010,7 +2009,7 @@ public class Settings {
     }
     /**
      * Sets the filepath of the last used import path when data was imported
-     * @param the filepath of the last opened import directory
+     * @param fp the filepath of the last opened import directory
      */
     public void setLastOpenedImportDir(File fp) {
         // try to find filepath-element
@@ -2045,7 +2044,7 @@ public class Settings {
     }
     /**
      * Sets the filepath of the last used import path when data was imported
-     * @param the filepath of the last opened import directory
+     * @param fp the filepath of the last opened import directory
      */
     public void setLastOpenedExportDir(File fp) {
         // try to find filepath-element
@@ -2080,7 +2079,7 @@ public class Settings {
     }
     /**
      * Sets the filepath of the last used image path when inserting images to a new entry
-     * @param the filepath of the last opened image directory
+     * @param fp the filepath of the last opened image directory
      */
     public void setLastOpenedAttachmentDir(File fp) {
         // try to find filepath-element
@@ -2804,6 +2803,7 @@ public class Settings {
      * Retrieves the logical combination for filtering the link-list when the user
      * selectes a keyword in the jListKeywords. See method "filterLinks()" in "ZettelkastenView.java"
      * for more details
+     * @return 
      */
     public String getLogKeywordlist() {
         Element el = settingsFile.getRootElement().getChild(SETTING_LOGKEYWORDLIST);
@@ -2815,6 +2815,7 @@ public class Settings {
      * Sets the logical combination for filtering the link-list when the user
      * selectes a keyword in the jListKeywords. See method "filterLinks()" in "ZettelkastenView.java"
      * for more details
+     * @param path
      */
     public void setLogKeywordlist(String path) {
         Element el = settingsFile.getRootElement().getChild(SETTING_LOGKEYWORDLIST);
@@ -2855,7 +2856,7 @@ public class Settings {
      * Gets the show-grid-variable. If true, the <i>horizontal</i> grids in lists and tables 
      * should be displayed.
      * 
-     * @return true if the <i>horizontal</i> grids in lists and tables should be displayed,
+     * @return {@code true} if the <i>horizontal</i> grids in lists and tables should be displayed,
      * flase otherwise
      */
     public boolean getShowGridHorizontal() {
@@ -2883,7 +2884,7 @@ public class Settings {
      * Gets the show-grid-variable. If true, the <i>vertical</i> grids in lists and tables 
      * should be displayed.
      * 
-     * @return true if the <i>vertical</i> grids in lists and tables should be displayed,
+     * @return {@code true} if the <i>vertical</i> grids in lists and tables should be displayed,
      * flase otherwise
      */
     public boolean getShowGridVertical() {
@@ -2910,7 +2911,7 @@ public class Settings {
     /**
      * Whether or not the searches from the tables, which are not started via the find-dialog, but via
      * the (context-)menus, should include synonym-search or not.
-     * @return true if the search should include synonyms, false otherwise
+     * @return {@code true} if the search should include synonyms, false otherwise
      */
     public boolean getSearchAlwaysSynonyms() {
         Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHALWAYSSYNONYMS);
@@ -2934,7 +2935,7 @@ public class Settings {
     
     /**
      * Whether or not keyword-synonyms should be displayed in the jTableKeywords
-     * @return true keyword-synonyms should be displayed in the jTableKeywords, false otherwise
+     * @return {@code true} keyword-synonyms should be displayed in the jTableKeywords, false otherwise
      */
     public boolean getShowSynonymsInTable() {
         Element el = settingsFile.getRootElement().getChild(SETTING_SHOWSYNONYMSINTABLE);
@@ -2999,7 +3000,7 @@ public class Settings {
     
     /**
      * Gets the setting for the quick input of keywords.
-     * @return true if the keyword-quickinput should be activated
+     * @return {@code true} if the keyword-quickinput should be activated
      */
     public boolean getQuickInput() {
         Element el = settingsFile.getRootElement().getChild(SETTING_QUICKINPUT);
@@ -3022,7 +3023,7 @@ public class Settings {
 
     /**
      * Gets the setting for the autobackup-option.
-     * @return true if autobackup should be activated
+     * @return {@code true} if autobackup should be activated
      */
     public boolean getAutoBackup() {
         Element el = settingsFile.getRootElement().getChild(SETTING_AUTOBACKUP);
@@ -3045,7 +3046,7 @@ public class Settings {
     
     /**
      * Gets the setting for the minimize to tray-option.
-     * @return true if minimizing to tray should be activated
+     * @return {@code true} if minimizing to tray should be activated
      */
     public boolean getMinimizeToTray() {
         Element el = settingsFile.getRootElement().getChild(SETTING_MINIMIZETOTRAY);
@@ -3068,7 +3069,7 @@ public class Settings {
 
     /**
      * Gets the setting for the autobackup-option.
-     * @return true if autobackup should be activated
+     * @return {@code true} if autobackup should be activated
      */
     public boolean getAutoUpdate() {
         Element el = settingsFile.getRootElement().getChild(SETTING_AUTOUPDATE);
@@ -3127,7 +3128,7 @@ public class Settings {
     }
     /**
      * Sets the setting whether a table of contents should be created when exporting desktop data.
-     * @return {@code true} if a table of contents should be created when exporting desktop data.
+     * @param val {@code true} if a table of contents should be created when exporting desktop data.
      */
     public void setTOCForDesktopExport(boolean val) {
         Element el = settingsFile.getRootElement().getChild(SETTING_TOCFORDESKTOPEXPORT);
@@ -3168,7 +3169,7 @@ public class Settings {
 
     /**
      * Gets the setting for the autobackup-option.
-     * @return true if autobackup should be activated
+     * @return {@code true} if autobackup should be activated
      */
     public boolean getAutoNightlyUpdate() {
         Element el = settingsFile.getRootElement().getChild(SETTING_AUTONIGHTLYUPDATE);
@@ -3191,7 +3192,7 @@ public class Settings {
 
     /**
      * Gets the setting for the autobackup-option.
-     * @return true if autobackup should be activated
+     * @return {@code true} if autobackup should be activated
      */
     public boolean getShowIconText() {
         Element el = settingsFile.getRootElement().getChild(SETTING_SHOWICONTEXT);
@@ -3259,7 +3260,7 @@ public class Settings {
 
     /**
      * Gets the setting for the autobackup-option.
-     * @return true if autobackup should be activated
+     * @return {@code true} if autobackup should be activated
      */
     public boolean getExtraBackup() {
         Element el = settingsFile.getRootElement().getChild(SETTING_EXTRABACKUP);
@@ -3445,7 +3446,7 @@ public class Settings {
     /**
      * Gets the setting whether new entries should be inserted at empty positions of previous
      * deleted entries or not.
-     * @return true if new entries should be inserted at empty positions; false if new entries should
+     * @return {@code true} if new entries should be inserted at empty positions; false if new entries should
      * be inserted at the end of the data file
      */
     public boolean getInsertNewEntryAtEmpty() {
@@ -3472,7 +3473,7 @@ public class Settings {
     /**
      * Gets the settings, whether highlighting searchresults and keywords should highlight
      * the background, i.e. setting a background-color or not
-     * @return true if a background-color for highlighting should be shown, false otherwise
+     * @return {@code true} if a background-color for highlighting should be shown, false otherwise
      */
     public boolean getShowHighlightBackground(int style) {
         String hs_style;
@@ -3497,7 +3498,8 @@ public class Settings {
     /**
      * Gets the settings, whether highlighting searchresults and keywords should highlight
      * the background, i.e. setting a background-color or not
-     * @param true if a background-color for highlighting should be shown, false otherwise
+     * @param val true if a background-color for highlighting should be shown, false otherwise
+     * @param style
      */
     public void setShowHighlightBackground(boolean val, int style) {
         String hs_style;
@@ -3527,7 +3529,7 @@ public class Settings {
     /**
      * Gets the settings, whether highlighting searchresults and keywords should highlight
      * the background, i.e. setting a background-color or not
-     * @return true if a background-color for highlighting should be shown, false otherwise
+     * @return {@code true} if a background-color for highlighting should be shown, false otherwise
      */
     public String getHighlightBackgroundColor(int style) {
         String hs_style;
@@ -3636,7 +3638,7 @@ public class Settings {
     /**
      * Gets the setting for the highlighting of search results. when activated, the search terms
      * in the search results window (CSearchResults) are highlighted.
-     * @return true if search terms should be highlighted
+     * @return {@code true} if search terms should be highlighted
      */
     public boolean getHighlightSearchResults() {
         Element el = settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTSEARCHRESULTS);
@@ -3661,7 +3663,7 @@ public class Settings {
     /**
      * Gets the setting for the highlighting of keywords in the main frame's entry-content. 
      * when activated, the keywords of an entry that appear in the entry-content are highlighted.
-     * @return true if keywords should be highlighted
+     * @return {@code true} if keywords should be highlighted
      */
     public boolean getHighlightKeywords() {
         Element el = settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTKEYWORDS);
@@ -3695,7 +3697,7 @@ public class Settings {
      * Gets the setting for showing an entry from the search results window immediatley.
      * when activated, a selected entry in the search results window is immediately displayed
      * in the main window.
-     * @return true if entry should be displayed at once
+     * @return {@code true} if entry should be displayed at once
      */
     public boolean getShowSearchEntry() {
         Element el = settingsFile.getRootElement().getChild(SETTING_SHOWSEARCHENTRY);
@@ -3721,7 +3723,7 @@ public class Settings {
     /**
      * Gets the setting whether the footnotes should be superscripted or not. A superscripted
      * footnote is displayed smaller, but changes the line-height.
-     * @return true if footnote should be superscripted
+     * @return {@code true} if footnote should be superscripted
      */
     public boolean getSupFootnote() {
         Element el = settingsFile.getRootElement().getChild(SETTING_SUPFOOTNOTE);
@@ -3731,7 +3733,7 @@ public class Settings {
     /**
      * Sets the setting whether the footnotes should be superscripted or not. A superscripted
      * footnote is displayed smaller, but changes the line-height.
-     * @param true if footnote should be superscripted
+     * @param val use true, if footnote should be superscripted
      */
     public void setSupFootnote(boolean val) {
         Element el = settingsFile.getRootElement().getChild(SETTING_SUPFOOTNOTE);
@@ -3746,7 +3748,7 @@ public class Settings {
     /**
      * Gets the setting whether a click on the footnotes should open the tab with the authorlist
      * and select the related author or not.
-     * @return true if footnote should show the related author in the tabbed pane
+     * @return {@code true} if footnote should show the related author in the tabbed pane
      */
     public boolean getJumpFootnote() {
         Element el = settingsFile.getRootElement().getChild(SETTING_JUMPFOOTNOTE);
@@ -3771,7 +3773,7 @@ public class Settings {
     /**
      * Gets the setting whether a search request should search in entries within a certain
      * date-range.
-     * @return true if search should look for entries with a certain date (timestamp)
+     * @return {@code true} if search should look for entries with a certain date (timestamp)
      */
     public boolean getSearchTime() {
         Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHTIME);
@@ -4027,7 +4029,7 @@ public class Settings {
      * Gets the setting for the thumbnail activation. This value indicates whether iamges
      * should always be display in original size, or whether large images should be resized
      * 
-     * @return true if large images should be resized.
+     * @return {@code true} if large images should be resized.
      */
     public boolean getImageResize() {
         Element el = settingsFile.getRootElement().getChild(SETTING_IMGRESIZE);
@@ -4112,7 +4114,7 @@ public class Settings {
     
     /**
      * Gets the setting for the extended quick input of keywords.
-     * @return true if the extended keyword-quickinput should be activated
+     * @return {@code true} if the extended keyword-quickinput should be activated
      */
     public int getQuickInputExtended() {
         Element el = settingsFile.getRootElement().getChild(SETTING_QUICKINPUTEXTENDED);
@@ -4164,7 +4166,7 @@ public class Settings {
     
     /**
      * Gets the steno-variable. If true, steno is activated, false otherwise
-     * @return true if steno is activated, false otherwise
+     * @return {@code true} if steno is activated, false otherwise
      */
     public boolean getStenoActivated() {
         Element el = settingsFile.getRootElement().getChild(SETTING_STENOACTIVATED);
@@ -4731,6 +4733,7 @@ public class Settings {
      * - FONTCOLOR<br>
      * - FONTSTYLE<br>
      * - FONTWEIGHT<br>
+     * @param style
      * @return the related style-information as string.
      */
     public String getHighlightSearchStyle(int what, int style) {
@@ -4770,6 +4773,7 @@ public class Settings {
      * - FONTCOLOR<br>
      * - FONTSTYLE<br>
      * - FONTWEIGHT<br>
+     * @param style
      */
     public void setHighlightSearchStyle(String value, int what, int style) {
         String hs_style;
@@ -5433,7 +5437,7 @@ public class Settings {
      * When the user wants to search for entries with a certain creation or modified-date, this
      * setting stores the values from the last entered date-input from the user
      *
-     * @param a string value, comma separated, which holds to dates: the beginning and the end-date
+     * @param value a string value, comma separated, which holds to dates: the beginning and the end-date
      * of the period the user wanted to search for entries. these strings are taken from the formatted
      * textfields in the CSearchDlg.
      */
@@ -5641,6 +5645,7 @@ public class Settings {
     }
     /**
      * 
+     * @param what
      * @param value 
      */
     public void setUseCustomCSS(int what, boolean value) {
@@ -5808,6 +5813,7 @@ public class Settings {
     }
     /**
      * 
+     * @param value
      */
     public void setLastUsedLatexDocClass(int value) {
         Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTDOCUMENTCLASS);

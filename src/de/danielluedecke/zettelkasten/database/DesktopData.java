@@ -231,7 +231,7 @@ public class DesktopData {
     }
     /**
      * Checks whether the datafile is modified
-     * @return true if it is modified, false otherwise
+     * @return {@code true} if it is modified, false otherwise
      */
     public boolean isModified() {
         return modified;
@@ -338,7 +338,7 @@ public class DesktopData {
      * @param desktopnr the desktop where we should look for occurences of the entry {@code entrynr}
      * @param entrynr the number of the entry that should be looked for. usually, this number corresponds
      * to entry-numbers of entries that are currently being added
-     * @return true if the entry with the number {@code entrynr} exists in the desktop {@code desktopnr},
+     * @return {@code true} if the entry with the number {@code entrynr} exists in the desktop {@code desktopnr},
      * false otherwise
      */
     public boolean checkForDoubleEntry(int desktopnr, int entrynr) {
@@ -747,7 +747,7 @@ public class DesktopData {
      * is set to the latest added desktop-index-number.
      * 
      * @param name (the name of the desktop, which appears in the desktopDialog's combobox)
-     * @return true if the desktop was successfully added, false otherwise (e.g. because the 
+     * @return {@code true} if the desktop was successfully added, false otherwise (e.g. because the 
      * desktop-name already existed)
      */
     public boolean addNewDesktop(String name) {
@@ -1284,7 +1284,7 @@ public class DesktopData {
      * or not.
      * 
      * @param nr the desktop which should be checked for children/bullets
-     * @return true if the desktop has any bullets (children, elements), false otherwise
+     * @return {@code true} if the desktop has any bullets (children, elements), false otherwise
      */
     public boolean desktopHasBullets(int nr) {
         // get the requested desktop

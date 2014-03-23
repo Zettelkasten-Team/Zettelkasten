@@ -10,7 +10,7 @@ public interface SourceListExpansionListener {
      * Called before expanding a {@link SourceListItem} in a {@link SourceList}.
      * Determines whether an item is allowed to be expanded or not
      * @param item the item that requests to be expanded.
-     * @return true if the item is expandable, false otherwise
+     * @return {@code true} if the item is expandable, false otherwise
      */
     boolean shouldExpandSourceListItem(SourceListItem item);
 
@@ -26,7 +26,7 @@ public interface SourceListExpansionListener {
      * Called before collapsing a {@link SourceListItem} in a {@link SourceList}.
      * Determines whether an item is allowed to be collapsed or not
      * @param item the item that requests to be collapsed.
-     * @return true if the item is collapsable, false otherwise
+     * @return {@code true} if the item is collapsable, false otherwise
      */
     boolean shouldCollapseSourceListItem(SourceListItem item);
 
@@ -42,7 +42,7 @@ public interface SourceListExpansionListener {
      * Called before expanding a {@link SourceListCategory} in a {@link SourceList}.
      * Determines whether a category is allowed to be expanded or not
      * @param category the category that requests to be expanded.
-     * @return true if the item is expandable, false otherwise
+     * @return {@code true} if the item is expandable, false otherwise
      */
     boolean shouldExpandSourceListCategory(SourceListCategory category);
 
@@ -58,7 +58,7 @@ public interface SourceListExpansionListener {
      * Called before collapsing a {@link SourceListCategory} in a {@link SourceList}.
      * Determines whether a category is allowed to be collapsed or not
      * @param category the category that requests to be collapsed.
-     * @return true if the item is collapsable, false otherwise
+     * @return {@code true} if the item is collapsable, false otherwise
      */
     boolean shouldToCollapseSourceListCategory(SourceListCategory category);
 

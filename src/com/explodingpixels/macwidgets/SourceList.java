@@ -157,7 +157,7 @@ public class SourceList {
     /**
      * True if there is a {@link SourceListControlBar} installed on this {@code SourceList}.
      *
-     * @return true if there is a {@link SourceListControlBar} installed on this {@code SourceList}.
+     * @return {@code true} if there is a {@link SourceListControlBar} installed on this {@code SourceList}.
      */
     public boolean isSourceListControlBarInstalled() {
         return fSourceListControlBar != null;

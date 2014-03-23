@@ -180,7 +180,7 @@ public class StenoData {
      *
      * @param abbr the short, steno-abbreviation of the word
      * @param longword the long, original version of the word
-     * @return true if element was successfully addes, false if {@code stenoword} already existed
+     * @return {@code true} if element was successfully addes, false if {@code stenoword} already existed
      */
     public boolean addElement(String abbr, String longword) {
         // check for existence
@@ -302,7 +302,7 @@ public class StenoData {
      * Checks whether the value passed by the parameter "e" already exists in the
      * data. Therefore, each element's id-attribute is compared to the parameter "e".
      * @param abbr the string we want to look for if it exists
-     * @return true if we found it, false if it doesn't exist
+     * @return {@code true} if we found it, false if it doesn't exist
      */
     public boolean exists(String abbr) {
         // get all elements

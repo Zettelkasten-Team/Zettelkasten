@@ -147,7 +147,7 @@ public class Bookmarks {
     }
     /**
      * returns the modified state of the bookmark-data
-     * @return true if the bookmark-data was modified, false if it's unchanged
+     * @return {@code true} if the bookmark-data was modified, false if it's unchanged
      */
     public boolean isModified() {
         return modified;
