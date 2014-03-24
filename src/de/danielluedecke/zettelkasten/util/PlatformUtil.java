@@ -49,7 +49,7 @@ public class PlatformUtil {
      * @return {@code true} if current OS is any linux os
      */
     public static boolean isLinux() {
-        return System.getProperty("os.name").toLowerCase().indexOf("linux")!=-1;
+        return System.getProperty("os.name").toLowerCase().contains("linux");
     }
     /**
      * Retrieve current Java version.
