@@ -6,7 +6,6 @@
 
 package de.danielluedecke.zettelkasten.mac;
 
-import de.danielluedecke.zettelkasten.util.Constants;
 import com.explodingpixels.macwidgets.MacWidgetFactory;
 import com.explodingpixels.macwidgets.SourceListBadgeContentProvider;
 import com.explodingpixels.macwidgets.SourceListCategory;
@@ -72,7 +71,7 @@ public class MacSourceTree extends BasicTreeUI {
     private final String EXPAND_NODE = "expandNode";
     private final String COLLAPSE_NODE = "collapseNode";
 
-    private CustomTreeModelListener fTreeModelListener = new CustomTreeModelListener();
+    private final CustomTreeModelListener fTreeModelListener = new CustomTreeModelListener();
 
     boolean isRootVisible;
 

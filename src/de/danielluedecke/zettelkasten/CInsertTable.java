@@ -1,6 +1,6 @@
 /*
  * Zettelkasten - nach Luhmann
- ** Copyright (C) 2001-2013 by Daniel Lüdecke (http://www.danielluedecke.de)
+ ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
  * 
  * Homepage: http://zettelkasten.danielluedecke.de
  * 
@@ -69,7 +69,7 @@ public class CInsertTable extends javax.swing.JDialog {
     public boolean isModified() {
         return modified;
     }
-    private Settings settingsObj;
+    private final Settings settingsObj;
     /**
      * 
      */
@@ -78,7 +78,12 @@ public class CInsertTable extends javax.swing.JDialog {
         return tabletag;
     }
 
-    /** Creates new form CInsertTable */
+    /**
+     * 
+     * @param parent
+     * @param s
+     * @param etable 
+     */
     public CInsertTable(java.awt.Frame parent, Settings s, String etable) {
         super(parent);
         settingsObj = s;
@@ -252,10 +257,8 @@ public class CInsertTable extends javax.swing.JDialog {
             // if the user wants to format the first row as headline, use the
             // related table-separator-char instead
             if (0==row && jCheckBoxTableHeader.isSelected()) tablesep="^";
-            // now copy all cell-data of the row to the string-builder that will contain
-            // the final string (table-tag)
-            for (int cnt=0; cnt<tablerow.size(); cnt++) {
-                tabledata.append(tablerow.get(cnt));
+            for (String tablerow1 : tablerow) {
+                tabledata.append(tablerow1);
                 tabledata.append(tablesep);
             }
             // if we have any data, remove last separator char

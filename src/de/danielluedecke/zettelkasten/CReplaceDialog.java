@@ -1,6 +1,6 @@
 /*
  * Zettelkasten - nach Luhmann
- ** Copyright (C) 2001-2013 by Daniel Lüdecke (http://www.danielluedecke.de)
+ ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
  * 
  * Homepage: http://zettelkasten.danielluedecke.de
  * 
@@ -84,11 +84,11 @@ public class CReplaceDialog extends javax.swing.JDialog {
      *
      */
     private String replaceTerm;
-    private Settings settingsObj;
+    private final Settings settingsObj;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CReplaceDialog.class);
     /**

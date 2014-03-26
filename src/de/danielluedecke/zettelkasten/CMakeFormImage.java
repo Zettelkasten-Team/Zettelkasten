@@ -1,6 +1,6 @@
 /*
  * Zettelkasten - nach Luhmann
- ** Copyright (C) 2001-2013 by Daniel Lüdecke (http://www.danielluedecke.de)
+ ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
  * 
  * Homepage: http://zettelkasten.danielluedecke.de
  * 
@@ -37,7 +37,6 @@ import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.ExtractFormInformation;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
-import de.danielluedecke.zettelkasten.util.Tools;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -56,13 +55,13 @@ import javax.swing.JOptionPane;
  */
 public class CMakeFormImage {
     private BufferedImage formimage;
-    private Settings settingsObj;
-    private Daten dataObj;
-    private String formtag;
-    private File formImageDir;
+    private final Settings settingsObj;
+    private final Daten dataObj;
+    private final String formtag;
+    private final File formImageDir;
     private boolean saveImgOk;
-    private File formImageFilepath;
-    private File formLargeImageFilepath;
+    private final File formImageFilepath;
+    private final File formLargeImageFilepath;
     private static final int IMG_SIZE_SMALL = 1;
     private static final int IMG_SIZE_LARGE = 2;
     private static final int MARK_DISTANCE = 6;
@@ -74,7 +73,7 @@ public class CMakeFormImage {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap = 
+    private final org.jdesktop.application.ResourceMap resourceMap = 
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(NewEntryFrame.class);
     
@@ -122,7 +121,6 @@ public class CMakeFormImage {
         // set font
         g.setFont(font);
         // fill color white 
-        g.setPaint(Color.WHITE);
         // fill white background
         g.fillRect(0, 0, 3000, 1000);
         // draw color black

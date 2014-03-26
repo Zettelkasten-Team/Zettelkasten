@@ -1,6 +1,6 @@
 /*
  * Zettelkasten - nach Luhmann
- ** Copyright (C) 2001-2013 by Daniel Lüdecke (http://www.danielluedecke.de)
+ ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
  * 
  * Homepage: http://zettelkasten.danielluedecke.de
  * 
@@ -50,7 +50,7 @@ public class CTexExportSettings extends javax.swing.JDialog {
     /**
      * 
      */
-    private Settings settingsObj;
+    private final Settings settingsObj;
     /**
      * 
      */
@@ -59,7 +59,11 @@ public class CTexExportSettings extends javax.swing.JDialog {
         return cancelled;
     }
 
-    /** Creates new form CTexExportSettings */
+    /** 
+     * Creates new form CTexExportSettings
+     * @param parent 
+     * @param s 
+     */
     public CTexExportSettings(java.awt.Frame parent, Settings s) {
         super(parent);
         settingsObj = s;

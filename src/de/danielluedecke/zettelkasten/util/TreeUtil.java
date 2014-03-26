@@ -1,6 +1,34 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Zettelkasten - nach Luhmann
+ ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
+ * 
+ * Homepage: http://zettelkasten.danielluedecke.de
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation; either version 3 of 
+ * the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, see <http://www.gnu.org/licenses/>.
+ * 
+ * 
+ * Dieses Programm ist freie Software. Sie können es unter den Bedingungen der GNU
+ * General Public License, wie von der Free Software Foundation veröffentlicht, weitergeben
+ * und/oder modifizieren, entweder gemäß Version 3 der Lizenz oder (wenn Sie möchten)
+ * jeder späteren Version.
+ * 
+ * Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein 
+ * wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder 
+ * der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der 
+ * GNU General Public License.
+ * 
+ * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
+ * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
 package de.danielluedecke.zettelkasten.util;
 
@@ -22,7 +50,7 @@ import javax.swing.tree.TreePath;
  */
 public class TreeUtil {
 
-    private static List<String> collapsedNodes = new ArrayList<String>();
+    private static final List<String> collapsedNodes = new ArrayList<String>();
     
     /**
      * This method extracts a node's ID.
@@ -152,6 +180,7 @@ public class TreeUtil {
     /**
      * If expand is true, expands all nodes in the tree.
      * Otherwise, collapses all nodes in the tree.
+     * @param tree
      */
     public static void expandAllTrees(JTree tree) {
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot();
@@ -177,6 +206,8 @@ public class TreeUtil {
     /**
      * If expand is true, expands all nodes in the tree.
      * Otherwise, collapses all nodes in the tree.
+     * @param expand
+     * @param tree
      */
     public static void expandAllTrees(boolean expand, JTree tree) {
         TreeNode root = (TreeNode) tree.getModel().getRoot();
@@ -204,6 +235,8 @@ public class TreeUtil {
     /**
      * If expand is true, expands all nodes in the tree.
      * Otherwise, collapses all nodes in the tree.
+     * @param tree
+     * @return 
      */
     public static List<String> retrieveCollapsedNodes(JTree tree) {
         // clear collapsed nodes

@@ -22,7 +22,10 @@ import org.jdesktop.application.Action;
 public class CInsertManualLink extends javax.swing.JDialog {
     private String manlink;
     /**
-     * Creates new form CInsertManualLink
+     * 
+     * @param parent
+     * @param selection
+     * @param settingsObj 
      */
     public CInsertManualLink(java.awt.Frame parent, String selection, Settings settingsObj) {
         super(parent);

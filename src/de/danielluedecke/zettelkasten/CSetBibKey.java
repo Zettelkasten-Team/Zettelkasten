@@ -1,6 +1,6 @@
 /*
  * Zettelkasten - nach Luhmann
- ** Copyright (C) 2001-2013 by Daniel Lüdecke (http://www.danielluedecke.de)
+ ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
  * 
  * Homepage: http://zettelkasten.danielluedecke.de
  * 
@@ -111,12 +111,10 @@ public class CSetBibKey extends javax.swing.JDialog {
      * authors.
      *
      * @param parent dialog's parent
+     * @param mf
      * @param d a reference to the {@code CDaten}-class, the main dataclass
      * @param bt a reference to the {@code CBibTex}-class that handles the import/export of bibtex-files
      * @param s a reference to the {@code CSettings}-class
-     * @param aus a string-array containing the selected authors
-     * @param ismacaqua a boolean-variable indicating whether the look&feel of the current os is mac-aqua, used
-     * to style the scrollbars
      */
     public CSetBibKey(java.awt.Frame parent, ZettelkastenView mf, Daten d, BibTex bt, Settings s) {
         super(parent);
@@ -151,7 +149,7 @@ public class CSetBibKey extends javax.swing.JDialog {
         // set last settings
         jComboBoxShowBibTex.setSelectedIndex(settingsObj.getLastUsedSetBibyKeyType());
         // change layout style if user wishes itunes-like scrollbars...
-        if (settingsObj.isMacStyle()) {
+        if (settingsObj.isMacAqua()) {
             // make extra table-sorter for itunes-tables
             TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
                 @Override

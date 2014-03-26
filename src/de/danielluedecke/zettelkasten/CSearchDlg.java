@@ -1,6 +1,6 @@
 /*
  * Zettelkasten - nach Luhmann
- ** Copyright (C) 2001-2013 by Daniel Lüdecke (http://www.danielluedecke.de)
+ ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
  * 
  * Homepage: http://zettelkasten.danielluedecke.de
  * 
@@ -246,7 +246,13 @@ public class CSearchDlg extends javax.swing.JDialog {
         getContext().getResourceMap(CSearchDlg.class);
     
     
-    /** Creates new form CSearchDlg */
+    /**
+     * 
+     * @param parent
+     * @param sr
+     * @param s
+     * @param initialSearchTerm 
+     */
     public CSearchDlg(java.awt.Frame parent, SearchRequests sr, Settings s, String initialSearchTerm) {
         super(parent);
         settingsObj = s;

@@ -1,6 +1,6 @@
 /*
  * Zettelkasten - nach Luhmann
- ** Copyright (C) 2001-2013 by Daniel Lüdecke (http://www.danielluedecke.de)
+ ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
  * 
  * Homepage: http://zettelkasten.danielluedecke.de
  * 
@@ -51,7 +51,7 @@ public class NewEntryFrameUtil {
             if (caret > 2) {
                 try {
                     String text = ta.getText();
-                    int longest = stenoObj.retrieveLongestAbbr();
+                    int longest = stenoObj.retrieveLongestAbbrLength();
                     int start = caret - longest - 1;
                     int start2 = text.lastIndexOf(System.getProperty("line.separator"), caret - 2);
                     if (start2 > start) {

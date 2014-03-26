@@ -1,6 +1,6 @@
 /*
  * Zettelkasten - nach Luhmann
- ** Copyright (C) 2001-2013 by Daniel Lüdecke (http://www.danielluedecke.de)
+ ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
  * 
  * Homepage: http://zettelkasten.danielluedecke.de
  * 
@@ -51,9 +51,9 @@ import org.jdesktop.application.Action;
  */
 public class CRateEntry extends javax.swing.JDialog {
 
-    private Daten dataObj;
+    private final Daten dataObj;
     private boolean cancelled = false;
-    private int entrynr;
+    private final int entrynr;
 
     private static final int RATING_VALUE_NONE = 1;
     private static final int RATING_VALUE_HALF = 2;
@@ -62,11 +62,16 @@ public class CRateEntry extends javax.swing.JDialog {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CRateEntry.class);
 
-    /** Creates new form CRateEntry */
+    /**
+     * 
+     * @param parent
+     * @param d
+     * @param nr 
+     */
     public CRateEntry(java.awt.Frame parent, Daten d, int nr) {
         super(parent);
         dataObj = d;

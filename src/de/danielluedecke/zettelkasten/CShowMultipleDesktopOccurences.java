@@ -1,6 +1,6 @@
 /*
  * Zettelkasten - nach Luhmann
- ** Copyright (C) 2001-2013 by Daniel Lüdecke (http://www.danielluedecke.de)
+ ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
  * 
  * Homepage: http://zettelkasten.danielluedecke.de
  * 
@@ -51,11 +51,15 @@ public class CShowMultipleDesktopOccurences extends javax.swing.JDialog {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CShowMultipleDesktopOccurences.class);
     /**
      * Creates new form CShowMultipleDesktopOccurences
+     * @param parent
+     * @param s
+     * @param modal
+     * @param t
      */
     public CShowMultipleDesktopOccurences(java.awt.Frame parent, Settings s, boolean modal, String t) {
         super(parent,modal);

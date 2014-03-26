@@ -1,6 +1,6 @@
 /*
  * Zettelkasten - nach Luhmann
- ** Copyright (C) 2001-2013 by Daniel Lüdecke (http://www.danielluedecke.de)
+ ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
  * 
  * Homepage: http://zettelkasten.danielluedecke.de
  * 
@@ -65,9 +65,9 @@ public class CSynonymsEdit extends javax.swing.JDialog {
     /**
      *
      */
-    private Synonyms synonymsObj;
-    private Settings settingsObj;
-    private Daten dataObj;
+    private final Synonyms synonymsObj;
+    private final Settings settingsObj;
+    private final Daten dataObj;
     /**
      *
      */
@@ -94,7 +94,7 @@ public class CSynonymsEdit extends javax.swing.JDialog {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CSynonymsEdit.class);
 
@@ -104,6 +104,7 @@ public class CSynonymsEdit extends javax.swing.JDialog {
      * @param parent
      * @param sy
      * @param st 
+     * @param dat 
      */
     public CSynonymsEdit(java.awt.Frame parent, Synonyms sy, Settings st, Daten dat) {
         super(parent);

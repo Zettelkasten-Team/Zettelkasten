@@ -1,6 +1,6 @@
 /*
  * Zettelkasten - nach Luhmann
- ** Copyright (C) 2001-2013 by Daniel Lüdecke (http://www.danielluedecke.de)
+ ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
  * 
  * Homepage: http://zettelkasten.danielluedecke.de
  * 
@@ -213,10 +213,12 @@ public class StenoData {
     /**
      * This method checks whether text string {@code text} ends with one of the abbreviations
      * (steno words) in the steno data base. if any abbreviation was found at the end of
-     * {@code tex}, this abbreviation is returned, else {@code null} is returned.
+     * {@code text}, this abbreviation is returned, else {@code null} is returned.
      * 
-     * @param text
-     * @return 
+     * @param text a text fragment, which end may contain an abbreviation. If {@code text} ends with
+     * an abbreviation, this abbreviation is returned.
+     * @return a string with an abbreviation, if {@code text} ends with this abbreviation. {@code null}
+     * if {@code text} does not contain (end with) any abbreviation.
      */
     public String findAbbreviationFromText(String text) {
         // go through all existing steno abbreviations
@@ -245,9 +247,9 @@ public class StenoData {
      * This is needed to check how many chars before the current caret position in the edit window
      * have to be checked for the steno abbreviation
      * 
-     * @return 
+     * @return the length of the longest abbreviation
      */
-    public int retrieveLongestAbbr() {
+    public int retrieveLongestAbbrLength() {
         int longest = 0;
         for (int cnt=0; cnt<getCount(); cnt++) {
             String abbr = getAbbreviation(cnt);
@@ -261,8 +263,8 @@ public class StenoData {
     /**
      * This method returns the abbreviation of the steno element with the index number {@code nr}.
      * 
-     * @param nr
-     * @return 
+     * @param nr the index-number of the abbreviation that should be returned.
+     * @return the abbreviation in the XML document with the index {@code nr}
      */
     public String getAbbreviation(int nr) {
         String[] retval = getElement(nr);
@@ -273,6 +275,11 @@ public class StenoData {
     }
     
 
+    /**
+     * 
+     * @param abbr
+     * @return 
+     */
     public String getStenoWord(String abbr) {
         // get all elements
         List<Element> all = steno.getRootElement().getChildren();

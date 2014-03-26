@@ -1,6 +1,6 @@
 /*
  * Zettelkasten - nach Luhmann
- ** Copyright (C) 2001-2013 by Daniel Lüdecke (http://www.danielluedecke.de)
+ ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
  * 
  * Homepage: http://zettelkasten.danielluedecke.de
  * 
@@ -45,25 +45,25 @@ public class UpdateFileTask extends org.jdesktop.application.Task<Object, Void> 
     /**
      * Daten object, which contains the XML data of the Zettelkasten
      */
-    private Daten dataObj;
+    private final Daten dataObj;
     /**
      * DesktopData object, which contains the XML data of the desktop
      */
-    private DesktopData desktopObj;
-    private BibTex bibtexObj;
-    private boolean resetFrequencies;
+    private final DesktopData desktopObj;
+    private final BibTex bibtexObj;
+    private final boolean resetFrequencies;
     private int updateType;
     
-    private static int UPDATE_TYPE_DATABASE = 1 << 1;
-    private static int UPDATE_TYPE_BIBTEX = 1 << 2;
+    private static final int UPDATE_TYPE_DATABASE = 1 << 1;
+    private static final int UPDATE_TYPE_BIBTEX = 1 << 2;
 
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
 
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(UpdateFileTask.class);
 

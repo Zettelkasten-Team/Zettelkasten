@@ -1,6 +1,6 @@
 /*
  * Zettelkasten - nach Luhmann
- ** Copyright (C) 2001-2013 by Daniel Lüdecke (http://www.danielluedecke.de)
+ ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
  * 
  * Homepage: http://zettelkasten.danielluedecke.de
  * 
@@ -61,8 +61,8 @@ import org.jdesktop.application.Action;
  */
 public class CStenoEdit extends javax.swing.JDialog {
 
-    private StenoData stenoObj;
-    private Settings settingsObj;
+    private final StenoData stenoObj;
+    private final Settings settingsObj;
 
     private boolean modified = false;
     public boolean isModified() {
@@ -75,7 +75,7 @@ public class CStenoEdit extends javax.swing.JDialog {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CStenoEdit.class);
 
@@ -151,7 +151,7 @@ public class CStenoEdit extends javax.swing.JDialog {
         // create auto-sorter for tabel
         jTableSteno.setAutoCreateRowSorter(true);
         jTableSteno.setGridColor(settingsObj.getTableGridColor());
-        if (settingsObj.isMacStyle()) {
+        if (settingsObj.isMacAqua()) {
             TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
                 @Override
                 public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {

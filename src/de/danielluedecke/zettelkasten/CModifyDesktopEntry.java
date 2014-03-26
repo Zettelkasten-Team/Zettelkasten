@@ -1,6 +1,6 @@
 /*
  * Zettelkasten - nach Luhmann
- ** Copyright (C) 2001-2013 by Daniel Lüdecke (http://www.danielluedecke.de)
+ ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
  * 
  * Homepage: http://zettelkasten.danielluedecke.de
  * 
@@ -74,11 +74,11 @@ import org.jdesktop.application.Action;
  */
 public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowListener {
 
-    private Settings settingsObj;
-    private AutoKorrektur spellObj;
-    private StenoData stenoObj;
-    private AcceleratorKeys accKeys;
-    private DesktopFrame desktopframe;
+    private final Settings settingsObj;
+    private final AutoKorrektur spellObj;
+    private final StenoData stenoObj;
+    private final AcceleratorKeys accKeys;
+    private final DesktopFrame desktopframe;
     /**
      * An undo manager to undo/redo input from the main text field
      */
@@ -94,22 +94,30 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap = 
+    private final org.jdesktop.application.ResourceMap resourceMap = 
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CModifyDesktopEntry.class);
 
-    private javax.swing.ActionMap actionMap =
+    private final javax.swing.ActionMap actionMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getActionMap(CModifyDesktopEntry.class, this);
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap toolbarResourceMap = 
+    private final org.jdesktop.application.ResourceMap toolbarResourceMap = 
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(ToolbarIcons.class);
 
     
-    /** Creates new form CModifyDesktopEntry */
+    /**
+     * 
+     * @param parent
+     * @param s
+     * @param ak
+     * @param st
+     * @param acc
+     * @param content 
+     */
     @SuppressWarnings("LeakingThisInConstructor")
     public CModifyDesktopEntry(DesktopFrame parent, Settings s, AutoKorrektur ak, StenoData st, AcceleratorKeys acc, String content) {
 
@@ -805,11 +813,10 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
             // append the "open"-tag
             output.append("[l]");
             output.append(System.getProperty("line.separator"));
-            // now iterate the string array, looking for all lines
-            for (int cnt=0; cnt<lines.length; cnt++) {
+            for (String line : lines) {
                 // append the open/close-tags for the bullet points
                 // and put the line between these tags
-                output.append("[*]").append(lines[cnt]).append("[/*]");
+                output.append("[*]").append(line).append("[/*]");
                 output.append(System.getProperty("line.separator"));
             }
             // finally, append the close-tag

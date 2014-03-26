@@ -25,6 +25,7 @@ import javax.swing.border.Border;
 public class MacSourceList {
     /**
      * Create a SourceList style JList.
+     * @return 
      */
     public static JList createMacSourceList() {
         // currently this new list-property is disabled, because the rendering is too
@@ -82,7 +83,7 @@ public class MacSourceList {
     public static class CustomListCellRenderer extends JPanel
         implements ListCellRenderer {
 
-        private ListCellRenderer fDelegate;
+        private final ListCellRenderer fDelegate;
         private boolean fIsSelected;
         private boolean fIsFocused;
 

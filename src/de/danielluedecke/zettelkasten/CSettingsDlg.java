@@ -1,6 +1,6 @@
 /*
  * Zettelkasten - nach Luhmann
- ** Copyright (C) 2001-2013 by Daniel Lüdecke (http://www.danielluedecke.de)
+ ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
  * 
  * Homepage: http://zettelkasten.danielluedecke.de
  * 
@@ -76,23 +76,23 @@ public class CSettingsDlg extends javax.swing.JDialog {
     /**
      * Reference to the settings-class
      */
-    private Settings settings;
+    private final Settings settings;
     /**
      *
      */
-    private Daten dataObj;
+    private final Daten dataObj;
     /**
      * A reference to the auto-correction class
      */
-    private AutoKorrektur autokorrekt;
+    private final AutoKorrektur autokorrekt;
     /**
      * A reference to the steno-data class
      */
-    private StenoData stenoObj;
+    private final StenoData stenoObj;
     /**
      * 
      */
-    private Synonyms synonyms;
+    private final Synonyms synonyms;
     /**
      * Used to retrieve all installed look'n'feels...
      */
@@ -100,7 +100,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap = 
+    private final org.jdesktop.application.ResourceMap resourceMap = 
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CSettingsDlg.class);
     /**
@@ -182,7 +182,15 @@ public class CSettingsDlg extends javax.swing.JDialog {
     private boolean userPathChanges = false;
     private boolean pandocPathChanges = false;
 
-    /** Creates new form CSettingsDlg */
+    /**
+     * 
+     * @param parent
+     * @param s
+     * @param d
+     * @param ac
+     * @param sy
+     * @param stn 
+     */
     public CSettingsDlg(java.awt.Frame parent, Settings s, Daten d, AutoKorrektur ac, Synonyms sy, StenoData stn) {
         super(parent);
         // set application icon
@@ -900,7 +908,6 @@ public class CSettingsDlg extends javax.swing.JDialog {
         installed_laf = UIManager.getInstalledLookAndFeels();
         // and add them to the combobox
         for(int cnt=0; cnt<installed_laf.length; cnt++) {
-            jComboBoxLAF.addItem((installed_laf[cnt].getName()).toString());
             if (installed_laf[cnt].getClassName().equals(settings.getLookAndFeel())) lafselection = cnt;
         }
         jComboBoxLAF.addItem(Constants.seaGlassLookAndFeelClassName);

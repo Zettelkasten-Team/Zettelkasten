@@ -1,8 +1,35 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Zettelkasten - nach Luhmann
+ ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
+ * 
+ * Homepage: http://zettelkasten.danielluedecke.de
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation; either version 3 of 
+ * the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, see <http://www.gnu.org/licenses/>.
+ * 
+ * 
+ * Dieses Programm ist freie Software. Sie können es unter den Bedingungen der GNU
+ * General Public License, wie von der Free Software Foundation veröffentlicht, weitergeben
+ * und/oder modifizieren, entweder gemäß Version 3 der Lizenz oder (wenn Sie möchten)
+ * jeder späteren Version.
+ * 
+ * Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein 
+ * wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder 
+ * der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der 
+ * GNU General Public License.
+ * 
+ * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
+ * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 package de.danielluedecke.zettelkasten.tasks;
 
 import de.danielluedecke.zettelkasten.database.BibTex;
@@ -31,35 +58,35 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
     /**
      * Daten object, which contains the XML data of the Zettelkasten
      */
-    private Daten dataObj;
+    private final Daten dataObj;
     /**
      * CBookmark object, which contains the XML data of the entries' bookmarks
      */
-    private Bookmarks bookmarkObj;
+    private final Bookmarks bookmarkObj;
     /**
      * DesktopData object, which contains the XML data of the desktop
      */
-    private DesktopData desktopObj;
-    private Synonyms synonymsObj;
-    private BibTex bibtexObj;
+    private final DesktopData desktopObj;
+    private final Synonyms synonymsObj;
+    private final BibTex bibtexObj;
     /**
      * Settings object, which contains the setting, for instance the file paths etc...
      */
-    private Settings settingsObj;
+    private final Settings settingsObj;
     /**
      * SearchRequests object, which contains the XML data of the searchrequests and -result
      * that are related with this data file
      */
-    private SearchRequests searchrequestsObj;
+    private final SearchRequests searchrequestsObj;
 
     private boolean saveOk = true;
 
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(SaveFileTask.class);
 

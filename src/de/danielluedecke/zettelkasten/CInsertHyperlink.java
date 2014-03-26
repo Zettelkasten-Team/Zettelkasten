@@ -1,6 +1,34 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Zettelkasten - nach Luhmann
+ ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
+ * 
+ * Homepage: http://zettelkasten.danielluedecke.de
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation; either version 3 of 
+ * the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, see <http://www.gnu.org/licenses/>.
+ * 
+ * 
+ * Dieses Programm ist freie Software. Sie können es unter den Bedingungen der GNU
+ * General Public License, wie von der Free Software Foundation veröffentlicht, weitergeben
+ * und/oder modifizieren, entweder gemäß Version 3 der Lizenz oder (wenn Sie möchten)
+ * jeder späteren Version.
+ * 
+ * Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein 
+ * wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder 
+ * der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der 
+ * GNU General Public License.
+ * 
+ * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
+ * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
 package de.danielluedecke.zettelkasten;
 
@@ -30,7 +58,10 @@ public class CInsertHyperlink extends javax.swing.JDialog {
 
     private String hyperlink;
     /**
-     * Creates new form CInsertHyperlink
+     * 
+     * @param parent
+     * @param selection
+     * @param settingsObj 
      */
     public CInsertHyperlink(java.awt.Frame parent, String selection, Settings settingsObj) {
         super(parent);
@@ -69,7 +100,7 @@ public class CInsertHyperlink extends javax.swing.JDialog {
                 // first, copy clipboard to string
                 String text = content.getTransferData(DataFlavor.stringFlavor).toString().trim();
                 // check whether text starts with http
-                if (text.startsWith("http") && text.indexOf(".")!=-1) {
+                if (text.startsWith("http") && text.contains(".")) {
                     jTextFieldURL.setText(text);
                 }
             }
