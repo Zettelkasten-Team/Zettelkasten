@@ -84,7 +84,7 @@ public class SearchRequests {
     /**
      * 
      */
-    private LinkedList<String> searchTermsHistory = new LinkedList<String>();
+    private final LinkedList<String> searchTermsHistory = new LinkedList<String>();
     /**
      *
      */
@@ -92,7 +92,7 @@ public class SearchRequests {
     /**
      * Reference to the main frame.
      */
-    private ZettelkastenView zknframe;
+    private final ZettelkastenView zknframe;
     /**
      *
      */
@@ -445,6 +445,7 @@ public class SearchRequests {
      * 
      * @param nr the number of the searchrequest where we want to set the new results
      * @param results the new results for the searchrequest {@code nr}
+     * @return 
      */
     public boolean setSearchResults(int nr, int[] results) {
         // get the element

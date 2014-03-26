@@ -33,7 +33,7 @@
 
 /**
  * Swing Application Framework PlugIn für NetBeans 7.x
- * http://plugins.netbeans.org/plugin/43853/swing-application-framework-support
+ * http://plugins.netbeans.org/plugin/43836/swing-application-framework-support
  */
 
 package de.danielluedecke.zettelkasten;

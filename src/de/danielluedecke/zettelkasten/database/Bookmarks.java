@@ -64,12 +64,12 @@ public class Bookmarks {
     /**
      *
      */
-    private Settings settingsObj;
+    private final Settings settingsObj;
     private boolean modified;
     /**
      * Reference to the main frame.
      */
-    private ZettelkastenView zknframe;
+    private final ZettelkastenView zknframe;
     
     /**
      * &lt;bookmarks&gt;<br>
@@ -90,6 +90,8 @@ public class Bookmarks {
      * - cat, which refers to the category-id<br>
      * <br>
      * The text-value of each bookmark-element represents the comment for that bookmark.
+     * @param zkn
+     * @param s
      */
     public Bookmarks(ZettelkastenView zkn, Settings s) {
         zknframe = zkn;
@@ -394,6 +396,7 @@ public class Bookmarks {
      * This method sets the comment of a given bookmark "nr".
      * 
      * @param nr the bookmark-number of which comment should be changes
+     * @param c
      * @return false if element/bookmark does not exist, true if comment was successfully changed
      */
     public boolean setComment(int nr, String c) {
@@ -416,7 +419,7 @@ public class Bookmarks {
      * This method returns the comment of a given bookmark in HTML-Format. The bookmark-number which
      * comment should be retrieved, is passed via paramter (pos).
      * 
-     * @param pos the bookmark-number from which we want to retrieve the comment
+     * @param nr
      * @return a string containing the comment of a bookmark, formatted in HTML, or an empty string if no
      * comment existed
      */

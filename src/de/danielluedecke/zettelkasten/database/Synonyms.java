@@ -339,6 +339,7 @@ public class Synonyms {
      *
      * @param originalLine the index-number of the original line that should remain in the database
      * @param mergedLine the index-number of the synonym-line that should be appended to the original line.
+     * @return 
      */
     public boolean mergeSynonymLines(int originalLine, int mergedLine) {
         // check for valid parameters
@@ -420,7 +421,8 @@ public class Synonyms {
      * If a complete synonyme-line from <b>any word</b> is requested,
      * use {@link #getSynonymLineFromAny(java.lang.String) #getSynonymLineFromAny()}
      *
-     * @param string-value of the synonym (original- or index-word) which is searched for in the list
+     * @param indexword string-value of the synonym (original- or index-word) which is searched for in the list
+     * @param matchcase
      * @return a string-array with the first element being the index-word, and the following elements
      * being the related synonyms; or {@code null}, if no synonym was found
      */
@@ -518,6 +520,7 @@ public class Synonyms {
      *
      * @param synonym string-value of the synonym (wither original- or index-word, or any related synonym)
      * which is searched for in the list.
+     * @param matchcase
      * @return the position of the synonym or -1 if no match was found
      */
     public int findSynonym(String synonym, boolean matchcase) {
@@ -545,6 +548,7 @@ public class Synonyms {
      * an index-word, {@code true} is returned, {@code false} otherwise.
      *
      * @param synonym string-value which should be checked whether it is an index-word or not
+     * @param matchcase
      * @return {@code true} if the parameter {@code synonym} is an index-word, {@code false} otherwise
      */
     public boolean isIndexWord(String synonym, boolean matchcase) {
@@ -601,6 +605,7 @@ public class Synonyms {
      *
      * @param synonym string-value of the synonym (wither original- or index-word, or any related synonym)
      * which is searched for in the list.
+     * @param matchcase
      * @return the other related synonyms as string array, with the parameter {@code synonym} <b>included</b>,
      * or null if {@code synonym} wasn't found.
      */
@@ -620,25 +625,6 @@ public class Synonyms {
             }
         }
         return null;
-    }
-
-
-    /**
-     * This method returns the position of a given synonym in the XML file, independent from wether the requested
-     * word is an index-word or a related synonym. if the synonym doesn't exist, the return value is -1.
-     * <br><br>
-     * If the position from the <b>index-word</b> only is requested,
-     * use {@link #getSynonymPosition(java.lang.String) getSynonymPosition(java.lang.String)}.
-     *
-     * @deprecated use {@link #findSynonym(java.lang.String, boolean)} instead!
-     * @param synonym string-value of the synonym (whether original- or index-word, or any related synonym)
-     * which is searched for in the list.
-     * @return the position of the synonyms-line in the data-file
-     * or -1 if {@code synonym} wasn't found.
-     */
-    @Deprecated
-    public int getSynonymPositionFromAny(String synonym, boolean matchcase) {
-        return findSynonym(synonym, matchcase);
     }
     /**
      * sets the modified state of the bookmark-data

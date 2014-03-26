@@ -51,25 +51,25 @@ public class AcceleratorKeys {
      * This data is loaded and saved within the CSettings class. The data is get/set 
      * via getFile/setFile methods (see below)
      */
-    private Document acceleratorKeysMain;
+    private final Document acceleratorKeysMain;
     /**
      * The xml file which stores all accelerator key information of the new entry window.
      * This data is loaded and saved within the CSettings class. The data is get/set 
      * via getFile/setFile methods (see below)
      */
-    private Document acceleratorKeysNewEntry;
+    private final Document acceleratorKeysNewEntry;
     /**
      * The xml file which stores all accelerator key information of the desktop window.
      * This data is loaded and saved within the CSettings class. The data is get/set 
      * via getFile/setFile methods (see below)
      */
-    private Document acceleratorKeysDesktop;
+    private final Document acceleratorKeysDesktop;
     /**
      * The xml file which stores all accelerator key information of the search results window.
      * This data is loaded and saved within the CSettings class. The data is get/set 
      * via getFile/setFile methods (see below)
      */
-    private Document acceleratorKeysSearchResults;
+    private final Document acceleratorKeysSearchResults;
     /**
      * this is the mask key. on mac os, we ususally have the "meta"-key as mask,
      * on windows or linux, however, ctrl is used
@@ -1454,7 +1454,7 @@ public class AcceleratorKeys {
      * SEARCHRESULTSKEYS<br>
      *
      * @param what uses constants, see global field definition at top of source
-     * @param actioname the attribute (i.e. the action's name) we want to find
+     * @param actionname the attribute (i.e. the action's name) we want to find
      * @return the string containing the accelerator key or null if nothing was found
      */
     public String getAcceleratorKey(int what, String actionname) {

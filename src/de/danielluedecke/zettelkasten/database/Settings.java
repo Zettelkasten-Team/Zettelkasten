@@ -3473,6 +3473,7 @@ public class Settings {
     /**
      * Gets the settings, whether highlighting searchresults and keywords should highlight
      * the background, i.e. setting a background-color or not
+     * @param style
      * @return {@code true} if a background-color for highlighting should be shown, false otherwise
      */
     public boolean getShowHighlightBackground(int style) {
@@ -3529,6 +3530,7 @@ public class Settings {
     /**
      * Gets the settings, whether highlighting searchresults and keywords should highlight
      * the background, i.e. setting a background-color or not
+     * @param style
      * @return {@code true} if a background-color for highlighting should be shown, false otherwise
      */
     public String getHighlightBackgroundColor(int style) {
@@ -3554,7 +3556,8 @@ public class Settings {
     /**
      * Gets the settings, whether highlighting searchresults and keywords should highlight
      * the background, i.e. setting a background-color or not
-     * @param true if a background-color for highlighting should be shown, false otherwise
+     * @param col
+     * @param style
      */
     public void setHighlightBackgroundColor(String col, int style) {
         String hs_style;
@@ -3580,12 +3583,19 @@ public class Settings {
         el.setText(col);
     }
 
-    
+    /**
+     * 
+     * @return 
+     */
     public String getAppendixBackgroundColor() {
         Element el = settingsFile.getRootElement().getChild(SETTING_APPENDIXBACKGROUNDCOLOR);
         if (el!=null) return el.getText();
         return "f2f2f2";
     }
+    /**
+     * 
+     * @param col 
+     */
     public void setReflistBackgroundColor(String col) {
         Element el = settingsFile.getRootElement().getChild(SETTING_APPENDIXBACKGROUNDCOLOR);
         if (null==el) {
@@ -3594,11 +3604,19 @@ public class Settings {
         }
         el.setText(col);
     }
+    /**
+     * 
+     * @return 
+     */
     public String getTableHeaderColor() {
         Element el = settingsFile.getRootElement().getChild(SETTING_TABLEHEADERCOLOR);
         if (el!=null) return el.getText();
         return "e4e4e4";
     }
+    /**
+     * 
+     * @param col 
+     */
     public void setTableHeaderColor(String col) {
         Element el = settingsFile.getRootElement().getChild(SETTING_TABLEHEADERCOLOR);
         if (null==el) {
@@ -3607,11 +3625,19 @@ public class Settings {
         }
         el.setText(col);
     }
+    /**
+     * 
+     * @return 
+     */
     public String getTableRowEvenColor() {
         Element el = settingsFile.getRootElement().getChild(SETTING_TABLEEVENROWCOLOR);
         if (el!=null) return el.getText();
         return "eeeeee";
     }
+    /**
+     * 
+     * @param col 
+     */
     public void setTableRowEvenColor(String col) {
         Element el = settingsFile.getRootElement().getChild(SETTING_TABLEEVENROWCOLOR);
         if (null==el) {
@@ -3620,11 +3646,19 @@ public class Settings {
         }
         el.setText(col);
     }
+    /**
+     * 
+     * @return 
+     */
     public String getTableRowOddColor() {
         Element el = settingsFile.getRootElement().getChild(SETTING_TABLEODDROWCOLOR);
         if (el!=null) return el.getText();
         return "f8f8f8";
     }
+    /**
+     * 
+     * @param col 
+     */
     public void setTableRowOddColor(String col) {
         Element el = settingsFile.getRootElement().getChild(SETTING_TABLEODDROWCOLOR);
         if (null==el) {
@@ -3648,7 +3682,7 @@ public class Settings {
     /**
      * Sets the setting for the highlighting of search results. when activated, the search terms
      * in the search results window (CSearchResults) are highlighted.
-     * @param true if search terms should be highlighted
+     * @param val {@code true} if search terms should be highlighted
      */
     public void setHighlightSearchResults(boolean val) {
         Element el = settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTSEARCHRESULTS);
@@ -3673,7 +3707,7 @@ public class Settings {
     /**
      * Sets the setting for the highlighting of keywords in the main frame's entry-content. 
      * when activated, the keywords of an entry that appear in the entry-content are highlighted.
-     * @param true if keywords should be highlighted
+     * @param val {@code true} if keywords should be highlighted
      */
     public void setHighlightKeyword(boolean val) {
         Element el = settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTKEYWORDS);
@@ -3708,7 +3742,7 @@ public class Settings {
      * Sets the setting for showing an entry from the search results window immediatley.
      * when activated, a selected entry in the search results window is immediately displayed
      * in the main window.
-     * @param true if entry should be displayed at once
+     * @param val {@code true} if entry should be displayed at once
      */
     public void setShowSearchEntry(boolean val) {
         Element el = settingsFile.getRootElement().getChild(SETTING_SHOWSEARCHENTRY);
@@ -3758,7 +3792,7 @@ public class Settings {
     /**
      * Sets the setting whether a click on the footnotes should open the tab with the authorlist
      * and select the related author or not.
-     * @param true if footnote should show the related author in the tabbed pane
+     * @param val {@code true} if footnote should show the related author in the tabbed pane
      */
     public void setJumpFootnote(boolean val) {
         Element el = settingsFile.getRootElement().getChild(SETTING_JUMPFOOTNOTE);
@@ -3783,7 +3817,7 @@ public class Settings {
     /**
      * Sets the setting whether a search request should search in entries within a certain
      * date-range.
-     * @param true if search should look for entries with a certain date (timestamp)
+     * @param val {@code true} if search should look for entries with a certain date (timestamp)
      */
     public void setSearchTime(boolean val) {
         Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHTIME);
@@ -3808,7 +3842,7 @@ public class Settings {
     }
     /**
      * Sets the setting which logicalk-combination the user chose for the last search request.
-     * @param 0 if search was log-and; 1 for log-or and 2 for log-not.
+     * @param val 0 if search was log-and; 1 for log-or and 2 for log-not.
      */
     public void setSearchLog(int val) {
         Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHLOG);
@@ -3837,7 +3871,7 @@ public class Settings {
      * width of images which are displayed in the textfield. larger images are resized to fit
      * the preferred maximum size and a link to the original image is inserted.
      * 
-     * @param the preferred maximum width of an image
+     * @param val the preferred maximum width of an image
      */
     public void setImageResizeWidth(int val) {
         Element el = settingsFile.getRootElement().getChild(SETTING_IMGRESIZEWIDTH);
@@ -3866,7 +3900,7 @@ public class Settings {
      * width of images which are displayed in the textfield. larger images are resized to fit
      * the preferred maximum size and a link to the original image is inserted.
      * 
-     * @param the preferred maximum width of an image
+     * @param val the preferred maximum width of an image
      */
     public void setImageResizeHeight(int val) {
         Element el = settingsFile.getRootElement().getChild(SETTING_IMGRESIZEHEIGHT);
@@ -4040,7 +4074,7 @@ public class Settings {
      * Sets the setting for the thumbnail activation. This value indicates whether iamges
      * should always be display in original size, or whether large images should be resized
      * 
-     * @param whether thumbnail-display is enabled or not
+     * @param val whether thumbnail-display is enabled or not
      */
     public void setImageResize(boolean val) {
         Element el = settingsFile.getRootElement().getChild(SETTING_IMGRESIZE);
@@ -4144,6 +4178,7 @@ public class Settings {
     
     /**
      * Gets the spell-correction-variable. If true, the grids in lists and tables should be displayed.
+     * @return 
      */
     public boolean getSpellCorrect() {
         Element el = settingsFile.getRootElement().getChild(SETTING_SPELLCORRECT);
@@ -4175,7 +4210,7 @@ public class Settings {
     }
     /**
      * Sets the steno-variable. If true, steno is activated, false otherwise
-     * @param true if steno is activated, false otherwise
+     * @param val {@code true} if steno is activated, false otherwise
      */
     public void setStenoActivated(boolean val) {
         Element el = settingsFile.getRootElement().getChild(SETTING_STENOACTIVATED);

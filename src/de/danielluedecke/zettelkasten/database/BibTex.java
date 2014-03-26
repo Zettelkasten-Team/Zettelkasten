@@ -82,7 +82,7 @@ public class BibTex {
     /**
      * A reference to the settings-class (CSettings)
      */
-    private Settings settingsObj;
+    private final Settings settingsObj;
     /**
      * The main variable that stors the currently opened bibtex-file
      */
@@ -90,17 +90,17 @@ public class BibTex {
     /**
      * This array stores all single entries from the attached bibtex file {@code bibtexfile}.
      */
-    private ArrayList<BibtexEntry> attachedbibtexentries = new ArrayList<BibtexEntry>();
+    private final ArrayList<BibtexEntry> attachedbibtexentries = new ArrayList<BibtexEntry>();
     /**
      * This array stores all single entries from the attached bibtex file {@code bibtexfile}.
      */
-    private ArrayList<BibtexEntry> bibtexentries = new ArrayList<BibtexEntry>();
+    private final ArrayList<BibtexEntry> bibtexentries = new ArrayList<BibtexEntry>();
     /**
      * Thi array stores bibtex entries that should be exported. Since bibtex entries that should be
      * exported may contain only a selection of all bibtex entries of the currently opened bibtex
      * file, we use an extra array to store export entrie.
      */
-    private ArrayList<BibtexEntry> outputbibtexentries = new ArrayList<BibtexEntry>();
+    private final ArrayList<BibtexEntry> outputbibtexentries = new ArrayList<BibtexEntry>();
     /**
      * Stores the file path to the currently opened bibtex file.
      */
@@ -111,21 +111,21 @@ public class BibTex {
      * via {@link #getFormattedEntryFromAttachedFile(int) getFormattedEntryFromAttachedFile()}.
      * The bibtex entry (i.e. author value) is formatted according to the selected citation style.
      */
-    private List<Map<String, String>> importtypes = new ArrayList<Map<String, String>>();
+    private final List<Map<String, String>> importtypes = new ArrayList<Map<String, String>>();
     /**
      * Stores the <b>CBE</b> citation style.<br><br>
      * Used when the user requests a formatted bibtex entry
      * via {@link #getFormattedEntryFromAttachedFile(int) getFormattedEntryFromAttachedFile()}.
      * The bibtex entry (i.e. author value) is formatted according to the selected citation style.
      */
-    private List<Map<String, String>> importtypesCBE = new ArrayList<Map<String, String>>();
+    private final List<Map<String, String>> importtypesCBE = new ArrayList<Map<String, String>>();
     /**
      * Stores the <b>APA</b> citation style.<br><br>
      * Used when the user requests a formatted bibtex entry
      * via {@link #getFormattedEntryFromAttachedFile(int) getFormattedEntryFromAttachedFile()}.
      * The bibtex entry (i.e. author value) is formatted according to the selected citation style.
      */
-    private List<Map<String, String>> importtypesAPA = new ArrayList<Map<String, String>>();
+    private final List<Map<String, String>> importtypesAPA = new ArrayList<Map<String, String>>();
     /**
      * A variable indicating which citation-style is used when requesting a formatted bibtex-entry
      * (see {@link #getFormattedEntry(bibtex.dom.BibtexEntry) getFormattedEntryFromAttachedFile()}).
@@ -135,7 +135,7 @@ public class BibTex {
     /**
      * Reference to the main frame.
      */
-    private ZettelkastenView zknframe;
+    private final ZettelkastenView zknframe;
     /**
      * get the strings for file descriptions from the resource map
      */
@@ -453,6 +453,7 @@ public class BibTex {
     /**
      * 
      * @param be 
+     * @return  
      */
     public int setEntries(ArrayList<BibtexEntry> be) {
         int totalcount = 0;
@@ -623,8 +624,9 @@ public class BibTex {
      * is parsed into the private variable {@code bibtexfile}, which can be accessed via
      * {@link #getFile() getFile()}.
      *
+     * @param is
      * @param encoding the character encoding of the file. use values of the array
-     * {@code CConstants.BIBTEX_ENCODINGS} as parameter.
+     * {@code Constants.BIBTEX_ENCODINGS} as parameter.
      * @return {@code true} if attachedfile was successfully opened, {@code false} otherwise.
      */
     public boolean openFile(InputStream is, String encoding) {
@@ -730,8 +732,6 @@ public class BibTex {
      * entries and {@link #addBibtexEntryForExport(bibtex.dom.BibtexEntry) addBibtexEntryForExport(bibtex.dom.BibtexEntry)}
      * to add new entries to this list that should be exported.
      *
-     * @param fp the filepath and filename of the new bibtex-file that should be created, containing
-     * all entries which are currently saved to {@link #outputbibtexentries outputbibtexentries}.
      * @return {@code true} if entries have been successfully exported, {@code false} otherwise.
      */
     public ByteArrayOutputStream saveFile() {
@@ -782,7 +782,6 @@ public class BibTex {
     /**
      * This method returns the file name of the last used bibtex-file.
      * 
-     * @param f the filepath of the last used bibtext file
      * @return the name of the given file, excluding extension, or {@code null} if an error occured.
      */
     public String getFileName() {
@@ -978,7 +977,7 @@ public class BibTex {
     /**
      * This method returns the abstract or annotation of the entry {@code entrynr} from the currently
      * attached file.
-     * @param entrynr the entry-number of an entry within the currently attached bibtex-file
+     * @param bibkey
      * @return the related abstract, or null if no key or no such entry exists.
      */
     public String getAbstractFromAttachedFile(String bibkey) {
@@ -1048,7 +1047,7 @@ public class BibTex {
     /**
      * This method returns the keywords or annotation of the entry {@code entrynr} from the currently
      * attached file.
-     * @param entrynr the entry-number of an entry within the currently attached bibtex-file
+     * @param bibkey
      * @return the related keywords as string-array, or null if no keywords or no such entry exists.
      */
     public String[] getKeywordsFromAttachedFile(String bibkey) {
@@ -1076,7 +1075,7 @@ public class BibTex {
             // check whether keywords contain ; or , as separator-char
             String sep = (-1==keywordline.indexOf(";"))?",":";";
             // split keywords
-            keywords = keywordline.toString().split(sep);
+            keywords = keywordline.split(sep);
         }
         // in some cases, the field "keywords" is named "tags" instead. look for this
         // field if "keywords" does not exist
@@ -1089,7 +1088,7 @@ public class BibTex {
                 // check whether keywords contain ; or , as separator-char
                 String sep = (-1==keywordline.indexOf(";"))?",":";";
                 // split keywords
-                keywords = keywordline.toString().split(sep);
+                keywords = keywordline.split(sep);
             }
         }
         return keywords;

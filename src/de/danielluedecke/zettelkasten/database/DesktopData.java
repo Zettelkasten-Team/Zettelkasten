@@ -44,6 +44,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
+import org.jdom2.Content;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.IllegalAddException;
@@ -68,33 +69,33 @@ import org.jdom2.Parent;
  * After the entries, each bullet has possible new bullet-elements as child-elements. These bullet-element
  * indicate the next level of the outline, repeating the structure described here and above.
  * 
- * <desktops>
- *   <desktop name="MyFirstDesktop">
- *     <bullet name="Name of Bullet point">
- *       <omment>The comment of this bullet</comment>
- *       <entry id="4" timestamp="0901155107">A possible comment to the entry</entry>
- *       <entry id="11" timestamp="0901153112" />
- *       <entry id="17" timestamp="0901155313">A possible comment to the entry</entry>
- *       <bullet name="Name of Bullet Point">
- *         <comment />
- *         <entry id="14" timestamp="0902114301" />
- *         <entry id="1" timestamp="0901121313">A possible comment to the entry</entry>
- *         <entry id="23" timestamp="0901453208" />
- *         <entry id="35" timestamp="0902251714" />
- *         <bullet name="Name of Bullet Point">
- *           <comment />
- *           <entry id="40" timestamp="0902114301" />
- *           <entry id="44" timestamp="0902114301" />
- *         </bullet>
- *         <bullet name="Name of Bullet Point">
- *           <comment />
- *           <entry id="50" timestamp="0902114301" />
- *           <entry id="54" timestamp="0902114301" />
- *         </bullet>
- *       </bullet>
- *     </bullet>
- *   </desktop>
- * </desktops>
+ * &lt;desktops&gt;<br>
+ * &nbsp;&nbsp;&lt;desktop name="MyFirstDesktop"&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&lt;bullet name="Name of Bullet point"&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;omment&gt;The comment of this bullet&lt;/comment&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="4" timestamp="0901155107"&gt;A possible comment to the entry&lt;/entry&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="11" timestamp="0901153112" /&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="17" timestamp="0901155313"&gt;A possible comment to the entry&lt;/entry&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;bullet name="Name of Bullet Point"&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;comment /&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="14" timestamp="0902114301" /&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="1" timestamp="0901121313"&gt;A possible comment to the entry&lt;/entry&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="23" timestamp="0901453208" /&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="35" timestamp="0902251714" /&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;bullet name="Name of Bullet Point"&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;comment /&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="40" timestamp="0902114301" /&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="44" timestamp="0902114301" /&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bullet&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;bullet name="Name of Bullet Point"&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;comment /&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="50" timestamp="0902114301" /&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="54" timestamp="0902114301" /&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bullet&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bullet&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&lt;/bullet&gt;<br>
+ * &nbsp;&nbsp;&lt;/desktop&gt;<br>
+ * &lt;/desktops&gt;
  * 
  * @author danielludecke
  */
@@ -107,8 +108,8 @@ public class DesktopData {
     private boolean modified;
     private int timestampid = 0;
     private Element foundDesktopElement = null;
-    private static String TREE_FOLDING_EXPANDED = "expand";
-    private static String TREE_FOLDING_COLLAPSED = "collaps";
+    private static final String TREE_FOLDING_EXPANDED = "expand";
+    private static final String TREE_FOLDING_COLLAPSED = "collaps";
 
     public static String ATTR_TIMESTAMP = "timestamp";
     public static String ATTR_COMMENT = "comment";
@@ -139,7 +140,7 @@ public class DesktopData {
     /**
      * Reference to the main frame.
      */
-    private ZettelkastenView zknframe;
+    private final ZettelkastenView zknframe;
     /**
      *
      */
@@ -151,11 +152,12 @@ public class DesktopData {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap = 
+    private final org.jdesktop.application.ResourceMap resourceMap = 
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(DesktopFrame.class);
     
     /**
+     * @param zkn
      */
     public DesktopData(ZettelkastenView zkn) {
         zknframe = zkn;
@@ -359,6 +361,7 @@ public class DesktopData {
      * 
      * @param entries an integer-array containing the entry-numbers of those entries that should be
      * removed from the desktop
+     * @return 
      */
     public boolean deleteEntries(int[] entries) {
         // indicator for deletes entries
@@ -791,11 +794,11 @@ public class DesktopData {
             // set initial notes text, if we have any...
             if (notes!=null && notes.length>0) {
                 // check for array-length before setting text
-                if (notes.length>0) n1.setText(notes[0].toString());
+                if (notes.length>0) n1.setText(notes[0]);
                 // check for array-length before setting text
-                if (notes.length>1) n2.setText(notes[1].toString());
+                if (notes.length>1) n2.setText(notes[1]);
                 // check for array-length before setting text
-                if (notes.length>2) n3.setText(notes[2].toString());
+                if (notes.length>2) n3.setText(notes[2]);
             }
             // add notes-sub-elements
             desk.addContent(n1);
@@ -1307,6 +1310,7 @@ public class DesktopData {
      * If it was found, the comment as string will be returned.
      *
      * @param timestamp
+     * @param linesep
      * @return a string containing the comment, or an empty string if no comment was found
      */
     public String getComment(String timestamp, String linesep) {
@@ -1331,9 +1335,7 @@ public class DesktopData {
      * given in the linked list parameter <i>tp</i>. This parameter contains the treepath to
      * the selected element.
      * 
-     * @param tp the treepath to the selected element in the jTree, stored in a linked string list
-     * @param isBullet whether the selected element is a bullet or not. must be checked from the
-     * CDesktop-frame.
+     * @param timestamp
      * @param comment a string containing the comment
      * @return {@code true} if comment was successfully set, {@code false} if an error occured.
      */
@@ -1514,7 +1516,7 @@ public class DesktopData {
                     // check for valid value
                     if (att!=null) {
                         // get entry-number
-                        int enr = Integer.parseInt(att.toString());
+                        int enr = Integer.parseInt(att);
                         // sort list so we can search whether entry-number already exists
                         Collections.sort(retrieveList);
                         // search for double entries
@@ -1624,13 +1626,12 @@ public class DesktopData {
      */
     private Element retrieveModifiedEntryElementFromTimestamp(String timestamp) {
         // retrieve all elements
-        List<?> elementList = modifiedEntries.getRootElement().getContent();
+        List<Content> elementList = modifiedEntries.getRootElement().getContent();
         // when we have any content, go on...
         if (elementList.size()>0) {
-            // iterate all elements
-            for (int cnt=0; cnt<elementList.size(); cnt++) {
+            for (Content elementList1 : elementList) {
                 // retrieve each single element
-                Element e = (Element)elementList.get(cnt);
+                Element e = (Element) elementList1;
                 // retrieve timestamp-attribute
                 String att = e.getAttributeValue(ATTR_TIMESTAMP);
                 // compare timestamp-attribute-value to timestamp-parameter
@@ -1959,7 +1960,7 @@ public class DesktopData {
         if (att!=null) {
             try {
                 // get entry-number
-                return Integer.parseInt(att.toString());
+                return Integer.parseInt(att);
             }
             catch (NumberFormatException ex) {
                 return -1;

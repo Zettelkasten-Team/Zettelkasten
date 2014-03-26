@@ -4969,6 +4969,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * the desktop after program-startup: the desktop is initiated, but the jEditorPane should not be
      * filled with entries at that moment, because it might take too long for the startup. instead,
      * we will do the update of the isplay later, when the window becomes visible.
+     * @return 
      */
     public boolean isNeedsUpdate() {
         return needsUpdate;
@@ -4979,6 +4980,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * the desktop after program-startup: the desktop is initiated, but the jEditorPane should not be
      * filled with entries at that moment, because it might take too long for the startup. instead,
      * we will do the update of the isplay later, when the window becomes visible.
+     * @param b
      */
     public void setNeedsUpdate(boolean b) {
         boolean old = isNeedsUpdate();
@@ -4993,6 +4995,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      * This variable indicates whether or not the fullscreen mode is supportet
      * on the current system. if not, disable related icons...
+     * @return 
      */
     public boolean isFullScreenSupp() {
         return fullScreenSupp;
@@ -5000,6 +5003,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      * This variable indicates whether or not the fullscreen mode is supportet
      * on the current system. if not, disable related icons...
+     * @param b
      */
     public void setFullScreenSupp(boolean b) {
         boolean old = isFullScreenSupp();
@@ -5014,6 +5018,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      * This variable indicates whether the user has selected a node at the very first position.
      * depending on this, the action to move an entry/bullet up is en-/disabled.
+     * @return 
      */
     public boolean isMoveUpEnabled() {
         return moveUpEnabled;
@@ -5021,6 +5026,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      * This variable indicates whether the user has selected a node at the very first position.
      * depending on this, the action to move an entry/bullet up is en-/disabled.
+     * @param b
      */
     public void setMoveUpEnabled(boolean b) {
         boolean old = isMoveUpEnabled();
@@ -5035,6 +5041,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      * This variable indicates whether the user has selected a node at the very last position.
      * depending on this, the action to move an entry/bullet down is en-/disabled.
+     * @return 
      */
     public boolean isMoveDownEnabled() {
         return moveDownEnabled;
@@ -5042,6 +5049,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      * This variable indicates whether the user has selected a node at the very last position.
      * depending on this, the action to move an entry/bullet down is en-/disabled.
+     * @param b
      */
     public void setMoveDownEnabled(boolean b) {
         boolean old = isMoveDownEnabled();
