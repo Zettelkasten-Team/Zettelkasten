@@ -192,6 +192,7 @@ public class ZettelkastenViewUtil {
      *
      * @param table the table were we have to add a new value with frequency
      * @param list the possible linked list were we have to add a new value with frequency
+     * @param zettelkastenView
      * @return an updated linked list that was passed as parameter {@code list}
      */
     public static LinkedList<Object[]> updateTableFrequencyRemove(JTable table, LinkedList<Object[]> list, ZettelkastenView zettelkastenView) {
@@ -232,6 +233,7 @@ public class ZettelkastenViewUtil {
      * This method retrieves the entry-number of the first selected entry in the tabbed pane
      * with the a jTable
      *
+     * @param data
      * @param table a reference to the swing-table, from which we want to retrieve the entry
      * @param column the column which holds the entry-numbers. in most cases this is column 0, but some
      * tables store the entry-numbers in column 1
@@ -262,6 +264,7 @@ public class ZettelkastenViewUtil {
      * This method retrieves the entry-numbers of all selected entries in the tabbed pane
      * with the a jTable
      *
+     * @param data
      * @param table a reference to the swing-table, from which we want to retrieve the entry
      * @param column the column which holds the entry-numbers. in most cases this is column 0, but some
      * tables store the entry-numbers in column 1
@@ -309,6 +312,16 @@ public class ZettelkastenViewUtil {
      * - {@code usb}: copies the settings-files to the current application's directory. this
      * is helpful when the user wants a portable version, so the settings-files can be copied
      * to the usb-flash-device.
+     * 
+     * @param mainframe
+     * @param jTextFieldEntryNumber
+     * @param data
+     * @param searchrequests
+     * @param desktop
+     * @param settings
+     * @param acceleratorKeys
+     * @param bibtex
+     * @param displayedZettel 
      */
     public static void hiddenFeatures(ZettelkastenView mainframe, javax.swing.JTextField jTextFieldEntryNumber, Daten data, SearchRequests searchrequests, DesktopData desktop, Settings settings, AcceleratorKeys acceleratorKeys, BibTex bibtex, int displayedZettel) {
         // here we have some "hidden features".

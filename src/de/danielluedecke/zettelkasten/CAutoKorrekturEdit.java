@@ -64,11 +64,11 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
     /**
      * A reference to the auto-correction class
      */
-    private AutoKorrektur autoKorrekt;
+    private final AutoKorrektur autoKorrekt;
     /**
      * 
      */
-    private Settings settingsObj;
+    private final Settings settingsObj;
     /**
      *
      */
@@ -80,12 +80,17 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CAutoKorrekturEdit.class);
 
     
-    /** Creates new form CAutoKorrekturEdit */
+    /**
+     * 
+     * @param parent
+     * @param ac
+     * @param st 
+     */
     public CAutoKorrekturEdit(java.awt.Frame parent, AutoKorrektur ac, Settings st) {
         super(parent);
         settingsObj = st;
@@ -95,7 +100,13 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
     }
 
 
-    /** Creates new form CAutoKorrekturEdit */
+    /**
+     * 
+     * @param parent
+     * @param ac
+     * @param st
+     * @param wrongspelling 
+     */
     public CAutoKorrekturEdit(java.awt.Frame parent, AutoKorrektur ac, Settings st, String wrongspelling) {
         super(parent);
         autoKorrekt = ac;

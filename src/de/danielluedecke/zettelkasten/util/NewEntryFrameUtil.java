@@ -129,9 +129,9 @@ public class NewEntryFrameUtil {
     }
 
     /**
-     *
-     * @param tag
-     * @return
+     * 
+     * @param ta
+     * @param key 
      */
     public static void autoCompleteTags(javax.swing.JTextArea ta, char key) {
         if (']' == key) {

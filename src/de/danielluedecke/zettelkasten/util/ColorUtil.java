@@ -142,6 +142,8 @@ public class ColorUtil {
 
     /**
      * Color value, needed for setting border-color of the matte-top and -bottom-border
+     * @param settings
+     * @return 
      */
     public static Color getBorderGray(Settings settings) {
         if (settings.isMacAqua()) {

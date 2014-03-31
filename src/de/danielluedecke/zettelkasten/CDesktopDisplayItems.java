@@ -74,9 +74,13 @@ public class CDesktopDisplayItems extends javax.swing.JDialog {
     /**
      * Reference to the settings class
      */
-    private Settings settingsObj;
+    private final Settings settingsObj;
     
-    /** Creates new form CDesktopDisplayItems */
+    /**
+     * wm, 
+     * @param parent
+     * @param s 
+     */
     public CDesktopDisplayItems(java.awt.Frame parent, Settings s) {
         super(parent);
         initComponents();

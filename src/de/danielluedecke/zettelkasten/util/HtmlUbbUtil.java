@@ -347,7 +347,7 @@ public class HtmlUbbUtil {
             LinkedList<String> remainingAuthors = new LinkedList<String>();
             remainingAuthors.addAll(Arrays.asList(authors));
             // extract footnotes.
-            LinkedList<String> footnotes = Tools.extractFootnotesFromContent(content.toString());
+            LinkedList<String> footnotes = Tools.extractFootnotesFromContent(content);
             // now we have all footnotes, i.e. the author-index-numbers, in the linked
             // list. now we can create a reference list
             if (footnotes.size()>0) {

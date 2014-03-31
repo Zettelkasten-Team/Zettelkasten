@@ -313,163 +313,173 @@ public class Tools {
 // }
         // here comes the part which depends on the desktop-api
         else {
-            // check whether linktype is a hyperlink
-            if (FileOperationsUtil.isHyperlink(linktype)) {
-                try {
-                    if (settings.getUseXDGOpen() && PlatformUtil.isLinux()) {
-                        Runtime.getRuntime().exec("xdg-open "+linktype);
-                        Constants.zknlogger.log(Level.INFO, "Using xdg-open with URL {0}", linktype);
-                    }
-                    // check whether desktop is supported
-                    else if (Desktop.isDesktopSupported()) {
-                        // get the desktop
-                        Desktop desk = Desktop.getDesktop();
-                        // if yes, proceed...
-                        // check whether opening a browser is supported or not...
-                        if (!desk.isSupported(Desktop.Action.BROWSE)) {
-                            // display error message box
-                            JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkUnsopportedMsg"),resourceMap.getString("errLinkUnsopportedTitle"),JOptionPane.PLAIN_MESSAGE);
-                            Constants.zknlogger.log(Level.WARNING, "Desktop.Action.BROWSE not supported!");
-                            return null;
-                        }
-                        desk.browse(new URI(linktype));
-                        Constants.zknlogger.log(Level.INFO, "Using desktop api with URL {0}", linktype);
-                    }
-                    // check whether we have windows os. if yes, use runtime exec instead of desktop
-                    else {
-                        Constants.zknlogger.log(Level.WARNING, "Desktop-API not supported!");
-                        if (PlatformUtil.isWindows()) {
-                            Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL \""+linktype+"\"");
-                            Constants.zknlogger.log(Level.INFO, "Using rundll32 with URL {0}", linktype);
-                            // Runtime.getRuntime().exec("cmd /c start \""+linktype+"\"");
-                        }
-                        else if(PlatformUtil.isLinux()) {
-                            Runtime.getRuntime().exec("xdg-open "+linktype);
-                            Constants.zknlogger.log(Level.INFO, "Using xdg-open with URL {0}", linktype);
-                        }
-                    }
-                }
-                catch (IOException e) {
-                    // display error message box
-                    JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkNotFoundMsg",linktype),resourceMap.getString("errLinkNotFoundTitle"),JOptionPane.PLAIN_MESSAGE);
-                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-                }
-                catch (URISyntaxException e) {
-                    // display error message box
-                    JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkSyntaxMsg"),resourceMap.getString("errLinkSyntaxTitle"),JOptionPane.PLAIN_MESSAGE);
-                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-                }
-                catch (SecurityException e) {
-                    // display error message box
-                    JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkNoAccessMsg"),resourceMap.getString("errLinkNoAccessTitle"),JOptionPane.PLAIN_MESSAGE);
-                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-                }
-            }
-            // linktype seems to be a file
-            else {
-                File linkfile;
-                File linuxpath;
-                // create file from the link
-                linkfile = FileOperationsUtil.getLinkFile(settings,data,linktype);
-                // create path for linux with "file://" at beginning of string
-                linuxpath = linkfile;
-                // check whether path contains space chars
-                if (linuxpath.toString().contains(" ")) {
-                    // if it fails, try to convert spaces with "%20"
-                    linuxpath = new File(linuxpath.toString().replaceAll(Pattern.quote(" "), Matcher.quoteReplacement("%20")));
-                }
-                try {
-                    // check whether desktop-api is supported
-                    if (Desktop.isDesktopSupported()) {
-                        // get the desktop
-                        Desktop desk = Desktop.getDesktop();
-                        // if yes, proceed...
-                        // if the string starts with "mailto:", we assume we have an email-link
-                        if (linktype.startsWith("mailto:")) {
-                            // check whether opening a browser is supported or not...
-                            if (!desk.isSupported(Desktop.Action.MAIL)) {
-                                // display error message box
-                                JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkUnsopportedMsg"),resourceMap.getString("errLinkUnsopportedTitle"),JOptionPane.PLAIN_MESSAGE);
-                                return null;
-                            }
-                            desk.mail(new URI(linktype));
-                        }
-                        else {
-                            // check whether opening a file is supported or not
-                            if (!desk.isSupported(Desktop.Action.OPEN) || PlatformUtil.isWindows()) {
-                                // check whether we have windows os. if yes, use runtime exec instead of desktop
-                                if (PlatformUtil.isWindows()) {
-                                    Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL \""+linkfile.toString()+"\"");
-                                    Constants.zknlogger.log(Level.INFO, "Using rundll32 with filepath {0}", linkfile);
-                                }
-                                else if(PlatformUtil.isLinux()) {
-                                    Runtime.getRuntime().exec("xdg-open file://"+linuxpath.getPath());
-                                    Constants.zknlogger.log(Level.INFO, "Using xdg-open with filepath {0}", linuxpath.getPath());
-                                }
-                             }
-                            else {
-                                if(PlatformUtil.isLinux()) {
-                                    if (settings.getUseXDGOpen()) {
-                                        Runtime.getRuntime().exec("xdg-open file://"+linuxpath.getPath());
-                                        Constants.zknlogger.log(Level.INFO, "Using xdg-open with filepath {0}", linuxpath.getPath());
-                                    }
-                                    else {
-                                        desk.open(linkfile);
-                                        Constants.zknlogger.log(Level.INFO, "Using dekstop api with filepath {0}", linkfile.getPath());
-                                    }
-                                }
-                                else {
-                                    desk.open(linkfile);
-                                    Constants.zknlogger.log(Level.INFO, "Using desktop api with filepath {0}", linkfile.getPath());
-                                }
-                            }
-                        }
-                    }
-                    // check whether we have windows os. if yes, use runtime exec instead of desktop
-                    else {
-                        Constants.zknlogger.log(Level.WARNING, "Desktop-API not supported!");
-                        if (PlatformUtil.isWindows()) {
-                            Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL \""+linktype.toString()+"\"");
-                            Constants.zknlogger.log(Level.INFO, "Using rundll32 with filepath {0}", linktype.toString());
-                            // Runtime.getRuntime().exec("cmd /c start \""+linktype+"\"");
-                        }
-                        else if(PlatformUtil.isLinux()) {
-                            Runtime.getRuntime().exec("xdg-open file://"+linuxpath.getPath());
-                            Constants.zknlogger.log(Level.INFO, "Using xdg-open with filepath {0}", linuxpath.getPath());
-                        }
-                    }
-                }
-                catch (IOException e) {
-                    // display error message box
-                    JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkNotFoundMsg",(linkfile!=null)?linkfile.toString():resourceMap.getString("linkFileUnknown")),resourceMap.getString("errLinkNotFoundTitle"),JOptionPane.PLAIN_MESSAGE);
-                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-                }
-                catch (IllegalArgumentException e) {
-                    // display error message box
-                    JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkNotFoundMsg",(linkfile!=null)?linkfile.toString():resourceMap.getString("linkFileUnknown")),resourceMap.getString("errLinkNotFoundTitle"),JOptionPane.PLAIN_MESSAGE);
-                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-                }
-                catch (SecurityException e) {
-                    // display error message box
-                    JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkNoAccessMsg"),resourceMap.getString("errLinkNoAccessTitle"),JOptionPane.PLAIN_MESSAGE);
-                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-                }
-                catch (HeadlessException e) {
-                    // display error message box
-                    JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkUnsopportedMsg"),resourceMap.getString("errLinkUnsopportedTitle"),JOptionPane.PLAIN_MESSAGE);
-                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-                }
-                catch (URISyntaxException e) {
-                    // display error message box
-                    JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkSyntaxMsg"),resourceMap.getString("errLinkSyntaxTitle"),JOptionPane.PLAIN_MESSAGE);
-                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-                }
-            }
+            launchFile(linktype, frame, data, settings);
         }
         return null;
     }
 
 
+    /**
+     * 
+     * @param linktype
+     * @param frame
+     * @param data
+     * @param settings 
+     */
+    public static void launchFile(String linktype, Frame frame, Daten data, Settings settings) {
+        // check whether linktype is a hyperlink
+        if (FileOperationsUtil.isHyperlink(linktype)) {
+            try {
+                if (settings.getUseXDGOpen() && PlatformUtil.isLinux()) {
+                    Runtime.getRuntime().exec("xdg-open "+linktype);
+                    Constants.zknlogger.log(Level.INFO, "Using xdg-open with URL {0}", linktype);
+                }
+                // check whether desktop is supported
+                else if (Desktop.isDesktopSupported()) {
+                    // get the desktop
+                    Desktop desk = Desktop.getDesktop();
+                    // if yes, proceed...
+                    // check whether opening a browser is supported or not...
+                    if (!desk.isSupported(Desktop.Action.BROWSE)) {
+                        // display error message box
+                        JOptionPane.showMessageDialog(frame, resourceMap.getString("errLinkUnsopportedMsg"),resourceMap.getString("errLinkUnsopportedTitle"),JOptionPane.PLAIN_MESSAGE);
+                        Constants.zknlogger.log(Level.WARNING, "Desktop.Action.BROWSE not supported!");
+                    }
+                    desk.browse(new URI(linktype));
+                    Constants.zknlogger.log(Level.INFO, "Using desktop api with URL {0}", linktype);
+                }
+                // check whether we have windows os. if yes, use runtime exec instead of desktop
+                else {
+                    Constants.zknlogger.log(Level.WARNING, "Desktop-API not supported!");
+                    if (PlatformUtil.isWindows()) {
+                        Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL \""+linktype+"\"");
+                        Constants.zknlogger.log(Level.INFO, "Using rundll32 with URL {0}", linktype);
+                        // Runtime.getRuntime().exec("cmd /c start \""+linktype+"\"");
+                    }
+                    else if(PlatformUtil.isLinux()) {
+                        Runtime.getRuntime().exec("xdg-open "+linktype);
+                        Constants.zknlogger.log(Level.INFO, "Using xdg-open with URL {0}", linktype);
+                    }
+                }
+            }
+            catch (IOException e) {
+                // display error message box
+                JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkNotFoundMsg",linktype),resourceMap.getString("errLinkNotFoundTitle"),JOptionPane.PLAIN_MESSAGE);
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+            }
+            catch (URISyntaxException e) {
+                // display error message box
+                JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkSyntaxMsg"),resourceMap.getString("errLinkSyntaxTitle"),JOptionPane.PLAIN_MESSAGE);
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+            }
+            catch (SecurityException e) {
+                // display error message box
+                JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkNoAccessMsg"),resourceMap.getString("errLinkNoAccessTitle"),JOptionPane.PLAIN_MESSAGE);
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+            }
+        }
+        // linktype seems to be a file
+        else {
+            File linkfile;
+            File linuxpath;
+            // create file from the link
+            linkfile = FileOperationsUtil.getLinkFile(settings, data, linktype);
+            // create path for linux with "file://" at beginning of string
+            linuxpath = linkfile;
+            // check whether path contains space chars
+            if (linuxpath.toString().contains(" ")) {
+                // if it fails, try to convert spaces with "%20"
+                linuxpath = new File(linuxpath.toString().replaceAll(Pattern.quote(" "), Matcher.quoteReplacement("%20")));
+            }
+            try {
+                // check whether desktop-api is supported
+                if (Desktop.isDesktopSupported()) {
+                    // get the desktop
+                    Desktop desk = Desktop.getDesktop();
+                    // if yes, proceed...
+                    // if the string starts with "mailto:", we assume we have an email-link
+                    if (linktype.startsWith("mailto:")) {
+                        // check whether opening a browser is supported or not...
+                        if (!desk.isSupported(Desktop.Action.MAIL)) {
+                            // display error message box
+                            JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkUnsopportedMsg"),resourceMap.getString("errLinkUnsopportedTitle"),JOptionPane.PLAIN_MESSAGE);
+                        }
+                        desk.mail(new URI(linktype));
+                    }
+                    else {
+                        // check whether opening a file is supported or not
+                        if (!desk.isSupported(Desktop.Action.OPEN) || PlatformUtil.isWindows()) {
+                            // check whether we have windows os. if yes, use runtime exec instead of desktop
+                            if (PlatformUtil.isWindows()) {
+                                Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL \""+linkfile.toString()+"\"");
+                                Constants.zknlogger.log(Level.INFO, "Using rundll32 with filepath {0}", linkfile);
+                            }
+                            else if(PlatformUtil.isLinux()) {
+                                Runtime.getRuntime().exec("xdg-open file://"+linuxpath.getPath());
+                                Constants.zknlogger.log(Level.INFO, "Using xdg-open with filepath {0}", linuxpath.getPath());
+                            }
+                         }
+                        else {
+                            if(PlatformUtil.isLinux()) {
+                                if (settings.getUseXDGOpen()) {
+                                    Runtime.getRuntime().exec("xdg-open file://"+linuxpath.getPath());
+                                    Constants.zknlogger.log(Level.INFO, "Using xdg-open with filepath {0}", linuxpath.getPath());
+                                }
+                                else {
+                                    desk.open(linkfile);
+                                    Constants.zknlogger.log(Level.INFO, "Using dekstop api with filepath {0}", linkfile.getPath());
+                                }
+                            }
+                            else {
+                                desk.open(linkfile);
+                                Constants.zknlogger.log(Level.INFO, "Using desktop api with filepath {0}", linkfile.getPath());
+                            }
+                        }
+                    }
+                }
+                // check whether we have windows os. if yes, use runtime exec instead of desktop
+                else {
+                    Constants.zknlogger.log(Level.WARNING, "Desktop-API not supported!");
+                    if (PlatformUtil.isWindows()) {
+                        Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL \""+linktype+"\"");
+                        Constants.zknlogger.log(Level.INFO, "Using rundll32 with filepath {0}", linktype);
+                        // Runtime.getRuntime().exec("cmd /c start \""+linktype+"\"");
+                    }
+                    else if(PlatformUtil.isLinux()) {
+                        Runtime.getRuntime().exec("xdg-open file://"+linuxpath.getPath());
+                        Constants.zknlogger.log(Level.INFO, "Using xdg-open with filepath {0}", linuxpath.getPath());
+                    }
+                }
+            }
+            catch (IOException e) {
+                // display error message box
+                JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkNotFoundMsg",(linkfile!=null)?linkfile.toString():resourceMap.getString("linkFileUnknown")),resourceMap.getString("errLinkNotFoundTitle"),JOptionPane.PLAIN_MESSAGE);
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+            }
+            catch (IllegalArgumentException e) {
+                // display error message box
+                JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkNotFoundMsg",(linkfile!=null)?linkfile.toString():resourceMap.getString("linkFileUnknown")),resourceMap.getString("errLinkNotFoundTitle"),JOptionPane.PLAIN_MESSAGE);
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+            }
+            catch (SecurityException e) {
+                // display error message box
+                JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkNoAccessMsg"),resourceMap.getString("errLinkNoAccessTitle"),JOptionPane.PLAIN_MESSAGE);
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+            }
+            catch (HeadlessException e) {
+                // display error message box
+                JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkUnsopportedMsg"),resourceMap.getString("errLinkUnsopportedTitle"),JOptionPane.PLAIN_MESSAGE);
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+            }
+            catch (URISyntaxException e) {
+                // display error message box
+                JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkSyntaxMsg"),resourceMap.getString("errLinkSyntaxTitle"),JOptionPane.PLAIN_MESSAGE);
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+            }
+        }
+    }
+    
+    
     /**
      * This method checks the content of {@code content} for valid HTML and returns {@code true}
      * if the content could be parsed t HTML. With this, we check whether an entry makes use of correct
@@ -987,9 +997,8 @@ public class Tools {
         if (synkeywords.size()>0) {
             // prepare option-message
             StringBuilder msg = new StringBuilder("");
-            // append all found keywords to that message
-            for (int cnt=0; cnt<synkeywords.size(); cnt++) {
-                msg.append("<br>" + "- <b>").append(synkeywords.get(cnt)).append("</b> <i>(Index-Synonym: ").append(synonymsObj.getIndexWord(synkeywords.get(cnt), true)).append(")</i>");
+            for (String synkeyword : synkeywords) {
+                msg.append("<br>" + "- <b>").append(synkeyword).append("</b> <i>(Index-Synonym: ").append(synonymsObj.getIndexWord(synkeyword, true)).append(")</i>");
             }
             // show option pane
             int option = JOptionPane.showConfirmDialog(null, resourceMap.getString("replaceSynonymsWithKeywordsMsg",msg.toString()), resourceMap.getString("replaceSynonymsWithKeywordsTitle"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);

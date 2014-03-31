@@ -53,7 +53,11 @@ import javax.swing.event.HyperlinkEvent;
  */
 public class AboutBox extends javax.swing.JDialog {
 
-    /** Creates new form CAboutBox */
+    /**
+     * 
+     * @param parent
+     * @param ismacaqua 
+     */
     public AboutBox(java.awt.Frame parent, boolean ismacaqua) {
         super(parent);
         initComponents();
