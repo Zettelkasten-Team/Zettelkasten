@@ -908,6 +908,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         installed_laf = UIManager.getInstalledLookAndFeels();
         // and add them to the combobox
         for(int cnt=0; cnt<installed_laf.length; cnt++) {
+            jComboBoxLAF.addItem((installed_laf[cnt].getName()));
             if (installed_laf[cnt].getClassName().equals(settings.getLookAndFeel())) lafselection = cnt;
         }
         jComboBoxLAF.addItem(Constants.seaGlassLookAndFeelClassName);

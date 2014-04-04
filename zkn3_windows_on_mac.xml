@@ -29,11 +29,11 @@
     <timeoutErr>true</timeoutErr>
   </splash>
   <versionInfo>
-    <fileVersion>3.2.4.1</fileVersion>
+    <fileVersion>3.2.4.2</fileVersion>
     <txtFileVersion>Zettelkasten 3</txtFileVersion>
     <fileDescription>Zettelkasten - nach Niklas Luhmann</fileDescription>
     <copyright>Daniel Luedecke</copyright>
-    <productVersion>3.2.4.1</productVersion>
+    <productVersion>3.2.4.2</productVersion>
     <txtProductVersion>Zettelkasten 3</txtProductVersion>
     <productName>Zettelkasten</productName>
     <companyName>Daniel Luedecke</companyName>
