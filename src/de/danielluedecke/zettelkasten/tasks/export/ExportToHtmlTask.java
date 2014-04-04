@@ -43,14 +43,15 @@ import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
 import de.danielluedecke.zettelkasten.util.PlatformUtil;
 import de.danielluedecke.zettelkasten.util.TreeUtil;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import javax.swing.JOptionPane;
@@ -407,31 +408,48 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
             }
             // continue if export is ok
             if (exportOk && !temppath.isEmpty() && fn!=null) {
-                // start pandoc for conversion
-                Runtime rt = Runtime.getRuntime();
-                Process pr = null;
-                BufferedReader perrstream;
                 // create output filename
                 File outfn = new File(temppath+FileOperationsUtil.getFileName(filepath)+"."+outformat);
+                // create argument list
+                List<String> args = Arrays.asList(settingsObj.getPandocPath(), "-f", "html" ,"-t", outformat, "-o", outfn.getAbsolutePath(), fn.getAbsolutePath());
+                // start pandoc for conversion
+                ProcessBuilder pb = new ProcessBuilder(args);
+                // log parameter, for debugging
+                Constants.zknlogger.log(Level.INFO, Arrays.toString(args.toArray(new String[args.size()])));
+                // ste process working dir
+                pb = pb.directory(fn.getParentFile());
+                pb = pb.redirectInput(ProcessBuilder.Redirect.PIPE).redirectError(ProcessBuilder.Redirect.PIPE);
                 // log filepath
                 Constants.zknlogger.log(Level.INFO,"Verwendete temporäre Exportdatei für Pandoc-Export: {0}", outfn);
                 try {
-                    // start process with pandoc to convert data
-                    pr = rt.exec(settingsObj.getPandocPath()+" -f html -t "+outformat+" -o "+outfn+" "+fn);
-                    // retrieve error input stream
-                    perrstream = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
-                    String line;
+                    // start process
+                    Process p = pb.start();
                     // catch error stream
                     StringBuilder errstr = new StringBuilder("");
-                    while ((line=perrstream.readLine())!=null) {
-                        // append read bytes
-                        errstr.append(line).append(System.getProperty("line.separator"));
+                    // create scanner to receive compiler messages
+                    try {
+                        Scanner sc = new Scanner(p.getInputStream()).useDelimiter(System.getProperty("line.separator"));
+                        // write output to text area
+                        while (sc.hasNextLine()) {
+                            errstr.append(System.getProperty("line.separator")).append(sc.nextLine());
+                        }
+                        // write output to text area
+                        // create scanner to receive compiler messages
+                        sc = new Scanner(p.getErrorStream()).useDelimiter(System.getProperty("line.separator"));
+                        // write output to text area
+                        while (sc.hasNextLine()) {
+                            errstr.append(System.getProperty("line.separator")).append(sc.nextLine());
+                        }
                     }
-                    perrstream.close();
+                    catch (IllegalStateException ex) {
+                        // log error stream
+                        Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
+                    }
                     // log error stream
                     Constants.zknlogger.log(Level.INFO,"Pandoc-Process-Log:"+System.getProperty("line.separator")+"{0}", errstr.toString());
-                    // wait for process to terminate
-                    pr.waitFor();
+                    // wait for other process to be finished
+                    p.waitFor();
+                    p.destroy();
                 } catch (IOException ex) {
                     // and change indicator
                     exportOk = false;
@@ -439,12 +457,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
                 } catch (InterruptedException ex) {
                     // and change indicator
                     exportOk = false;
-                    Constants.zknlogger.log(Level.SEVERE,"Could not convert file! Either Pandoc is missing pandoc conversion was interrupted.");
-                    // destroy process
-                    if (pr!=null) {
-                        Constants.zknlogger.log(Level.SEVERE,"Process exit code: {0}", String.valueOf(pr.exitValue()));
-                        pr.destroy();
-                    }
+                    Constants.zknlogger.log(Level.SEVERE,"Could not convert file! Either Pandoc is missing or export file not found.");
                 }
                 finally {
                     try {
@@ -467,20 +480,11 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
                         else {
                             Constants.zknlogger.log(Level.INFO,"Successfully renamed export file to {0}.", filepath.toString());
                         }
-                        // destroy process
-                        if (pr!=null) {
-                            pr.destroy();
-                        }
                     }
                     catch(SecurityException ex) {
                         // and change indicator
                         exportOk = false;
                         Constants.zknlogger.log(Level.SEVERE,"Could not convert file! Access to destination file path denied!");
-                        // destroy process
-                        if (pr!=null) {
-                            Constants.zknlogger.log(Level.SEVERE,"Process exit code: {0}", String.valueOf(pr.exitValue()));
-                            pr.destroy();
-                        }
                     }
                 }
             }

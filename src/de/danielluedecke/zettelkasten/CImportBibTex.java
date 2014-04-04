@@ -159,7 +159,14 @@ public class CImportBibTex extends javax.swing.JDialog {
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CImportBibTex.class);
 
-    /** Creates new form CImportBibTex */
+    /**
+     * 
+     * @param parent
+     * @param mf
+     * @param d
+     * @param bt
+     * @param s 
+     */
     public CImportBibTex(java.awt.Frame parent, ZettelkastenView mf, Daten d, BibTex bt, Settings s) {
         super(parent);
         settingsObj = s;
