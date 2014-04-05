@@ -72,7 +72,7 @@ public class Synonyms {
     public final void clear() {
         // check whether backup document exists, whether autokorrektur-document exists and whether
         // the autokorrektur-document has any data. only in this case we create a backup
-        if (synonymsFile!=null && synonymsFile.getRootElement().getContentSize()>0) {
+        if (synonymsFile!=null && synonymsFile.getRootElement().getContentSize()>1) {
             // create new backup doc
             backupdoc = new Document(new Element("backup_synonyms"));
             // copy content
@@ -114,7 +114,7 @@ public class Synonyms {
      */
     public void restoreDocument() {
         // check whether we have a backup document that also contains data
-        if ((backupdoc!=null) && (backupdoc.getRootElement().getContentSize()>0)) {
+        if ((backupdoc!=null) && (backupdoc.getRootElement().getContentSize()>1)) {
             // if we have it, create new main XML document
             synonymsFile = new Document(new Element("synonyms"));
             // and copy the content of the backup document to it
@@ -129,6 +129,14 @@ public class Synonyms {
      */
     public void setDocument(Document d) {
         synonymsFile = d;
+        // check whether backup document exists, whether autokorrektur-document exists and whether
+        // the autokorrektur-document has any data. only in this case we create a backup
+        if (synonymsFile!=null && synonymsFile.getRootElement().getContentSize()>1) {
+            // create new backup doc
+            backupdoc = new Document(new Element("backup_synonyms"));
+            // copy content
+            backupdoc.getRootElement().addContent(synonymsFile.getRootElement().cloneContent());
+        }
     }
     /**
      * Gets the xml-document that contains the synonyms-data
