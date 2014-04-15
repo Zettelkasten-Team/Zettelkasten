@@ -405,10 +405,12 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // when we have an entry to edit, fill the textfields with content
         // else set probable selected text from entry as "pre-content"
         // the content of "content" is retrieved from text-selection from the main window.
-        if (!editmode && content!=null) {
-            jTextAreaEntry.setText(content);
-            // if we have editmode, enable apply-button
-            setTextfieldFilled(!content.isEmpty());
+        if (!editmode) {
+            if (content!=null) {
+                jTextAreaEntry.setText(content);
+                // if we have editmode, enable apply-button
+                setTextfieldFilled(!content.isEmpty());
+            }
         } else {
             initFields();
         }
@@ -2785,10 +2787,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                         List<File> anyfiles = new ArrayList<File>();
                         // dummy
                         File file;
-                        // iterate droplist
-                        for (int i = 0; i < files.size(); i++) {
+                        for (Object file1 : files) {
                             // get each single object from droplist
-                            file = (File) files.get(i);
+                            file = (File) file1;
                             // check whether it is a file
                             if (file.isFile()) {
                                 // if it's an image, add it to image file list
