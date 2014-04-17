@@ -68,7 +68,7 @@ public class ExportTools {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private static org.jdesktop.application.ResourceMap resourceMap = 
+    private static final org.jdesktop.application.ResourceMap resourceMap = 
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(de.danielluedecke.zettelkasten.tasks.export.ExportTask.class);
     /**
@@ -141,6 +141,8 @@ public class ExportTools {
      * in an entry is added to the final reference-list. When exporting to HTML, the authors-footnotes
      * are linked with the author-value in the reference-list.
      *
+     * @param dataObj
+     * @param settingsObj
      * @param contentpage the complete html-page that is going to be exported, so the author-footnotes
      * can be extracted from this content.
      * @param footnotetag the footnote-tag, to identify where a footnote starts
@@ -303,11 +305,10 @@ public class ExportTools {
             // this list will contain all found bibkeys within the authors
             // of the to be exported entries
             ArrayList<String> foundbibkeys = new ArrayList<String>();
-            // go through all elements of the data file
-            for (int counter=0; counter<exportentries.size(); counter++) {
+            for (Object exportentrie : exportentries) {
                 try {
                     // retrieve zettelnumber
-                    int zettelnummer = Integer.parseInt(exportentries.get(counter).toString());
+                    int zettelnummer = Integer.parseInt(exportentrie.toString());
                     // retrieve the author-index-numbers of each export-entry
                     int[] entryauthors = dataObj.getAuthorIndexNumbers(zettelnummer);
                     // check whether entry has any authors...
@@ -323,8 +324,7 @@ public class ExportTools {
                             }
                         }
                     }
-                }
-                catch (NumberFormatException e) {
+                }catch (NumberFormatException e) {
                     // do nothing here...
                 }
             }
@@ -388,7 +388,9 @@ public class ExportTools {
      * Each footnote that refers to an author-value with bibkey is converted like this:
      * <b>{@code \footnote{\cite{<bibkey>}}}</b>
      * 
+     * @param dataObj
      * @param content the entry's content, so the footnote-tags can be extracted and possible bibkey-values retrieved.
+     * @param referenceAsFootnote
      * @return the content as string value, with all footnote-tags that reference to author-values with bibkeys converted
      * to the LaTex-cite-command
      */
@@ -421,7 +423,7 @@ public class ExportTools {
                 // check whether we have any bibkey-value
                 if (bibkey!=null && !bibkey.isEmpty()) {
                     // now that we have the bibkey, replace footnote with cite-tag
-                    content = content.substring(0,start.get(i))+footRefOpen+bibkey+footRefClose+content.substring(end.get(i)+1);
+                    content = content.substring(0,start.get(i))+footRefOpen+bibkey+footRefClose+content.substring(end.get(i));
                 }
             }
         }
