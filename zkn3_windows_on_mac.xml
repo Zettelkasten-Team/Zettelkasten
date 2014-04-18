@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
@@ -29,11 +30,11 @@
     <timeoutErr>true</timeoutErr>
   </splash>
   <versionInfo>
-    <fileVersion>3.2.4.2</fileVersion>
+    <fileVersion>3.2.4.3</fileVersion>
     <txtFileVersion>Zettelkasten 3</txtFileVersion>
     <fileDescription>Zettelkasten - nach Niklas Luhmann</fileDescription>
     <copyright>Daniel Luedecke</copyright>
-    <productVersion>3.2.4.2</productVersion>
+    <productVersion>3.2.4.3</productVersion>
     <txtProductVersion>Zettelkasten 3</txtProductVersion>
     <productName>Zettelkasten</productName>
     <companyName>Daniel Luedecke</companyName>
