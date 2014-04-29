@@ -120,6 +120,7 @@ public class TreeUtils {
 
     public static void expandPathOnEdt(final JTree tree, final TreePath path) {
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 tree.expandPath(path);
             }
