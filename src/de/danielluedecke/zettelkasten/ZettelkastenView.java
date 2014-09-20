@@ -39,11 +39,11 @@
 package de.danielluedecke.zettelkasten;
 
 import com.explodingpixels.macwidgets.BottomBar;
+import com.explodingpixels.macwidgets.BottomBarSize;
 import com.explodingpixels.macwidgets.MacButtonFactory;
 import com.explodingpixels.macwidgets.MacUtils;
 import com.explodingpixels.macwidgets.MacWidgetFactory;
 import com.explodingpixels.macwidgets.UnifiedToolBar;
-import com.explodingpixels.macwidgets.WidgetFactory;
 import com.explodingpixels.widgets.TableUtils;
 import com.explodingpixels.widgets.WindowUtils;
 import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
@@ -59,6 +59,8 @@ import de.danielluedecke.zettelkasten.database.Synonyms;
 import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.mac.MacSourceList;
 import de.danielluedecke.zettelkasten.mac.MacSourceTree;
+import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
+import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
 import de.danielluedecke.zettelkasten.tasks.FindDoubleEntriesTask;
 import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
 import de.danielluedecke.zettelkasten.tasks.export.ExportTools;
@@ -717,19 +719,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jScrollPane14.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
             jScrollPane15.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, ColorUtil.getBorderGray(settingsObj)));
             jTabbedPaneMain.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
-            jListEntryKeywords.setBorder(WidgetFactory.getTitledBorder(getResourceMap().getString("jListEntryKeywords.border.title"), settings));
-            jEditorPaneBookmarkComment.setBorder(WidgetFactory.getTitledBorder(getResourceMap().getString("jEditorPaneBookmarkComment.border.title"), settings));
+            jListEntryKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(getResourceMap().getString("jListEntryKeywords.border.title"), settings));
+            jEditorPaneBookmarkComment.setBorder(ZknMacWidgetFactory.getTitledBorder(getResourceMap().getString("jEditorPaneBookmarkComment.border.title"), settings));
         }
         if (settingsObj.isMacAqua()) {
-            WidgetFactory.updateSplitPane(jSplitPane1);
-            WidgetFactory.updateSplitPane(jSplitPane2);
-            WidgetFactory.updateSplitPane(jSplitPane3);
-            WidgetFactory.updateSplitPane(jSplitPaneMain1);
-            WidgetFactory.updateSplitPane(jSplitPaneMain2);
-            WidgetFactory.updateSplitPane(jSplitPaneLinks);
-            WidgetFactory.updateSplitPane(jSplitPaneAuthors);
-            jListEntryKeywords.setBorder(WidgetFactory.getTitledBorder(getResourceMap().getString("jListEntryKeywords.border.title"), ColorUtil.colorJTreeText, settings));
-            jEditorPaneBookmarkComment.setBorder(WidgetFactory.getTitledBorder(getResourceMap().getString("jEditorPaneBookmarkComment.border.title"), settings));
+            ZknMacWidgetFactory.updateSplitPane(jSplitPane1);
+            ZknMacWidgetFactory.updateSplitPane(jSplitPane2);
+            ZknMacWidgetFactory.updateSplitPane(jSplitPane3);
+            ZknMacWidgetFactory.updateSplitPane(jSplitPaneMain1);
+            ZknMacWidgetFactory.updateSplitPane(jSplitPaneMain2);
+            ZknMacWidgetFactory.updateSplitPane(jSplitPaneLinks);
+            ZknMacWidgetFactory.updateSplitPane(jSplitPaneAuthors);
+            jListEntryKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(getResourceMap().getString("jListEntryKeywords.border.title"), ColorUtil.colorJTreeText, settings));
+            jEditorPaneBookmarkComment.setBorder(ZknMacWidgetFactory.getTitledBorder(getResourceMap().getString("jEditorPaneBookmarkComment.border.title"), settings));
         }
     }
     
@@ -2510,7 +2512,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             statusOfEntryLabel.setText(getResourceMap().getString("entryOfText"));
             // set new border text
             Color bcol = (settings.isMacAqua()) ? ColorUtil.colorJTreeText : null;
-            jListEntryKeywords.setBorder(WidgetFactory.getTitledBorder(getResourceMap().getString("jListEntryKeywords.border.title"), bcol, settings));
+            jListEntryKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(getResourceMap().getString("jListEntryKeywords.border.title"), bcol, settings));
             // clear all table contents
             clearTreesAndTables();
         }
@@ -2896,7 +2898,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
         // set new border text
         Color bcol = (settings.isMacAqua()) ? ColorUtil.colorJTreeText : null;
-        jListEntryKeywords.setBorder(WidgetFactory.getTitledBorder(bordertext.toString(), bcol, settings));
+        jListEntryKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(bordertext.toString(), bcol, settings));
         // en- or disable those actions which are related to the displaying of the current entry
         setCurrentEntryShown(displayedZettel!=data.getCurrentZettelPos());
     }
@@ -10638,42 +10640,42 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
             UnifiedToolBar mactoolbar = new UnifiedToolBar();
 
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_newEntry, MacButtonFactory.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_open, MacButtonFactory.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_save, MacButtonFactory.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_newEntry, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_open, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_save, MacToolbarButton.SEGMENT_POSITION_LAST));
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
             if (settings.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_edit, MacButtonFactory.SEGMENT_POSITION_FIRST));
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_delete, MacButtonFactory.SEGMENT_POSITION_MIDDLE));
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_copy, MacButtonFactory.SEGMENT_POSITION_MIDDLE));
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_paste, MacButtonFactory.SEGMENT_POSITION_MIDDLE));
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_selectall, MacButtonFactory.SEGMENT_POSITION_LAST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_edit, MacToolbarButton.SEGMENT_POSITION_FIRST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_delete, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_copy, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_paste, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_selectall, MacToolbarButton.SEGMENT_POSITION_LAST));
             }
             else {
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_copy, MacButtonFactory.SEGMENT_POSITION_FIRST));
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_paste, MacButtonFactory.SEGMENT_POSITION_LAST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_copy, MacToolbarButton.SEGMENT_POSITION_FIRST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_paste, MacToolbarButton.SEGMENT_POSITION_LAST));
             }
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_addmanlinks, MacButtonFactory.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_addluhmann, MacButtonFactory.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_addmanlinks, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_addluhmann, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
             if (settings.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_addbookmark, MacButtonFactory.SEGMENT_POSITION_MIDDLE));
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_addtodesktop, MacButtonFactory.SEGMENT_POSITION_LAST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_addbookmark, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_addtodesktop, MacToolbarButton.SEGMENT_POSITION_LAST));
             }
             else {
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_addbookmark, MacButtonFactory.SEGMENT_POSITION_LAST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_addbookmark, MacToolbarButton.SEGMENT_POSITION_LAST));
             }
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
             if (settings.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_find, MacButtonFactory.SEGMENT_POSITION_FIRST));
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_first, MacButtonFactory.SEGMENT_POSITION_MIDDLE));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_find, MacToolbarButton.SEGMENT_POSITION_FIRST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_first, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
             }
             else {
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_first, MacButtonFactory.SEGMENT_POSITION_FIRST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_first, MacToolbarButton.SEGMENT_POSITION_FIRST));
             }
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_prev, MacButtonFactory.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_next, MacButtonFactory.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_last, MacButtonFactory.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_prev, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_next, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_last, MacToolbarButton.SEGMENT_POSITION_LAST));
             
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(32, 1));
             mactoolbar.addComponentToLeft(tb_searchTextfield);
@@ -10689,7 +10691,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private void makeMacBottomBar() {
         jPanel12.setVisible(false);
-        BottomBar macbottombar = new BottomBar();
+        BottomBar macbottombar = new BottomBar(BottomBarSize.LARGE);
         // history buttons
         buttonHistoryBack.setBorderPainted(true);
         buttonHistoryFore.setBorderPainted(true);

@@ -34,15 +34,14 @@
 package de.danielluedecke.zettelkasten;
 
 import com.explodingpixels.macwidgets.BottomBar;
+import com.explodingpixels.macwidgets.BottomBarSize;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.classes.EntryStringTransferHandler;
-import com.explodingpixels.macwidgets.MacButtonFactory;
 import com.explodingpixels.macwidgets.MacUtils;
 import com.explodingpixels.macwidgets.MacWidgetFactory;
 import com.explodingpixels.macwidgets.UnifiedToolBar;
-import com.explodingpixels.macwidgets.WidgetFactory;
 import com.explodingpixels.widgets.WindowUtils;
 import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
@@ -55,6 +54,8 @@ import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.database.Bookmarks;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.TasksData;
+import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
+import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
 import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
 import de.danielluedecke.zettelkasten.tasks.export.ExportTools;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
@@ -369,16 +370,16 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         if (settingsObj.isSeaGlass()) {
             jSplitPaneDesktop2.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
             jScrollPane1.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(settingsObj)));
-            jTextArea1.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jTextArea1.border.title"), settingsObj));
-            jTextArea2.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jTextArea2.border.title"), settingsObj));
-            jTextArea3.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jTextArea3.border.title"), settingsObj));
+            jTextArea1.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea1.border.title"), settingsObj));
+            jTextArea2.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea2.border.title"), settingsObj));
+            jTextArea3.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea3.border.title"), settingsObj));
         }
         if (settingsObj.isMacAqua()) {
-            WidgetFactory.updateSplitPane(jSplitPaneDesktop1);
-            WidgetFactory.updateSplitPane(jSplitPaneDesktop2);
-            jTextArea1.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jTextArea1.border.title"), settingsObj));
-            jTextArea2.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jTextArea2.border.title"), settingsObj));
-            jTextArea3.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jTextArea3.border.title"), settingsObj));
+            ZknMacWidgetFactory.updateSplitPane(jSplitPaneDesktop1);
+            ZknMacWidgetFactory.updateSplitPane(jSplitPaneDesktop2);
+            jTextArea1.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea1.border.title"), settingsObj));
+            jTextArea2.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea2.border.title"), settingsObj));
+            jTextArea3.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea3.border.title"), settingsObj));
         }
     }
 
@@ -652,8 +653,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                                 try {
                                     text.append(dataObj.getZettelContentAsHtml(Integer.parseInt(entrie)));
                                     text.append(lineseparator);
-                                }catch (NumberFormatException ex) {
-                                }catch (IndexOutOfBoundsException ex) {
+                                }catch (NumberFormatException | IndexOutOfBoundsException ex) {
                                 }
                             }
                             // add content to editor pane
@@ -823,33 +823,33 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 
             UnifiedToolBar mactoolbar = new UnifiedToolBar();
 
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_newbullet, MacButtonFactory.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_newbullet, MacToolbarButton.SEGMENT_POSITION_FIRST));
             if (settingsObj.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_newentry, MacButtonFactory.SEGMENT_POSITION_MIDDLE));
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_addluhmann, MacButtonFactory.SEGMENT_POSITION_LAST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_newentry, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_addluhmann, MacToolbarButton.SEGMENT_POSITION_LAST));
             }
             else {
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_newentry, MacButtonFactory.SEGMENT_POSITION_LAST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_newentry, MacToolbarButton.SEGMENT_POSITION_LAST));
             }
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_modifyentry, MacButtonFactory.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_cut, MacButtonFactory.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_copy, MacButtonFactory.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_paste, MacButtonFactory.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_modifyentry, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_cut, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_copy, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_paste, MacToolbarButton.SEGMENT_POSITION_LAST));
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_moveup, MacButtonFactory.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_movedown, MacButtonFactory.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_moveup, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_movedown, MacToolbarButton.SEGMENT_POSITION_LAST));
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
             if (settingsObj.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_rename, MacButtonFactory.SEGMENT_POSITION_FIRST));
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_comment, MacButtonFactory.SEGMENT_POSITION_MIDDLE));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_rename, MacToolbarButton.SEGMENT_POSITION_FIRST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_comment, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
             }
             else {
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_comment, MacButtonFactory.SEGMENT_POSITION_FIRST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_comment, MacToolbarButton.SEGMENT_POSITION_FIRST));
             }
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_delete, MacButtonFactory.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_delete, MacToolbarButton.SEGMENT_POSITION_LAST));
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_refresh, MacButtonFactory.SEGMENT_POSITION_ONLY));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_refresh, MacToolbarButton.SEGMENT_POSITION_ONLY));
             
             mactoolbar.installWindowDraggerOnWindow(this);
             jPanel1.add(mactoolbar.getComponent(),BorderLayout.PAGE_START);
@@ -859,7 +859,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     private void makeMacBottomBar() {
         jPanel7.setVisible(false);
 
-        BottomBar macbottombar = new BottomBar();
+        BottomBar macbottombar = new BottomBar(BottomBarSize.LARGE);
         macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(jLabel1));
         macbottombar.addComponentToLeft(jComboBoxDesktop);
         macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(jLabelWordCount));
@@ -2449,7 +2449,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // all entries, so the desktop-iteration would be the inner-loop. this is not intended,
         // because we want to sort the multiple entries according to an ordered desktop-list,
         // which requires iterating the desktops as outer loop.
-        LinkedList<Integer> multipleEntries = new LinkedList<Integer>();
+        LinkedList<Integer> multipleEntries = new LinkedList<>();
         // init multiple message flag
         showMultipleEntryMsg = true;
         // check for valid user-input
@@ -2696,9 +2696,8 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                                           settingsObj);
         // if we have a valid file, go on
         if (filepath!=null && filepath.exists()) {
-            try {
-                // open the zip-file
-                ZipInputStream zip = new ZipInputStream(new FileInputStream(filepath));
+            // open the zip-file
+            try (ZipInputStream zip = new ZipInputStream(new FileInputStream(filepath))) {
                 ZipEntry entry;
                 // now iterate the zip-file, searching for the requested file in it
                 while ((entry=zip.getNextEntry())!=null) {
@@ -2716,7 +2715,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                         }
                     }
                 }
-                zip.close();
                 // tell about success
                 Constants.zknlogger.log(Level.INFO,"Desktop archive successfully opened.");
             }
@@ -2825,9 +2823,8 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 return;
             }
             // export and zip file
-            try {
-                // open the outputstream
-                ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(filepath));
+            // open the outputstream
+            try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(filepath))) {
                 // I first wanted to use a pretty output format, so advanced users who
                 // extract the data file can better watch the xml-files. but somehow, this
                 // lead to an error within the method "retrieveElement" in the class "CDaten.java",
@@ -2837,15 +2834,8 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 // save archived desktop
                 zip.putNextEntry(new ZipEntry(Constants.archivedDesktopFileName));
                 out.output(archiveddesktop, zip);
-                zip.close();
             }
-            catch (IOException e) {
-                Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
-                JOptionPane.showMessageDialog(this,resourceMap.getString("archiveErrMsg"),resourceMap.getString("archiveErrTitle"),JOptionPane.PLAIN_MESSAGE);
-                zknframe.showErrorIcon();
-                return;
-            }           
-            catch (SecurityException e) {
+            catch (IOException | SecurityException e) {
                 Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
                 JOptionPane.showMessageDialog(this,resourceMap.getString("archiveErrMsg"),resourceMap.getString("archiveErrTitle"),JOptionPane.PLAIN_MESSAGE);
                 zknframe.showErrorIcon();
@@ -2964,7 +2954,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // check for return-value
         if (desktopMultipleExportDlg.getChosenDesktops()!=null && desktopMultipleExportDlg.getChosenDesktops().length>0) {
             // create list that will contain all entries which should be exported
-            ArrayList<Object> liste = new ArrayList<Object>();
+            ArrayList<Object> liste = new ArrayList<>();
             // iterate all chosen desktop-names
             for (String desktopname : desktopMultipleExportDlg.getChosenDesktops()) {
                 // here we recursively create the list of headlines and entry-numbers
@@ -3022,7 +3012,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // check for valid return value
         if (currentdesktopentries!=null && currentdesktopentries.length>0) {
             // create new integer-array
-            ArrayList<Integer> expvalues = new ArrayList<Integer>();
+            ArrayList<Integer> expvalues = new ArrayList<>();
             // go through all entry-numbers
             for (int cnt=1; cnt<=dataObj.getCount(Daten.ZKNCOUNT); cnt++) {
                 // if entry-number is *not* on the desktop...
@@ -3741,7 +3731,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 // retrieve all authors from desktop
                 // therefor, we first need all entries
                 int [] entries = desktopObj.retrieveDesktopEntries();
-                LinkedList<String> remainingAuthors = new LinkedList<String>();
+                LinkedList<String> remainingAuthors = new LinkedList<>();
                 // interate entries
                 for (int e : entries) {
                     // get authors

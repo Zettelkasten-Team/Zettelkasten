@@ -47,14 +47,14 @@ import de.danielluedecke.zettelkasten.util.classes.EntryStringTransferHandler;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import de.danielluedecke.zettelkasten.database.Daten;
 import com.explodingpixels.macwidgets.BottomBar;
-import com.explodingpixels.macwidgets.HudWidgetFactory;
-import com.explodingpixels.macwidgets.MacButtonFactory;
+import com.explodingpixels.macwidgets.BottomBarSize;
 import com.explodingpixels.macwidgets.MacUtils;
 import com.explodingpixels.macwidgets.MacWidgetFactory;
 import com.explodingpixels.macwidgets.UnifiedToolBar;
-import com.explodingpixels.macwidgets.WidgetFactory;
 import com.explodingpixels.widgets.WindowUtils;
 import de.danielluedecke.zettelkasten.database.TasksData;
+import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
+import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
 import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
@@ -455,11 +455,11 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             jSplitPaneNewEntry4.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
             jTabbedPaneNewEntry1.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
             jPanel4.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-            jTextAreaEntry.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaEntry.border.title"), settingsObj));
-            jTextAreaAuthor.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaAuthor.border.title"), settingsObj));
-            jListKeywords.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jListKeywords.border.title"), settingsObj));
-            jTextAreaRemarks.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaRemarks.border.title"), settingsObj));
-            jListLinks.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jListLinks.border.title"), settingsObj));
+            jTextAreaEntry.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaEntry.border.title"), settingsObj));
+            jTextAreaAuthor.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaAuthor.border.title"), settingsObj));
+            jListKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jListKeywords.border.title"), settingsObj));
+            jTextAreaRemarks.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaRemarks.border.title"), settingsObj));
+            jListLinks.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jListLinks.border.title"), settingsObj));
         }
         if (settingsObj.isMacAqua()) {
 //            Component r = jSplitPaneNewEntry2.getRightComponent();
@@ -470,20 +470,20 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
 //            // add them swapped
 //            jSplitPaneNewEntry2.setLeftComponent(r);
 //            jSplitPaneNewEntry2.setRightComponent(l);
-            WidgetFactory.updateSplitPane(jSplitPaneNewEntry1);
-            WidgetFactory.updateSplitPane(jSplitPaneNewEntry2);
-            WidgetFactory.updateSplitPane(jSplitPaneNewEntry3);
-            WidgetFactory.updateSplitPane(jSplitPaneNewEntry4, ColorUtil.colorJTreeBackground);
+            ZknMacWidgetFactory.updateSplitPane(jSplitPaneNewEntry1);
+            ZknMacWidgetFactory.updateSplitPane(jSplitPaneNewEntry2);
+            ZknMacWidgetFactory.updateSplitPane(jSplitPaneNewEntry3);
+            ZknMacWidgetFactory.updateSplitPane(jSplitPaneNewEntry4, ColorUtil.colorJTreeBackground);
             jScrollPane3.setBorder(null);
             jScrollPane4.setBorder(null);
             jScrollPane5.setBorder(null);
             jScrollPane6.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
             jScrollPane7.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-            jTextAreaEntry.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaEntry.border.title"), settingsObj));
-            jTextAreaAuthor.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaAuthor.border.title"), settingsObj));
-            jListKeywords.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jListKeywords.border.title"), ColorUtil.colorJTreeText, settingsObj));
-            jTextAreaRemarks.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaRemarks.border.title"), ColorUtil.colorJTreeText, settingsObj));
-            jListLinks.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jListLinks.border.title"), ColorUtil.colorJTreeText, settingsObj));
+            jTextAreaEntry.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaEntry.border.title"), settingsObj));
+            jTextAreaAuthor.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaAuthor.border.title"), settingsObj));
+            jListKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jListKeywords.border.title"), ColorUtil.colorJTreeText, settingsObj));
+            jTextAreaRemarks.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaRemarks.border.title"), ColorUtil.colorJTreeText, settingsObj));
+            jListLinks.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jListLinks.border.title"), ColorUtil.colorJTreeText, settingsObj));
             jTextFieldAddKeyword.setText(resourceMap.getString("textFieldDefaultText"));
             jTextFieldAddLink.setText(resourceMap.getString("textFieldDefaultText"));
         }
@@ -765,21 +765,21 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         if (settingsObj.isMacAqua()) {
             jTextFieldAddKeyword.addFocusListener(new java.awt.event.FocusAdapter() {
                 @Override public void focusGained(java.awt.event.FocusEvent evt) {
-                    HudWidgetFactory.setTextFieldBorder(jTextFieldAddKeyword);
+                    ZknMacWidgetFactory.setTextFieldBorder(jTextFieldAddKeyword);
                     updateTextFieldText(jTextFieldAddKeyword);
                 }
                 @Override public void focusLost(java.awt.event.FocusEvent evt) {
-                    HudWidgetFactory.setTextFieldBorder(jTextFieldAddKeyword);
+                    ZknMacWidgetFactory.setTextFieldBorder(jTextFieldAddKeyword);
                     updateTextFieldText(jTextFieldAddKeyword);
                 }
             });
             jTextFieldAddLink.addFocusListener(new java.awt.event.FocusAdapter() {
                 @Override public void focusGained(java.awt.event.FocusEvent evt) {
-                    HudWidgetFactory.setTextFieldBorder(jTextFieldAddLink);
+                    ZknMacWidgetFactory.setTextFieldBorder(jTextFieldAddLink);
                     updateTextFieldText(jTextFieldAddLink);
                 }
                 @Override public void focusLost(java.awt.event.FocusEvent evt) {
-                    HudWidgetFactory.setTextFieldBorder(jTextFieldAddLink);
+                    ZknMacWidgetFactory.setTextFieldBorder(jTextFieldAddLink);
                     updateTextFieldText(jTextFieldAddLink);
                 }
             });
@@ -1226,42 +1226,42 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
 
             UnifiedToolBar mactoolbar = new UnifiedToolBar();
 
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_cut,MacButtonFactory.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_copy,MacButtonFactory.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_paste,MacButtonFactory.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_cut,MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_copy,MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_paste,MacToolbarButton.SEGMENT_POSITION_LAST));
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
             if (settingsObj.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_selectall,MacButtonFactory.SEGMENT_POSITION_ONLY));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_selectall,MacToolbarButton.SEGMENT_POSITION_ONLY));
                 mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
             }
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_undo,MacButtonFactory.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_redo,MacButtonFactory.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_undo,MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_redo,MacToolbarButton.SEGMENT_POSITION_LAST));
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
             if (settingsObj.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_newauthor,MacButtonFactory.SEGMENT_POSITION_ONLY));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_newauthor,MacToolbarButton.SEGMENT_POSITION_ONLY));
                 mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
             }
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_manlink,MacButtonFactory.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_footnote,MacButtonFactory.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_insertimage,MacButtonFactory.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_inserttable,MacButtonFactory.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_manlink,MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_footnote,MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_insertimage,MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_inserttable,MacToolbarButton.SEGMENT_POSITION_LAST));
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_bold,MacButtonFactory.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_italic,MacButtonFactory.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_bold,MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_italic,MacToolbarButton.SEGMENT_POSITION_MIDDLE));
             if (settingsObj.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_underline,MacButtonFactory.SEGMENT_POSITION_MIDDLE));
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_strike,MacButtonFactory.SEGMENT_POSITION_LAST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_underline,MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_strike,MacToolbarButton.SEGMENT_POSITION_LAST));
             }
             else {
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_underline,MacButtonFactory.SEGMENT_POSITION_LAST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_underline,MacToolbarButton.SEGMENT_POSITION_LAST));
             }
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
             if (settingsObj.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_textcolor,MacButtonFactory.SEGMENT_POSITION_FIRST));
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_highlight,MacButtonFactory.SEGMENT_POSITION_LAST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_textcolor,MacToolbarButton.SEGMENT_POSITION_FIRST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_highlight,MacToolbarButton.SEGMENT_POSITION_LAST));
             }
             else {
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_textcolor,MacButtonFactory.SEGMENT_POSITION_ONLY));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_textcolor,MacToolbarButton.SEGMENT_POSITION_ONLY));
             }
 
             mactoolbar.installWindowDraggerOnWindow(this);
@@ -1272,7 +1272,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
 
     private void makeMacBottomBar() {
         jPanel1.setVisible(false);
-        BottomBar macbottombar = new BottomBar();
+        BottomBar macbottombar = new BottomBar(BottomBarSize.SMALL);
         macbottombar.addComponentToRight(jButtonCancel);
         macbottombar.addComponentToRight(jButtonOK,4);
         macbottombar.addComponentToRight(statusAnimationLabel,4);
@@ -4661,13 +4661,13 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jPanel4 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jListKeywords = MacSourceList.createMacSourceList();
-        jTextFieldAddKeyword = (settingsObj.isMacAqua()) ? HudWidgetFactory.createHudTreeTextField(resourceMap.getString("textFieldDefaultText")) : new javax.swing.JTextField();
+        jTextFieldAddKeyword = (settingsObj.isMacAqua()) ? ZknMacWidgetFactory.createHudTreeTextField(resourceMap.getString("textFieldDefaultText")) : new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTextAreaRemarks = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
         jListLinks = MacSourceList.createMacSourceList();
-        jTextFieldAddLink = (settingsObj.isMacAqua()) ? HudWidgetFactory.createHudTreeTextField(resourceMap.getString("textFieldDefaultText")) : new javax.swing.JTextField();
+        jTextFieldAddLink = (settingsObj.isMacAqua()) ? ZknMacWidgetFactory.createHudTreeTextField(resourceMap.getString("textFieldDefaultText")) : new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jTabbedPaneNewEntry1 = new javax.swing.JTabbedPane();
         jPanel7 = new javax.swing.JPanel();

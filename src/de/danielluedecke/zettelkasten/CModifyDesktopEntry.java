@@ -39,11 +39,11 @@ import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
 import de.danielluedecke.zettelkasten.database.StenoData;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.Constants;
-import com.explodingpixels.macwidgets.MacButtonFactory;
 import com.explodingpixels.macwidgets.MacUtils;
 import com.explodingpixels.macwidgets.MacWidgetFactory;
 import com.explodingpixels.macwidgets.UnifiedToolBar;
 import com.explodingpixels.widgets.WindowUtils;
+import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import de.danielluedecke.zettelkasten.util.NewEntryFrameUtil;
 import de.danielluedecke.zettelkasten.util.PlatformUtil;
@@ -517,19 +517,19 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
 
             UnifiedToolBar mactoolbar = new UnifiedToolBar();
 
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_cut, MacButtonFactory.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_copy, MacButtonFactory.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_paste, MacButtonFactory.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_cut, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_copy, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_paste, MacToolbarButton.SEGMENT_POSITION_LAST));
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 0));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_selectall, MacButtonFactory.SEGMENT_POSITION_ONLY));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_selectall, MacToolbarButton.SEGMENT_POSITION_ONLY));
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 0));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_undo, MacButtonFactory.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_redo, MacButtonFactory.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_undo, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_redo, MacToolbarButton.SEGMENT_POSITION_LAST));
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 0));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_bold, MacButtonFactory.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_italic, MacButtonFactory.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_underline, MacButtonFactory.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_strike, MacButtonFactory.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_bold, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_italic, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_underline, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_strike, MacToolbarButton.SEGMENT_POSITION_LAST));
 
             mactoolbar.installWindowDraggerOnWindow(this);
             mainPanel.add(mactoolbar.getComponent(),BorderLayout.PAGE_START);

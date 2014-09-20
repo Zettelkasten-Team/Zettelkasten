@@ -34,6 +34,7 @@
 package de.danielluedecke.zettelkasten;
 
 import com.explodingpixels.macwidgets.BottomBar;
+import com.explodingpixels.macwidgets.BottomBarSize;
 import de.danielluedecke.zettelkasten.mac.MacSourceList;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
@@ -44,15 +45,15 @@ import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.classes.DateComparer;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import de.danielluedecke.zettelkasten.database.Daten;
-import com.explodingpixels.macwidgets.MacButtonFactory;
 import com.explodingpixels.macwidgets.MacUtils;
 import com.explodingpixels.macwidgets.MacWidgetFactory;
 import com.explodingpixels.macwidgets.UnifiedToolBar;
-import com.explodingpixels.macwidgets.WidgetFactory;
 import com.explodingpixels.widgets.TableUtils;
 import com.explodingpixels.widgets.WindowUtils;
 import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.database.DesktopData;
+import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
+import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
 import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
@@ -271,7 +272,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         if (settingsObj.isSeaGlass()) {
             jPanel3.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(settingsObj)));
             jPanel4.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
-            jListKeywords.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jListKeywords.border.title"), settingsObj));
+            jListKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jListKeywords.border.title"), settingsObj));
             if (settingsObj.getSearchFrameSplitLayout()==JSplitPane.HORIZONTAL_SPLIT) {
                 jPanel1.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(settingsObj)));
                 jPanel2.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
@@ -283,9 +284,9 @@ public class SearchResultsFrame extends javax.swing.JFrame {
             // jPanel3.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(settingsObj)));
         }
         if (settingsObj.isMacAqua()) {
-            WidgetFactory.updateSplitPane(jSplitPaneSearch1);
-            WidgetFactory.updateSplitPane(jSplitPaneSearch2);
-            jListKeywords.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jListKeywords.border.title"), ColorUtil.colorJTreeText, settingsObj));
+            ZknMacWidgetFactory.updateSplitPane(jSplitPaneSearch1);
+            ZknMacWidgetFactory.updateSplitPane(jSplitPaneSearch2);
+            jListKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jListKeywords.border.title"), ColorUtil.colorJTreeText, settingsObj));
         }
     }
 
@@ -416,23 +417,23 @@ public class SearchResultsFrame extends javax.swing.JFrame {
             
             UnifiedToolBar mactoolbar = new UnifiedToolBar();
 
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_copy, MacButtonFactory.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_selectall, MacButtonFactory.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_copy, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_selectall, MacToolbarButton.SEGMENT_POSITION_LAST));
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_editentry, MacButtonFactory.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_remove, MacButtonFactory.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_editentry, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_remove, MacToolbarButton.SEGMENT_POSITION_LAST));
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_manlinks, MacButtonFactory.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_luhmann, MacButtonFactory.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_manlinks, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_luhmann, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
             if (settingsObj.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_bookmark, MacButtonFactory.SEGMENT_POSITION_MIDDLE));
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_desktop, MacButtonFactory.SEGMENT_POSITION_LAST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_bookmark, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_desktop, MacToolbarButton.SEGMENT_POSITION_LAST));
             }
             else {
-                mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_bookmark, MacButtonFactory.SEGMENT_POSITION_LAST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_bookmark, MacToolbarButton.SEGMENT_POSITION_LAST));
             }
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            mactoolbar.addComponentToLeft(MacButtonFactory.makeTexturedToolBarButton(tb_highlight, MacButtonFactory.SEGMENT_POSITION_ONLY));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_highlight, MacToolbarButton.SEGMENT_POSITION_ONLY));
 
             mactoolbar.installWindowDraggerOnWindow(this);
             searchMainPanel.add(mactoolbar.getComponent(),BorderLayout.PAGE_START);
@@ -443,7 +444,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
     private void makeMacBottomBar() {
         jPanel9.setVisible(false);
 
-        BottomBar macbottombar = new BottomBar();
+        BottomBar macbottombar = new BottomBar(BottomBarSize.SMALL);
         macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(jLabelHits),20);
         macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(jLabel1),4);
         macbottombar.addComponentToLeft(jComboBoxSearches,4);
@@ -874,7 +875,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
     @Action
     public void addKeywordsToEntries() {
         // create linked list as parameter for filter-dialog
-        LinkedList<String> keywords = new LinkedList<String>();
+        LinkedList<String> keywords = new LinkedList<>();
         // go through all keyword-entries
         for (int cnt=1; cnt<=dataObj.getCount(Daten.KWCOUNT); cnt++) {
             // get keyword
@@ -929,7 +930,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         }
         settingsObj.setSearchFrameSplitLayout(currentlayout);
         jSplitPaneSearch1.setOrientation(currentlayout);
-        if (settingsObj.isMacAqua()) WidgetFactory.updateSplitPane(jSplitPaneSearch1);
+        if (settingsObj.isMacAqua()) ZknMacWidgetFactory.updateSplitPane(jSplitPaneSearch1);
     }
     
     
@@ -2232,7 +2233,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         jSplitPaneSearch1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTableResults = (settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+        jTableResults = (settingsObj.isMacStyle()) ? com.explodingpixels.macwidgets.MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
         jTextFieldFilterList = new javax.swing.JTextField();
         jButtonResetList = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
@@ -2459,12 +2460,14 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         jTableResults.setShowVerticalLines(false);
         jTableResults.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jTableResults);
-        jTableResults.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title0")); // NOI18N
-        jTableResults.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title1")); // NOI18N
-        jTableResults.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title2")); // NOI18N
-        jTableResults.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title3")); // NOI18N
-        jTableResults.getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title4")); // NOI18N
-        jTableResults.getColumnModel().getColumn(5).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title5")); // NOI18N
+        if (jTableResults.getColumnModel().getColumnCount() > 0) {
+            jTableResults.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title0")); // NOI18N
+            jTableResults.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title1")); // NOI18N
+            jTableResults.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title2")); // NOI18N
+            jTableResults.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title3")); // NOI18N
+            jTableResults.getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title4")); // NOI18N
+            jTableResults.getColumnModel().getColumn(5).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title5")); // NOI18N
+        }
 
         jTextFieldFilterList.setName("jTextFieldFilterList"); // NOI18N
 
@@ -2526,7 +2529,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
         );
 
         jSplitPaneSearch2.setLeftComponent(jPanel3);
@@ -2544,11 +2547,11 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
         );
 
         jSplitPaneSearch2.setRightComponent(jPanel4);

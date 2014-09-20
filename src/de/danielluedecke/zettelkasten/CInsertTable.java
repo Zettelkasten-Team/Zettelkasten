@@ -232,7 +232,7 @@ public class CInsertTable extends javax.swing.JDialog {
     public void insertTable() {
         // this variable stores the values of each table-row, so we can
         // parse them into a single string.
-        ArrayList<String> tablerow = new ArrayList<String>();
+        ArrayList<String> tablerow = new ArrayList<>();
         // prepare stringbuilder that will contain the complete table-data including format-tags.
         StringBuilder tabledata = new StringBuilder("[table]");
         // append caption

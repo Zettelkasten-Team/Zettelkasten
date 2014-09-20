@@ -451,12 +451,7 @@ public class Tools {
                     }
                 }
             }
-            catch (IOException e) {
-                // display error message box
-                JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkNotFoundMsg",(linkfile!=null)?linkfile.toString():resourceMap.getString("linkFileUnknown")),resourceMap.getString("errLinkNotFoundTitle"),JOptionPane.PLAIN_MESSAGE);
-                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-            }
-            catch (IllegalArgumentException e) {
+            catch (IOException | IllegalArgumentException e) {
                 // display error message box
                 JOptionPane.showMessageDialog(frame,resourceMap.getString("errLinkNotFoundMsg",(linkfile!=null)?linkfile.toString():resourceMap.getString("linkFileUnknown")),resourceMap.getString("errLinkNotFoundTitle"),JOptionPane.PLAIN_MESSAGE);
                 Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
@@ -589,10 +584,7 @@ public class Tools {
                 retval.append(d.substring(0,2));
                 if (!shortdate) retval.append(", ");
             }
-            catch (NumberFormatException ex) {
-                Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-            }
-            catch (IndexOutOfBoundsException ex) {
+            catch (NumberFormatException | IndexOutOfBoundsException ex) {
                 Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
             }
         }
@@ -648,10 +640,7 @@ public class Tools {
                     retval.append(String.format("%02d", min));
                 }
             }
-            catch (NumberFormatException ex) {
-                Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-            }
-            catch (IndexOutOfBoundsException ex) {
+            catch (NumberFormatException | IndexOutOfBoundsException ex) {
                 Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
             }
         }
@@ -675,7 +664,7 @@ public class Tools {
         // parse input at each comma
         String[] entries = input.split(",");
         // create linked list that will contain all entries...
-        List<Integer> finalentries = new ArrayList<Integer>();
+        List<Integer> finalentries = new ArrayList<>();
         // go through all parts of the input
         for (String e : entries) {
             // remove leading/trailing space chars
@@ -706,16 +695,11 @@ public class Tools {
                             return null;
                         }
                     }
-                    catch (NumberFormatException ex) {
+                    catch (NumberFormatException | IndexOutOfBoundsException ex) {
                         // tell user about invalid value
                         JOptionPane.showMessageDialog(null,resourceMap.getString("errInvalidValueMsg"),resourceMap.getString("errInvalidValueTitle"),JOptionPane.PLAIN_MESSAGE);
                         return null;
                     }
-                    catch (IndexOutOfBoundsException ex) {
-                        // tell user about invalid value
-                        JOptionPane.showMessageDialog(null,resourceMap.getString("errInvalidValueMsg"),resourceMap.getString("errInvalidValueTitle"),JOptionPane.PLAIN_MESSAGE);
-                        return null;
-                     }
                 }
             }
             else {
@@ -773,7 +757,7 @@ public class Tools {
         // check whether we have any valid string
         if (str!=null) {
             // create integer list for entry numbers
-            ArrayList<Integer> entries = new ArrayList<Integer>();
+            ArrayList<Integer> entries = new ArrayList<>();
             // split drop-string at each new line
             String[] lines = str.split("\n");
             // iterate all line

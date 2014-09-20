@@ -683,7 +683,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
-          <Component id="jPanel1" alignment="0" pref="734" max="32767" attributes="0"/>
+          <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
           <Component id="jToolBarDesktop" alignment="0" pref="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>

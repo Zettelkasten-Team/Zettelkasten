@@ -33,9 +33,9 @@
 
 package de.danielluedecke.zettelkasten;
 
-import com.explodingpixels.macwidgets.WidgetFactory;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.Settings;
+import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
@@ -74,7 +74,12 @@ public class CInformation extends javax.swing.JDialog {
     private org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
                                                        getContext().getResourceMap(CInformation.class);
 
-    /** Creates new form CInformation */
+    /**
+     * 
+     * @param parent
+     * @param d
+     * @param s 
+     */
     public CInformation(java.awt.Frame parent, Daten d, Settings s) {
         super(parent);
         dataObj = d;
@@ -108,12 +113,12 @@ public class CInformation extends javax.swing.JDialog {
             jButtonBrowseAttachmentPath.putClientProperty("JComponent.sizeVariant", "small");
             jButtonBrowseImagePath.putClientProperty("JComponent.sizeVariant", "small");
             // set new border text
-            jTextAreaDescription.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaDescription.border.title"), null, settingsObj));
-            jTextAreaSysInfo.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaSysInfo.border.title"), null, settingsObj));
+            jTextAreaDescription.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaDescription.border.title"), null, settingsObj));
+            jTextAreaSysInfo.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaSysInfo.border.title"), null, settingsObj));
         }
         if (settingsObj.isMacAqua()) {
-            jTextAreaDescription.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaDescription.border.title"), ColorUtil.colorJTreeText, settingsObj));
-            jTextAreaSysInfo.setBorder(WidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaSysInfo.border.title"), ColorUtil.colorJTreeText, settingsObj));
+            jTextAreaDescription.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaDescription.border.title"), ColorUtil.colorJTreeText, settingsObj));
+            jTextAreaSysInfo.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaSysInfo.border.title"), ColorUtil.colorJTreeText, settingsObj));
         }
         // retrieve filepath
         String filepath = settingsObj.getFilePath().toString();

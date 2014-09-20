@@ -99,6 +99,8 @@ public class Constants {
      * File type of created form images
      */
     public static final String FORMIMAGE_EXTENSION = ".png";
+    public static boolean isJava7OnMac = System.getProperty("java.version").startsWith("1.7") && System.getProperty("os.name").startsWith("Mac OS");
+    public static boolean isJava8OnMac = System.getProperty("java.version").startsWith("1.8") && System.getProperty("os.name").startsWith("Mac OS");
     /**
      * This constant determines the interval of the timer that is responsible for
      * the automatic backup of the data file.

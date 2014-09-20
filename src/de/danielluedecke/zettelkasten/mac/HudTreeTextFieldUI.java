@@ -30,10 +30,10 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-package com.explodingpixels.macwidgets.plaf;
+package de.danielluedecke.zettelkasten.mac;
 
+import com.explodingpixels.macwidgets.plaf.HudPaintingUtils;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
-import de.danielluedecke.zettelkasten.util.Constants;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -49,7 +49,7 @@ import javax.swing.text.JTextComponent;
  */
 public class HudTreeTextFieldUI extends BasicTextFieldUI {
 
-    private Color fontColor = ColorUtil.colorJTreeDarkText;
+    private final Color fontColor = ColorUtil.colorJTreeDarkText;
 
     @Override
     public void installUI(JComponent c) {
