@@ -187,7 +187,7 @@ public class HtmlUbbUtil {
             highlightsb.append("font-style:");
             highlightsb.append(fs);
         }
-        highlightsb.append("}").append(System.getProperty("line.separator"));
+        highlightsb.append("}").append(System.lineSeparator());
         return highlightsb.toString();
     }
 
@@ -237,10 +237,10 @@ public class HtmlUbbUtil {
         // ***********************************************
         // init div and table tag
         // ***********************************************
-        htmlrating.append(System.getProperty("line.separator")).append("<div class=\"entryrating\">");
+        htmlrating.append(System.lineSeparator()).append("<div class=\"entryrating\">");
         htmlrating.append("<table ");
         if (PlatformUtil.isJava7OnMac() || PlatformUtil.isJava7OnWindows()) htmlrating.append("cellspacing=\"0\" ");
-        htmlrating.append("class=\"tabentryrating\"><tr>").append(System.getProperty("line.separator"));
+        htmlrating.append("class=\"tabentryrating\"><tr>").append(System.lineSeparator());
         // ***********************************************
         // init entry heading with entry nr and word count
         // ***********************************************
@@ -295,7 +295,7 @@ public class HtmlUbbUtil {
         // close hyperlink
         htmlrating.append("</a>");
         // close tag
-        htmlrating.append("</td></tr>").append(System.getProperty("line.separator"));
+        htmlrating.append("</td></tr>").append(System.lineSeparator());
         // check whether entry has manual links
         String[] manlinks = dataObj.getManualLinksAsString(entrynr);
         if (manlinks!=null && manlinks.length>0) {
@@ -318,9 +318,9 @@ public class HtmlUbbUtil {
             }
             // append string, but delete last 10 chars, which are " &middot; "
             htmlrating.append(crossrefs.toString().substring(0, crossrefs.length()-10));
-            htmlrating.append("</td></tr>").append(System.getProperty("line.separator"));
+            htmlrating.append("</td></tr>").append(System.lineSeparator());
         }
-        htmlrating.append("</table></div>").append(System.getProperty("line.separator"));
+        htmlrating.append("</table></div>").append(System.lineSeparator());
         // return result
         return htmlrating.toString();
     }
@@ -339,7 +339,7 @@ public class HtmlUbbUtil {
         // ***********************************************
         String [] authors = dataObj.getAuthors(entrynr);
         // separate authors from content
-        retval.append("<h1>").append(resourceMap.getString("authorsText")).append("</h1>").append(System.getProperty("line.separator"));
+        retval.append("<h1>").append(resourceMap.getString("authorsText")).append("</h1>").append(System.lineSeparator());
         // check if we have any values
         if (authors!=null && authors.length>0) {
             // copy all authors to linked list, so we can remove those authors that have been added
@@ -374,7 +374,7 @@ public class HtmlUbbUtil {
                         // aus = convertHyperlinks(aus.replace("<", "&lt;").replace(">", "&gt;"));
                         aus = convertHyperlinks(aus);
                         retval.append(aus);
-                        retval.append("</p>").append(System.getProperty("line.separator"));
+                        retval.append("</p>").append(System.lineSeparator());
                     }
                     catch (NumberFormatException e) {
                         Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
@@ -400,7 +400,7 @@ public class HtmlUbbUtil {
                         // aus = convertHyperlinks(aus.replace("<", "&lt;").replace(">", "&gt;"));
                         aus = convertHyperlinks(aus);
                         retval.append(aus);
-                        retval.append("</p>").append(System.getProperty("line.separator"));
+                        retval.append("</p>").append(System.lineSeparator());
                     }
                 }
             }
@@ -417,7 +417,7 @@ public class HtmlUbbUtil {
                     }
                     // autoconvert url's to hyperlinks
                     au = convertHyperlinks(au);
-                    retval.append("<p class=\"reflist\">").append(au).append("</p>").append(System.getProperty("line.separator"));
+                    retval.append("<p class=\"reflist\">").append(au).append("</p>").append(System.lineSeparator());
                 }
             }
         }
@@ -457,8 +457,8 @@ public class HtmlUbbUtil {
                 remarks = highlightSearchTerms(remarks,HIGHLIGHT_STYLE_KEYWORDS);
             }
             // after the conversion is done, append the content to the resulting return string
-            retval.append("<h1>").append(resourceMap.getString("remarksText")).append("</h1>").append(System.getProperty("line.separator"));
-            retval.append("<div class=\"remarks\">").append(remarks).append("</div><p></p>").append(System.getProperty("line.separator"));
+            retval.append("<h1>").append(resourceMap.getString("remarksText")).append("</h1>").append(System.lineSeparator());
+            retval.append("<div class=\"remarks\">").append(remarks).append("</div><p></p>").append(System.lineSeparator());
         }
         return retval.toString();
     }
@@ -491,7 +491,7 @@ public class HtmlUbbUtil {
                         att = highlightSearchTerms(att,HIGHLIGHT_STYLE_KEYWORDS);
                     }
                     dummylink.append(att);
-                    dummylink.append("</a></li>").append(System.getProperty("line.separator"));
+                    dummylink.append("</a></li>").append(System.lineSeparator());
                 }
             }
             // if there have been attachments, they must be stored in the stringbuffer now
@@ -499,9 +499,9 @@ public class HtmlUbbUtil {
             if (dummylink.length()>0) {
                 // apply a class attribute to the attachments, so we can have certain styles
                 // and formatting for the links as well
-                retval.append("<div class=\"attachments\"><h1>").append(resourceMap.getString("HyperlinksHeader")).append("</h1>").append(System.getProperty("line.separator")).append("<ul>");
+                retval.append("<div class=\"attachments\"><h1>").append(resourceMap.getString("HyperlinksHeader")).append("</h1>").append(System.lineSeparator()).append("<ul>");
                 retval.append(dummylink.toString());
-                retval.append("</ul></div><p></p>").append(System.getProperty("line.separator"));
+                retval.append("</ul></div><p></p>").append(System.lineSeparator());
             }
         }
         return retval.toString();
@@ -528,7 +528,7 @@ public class HtmlUbbUtil {
                 retval.append("&nbsp;&middot;&nbsp").append("<a class=\"tslink\" href=\"#tstampe\">").append(resourceMap.getString("timestampEdited")).append(" ").append(Tools.getProperDate(edited, true)).append("</a>");
             }
             // and close the tags of the html-part
-            retval.append(System.getProperty("line.separator"));
+            retval.append(System.lineSeparator());
         }
         return retval.toString();
     }
@@ -562,15 +562,15 @@ public class HtmlUbbUtil {
         // ***********************************************
         // initiate html-page, header
         // ***********************************************
-        retval.append("<html><head>").append(System.getProperty("line.separator")); // NEW!
+        retval.append("<html><head>").append(System.lineSeparator()); // NEW!
         // first of all, prepare the header and style information of the main content
-        retval.append("<style>").append(System.getProperty("line.separator"));
+        retval.append("<style>").append(System.lineSeparator());
         // get the common style definition for the basic-tags
         retval.append(getCommonStyleDefinition(settings,segmentKeywords,dataObj.getKeywords(entrynr),false,false));
         // close style definition
-        retval.append("</style>").append(System.getProperty("line.separator"));
+        retval.append("</style>").append(System.lineSeparator());
         // close header and open body
-        retval.append("</head><body>").append(System.getProperty("line.separator")); // NEW!
+        retval.append("</head><body>").append(System.lineSeparator()); // NEW!
         // ***********************************************
         // init headline
         // ***********************************************
@@ -594,7 +594,7 @@ public class HtmlUbbUtil {
             }
             retval.append("<h1>");
             retval.append(title);
-            retval.append("</h1>").append(System.getProperty("line.separator"));
+            retval.append("</h1>").append(System.lineSeparator());
         }
         // ***********************************************
         // get entry's content
@@ -613,7 +613,7 @@ public class HtmlUbbUtil {
             retval.append("<i>").append(resourceMap.getString("deletedEntry")).append("</i>");
         }
         // close all tags properly
-        retval.append("</div>").append(System.getProperty("line.separator"));
+        retval.append("</div>").append(System.lineSeparator());
         // check whether we need an appendix at all...
         boolean appendixNeeded = (dataObj.hasAttachments(entrynr) | dataObj.hasAuthors(entrynr) | dataObj.hasRemarks(entrynr));
         if (appendixNeeded) {
@@ -621,7 +621,7 @@ public class HtmlUbbUtil {
             // here we start with additional infos that belong to an
             // entry's appendix. thus, we have different style options
             // ***********************************************
-            retval.append("<div class=\"appendixcontent\">").append(System.getProperty("line.separator"));
+            retval.append("<div class=\"appendixcontent\">").append(System.lineSeparator());
             // ***********************************************
             // get remarks
             // ***********************************************
@@ -635,9 +635,9 @@ public class HtmlUbbUtil {
             // ***********************************************
             retval.append(getEntryAttachments(dataObj, entrynr, sourceframe));
             // close body and html-page
-            retval.append("</div>").append(System.getProperty("line.separator"));
+            retval.append("</div>").append(System.lineSeparator());
         }
-        retval.append("</body><html>").append(System.getProperty("line.separator")); // NEW!
+        retval.append("</body><html>").append(System.lineSeparator()); // NEW!
         return retval.toString();
     }
 
@@ -655,7 +655,7 @@ public class HtmlUbbUtil {
         StringBuilder retval = new StringBuilder("");
         // append new style information for the next "html-page"
         // these author information are set to the second textpanel in the main window
-        retval.append("<style>").append(System.getProperty("line.separator"));
+        retval.append("<style>").append(System.lineSeparator());
         // body-tag with main font settings
         retval.append("body{font-family:");
         retval.append(settingsObj.getAuthorFont(Settings.FONTNAME));
@@ -667,10 +667,10 @@ public class HtmlUbbUtil {
         retval.append(settingsObj.getAuthorFont(Settings.FONTSTYLE));
         retval.append(";font-weight:");
         retval.append(settingsObj.getAuthorFont(Settings.FONTWEIGHT));
-        retval.append(";margin:3px}").append(System.getProperty("line.separator"));
-        retval.append("p{margin:0}").append(System.getProperty("line.separator"));
+        retval.append(";margin:3px}").append(System.lineSeparator());
+        retval.append("p{margin:0}").append(System.lineSeparator());
         // css for links, usually only footnotes.
-        retval.append("a{color:#003399;text-decoration:none}").append(System.getProperty("line.separator"));
+        retval.append("a{color:#003399;text-decoration:none}").append(System.lineSeparator());
         // copy css-style to retval...
         retval.append(getHighlightCSS(settingsObj));
         retval.append("</style>");
@@ -1479,7 +1479,7 @@ public class HtmlUbbUtil {
                                 row = row.replace(Constants.FORMAT_TABLECAPTION_OPEN, "<caption>");
                                 row = row.replace(Constants.FORMAT_TABLECAPTION_CLOSE, "</caption>");
                                 // close row--tags
-                                tabelle.append(row).append(System.getProperty("line.separator"));
+                                tabelle.append(row).append(System.lineSeparator());
                             }
                             else {
                                 // check whether row is table header or a simple data-row. therefore,
@@ -1512,7 +1512,7 @@ public class HtmlUbbUtil {
                                     tabelle.append((isheader)?"</th>":"</td>");
                                 }
                                 // close row--tags
-                                tabelle.append("</tr>").append(System.getProperty("line.separator"));
+                                tabelle.append("</tr>").append(System.lineSeparator());
                             }
                         }
                     }
@@ -1725,7 +1725,7 @@ public class HtmlUbbUtil {
         // if we have statistical table style, don't use vertical column lines / grid
         String grid = (settingsObj.getLatexExportStatisticTableStyle()) ? "" : "|";
         // if we have statistical table style, center table
-        String centertable = (settingsObj.getLatexExportStatisticTableStyle()) ? "\\centering"+System.getProperty("line.separator") : "";
+        String centertable = (settingsObj.getLatexExportStatisticTableStyle()) ? "\\centering"+System.lineSeparator() : "";
         // if we have statistical table style, don't use vertical column lines / grid
         String tablestart = (settingsObj.getLatexExportStatisticTableStyle()) ? "\\begin{tabular}" : "\\begin{tabularx}{\\textwidth}";
         // if we have statistical table style, don't use vertical column lines / grid
@@ -1748,7 +1748,7 @@ public class HtmlUbbUtil {
                     // get table-content
                     String tablecontent = dummy.substring(pos+7, end);
                     // get table rows
-                    String[] tablerows = tablecontent.split(System.getProperty("line.separator"));
+                    String[] tablerows = tablecontent.split(System.lineSeparator());
                     // check for valid values
                     if (tablerows!=null && tablerows.length>0) {
                         // check whether we have a caption
@@ -1758,7 +1758,7 @@ public class HtmlUbbUtil {
                             tablerows[headerrow] = tablerows[headerrow].replace(Constants.FORMAT_TABLECAPTION_CLOSE, "}");
                             // copy row data
                             caption = tablerows[headerrow];
-                            caption = caption+System.getProperty("line.separator");
+                            caption = caption+System.lineSeparator();
                             // increase header row counter
                             if (tablerows.length>1) {
                                 headerrow = 1;
@@ -1803,9 +1803,9 @@ public class HtmlUbbUtil {
                             }
                         }
                         // close latex-column-count
-                        tabelle.append(grid).append("}").append(System.getProperty("line.separator"));
+                        tabelle.append(grid).append("}").append(System.lineSeparator());
                         // add horozontal line
-                        tabelle.append("\\hline").append(System.getProperty("line.separator"));
+                        tabelle.append("\\hline").append(System.lineSeparator());
                         // create table row counter. this is needed for alternate coloring of rows
                         boolean colorrow = false;
                         // count rows...
@@ -1817,7 +1817,7 @@ public class HtmlUbbUtil {
                             // if the row is not empty, go on
                             if (!row.isEmpty() && !row.startsWith("\\caption{")) {
                                 // replace new lines
-                                row = row.replaceAll(Pattern.quote("\\\\"), System.getProperty("line.separator"));
+                                row = row.replaceAll(Pattern.quote("\\\\"), System.lineSeparator());
                                 // check whether row is table header or a simple data-row. therefore,
                                 // look for occurences of "|", which is a cell-separator, or for "^",
                                 // whih is the separator for the tableheader
@@ -1829,24 +1829,24 @@ public class HtmlUbbUtil {
                                     // check whether we have a header-row
                                     if (isheader) {
                                         // apply dark gray cell color
-                                        tabelle.append("\\rowcolor{DarkGray}").append(System.getProperty("line.separator"));
+                                        tabelle.append("\\rowcolor{DarkGray}").append(System.lineSeparator());
                                     }
                                     else {
                                         // check whether we have odd row
                                         if (colorrow) {
                                             // apply light gray cell color
-                                            tabelle.append("\\rowcolor{LightGray}").append(System.getProperty("line.separator"));
+                                            tabelle.append("\\rowcolor{LightGray}").append(System.lineSeparator());
                                             colorrow = false;
                                         }
                                         else {
                                             // apply white cell color
-                                            tabelle.append("\\rowcolor{white}").append(System.getProperty("line.separator"));
+                                            tabelle.append("\\rowcolor{white}").append(System.lineSeparator());
                                             colorrow = true;
                                         }
                                     }
                                 }
                                 // close row--tags
-                                tabelle.append(row).append(" \\\\ ").append(System.getProperty("line.separator"));
+                                tabelle.append(row).append(" \\\\ ").append(System.lineSeparator());
                                 // check whether we have first row
                                 if (0==rowscounted) {
                                     // increase counter, only needed to find first row
@@ -1854,19 +1854,19 @@ public class HtmlUbbUtil {
                                     // now check whether we have statistical table style
                                     // if so, add two lines
                                     if (settingsObj.getLatexExportStatisticTableStyle()) {
-                                        tabelle.append("\\hline").append("\\hline").append(System.getProperty("line.separator"));
+                                        tabelle.append("\\hline").append("\\hline").append(System.lineSeparator());
                                     }
                                 }
                             }
                         }
                         
                         // create final tex-table-tempplate
-                        dummy = dummy.substring(0, pos)+"\\begin{table}[htp]"+System.getProperty("line.separator")+
+                        dummy = dummy.substring(0, pos)+"\\begin{table}[htp]"+System.lineSeparator()+
                                                         centertable+caption+
                                                         tablestart+"{"+grid+
                                                         tabelle.toString()+
-                                                        "\\hline"+System.getProperty("line.separator")+
-                                                        tableend+System.getProperty("line.separator")+
+                                                        "\\hline"+System.lineSeparator()+
+                                                        tableend+System.lineSeparator()+
                                                         "\\end{table}"+dummy.substring(end+8);
                         pos = pos + tabelle.toString().length();
                     }
@@ -1908,7 +1908,7 @@ public class HtmlUbbUtil {
         // if (IS_WINDOWS) imgpath = File.separatorChar+imgpath;
         String dummy = (settings.getMarkdownActivated() ? Tools.convertMarkDown2UBB(c) : c);
         // new line
-        dummy = dummy.replace("[br]", System.getProperty("line.separator"));
+        dummy = dummy.replace("[br]", System.lineSeparator());
         // italic formatting: [k] becomes <i>
         dummy = dummy.replaceAll("\\[k\\](.*?)\\[/k\\]", Matcher.quoteReplacement("\\emph{")+"$1"+"}");
         // bold formatting: [f] becomes <b>
@@ -1965,11 +1965,11 @@ public class HtmlUbbUtil {
         dummy = dummy.replace("[img]", "[img]"+imgpath);
         dummy = dummy.replaceAll("\\[img\\]([^|]*)(.*?)\\[/img\\]", Matcher.quoteReplacement("\\includegraphics{")+"$1"+"}");
         // unordered list: [l] becomes <ul>
-        dummy = dummy.replaceAll("\\[l\\](.*?)\\[/l\\]", Matcher.quoteReplacement("\\begin{itemize}")+System.getProperty("line.separator")+"$1"+Matcher.quoteReplacement("\\end{itemize}"));
+        dummy = dummy.replaceAll("\\[l\\](.*?)\\[/l\\]", Matcher.quoteReplacement("\\begin{itemize}")+System.lineSeparator()+"$1"+Matcher.quoteReplacement("\\end{itemize}"));
         // ordered list: [ol] becomes <ol>
-        dummy = dummy.replaceAll("\\[n\\](.*?)\\[/n\\]", Matcher.quoteReplacement("\\begin{enumerate}")+System.getProperty("line.separator")+"$1"+Matcher.quoteReplacement("\\end{enumerate}"));
+        dummy = dummy.replaceAll("\\[n\\](.*?)\\[/n\\]", Matcher.quoteReplacement("\\begin{enumerate}")+System.lineSeparator()+"$1"+Matcher.quoteReplacement("\\end{enumerate}"));
         // bullet points: [*] becomes <li>
-        dummy = dummy.replaceAll("\\[\\*\\](.*?)\\[/\\*\\]", Matcher.quoteReplacement("\\item ")+"$1"+System.getProperty("line.separator"));
+        dummy = dummy.replaceAll("\\[\\*\\](.*?)\\[/\\*\\]", Matcher.quoteReplacement("\\item ")+"$1"+System.lineSeparator());
         // konvertierung von sonderzeichen
         dummy = dummy.replace("...", "\\dots");
         // here we convert all author-footnotes to latex-cite-tags
@@ -1997,7 +1997,7 @@ public class HtmlUbbUtil {
         // which is being display in the main window's entry remarks field
         StringBuilder retval = new StringBuilder("");
         // first of all, prepare the header and style information of the main content
-        retval.append("<style>").append(System.getProperty("line.separator"));
+        retval.append("<style>").append(System.lineSeparator());
         // body-tag with main font settings
         // body-tag with main font settings
         retval.append("body{font-family:");
@@ -2010,12 +2010,12 @@ public class HtmlUbbUtil {
         retval.append(settings.getRemarksFont(Settings.FONTSTYLE));
         retval.append(";font-weight:");
         retval.append(settings.getRemarksFont(Settings.FONTWEIGHT));
-        retval.append("}").append(System.getProperty("line.separator"));
+        retval.append("}").append(System.lineSeparator());
         // copy css-style to retval...
         retval.append(getHighlightCSS(settings));
-        retval.append(".content{padding:3px}").append(System.getProperty("line.separator"));
+        retval.append(".content{padding:3px}").append(System.lineSeparator());
         // css for links, usually only footnotes.
-        retval.append("a{color:#003399;text-decoration:none}").append(System.getProperty("line.separator"));
+        retval.append("a{color:#003399;text-decoration:none}").append(System.lineSeparator());
         retval.append("</style>");
         // now start with the html content itself
         retval.append("<div class=\"content\">");        
@@ -2035,7 +2035,7 @@ public class HtmlUbbUtil {
             retval.append(dummy);
         }
         // close all tags properly
-        retval.append("</div>").append(System.getProperty("line.separator"));
+        retval.append("</div>").append(System.lineSeparator());
         
         return retval.toString();
     }
@@ -2045,7 +2045,7 @@ public class HtmlUbbUtil {
         // which is being display in the main window's entry remarks field
         StringBuilder retval = new StringBuilder("");
         // first of all, prepare the header and style information of the main content
-        retval.append("<style>").append(System.getProperty("line.separator"));
+        retval.append("<style>").append(System.lineSeparator());
         // body-tag with main font settings
         // body-tag with main font settings
         retval.append("body{font-family:");
@@ -2056,14 +2056,14 @@ public class HtmlUbbUtil {
         retval.append(settings.getEntryHeaderFont(Settings.FONTSTYLE));
         retval.append(";font-weight:");
         retval.append(settings.getEntryHeaderFont(Settings.FONTWEIGHT));
-        retval.append("}").append(System.getProperty("line.separator"));
-        retval.append("table{border-collapse:collapse;border:none}").append(System.getProperty("line.separator"));
-        retval.append("td{border:none}").append(System.getProperty("line.separator"));
+        retval.append("}").append(System.lineSeparator());
+        retval.append("table{border-collapse:collapse;border:none}").append(System.lineSeparator());
+        retval.append("td{border:none}").append(System.lineSeparator());
         // css for links, usually only footnotes.
-        retval.append("a{color:black;text-decoration:none}").append(System.getProperty("line.separator"));
+        retval.append("a{color:black;text-decoration:none}").append(System.lineSeparator());
         retval.append("</style>");
         // now start with the html content itself
-        retval.append("<table><tr>").append(System.getProperty("line.separator"));
+        retval.append("<table><tr>").append(System.lineSeparator());
         retval.append("<td width=\"1%\" valign=\"top\">");
         retval.append(resourceMap.getString(resmapstring));
         retval.append("</td><td valign=\"top\">");
@@ -2078,7 +2078,7 @@ public class HtmlUbbUtil {
             retval.append(entrysb.toString().substring(0, entrysb.length()-10));
         }
         // close all tags properly
-        retval.append("</td></tr></table>").append(System.getProperty("line.separator"));
+        retval.append("</td></tr></table>").append(System.lineSeparator());
         
         return retval.toString();
     }
@@ -2115,7 +2115,7 @@ public class HtmlUbbUtil {
 
                 retval.append(".highlight_").append(sk).append("{");
                 retval.append("background-color:#").append(settings.getHighlightBackgroundColor(HIGHLIGHT_STYLE_KEYWORDS)).append("}");
-                retval.append(System.getProperty("line.separator"));
+                retval.append(System.lineSeparator());
             }
 
             if (entrykeywords!=null && entrykeywords.length>0) {
@@ -2142,7 +2142,7 @@ public class HtmlUbbUtil {
 
                     retval.append(".highlight_").append(ek).append("{");
                     retval.append("background-color:#ffffff}");
-                    retval.append(System.getProperty("line.separator"));
+                    retval.append(System.lineSeparator());
                 }
             }
         }
@@ -2204,26 +2204,26 @@ public class HtmlUbbUtil {
         retval.append(settings.getMainfont(Settings.FONTWEIGHT));
         // line-height currently not supported by Java
         // retval.append(";line-height:18px");
-        retval.append("}").append(System.getProperty("line.separator"));
+        retval.append("}").append(System.lineSeparator());
         /*
          * table formatting
          */ 
         if (settings.getShowTableBorder()) {
-            retval.append("table{border-collapse:collapse;border-top:1px solid black;border-bottom:1px solid black;padding:0px}").append(System.getProperty("line.separator"));
-            retval.append(".rowhead{border-top:1px solid black;border-bottom:1px solid black;background-color:#").append(settings.getTableHeaderColor()).append("}").append(System.getProperty("line.separator"));
+            retval.append("table{border-collapse:collapse;border-top:1px solid black;border-bottom:1px solid black;padding:0px}").append(System.lineSeparator());
+            retval.append(".rowhead{border-top:1px solid black;border-bottom:1px solid black;background-color:#").append(settings.getTableHeaderColor()).append("}").append(System.lineSeparator());
         }
         else {
-            retval.append("table{border-collapse:collapse;border:none}").append(System.getProperty("line.separator"));
-            retval.append(".rowhead{background-color:#").append(settings.getTableHeaderColor()).append("}").append(System.getProperty("line.separator"));
+            retval.append("table{border-collapse:collapse;border:none}").append(System.lineSeparator());
+            retval.append(".rowhead{background-color:#").append(settings.getTableHeaderColor()).append("}").append(System.lineSeparator());
         }
         retval.append("th{padding:4px;border:none;font-weight:bold;");
-        retval.append("background-color:#").append(settings.getTableHeaderColor()).append("}").append(System.getProperty("line.separator"));
-        retval.append("td{padding:4px;vertical-align:top}").append(System.getProperty("line.separator"));
-        retval.append(".roweven{background-color:#").append(settings.getTableRowEvenColor()).append("}").append(System.getProperty("line.separator"));
-        retval.append(".rowodd{background-color:#").append(settings.getTableRowOddColor()).append("}").append(System.getProperty("line.separator"));
-        retval.append(".tfirstcol{text-align:left}").append(System.getProperty("line.separator"));
-        retval.append(".tothercol{text-align:center}").append(System.getProperty("line.separator"));
-        retval.append("caption{font-style:italic}").append(System.getProperty("line.separator"));
+        retval.append("background-color:#").append(settings.getTableHeaderColor()).append("}").append(System.lineSeparator());
+        retval.append("td{padding:4px;vertical-align:top}").append(System.lineSeparator());
+        retval.append(".roweven{background-color:#").append(settings.getTableRowEvenColor()).append("}").append(System.lineSeparator());
+        retval.append(".rowodd{background-color:#").append(settings.getTableRowOddColor()).append("}").append(System.lineSeparator());
+        retval.append(".tfirstcol{text-align:left}").append(System.lineSeparator());
+        retval.append(".tothercol{text-align:center}").append(System.lineSeparator());
+        retval.append("caption{font-style:italic}").append(System.lineSeparator());
         /*
          * header tags formatting
          */ 
@@ -2238,7 +2238,7 @@ public class HtmlUbbUtil {
         retval.append(settings.getTitleFont(Settings.FONTSTYLE));
         retval.append(";font-weight:");
         retval.append(settings.getTitleFont(Settings.FONTWEIGHT));
-        retval.append("}").append(System.getProperty("line.separator"));
+        retval.append("}").append(System.lineSeparator());
         // h2-tag with header1 font settings
         retval.append(h2);
         retval.append("{font-family:");
@@ -2251,7 +2251,7 @@ public class HtmlUbbUtil {
         retval.append(settings.getHeaderfont1(Settings.FONTSTYLE));
         retval.append(";font-weight:");
         retval.append(settings.getHeaderfont1(Settings.FONTWEIGHT));
-        retval.append("}").append(System.getProperty("line.separator"));
+        retval.append("}").append(System.lineSeparator());
         // h3-tag with header2 font settings
         retval.append(h3);
         retval.append("{font-family:");
@@ -2264,37 +2264,37 @@ public class HtmlUbbUtil {
         retval.append(settings.getHeaderfont2(Settings.FONTSTYLE));
         retval.append(";font-weight:");
         retval.append(settings.getHeaderfont2(Settings.FONTWEIGHT));
-        retval.append("}").append(System.getProperty("line.separator"));
+        retval.append("}").append(System.lineSeparator());
         /*
          * append style-definition for lists
          */ 
-        retval.append("ul{margin-left:10px}").append(System.getProperty("line.separator"));
-        retval.append("ol{margin-left:10px}").append(System.getProperty("line.separator"));
+        retval.append("ul{margin-left:10px}").append(System.lineSeparator());
+        retval.append("ol{margin-left:10px}").append(System.lineSeparator());
         // append style-definition for lists
         retval.append("li{margin-bottom:");
         // now we have to calculated a prop ortional line-distance. we do this
         // by dividing the font-size by 1.5, which is the margin-distance from
         // each list-point
         int s = Integer.parseInt(settings.getMainfont(Settings.FONTSIZE));
-        retval.append(String.valueOf((s/2))).append(fontunit).append("}").append(System.getProperty("line.separator"));
+        retval.append(String.valueOf((s/2))).append(fontunit).append("}").append(System.lineSeparator());
         /*
          * css for links, usually only footnotes.
          */ 
         retval.append("a{color:#");
         retval.append(settings.getLinkColor());
-        retval.append(";text-decoration:none}").append(System.getProperty("line.separator"));
+        retval.append(";text-decoration:none}").append(System.lineSeparator());
         retval.append("a.manlink{color:#");
         retval.append(settings.getManlinkColor());
-        retval.append(";text-decoration:none}").append(System.getProperty("line.separator"));
+        retval.append(";text-decoration:none}").append(System.lineSeparator());
         retval.append("a.fnlink{color:#");
         retval.append(settings.getFootnoteLinkColor());
-        retval.append(";text-decoration:none}").append(System.getProperty("line.separator"));
+        retval.append(";text-decoration:none}").append(System.lineSeparator());
         /*
          * css for different character formattings
          */ 
         // make footnotes a bit smaller
-        retval.append("sup{font-size:0.9em}").append(System.getProperty("line.separator"));
-        retval.append("sub{font-size:0.9em}").append(System.getProperty("line.separator"));
+        retval.append("sup{font-size:0.9em}").append(System.lineSeparator());
+        retval.append("sub{font-size:0.9em}").append(System.lineSeparator());
         // create style for quotes
         if (isExport) {
             retval.append("blockquote");
@@ -2308,7 +2308,7 @@ public class HtmlUbbUtil {
         retval.append(";font-size:");
         retval.append(settings.getQuoteFont(Settings.FONTSIZE));
         retval.append(fontunit).append(";color:#");
-        retval.append(settings.getQuoteFont(Settings.FONTCOLOR)).append("}").append(System.getProperty("line.separator"));
+        retval.append(settings.getQuoteFont(Settings.FONTCOLOR)).append("}").append(System.lineSeparator());
         // create style for code
         retval.append("code");
         retval.append("{font-family:");
@@ -2316,7 +2316,7 @@ public class HtmlUbbUtil {
         retval.append(";font-size:");
         retval.append(settings.getCodeFont(Settings.FONTSIZE));
         retval.append(fontunit).append(";color:#");
-        retval.append(settings.getCodeFont(Settings.FONTCOLOR)).append("}").append(System.getProperty("line.separator"));
+        retval.append(settings.getCodeFont(Settings.FONTCOLOR)).append("}").append(System.lineSeparator());
         /*
          * css style for reference list fonts
          */ 
@@ -2336,7 +2336,7 @@ public class HtmlUbbUtil {
         // each list-point
         s = Integer.parseInt(settings.getAuthorFont(Settings.FONTSIZE));
         float f = (float) (s / 2);
-        retval.append(String.valueOf((int) Math.ceil(f))).append("px}").append(System.getProperty("line.separator"));
+        retval.append(String.valueOf((int) Math.ceil(f))).append("px}").append(System.lineSeparator());
         /*
          * css style for search term highlighting
          */ 
@@ -2345,8 +2345,8 @@ public class HtmlUbbUtil {
          * css style desktop display
          ***************************************************************/ 
         if (isDesktop) {
-            retval.append("table.maintable{border-collapse:collapse;border:none}").append(System.getProperty("line.separator"));
-            retval.append(".content{").append(contentpadding).append("}").append(System.getProperty("line.separator"));
+            retval.append("table.maintable{border-collapse:collapse;border:none}").append(System.lineSeparator());
+            retval.append(".content{").append(contentpadding).append("}").append(System.lineSeparator());
             // desktop bullet settings
             retval.append("h1{font-family:");
             retval.append(settings.getDesktopHeaderfont(Settings.FONTNAME));
@@ -2358,9 +2358,9 @@ public class HtmlUbbUtil {
             retval.append(settings.getDesktopHeaderfont(Settings.FONTSTYLE));
             retval.append(";font-weight:");
             retval.append(settings.getDesktopHeaderfont(Settings.FONTWEIGHT));
-            retval.append("}").append(System.getProperty("line.separator"));
+            retval.append("}").append(System.lineSeparator());
             // paragraph settings
-            retval.append("p{margin-bottom:6px;margin-top:3px}").append(System.getProperty("line.separator"));
+            retval.append("p{margin-bottom:6px;margin-top:3px}").append(System.lineSeparator());
             // desktop-comment settings
             retval.append(".comment{padding:5px;background-color:#f0f0f0;");
             if (!isExport) {
@@ -2376,7 +2376,7 @@ public class HtmlUbbUtil {
             retval.append(settings.getDesktopCommentfont(Settings.FONTSTYLE));
             retval.append(";font-weight:");
             retval.append(settings.getDesktopCommentfont(Settings.FONTWEIGHT));
-            retval.append("}").append(System.getProperty("line.separator"));
+            retval.append("}").append(System.lineSeparator());
             // desktop header font for the display items
             retval.append(".items{font-family:");
             retval.append(settings.getDesktopItemHeaderfont(Settings.FONTNAME));
@@ -2388,7 +2388,7 @@ public class HtmlUbbUtil {
             retval.append(settings.getDesktopItemHeaderfont(Settings.FONTSTYLE));
             retval.append(";font-weight:");
             retval.append(settings.getDesktopItemHeaderfont(Settings.FONTWEIGHT));
-            retval.append("}").append(System.getProperty("line.separator"));
+            retval.append("}").append(System.lineSeparator());
             // desktop font for the display items text
             retval.append(".itemfont{font-family:");
             retval.append(settings.getDesktopItemfont(Settings.FONTNAME));
@@ -2401,7 +2401,7 @@ public class HtmlUbbUtil {
             retval.append(";font-weight:");
             retval.append(settings.getDesktopItemfont(Settings.FONTWEIGHT));
             retval.append(";margin-top:3px;margin-bottom:3px");
-            retval.append("}").append(System.getProperty("line.separator"));
+            retval.append("}").append(System.lineSeparator());
         }
         /***************************************************************
          * css style entry display
@@ -2416,28 +2416,28 @@ public class HtmlUbbUtil {
             retval.append(";font-size:");
             retval.append(settings.getEntryHeaderFont(Settings.FONTSIZE));
             retval.append(fontunit).append(";color:#");
-            retval.append(settings.getEntryHeaderFont(Settings.FONTCOLOR)).append("}").append(System.getProperty("line.separator"));
+            retval.append(settings.getEntryHeaderFont(Settings.FONTCOLOR)).append("}").append(System.lineSeparator());
             retval.append(".elink, .tslink, .rlink {color:#");
-            retval.append(settings.getEntryHeaderFont(Settings.FONTCOLOR)).append("}").append(System.getProperty("line.separator"));
-            retval.append(".crtitle{margin:0px;padding:0px;width:1%;vertical-align:top;padding-top:").append(halfcontentpadding).append("px}").append(System.getProperty("line.separator"));
+            retval.append(settings.getEntryHeaderFont(Settings.FONTCOLOR)).append("}").append(System.lineSeparator());
+            retval.append(".crtitle{margin:0px;padding:0px;width:1%;vertical-align:top;padding-top:").append(halfcontentpadding).append("px}").append(System.lineSeparator());
             retval.append(".crtitle a{color:#");
-            retval.append(settings.getEntryHeaderFont(Settings.FONTCOLOR)).append("}").append(System.getProperty("line.separator"));
-            retval.append(".mlink {margin:0px;padding:0px;padding-top:").append(halfcontentpadding).append("px}").append(System.getProperty("line.separator"));
+            retval.append(settings.getEntryHeaderFont(Settings.FONTCOLOR)).append("}").append(System.lineSeparator());
+            retval.append(".mlink {margin:0px;padding:0px;padding-top:").append(halfcontentpadding).append("px}").append(System.lineSeparator());
             retval.append(".mlink a{color:#");
-            retval.append(settings.getEntryHeaderFont(Settings.FONTCOLOR)).append("}").append(System.getProperty("line.separator"));
-            retval.append(".tabentryrating{border-collapse:collapse;border:none;margin:0px;padding:0px;width:100%}").append(System.getProperty("line.separator"));
-            retval.append(".leftcellentryrating{margin:0px;padding:0px;width:30%}").append(System.getProperty("line.separator"));
-            retval.append(".midcellentryrating{margin:0px;padding:0px;width:45%}").append(System.getProperty("line.separator"));
-            retval.append(".rightcellentryrating{margin:0px;padding:0px;width:25%}").append(System.getProperty("line.separator"));
+            retval.append(settings.getEntryHeaderFont(Settings.FONTCOLOR)).append("}").append(System.lineSeparator());
+            retval.append(".tabentryrating{border-collapse:collapse;border:none;margin:0px;padding:0px;width:100%}").append(System.lineSeparator());
+            retval.append(".leftcellentryrating{margin:0px;padding:0px;width:30%}").append(System.lineSeparator());
+            retval.append(".midcellentryrating{margin:0px;padding:0px;width:45%}").append(System.lineSeparator());
+            retval.append(".rightcellentryrating{margin:0px;padding:0px;width:25%}").append(System.lineSeparator());
             retval.append(".content{background-color:#");
             retval.append(settings.getContentBackgroundColor()).append(";");
-            retval.append(contentpadding).append(";padding-bottom:20px}").append(System.getProperty("line.separator"));
+            retval.append(contentpadding).append(";padding-bottom:20px}").append(System.lineSeparator());
             /*
              * css style for appendix
              */ 
             retval.append(".appendixcontent{background-color:#");
             retval.append(settings.getAppendixBackgroundColor()).append(";");
-            retval.append(contentpadding).append("}").append(System.getProperty("line.separator"));
+            retval.append(contentpadding).append("}").append(System.lineSeparator());
             // appendix header
             retval.append(".appendixcontent h1");
             retval.append("{font-family:");
@@ -2450,14 +2450,14 @@ public class HtmlUbbUtil {
             retval.append(settings.getAppendixHeaderFont(Settings.FONTSTYLE));
             retval.append(";font-weight:");
             retval.append(settings.getAppendixHeaderFont(Settings.FONTWEIGHT));
-            retval.append(";margin:0;padding:0}").append(System.getProperty("line.separator"));
+            retval.append(";margin:0;padding:0}").append(System.lineSeparator());
             // h1-tag with title font settings
             retval.append(".attachments ul{color:#");
             retval.append(settings.getLinkColor());
-            retval.append(";font-size:9").append(fontunit).append(";margin-left:10px}").append(System.getProperty("line.separator"));
+            retval.append(";font-size:9").append(fontunit).append(";margin-left:10px}").append(System.lineSeparator());
             retval.append(".attachments ul a{color:#");
             retval.append(settings.getLinkColor());
-            retval.append(";text-decoration:none}").append(System.getProperty("line.separator"));
+            retval.append(";text-decoration:none}").append(System.lineSeparator());
             /*
              * css style for remarks-area in appendix
              */ 
@@ -2474,7 +2474,7 @@ public class HtmlUbbUtil {
             retval.append(";margin-top:");
             s = Integer.parseInt(settings.getRemarksFont(Settings.FONTSIZE));
             f = (float) (s / 2);
-            retval.append(String.valueOf((int) Math.ceil(f))).append("px}").append(System.getProperty("line.separator"));
+            retval.append(String.valueOf((int) Math.ceil(f))).append("px}").append(System.lineSeparator());
         }
         return retval.toString();
     }
@@ -2497,7 +2497,7 @@ public class HtmlUbbUtil {
         // which is being display in the main window's "entry textfield"
         StringBuilder retval = new StringBuilder("");
         // first of all, prepare the header and style information of the main content
-        retval.append("<style>").append(System.getProperty("line.separator"));
+        retval.append("<style>").append(System.lineSeparator());
         // get the common style definition for the basic-tags
         retval.append(getCommonStyleDefinition(settings,true,false,print));
         retval.append("</style>");
@@ -2522,7 +2522,7 @@ public class HtmlUbbUtil {
         // which is being display in the main window's "entry textfield"
         StringBuilder retval = new StringBuilder("");
         // first of all, prepare the header and style information of the main content
-        retval.append("<style>").append(System.getProperty("line.separator"));
+        retval.append("<style>").append(System.lineSeparator());
         // get the common style definition for the basic-tags
         retval.append(getCommonStyleDefinition(settings,false,true,false));
         // body-tag with main font settings
@@ -2536,7 +2536,7 @@ public class HtmlUbbUtil {
         retval.append(settings.getDesktopHeaderfont(Settings.FONTSTYLE));
         retval.append(";font-weight:");
         retval.append(settings.getDesktopHeaderfont(Settings.FONTWEIGHT));
-        retval.append("}").append(System.getProperty("line.separator"));
+        retval.append("}").append(System.lineSeparator());
         retval.append(".author{font-family:");
         retval.append(settings.getAuthorFont(Settings.FONTNAME));
         retval.append(";font-size:");
@@ -2547,7 +2547,7 @@ public class HtmlUbbUtil {
         retval.append(settings.getAuthorFont(Settings.FONTSTYLE));
         retval.append(";font-weight:");
         retval.append(settings.getAuthorFont(Settings.FONTWEIGHT));
-        retval.append("}").append(System.getProperty("line.separator"));
+        retval.append("}").append(System.lineSeparator());
         retval.append("</style><div class=\"content\">");
 
         return retval.toString();
@@ -2574,20 +2574,20 @@ public class HtmlUbbUtil {
         // which is being display in the main window's "entry textfield"
         StringBuilder retval = new StringBuilder("");
         // first of all, prepare the header and style information of the main content
-        retval.append("<html><head><style>").append(System.getProperty("line.separator"));
+        retval.append("<html><head><style>").append(System.lineSeparator());
         // get the common style definition for the basic-tags
         retval.append(getCommonStyleDefinition(settings,true,true,false));
         // body-tag with main font settings
-        retval.append(".tocheader1 {margin-left:0.5em;}").append(System.getProperty("line.separator"));
-        retval.append(".tocentry1 {margin-left:1em;}").append(System.getProperty("line.separator"));
-        retval.append(".tocheader2 {margin-left:1.5em;}").append(System.getProperty("line.separator"));
-        retval.append(".tocentry2 {margin-left:2em;}").append(System.getProperty("line.separator"));
-        retval.append(".tocheader3 {margin-left:2.5em;}").append(System.getProperty("line.separator"));
-        retval.append(".tocentry3 {margin-left:3em;}").append(System.getProperty("line.separator"));
-        retval.append(".tocheader4 {margin-left:3.5em;}").append(System.getProperty("line.separator"));
-        retval.append(".tocentry4 {margin-left:4em;}").append(System.getProperty("line.separator"));
-        retval.append(".tocheader5 {margin-left:4.5em;}").append(System.getProperty("line.separator"));
-        retval.append(".tocentry5 {margin-left:5em;}").append(System.getProperty("line.separator"));
+        retval.append(".tocheader1 {margin-left:0.5em;}").append(System.lineSeparator());
+        retval.append(".tocentry1 {margin-left:1em;}").append(System.lineSeparator());
+        retval.append(".tocheader2 {margin-left:1.5em;}").append(System.lineSeparator());
+        retval.append(".tocentry2 {margin-left:2em;}").append(System.lineSeparator());
+        retval.append(".tocheader3 {margin-left:2.5em;}").append(System.lineSeparator());
+        retval.append(".tocentry3 {margin-left:3em;}").append(System.lineSeparator());
+        retval.append(".tocheader4 {margin-left:3.5em;}").append(System.lineSeparator());
+        retval.append(".tocentry4 {margin-left:4em;}").append(System.lineSeparator());
+        retval.append(".tocheader5 {margin-left:4.5em;}").append(System.lineSeparator());
+        retval.append(".tocentry5 {margin-left:5em;}").append(System.lineSeparator());
         retval.append(".deskhead{font-family:");
         retval.append(settings.getDesktopHeaderfont(Settings.FONTNAME));
         retval.append(";font-size:");
@@ -2598,7 +2598,7 @@ public class HtmlUbbUtil {
         retval.append(settings.getDesktopHeaderfont(Settings.FONTSTYLE));
         retval.append(";font-weight:");
         retval.append(settings.getDesktopHeaderfont(Settings.FONTWEIGHT));
-        retval.append("}").append(System.getProperty("line.separator"));
+        retval.append("}").append(System.lineSeparator());
         retval.append(".author{font-family:");
         retval.append(settings.getAuthorFont(Settings.FONTNAME));
         retval.append(";font-size:");
@@ -2609,7 +2609,7 @@ public class HtmlUbbUtil {
         retval.append(settings.getAuthorFont(Settings.FONTSTYLE));
         retval.append(";font-weight:");
         retval.append(settings.getAuthorFont(Settings.FONTWEIGHT));
-        retval.append("}").append(System.getProperty("line.separator"));
+        retval.append("}").append(System.lineSeparator());
         retval.append("</style></head><body><div class=\"content\">");
 
         return retval.toString();
@@ -2690,7 +2690,7 @@ public class HtmlUbbUtil {
             // append title
             retval.append(zetteltitle);
         }
-        retval.append("</strong></p>").append(System.getProperty("line.separator"));
+        retval.append("</strong></p>").append(System.lineSeparator());
         return retval.toString();
     }
     
@@ -2744,16 +2744,16 @@ public class HtmlUbbUtil {
             // if the entry has remarks, add them to the content
             if (!rem.isEmpty()) {
                 // set title
-                retval.append(System.getProperty("line.separator")).append("<p class=\"items\">");
+                retval.append(System.lineSeparator()).append("<p class=\"items\">");
                 retval.append(resourceMap.getString("remarksText"));
-                retval.append("</p>").append(System.getProperty("line.separator")).append("<p class=\"itemfont\">");
+                retval.append("</p>").append(System.lineSeparator()).append("<p class=\"itemfont\">");
                 // now copy the content of the entry to a dummy string. here we convert
                 // the format codes into html-tags. the format codes are simplified tags
                 // for the user to enable simple format editing
                 rem = rem.replace("<", "&lt;").replace(">", "&gt;").replace("[br]", "<br>");
                 // after the conversion is done, append the content to the resulting return string
                 retval.append(rem);
-                retval.append("</p>").append(System.getProperty("line.separator"));
+                retval.append("</p>").append(System.lineSeparator());
             }
         }
         //
@@ -2766,7 +2766,7 @@ public class HtmlUbbUtil {
             // if there is no author information, tell this the user
             if ((zettelauthors!=null)&&(zettelauthors.length>0)) {
                 // set title
-                retval.append(System.getProperty("line.separator")).append("<p class=\"items\">");
+                retval.append(System.lineSeparator()).append("<p class=\"items\">");
                 retval.append(resourceMap.getString("authorsText"));
                 retval.append("</p>");
                 // iterate the author array
@@ -2774,9 +2774,9 @@ public class HtmlUbbUtil {
                     // autoconvert url's to hyperlinks
                     aus = convertHyperlinks(aus.replace("<", "&lt;").replace(">", "&gt;"));
                     // and append each author
-                    retval.append(System.getProperty("line.separator")).append("<p class=\"itemfont\">").append(aus).append("</p>");
+                    retval.append(System.lineSeparator()).append("<p class=\"itemfont\">").append(aus).append("</p>");
                 }
-                retval.append(System.getProperty("line.separator"));
+                retval.append(System.lineSeparator());
             }
         }
         //
@@ -2789,18 +2789,18 @@ public class HtmlUbbUtil {
             // if there is no author information, tell this the user
             if ((links!=null)&&(!links.isEmpty())) {
                 // set title
-                retval.append(System.getProperty("line.separator")).append("<p class=\"items\">");
+                retval.append(System.lineSeparator()).append("<p class=\"items\">");
                 retval.append(resourceMap.getString("attachmentsText"));
-                retval.append("</p>").append(System.getProperty("line.separator")).append("<p class=\"itemfont\">");
+                retval.append("</p>").append(System.lineSeparator()).append("<p class=\"itemfont\">");
                 // create iterator
                 Iterator<Element> ie = links.iterator();
                 // iterate the list
                 while (ie.hasNext()) {
                     Element e = ie.next();
                     // and append each attachment
-                    retval.append("<a href=\"").append(e.getText()).append("\">").append(e.getText()).append("</a><br>").append(System.getProperty("line.separator"));
+                    retval.append("<a href=\"").append(e.getText()).append("\">").append(e.getText()).append("</a><br>").append(System.lineSeparator());
                 }
-                retval.append("</p>").append(System.getProperty("line.separator"));
+                retval.append("</p>").append(System.lineSeparator());
             }
         }
         //
@@ -2813,9 +2813,9 @@ public class HtmlUbbUtil {
             // if there is no author information, tell this the user
             if ((kws!=null)&&(kws.length>0)) {
                 // set title
-                retval.append(System.getProperty("line.separator")).append("<p class=\"items\">");
+                retval.append(System.lineSeparator()).append("<p class=\"items\">");
                 retval.append(resourceMap.getString("keywordsText"));
-                retval.append("</p>").append(System.getProperty("line.separator")).append("<p class=\"itemfont\">");
+                retval.append("</p>").append(System.lineSeparator()).append("<p class=\"itemfont\">");
                 // sort array
                 Arrays.sort(kws,new Comparer());
                 // iterate the string arryy
@@ -2826,7 +2826,7 @@ public class HtmlUbbUtil {
                 // truncate last comma and space
                 retval.setLength(retval.length()-2);
                 // close tag
-                retval.append("</p>").append(System.getProperty("line.separator"));
+                retval.append("</p>").append(System.lineSeparator());
             }
         }
         // return finished entry

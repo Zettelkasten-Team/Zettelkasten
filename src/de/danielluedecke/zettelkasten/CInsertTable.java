@@ -240,7 +240,7 @@ public class CInsertTable extends javax.swing.JDialog {
         tabledata.append(jTextFieldCaption.getText());
         tabledata.append(Constants.FORMAT_TABLECAPTION_CLOSE);
         // and append a new line
-        tabledata.append(System.getProperty("line.separator"));
+        tabledata.append(System.lineSeparator());
         // retrieve all table rows
         for (int row=0; row<tm.getRowCount()-1; row++) {
             // clear tablerow
@@ -264,10 +264,10 @@ public class CInsertTable extends javax.swing.JDialog {
             // if we have any data, remove last separator char
             if (tabledata.length()>1) tabledata.setLength(tabledata.length()-1);
             // and append a new line
-            tabledata.append(System.getProperty("line.separator"));
+            tabledata.append(System.lineSeparator());
         }
         // if we have any data, remove last new line
-        if (tabledata.length()>1) tabledata.setLength(tabledata.length()-System.getProperty("line.separator").length());
+        if (tabledata.length()>1) tabledata.setLength(tabledata.length()-System.lineSeparator().length());
         // close tag
         tabledata.append("[/table]");
         // copy stringbuilder to return variable

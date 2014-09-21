@@ -85,17 +85,17 @@ public class ExportTools {
         StringBuilder sb = new StringBuilder("");
         // if there is no keyword information, tell this the user
         if ((null==values)||(values.length<1)) {
-            sb.append(notfound).append(System.getProperty("line.separator"));
+            sb.append(notfound).append(System.lineSeparator());
         }
         else {
             // create headline indicating that keyword-part starts here
-            sb.append(textagopen).append(header).append(textagclose).append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+            sb.append(textagopen).append(header).append(textagclose).append(System.lineSeparator()).append(System.lineSeparator());
             // iterate the keyword array
             for (String val : values) {
                 // and append each author
-                sb.append(val).append(System.getProperty("line.separator"));
+                sb.append(val).append(System.lineSeparator());
             }
-            sb.append(System.getProperty("line.separator"));
+            sb.append(System.lineSeparator());
         }
         return sb.toString();
     }
@@ -120,18 +120,18 @@ public class ExportTools {
         StringBuilder sb = new StringBuilder("");
         // if there is no keyword information, tell this the user
         if ((null==values)||(values.length<1)) {
-            sb.append(notfound).append(System.getProperty("line.separator"));
+            sb.append(notfound).append(System.lineSeparator());
         }
         else {
             // create headline indicating that keyword-part starts here
-            sb.append(textagopen).append(header).append(textagclose).append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+            sb.append(textagopen).append(header).append(textagclose).append(System.lineSeparator()).append(System.lineSeparator());
             // iterate the keyword array
             for (String val : values) {
                 // and append each author
                 sb.append(val).append(", ");
             }
             sb.setLength(sb.length()-2);
-            sb.append(System.getProperty("line.separator"));
+            sb.append(System.lineSeparator());
         }
         return sb.toString();
     }
@@ -194,7 +194,7 @@ public class ExportTools {
             sb.append(headeropen);
             // append a new headline with the bullet's name
             sb.append(resourceMap.getString("referenceListHeading"));
-            sb.append(headerclose).append(System.getProperty("line.separator"));
+            sb.append(headerclose).append(System.lineSeparator());
             // iterator for the linked list
             Iterator<String> i = footnotes.iterator();
             // go through all footnotes
@@ -207,13 +207,13 @@ public class ExportTools {
                     switch (listtype) {
                         case Constants.REFERENCE_LIST_TXT:
                                 // prepare html-stuff for authors
-                                sb.append("[").append(au).append("] ").append(dataObj.getAuthor(aunr)).append(System.getProperty("line.separator"));
+                                sb.append("[").append(au).append("] ").append(dataObj.getAuthor(aunr)).append(System.lineSeparator());
                                 break;
                         case Constants.REFERENCE_LIST_HTML:
                                 // prepare html-stuff for authors
                                 sb.append("<p class=\"reflist\"><b>[<a name=\"fn_").append(au).append("\">").append(au).append("</a>]</b> ");
                                 sb.append(dataObj.getAuthor(aunr));
-                                sb.append("</p>").append(System.getProperty("line.separator"));
+                                sb.append("</p>").append(System.lineSeparator());
                                 break;
                     }
                 } catch (NumberFormatException e) {

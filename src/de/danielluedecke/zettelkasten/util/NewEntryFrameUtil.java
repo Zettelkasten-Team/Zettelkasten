@@ -53,7 +53,7 @@ public class NewEntryFrameUtil {
                     String text = ta.getText();
                     int longest = stenoObj.retrieveLongestAbbrLength();
                     int start = caret - longest - 1;
-                    int start2 = text.lastIndexOf(System.getProperty("line.separator"), caret - 2);
+                    int start2 = text.lastIndexOf(System.lineSeparator(), caret - 2);
                     if (start2 > start) {
                         start = start2;
                     }
@@ -101,7 +101,7 @@ public class NewEntryFrameUtil {
                     if (settingsObj.getSpellCorrect()) {
                         if (caret > 2) {
                             int start = text.lastIndexOf(" ", caret - 2);
-                            int start2 = text.lastIndexOf(System.getProperty("line.separator"), caret - 2);
+                            int start2 = text.lastIndexOf(System.lineSeparator(), caret - 2);
                             if (start2 > start) {
                                 start = start2;
                             }

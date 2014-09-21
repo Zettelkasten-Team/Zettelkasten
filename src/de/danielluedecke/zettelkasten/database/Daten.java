@@ -987,7 +987,7 @@ public class Daten {
     public void addZknDescription(String desc) {
         // if description is not empty, concatenate it to old description
         if (!desc.isEmpty()) {
-            if (setZknDescription(getZknDescription()+System.getProperty("line.separator")+System.getProperty("line.separator")+desc)) {
+            if (setZknDescription(getZknDescription()+System.lineSeparator()+System.lineSeparator()+desc)) {
                 setMetaModified(true);
             }
         }
@@ -4967,7 +4967,7 @@ public class Daten {
     public String getCleanRemarks(int pos) {
         String content = getRemarks(pos);
         if (!content.isEmpty()) {
-            content = content.replace("[br]", System.getProperty("line.separator"));
+            content = content.replace("[br]", System.lineSeparator());
         }
         // return the cleaned string
         return content;

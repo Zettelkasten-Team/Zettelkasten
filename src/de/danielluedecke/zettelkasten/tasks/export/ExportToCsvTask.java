@@ -250,11 +250,11 @@ public class ExportToCsvTask extends org.jdesktop.application.Task<Object, Void>
                                 // append author to stringbuilder
                                 sbauthor.append(a);
                                 // and add a new line
-                                sbauthor.append(System.getProperty("line.separator"));
+                                sbauthor.append(System.lineSeparator());
                             }
                             // if we have any values in the stringbuilder, truncate last line separator
                             if (sbauthor.length()>1) {
-                                sbauthor.setLength((sbauthor.length()-System.getProperty("line.separator").length()));
+                                sbauthor.setLength((sbauthor.length()-System.lineSeparator().length()));
                             }
                             // finally, add author values to the csv-line
                             csvline.add(sbauthor.toString());
@@ -278,11 +278,11 @@ public class ExportToCsvTask extends org.jdesktop.application.Task<Object, Void>
                                 // append author to stringbuilder
                                 sbkeywords.append(k);
                                 // and add a new line
-                                sbkeywords.append(System.getProperty("line.separator"));
+                                sbkeywords.append(System.lineSeparator());
                             }
                             // if we have any values in the stringbuilder, truncate last line separator
                             if (sbkeywords.length()>1) {
-                                sbkeywords.setLength((sbkeywords.length()-System.getProperty("line.separator").length()));
+                                sbkeywords.setLength((sbkeywords.length()-System.lineSeparator().length()));
                             }
                             // finally, add author values to the csv-line
                             csvline.add(sbkeywords.toString());
@@ -319,11 +319,11 @@ public class ExportToCsvTask extends org.jdesktop.application.Task<Object, Void>
                             Element el_dummy = i.next();
                             // and set the text to our created child element
                             links.append(el_dummy.getText());
-                            links.append(System.getProperty("line.separator"));
+                            links.append(System.lineSeparator());
                         }
                         // if we have any values in the stringbuilder, truncate last line separator
                         if (links.length()>1) {
-                            links.setLength((links.length()-System.getProperty("line.separator").length()));
+                            links.setLength((links.length()-System.lineSeparator().length()));
                         }
                         // finally, add author values to the csv-line
                         csvline.add(links.toString());

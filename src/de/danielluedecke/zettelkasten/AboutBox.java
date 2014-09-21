@@ -150,10 +150,7 @@ public class AboutBox extends javax.swing.JDialog {
                     jEditorPane1.scrollToReference(linktype.substring(1));
                 }
             }
-            catch (IOException e) {
-                Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
-            }
-            catch (URISyntaxException e) {
+            catch (IOException | URISyntaxException e) {
                 Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
             }
         }

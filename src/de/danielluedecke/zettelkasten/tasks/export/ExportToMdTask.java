@@ -258,7 +258,7 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
                                     }
                                     exportPage.append(zetteltitle);
                                 }
-                                exportPage.append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                                exportPage.append(System.lineSeparator()).append(System.lineSeparator());
                             }
                         }
                         // check whether the user wants to export content
@@ -273,7 +273,7 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
                                 // else add remark that entry is deleted
                                 exportPage.append(resourceMap.getString("deletedEntry"));
                             }
-                            exportPage.append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                            exportPage.append(System.lineSeparator()).append(System.lineSeparator());
                         }
                         // if the user wants to export remarks, do this here.
                         if ((exportparts & Constants.EXPORT_REMARKS)!=0) {
@@ -282,9 +282,9 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
                             // check whether we have any
                             if (!remarks.isEmpty()) {
                                 // set headline indicating that we have remarks here
-                                exportPage.append(resourceMap.getString("remarksHeader")).append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                                exportPage.append(resourceMap.getString("remarksHeader")).append(System.lineSeparator()).append(System.lineSeparator());
                                 // init paragraph with class-attribute, so the user may change style aftwerwards
-                                exportPage.append(remarks).append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                                exportPage.append(remarks).append(System.lineSeparator()).append(System.lineSeparator());
                             }
                         }
                         if ((exportparts & Constants.EXPORT_TIMESTAMP)!=0) {
@@ -296,10 +296,10 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
                                 // check whether we have a modified-timestamp
                                 // if we have a modified-stamp, add it...
                                 if (timestamp.length>1 && !timestamp[1].isEmpty()) {
-                                    exportPage.append(System.getProperty("line.separator")).append(resourceMap.getString("timestampEdited")).append(" ").append(Tools.getProperDate(timestamp[1], false));
+                                    exportPage.append(System.lineSeparator()).append(resourceMap.getString("timestampEdited")).append(" ").append(Tools.getProperDate(timestamp[1], false));
                                 }
                                 // and close the tags of the html-part
-                                exportPage.append(System.getProperty("line.separator"));
+                                exportPage.append(System.lineSeparator());
                             }
                         }
                         // check whether the user wants to export authors
@@ -323,7 +323,7 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
                     catch (NumberFormatException e) {
                         // leave out first char, which is always a "H", set by the method
                         // "createExportEntries()".
-                        exportPage.append(System.getProperty("line.separator")).append(exportentries.get(counter).toString().substring(2)).append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                        exportPage.append(System.lineSeparator()).append(exportentries.get(counter).toString().substring(2)).append(System.lineSeparator()).append(System.lineSeparator());
                     }
                     // update progress bar
                     setProgress(counter,0,contentsize);
@@ -343,7 +343,7 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
         // show status text
         msgLabel.setText(resourceMap.getString("msg4"));
         // create reference list
-        exportPage.append(ExportTools.createReferenceList(dataObj,settingsObj,exportPage.toString(),"[FN ","]",System.getProperty("line.separator"),System.getProperty("line.separator"),Constants.REFERENCE_LIST_TXT));
+        exportPage.append(ExportTools.createReferenceList(dataObj,settingsObj,exportPage.toString(),"[FN ","]",System.lineSeparator(),System.lineSeparator(),Constants.REFERENCE_LIST_TXT));
         // show status text
         msgLabel.setText(resourceMap.getString("msg2"));
         // write export file
@@ -427,7 +427,7 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
             // get the child
             node = (DefaultMutableTreeNode) en.nextElement();
             // retrieve comment
-            String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node),System.getProperty("line.separator"));
+            String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node),System.lineSeparator());
             // check for valid comment
             if (com!=null && !com.isEmpty()) {
                 // if the child is a bullet...
@@ -459,17 +459,17 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
     private String createExportBullet(DefaultMutableTreeNode node, boolean exportcomments) {
         StringBuilder sb = new StringBuilder("");
         // append text
-        sb.append(TreeUtil.getNodeText(node)).append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+        sb.append(TreeUtil.getNodeText(node)).append(System.lineSeparator()).append(System.lineSeparator());
         // check whether comments should be exported as well
         if (exportcomments) {
             // retrieve comment
-            String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node),System.getProperty("line.separator"));
+            String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node),System.lineSeparator());
             // check for valid comment
             if (com!=null && !com.isEmpty()) {
                 // append comment-text
-                sb.append(resourceMap.getString("comment")).append(System.getProperty("line.separator"));
+                sb.append(resourceMap.getString("comment")).append(System.lineSeparator());
                 // append comment
-                sb.append(com).append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                sb.append(com).append(System.lineSeparator()).append(System.lineSeparator());
             }
         }
         return sb.toString();
@@ -530,7 +530,7 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
                     }
                     sb.append(zetteltitle);
                 }
-                sb.append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                sb.append(System.lineSeparator()).append(System.lineSeparator());
             }
         }
         // if we have content, add it.
@@ -541,13 +541,13 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
             // else add remark that entry is deleted
             sb.append(resourceMap.getString("deletedEntry"));
         }
-        sb.append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+        sb.append(System.lineSeparator()).append(System.lineSeparator());
         // if the user wishes to remove multiple line-breaks, do this here
         if (settingsObj.getRemoveLinesForDesktopExport()) {
             // retrieve current content
             text = sb.toString();
             // remove double line separaters
-            text = text.replace(System.getProperty("line.separator")+System.getProperty("line.separator"),System.getProperty("line.separator"));
+            text = text.replace(System.lineSeparator()+System.lineSeparator(),System.lineSeparator());
             // set back content
             sb = new StringBuilder(text);
         }
@@ -558,21 +558,21 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
             // check whether we have any
             if (!remarks.isEmpty()) {
                 // set headline indicating that we have remarks here
-                sb.append(resourceMap.getString("remarksHeader")).append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                sb.append(resourceMap.getString("remarksHeader")).append(System.lineSeparator()).append(System.lineSeparator());
                 // init paragraph with class-attribute, so the user may change style aftwerwards
-                sb.append(remarks).append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                sb.append(remarks).append(System.lineSeparator()).append(System.lineSeparator());
             }
         }
         // check whether comments should be exported as well
         if (exportcomments) {
             // retrieve comment
-            String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node),System.getProperty("line.separator"));
+            String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node),System.lineSeparator());
             // check for valid comment
             if (com!=null && !com.isEmpty()) {
                 // append comment-text
-                sb.append(resourceMap.getString("comment")).append(System.getProperty("line.separator"));
+                sb.append(resourceMap.getString("comment")).append(System.lineSeparator());
                 // append comment
-                sb.append(com).append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                sb.append(com).append(System.lineSeparator()).append(System.lineSeparator());
             }
         }
         // check whether the user wants to export authors

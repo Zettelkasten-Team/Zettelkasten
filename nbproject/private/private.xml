@@ -122,16 +122,13 @@
         <group>
             <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/mac/MacToolbarButton.java</file>
             <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/util/Tools.java</file>
+            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/resources/licence.html</file>
             <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/SearchResultsFrame.java</file>
             <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/util/Constants.java</file>
+            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/README.md</file>
             <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/ZettelkastenView.java</file>
-            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/CInformation.java</file>
-            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/DesktopFrame.java</file>
-            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/CModifyDesktopEntry.java</file>
-            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/mac/HudTreeTextFieldUI.java</file>
-            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/mac/ZknMacWidgetFactory.java</file>
+            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/AboutBox.java</file>
             <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/CInsertTable.java</file>
-            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/database/Settings.java</file>
         </group>
     </open-files>
 </project-private>

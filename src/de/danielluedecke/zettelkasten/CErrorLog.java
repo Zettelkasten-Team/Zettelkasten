@@ -102,15 +102,15 @@ public class CErrorLog extends javax.swing.JDialog {
                     // set internal session-log-text to 2. textarea
                     Tools.flushSessionLog();
                     jTextArea2.setText("------------------------------"+
-                                        System.getProperty("line.separator")+
+                                        System.lineSeparator()+
                                         "Zettelkasten-Version: "+Constants.BUILD_VERSION+
-                                        System.getProperty("line.separator")+
-                                        System.getProperty("line.separator")+
+                                        System.lineSeparator()+
+                                        System.lineSeparator()+
                                         Tools.getSystemInformation()+
-                                        System.getProperty("line.separator")+
+                                        System.lineSeparator()+
                                         "------------------------------"+
-                                        System.getProperty("line.separator")+
-                                        System.getProperty("line.separator")+
+                                        System.lineSeparator()+
+                                        System.lineSeparator()+
                                         mainframe.baos_log.toString());
                     jTextArea2.setCaretPosition(0);
                 }
@@ -121,18 +121,18 @@ public class CErrorLog extends javax.swing.JDialog {
             // information in front of the log
             StringBuilder sb = new StringBuilder("");
             // some text for the user
-            sb.append(resourceMap.getString("errorMsg")).append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+            sb.append(resourceMap.getString("errorMsg")).append(System.lineSeparator()).append(System.lineSeparator());
             // a separator line for a better overview
-            sb.append("------------------------------").append(System.getProperty("line.separator"));
+            sb.append("------------------------------").append(System.lineSeparator());
             // first, show programme-version
-            sb.append("Zettelkasten-Version: " + Constants.BUILD_VERSION).append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+            sb.append("Zettelkasten-Version: " + Constants.BUILD_VERSION).append(System.lineSeparator()).append(System.lineSeparator());
             // now show system-information (jre, os etc.)
-            sb.append("System-Information:").append(System.getProperty("line.separator")).append(Tools.getSystemInformation()).append(System.getProperty("line.separator"));
+            sb.append("System-Information:").append(System.lineSeparator()).append(Tools.getSystemInformation()).append(System.lineSeparator());
             // a separator line for a better overview
-            sb.append("------------------------------").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+            sb.append("------------------------------").append(System.lineSeparator()).append(System.lineSeparator());
             int c = 0;
             // header for log 1
-            sb.append("Log 1").append(System.getProperty("line.separator")).append("-----").append(System.getProperty("line.separator"));
+            sb.append("Log 1").append(System.lineSeparator()).append("-----").append(System.lineSeparator());
             // now, load the log-file and append it to the final error message as well
             InputStream is = new FileInputStream(new File(FileOperationsUtil.getZettelkastenHomeDir()+"zknerror0.log"));
             while (c!=-1) {
@@ -143,7 +143,7 @@ public class CErrorLog extends javax.swing.JDialog {
             is.close();
             c = 0;
             // header for log 2
-            sb.append(System.getProperty("line.separator")).append(System.getProperty("line.separator")).append("Log 2").append(System.getProperty("line.separator")).append("-----").append(System.getProperty("line.separator"));
+            sb.append(System.lineSeparator()).append(System.lineSeparator()).append("Log 2").append(System.lineSeparator()).append("-----").append(System.lineSeparator());
             // now, load the log-file and append it to the final error message as well
             is = new FileInputStream(new File(FileOperationsUtil.getZettelkastenHomeDir()+"zknerror1.log"));
             while (c!=-1) {
@@ -154,7 +154,7 @@ public class CErrorLog extends javax.swing.JDialog {
             is.close();
             c = 0;
             // header for log 3
-            sb.append(System.getProperty("line.separator")).append(System.getProperty("line.separator")).append("Log 3").append(System.getProperty("line.separator")).append("-----").append(System.getProperty("line.separator"));
+            sb.append(System.lineSeparator()).append(System.lineSeparator()).append("Log 3").append(System.lineSeparator()).append("-----").append(System.lineSeparator());
             // now, load the log-file and append it to the final error message as well
             is = new FileInputStream(new File(FileOperationsUtil.getZettelkastenHomeDir()+"zknerror2.log"));
             while (c!=-1) {
@@ -167,21 +167,21 @@ public class CErrorLog extends javax.swing.JDialog {
             // create a new buffer for the log
             byte[] buffer = new byte[1024];
             // header for log 1
-            sb.append("Log 1"+System.getProperty("line.separator")+"-----"+System.getProperty("line.separator"));
+            sb.append("Log 1"+System.lineSeparator()+"-----"+System.lineSeparator());
             // now, load the log-file and append it to the final error message as well
             InputStream is = new FileInputStream(new File(FileOperationsUtil.getZettelkastenHomeDir()+"zknerror0.log"));
             while(is.read(buffer)!=-1) sb.append(new String(buffer));
             // close stream
             is.close();
             // header for log 2
-            sb.append(System.getProperty("line.separator")+System.getProperty("line.separator")+"Log 2"+System.getProperty("line.separator")+"-----"+System.getProperty("line.separator"));
+            sb.append(System.lineSeparator()+System.lineSeparator()+"Log 2"+System.lineSeparator()+"-----"+System.lineSeparator());
             // now, load the log-file and append it to the final error message as well
             is = new FileInputStream(new File(FileOperationsUtil.getZettelkastenHomeDir()+"zknerror1.log"));
             while(is.read(buffer)!=-1) sb.append(new String(buffer));
             // close stream
             is.close();
             // header for log 3
-            sb.append(System.getProperty("line.separator")+System.getProperty("line.separator")+"Log 3"+System.getProperty("line.separator")+"-----"+System.getProperty("line.separator"));
+            sb.append(System.lineSeparator()+System.lineSeparator()+"Log 3"+System.lineSeparator()+"-----"+System.lineSeparator());
             // now, load the log-file and append it to the final error message as well
             is = new FileInputStream(new File(FileOperationsUtil.getZettelkastenHomeDir()+"zknerror2.log"));
             while(is.read(buffer)!=-1) sb.append(new String(buffer));

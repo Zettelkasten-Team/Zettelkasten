@@ -530,7 +530,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                 // iterate array and copy all selected keywords to clipboard
                 for (Object o : kws) {
                     keywords.append(o.toString());
-                    keywords.append(System.getProperty("line.separator"));
+                    keywords.append(System.lineSeparator());
                 }
                 return keywords.toString();
             }
@@ -636,7 +636,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                             // if not, append author string
                             // therefore, add a new line, but only if the textfield is not empty
                             // (i.e. we already have an author)
-                            if (!jTextAreaAuthor.getText().isEmpty()) jTextAreaAuthor.append(System.getProperty("line.separator"));
+                            if (!jTextAreaAuthor.getText().isEmpty()) jTextAreaAuthor.append(System.lineSeparator());
                             jTextAreaAuthor.append(au);
                             // jTextAreaAuthor.insert(au, jTextAreaAuthor.getCaretPosition());
                             // set the modified state
@@ -1565,11 +1565,11 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // usually, to avoid <br>-tags within <ul> and <li>-tags when the entry is converted
         // to html, an entered list will be converted to a single line, removing all new lines.
         // but for editing and display, it is better to have them in single lines each.
-        text = text.replace(Constants.FORMAT_LIST_OPEN, Constants.FORMAT_LIST_OPEN+System.getProperty("line.separator"));
-        text = text.replace(Constants.FORMAT_LIST_CLOSE, Constants.FORMAT_LIST_CLOSE+System.getProperty("line.separator"));
-        text = text.replace(Constants.FORMAT_NUMBEREDLIST_OPEN, Constants.FORMAT_NUMBEREDLIST_OPEN+System.getProperty("line.separator"));
-        text = text.replace(Constants.FORMAT_NUMBEREDLIST_CLOSE, Constants.FORMAT_NUMBEREDLIST_CLOSE+System.getProperty("line.separator"));
-        text = text.replace(Constants.FORMAT_LISTITEM_CLOSE, Constants.FORMAT_LISTITEM_CLOSE+System.getProperty("line.separator"));
+        text = text.replace(Constants.FORMAT_LIST_OPEN, Constants.FORMAT_LIST_OPEN+System.lineSeparator());
+        text = text.replace(Constants.FORMAT_LIST_CLOSE, Constants.FORMAT_LIST_CLOSE+System.lineSeparator());
+        text = text.replace(Constants.FORMAT_NUMBEREDLIST_OPEN, Constants.FORMAT_NUMBEREDLIST_OPEN+System.lineSeparator());
+        text = text.replace(Constants.FORMAT_NUMBEREDLIST_CLOSE, Constants.FORMAT_NUMBEREDLIST_CLOSE+System.lineSeparator());
+        text = text.replace(Constants.FORMAT_LISTITEM_CLOSE, Constants.FORMAT_LISTITEM_CLOSE+System.lineSeparator());
         // and set the text to the textarea
         jTextAreaEntry.setText(Tools.replaceUbbToUnicode(text));
         // get the authors and set them to the textarea
@@ -1583,11 +1583,11 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // delete the last newline ("\n") which is not needed...
             for (String au : authors) {
                 sb.append(au);
-                sb.append(System.getProperty("line.separator"));
+                sb.append(System.lineSeparator());
             }
         }
         // delete last newline-symbol
-        if (sb.length()>0) sb.setLength(sb.length()-(System.getProperty("line.separator").length()));
+        if (sb.length()>0) sb.setLength(sb.length()-(System.lineSeparator().length()));
         // and set the string to the textarea
         jTextAreaAuthor.setText(sb.toString());
         // retrieve the current keywords
@@ -1993,10 +1993,10 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // if we have a valid return-value...
         if ((newAu!=null) && (newAu.length()>0)) {
             // get system line separator
-            String linesep = System.getProperty("line.separator");
+            String linesep = System.lineSeparator();
             // but first, we habe to remove all carriage-returns (\r), which are part of the
             // line-seperator in windows. somehow, the replace-command does *not* work, when
-            // we replace "System.getProperty("line.separator")" with "[br]", but only when
+            // we replace "System.lineSeparator()" with "[br]", but only when
             // a "\n" is replaced by [br]. So, in case the system's line-separator also contains a
             // "\r", it is replaced by nothing, to clean the content.
             if (linesep.contains("\r")) newAu = newAu.replace("\r", "");
@@ -2029,7 +2029,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                             // if not, append author string
                             // therefore, add a new line, but only if the textfield is not empty
                             // (i.e. we already have an author)
-                            if (!jTextAreaAuthor.getText().isEmpty()) jTextAreaAuthor.append(System.getProperty("line.separator"));
+                            if (!jTextAreaAuthor.getText().isEmpty()) jTextAreaAuthor.append(System.lineSeparator());
                             jTextAreaAuthor.append(a);
                             // set the modified state
                             setModified(true);
@@ -2516,7 +2516,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // retrieve the selection
         String selection = jTextAreaEntry.getSelectedText();
         // get system line separator
-        String linesep = System.getProperty("line.separator");
+        String linesep = System.lineSeparator();
         // check whether tag is selected or not
         if (null==selection) {
             // if we don't have any selection, just insert tags
@@ -2525,7 +2525,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         else {
             // first, we habe to remove all carriage-returns (\r), which are part of the
             // line-seperator in windows. somehow, the replace-command does *not* work, when
-            // we replace "System.getProperty("line.separator")" with "[br]", but only when
+            // we replace "System.lineSeparator()" with "[br]", but only when
             // a "\n" is replaced by [br]. So, in case the system's line-separator also contains a
             // "\r", it is replaced by nothing, to clean the content.
             if (linesep.contains("\r")) selection = selection.replace("\r", "");
@@ -2535,16 +2535,16 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             StringBuilder output = new StringBuilder("");
             // append the "open"-tag
             output.append(listTypeOpenTag);
-            output.append(System.getProperty("line.separator"));
+            output.append(System.lineSeparator());
             for (String line : lines) {
                 // append the open/close-tags for the bullet points
                 // and put the line between these tags
                 output.append(Constants.FORMAT_LISTITEM_OPEN).append(line).append(Constants.FORMAT_LISTITEM_CLOSE);
-                output.append(System.getProperty("line.separator"));
+                output.append(System.lineSeparator());
             }
             // finally, append the close-tag
             output.append(listTypeCloseTag);
-            output.append(System.getProperty("line.separator"));
+            output.append(System.lineSeparator());
             // and paste the text
             jTextAreaEntry.replaceSelection(output.toString());
         }
@@ -2695,7 +2695,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                     // if not, append author string
                     // therefore, add a new line, but only if the textfield is not empty
                     // (i.e. we already have an author)
-                    if (!jTextAreaAuthor.getText().isEmpty()) jTextAreaAuthor.append(System.getProperty("line.separator"));
+                    if (!jTextAreaAuthor.getText().isEmpty()) jTextAreaAuthor.append(System.lineSeparator());
                     jTextAreaAuthor.append(au);
                     // set the modified state
                     setModified(true);
@@ -3049,7 +3049,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     @Action(enabledProperty = "textSelected")
     public void removeDoubleLineSeparators() {
         // get separator char
-        String sep = System.getProperty("line.separator");
+        String sep = System.lineSeparator();
         // replace double line separators
         removeReplacement(sep+sep," ");
         // in case someone copied a text with only a newline-char,
@@ -3099,7 +3099,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     @Action(enabledProperty = "textSelected")
     public void removeSingleLineSeparators() {
         // get separator char
-        String sep = System.getProperty("line.separator");
+        String sep = System.lineSeparator();
         // repalce double line separators
         removeReplacement(sep," ");
         // in case someone copied a text with only a newline-char,
@@ -3326,7 +3326,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                     // add the filename to the copied imagefile
                     imagetag.append(dest.getName());
                     // close tag
-                    imagetag.append(imgclose).append(System.getProperty("line.separator"));
+                    imagetag.append(imgclose).append(System.lineSeparator());
                     // and insert the string into the textfield
                     jTextAreaEntry.replaceSelection(imagetag.toString());
                     // set the modified state
@@ -3349,7 +3349,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                 // add the filename to the copied imagefile
                 imagetag.append(f.getPath());
                 // close tag
-                imagetag.append(imgclose).append(System.getProperty("line.separator"));
+                imagetag.append(imgclose).append(System.lineSeparator());
                 // and insert the string into the textfield
                 jTextAreaEntry.replaceSelection(imagetag.toString());
                 // set the modified state
@@ -3638,7 +3638,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             return false;
         }
         // get system line separator
-        String linesep = System.getProperty("line.separator");
+        String linesep = System.lineSeparator();
         // retrieve the title
         String title = jTextFieldTitle.getText();
         // retrieve the content
@@ -3649,7 +3649,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         //
         // but first, we habe to remove all carriage-returns (\r), which are part of the
         // line-seperator in windows. somehow, the replace-command does *not* work, when
-        // we replace "System.getProperty("line.separator")" with "[br]", but only when
+        // we replace "System.lineSeparator()" with "[br]", but only when
         // a "\n" is replaced by [br]. So, in case the system's line-separator also contains a
         // "\r", it is replaced by nothing, to clean the content.
         content = Tools.replaceUnicodeToUbb(content);
@@ -3683,7 +3683,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         //
         // but first, we habe to remove all carriage-returns (\r), which are part of the
         // line-seperator in windows. somehow, the replace-command does *not* work, when
-        // we replace "System.getProperty("line.separator")" with "[br]", but only when
+        // we replace "System.lineSeparator()" with "[br]", but only when
         // a "\n" is replaced by [br]. So, in case the system's line-separator also contains a
         // "\r", it is replaced by nothing, to clean the content.
         remarks = Tools.replaceUnicodeToUbb(remarks);
@@ -3873,7 +3873,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // retrieve the text from the author textfield
         String text = jTextAreaAuthor.getText();
         // remove all carriage-returns
-        if (System.getProperty("line.separator").contains("\r")) text = text.replace("\r", "");
+        if (System.lineSeparator().contains("\r")) text = text.replace("\r", "");
         // split into single authors
         String[] aus = text.split("\n");
         // check whether we have any authors at all
@@ -4081,7 +4081,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                     // if not, append author string
                     // therefore, add a new line, but only if the textfield is not empty
                     // (i.e. we already have an author)
-                    if (!jTextAreaAuthor.getText().isEmpty()) jTextAreaAuthor.append(System.getProperty("line.separator"));
+                    if (!jTextAreaAuthor.getText().isEmpty()) jTextAreaAuthor.append(System.lineSeparator());
                     jTextAreaAuthor.append(au);
                     // set the modified state
                     setModified(true);

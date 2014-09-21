@@ -268,7 +268,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                                     exportPage.append(zetteltitle);
                                 }
                                 exportPage.append("}");
-                                exportPage.append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                                exportPage.append(System.lineSeparator()).append(System.lineSeparator());
                             }
                         }
                         // check whether the user wants to export content
@@ -291,7 +291,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                                 // else add remark that entry is deleted
                                 exportPage.append(resourceMap.getString("deletedEntry"));
                             }
-                            exportPage.append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                            exportPage.append(System.lineSeparator()).append(System.lineSeparator());
                         }
                         // if the user wants to export remarks, do this here.
                         if ((exportparts & Constants.EXPORT_REMARKS)!=0) {
@@ -300,9 +300,9 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                             // check whether we have any
                             if (!remarks.isEmpty()) {
                                 // set headline indicating that we have remarks here
-                                exportPage.append("\\subsection{").append(resourceMap.getString("remarksHeader")).append("}").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                                exportPage.append("\\subsection{").append(resourceMap.getString("remarksHeader")).append("}").append(System.lineSeparator()).append(System.lineSeparator());
                                 // init paragraph with class-attribute, so the user may change style aftwerwards
-                                exportPage.append(remarks).append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                                exportPage.append(remarks).append(System.lineSeparator()).append(System.lineSeparator());
                             }
                         }
                         if ((exportparts & Constants.EXPORT_TIMESTAMP)!=0) {
@@ -316,10 +316,10 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                             timestamp = dataObj.getTimestampEdited(zettelnummer);
                             // check whether we have a timestamp at all
                             if (timestamp!=null && !timestamp.isEmpty()) {
-                                exportPage.append(System.getProperty("line.separator")).append(resourceMap.getString("timestampEdited")).append(" ").append(Tools.getProperDate(timestamp, false));
+                                exportPage.append(System.lineSeparator()).append(resourceMap.getString("timestampEdited")).append(" ").append(Tools.getProperDate(timestamp, false));
                             }
                             // and close the tags of the html-part
-                            exportPage.append(System.getProperty("line.separator"));
+                            exportPage.append(System.lineSeparator());
                         }
                         // check whether the user wants to export authors
                         if ((exportparts & Constants.EXPORT_AUTHOR)!=0 && dataObj.hasAuthors(zettelnummer)) {
@@ -340,14 +340,14 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                         }
                         // uncomment this, if the "end{zettel}" command should be enabled. As this leads to errors when comiling the latex file,
                         // the begin{zettel} and end{zettel} tags are not used.
-                        // exportPage.append(System.getProperty("line.separator")).append("\\end{zettel}").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                        // exportPage.append(System.lineSeparator()).append("\\end{zettel}").append(System.lineSeparator()).append(System.lineSeparator());
                         // close zettel-tags
-                        exportPage.append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                        exportPage.append(System.lineSeparator()).append(System.lineSeparator());
                     }
                     catch (NumberFormatException e) {
                         // leave out first char, which is always a "H", set by the method
                         // "createExportEntries()".
-                        exportPage.append(System.getProperty("line.separator")).append(exportentries.get(counter).toString().substring(2)).append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                        exportPage.append(System.lineSeparator()).append(exportentries.get(counter).toString().substring(2)).append(System.lineSeparator()).append(System.lineSeparator());
                     }
                     // update progress bar
                     setProgress(counter,0,contentsize);
@@ -416,53 +416,53 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
             defaultdocclass = "{"+Constants.LATEX_DOCUMENT_CLASS[docclass]+"}";
         }
         // first, we need the document class
-        exportPageHeader.append("% Dokumentenklasse: 1-seitiger DIN-A4-Artikel (wissenschaftlich)").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\documentclass").append(defaultdocclass).append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+        exportPageHeader.append("% Dokumentenklasse: 1-seitiger DIN-A4-Artikel (wissenschaftlich)").append(System.lineSeparator());
+        exportPageHeader.append("\\documentclass").append(defaultdocclass).append(System.lineSeparator()).append(System.lineSeparator());
         // include package for new German orthography
-        // exportPageHeader.append("% Neue deutsche Rechtschreibung").append(System.getProperty("line.separator"));
-        // exportPageHeader.append("\\usepackage{ngerman}").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+        // exportPageHeader.append("% Neue deutsche Rechtschreibung").append(System.lineSeparator());
+        // exportPageHeader.append("\\usepackage{ngerman}").append(System.lineSeparator()).append(System.lineSeparator());
         // include math package for spencer brown forms
-        // exportPageHeader.append("% Neue deutsche Rechtschreibung").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\usepackage{amsmath,xcolor}").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+        // exportPageHeader.append("% Neue deutsche Rechtschreibung").append(System.lineSeparator());
+        exportPageHeader.append("\\usepackage{amsmath,xcolor}").append(System.lineSeparator()).append(System.lineSeparator());
         // include package for UTF8-umlaut-endocing
-        exportPageHeader.append("% Eingabe von Umlauten").append(System.getProperty("line.separator"));
-        exportPageHeader.append("% Siehe http://www.tug.org/texlive/devsrc/Master/texmf-dist/doc/latex/base/inputenc.pdf").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\usepackage[utf8]{inputenc}").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+        exportPageHeader.append("% Eingabe von Umlauten").append(System.lineSeparator());
+        exportPageHeader.append("% Siehe http://www.tug.org/texlive/devsrc/Master/texmf-dist/doc/latex/base/inputenc.pdf").append(System.lineSeparator());
+        exportPageHeader.append("\\usepackage[utf8]{inputenc}").append(System.lineSeparator()).append(System.lineSeparator());
         // include package for quotes;
-        exportPageHeader.append("% Anführungszeichen einfach setzen").append(System.getProperty("line.separator"));
-        exportPageHeader.append("% Siehe http://mirrors.ctan.org/macros/latex/contrib/csquotes/csquotes.pdf").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\usepackage[german=quotes]{csquotes}").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+        exportPageHeader.append("% Anführungszeichen einfach setzen").append(System.lineSeparator());
+        exportPageHeader.append("% Siehe http://mirrors.ctan.org/macros/latex/contrib/csquotes/csquotes.pdf").append(System.lineSeparator());
+        exportPageHeader.append("\\usepackage[german=quotes]{csquotes}").append(System.lineSeparator()).append(System.lineSeparator());
         // include package for footer / page count
         // but only, when non-standard is chosen
         if (docclass!=0) {
-            exportPageHeader.append("% Seitenzahlen in Fußzeile rechts").append(System.getProperty("line.separator"));
-            exportPageHeader.append("\\usepackage{scrpage2}").append(System.getProperty("line.separator"));
-            exportPageHeader.append("\\pagestyle{scrheadings}").append(System.getProperty("line.separator"));
-            exportPageHeader.append("\\rofoot{\\pagemark}").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+            exportPageHeader.append("% Seitenzahlen in Fußzeile rechts").append(System.lineSeparator());
+            exportPageHeader.append("\\usepackage{scrpage2}").append(System.lineSeparator());
+            exportPageHeader.append("\\pagestyle{scrheadings}").append(System.lineSeparator());
+            exportPageHeader.append("\\rofoot{\\pagemark}").append(System.lineSeparator()).append(System.lineSeparator());
         }
         // include package for graphics
-        exportPageHeader.append("% Paket für Grafiken einbinden").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\usepackage{graphicx}").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+        exportPageHeader.append("% Paket für Grafiken einbinden").append(System.lineSeparator());
+        exportPageHeader.append("\\usepackage{graphicx}").append(System.lineSeparator()).append(System.lineSeparator());
         // include package for colors
-        exportPageHeader.append("% Paket für farbige und flexible Tabellenzellen").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\usepackage{colortbl}").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\usepackage{tabularx}").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\definecolor{DarkGray}{gray}{0.7}").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\definecolor{LightGray}{gray}{0.9}").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\renewcommand{\\arraystretch}{1.2}").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+        exportPageHeader.append("% Paket für farbige und flexible Tabellenzellen").append(System.lineSeparator());
+        exportPageHeader.append("\\usepackage{colortbl}").append(System.lineSeparator());
+        exportPageHeader.append("\\usepackage{tabularx}").append(System.lineSeparator());
+        exportPageHeader.append("\\definecolor{DarkGray}{gray}{0.7}").append(System.lineSeparator());
+        exportPageHeader.append("\\definecolor{LightGray}{gray}{0.9}").append(System.lineSeparator());
+        exportPageHeader.append("\\renewcommand{\\arraystretch}{1.2}").append(System.lineSeparator()).append(System.lineSeparator());
         // include package for references
-        exportPageHeader.append("% Paket für Literaturverweise einbinden").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\usepackage{multibib} % Hier ändern für eigene Literatur-Stil-Pakete").append(System.getProperty("line.separator"));
+        exportPageHeader.append("% Paket für Literaturverweise einbinden").append(System.lineSeparator());
+        exportPageHeader.append("\\usepackage{multibib} % Hier ändern für eigene Literatur-Stil-Pakete").append(System.lineSeparator());
         // no paragraph indent
-        exportPageHeader.append("% Standardmäßig kein Einrücken von Absätzen").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\parindent 0pt").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+        exportPageHeader.append("% Standardmäßig kein Einrücken von Absätzen").append(System.lineSeparator());
+        exportPageHeader.append("\\parindent 0pt").append(System.lineSeparator()).append(System.lineSeparator());
         // check whether document contains form-tags
         if (zettelHasForms && settingsObj.getLatexExportCreateFormTags()) {
             // if so, append makro to document-header
             doTheSpencerBrown();
         }
         // begin document
-        exportPageHeader.append("\\begin{document}").append(System.getProperty("line.separator"));
+        exportPageHeader.append("\\begin{document}").append(System.lineSeparator());
         // create title
         exportPageHeader.append("\\title{");
         // in case we export a desktop, use that name as title
@@ -473,7 +473,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         else {
             settingsObj.getFileName();
         }
-        exportPageHeader.append("}").append(System.getProperty("line.separator"));
+        exportPageHeader.append("}").append(System.lineSeparator());
         // check whether author-name or email should be set
         if (settingsObj.getLatexExportShowMail() || settingsObj.getLatexExportShowAuthor()) {
             // retrieve author and mail values
@@ -482,19 +482,19 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
             // check whether we have values here
             exportPageHeader.append("\\author{");
             if (doc_author!=null && !doc_author.isEmpty()) {
-                exportPageHeader.append(doc_author).append("\\\\").append(System.getProperty("line.separator"));
+                exportPageHeader.append(doc_author).append("\\\\").append(System.lineSeparator());
             }
             if (doc_mail!=null && !doc_mail.isEmpty()) {
                 exportPageHeader.append("\\texttt{").append(doc_mail).append("}");
             }
-            exportPageHeader.append("}").append(System.getProperty("line.separator"));
+            exportPageHeader.append("}").append(System.lineSeparator());
         }
-        exportPageHeader.append("\\maketitle").append(System.getProperty("line.separator"));
+        exportPageHeader.append("\\maketitle").append(System.lineSeparator());
         // create table of contents, if requestet
         if (createTOC) {
-            exportPageHeader.append("\\tableofcontents").append(System.getProperty("line.separator"));
+            exportPageHeader.append("\\tableofcontents").append(System.lineSeparator());
         }
-        exportPageHeader.append(System.getProperty("line.separator"));
+        exportPageHeader.append(System.lineSeparator());
     }
     /**
      * 
@@ -511,122 +511,122 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
             bibname = "";
         }
         // new line
-        exportPage.append(System.getProperty("line.separator"));
+        exportPage.append(System.lineSeparator());
         // include bibtex-file. in case the user created a separate bibtex-file, this filename is used. else,
         // the filename of the default-attached bibtex-file is used.
-        exportPage.append("\\bibliography{").append((exportbibtex) ? filename : bibname).append("}").append(System.getProperty("line.separator"));
+        exportPage.append("\\bibliography{").append((exportbibtex) ? filename : bibname).append("}").append(System.lineSeparator());
         // create default bibliography style
-        exportPage.append("\\bibliographystyle{").append(Constants.LATEX_BIB_STYLECODE[settingsObj.getLastUsedLatexBibStyle()]).append("} % Auskommentieren, wenn eigener Literatur-Stil eingebunden wird.").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+        exportPage.append("\\bibliographystyle{").append(Constants.LATEX_BIB_STYLECODE[settingsObj.getLastUsedLatexBibStyle()]).append("} % Auskommentieren, wenn eigener Literatur-Stil eingebunden wird.").append(System.lineSeparator()).append(System.lineSeparator());
         // print references
-        exportPage.append("% kann anstelle der beiden vorigen Zeilen verwendet werden,").append(System.getProperty("line.separator"));
-        exportPage.append("% um eigene Literatur-Stile zu nutzen.").append(System.getProperty("line.separator"));
-        exportPage.append("% \\printbibliography").append(System.getProperty("line.separator"));
+        exportPage.append("% kann anstelle der beiden vorigen Zeilen verwendet werden,").append(System.lineSeparator());
+        exportPage.append("% um eigene Literatur-Stile zu nutzen.").append(System.lineSeparator());
+        exportPage.append("% \\printbibliography").append(System.lineSeparator());
         // close document-tag
-        exportPage.append(System.getProperty("line.separator")).append("\\end{document}");
+        exportPage.append(System.lineSeparator()).append("\\end{document}");
     }
     /**
      * 
      */
     private void doTheSpencerBrown() {
-        exportPageHeader.append("% Dieses Makro erstellt Befehle, um die Form-Notation von George Spencer Brown").append(System.getProperty("line.separator"));
-        exportPageHeader.append("% zu imitieren, die oft von Autoren im Bereich Systemtheorie verwendet wird.").append(System.getProperty("line.separator"));
-        exportPageHeader.append("% Vielen Dank an die Benutzer des Mr. Unix Forums für die hilfreichen Tipps zur Umsetzung!").append(System.getProperty("line.separator"));
-        exportPageHeader.append("% http://www.mrunix.de/forums/showthread.php?t=66803&page=2").append(System.getProperty("line.separator"));
-        exportPageHeader.append("%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("% Beispiele: Form =\\cross{Innenseite}%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("% Beispiele: Form =\\cross{Innenseite}Außenseite%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("% Beispiele: Form =\\ReEntry{\\cross{\\cross{\\cross{Innenseite}Kontext 1}Kontext 2}Kontex 3}Außenseite").append(System.getProperty("line.separator"));
-        exportPageHeader.append("%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\newlength\\crossleftdist  %Abstand links vom\\cross").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\newlength\\crossrightdist %Abstand rechts vom\\cross").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\newlength\\crosscontleftdist  %Abstand Inhalt links zum \\cross").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\newlength\\crosscontrightdist %Abstand Inhalt rechts zum \\cross").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\newlength\\crosscontabovedist %Freiraum Inhalt oben zum \\cross").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\newlength\\crossdepth %Tiefe fürs \\cross (Freiraum unterm Inhalt)").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\newlength\\crosslinethickness %Linienstärke fürs \\cross").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\newlength\\crosshooklength  %die Länge des Hakens").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\newlength\\crosscontdepth").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\newlength\\crosscontbelowdist").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\newlength\\crossAbove").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\newlength\\crossBelow").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\newlength\\formabovedist").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\newlength\\formbelowdist").append(System.getProperty("line.separator"));
-        exportPageHeader.append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\setlength\\formabovedist{4ex} %Ändern für Abstand über Form").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\setlength\\formbelowdist{2ex} %Ändern für Abstand unter Form").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\setlength\\crossleftdist{0.5em}").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\setlength\\crossrightdist{0.5em}").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\setlength\\crosscontleftdist{1pt}").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\setlength\\crosscontrightdist{4pt}").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\setlength\\crosscontabovedist{3.5pt}").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\setlength\\crossdepth{5pt}").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\setlength\\crosslinethickness{0.4pt}").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\setlength\\crosshooklength{\\dimexpr\\crossdepth-3pt\\relax}").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\newcommand*\\cross[1]{%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("  \\settodepth\\crosscontdepth{#1}%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("  \\setlength\\crosscontbelowdist{0pt}%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("  \\ifdim\\crosscontdepth=0pt").append(System.getProperty("line.separator"));
-        exportPageHeader.append("    \\settodepth\\crosscontdepth{g}%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("    \\addtolength\\crosscontbelowdist{\\crosscontdepth}%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("  \\fi").append(System.getProperty("line.separator"));
-        exportPageHeader.append("  \\raisebox{-\\crosscontdepth}{%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("  \\mbox{%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("    \\hbox{%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("      \\kern \\crossleftdist").append(System.getProperty("line.separator"));
-        exportPageHeader.append("      \\vbox{%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("       \\hrule height \\crosslinethickness").append(System.getProperty("line.separator"));
-        exportPageHeader.append("          \\kern\\crosscontabovedist").append(System.getProperty("line.separator"));
-        exportPageHeader.append("          \\hbox{%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("            \\kern \\crosscontleftdist").append(System.getProperty("line.separator"));
-        exportPageHeader.append("            \\raisebox{-\\crosscontdepth}{%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("              \\begingroup").append(System.getProperty("line.separator"));
-        exportPageHeader.append("                \\setlength\\crossleftdist{-\\crosscontleftdist}%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("                  \\vphantom{b}#1%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("              \\endgroup").append(System.getProperty("line.separator"));
-        exportPageHeader.append("            }%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("            \\kern \\crosscontrightdist").append(System.getProperty("line.separator"));
-        exportPageHeader.append("          }%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("          \\kern \\crosscontbelowdist").append(System.getProperty("line.separator"));
-        exportPageHeader.append("        }%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("        \\vrule width \\crosslinethickness %depth \\crosscontdepth").append(System.getProperty("line.separator"));
-        exportPageHeader.append("        \\kern \\crossrightdist").append(System.getProperty("line.separator"));
-        exportPageHeader.append("      }%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("    }%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("  }%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("}").append(System.getProperty("line.separator"));
-        exportPageHeader.append("").append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\newcommand*\\ReEntry[1]{%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("  \\settodepth\\crosscontdepth{#1}%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("  \\settoheight\\crossAbove{#1}%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("  \\addtolength\\crossAbove{\\crosslinethickness}%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("  \\setlength\\crossBelow{\\dimexpr\\crosscontdepth+\\crossdepth\\relax}%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("  \\raisebox{-\\crossBelow}[\\crossAbove][\\dimexpr\\crossBelow+\\crosslinethickness\\relax]{%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("    \\mbox{%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("      \\hbox{%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("        \\kern \\crossleftdist").append(System.getProperty("line.separator"));
-        exportPageHeader.append("        \\vrule width \\crosslinethickness height \\dimexpr\\crosshooklength+\\crosscontdepth\\relax").append(System.getProperty("line.separator"));
-        exportPageHeader.append("        \\kern-\\crosslinethickness").append(System.getProperty("line.separator"));
-        exportPageHeader.append("        \\vbox{%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("          \\hrule height \\crosslinethickness").append(System.getProperty("line.separator"));
-        exportPageHeader.append("          \\kern \\crosscontabovedist").append(System.getProperty("line.separator"));
-        exportPageHeader.append("          \\hbox{%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("            \\kern \\crosscontleftdist").append(System.getProperty("line.separator"));
-        exportPageHeader.append("            \\begingroup").append(System.getProperty("line.separator"));
-        exportPageHeader.append("              \\setlength\\crossleftdist{-\\crosscontleftdist}%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("                #1%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("            \\endgroup").append(System.getProperty("line.separator"));
-        exportPageHeader.append("            \\kern \\crosscontrightdist").append(System.getProperty("line.separator"));
-        exportPageHeader.append("          }%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("          \\kern \\crossdepth").append(System.getProperty("line.separator"));
-        exportPageHeader.append("          \\hrule height 0pt depth \\crosslinethickness").append(System.getProperty("line.separator"));
-        exportPageHeader.append("        }%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("        \\vrule width\\crosslinethickness").append(System.getProperty("line.separator"));
-        exportPageHeader.append("        \\kern \\crossrightdist").append(System.getProperty("line.separator"));
-        exportPageHeader.append("      }%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("    }%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("  }%").append(System.getProperty("line.separator"));
-        exportPageHeader.append("}").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
-        exportPageHeader.append("\\newcommand*\\FormAbstand[1]{%").append(System.getProperty("line.separator"));
+        exportPageHeader.append("% Dieses Makro erstellt Befehle, um die Form-Notation von George Spencer Brown").append(System.lineSeparator());
+        exportPageHeader.append("% zu imitieren, die oft von Autoren im Bereich Systemtheorie verwendet wird.").append(System.lineSeparator());
+        exportPageHeader.append("% Vielen Dank an die Benutzer des Mr. Unix Forums für die hilfreichen Tipps zur Umsetzung!").append(System.lineSeparator());
+        exportPageHeader.append("% http://www.mrunix.de/forums/showthread.php?t=66803&page=2").append(System.lineSeparator());
+        exportPageHeader.append("%").append(System.lineSeparator());
+        exportPageHeader.append("% Beispiele: Form =\\cross{Innenseite}%").append(System.lineSeparator());
+        exportPageHeader.append("% Beispiele: Form =\\cross{Innenseite}Außenseite%").append(System.lineSeparator());
+        exportPageHeader.append("% Beispiele: Form =\\ReEntry{\\cross{\\cross{\\cross{Innenseite}Kontext 1}Kontext 2}Kontex 3}Außenseite").append(System.lineSeparator());
+        exportPageHeader.append("%").append(System.lineSeparator());
+        exportPageHeader.append("\\newlength\\crossleftdist  %Abstand links vom\\cross").append(System.lineSeparator());
+        exportPageHeader.append("\\newlength\\crossrightdist %Abstand rechts vom\\cross").append(System.lineSeparator());
+        exportPageHeader.append("\\newlength\\crosscontleftdist  %Abstand Inhalt links zum \\cross").append(System.lineSeparator());
+        exportPageHeader.append("\\newlength\\crosscontrightdist %Abstand Inhalt rechts zum \\cross").append(System.lineSeparator());
+        exportPageHeader.append("\\newlength\\crosscontabovedist %Freiraum Inhalt oben zum \\cross").append(System.lineSeparator());
+        exportPageHeader.append("\\newlength\\crossdepth %Tiefe fürs \\cross (Freiraum unterm Inhalt)").append(System.lineSeparator());
+        exportPageHeader.append("\\newlength\\crosslinethickness %Linienstärke fürs \\cross").append(System.lineSeparator());
+        exportPageHeader.append("\\newlength\\crosshooklength  %die Länge des Hakens").append(System.lineSeparator());
+        exportPageHeader.append("\\newlength\\crosscontdepth").append(System.lineSeparator());
+        exportPageHeader.append("\\newlength\\crosscontbelowdist").append(System.lineSeparator());
+        exportPageHeader.append("\\newlength\\crossAbove").append(System.lineSeparator());
+        exportPageHeader.append("\\newlength\\crossBelow").append(System.lineSeparator());
+        exportPageHeader.append("\\newlength\\formabovedist").append(System.lineSeparator());
+        exportPageHeader.append("\\newlength\\formbelowdist").append(System.lineSeparator());
+        exportPageHeader.append(System.lineSeparator());
+        exportPageHeader.append("\\setlength\\formabovedist{4ex} %Ändern für Abstand über Form").append(System.lineSeparator());
+        exportPageHeader.append("\\setlength\\formbelowdist{2ex} %Ändern für Abstand unter Form").append(System.lineSeparator());
+        exportPageHeader.append("\\setlength\\crossleftdist{0.5em}").append(System.lineSeparator());
+        exportPageHeader.append("\\setlength\\crossrightdist{0.5em}").append(System.lineSeparator());
+        exportPageHeader.append("\\setlength\\crosscontleftdist{1pt}").append(System.lineSeparator());
+        exportPageHeader.append("\\setlength\\crosscontrightdist{4pt}").append(System.lineSeparator());
+        exportPageHeader.append("\\setlength\\crosscontabovedist{3.5pt}").append(System.lineSeparator());
+        exportPageHeader.append("\\setlength\\crossdepth{5pt}").append(System.lineSeparator());
+        exportPageHeader.append("\\setlength\\crosslinethickness{0.4pt}").append(System.lineSeparator());
+        exportPageHeader.append("\\setlength\\crosshooklength{\\dimexpr\\crossdepth-3pt\\relax}").append(System.lineSeparator()).append(System.lineSeparator());
+        exportPageHeader.append("\\newcommand*\\cross[1]{%").append(System.lineSeparator());
+        exportPageHeader.append("  \\settodepth\\crosscontdepth{#1}%").append(System.lineSeparator());
+        exportPageHeader.append("  \\setlength\\crosscontbelowdist{0pt}%").append(System.lineSeparator());
+        exportPageHeader.append("  \\ifdim\\crosscontdepth=0pt").append(System.lineSeparator());
+        exportPageHeader.append("    \\settodepth\\crosscontdepth{g}%").append(System.lineSeparator());
+        exportPageHeader.append("    \\addtolength\\crosscontbelowdist{\\crosscontdepth}%").append(System.lineSeparator());
+        exportPageHeader.append("  \\fi").append(System.lineSeparator());
+        exportPageHeader.append("  \\raisebox{-\\crosscontdepth}{%").append(System.lineSeparator());
+        exportPageHeader.append("  \\mbox{%").append(System.lineSeparator());
+        exportPageHeader.append("    \\hbox{%").append(System.lineSeparator());
+        exportPageHeader.append("      \\kern \\crossleftdist").append(System.lineSeparator());
+        exportPageHeader.append("      \\vbox{%").append(System.lineSeparator());
+        exportPageHeader.append("       \\hrule height \\crosslinethickness").append(System.lineSeparator());
+        exportPageHeader.append("          \\kern\\crosscontabovedist").append(System.lineSeparator());
+        exportPageHeader.append("          \\hbox{%").append(System.lineSeparator());
+        exportPageHeader.append("            \\kern \\crosscontleftdist").append(System.lineSeparator());
+        exportPageHeader.append("            \\raisebox{-\\crosscontdepth}{%").append(System.lineSeparator());
+        exportPageHeader.append("              \\begingroup").append(System.lineSeparator());
+        exportPageHeader.append("                \\setlength\\crossleftdist{-\\crosscontleftdist}%").append(System.lineSeparator());
+        exportPageHeader.append("                  \\vphantom{b}#1%").append(System.lineSeparator());
+        exportPageHeader.append("              \\endgroup").append(System.lineSeparator());
+        exportPageHeader.append("            }%").append(System.lineSeparator());
+        exportPageHeader.append("            \\kern \\crosscontrightdist").append(System.lineSeparator());
+        exportPageHeader.append("          }%").append(System.lineSeparator());
+        exportPageHeader.append("          \\kern \\crosscontbelowdist").append(System.lineSeparator());
+        exportPageHeader.append("        }%").append(System.lineSeparator());
+        exportPageHeader.append("        \\vrule width \\crosslinethickness %depth \\crosscontdepth").append(System.lineSeparator());
+        exportPageHeader.append("        \\kern \\crossrightdist").append(System.lineSeparator());
+        exportPageHeader.append("      }%").append(System.lineSeparator());
+        exportPageHeader.append("    }%").append(System.lineSeparator());
+        exportPageHeader.append("  }%").append(System.lineSeparator());
+        exportPageHeader.append("}").append(System.lineSeparator());
+        exportPageHeader.append("").append(System.lineSeparator());
+        exportPageHeader.append("\\newcommand*\\ReEntry[1]{%").append(System.lineSeparator());
+        exportPageHeader.append("  \\settodepth\\crosscontdepth{#1}%").append(System.lineSeparator());
+        exportPageHeader.append("  \\settoheight\\crossAbove{#1}%").append(System.lineSeparator());
+        exportPageHeader.append("  \\addtolength\\crossAbove{\\crosslinethickness}%").append(System.lineSeparator());
+        exportPageHeader.append("  \\setlength\\crossBelow{\\dimexpr\\crosscontdepth+\\crossdepth\\relax}%").append(System.lineSeparator());
+        exportPageHeader.append("  \\raisebox{-\\crossBelow}[\\crossAbove][\\dimexpr\\crossBelow+\\crosslinethickness\\relax]{%").append(System.lineSeparator());
+        exportPageHeader.append("    \\mbox{%").append(System.lineSeparator());
+        exportPageHeader.append("      \\hbox{%").append(System.lineSeparator());
+        exportPageHeader.append("        \\kern \\crossleftdist").append(System.lineSeparator());
+        exportPageHeader.append("        \\vrule width \\crosslinethickness height \\dimexpr\\crosshooklength+\\crosscontdepth\\relax").append(System.lineSeparator());
+        exportPageHeader.append("        \\kern-\\crosslinethickness").append(System.lineSeparator());
+        exportPageHeader.append("        \\vbox{%").append(System.lineSeparator());
+        exportPageHeader.append("          \\hrule height \\crosslinethickness").append(System.lineSeparator());
+        exportPageHeader.append("          \\kern \\crosscontabovedist").append(System.lineSeparator());
+        exportPageHeader.append("          \\hbox{%").append(System.lineSeparator());
+        exportPageHeader.append("            \\kern \\crosscontleftdist").append(System.lineSeparator());
+        exportPageHeader.append("            \\begingroup").append(System.lineSeparator());
+        exportPageHeader.append("              \\setlength\\crossleftdist{-\\crosscontleftdist}%").append(System.lineSeparator());
+        exportPageHeader.append("                #1%").append(System.lineSeparator());
+        exportPageHeader.append("            \\endgroup").append(System.lineSeparator());
+        exportPageHeader.append("            \\kern \\crosscontrightdist").append(System.lineSeparator());
+        exportPageHeader.append("          }%").append(System.lineSeparator());
+        exportPageHeader.append("          \\kern \\crossdepth").append(System.lineSeparator());
+        exportPageHeader.append("          \\hrule height 0pt depth \\crosslinethickness").append(System.lineSeparator());
+        exportPageHeader.append("        }%").append(System.lineSeparator());
+        exportPageHeader.append("        \\vrule width\\crosslinethickness").append(System.lineSeparator());
+        exportPageHeader.append("        \\kern \\crossrightdist").append(System.lineSeparator());
+        exportPageHeader.append("      }%").append(System.lineSeparator());
+        exportPageHeader.append("    }%").append(System.lineSeparator());
+        exportPageHeader.append("  }%").append(System.lineSeparator());
+        exportPageHeader.append("}").append(System.lineSeparator()).append(System.lineSeparator());
+        exportPageHeader.append("\\newcommand*\\FormAbstand[1]{%").append(System.lineSeparator());
         // prepare form-paragraph
         String formtag = "\\raisebox{0pt}[\\formabovedist][\\formbelowdist]#1";
         // check whether formtag should be centred
@@ -636,8 +636,8 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         // enter % for significant empty spaces
         formtag = formtag+"%";
         // insert string
-        exportPageHeader.append("  ").append(formtag).append(System.getProperty("line.separator"));
-        exportPageHeader.append("}").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+        exportPageHeader.append("  ").append(formtag).append(System.lineSeparator());
+        exportPageHeader.append("}").append(System.lineSeparator()).append(System.lineSeparator());
     }
     /**
      *
@@ -721,7 +721,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         // truncate last comma
         sb.setLength(sb.length()-1);
         // add line-separator
-        sb.append("]}").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+        sb.append("]}").append(System.lineSeparator()).append(System.lineSeparator());
 */
         // return result
         return sb.toString();
@@ -782,7 +782,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
             // get the child
             node = (DefaultMutableTreeNode) en.nextElement();
             // retrieve comment
-            String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node),System.getProperty("line.separator"));
+            String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node),System.lineSeparator());
             // check for valid comment
             if (com!=null && !com.isEmpty()) {
                 // if the child is a bullet...
@@ -837,7 +837,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         // convert special chars and enquote quotes
         text = getConvertedTex(text);
         // retrieve comment
-        String com = (exportcomments) ? desktopObj.getComment(TreeUtil.getNodeTimestamp(node),System.getProperty("line.separator")) : "";
+        String com = (exportcomments) ? desktopObj.getComment(TreeUtil.getNodeTimestamp(node),System.lineSeparator()) : "";
         // add each beginning entry-tag
         sb.append(latexBeginTag(nr,com));
         // check whether the user wants to export titles.
@@ -865,7 +865,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                     sb.append(zetteltitle);
                 }
                 sb.append("}");
-                sb.append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                sb.append(System.lineSeparator()).append(System.lineSeparator());
             }
         }
         // if we have content, add it.
@@ -891,7 +891,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
             // check whether we have any
             if (!remarks.isEmpty()) {
                 // set headline indicating that we have remarks here
-                sb.append(System.getProperty("line.separator")).append("\\textit{").append(resourceMap.getString("remarksHeader")).append("}");
+                sb.append(System.lineSeparator()).append("\\textit{").append(resourceMap.getString("remarksHeader")).append("}");
                 // init paragraph with class-attribute, so the user may change style aftwerwards
                 sb.append(remarks);
             }
@@ -899,14 +899,14 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         // close zettel-tags
         // uncomment this, if the "end{zettel}" command should be enabled. As this leads to errors when comiling the latex file,
         // the begin{zettel} and end{zettel} tags are not used, see method "latexBeginTag()"
-        // sb.append(System.getProperty("line.separator")).append("\\end{zettel}").append(System.getProperty("line.separator"));
-        sb.append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+        // sb.append(System.lineSeparator()).append("\\end{zettel}").append(System.lineSeparator());
+        sb.append(System.lineSeparator()).append(System.lineSeparator());
         // if the user wishes to remove multiple line-breaks, do this here
         if (settingsObj.getRemoveLinesForDesktopExport()) {
             // retrieve current content
             text = sb.toString();
             // remove double line separaters
-            text = text.replace(System.getProperty("line.separator")+System.getProperty("line.separator"),System.getProperty("line.separator"));
+            text = text.replace(System.lineSeparator()+System.lineSeparator(),System.lineSeparator());
             // set back content
             sb = new StringBuilder(text);
         }
@@ -925,7 +925,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         // check whether comments should be exported as well
         if (exportcomments) {
             // retrieve comment
-            String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node),System.getProperty("line.separator"));
+            String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node),System.lineSeparator());
             // check for valid comment
             if (com!=null && !com.isEmpty()) {
                 // append comment
@@ -948,7 +948,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         // get converted special chars and enquotes quotes
         text = getConvertedTex(text);
         // append text
-        sb.append(text).append("}").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+        sb.append(text).append("}").append(System.lineSeparator()).append(System.lineSeparator());
         return sb.toString();
     }
     /**

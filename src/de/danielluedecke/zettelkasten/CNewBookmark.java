@@ -110,7 +110,7 @@ public class CNewBookmark extends javax.swing.JDialog {
             // get the comment
             String comment = bookmarksObj.getComment(pos);
             // replace br-tags with newlines
-            comment = comment.replace("[br]", System.getProperty("line.separator"));
+            comment = comment.replace("[br]", System.lineSeparator());
             // and set text to textfield
             jTextAreaComment.setText(comment);
             // change title
@@ -277,10 +277,10 @@ public class CNewBookmark extends javax.swing.JDialog {
         //
         // but first, we habe to remove all carriage-returns (\r), which are part of the
         // line-seperator in windows. somehow, the replace-command does *not* work, when
-        // we replace "System.getProperty("line.separator")" with "[br]", but only when
+        // we replace "System.lineSeparator()" with "[br]", but only when
         // a "\n" is replaced by [br]. So, in case the system's line-separator also contains a
         // "\r", it is replaced by nothing, to clean the content.
-        if (System.getProperty("line.separator").contains("\r")) comment = comment.replace("\r", "");
+        if (System.lineSeparator().contains("\r")) comment = comment.replace("\r", "");
         comment = comment.replace("\n","[br]");
         // get the category
         String cat = jComboBoxCats.getSelectedItem().toString();

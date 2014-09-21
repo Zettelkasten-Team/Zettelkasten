@@ -257,12 +257,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * the JList-component which displays the found entries, which have relations
      * between certain keywords. see "showCluster()" for more details.
      */
-    private final List<String> clusterList = new ArrayList<String>();
+    private final List<String> clusterList = new ArrayList<>();
     /**
      * create a variable for a list model. this list model is used for
      * the JList-component which displays the is-follower-numbers.
      */
-    private final List<String> isFollowerList = new ArrayList<String>();
+    private final List<String> isFollowerList = new ArrayList<>();
     /**
      * This variable stores the table data of the keyword-list when this list is filtered.
      * All changes to a fitered table-list are also applied to this linked list. When 
@@ -546,10 +546,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // and use a simple formatting, so the log-file will be readable
             fh.setFormatter(new SimpleFormatter());
         }
-        catch (IOException ex) {
-            Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
-        }
-        catch (SecurityException ex) {
+        catch (IOException | SecurityException ex) {
             Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
         }
         // befor components are drawn, set the default look and feel for this application
@@ -1566,7 +1563,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // quotes are removed, since we don't need them...
                 Matcher mat = Pattern.compile("(\"(.*?)\"|([^,]+)),?").matcher(tf.getText());
                 // create a new list that will contain each found pattern (i.e. searchterm)
-                List<String> result = new ArrayList<String>();
+                List<String> result = new ArrayList<>();
                 while (mat.find()) result.add(mat.group(2) == null ? mat.group(3) : mat.group(2));
                 // and copy the list to our array...
                 String[] searchterms = result.toArray(new String[result.size()]);
@@ -1992,9 +1989,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                                 // return success value
                                 return true;
                             }
-                            catch (NumberFormatException e) {
-                            }
-                            catch (IndexOutOfBoundsException ex) {
+                            catch (NumberFormatException | IndexOutOfBoundsException e) {
                             }
                         }
                     }
@@ -2009,14 +2004,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jListEntryKeywords.setTransferHandler(new EntryStringTransferHandler() {
             @Override protected String exportString(JComponent c) {
                 // retrieve selections
-                Object[] kws = jListEntryKeywords.getSelectedValues(); // TODO ab Java 7 ersetzen durch getSelectedValuesList()
+                List<Object> kws = jListEntryKeywords.getSelectedValuesList();
                 // when we have no selection, return null
-                if (kws.length<1) return null;
+                if (kws.isEmpty()) return null;
                 StringBuilder keywords = new StringBuilder("");
                 // iterate array and copy all selected keywords to clipboard
                 for (Object o : kws) {
                     keywords.append(o.toString());
-                    keywords.append(System.getProperty("line.separator"));
+                    keywords.append(System.lineSeparator());
                 }
                 return keywords.toString();
             }
@@ -2105,7 +2100,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private void setCustomTableRowSorter(JTable table, int column) {
         // create new table sorter
-        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>();
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>();
         // tell tgis jtable that it has an own sorter
         table.setRowSorter(sorter);
         // and tell the sorter, which table model to sort.
@@ -2485,13 +2480,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // ZettelkastenView.super.getFrame().getRootPane().putClientProperty("SeaGlass.UnifiedToolbarLook", Boolean.TRUE);
                 ZettelkastenView.super.getFrame().getRootPane().setBackground(ColorUtil.colorSeaGlassGray);
             }
-        } catch (UnsupportedLookAndFeelException ex) {
-            Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-        } catch (ClassNotFoundException ex) {
-            Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-        } catch (InstantiationException ex) {
-            Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-        } catch (IllegalAccessException ex) {
+        } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
         }
     }
@@ -2837,7 +2826,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             String[] highlightterms = data.getSeparatedKeywords(displayedZettel);
             // create new linked list that will contain all highlight-terms, including
             // the related synonyms of the highlight-terms
-            LinkedList<String> highlight = new LinkedList<String>();
+            LinkedList<String> highlight = new LinkedList<>();
             // check whether we have any keywords to highlight
             if (highlightterms!=null && highlightterms.length>0) {
                 highlight.addAll(Arrays.asList(highlightterms));
@@ -3013,7 +3002,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             }
             catch (NumberFormatException e) {
                 Constants.zknlogger.log(Level.WARNING, "Node was: {0}{1}Retrieved Number was: {2}{3}{4}", 
-                                        new Object[]{node.toString(), System.getProperty("line.separator"), text, System.getProperty("line.separator"), e.getLocalizedMessage()});
+                                        new Object[]{node.toString(), System.lineSeparator(), text, System.lineSeparator(), e.getLocalizedMessage()});
                 return -1;
             }
         }
@@ -3256,10 +3245,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             try {
                 Desktop.getDesktop().browse(new URI(updateURI));
             }
-            catch (IOException e) {
-                Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
-            }
-            catch (URISyntaxException e) {
+            catch (IOException | URISyntaxException e) {
                 Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
             }
         }
@@ -3398,7 +3384,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
     private int[] prepareLuhmannNumbersForExport() {
         // init linked list
-        luhmannnumbersforexport = new LinkedList<Integer>();
+        luhmannnumbersforexport = new LinkedList<>();
         // get recursive Luhmann-Numbers of current entry
         fillLuhmannNumbersForExport(displayedZettel);
         // add them...
@@ -3456,7 +3442,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void exportLinks() {
         // create linked list that will contain all attachments
         ArrayList<Object> explinks;
-        explinks = new ArrayList<Object>();
+        explinks = new ArrayList<>();
         // first, add original entry number
         explinks.add(String.valueOf(displayedZettel));
         // get length of links-table
@@ -3488,7 +3474,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     @Action(enabledProperty = "exportPossible")
     public void exportLinksToSearch() {
         // create linked list that will contain all attachments
-        ArrayList<Object> explinks = new ArrayList<Object>();
+        ArrayList<Object> explinks = new ArrayList<>();
         // retrieve entry-numbers
         // first, add original entry number
         explinks.add(String.valueOf(displayedZettel));
@@ -3612,7 +3598,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     @Action(enabledProperty = "exportPossible")
     public void exportCluster() {
         // create linked list that will contain all attachments
-        ArrayList<Object> expcluster = new ArrayList<Object>();
+        ArrayList<Object> expcluster = new ArrayList<>();
         // get length of cluster-entry-list
         // call export-method
         exportEntries(expcluster);
@@ -4048,11 +4034,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                             updateDisplayParts(displayedZettel);
                         }
                         // the user did not edit a valid date, and probably used chars instead of numbers
-                        catch (NumberFormatException ex) {
-                            // reset value, so the input can be done again
-                            defaulttimestamp = "";
-                        }
-                        catch (IndexOutOfBoundsException ex) {
+                        catch (NumberFormatException | IndexOutOfBoundsException ex) {
                             // reset value, so the input can be done again
                             defaulttimestamp = "";
                         }
@@ -4255,10 +4237,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // if we have a valid return-value...
         if ((newAu!=null) && (newAu.length()>0)) {
             // get system line separator
-            String linesep = System.getProperty("line.separator");
+            String linesep = System.lineSeparator();
             // but first, we habe to remove all carriage-returns (\r), which are part of the
             // line-seperator in windows. somehow, the replace-command does *not* work, when
-            // we replace "System.getProperty("line.separator")" with "[br]", but only when
+            // we replace "System.lineSeparator()" with "[br]", but only when
             // a "\n" is replaced by [br]. So, in case the system's line-separator also contains a
             // "\r", it is replaced by nothing, to clean the content.
             if (linesep.contains("\r")) newAu = newAu.replace("\r", "");
@@ -4373,7 +4355,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // but first, check, whether we have any desktops at all...
         if (desktop.getCount()>0) {
             // create linked list
-            LinkedList<Integer> checkEntries = new LinkedList<Integer>();
+            LinkedList<Integer> checkEntries = new LinkedList<>();
             // copy all to be deleted entries to the linked list
             for (int n : nrs) checkEntries.add(n);
             // now check whether one or more entries of the to be deleted entries appear in one or
@@ -4382,7 +4364,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // if we have any return-value, go on...
             if(multipleOccurencesMessage!=null) {
                 // get system line separator
-                String linesep = System.getProperty("line.separator");
+                String linesep = System.lineSeparator();
                 multipleOccurencesMessage = getResourceMap().getString("askForDeleteEntriesOnDesktop")
                                           + linesep+linesep
                                           + multipleOccurencesMessage;
@@ -4476,7 +4458,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // if we haven't already stored the current complete table data, do this now
         if (null==list) {
             // create new instance of list
-            list = new LinkedList<Object[]>();
+            list = new LinkedList<>();
             // go through all table-data
             for (int cnt=0; cnt<dtm.getRowCount(); cnt++) {
                 // init the object-variable
@@ -5500,7 +5482,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTreeCluster.setEnabled(false);        
         // create a linked list. here we will add all keywords from the selection to the 
         // first level paremt
-        LinkedList<String> kws = new LinkedList<String>();
+        LinkedList<String> kws = new LinkedList<>();
         // start from the second element, since we don't want the root-element
         // and copy all nodes from this path to the linked list
         for (int cnt=1; cnt<tp.getPathCount(); cnt++) kws.add(tp.getPathComponent(cnt).toString());
@@ -5648,8 +5630,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // identify new-line/line-separator-char
                 String sepval = (text.contains("\r\n")) ? "\r\n" : "\n";
                 // if we have any leading new lines, remove these
-//                while (text.startsWith(System.getProperty("line.separator"))) {
-//                    text = text.substring(System.getProperty("line.separator").length());
+//                while (text.startsWith(System.lineSeparator())) {
+//                    text = text.substring(System.lineSeparator().length());
 //                }
                 while (text.startsWith(sepval)) {
                     text = text.substring(sepval.length());
@@ -5670,13 +5652,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 Constants.zknlogger.log(Level.INFO,"Autobackup finished (if necessary).");
             }
         }
-        catch(IllegalStateException e) {
-            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-        }
-        catch(IOException e) {
-            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-        }
-        catch(UnsupportedFlavorException e) {
+        catch(IllegalStateException | IOException | UnsupportedFlavorException e) {
             Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
         }
     }
@@ -5719,11 +5695,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     }
                 }
 //                // if we have any leading new lines, remove these
-//                while (text.startsWith(System.getProperty("line.separator"))) {
-//                    text = text.substring(System.getProperty("line.separator").length());
+//                while (text.startsWith(System.lineSeparator())) {
+//                    text = text.substring(System.lineSeparator().length());
 //                }
 //                // retrieve first line
-//                int pos = text.indexOf(System.getProperty("line.separator"));
+//                int pos = text.indexOf(System.lineSeparator());
 //                // if we have more than one line, a first line is found
 //                if (pos!=-1) {
 //                    // cut first line and set it as title
@@ -5731,8 +5707,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 //                    // remove first line from text
 //                    text = text.substring(pos);
 //                    // if we have any leading new lines, remove these
-//                    while (text.startsWith(System.getProperty("line.separator"))) {
-//                        text = text.substring(System.getProperty("line.separator").length());
+//                    while (text.startsWith(System.lineSeparator())) {
+//                        text = text.substring(System.lineSeparator().length());
 //                    }
 //                }
                 // add text as new entry
@@ -5751,13 +5727,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 Constants.zknlogger.log(Level.INFO,"Autobackup finished (if necessary).");
             }
         }
-        catch(IllegalStateException e) {
-            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-        }
-        catch(IOException e) {
-            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-        }
-        catch(UnsupportedFlavorException e) {
+        catch(IllegalStateException | IOException | UnsupportedFlavorException e) {
             Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
         }
     }
@@ -5925,10 +5895,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 dtde.rejectDrop();
             }
         }
-        catch (IOException ex) {
-            Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
-            dtde.rejectDrop();
-        } catch (UnsupportedFlavorException ex) {
+        catch (IOException | UnsupportedFlavorException ex) {
             Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
             dtde.rejectDrop();
         }
@@ -6007,7 +5974,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // if we have any keywords, go on
             if (kws!=null) {
                 // create new instance of that variable
-                linkedlinkslist = new ArrayList<Object[]>();
+                linkedlinkslist = new ArrayList<>();
                 // iterate all entrys of the zettelkasten
                 for (cnt=1; cnt<=len; cnt++) {
                     // leave out the comparison of the current entry with itself
@@ -6392,52 +6359,52 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 }
             }
             try {
+                ByteArrayOutputStream bout;
                 // open the outputstream
-                ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(backup));
-                // I first wanted to use a pretty output format, so advanced users who
-                // extract the data file can better watch the xml-files. but somehow, this
-                // lead to an error within the method "retrieveElement" in the class "CDaten.java",
-                // saying the a org.jdom.text cannot be converted to org.jdom.element?!?
-                // XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
-                XMLOutputter out = new XMLOutputter();
-                // save old statustext
-                oldmsg = statusMsgLabel.getText();
-                // show status text
-                statusMsgLabel.setText(rm.getString("createAutoBackupMsg"));
-                // save metainformation
-                zip.putNextEntry(new ZipEntry(Constants.metainfFileName));
-                out.output(data.getMetaInformationData(), zip);
-                // save main data.
-                zip.putNextEntry(new ZipEntry(Constants.zknFileName));
-                out.output(data.getZknData(), zip);
-                // save authors
-                zip.putNextEntry(new ZipEntry(Constants.authorFileName));
-                out.output(data.getAuthorData(), zip);
-                // save keywords
-                zip.putNextEntry(new ZipEntry(Constants.keywordFileName));
-                out.output(data.getKeywordData(), zip);
-                // save bookmarks
-                zip.putNextEntry(new ZipEntry(Constants.bookmarksFileName));
-                out.output(bookmarks.getBookmarkData(), zip);
-                // save searchrequests
-                zip.putNextEntry(new ZipEntry(Constants.searchrequestsFileName));
-                out.output(searchrequests.getSearchData(), zip);
-                // save synonyms
-                zip.putNextEntry(new ZipEntry(Constants.synonymsFileName));
-                out.output(synonyms.getDocument(), zip);
-                // save bibtex file
-                zip.putNextEntry(new ZipEntry(Constants.bibTexFileName));
-                ByteArrayOutputStream bout = bibtex.saveFile();
-                bout.writeTo(zip);
-                // save desktops
-                zip.putNextEntry(new ZipEntry(Constants.desktopFileName));
-                out.output(desktop.getDesktopData(), zip);
-                zip.putNextEntry(new ZipEntry(Constants.desktopModifiedEntriesFileName));
-                out.output(desktop.getDesktopModifiedEntriesData(), zip);
-                zip.putNextEntry(new ZipEntry(Constants.desktopNotesFileName));
-                out.output(desktop.getDesktopNotesData(), zip);
-                
-                zip.close();
+                try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(backup))) {
+                    // I first wanted to use a pretty output format, so advanced users who
+                    // extract the data file can better watch the xml-files. but somehow, this
+                    // lead to an error within the method "retrieveElement" in the class "CDaten.java",
+                    // saying the a org.jdom.text cannot be converted to org.jdom.element?!?
+                    // XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
+                    XMLOutputter out = new XMLOutputter();
+                    // save old statustext
+                    oldmsg = statusMsgLabel.getText();
+                    // show status text
+                    statusMsgLabel.setText(rm.getString("createAutoBackupMsg"));
+                    // save metainformation
+                    zip.putNextEntry(new ZipEntry(Constants.metainfFileName));
+                    out.output(data.getMetaInformationData(), zip);
+                    // save main data.
+                    zip.putNextEntry(new ZipEntry(Constants.zknFileName));
+                    out.output(data.getZknData(), zip);
+                    // save authors
+                    zip.putNextEntry(new ZipEntry(Constants.authorFileName));
+                    out.output(data.getAuthorData(), zip);
+                    // save keywords
+                    zip.putNextEntry(new ZipEntry(Constants.keywordFileName));
+                    out.output(data.getKeywordData(), zip);
+                    // save bookmarks
+                    zip.putNextEntry(new ZipEntry(Constants.bookmarksFileName));
+                    out.output(bookmarks.getBookmarkData(), zip);
+                    // save searchrequests
+                    zip.putNextEntry(new ZipEntry(Constants.searchrequestsFileName));
+                    out.output(searchrequests.getSearchData(), zip);
+                    // save synonyms
+                    zip.putNextEntry(new ZipEntry(Constants.synonymsFileName));
+                    out.output(synonyms.getDocument(), zip);
+                    // save bibtex file
+                    zip.putNextEntry(new ZipEntry(Constants.bibTexFileName));
+                    bout = bibtex.saveFile();
+                    bout.writeTo(zip);
+                    // save desktops
+                    zip.putNextEntry(new ZipEntry(Constants.desktopFileName));
+                    out.output(desktop.getDesktopData(), zip);
+                    zip.putNextEntry(new ZipEntry(Constants.desktopModifiedEntriesFileName));
+                    out.output(desktop.getDesktopModifiedEntriesData(), zip);
+                    zip.putNextEntry(new ZipEntry(Constants.desktopNotesFileName));
+                    out.output(desktop.getDesktopNotesData(), zip);
+                }
                 bout.close();
             }
             catch (IOException e) {
@@ -6643,7 +6610,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private class createClusterTask extends org.jdesktop.application.Task<Object, Void> {
         // create link list for the keywords and related keywords
-        LinkedList<String> lwsClusterTask = new LinkedList<String>();
+        LinkedList<String> lwsClusterTask = new LinkedList<>();
 
         createClusterTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
@@ -6795,7 +6762,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // get setting, whether we have logical-and or logical-or-search
             boolean log_and = settings.getLogKeywordlist().equalsIgnoreCase(Settings.SETTING_LOGKEYWORDLIST_AND);
             // create new instance of that variable
-            linkedfilteredlinkslist = new ArrayList<Object[]>();
+            linkedfilteredlinkslist = new ArrayList<>();
             // iterate all entrys of the zettelkasten
             for (cnt=1; cnt<=len; cnt++) {
                 // leave out the comparison of the current entry with itself
@@ -7526,7 +7493,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void exportEntries(int[] entries) {
         // here we copy the integer-array to an object-array-list,
         // since our export-entries need to be in array-object-format
-        ArrayList<Object> liste = new ArrayList<Object>();
+        ArrayList<Object> liste = new ArrayList<>();
         if (null==entries || entries.length<1) {
             liste = null;
         }
@@ -8332,19 +8299,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         JOptionPane.showMessageDialog(getFrame(),
                                                       getResourceMap().getString("backupLoadedMsg",
                                                                                  "\""+checkbackup.getName()+"\"",
-                                                                                 System.getProperty("line.separator")+
-                                                                                 System.getProperty("line.separator")+
+                                                                                 System.lineSeparator()+
+                                                                                 System.lineSeparator()+
                                                                                  "\""+fp.toString().substring(0, fp.toString().lastIndexOf(File.separatorChar))+"\""+
-                                                                                 System.getProperty("line.separator")+
-                                                                                 System.getProperty("line.separator"),
+                                                                                 System.lineSeparator()+
+                                                                                 System.lineSeparator(),
                                                                                  "\""+fp.getName()+"\""),
                                                       getResourceMap().getString("backupLoadedTitle"),
                                                       JOptionPane.PLAIN_MESSAGE);
                     }
-                    catch(SecurityException e) {
-                        Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
-                    }
-                    catch(NullPointerException e) {
+                    catch(SecurityException | NullPointerException e) {
                         Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
                     }
                 }
@@ -8463,19 +8427,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         JOptionPane.showMessageDialog(getFrame(),
                                                       getResourceMap().getString("backupLoadedMsg",
                                                                                  "\""+checkbackup.getName()+"\"",
-                                                                                 System.getProperty("line.separator")+
-                                                                                 System.getProperty("line.separator")+
+                                                                                 System.lineSeparator()+
+                                                                                 System.lineSeparator()+
                                                                                  "\""+fp.toString().substring(0, fp.toString().lastIndexOf(File.separatorChar))+"\""+
-                                                                                 System.getProperty("line.separator")+
-                                                                                 System.getProperty("line.separator"),
+                                                                                 System.lineSeparator()+
+                                                                                 System.lineSeparator(),
                                                                                  "\""+fp.getName()+"\""),
                                                       getResourceMap().getString("backupLoadedTitle"),
                                                       JOptionPane.PLAIN_MESSAGE);
                     }
-                    catch(SecurityException e) {
-                        Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
-                    }
-                    catch(NullPointerException e) {
+                    catch(SecurityException | NullPointerException e) {
                         Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
                     }
                 }
@@ -8773,7 +8734,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // get length of keyword file
         int len = data.getCount(Daten.KWCOUNT);
         // create linked list that will contain all keywords
-        LinkedList<String> keywords = new LinkedList<String>();
+        LinkedList<String> keywords = new LinkedList<>();
         // copy all keywords to a linked list
         for (int cnt=0; cnt<len; cnt++) keywords.add(data.getKeyword(cnt+1));
         // call export-method
@@ -8830,7 +8791,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // get length of author file
         int len = data.getCount(Daten.AUCOUNT);
         // create linked list that will contain all authors
-        LinkedList<String> authors = new LinkedList<String>();
+        LinkedList<String> authors = new LinkedList<>();
         // copy all authors to a linked list
         for (int cnt=0; cnt<len; cnt++) authors.add(data.getAuthor(cnt+1));
         // call export-method
@@ -8924,7 +8885,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // get length of attachment-table
         int len = jTableAttachments.getRowCount();
         // create linked list that will contain all attachments
-        LinkedList<String> attachments = new LinkedList<String>();
+        LinkedList<String> attachments = new LinkedList<>();
         // copy all attachments to a linked list
         for (int cnt=0; cnt<len; cnt++) attachments.add(jTableAttachments.getValueAt(cnt, 0).toString());
         // call export-method
@@ -9082,12 +9043,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     // here startes the export of txt-data
                     if (exportformat.equals(getResourceMap().getString("exportListFormat2"))) {
                         // iterate exportlist and copy each list-element to the string, separated by new lines
-                        while (i.hasNext()) finalcontent.append(i.next()).append(System.getProperty("line.separator"));
+                        while (i.hasNext()) finalcontent.append(i.next()).append(System.lineSeparator());
                     }
                     // here startes the export of html-data
                     else if (exportformat.equals(getResourceMap().getString("exportListFormat3"))) {
                         // init html-page
-                        finalcontent.append("<html><head></head><body><ol>").append(System.getProperty("line.separator"));
+                        finalcontent.append("<html><head></head><body><ol>").append(System.lineSeparator());
                         // iterate exportlist and copy each list-element to the string, separated by new lines
                         while (i.hasNext()) {
                             // create dummy string to convert German umlauts
@@ -9103,10 +9064,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                             dummy = dummy.replace("Ü", "&Uuml;");
                             dummy = dummy.replace("ß", "&szlig;");
                             // append converted author to stringbuilder
-                            finalcontent.append("<li>").append(dummy).append("</li>").append(System.getProperty("line.separator"));
+                            finalcontent.append("<li>").append(dummy).append("</li>").append(System.lineSeparator());
                         }
                         // close html-page
-                        finalcontent.append(System.getProperty("line.separator")).append("</ol></body></html>");
+                        finalcontent.append(System.lineSeparator()).append("</ol></body></html>");
                     }
                     // init output-filewriter
                     Writer exportfile = null;
@@ -10464,11 +10425,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                             // set handled to true, so other actions won't take place any more.
                             // if we leave this out, a second, system-own aboutbox would be displayed
                             setHandled(args[0], Boolean.TRUE);
-                        } catch (NoSuchMethodException ex) {
-                            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                        } catch (IllegalAccessException ex) {
-                            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                        } catch (InvocationTargetException ex) {
+                        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
                             Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
                         }
                     }
@@ -10491,23 +10448,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 enablePreferenceMethod.invoke(app, new Object[] {Boolean.TRUE});
                 // tell about success
                 Constants.zknlogger.log(Level.INFO,"Apple Preference Menu successfully initiated.");
-            } catch (NoSuchMethodException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-            } catch (SecurityException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-            } catch (InvocationTargetException ex) {
+            } catch (NoSuchMethodException | SecurityException | InvocationTargetException ex) {
                 Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
             }
         }
-        catch (ClassNotFoundException e) {
+        catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
         }
-        catch (IllegalAccessException e) {
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
-        }
-        catch (InstantiationException e) {
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
-        }
+        // </editor-fold>
+
     // </editor-fold>
     }
 

@@ -428,17 +428,17 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
                     StringBuilder errstr = new StringBuilder("");
                     // create scanner to receive compiler messages
                     try {
-                        Scanner sc = new Scanner(p.getInputStream()).useDelimiter(System.getProperty("line.separator"));
+                        Scanner sc = new Scanner(p.getInputStream()).useDelimiter(System.lineSeparator());
                         // write output to text area
                         while (sc.hasNextLine()) {
-                            errstr.append(System.getProperty("line.separator")).append(sc.nextLine());
+                            errstr.append(System.lineSeparator()).append(sc.nextLine());
                         }
                         // write output to text area
                         // create scanner to receive compiler messages
-                        sc = new Scanner(p.getErrorStream()).useDelimiter(System.getProperty("line.separator"));
+                        sc = new Scanner(p.getErrorStream()).useDelimiter(System.lineSeparator());
                         // write output to text area
                         while (sc.hasNextLine()) {
-                            errstr.append(System.getProperty("line.separator")).append(sc.nextLine());
+                            errstr.append(System.lineSeparator()).append(sc.nextLine());
                         }
                     }
                     catch (IllegalStateException ex) {
@@ -446,7 +446,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
                         Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
                     }
                     // log error stream
-                    Constants.zknlogger.log(Level.INFO,"Pandoc-Process-Log:"+System.getProperty("line.separator")+"{0}", errstr.toString());
+                    Constants.zknlogger.log(Level.INFO,"Pandoc-Process-Log:"+System.lineSeparator()+"{0}", errstr.toString());
                     // wait for other process to be finished
                     p.waitFor();
                     p.destroy();
@@ -553,7 +553,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
                         sb.append(zetteltitle);
                     }
                     sb.append("</a>");
-                    sb.append("</h1>").append(System.getProperty("line.separator"));
+                    sb.append("</h1>").append(System.lineSeparator());
                 }
             }
             // check whether the user wants to export content
@@ -584,7 +584,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
                 }
                 else {
                     // else add remark that entry is deleted
-                    sb.append("<i>").append(resourceMap.getString("deletedEntry")).append("</i>").append(System.getProperty("line.separator"));
+                    sb.append("<i>").append(resourceMap.getString("deletedEntry")).append("</i>").append(System.lineSeparator());
                 }
                 sb.append("</p>");
             }
@@ -595,9 +595,9 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
                 // check whether we have any
                 if (!remarks.isEmpty()) {
                     // set headline indicating that we have remarks here
-                    sb.append("<h4>").append(resourceMap.getString("remarksHeader")).append("</h4>").append(System.getProperty("line.separator"));
+                    sb.append("<h4>").append(resourceMap.getString("remarksHeader")).append("</h4>").append(System.lineSeparator());
                     // init paragraph with class-attribute, so the user may change style aftwerwards
-                    sb.append("<p class=\"para_remarks\">").append(remarks).append("</p>").append(System.getProperty("line.separator"));
+                    sb.append("<p class=\"para_remarks\">").append(remarks).append("</p>").append(System.lineSeparator());
                 }
             }
             if ((exportparts & Constants.EXPORT_TIMESTAMP)!=0) {
@@ -614,7 +614,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
                         sb.append("<br>").append(resourceMap.getString("timestampEdited")).append(" ").append(Tools.getProperDate(timestamp[1], false));
                     }
                     // and close the tags of the html-part
-                    sb.append("</p>").append(System.getProperty("line.separator"));
+                    sb.append("</p>").append(System.lineSeparator());
                 }
             }
             // check whether the user wants to export authors
@@ -638,7 +638,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
         catch (NumberFormatException e) {
             // leave out first char, which is always a "H", set by the method
             // "createExportEntries()".
-            sb.append("<h1 class=\"deskhead\">").append(exportentries.get(counter).toString().substring(2)).append("</h1>").append(System.getProperty("line.separator"));
+            sb.append("<h1 class=\"deskhead\">").append(exportentries.get(counter).toString().substring(2)).append("</h1>").append(System.lineSeparator());
         }
         return sb.toString();
     }
@@ -660,11 +660,11 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
         StringBuilder sb = new StringBuilder("");
         // if there is no keyword information, tell this the user
         if ((null==values)||(values.length<1)) {
-            sb.append("<p><i>").append(notfound).append("</i></p>").append(System.getProperty("line.separator"));
+            sb.append("<p><i>").append(notfound).append("</i></p>").append(System.lineSeparator());
         }
         else {
             // create headline indicating that keyword-part starts here
-            sb.append("<h4>").append(header).append("</h4>").append(System.getProperty("line.separator"));
+            sb.append("<h4>").append(header).append("</h4>").append(System.lineSeparator());
             // init paragraph with class-attribute, so the user may change style aftwerwards
             sb.append("<p class=\"").append(cssclass).append("\">");
             // iterate the keyword array
@@ -673,7 +673,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
                 sb.append(val).append(", ");
             }
             sb.setLength(sb.length()-2);
-            sb.append("</p>").append(System.getProperty("line.separator"));
+            sb.append("</p>").append(System.lineSeparator());
         }
         return sb.toString();
     }
@@ -691,11 +691,11 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
         StringBuilder sb = new StringBuilder("");
         // if there is no keyword information, tell this the user
         if ((null==values)||(values.length<1)) {
-            sb.append("<p><i>").append(notfound).append("</i></p>").append(System.getProperty("line.separator"));
+            sb.append("<p><i>").append(notfound).append("</i></p>").append(System.lineSeparator());
         }
         else {
             // create headline indicating that keyword-part starts here
-            sb.append("<h4>").append(header).append("</h4>").append(System.getProperty("line.separator"));
+            sb.append("<h4>").append(header).append("</h4>").append(System.lineSeparator());
             // init paragraph with class-attribute, so the user may change style aftwerwards
             sb.append("<ul class=\"").append(cssclass).append("\">");
             // iterate the keyword array
@@ -703,9 +703,9 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
                 // autoconvert url's to hyperlinks
                 // val = CHtml.convertHyperlinks(val.replace("<", "&lt;").replace(">", "&gt;"));
                 // and append each author
-                sb.append("<li>").append(val.replace("<", "&lt;").replace(">", "&gt;")).append("</li>").append(System.getProperty("line.separator"));
+                sb.append("<li>").append(val.replace("<", "&lt;").replace(">", "&gt;")).append("</li>").append(System.lineSeparator());
             }
-            sb.append("</ul>").append(System.getProperty("line.separator"));
+            sb.append("</ul>").append(System.lineSeparator());
         }
         return sb.toString();
     }
@@ -739,7 +739,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
                     // check for valid comment
                     if (com!=null && !com.isEmpty()) {
                         // append comment
-                        exportPage.append("<p class=\"comment\">").append(com).append("</p>").append(System.getProperty("line.separator"));
+                        exportPage.append("<p class=\"comment\">").append(com).append("</p>").append(System.lineSeparator());
                     }
                 }
             }
@@ -754,7 +754,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
                     // check for valid comment
                     if (com!=null && !com.isEmpty()) {
                         // append comment and replace [br]-tags
-                        exportPage.append("<p class=\"comment\">").append(com).append("</p>").append(System.getProperty("line.separator"));
+                        exportPage.append("<p class=\"comment\">").append(com).append("</p>").append(System.lineSeparator());
                     }
                 }
             }
@@ -812,7 +812,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
         StringBuilder sb = new StringBuilder("");
         sb.append("<a name=\"");
         sb.append("entry").append(timestamp);
-        sb.append("\">&nbsp;</a>").append(System.getProperty("line.separator"));
+        sb.append("\">&nbsp;</a>").append(System.lineSeparator());
         sb.append(text);
         // retrieve entry's title
         String title = dataObj.getZettelTitle(nr);
@@ -829,7 +829,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
         // convert to string for css-class
         String level = String.valueOf(lvl);
         // create toc-entry
-        exportTableOfContent.append("<p class=\"tocentry").append(level).append("\"><a href=\"#entry").append(timestamp).append("\">").append(title).append("</a></p>").append(System.getProperty("line.separator"));
+        exportTableOfContent.append("<p class=\"tocentry").append(level).append("\"><a href=\"#entry").append(timestamp).append("\">").append(title).append("</a></p>").append(System.lineSeparator());
         // return result
         return sb.toString();
     }
@@ -856,7 +856,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
         sb.append("entry").append(timestamp);
         sb.append("\">&nbsp;</a>");
         sb.append(TreeUtil.getNodeText(node));
-        sb.append("</h").append(String.valueOf(bulletlevel)).append(">").append(System.getProperty("line.separator"));
+        sb.append("</h").append(String.valueOf(bulletlevel)).append(">").append(System.lineSeparator());
         // retrieve node-level, so we can use margins according the the depth of the node in the outline structure
         int lvl = node.getLevel();
         int headerlvl = lvl+1;
@@ -871,7 +871,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
         String level = String.valueOf(lvl);
         String headerlevel = String.valueOf(headerlvl);
         // add bullet-point to table of content
-        exportTableOfContent.append("<h").append(headerlevel).append(" class=\"tocheader").append(level).append("\"><a href=\"#entry").append(timestamp).append("\">").append(TreeUtil.getNodeText(node)).append("</a></h").append(headerlevel).append(">").append(System.getProperty("line.separator"));
+        exportTableOfContent.append("<h").append(headerlevel).append(" class=\"tocheader").append(level).append("\"><a href=\"#entry").append(timestamp).append("\">").append(TreeUtil.getNodeText(node)).append("</a></h").append(headerlevel).append(">").append(System.lineSeparator());
         return sb.toString();
     }
     /**
@@ -903,14 +903,14 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
                     // append bullet-point
                     exportPage.append(createExportBullet(node));
                     // append comment
-                    exportPage.append("<p class=\"comment\">").append(com).append("</p>").append(System.getProperty("line.separator"));
+                    exportPage.append("<p class=\"comment\">").append(com).append("</p>").append(System.lineSeparator());
                 }
                 // now we know we have an entry. so get the entry number...
                 else {
                     // and append the html-text of the entry...
                     exportPage.append(createExportEntry(node));
                     // append comment
-                    exportPage.append("<p class=\"comment\">").append(com).append("</p>").append(System.getProperty("line.separator"));
+                    exportPage.append("<p class=\"comment\">").append(com).append("</p>").append(System.lineSeparator());
                 }
             }
             // when the new node also has children, call this method again,
@@ -960,11 +960,11 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
         // list. now we can create a reference list
         if (footnotes.size()>0) {
             // insert a paragraph for space
-            exportPage.append("<p>&nbsp;</p>").append(System.getProperty("line.separator"));
+            exportPage.append("<p>&nbsp;</p>").append(System.lineSeparator());
             // first, init the list in html and add title "references"
-            exportPage.append("<h1>").append(resourceMap.getString("referenceListHeading")).append("</h1>").append(System.getProperty("line.separator"));
+            exportPage.append("<h1>").append(resourceMap.getString("referenceListHeading")).append("</h1>").append(System.lineSeparator());
             // open unordered list-tag
-            exportPage.append("<ul>").append(System.getProperty("line.separator"));
+            exportPage.append("<ul>").append(System.lineSeparator());
             // iterator for the linked list
             Iterator<String> i = footnotes.iterator();
             while (i.hasNext()) {
@@ -973,14 +973,14 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
                     int aunr = Integer.parseInt(au);
                     exportPage.append("<li class=\"reflist\"><b>[<a name=\"fn_").append(au).append("\">").append(au).append("</a>]</b> ");
                     exportPage.append(dataObj.getAuthor(aunr));
-                    exportPage.append("</li>").append(System.getProperty("line.separator"));
+                    exportPage.append("</li>").append(System.lineSeparator());
                 }
                 catch (NumberFormatException e) {
                     Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
                 }
             }
             // close unordered list-tag
-            exportPage.append("</ul>").append(System.getProperty("line.separator"));
+            exportPage.append("</ul>").append(System.lineSeparator());
         }
         // add table of contents, if requested
         if (createTOC) {

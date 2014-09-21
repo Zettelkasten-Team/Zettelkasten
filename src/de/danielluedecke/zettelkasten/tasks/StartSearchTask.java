@@ -436,7 +436,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         // if we found it, set this as first text to the description
                         if (pos!=-1) {
                             desc.append(resourceMap.getString("filteredSearchText")).append(" ").append(d.substring(pos)).append(", ");
-                            ldesc.append(resourceMap.getString("filteredSearchText")).append(" ").append(d.substring(pos)).append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                            ldesc.append(resourceMap.getString("filteredSearchText")).append(" ").append(d.substring(pos)).append(System.lineSeparator()).append(System.lineSeparator());
                         }
                         // create array list. here we will store the original search terms from
                         // the search that was filtered, and the new search term from the filter-request
@@ -482,10 +482,10 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     for (String st : searchTerms) {
                         // if search term is longer than 90 chars, truncate it...
                         if (st.length()>90) st = st.substring(0, 90)+"...";
-                        ldesc.append(System.getProperty("line.separator")).append("- ").append(st);
+                        ldesc.append(System.lineSeparator()).append("- ").append(st);
                     }
                     // search-options will be displayed in new line
-                    ldesc.append(System.getProperty("line.separator")).append("(");
+                    ldesc.append(System.lineSeparator()).append("(");
                     // add the logical combination to the search description
                     switch (logical) {
                         // add short and long desctiption for the logical-and-search
@@ -506,37 +506,37 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     }
                     desc.append(", ");
                     // add new line for further search options
-                    ldesc.append(")").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+                    ldesc.append(")").append(System.lineSeparator()).append(System.lineSeparator());
                     // append where the user searched for the searchterms
                     desc.append(resourceMap.getString("searchWhere")).append(" ");
-                    ldesc.append(resourceMap.getString("searchWhere")).append(":").append(System.getProperty("line.separator"));
+                    ldesc.append(resourceMap.getString("searchWhere")).append(":").append(System.lineSeparator());
                     int wherecnt = 0;
                     // when we searched keywords, add to description that keywords where one of the
                     // entries fields that have been searched for the find term...
                     if ((where&Constants.SEARCH_KEYWORDS)!=0) {
                         desc.append(resourceMap.getString("searchInKeywords")).append(", ");
-                        ldesc.append("- ").append(resourceMap.getString("searchInKeywords")).append(System.getProperty("line.separator"));
+                        ldesc.append("- ").append(resourceMap.getString("searchInKeywords")).append(System.lineSeparator());
                         wherecnt++;
                     }
                     // when we searched authors, add to description that authors where one of the
                     // entries fields that have been searched for the find term...
                     if ((where&Constants.SEARCH_AUTHOR)!=0) {
                         desc.append(resourceMap.getString("searchInAuthors")).append(", ");
-                        ldesc.append("- ").append(resourceMap.getString("searchInAuthors")).append(System.getProperty("line.separator"));
+                        ldesc.append("- ").append(resourceMap.getString("searchInAuthors")).append(System.lineSeparator());
                         wherecnt++;
                     }
                     // when we searched content, add to description that content where one of the
                     // entries fields that have been searched for the find term...
                     if ((where&Constants.SEARCH_CONTENT)!=0) {
                         desc.append(resourceMap.getString("searchInContent")).append(", ");
-                        ldesc.append("- ").append(resourceMap.getString("searchInContent")).append(System.getProperty("line.separator"));
+                        ldesc.append("- ").append(resourceMap.getString("searchInContent")).append(System.lineSeparator());
                         wherecnt++;
                     }
                     // when we searched titles, add to description that titles where one of the
                     // entries fields that have been searched for the find term...
                     if ((where&Constants.SEARCH_TITLE)!=0) {
                         // long description contains all search-areas
-                        ldesc.append("- ").append(resourceMap.getString("searchInTitle")).append(System.getProperty("line.separator"));
+                        ldesc.append("- ").append(resourceMap.getString("searchInTitle")).append(System.lineSeparator());
                         // short description only 3 parts
                         if (wherecnt<3) desc.append(resourceMap.getString("searchInTitle")).append(", ");
                         wherecnt++;
@@ -545,7 +545,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     // entries fields that have been searched for the find term...
                     if ((where&Constants.SEARCH_LINKS)!=0) {
                         // long description contains all search-areas
-                        ldesc.append("- ").append(resourceMap.getString("searchInLinks")).append(System.getProperty("line.separator"));
+                        ldesc.append("- ").append(resourceMap.getString("searchInLinks")).append(System.lineSeparator());
                         // short description only 3 parts
                         if (wherecnt<3) desc.append(resourceMap.getString("searchInLinks")).append(", ");
                         wherecnt++;
@@ -554,7 +554,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     // entries fields that have been searched for the find term...
                     if ((where&Constants.SEARCH_LINKCONTENT)!=0) {
                         // long description contains all search-areas
-                        ldesc.append("- ").append(resourceMap.getString("searchInLinksContent")).append(System.getProperty("line.separator"));
+                        ldesc.append("- ").append(resourceMap.getString("searchInLinksContent")).append(System.lineSeparator());
                         // short description only 3 parts
                         if (wherecnt<3) desc.append(resourceMap.getString("searchInLinksContent")).append(", ");
                         wherecnt++;
@@ -563,7 +563,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     // entries fields that have been searched for the find term...
                     if ((where&Constants.SEARCH_REMARKS)!=0) {
                         // long description contains all search-areas
-                        ldesc.append("- ").append(resourceMap.getString("searchInRemarks")).append(System.getProperty("line.separator"));
+                        ldesc.append("- ").append(resourceMap.getString("searchInRemarks")).append(System.lineSeparator());
                         if (wherecnt<3) desc.append(resourceMap.getString("searchInRemarks")).append(", ");
                         wherecnt++;
                     }
@@ -581,10 +581,10 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     desc.append(" (").append(df.format(new Date())).append(")");
                     // append matchcase/wholeword
                     if (wholeword||matchcase||synonyms) {
-                        ldesc.append(System.getProperty("line.separator")).append(resourceMap.getString("longDescSearchOptions"));
-                        if (wholeword) ldesc.append(System.getProperty("line.separator")).append("- ").append(resourceMap.getString("longDescWholeWord"));
-                        if (matchcase) ldesc.append(System.getProperty("line.separator")).append("- ").append(resourceMap.getString("longDescMatchCase"));
-                        if (synonyms) ldesc.append(System.getProperty("line.separator")).append("- ").append(resourceMap.getString("longDescSynonyms"));
+                        ldesc.append(System.lineSeparator()).append(resourceMap.getString("longDescSearchOptions"));
+                        if (wholeword) ldesc.append(System.lineSeparator()).append("- ").append(resourceMap.getString("longDescWholeWord"));
+                        if (matchcase) ldesc.append(System.lineSeparator()).append("- ").append(resourceMap.getString("longDescMatchCase"));
+                        if (synonyms) ldesc.append(System.lineSeparator()).append("- ").append(resourceMap.getString("longDescSynonyms"));
                     }
                     // copy description to string
                     searchLabel = desc.toString();

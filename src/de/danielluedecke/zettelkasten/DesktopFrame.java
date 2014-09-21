@@ -336,7 +336,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // hide live-searchpanel on init.
         jPanelLiveSearch.setVisible(false);
         // retrieve system's line-separator
-        lineseparator = System.getProperty("line.separator");
+        lineseparator = System.lineSeparator();
         // init the progressbar and animated icon for background tasks
         InitStatusbarForTasks isb = new InitStatusbarForTasks(statusAnimationLabel, null, null);
         // set click to update-text
@@ -2884,7 +2884,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             // if dialog window isn't already created, do this now
                 if (null == taskDlg) {
                     // create list that will contain all entries which should be exported
-                    ArrayList<Object> liste = new ArrayList<Object>();
+                    ArrayList<Object> liste = new ArrayList<>();
                     // here we recursively create the list of headlines and entry-numbers
                     // from the current desktop
                     createExportEntries(startelement,liste);
@@ -3638,7 +3638,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             //
             // but first, we habe to remove all carriage-returns (\r), which are part of the
             // line-seperator in windows. somehow, the replace-command does *not* work, when
-            // we replace "System.getProperty("line.separator")" with "[br]", but only when
+            // we replace "System.lineSeparator()" with "[br]", but only when
             // a "\n" is replaced by [br]. So, in case the system's line-separator also contains a
             // "\r", it is replaced by nothing, to clean the content.
             if (lineseparator.contains("\r")) newcomment = newcomment.replace("\r", "");

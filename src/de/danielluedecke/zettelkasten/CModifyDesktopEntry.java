@@ -187,11 +187,11 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
         // usually, to avoid <br>-tags within <ul> and <li>-tags when the entry is converted
         // to html, an entered list will be converted to a single line, removing all new lines.
         // but for editing and display, it is better to have them in single lines each.
-        text = text.replace(Constants.FORMAT_LIST_OPEN, Constants.FORMAT_LIST_OPEN+System.getProperty("line.separator"));
-        text = text.replace(Constants.FORMAT_LIST_CLOSE, Constants.FORMAT_LIST_CLOSE+System.getProperty("line.separator"));
-        text = text.replace(Constants.FORMAT_NUMBEREDLIST_OPEN, Constants.FORMAT_NUMBEREDLIST_OPEN+System.getProperty("line.separator"));
-        text = text.replace(Constants.FORMAT_NUMBEREDLIST_CLOSE, Constants.FORMAT_NUMBEREDLIST_CLOSE+System.getProperty("line.separator"));
-        text = text.replace(Constants.FORMAT_LISTITEM_CLOSE, Constants.FORMAT_LISTITEM_CLOSE+System.getProperty("line.separator"));
+        text = text.replace(Constants.FORMAT_LIST_OPEN, Constants.FORMAT_LIST_OPEN+System.lineSeparator());
+        text = text.replace(Constants.FORMAT_LIST_CLOSE, Constants.FORMAT_LIST_CLOSE+System.lineSeparator());
+        text = text.replace(Constants.FORMAT_NUMBEREDLIST_OPEN, Constants.FORMAT_NUMBEREDLIST_OPEN+System.lineSeparator());
+        text = text.replace(Constants.FORMAT_NUMBEREDLIST_CLOSE, Constants.FORMAT_NUMBEREDLIST_CLOSE+System.lineSeparator());
+        text = text.replace(Constants.FORMAT_LISTITEM_CLOSE, Constants.FORMAT_LISTITEM_CLOSE+System.lineSeparator());
         // and set the text to the textarea
         jTextArea1.setText(Tools.replaceUbbToUnicode(text));
     }
@@ -551,7 +551,7 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
         //
         // but first, we habe to remove all carriage-returns (\r), which are part of the
         // line-seperator in windows. somehow, the replace-command does *not* work, when
-        // we replace "System.getProperty("line.separator")" with "[br]", but only when
+        // we replace "System.lineSeparator()" with "[br]", but only when
         // a "\n" is replaced by [br]. So, in case the system's line-separator also contains a
         // "\r", it is replaced by nothing, to clean the content.
         modifiedEntry = Tools.replaceUnicodeToUbb(modifiedEntry);
@@ -793,7 +793,7 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
         // retrieve the selection
         String selection = jTextArea1.getSelectedText();
         // get system line separator
-        String linesep = System.getProperty("line.separator");
+        String linesep = System.lineSeparator();
         // check whether tag is selected or not
         if (null==selection) {
             // if we don't have any selection, just insert tags
@@ -802,7 +802,7 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
         else {
             // first, we habe to remove all carriage-returns (\r), which are part of the
             // line-seperator in windows. somehow, the replace-command does *not* work, when
-            // we replace "System.getProperty("line.separator")" with "[br]", but only when
+            // we replace "System.lineSeparator()" with "[br]", but only when
             // a "\n" is replaced by [br]. So, in case the system's line-separator also contains a
             // "\r", it is replaced by nothing, to clean the content.
             if (linesep.contains("\r")) selection = selection.replace("\r", "");
@@ -812,16 +812,16 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
             StringBuilder output = new StringBuilder("");
             // append the "open"-tag
             output.append("[l]");
-            output.append(System.getProperty("line.separator"));
+            output.append(System.lineSeparator());
             for (String line : lines) {
                 // append the open/close-tags for the bullet points
                 // and put the line between these tags
                 output.append("[*]").append(line).append("[/*]");
-                output.append(System.getProperty("line.separator"));
+                output.append(System.lineSeparator());
             }
             // finally, append the close-tag
             output.append("[/l]");
-            output.append(System.getProperty("line.separator"));
+            output.append(System.lineSeparator());
             // and paste the text
             jTextArea1.replaceSelection(output.toString());
         }
@@ -894,7 +894,7 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
     @Action
     public void removeDoubleLineSeparators() {
         // get separator char
-        String sep = System.getProperty("line.separator");
+        String sep = System.lineSeparator();
         // repalce double line separators
         removeReplacement(sep+sep," ");
     }
@@ -931,7 +931,7 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
     @Action
     public void removeSingleLineSeparators() {
         // get separator char
-        String sep = System.getProperty("line.separator");
+        String sep = System.lineSeparator();
         // repalce double line separators
         removeReplacement(sep," ");
     }

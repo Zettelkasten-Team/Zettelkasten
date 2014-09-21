@@ -112,7 +112,7 @@ public class Settings {
      * 
      * See method "loadSettings" below for more details.
      */
-    private final List<String> filesToLoad = new ArrayList<String>();
+    private final List<String> filesToLoad = new ArrayList<>();
     /**
      * Stores the files which we want to retrieve from the meta-data-file (zettelkasten-data.zkd3).
      * This file is a zip-container with the file-extension ".zkd3" and contains several XML-Files.
@@ -122,7 +122,7 @@ public class Settings {
      * 
      * See method "loadSettings" below for more details.
      */
-    private final List<String> dataFilesToLoad = new ArrayList<String>();
+    private final List<String> dataFilesToLoad = new ArrayList<>();
     /**
      * Indicates whether the programm is running on a mac with aqua-look and feel or not...
      * @return {@code true}, if the programm is running on a mac with aqua-look and feel
@@ -461,7 +461,7 @@ public class Settings {
         File dummy = new File(fp);
         if (!dummy.exists()) return;
         // create linked list
-        LinkedList<String> recdocs = new LinkedList<String>();
+        LinkedList<String> recdocs = new LinkedList<>();
         // add new filepath to linked list
         recdocs.add(fp);
         // iterate all current recent documents
@@ -1679,10 +1679,9 @@ public class Settings {
             // not stored in the .zkn3-files. however, these meta-data is not only pure settings.
             // it is better to have them separated, in the base-zkn-directory (zkn-path) if possible,
             // so whenever the user removes the program directory, the other data is still there.
-            try {
-                for (String filesToLoad1 : filesToLoad) {
-                    // open the zip-file
-                    ZipInputStream zip = new ZipInputStream(new FileInputStream(filepath));
+            for (String filesToLoad1 : filesToLoad) {
+                // open the zip-file
+                try (ZipInputStream zip = new ZipInputStream(new FileInputStream(filepath))) {
                     ZipEntry entry;
                     // now iterate the zip-file, searching for the requested file in it
                     while ((entry=zip.getNextEntry())!=null) {
@@ -1707,14 +1706,13 @@ public class Settings {
                             }
                         }
                     }
-                    zip.close();
-                    // now fill/create all child-elements that do not already exist
-                    fillElements();
-                    acceleratorKeys.initAcceleratorKeys();
                 }
-            }
-            catch (IOException e) {
-                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+                catch (IOException e) {
+                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+                }
+                // now fill/create all child-elements that do not already exist
+                fillElements();
+                acceleratorKeys.initAcceleratorKeys();
             }
         }
 
@@ -1723,31 +1721,31 @@ public class Settings {
             try {
                 for (String dataFilesToLoad1 : dataFilesToLoad) {
                     // open the zip-file
-                    ZipInputStream zip = new ZipInputStream(new FileInputStream(datafilepath));
-                    ZipEntry entry;
-                    // now iterate the zip-file, searching for the requested file in it
-                    while ((entry=zip.getNextEntry())!=null) {
-                        String entryname = entry.getName();
-                        // if the found file matches the requested one, start the SAXBuilder
-                        if (entryname.equals(dataFilesToLoad1)) {
-                            try {
-                                SAXBuilder builder = new SAXBuilder();
-                                // Document doc = new Document();
-                                Document doc = builder.build(zip);
-                                // compare, which file we have retrieved, so we store the data
-                                // correctly on our data-object
-                                if (entryname.equals(Constants.foreignWordsName)) foreignWordsFile=doc;
-                                if (entryname.equals(Constants.synonymsFileName)) synonyms.setDocument(doc);
-                                if (entryname.equals(Constants.autoKorrekturFileName)) autoKorrekt.setDocument(doc);
-                                if (entryname.equals(Constants.stenoFileName)) steno.setDocument(doc);
-                                break;
-                            }
-                            catch (JDOMException e) {
-                                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+                    try (ZipInputStream zip = new ZipInputStream(new FileInputStream(datafilepath))) {
+                        ZipEntry entry;
+                        // now iterate the zip-file, searching for the requested file in it
+                        while ((entry=zip.getNextEntry())!=null) {
+                            String entryname = entry.getName();
+                            // if the found file matches the requested one, start the SAXBuilder
+                            if (entryname.equals(dataFilesToLoad1)) {
+                                try {
+                                    SAXBuilder builder = new SAXBuilder();
+                                    // Document doc = new Document();
+                                    Document doc = builder.build(zip);
+                                    // compare, which file we have retrieved, so we store the data
+                                    // correctly on our data-object
+                                    if (entryname.equals(Constants.foreignWordsName)) foreignWordsFile=doc;
+                                    if (entryname.equals(Constants.synonymsFileName)) synonyms.setDocument(doc);
+                                    if (entryname.equals(Constants.autoKorrekturFileName)) autoKorrekt.setDocument(doc);
+                                    if (entryname.equals(Constants.stenoFileName)) steno.setDocument(doc);
+                                    break;
+                                }
+                                catch (JDOMException e) {
+                                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+                                }
                             }
                         }
                     }
-                    zip.close();
                 }
             }
             catch (IOException e) {
@@ -1765,9 +1763,8 @@ public class Settings {
     public boolean saveSettings() {
         // initial value
         boolean saveok = true;
-        try {
-            // open the outputstream
-            ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(filepath));
+        // open the outputstream
+        try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(filepath))) {
             // I first wanted to use a pretty output format, so advanced users who
             // extract the data file can better watch the xml-files. but somehow, this
             // lead to an error within the method "retrieveElement" in the class "CDaten.java",
@@ -1794,7 +1791,6 @@ public class Settings {
             zip.putNextEntry(new ZipEntry(Constants.acceleratorKeysSearchResultsName));
             out.output(acceleratorKeys.getDocument(AcceleratorKeys.SEARCHRESULTSKEYS), zip);
             // close zipfile
-            zip.close();
         }
         catch (IOException e) {
             // log error
@@ -1826,9 +1822,8 @@ public class Settings {
         }
         // save original data-file. in case we get an error here, we can copy
         // back the temporary saved file...
-        try {
-            // open the outputstream
-            ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(datafilepath));
+        // open the outputstream
+        try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(datafilepath))) {
             // I first wanted to use a pretty output format, so advanced users who
             // extract the data file can better watch the xml-files. but somehow, this
             // lead to an error within the method "retrieveElement" in the class "CDaten.java",
@@ -1848,25 +1843,8 @@ public class Settings {
             zip.putNextEntry(new ZipEntry(Constants.autoKorrekturFileName));
             out.output(autoKorrekt.getDocument(), zip);
             // close zip-file
-            zip.close();
         }
-        catch (IOException e) {
-            // log error message
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
-            // change return value
-            saveok = false;
-            // first, create basic backup-file
-            File checkbackup = FileOperationsUtil.getBackupFilePath(datafilepath);
-            // rename temporary file as backup-file
-            tmpdatafp.renameTo(checkbackup);
-            // log path.
-            Constants.zknlogger.log(Level.INFO, "A backup of the meta-data was saved to {0}", checkbackup.toString());
-            // tell user that an error occured
-            JOptionPane.showMessageDialog(null, resourceMap.getString("metadataSaveErrMsg","\""+checkbackup.getName()+"\""),
-                                          resourceMap.getString("metadataSaveErrTitle"),
-                                          JOptionPane.PLAIN_MESSAGE);
-        }
-        catch (SecurityException e) {
+        catch (IOException | SecurityException e) {
             // log error message
             Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
             // change return value
@@ -4320,8 +4298,14 @@ public class Settings {
         // init default values
         int fstyle=Font.PLAIN;
         // convert the css-string-style into a font-integer-style
-        if (style.equals("normal")) fstyle=Font.PLAIN;
-        else if (style.equals("italic")) fstyle=Font.ITALIC;
+        switch (style) {
+            case "normal":
+                fstyle=Font.PLAIN;
+                break;
+            case "italic":
+                fstyle=Font.ITALIC;
+                break;
+        }
         // in css, the bold-property is not a style-attribute, but a font-weight-attribute
         // that's why we have separated this here
         if (weight.equals("bold")) fstyle=fstyle+Font.BOLD;
@@ -4390,8 +4374,14 @@ public class Settings {
         // init default values
         int fstyle=Font.PLAIN;
         // convert the css-string-style into a font-integer-style
-        if (style.equals("normal")) fstyle=Font.PLAIN;
-        else if (style.equals("italic")) fstyle=Font.ITALIC;
+        switch (style) {
+            case "normal":
+                fstyle=Font.PLAIN;
+                break;
+            case "italic":
+                fstyle=Font.ITALIC;
+                break;
+        }
         // in css, the bold-property is not a style-attribute, but a font-weight-attribute
         // that's why we have separated this here
         if (weight.equals("bold")) fstyle=fstyle+Font.BOLD;
@@ -4450,8 +4440,14 @@ public class Settings {
         // init default values
         int fstyle=Font.PLAIN;
         // convert the css-string-style into a font-integer-style
-        if (style.equals("normal")) fstyle=Font.PLAIN;
-        else if (style.equals("italic")) fstyle=Font.ITALIC;
+        switch (style) {
+            case "normal":
+                fstyle=Font.PLAIN;
+                break;
+            case "italic":
+                fstyle=Font.ITALIC;
+                break;
+        }
         // in css, the bold-property is not a style-attribute, but a font-weight-attribute
         // that's why we have separated this here
         if (weight.equals("bold")) fstyle=fstyle+Font.BOLD;
@@ -4519,8 +4515,14 @@ public class Settings {
         // init default values
         int fstyle=Font.PLAIN;
         // convert the css-string-style into a font-integer-style
-        if (style.equals("normal")) fstyle=Font.PLAIN;
-        else if (style.equals("italic")) fstyle=Font.ITALIC;
+        switch (style) {
+            case "normal":
+                fstyle=Font.PLAIN;
+                break;
+            case "italic":
+                fstyle=Font.ITALIC;
+                break;
+        }
         // in css, the bold-property is not a style-attribute, but a font-weight-attribute
         // that's why we have separated this here
         if (weight.equals("bold")) fstyle=fstyle+Font.BOLD;
@@ -4588,8 +4590,14 @@ public class Settings {
         // init default values
         int fstyle=Font.PLAIN;
         // convert the css-string-style into a font-integer-style
-        if (style.equals("normal")) fstyle=Font.PLAIN;
-        else if (style.equals("italic")) fstyle=Font.ITALIC;
+        switch (style) {
+            case "normal":
+                fstyle=Font.PLAIN;
+                break;
+            case "italic":
+                fstyle=Font.ITALIC;
+                break;
+        }
         // in css, the bold-property is not a style-attribute, but a font-weight-attribute
         // that's why we have separated this here
         if (weight.equals("bold")) fstyle=fstyle+Font.BOLD;
@@ -4657,8 +4665,14 @@ public class Settings {
         // init default values
         int fstyle=Font.PLAIN;
         // convert the css-string-style into a font-integer-style
-        if (style.equals("normal")) fstyle=Font.PLAIN;
-        else if (style.equals("italic")) fstyle=Font.ITALIC;
+        switch (style) {
+            case "normal":
+                fstyle=Font.PLAIN;
+                break;
+            case "italic":
+                fstyle=Font.ITALIC;
+                break;
+        }
         // in css, the bold-property is not a style-attribute, but a font-weight-attribute
         // that's why we have separated this here
         if (weight.equals("bold")) fstyle=fstyle+Font.BOLD;
@@ -4726,8 +4740,14 @@ public class Settings {
         // init default values
         int fstyle=Font.PLAIN;
         // convert the css-string-style into a font-integer-style
-        if (style.equals("normal")) fstyle=Font.PLAIN;
-        else if (style.equals("italic")) fstyle=Font.ITALIC;
+        switch (style) {
+            case "normal":
+                fstyle=Font.PLAIN;
+                break;
+            case "italic":
+                fstyle=Font.ITALIC;
+                break;
+        }
         // in css, the bold-property is not a style-attribute, but a font-weight-attribute
         // that's why we have separated this here
         if (weight.equals("bold")) fstyle=fstyle+Font.BOLD;
@@ -4874,8 +4894,14 @@ public class Settings {
         // init default values
         int fstyle=Font.PLAIN;
         // convert the css-string-style into a font-integer-style
-        if (style.equals("normal")) fstyle=Font.PLAIN;
-        else if (style.equals("italic")) fstyle=Font.ITALIC;
+        switch (style) {
+            case "normal":
+                fstyle=Font.PLAIN;
+                break;
+            case "italic":
+                fstyle=Font.ITALIC;
+                break;
+        }
         // in css, the bold-property is not a style-attribute, but a font-weight-attribute
         // that's why we have separated this here
         if (weight.equals("bold")) fstyle=fstyle+Font.BOLD;
@@ -4944,8 +4970,14 @@ public class Settings {
         // init default values
         int fstyle=Font.PLAIN;
         // convert the css-string-style into a font-integer-style
-        if (style.equals("normal")) fstyle=Font.PLAIN;
-        else if (style.equals("italic")) fstyle=Font.ITALIC;
+        switch (style) {
+            case "normal":
+                fstyle=Font.PLAIN;
+                break;
+            case "italic":
+                fstyle=Font.ITALIC;
+                break;
+        }
         // in css, the bold-property is not a style-attribute, but a font-weight-attribute
         // that's why we have separated this here
         if (weight.equals("bold")) fstyle=fstyle+Font.BOLD;
@@ -5014,8 +5046,14 @@ public class Settings {
         // init default values
         int fstyle=Font.PLAIN;
         // convert the css-string-style into a font-integer-style
-        if (style.equals("normal")) fstyle=Font.PLAIN;
-        else if (style.equals("italic")) fstyle=Font.ITALIC;
+        switch (style) {
+            case "normal":
+                fstyle=Font.PLAIN;
+                break;
+            case "italic":
+                fstyle=Font.ITALIC;
+                break;
+        }
         // in css, the bold-property is not a style-attribute, but a font-weight-attribute
         // that's why we have separated this here
         if (weight.equals("bold")) fstyle=fstyle+Font.BOLD;
@@ -5083,8 +5121,14 @@ public class Settings {
         // init default values
         int fstyle=Font.PLAIN;
         // convert the css-string-style into a font-integer-style
-        if (style.equals("normal")) fstyle=Font.PLAIN;
-        else if (style.equals("italic")) fstyle=Font.ITALIC;
+        switch (style) {
+            case "normal":
+                fstyle=Font.PLAIN;
+                break;
+            case "italic":
+                fstyle=Font.ITALIC;
+                break;
+        }
         // in css, the bold-property is not a style-attribute, but a font-weight-attribute
         // that's why we have separated this here
         if (weight.equals("bold")) fstyle=fstyle+Font.BOLD;
@@ -5152,8 +5196,14 @@ public class Settings {
         // init default values
         int fstyle=Font.PLAIN;
         // convert the css-string-style into a font-integer-style
-        if (style.equals("normal")) fstyle=Font.PLAIN;
-        else if (style.equals("italic")) fstyle=Font.ITALIC;
+        switch (style) {
+            case "normal":
+                fstyle=Font.PLAIN;
+                break;
+            case "italic":
+                fstyle=Font.ITALIC;
+                break;
+        }
         // in css, the bold-property is not a style-attribute, but a font-weight-attribute
         // that's why we have separated this here
         if (weight.equals("bold")) fstyle=fstyle+Font.BOLD;

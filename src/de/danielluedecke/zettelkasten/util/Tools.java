@@ -114,8 +114,8 @@ public class Tools {
      */
     public static String getSystemInformation() {
         StringBuilder sysinfo = new StringBuilder("");
-        sysinfo.append(System.getProperty("os.name")).append(" ").append(System.getProperty("os.version")).append(" (").append(System.getProperty("os.arch")).append(")").append(System.getProperty("line.separator"));
-        sysinfo.append("Java-Version ").append(System.getProperty("java.version")).append(" (").append(System.getProperty("java.vendor")).append(")").append(System.getProperty("line.separator"));
+        sysinfo.append(System.getProperty("os.name")).append(" ").append(System.getProperty("os.version")).append(" (").append(System.getProperty("os.arch")).append(")").append(System.lineSeparator());
+        sysinfo.append("Java-Version ").append(System.getProperty("java.version")).append(" (").append(System.getProperty("java.vendor")).append(")").append(System.lineSeparator());
         sysinfo.append(System.getProperty("java.home"));
         return sysinfo.toString();
     }
@@ -131,7 +131,7 @@ public class Tools {
     public static String replaceUbbToUnicode(String text) {
         if (text!=null && !text.isEmpty()) {
             // replace all "br" with "real" new lines
-            text = text.replace("[br]", System.getProperty("line.separator"));
+            text = text.replace("[br]", System.lineSeparator());
             // replace all "tabs" with "real" tabs
             text = text.replace("&#9;", "\t");
             // replace all bullet-codes with "real" bullets
@@ -156,7 +156,7 @@ public class Tools {
     public static String replaceUnicodeToUbb(String text) {
         if (text!=null && !text.isEmpty()) {
             // check whether the line-seperator has 2 chars. if so, remove first char...
-            if (System.getProperty("line.separator").contains("\r")) {
+            if (System.lineSeparator().contains("\r")) {
                 text = text.replace("\r", "");
             }
             // ...only then this replacement will work
@@ -497,7 +497,7 @@ public class Tools {
                     if (!errorMsg.toLowerCase().contains("body")) {
                         // tell function that HTML is invalid.
                         validhtml = false;
-                        errorMsg = System.getProperty("line.separator")+"Error when parsing the entry "+String.valueOf(zettelnummer)+"!"+System.getProperty("line.separator")+errorMsg+System.getProperty("line.separator");
+                        errorMsg = System.lineSeparator()+"Error when parsing the entry "+String.valueOf(zettelnummer)+"!"+System.lineSeparator()+errorMsg+System.lineSeparator();
                         Constants.zknlogger.log(Level.SEVERE,errorMsg);
                     }
                 }
@@ -877,7 +877,7 @@ public class Tools {
      */
     public static String prepareDoubleEntriesMessage(List<Object[]> list) {
         // retrieve system's line-separator
-        String lineseparator = System.getProperty("line.separator");
+        String lineseparator = System.lineSeparator();
         // get an iterator for the multiple entries and check
         // whether we have any multiple occurences at all. if yes,
         // tell the user about that
@@ -1376,7 +1376,7 @@ public class Tools {
             dummy = dummy.replaceAll("\\[m ([^\\[]*)\\](.*?)\\[/m\\]", "$2");
             dummy = dummy.replaceAll("\\[l\\](.*?)\\[/l\\]", "$1");
             dummy = dummy.replaceAll("\\[\\*\\](.*?)\\[/\\*\\]", "- $1\n");
-            dummy = dummy.replace("[br]", System.getProperty("line.separator"));
+            dummy = dummy.replace("[br]", System.lineSeparator());
             // convert tables. we don't do this with regular expressions
             // first, init the index-variable
             int pos = 0;
@@ -1446,7 +1446,7 @@ public class Tools {
         if (title!=null && !title.isEmpty()) {
             // if yes, add title and line separator to string builder
             plainEntry.append(title);
-            plainEntry.append(System.getProperty("line.separator"));
+            plainEntry.append(System.lineSeparator());
         }
         // retrieve plain entry that contains no ubb-tags and add it
         // to our string builder
@@ -1559,7 +1559,7 @@ public class Tools {
                 // else check whether first char in new line is a space char
                 boolean firstIsSpace = word.charAt(0) == ' ';
                 // append new line
-                sb.append(System.getProperty("line.separator"));
+                sb.append(System.lineSeparator());
                 // append prefix, if we have any
                 sb.append((prefix!=null&&!prefix.isEmpty())?prefix+" ":"");
                 // append word resp. nothing, if first char is space

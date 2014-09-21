@@ -180,7 +180,7 @@ public class CFormEditor extends javax.swing.JDialog {
             sb.append("^").append(unmarkedSpace);
         }
         // close tag
-        sb.append("]").append(System.getProperty("line.separator"));
+        sb.append("]").append(System.lineSeparator());
         // copy result to global variable
         formtag = sb.toString();
         modified = true;
