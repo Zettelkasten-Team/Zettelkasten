@@ -151,11 +151,11 @@ public class Daten {
      * 
      * See class "CLoadDialog.java" for more details.
      */
-    private final List<String> filesToLoad = new ArrayList<String>();
+    private final List<String> filesToLoad = new ArrayList<>();
     /**
      * This list stores all follower and follower's follower of an entry
      */
-    private final List<Integer> allLuhmannNumbers = new ArrayList<Integer>();
+    private final List<Integer> allLuhmannNumbers = new ArrayList<>();
     /**
      * here we store whether the keyword list (keywordFile)
      * is up to date or not. if it's up to date, we do not need
@@ -736,10 +736,7 @@ public class Daten {
                         // set modified flag
                         mod = true;
                     }
-                    catch (IllegalDataException ex) {
-                        Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                    }
-                    catch (IllegalAddException ex) {
+                    catch (IllegalDataException | IllegalAddException ex) {
                         Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
                     }
                 }
@@ -967,11 +964,7 @@ public class Daten {
             // change modified state
             setMetaModified(true);
         }
-        catch (IllegalAddException ex) {
-            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-            return false;
-        }
-        catch (IllegalDataException ex) {
+        catch (IllegalAddException | IllegalDataException ex) {
             Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
             return false;
         }
@@ -1024,13 +1017,7 @@ public class Daten {
                             }
                         }
                     }
-                    catch (NumberFormatException ex) {
-                        Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                    }
-                    catch (IllegalNameException ex) {
-                        Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                    }
-                    catch (IllegalDataException ex) {
+                    catch (NumberFormatException | IllegalNameException | IllegalDataException ex) {
                         Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
                     }
                 }
@@ -1059,13 +1046,7 @@ public class Daten {
                             }
                         }
                     }
-                    catch (NumberFormatException ex) {
-                        Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                    }
-                    catch (IllegalNameException ex) {
-                        Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                    }
-                    catch (IllegalDataException ex) {
+                    catch (NumberFormatException | IllegalNameException | IllegalDataException ex) {
                         Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
                     }
                 }
@@ -1203,11 +1184,7 @@ public class Daten {
             // set modified state
             setModified(true);
         }
-        catch (IllegalAddException ex) {
-            Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
-            return false;
-        }
-        catch (IllegalDataException ex) {
+        catch (IllegalAddException | IllegalDataException ex) {
             Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
             return false;
         }
@@ -1414,11 +1391,7 @@ public class Daten {
                 // and return keyword index-number
                 return pos;
             }
-            catch (IllegalNameException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                return -1;
-            }
-            catch (IllegalDataException ex) {
+            catch (IllegalNameException | IllegalDataException ex) {
                 Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
                 return -1;
             }
@@ -1452,11 +1425,7 @@ public class Daten {
                 // return the empty-position, which is now filled with the new keyword-value
                 return emptypos;
             }
-            catch (IllegalNameException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                return -1;
-            }
-            catch (IllegalDataException ex) {
+            catch (IllegalNameException | IllegalDataException ex) {
                 Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
                 return -1;
             }
@@ -1495,10 +1464,7 @@ public class Daten {
                     // do nothing here
                     Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
                 }
-                catch (IllegalNameException ex) {
-                    Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                }
-                catch (IllegalDataException ex) {
+                catch (IllegalNameException | IllegalDataException ex) {
                     Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
                 }
                 // return the new size of the keyword file, i.e. the keyword position of 
@@ -1614,10 +1580,7 @@ public class Daten {
                         // change modified state
                         setModified(true);
                     }
-                    catch (IllegalNameException ex) {
-                        Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                    }
-                    catch (IllegalDataException ex) {
+                    catch (IllegalNameException | IllegalDataException ex) {
                         Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
                     }
                 }
@@ -1654,10 +1617,7 @@ public class Daten {
                         // do nothing here
                         Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
                     }
-                    catch (IllegalNameException ex) {
-                        Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                    }
-                    catch (IllegalDataException ex) {
+                    catch (IllegalNameException | IllegalDataException ex) {
                         Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
                     }
                 }
@@ -1772,10 +1732,7 @@ public class Daten {
                     // and change the modified state of the file
                     setModified(true);
                 }
-                catch (IllegalNameException ex) {
-                    Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                }
-                catch (IllegalDataException ex) {
+                catch (IllegalNameException | IllegalDataException ex) {
                     Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
                 }
             }
@@ -2167,7 +2124,7 @@ public class Daten {
         }
         // create linked list that will contain all new keywords that don't already
         // exist in the entry "nr"
-        List<String> cleanedKeywords = new ArrayList<String>();
+        List<String> cleanedKeywords = new ArrayList<>();
         // now check for the existence of each keyword in the entry "nr" and
         // add all non-existing (new) keywords to the linked list...
         for (String kw : kws) {
@@ -2680,11 +2637,7 @@ public class Daten {
                 // and return author index-number
                 return pos;
             }
-            catch (IllegalNameException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                return -1;
-            }
-            catch (IllegalDataException ex) {
+            catch (IllegalNameException | IllegalDataException ex) {
                 Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
                 return -1;
             }
@@ -2718,11 +2671,7 @@ public class Daten {
                 // return the empty-position, which is now filled with the new author-value
                 return emptypos;
             }
-            catch (IllegalNameException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                return -1;
-            }
-            catch (IllegalDataException ex) {
+            catch (IllegalNameException | IllegalDataException ex) {
                 Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
                 return -1;
             }
@@ -2761,10 +2710,7 @@ public class Daten {
             catch (IllegalAddException ex) {
                 Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
             }
-            catch (IllegalNameException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-            }
-            catch (IllegalDataException ex) {
+            catch (IllegalNameException | IllegalDataException ex) {
                 Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
             }
             // return the new size of the author file, i.e. the author position of 
@@ -3009,11 +2955,7 @@ public class Daten {
             // set modified state
             setModified(true);
         }
-        catch (IllegalAddException ex) {
-            Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
-            return ADD_ENTRY_ERR;
-        }
-        catch (IllegalDataException ex) {
+        catch (IllegalAddException | IllegalDataException ex) {
             Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
             return ADD_ENTRY_ERR;
         }
@@ -3441,11 +3383,7 @@ public class Daten {
             // set modified state
             setModified(true);
         }
-        catch (IllegalAddException ex) {
-            Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
-            return false;
-        }
-        catch (IllegalDataException ex) {
+        catch (IllegalAddException | IllegalDataException ex) {
             Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
             return false;
         }
@@ -3761,7 +3699,7 @@ public class Daten {
             // copy all values to an array
             String[] lnrs = lnr.split(",");
             // create list
-            List<String> luhmannnrs = new ArrayList<String>();
+            List<String> luhmannnrs = new ArrayList<>();
             // copy all numbers to list, so we can insert the new number via this list
             // for (String ln : lnrs) luhmannnrs.add(ln);
             luhmannnrs.addAll(Arrays.asList(lnrs));
@@ -3805,7 +3743,7 @@ public class Daten {
         // if no manual links from parameter available, leave...
         if ((null==manlinks)||(manlinks.length<1)) return;
         // create linked list and copy all current manual links to that list
-        LinkedList<String> l = new LinkedList<String>();
+        LinkedList<String> l = new LinkedList<>();
         for (int ml : current_mls) l.add(String.valueOf(ml));
         // go through all entries that should be removed from the manual links...
         for (String mlparam : manlinks) {
@@ -4662,7 +4600,7 @@ public class Daten {
         if (null==entry) return null;
         // retrieve list of attachments
         List<Element> dummy = entry.getChild(ELEMENT_ATTACHMENTS).getChildren();
-        List<Element> attachments = new LinkedList<Element>();
+        List<Element> attachments = new LinkedList<>();
         // we have to manually copy all elements from one list to the other,
         // so we don't change the original content.
         Iterator<Element> it = dummy.iterator();
@@ -4745,7 +4683,7 @@ public class Daten {
         List<Element> links = entry.getChild(ELEMENT_ATTACHMENTS).getChildren();
         // create iterator and copy all elements to a linked list
         Iterator<Element> i = links.iterator();
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
         // copy list to array
         while (i.hasNext()) {
             // get each link-element
@@ -4799,10 +4737,7 @@ public class Daten {
                 // change modification state
                 mod = true;
             }
-            catch (IllegalDataException ex) {
-                Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-            }
-            catch (IllegalAddException ex) {
+            catch (IllegalDataException | IllegalAddException ex) {
                 Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
             }
         }
@@ -4837,10 +4772,7 @@ public class Daten {
                 // change modification state
                 mod = true;
             }
-            catch (IllegalDataException ex) {
-                Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-            }
-            catch (IllegalAddException ex) {
+            catch (IllegalDataException | IllegalAddException ex) {
                 Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
             }
         }
@@ -4862,7 +4794,7 @@ public class Daten {
         // if we have any, we can go on...
         if (oldlinks!=null && oldAttachment!=null && newAttachment!=null) {
             // create linked list that will contain the updated attachments
-            List<String> attachments = new ArrayList<String>();
+            List<String> attachments = new ArrayList<>();
             // iterator for current attachments of the entry
             Iterator<Element> i = oldlinks.iterator();
             // go...
@@ -4894,7 +4826,7 @@ public class Daten {
         // if we have any, we can go on...
         if (oldlinks!=null) {
             // create linked list that will contain the updated attachments
-            List<String> attachments = new ArrayList<String>();
+            List<String> attachments = new ArrayList<>();
             // iterator for current attachments of the entry
             Iterator<Element> i = oldlinks.iterator();
             // go...
@@ -5607,11 +5539,7 @@ public class Daten {
             // and change modified-state
             setModified(true);
         }
-        catch (IllegalNameException ex) {
-            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-            return false;
-        }
-        catch (IllegalDataException ex) {
+        catch (IllegalNameException | IllegalDataException ex) {
             Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
             return false;
         }
@@ -7573,7 +7501,7 @@ public class Daten {
      */
     private List<Integer> extractManualLinksFromContent(String dummy) {
         // save manual links
-        List<Integer> manlinknumbers = new ArrayList<Integer>();
+        List<Integer> manlinknumbers = new ArrayList<>();
         try {
             // create foot note patterm
             Pattern p = Pattern.compile("\\[z ([^\\[]*)\\](.*?)\\[/z\\]");
@@ -7588,11 +7516,7 @@ public class Daten {
                 manlinknumbers.add(ml);
             }
         }
-        catch (PatternSyntaxException ex) {
-        }
-        catch (IndexOutOfBoundsException ex) {
-        }
-        catch (NumberFormatException ex) {
+        catch (PatternSyntaxException | IndexOutOfBoundsException | NumberFormatException ex) {
         }
         return manlinknumbers;
     }

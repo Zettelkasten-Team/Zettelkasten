@@ -955,7 +955,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
     @Action
     public void addAuthorsToEntries() {
         // create linked list as parameter for filter-dialog
-        LinkedList<String> suthors = new LinkedList<String>();
+        LinkedList<String> suthors = new LinkedList<>();
         // go through all author-entries
         for (int cnt=1; cnt<=dataObj.getCount(Daten.AUCOUNT); cnt++) {
             // get authors
@@ -1046,15 +1046,15 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         // setting, changing the tab-key to change the focus.
 
         // bind our new forward focus traversal keys
-        Set<AWTKeyStroke> newForwardKeys = new HashSet<AWTKeyStroke>(1);
+        Set<AWTKeyStroke> newForwardKeys = new HashSet<>(1);
         newForwardKeys.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_TAB,0));
         jTableResults.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,Collections.unmodifiableSet(newForwardKeys));
         // bind our new backward focus traversal keys
-        Set<AWTKeyStroke> newBackwardKeys = new HashSet<AWTKeyStroke>(1);
+        Set<AWTKeyStroke> newBackwardKeys = new HashSet<>(1);
         newBackwardKeys.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_TAB,KeyEvent.SHIFT_MASK+KeyEvent.SHIFT_DOWN_MASK));
         jTableResults.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,Collections.unmodifiableSet(newBackwardKeys));
         // create new table sorter
-        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>();
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>();
         // tell tgis jtable that it has an own sorter
         jTableResults.setRowSorter(sorter);
         // and tell the sorter, which table model to sort.
@@ -1279,7 +1279,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
                 // if we have any search terms, we want to select the related keywords...
                 if (sts!=null) {
                     // create an integer list
-                    LinkedList<Integer> l = new LinkedList<Integer>();
+                    LinkedList<Integer> l = new LinkedList<>();
                     // iterate all search terms
                     for (String s : sts) {
                         // try to find the keyword in the jList
@@ -1344,7 +1344,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
             if (searchrequest.isSynonymSearch(index)) {
                 // create new linked list that will contain all highlight-terms, including
                 // the related synonyms of the highlight-terms
-                LinkedList<String> highlight = new LinkedList<String>();
+                LinkedList<String> highlight = new LinkedList<>();
                 // go through all searchterms
                 for (String s : sts) {
                     // get the synonym-line for each search term
@@ -1597,7 +1597,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         // retrieve current entries from the list
         int[] entries = searchrequest.getSearchResults(jComboBoxSearches.getSelectedIndex());
         // create linked list as parameter for filter-dialog
-        LinkedList<String> keywords = new LinkedList<String>();
+        LinkedList<String> keywords = new LinkedList<>();
         // go through all entries
         for (int e : entries) {
             // get keywords of each entries
@@ -1664,7 +1664,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         // retrieve current entries from the list
         int[] entries = searchrequest.getSearchResults(jComboBoxSearches.getSelectedIndex());
         // create linked list as parameter for filter-dialog
-        LinkedList<String> authors = new LinkedList<String>();
+        LinkedList<String> authors = new LinkedList<>();
         // go through all entries
         for (int e : entries) {
             // get authors of each entries

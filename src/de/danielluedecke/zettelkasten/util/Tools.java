@@ -809,7 +809,7 @@ public class Tools {
      */
     public static List<Object[]> retrieveDoubleEntries(DesktopData desktopObj, List<Integer> addedEntries) {
         // create a linked list that will scan for multiple occurences of the added entries
-        List<Object[]> multipleentries = new ArrayList<Object[]>();
+        List<Object[]> multipleentries = new ArrayList<>();
         // first we go through all saved desktops we have and look
         // for occurences of the to be added entry. if the entry exists
         // in one or more desktops, the element is stored in our linked list.
@@ -827,7 +827,7 @@ public class Tools {
             Iterator<Integer> it = addedEntries.iterator();
             // since we may find multiple entries, we create a new linked
             // list here, that will store *all* found entries of the current desktop
-            List<Element> finallist = new ArrayList<Element>();
+            List<Element> finallist = new ArrayList<>();
             // go through all found entries...
             // what we do here is following: we may have several different entries that already
             // have been added to this desktop before. these entries, if we have any, are
@@ -915,7 +915,7 @@ public class Tools {
                     // get the entrynumber of the found entry
                     String id = entry.getAttributeValue("id");
                     // create a linked list that will hold the path to the desktop
-                    List<String> path = new ArrayList<String>();
+                    List<String> path = new ArrayList<>();
                     // as long as the found element has parents, we have path-elements/information
                     // to add...
                     while(entry.getParentElement()!=null) {
@@ -970,7 +970,7 @@ public class Tools {
     public static String[] replaceSynonymsWithKeywords(Synonyms synonymsObj, String[] keywords) {
         // create linked list that will hold the keywords which have been recognized as synonyms, but not
         // as index-words
-        List<String> synkeywords = new ArrayList<String>();
+        List<String> synkeywords = new ArrayList<>();
         // check keywords whether they appear as synonyms, but not index-word
         for (String skw : keywords) {
             if ((synonymsObj.findSynonym(skw, true)!=-1) && !synonymsObj.isIndexWord(skw, true)) {
@@ -989,7 +989,7 @@ public class Tools {
             // if the user wants to replace the keyword-synonyms by their index-word, do this now
             if (JOptionPane.YES_OPTION==option) {
                 // create new list for return value
-                ArrayList<String> newkeywords = new ArrayList<String>();
+                ArrayList<String> newkeywords = new ArrayList<>();
                 for (String keyword : keywords) {
                     // and replace all found synonyms-values by their related index-words
                     if ((synonymsObj.findSynonym(keyword, true) != -1) && !synonymsObj.isIndexWord(keyword, true)) {
@@ -1059,7 +1059,7 @@ public class Tools {
             return null;
         }
         // create new arraylist for retirn values
-        List<String> separatedkws = new ArrayList<String>();
+        List<String> separatedkws = new ArrayList<>();
         // first, add original keywords
         separatedkws.addAll(Arrays.asList(keywords));        
         // go through all found keywords
@@ -1140,7 +1140,7 @@ public class Tools {
             // we need to put these arrays together. We do this by creating an array list
             // and adding all elements of both array to that list. Then we copy the final
             // array-list back to our findterms-array
-            List<String> separatedkws = new ArrayList<String>();
+            List<String> separatedkws = new ArrayList<>();
             // copy all elements of textparts-array to the array-list
             for (String part1 : kwparts) {
                 if (!separatedkws.contains(part1)) {
@@ -1277,7 +1277,7 @@ public class Tools {
         // and matacher
         Matcher m = p.matcher(content);
         // init return value. This array contains all resize values of imagaes, if we have any
-        List<Integer> resizevalues = new ArrayList<Integer>();
+        List<Integer> resizevalues = new ArrayList<>();
         // find image tags
         while (m.find()) {
             // get group counts. usually, we only have two groups:
@@ -1292,9 +1292,7 @@ public class Tools {
                 reval = Integer.parseInt(resizeval);
                 resizevalues.add(reval);
             }
-            catch (NumberFormatException ex) {
-            }
-            catch (IndexOutOfBoundsException ex) {
+            catch (NumberFormatException | IndexOutOfBoundsException ex) {
             }
         }
         return resizevalues;
@@ -1717,7 +1715,7 @@ public class Tools {
             return null;
         }
         // create new array list
-        ArrayList<String> forms = new ArrayList<String>();
+        ArrayList<String> forms = new ArrayList<>();
         // find forms. we don't do this with regular expressions
         // first, init the index-variable
         int pos = 0;
@@ -1782,10 +1780,7 @@ public class Tools {
             try {
                 pr = rt.exec(settings.getPandocPath()+" --version");
                 pr.waitFor();
-            } catch (IOException ex) {
-                Constants.zknlogger.log(Level.WARNING,"Could not find Pandoc under specified path {0}.", settings.getPandocPath());
-                pandocmissing = true;
-            } catch (InterruptedException ex) {
+            } catch (IOException | InterruptedException ex) {
                 Constants.zknlogger.log(Level.WARNING,"Could not find Pandoc under specified path {0}.", settings.getPandocPath());
                 pandocmissing = true;
             }
@@ -1806,7 +1801,7 @@ public class Tools {
 
     public static LinkedList extractFootnotesFromContent(String content) {
         // now prepare a reference list from possible footnotes
-        LinkedList<String> footnotes = new LinkedList<String>();
+        LinkedList<String> footnotes = new LinkedList<>();
         // position index for finding the footnotes
         int pos = 0;
         // do search as long as pos is not -1 (not-found)

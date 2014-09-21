@@ -2003,7 +2003,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // ...parse them to an array
             String[] authors = newAu.split("\n");
             // list for new authors. needed to avoid empty entries
-            LinkedList<String> newaus = new LinkedList<String>();
+            LinkedList<String> newaus = new LinkedList<>();
             // go through array of all authors
             for (String a : authors) {
                 // check whether string is empty or not (may occur when the user uses two new lines
@@ -2782,9 +2782,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                     // check for valid values
                     if (files!=null && files.size()>0) {
                         // create list with final image files
-                        List<File> imgfiles = new ArrayList<File>();
+                        List<File> imgfiles = new ArrayList<>();
                         // create list with final image files
-                        List<File> anyfiles = new ArrayList<File>();
+                        List<File> anyfiles = new ArrayList<>();
                         // dummy
                         File file;
                         for (Object file1 : files) {
@@ -2818,10 +2818,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                 dtde.rejectDrop();
             }
         }
-        catch (IOException ex) {
-            Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
-            dtde.rejectDrop();
-        } catch (UnsupportedFlavorException ex) {
+        catch (IOException | UnsupportedFlavorException ex) {
             Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
             dtde.rejectDrop();
         }
@@ -3204,7 +3201,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         String simagedir = settingsObj.getImagePath(dataObj.getUserImagePath(),false);
         // create new linked list that will contain a "cleaned" list of files, i.e. only contains
         // those selected files that haven't been copied to the attachment directory yet.
-        LinkedList<File> newfiles = new LinkedList<File>();
+        LinkedList<File> newfiles = new LinkedList<>();
         // iterate array
         for (File cf : sources) {
             // first off all, let's check whether the user chose an already existing image
@@ -3485,7 +3482,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // retrieve the list model
         ListModel lm = jListQuickInputKeywords.getModel();
         // create new linked list that will contain the filtered elements
-        LinkedList<String> list = new LinkedList<String>();
+        LinkedList<String> list = new LinkedList<>();
         // iterate the listmodel
         for (int cnt=0; cnt<lm.getSize(); cnt++) {
             // retrieve the listitem and make it lowercase
@@ -4008,16 +4005,16 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     public void addQuickKeywordToList() {
         // when we have no selected keywords yet, create list now...
         if (settingsObj.getQuickInput()&&(null==selectedKeywords)) {
-            selectedKeywords = new LinkedList<String>();
+            selectedKeywords = new LinkedList<>();
         }
         // retrieve all selected keywords
-        Object[] o = jListQuickInputKeywords.getSelectedValues();
+        List<Object> o = jListQuickInputKeywords.getSelectedValuesList();
         // if we have selections, go on
-        if (o.length>0) {
+        if (!o.isEmpty()) {
             // go through all selected values
-            for (int cnt=o.length-1; cnt>=0; cnt--) {
+            for (int cnt=o.size()-1; cnt>=0; cnt--) {
                 // get each keyword string
-                String kw = o[cnt].toString();
+                String kw = o.get(cnt).toString();
                 // check whether keyword already exisrs in the jlist
                 if (!isDoubleKeywords(kw)) {
                     // if not, add keyword to listmodel
@@ -4131,7 +4128,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // its content is just cleared, the element itself is not removed. we do
             // this to have always the same indexnumber for a keyword or an author.
             // now we copy the array to a linked list, leaving out empty elements
-            taskauthorlist = new LinkedList<String>();
+            taskauthorlist = new LinkedList<>();
             // go through all keywords of the keyword datafile
             for (cnt=0; cnt<count; cnt++) {
                 // get the author as string and add it to list
@@ -4232,7 +4229,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // its content is just cleared, the element itself is not removed. we do
             // this to have always the same indexnumber for a keyword or an author.
             // now we copy the array to a linked list, leaving out empty elements
-            displayedKeywordList = new LinkedList<String>();
+            displayedKeywordList = new LinkedList<>();
             // go through all keywords of the keyword datafile
             for (cnt=0; cnt<count; cnt++) {
                 // get the keyword as string and add them to the array
