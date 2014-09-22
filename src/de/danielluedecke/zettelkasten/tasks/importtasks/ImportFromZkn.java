@@ -73,36 +73,36 @@ public class ImportFromZkn extends org.jdesktop.application.Task<Object, Void> {
      * Reference to the Daten object, which contains the XML data of the Zettelkasten.
      * will be passed as parameter in the constructor, see below
      */
-    private Daten dataObj;
+    private final Daten dataObj;
     /**
      *
      */
-    private TasksData taskinfo;
+    private final TasksData taskinfo;
     /**
      * Reference to the Bookmarks object, which contains the XML data of the bookmarks.
      * will be passed as parameter in the constructor, see below
      */
-    private Bookmarks bookmarksObj;
+    private final Bookmarks bookmarksObj;
     /**
      * Reference to the Settings object, which contains the settings like fike paths etc...
      */
-    private Settings settingsObj;
+    private final Settings settingsObj;
     /**
      * Reference to the DesktopData object, which contains the XML data of the desktop.
      * will be passed as parameter in the constructor, see below
      */
-    private DesktopData desktopObj;
+    private final DesktopData desktopObj;
     /**
      * SearchRequests object, which contains the XML data of the searchrequests and -result
      * that are related with this data file
      */
-    private SearchRequests searchrequestsObj;
+    private final SearchRequests searchrequestsObj;
     /**
      * dummy variable that stores the importet data in a XML file.
      * this data is after being importtet converted to the XML structure
      * of the Daten dataObj
      */
-    private Document dummyXML;
+    private final Document dummyXML;
     /**
      * file path to import file
      */
@@ -110,7 +110,7 @@ public class ImportFromZkn extends org.jdesktop.application.Task<Object, Void> {
     /**
      * indicates whether a conversion from ascii to unicode chars is necessary
      */
-    private boolean atou;
+    private final boolean atou;
     /**
      * indicates which type of data format should be imported.
      * refer to the Zettelkasten.view properties file (resources) to see
@@ -122,7 +122,7 @@ public class ImportFromZkn extends org.jdesktop.application.Task<Object, Void> {
      * or whether the old zettelkasten-data-file should be closed (and saved) before and
      * a new data-file should be created from the imported data
      */
-    private boolean append;
+    private final boolean append;
     /**
      * A default timestamp for importing old datafiles. Sometimes entries of old data files may
      * not contain timestamps. so we can insert a default value here...
@@ -131,14 +131,14 @@ public class ImportFromZkn extends org.jdesktop.application.Task<Object, Void> {
     /**
      *
      */
-    private StringBuilder importedTypesMessage = new StringBuilder("");
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final StringBuilder importedTypesMessage = new StringBuilder("");
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
 
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(ImportTask.class);
 
@@ -152,14 +152,10 @@ public class ImportFromZkn extends org.jdesktop.application.Task<Object, Void> {
      * @param bm
      * @param dt
      * @param sr
-     * @param ac
      * @param s
-     * @param syn
-     * @param stn
      * @param fp
      * @param a2u
      * @param appendit
-     * @param rd
      * @param dts 
      */
     public ImportFromZkn(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label,
@@ -351,7 +347,7 @@ public class ImportFromZkn extends org.jdesktop.application.Task<Object, Void> {
                         skip=true;
                     }
                     // in case we have an illegal add exception...
-                    catch (IllegalAddException e) {
+                    catch (IllegalAddException | IllegalDataException e) {
                         // display errormessage
                         showErrorLogMsg(e.getLocalizedMessage());
                         // reset data files
@@ -360,14 +356,7 @@ public class ImportFromZkn extends org.jdesktop.application.Task<Object, Void> {
                         return null;
                     }
                     // ...or an illegal data exception, show error log and leave thread here
-                    catch (IllegalDataException e) {
-                        // display errormessage
-                        showErrorLogMsg(e.getLocalizedMessage());
-                        // reset data files
-                        resetDataFiles();
-                        // leave task
-                        return null;
-                    }
+
                 }
                 counter++;
                 // when we have a very small data-file, don't count kilobytes,
@@ -533,7 +522,7 @@ public class ImportFromZkn extends org.jdesktop.application.Task<Object, Void> {
                         buffer.setLength(0);
                     }
                     // in case we have an illegal-add-exception...
-                    catch (IllegalAddException e) {
+                    catch (IllegalAddException | IllegalDataException e) {
                         // display errormessage
                         showErrorLogMsg(e.getLocalizedMessage());
                         // reset data files
@@ -542,14 +531,7 @@ public class ImportFromZkn extends org.jdesktop.application.Task<Object, Void> {
                         return null;
                     }
                     // ...or an illegal-data-exception, show error-log and leave thread
-                    catch (IllegalDataException e) {
-                        // display errormessage
-                        showErrorLogMsg(e.getLocalizedMessage());
-                        // reset data files
-                        resetDataFiles();
-                        // leave task
-                        return null;
-                    }
+
                 }
                 // increase the counter for the progress bar
                 counter++;
@@ -676,7 +658,7 @@ public class ImportFromZkn extends org.jdesktop.application.Task<Object, Void> {
                     // quotes are removed, since we don't need them...
                     Matcher mat = Pattern.compile("(\"(.*?)\"|([^,]+)),?").matcher(dummyString);
                     // create a new list that will contain each found pattern (i.e. searchterm)
-                    List<String> result = new ArrayList<String>();
+                    List<String> result = new ArrayList<>();
                     while (mat.find()) {
                            result.add(mat.group(2) == null ? mat.group(3) : mat.group(2));
                     }
@@ -737,9 +719,9 @@ public class ImportFromZkn extends org.jdesktop.application.Task<Object, Void> {
                     String [] hls = dummyString.split(";");
                     // add each hyperlink string
                     // therefor, iterate the array
-                    for (int hcnt=0;hcnt<hls.length;hcnt++) {
+                    for (String hl : hls) {
                         Element sublink = new Element(Daten.ELEMENT_ATTCHILD);
-                        sublink.setText(hls[hcnt]);
+                        sublink.setText(hl);
                         hyperlinks.addContent(sublink);
                     }
                 }
