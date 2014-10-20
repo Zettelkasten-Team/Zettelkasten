@@ -1272,7 +1272,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
 
     private void makeMacBottomBar() {
         jPanel1.setVisible(false);
-        BottomBar macbottombar = new BottomBar(BottomBarSize.SMALL);
+        BottomBar macbottombar = new BottomBar(BottomBarSize.LARGE);
         macbottombar.addComponentToRight(jButtonCancel);
         macbottombar.addComponentToRight(jButtonOK,4);
         macbottombar.addComponentToRight(statusAnimationLabel,4);

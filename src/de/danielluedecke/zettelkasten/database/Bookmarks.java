@@ -202,7 +202,7 @@ public class Bookmarks {
      */
     public String[] getCategoriesInSortedOrder() {
         // create linked array list
-        List<String> retval = new ArrayList<String>();
+        List<String> retval = new ArrayList<>();
         // iterate all categories
         for (int cnt = 0; cnt < getCategoryCount(); cnt++) {
             // get category
@@ -617,13 +617,7 @@ public class Bookmarks {
                         }
                     }
                 }
-                catch (NumberFormatException e) {
-                    Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
-                }
-                catch (IllegalNameException e) {
-                    Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
-                }
-                catch (IllegalDataException e) {
+                catch (NumberFormatException | IllegalNameException | IllegalDataException e) {
                     Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
                 }
                 // change modified state
@@ -721,13 +715,7 @@ public class Bookmarks {
                 // change modified-state
                 setModified(true);
             }
-            catch (IllegalAddException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-            }
-            catch (IllegalNameException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-            }
-            catch (IllegalDataException ex) {
+            catch (IllegalAddException | IllegalNameException | IllegalDataException ex) {
                 Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
             }
         }
@@ -768,10 +756,7 @@ public class Bookmarks {
                 // change modified-state
                 setModified(true);
             }
-            catch (IllegalNameException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-            }
-            catch (IllegalDataException ex) {
+            catch (IllegalNameException | IllegalDataException ex) {
                 Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
             }
         }

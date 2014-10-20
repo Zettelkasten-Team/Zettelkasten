@@ -73,7 +73,12 @@ public class CErrorLog extends javax.swing.JDialog {
     private ZettelkastenView mainframe;
 
 
-    /** Creates new form CErrorLog */
+    /**
+     * 
+     * @param parent
+     * @param zkn
+     * @param settingsObj 
+     */
     public CErrorLog(java.awt.Frame parent, ZettelkastenView zkn, Settings settingsObj) {
         super(parent);
         mainframe = zkn;
@@ -355,9 +360,7 @@ public class CErrorLog extends javax.swing.JDialog {
         
         try {
             Desktop.getDesktop().mail(new URI("mailto:mail@danielluedecke.de?SUBJECT=Logfile%20ZKN3"));
-        } catch (URISyntaxException ex) {
-            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-        } catch (IOException ex) {
+        } catch (URISyntaxException | IOException ex) {
             Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
         }
     }//GEN-LAST:event_jButton1ActionPerformed

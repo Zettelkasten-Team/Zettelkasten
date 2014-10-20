@@ -49,10 +49,15 @@ import org.jdesktop.application.Action;
  */
 public class CExportEntries extends javax.swing.JDialog {
 
-    private int len;
+    private final int len;
     private int[] entries = null;
     private boolean cancelled = false;
-    /** Creates new form CExportEntries */
+    /**
+     * 
+     * @param parent
+     * @param l
+     * @param settingsObj 
+     */
     public CExportEntries(java.awt.Frame parent, int l, Settings settingsObj) {
         super(parent);
         len = l;

@@ -317,11 +317,7 @@ public class DesktopData {
             // change modified state
             setModified(true);
         }
-        catch (IllegalNameException ex) {
-            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-            return false;
-        }
-        catch (IllegalDataException ex) {
+        catch (IllegalNameException | IllegalDataException ex) {
             Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
             return false;
         }
@@ -369,7 +365,7 @@ public class DesktopData {
         // check for valid parameter
         if (entries!=null && entries.length>0 && getCount()>0) {
             // create linked list which will contain all to be deleted entries...
-            LinkedList<Element> finallist = new LinkedList<Element>();
+            LinkedList<Element> finallist = new LinkedList<>();
             // go through all desktops (outer loop)...
             for (int cnt=0; cnt<getCount(); cnt++) {
                 // ...and search for all entries in each desktop (inner loop)
@@ -809,15 +805,7 @@ public class DesktopData {
             // change modified state
             setModified(true);
         }
-        catch (IllegalAddException ex) {
-            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-            return false;
-        }
-        catch (IllegalNameException ex) {
-            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-            return false;
-        }
-        catch (IllegalDataException ex) {
+        catch (IllegalAddException | IllegalNameException | IllegalDataException ex) {
             Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
             return false;
         }
@@ -863,15 +851,7 @@ public class DesktopData {
                 // return timestamp of addes bullet
                 return newts;
             }
-            catch (IllegalNameException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                return null;
-            }
-            catch (IllegalDataException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                return null;
-            }
-            catch (IllegalAddException ex) {
+            catch (IllegalNameException | IllegalDataException | IllegalAddException ex) {
                 Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
                 return null;
             }
@@ -912,11 +892,7 @@ public class DesktopData {
                 // change modified state
                 setModified(true);
             }
-            catch (IllegalNameException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                return false;
-            }
-            catch (IllegalDataException ex) {
+            catch (IllegalNameException | IllegalDataException ex) {
                 Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
                 return false;
             }
@@ -1003,13 +979,7 @@ public class DesktopData {
                 // change modified state
                 setModified(true);
             }
-            catch (IllegalNameException ex) {
-                Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-            }
-            catch (IllegalDataException ex) {
-                Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-            }
-            catch (IllegalAddException ex) {
+            catch (IllegalNameException | IllegalDataException | IllegalAddException ex) {
                 Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
             }
         }
@@ -1083,13 +1053,7 @@ public class DesktopData {
                 // return timestamp
                 return ts;
             }
-            catch (IllegalNameException ex) {
-                Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-            }
-            catch (IllegalDataException ex) {
-                Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-            }
-            catch (IllegalAddException ex) {
+            catch (IllegalNameException | IllegalDataException | IllegalAddException ex) {
                 Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
             }
         }
@@ -1117,10 +1081,7 @@ public class DesktopData {
                 // set new treefold-attribute
                 b.setAttribute("treefold", (expanded)?TREE_FOLDING_EXPANDED:TREE_FOLDING_COLLAPSED);
             }
-            catch (IllegalNameException ex) {
-                Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-            }
-            catch (IllegalDataException ex) {
+            catch (IllegalNameException | IllegalDataException ex) {
                 Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
             }
         }
@@ -1396,7 +1357,7 @@ public class DesktopData {
         // if we have such element, go on...
         if (desktopelement!=null) {
             // create new list that will contain the return values
-            retrieveList = new ArrayList<Integer>();
+            retrieveList = new ArrayList<>();
             // fill list with all entry-numbers. since we have sub-bullets/levels, we
             // recursevly go through the desktop-data
             retrieveDesktopEntries(desktopelement);
@@ -1429,7 +1390,7 @@ public class DesktopData {
         // if we have such element, go on...
         if (bullet!=null) {
             // create new list that will contain the return values
-            retrieveList = new ArrayList<Integer>();
+            retrieveList = new ArrayList<>();
             // fill list with all entry-numbers. since we have sub-bullets/levels, we
             // recursevly go through the desktop-data
             retrieveDesktopEntries(bullet);
@@ -1478,7 +1439,7 @@ public class DesktopData {
         // if we have such element, go on...
         if (bullet!=null) {
             // create new list that will contain the return values
-            timestampList = new ArrayList<String>();
+            timestampList = new ArrayList<>();
             // fill list with all entry-numbers. since we have sub-bullets/levels, we
             // recursevly go through the desktop-data
             retrieveDesktopEntriesTimestamps(bullet);
@@ -1758,15 +1719,7 @@ public class DesktopData {
                 // change modified-flag
                 setModified(true);
             }
-            catch (IllegalNameException ex) {
-                Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-                return false;
-            }
-            catch (IllegalDataException ex) {
-                Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-                return false;
-            }
-            catch (IllegalAddException ex) {
+            catch (IllegalNameException | IllegalDataException | IllegalAddException ex) {
                 Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
                 return false;
             }
@@ -1845,13 +1798,7 @@ public class DesktopData {
                 // add element to desktop-notes
                 desktopNotes.getRootElement().addContent(desk);
             }
-            catch (IllegalNameException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-            }
-            catch (IllegalDataException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-            }
-            catch (IllegalAddException ex) {
+            catch (IllegalNameException | IllegalDataException | IllegalAddException ex) {
                 Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
             }
         }
@@ -1886,10 +1833,7 @@ public class DesktopData {
                     e.setAttribute("treefold", TREE_FOLDING_EXPANDED);
                 }
             }
-            catch (IllegalNameException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-            }
-            catch (IllegalDataException ex) {
+            catch (IllegalNameException | IllegalDataException ex) {
                 Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
             }
             // when the new element also has children, call this method again,
@@ -2074,7 +2018,7 @@ public class DesktopData {
                 // now retrieve all timestamps from the archived desktop
                 // and look for modified entries...
                 // create new list that will contain the timestamps
-                timestampList = new ArrayList<String>();
+                timestampList = new ArrayList<>();
                 // fill list with all entry-numbers. since we have sub-bullets/levels, we
                 // recursevly go through the desktop-data
                 retrieveDesktopEntriesTimestamps(deskel);
@@ -2102,15 +2046,7 @@ public class DesktopData {
                     archive.getRootElement().addContent(modifiedel);
                 }
             }
-            catch (IllegalNameException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                return null;
-            }
-            catch (IllegalDataException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                return null;
-            }
-            catch (IllegalAddException ex) {
+            catch (IllegalNameException | IllegalDataException | IllegalAddException ex) {
                 Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
                 return null;
             }
@@ -2205,15 +2141,7 @@ public class DesktopData {
             }
             setModified(true);
         }
-        catch (IllegalNameException ex) {
-            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-            return IMPORT_ARCHIVE_ERR_OTHER;
-        }
-        catch (IllegalDataException ex) {
-            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-            return IMPORT_ARCHIVE_ERR_OTHER;
-        }
-        catch (IllegalAddException ex) {
+        catch (IllegalNameException | IllegalDataException | IllegalAddException ex) {
             Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
             return IMPORT_ARCHIVE_ERR_OTHER;
         }

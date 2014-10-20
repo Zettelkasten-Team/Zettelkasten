@@ -344,7 +344,7 @@ public class HtmlUbbUtil {
         if (authors!=null && authors.length>0) {
             // copy all authors to linked list, so we can remove those authors that have been added
             // as footnotes
-            LinkedList<String> remainingAuthors = new LinkedList<String>();
+            LinkedList<String> remainingAuthors = new LinkedList<>();
             remainingAuthors.addAll(Arrays.asList(authors));
             // extract footnotes.
             LinkedList<String> footnotes = Tools.extractFootnotesFromContent(content);
@@ -782,7 +782,7 @@ public class HtmlUbbUtil {
                     // retrieve all matching groups
                     Matcher m = p.matcher(dummy);
                     // add each found string to a linked array-list
-                    List<String> founds = new ArrayList<String>();
+                    List<String> founds = new ArrayList<>();
                     // iterate all matching groups and check whether these "search terms" have already
                     // been added to the linked list. if not, add it,
                     while (m.find()) {
@@ -942,8 +942,8 @@ public class HtmlUbbUtil {
         }
         else {
             // save find-position
-            List<Integer> start = new ArrayList<Integer>();
-            List<Integer> end = new ArrayList<Integer>();
+            List<Integer> start = new ArrayList<>();
+            List<Integer> end = new ArrayList<>();
             try {
                 // create foot note patterm
                 Pattern p = Pattern.compile("\\[fn ([^\\[]*)\\]");
@@ -990,13 +990,11 @@ public class HtmlUbbUtil {
                     }
                 }
             }
-            catch (PatternSyntaxException ex) {
+            catch (PatternSyntaxException | IndexOutOfBoundsException ex) {
             }
             catch (NumberFormatException ex) {
                 Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
                 Constants.zknlogger.log(Level.WARNING,"Could not convert author ID into author number!");
-            }
-            catch (IndexOutOfBoundsException ex) {
             }
             // footnote: [fn 102] becomes <sup>[102]</sup> (or just [102], if no superscription is set)
             if (settings.getSupFootnote()) {
@@ -1180,9 +1178,7 @@ public class HtmlUbbUtil {
                                 // set search-position indicator
                                 pos = newdummy.length();
                                 dummy = newdummy+dummy.substring(end+2);
-                            } catch (IOException ex) {
-                                pos = end+1;
-                            } catch (IndexOutOfBoundsException ex) {
+                            } catch (IOException | IndexOutOfBoundsException ex) {
                                 pos = end+1;
                             }
                         }
@@ -1424,11 +1420,7 @@ public class HtmlUbbUtil {
                 }
             }
         }
-        catch (PatternSyntaxException e) {
-            // and leave method
-            return content;
-        }
-        catch (IndexOutOfBoundsException e) {
+        catch (PatternSyntaxException | IndexOutOfBoundsException e) {
             // and leave method
             return content;
         }
@@ -2119,7 +2111,7 @@ public class HtmlUbbUtil {
             }
 
             if (entrykeywords!=null && entrykeywords.length>0) {
-                LinkedList<String> eks = new LinkedList<String>();
+                LinkedList<String> eks = new LinkedList<>();
                 eks.addAll(Arrays.asList(entrykeywords));
                 for (String sk : segmentKeywords) {
                     eks.remove(sk);

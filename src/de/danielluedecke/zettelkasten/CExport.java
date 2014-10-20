@@ -66,17 +66,17 @@ public class CExport extends javax.swing.JDialog {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CExport.class);
     /**
      * A reference to the settings class
      */
-    private Settings settingsObj;
+    private final Settings settingsObj;
     /**
      * A reference to the bibtex class
      */
-    private BibTex bibtexObj;
+    private final BibTex bibtexObj;
     /**
      * file path to export file
      */

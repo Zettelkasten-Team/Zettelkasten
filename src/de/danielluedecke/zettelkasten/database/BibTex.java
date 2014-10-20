@@ -90,17 +90,17 @@ public class BibTex {
     /**
      * This array stores all single entries from the attached bibtex file {@code bibtexfile}.
      */
-    private final ArrayList<BibtexEntry> attachedbibtexentries = new ArrayList<BibtexEntry>();
+    private final ArrayList<BibtexEntry> attachedbibtexentries = new ArrayList<>();
     /**
      * This array stores all single entries from the attached bibtex file {@code bibtexfile}.
      */
-    private final ArrayList<BibtexEntry> bibtexentries = new ArrayList<BibtexEntry>();
+    private final ArrayList<BibtexEntry> bibtexentries = new ArrayList<>();
     /**
      * Thi array stores bibtex entries that should be exported. Since bibtex entries that should be
      * exported may contain only a selection of all bibtex entries of the currently opened bibtex
      * file, we use an extra array to store export entrie.
      */
-    private final ArrayList<BibtexEntry> outputbibtexentries = new ArrayList<BibtexEntry>();
+    private final ArrayList<BibtexEntry> outputbibtexentries = new ArrayList<>();
     /**
      * Stores the file path to the currently opened bibtex file.
      */
@@ -111,21 +111,21 @@ public class BibTex {
      * via {@link #getFormattedEntryFromAttachedFile(int) getFormattedEntryFromAttachedFile()}.
      * The bibtex entry (i.e. author value) is formatted according to the selected citation style.
      */
-    private final List<Map<String, String>> importtypes = new ArrayList<Map<String, String>>();
+    private final List<Map<String, String>> importtypes = new ArrayList<>();
     /**
      * Stores the <b>CBE</b> citation style.<br><br>
      * Used when the user requests a formatted bibtex entry
      * via {@link #getFormattedEntryFromAttachedFile(int) getFormattedEntryFromAttachedFile()}.
      * The bibtex entry (i.e. author value) is formatted according to the selected citation style.
      */
-    private final List<Map<String, String>> importtypesCBE = new ArrayList<Map<String, String>>();
+    private final List<Map<String, String>> importtypesCBE = new ArrayList<>();
     /**
      * Stores the <b>APA</b> citation style.<br><br>
      * Used when the user requests a formatted bibtex entry
      * via {@link #getFormattedEntryFromAttachedFile(int) getFormattedEntryFromAttachedFile()}.
      * The bibtex entry (i.e. author value) is formatted according to the selected citation style.
      */
-    private final List<Map<String, String>> importtypesAPA = new ArrayList<Map<String, String>>();
+    private final List<Map<String, String>> importtypesAPA = new ArrayList<>();
     /**
      * A variable indicating which citation-style is used when requesting a formatted bibtex-entry
      * (see {@link #getFormattedEntry(bibtex.dom.BibtexEntry) getFormattedEntryFromAttachedFile()}).
@@ -180,7 +180,7 @@ public class BibTex {
         /*
          * Here we start with the styles for default-values (non-defined).
          */
-        Map<String, String> importstyles = new LinkedHashMap<String, String>();
+        Map<String, String> importstyles = new LinkedHashMap<>();
         importstyles.put("author", "*");
         importstyles.put("year", " (*)");
         importstyles.put("title", ": *.");
@@ -194,7 +194,7 @@ public class BibTex {
         /*
          * Here we start with the styles for books.
          */
-        importstyles = new LinkedHashMap<String, String>();
+        importstyles = new LinkedHashMap<>();
         importstyles.put("author", "*");
         importstyles.put("year", " (*)");
         importstyles.put("title", ": *.");
@@ -205,7 +205,7 @@ public class BibTex {
         /*
          * Here we start with the styles for articles.
          */
-        importstyles = new LinkedHashMap<String, String>();
+        importstyles = new LinkedHashMap<>();
         importstyles.put("author", "*");
         importstyles.put("year", " (*)");
         importstyles.put("title", ": *.");
@@ -219,7 +219,7 @@ public class BibTex {
         /*
          * Here we start with the styles for incollections.
          */
-        importstyles = new LinkedHashMap<String, String>();
+        importstyles = new LinkedHashMap<>();
         importstyles.put("author", "*");
         importstyles.put("year", " (*)");
         importstyles.put("title", ": *.");
@@ -233,7 +233,7 @@ public class BibTex {
         /*
          * Here we start with the styles for inbooks.
          */
-        importstyles = new LinkedHashMap<String, String>();
+        importstyles = new LinkedHashMap<>();
         importstyles.put("author", "*");
         importstyles.put("year", " (*)");
         importstyles.put("title", ": *.");
@@ -248,7 +248,7 @@ public class BibTex {
         /*
          * Here we start with the styles for misc-values.
          */
-        importstyles = new LinkedHashMap<String, String>();
+        importstyles = new LinkedHashMap<>();
         importstyles.put("author", "*");
         importstyles.put("year", " (*)");
         importstyles.put("title", ": *.");
@@ -261,7 +261,7 @@ public class BibTex {
         /*
          * Here we start with the styles for default-values (non-defined).
          */
-        Map<String, String> importstyles = new LinkedHashMap<String, String>();
+        Map<String, String> importstyles = new LinkedHashMap<>();
         importstyles.put("author", "*.");
         importstyles.put("year", " *.");
         importstyles.put("title", " *.");
@@ -275,7 +275,7 @@ public class BibTex {
         /*
          * Here we start with the styles for books.
          */
-        importstyles = new LinkedHashMap<String, String>();
+        importstyles = new LinkedHashMap<>();
         importstyles.put("author", "*.");
         importstyles.put("year", " *.");
         importstyles.put("title", " *.");
@@ -286,7 +286,7 @@ public class BibTex {
         /*
          * Here we start with the styles for articles.
          */
-        importstyles = new LinkedHashMap<String, String>();
+        importstyles = new LinkedHashMap<>();
         importstyles.put("author", "*.");
         importstyles.put("year", " *.");
         importstyles.put("title", " *.");
@@ -300,7 +300,7 @@ public class BibTex {
         /*
          * Here we start with the styles for incollections.
          */
-        importstyles = new LinkedHashMap<String, String>();
+        importstyles = new LinkedHashMap<>();
         importstyles.put("author", "*.");
         importstyles.put("year", " *.");
         importstyles.put("title", " *.");
@@ -314,7 +314,7 @@ public class BibTex {
         /*
          * Here we start with the styles for inbooks.
          */
-        importstyles = new LinkedHashMap<String, String>();
+        importstyles = new LinkedHashMap<>();
         importstyles.put("author", "*.");
         importstyles.put("year", " *.");
         importstyles.put("title", " *.");
@@ -328,7 +328,7 @@ public class BibTex {
         /*
          * Here we start with the styles for misc.
          */
-        importstyles = new LinkedHashMap<String, String>();
+        importstyles = new LinkedHashMap<>();
         importstyles.put("author", "*.");
         importstyles.put("year", " *.");
         importstyles.put("title", " *.");
@@ -341,7 +341,7 @@ public class BibTex {
         /*
          * Here we start with the styles for default-values (non-defined).
          */
-        Map<String, String> importstyles = new LinkedHashMap<String, String>();
+        Map<String, String> importstyles = new LinkedHashMap<>();
         importstyles.put("author", "*");
         importstyles.put("year", " (*)");
         importstyles.put("title", ": *.");
@@ -355,7 +355,7 @@ public class BibTex {
         /*
          * Here we start with the styles for books.
          */
-        importstyles = new LinkedHashMap<String, String>();
+        importstyles = new LinkedHashMap<>();
         importstyles.put("author", "*");
         importstyles.put("year", " (*)");
         importstyles.put("title", ": *.");
@@ -366,7 +366,7 @@ public class BibTex {
         /*
          * Here we start with the styles for articles.
          */
-        importstyles = new LinkedHashMap<String, String>();
+        importstyles = new LinkedHashMap<>();
         importstyles.put("author", "*");
         importstyles.put("year", " (*)");
         importstyles.put("title", ": *.");
@@ -380,7 +380,7 @@ public class BibTex {
         /*
          * Here we start with the styles for incollections.
          */
-        importstyles = new LinkedHashMap<String, String>();
+        importstyles = new LinkedHashMap<>();
         importstyles.put("author", "*");
         importstyles.put("year", " (*)");
         importstyles.put("title", ": *.");
@@ -394,7 +394,7 @@ public class BibTex {
         /*
          * Here we start with the styles for inbooks.
          */
-        importstyles = new LinkedHashMap<String, String>();
+        importstyles = new LinkedHashMap<>();
         importstyles.put("author", "*");
         importstyles.put("year", " (*)");
         importstyles.put("title", ": *.");
@@ -409,7 +409,7 @@ public class BibTex {
         /*
          * Here we start with the styles for misc.
          */
-        importstyles = new LinkedHashMap<String, String>();
+        importstyles = new LinkedHashMap<>();
         importstyles.put("author", "*");
         importstyles.put("year", " (*)");
         importstyles.put("title", ": *.");
@@ -601,10 +601,7 @@ public class BibTex {
                 Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
                 return false;
             }
-        } catch (ParseException e) {
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
-            return false;
-        } catch (IOException e) {
+        } catch (ParseException | IOException e) {
             Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
             return false;
         }
@@ -669,10 +666,7 @@ public class BibTex {
                 Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
                 return false;
             }
-        } catch (ParseException e) {
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
-            return false;
-        } catch (IOException e) {
+        } catch (ParseException | IOException e) {
             Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
             return false;
         }
@@ -716,10 +710,7 @@ public class BibTex {
                 Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
                 return false;
             }
-        } catch (ParseException e) {
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
-            return false;
-        } catch (IOException e) {
+        } catch (ParseException | IOException e) {
             Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
             return false;
         }
@@ -1307,7 +1298,7 @@ public class BibTex {
             // for formatting the author-value. see below
             Map<String, String> fields;
             // copy import-type based on current citestyle into variable
-            List<Map<String,String>> citetype = new ArrayList<Map<String, String>>();
+            List<Map<String,String>> citetype = new ArrayList<>();
             switch (getCiteStyle()) {
                 case Constants.BIBTEX_CITE_STYLE_GENERAL: citetype = importtypes; break;
                 case Constants.BIBTEX_CITE_STYLE_CBE: citetype = importtypesCBE; break;
@@ -1546,7 +1537,7 @@ public class BibTex {
             // retrieve single authors
             String[] singleauthors = dummy.replace("{", "").replace("}", "").split(Pattern.quote(" and "));
             // prepare string builder
-            List<String> finalauthors = new ArrayList<String>();
+            List<String> finalauthors = new ArrayList<>();
             // iterate all found authors
             for (String aunames : singleauthors) {
                 // check how many authors we have

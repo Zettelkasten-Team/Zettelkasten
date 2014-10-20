@@ -118,7 +118,12 @@ public class CDesktopExport extends javax.swing.JDialog {
     private static final int TYPE_EPUB = 8;
 
     
-    /** Creates new form CDesktopExport */
+    /**
+     * 
+     * @param parent
+     * @param s
+     * @param b 
+     */
     public CDesktopExport(java.awt.Frame parent, Settings s, BibTex b) {
         super(parent);
         settingsObj = s;

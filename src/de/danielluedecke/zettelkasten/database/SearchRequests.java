@@ -84,7 +84,7 @@ public class SearchRequests {
     /**
      * 
      */
-    private final LinkedList<String> searchTermsHistory = new LinkedList<String>();
+    private final LinkedList<String> searchTermsHistory = new LinkedList<>();
     /**
      *
      */
@@ -264,11 +264,7 @@ public class SearchRequests {
             // return success
             return true;
         }
-        catch (IllegalAddException ex) {
-            // log error
-            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-        }
-        catch (IllegalDataException ex) {
+        catch (IllegalAddException | IllegalDataException ex) {
             // log error
             Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
         }
@@ -294,7 +290,7 @@ public class SearchRequests {
                 return null;
             }
             // create linked list for return results
-            LinkedList<String> st = new LinkedList<String>();
+            LinkedList<String> st = new LinkedList<>();
             // create iterator
             Iterator<?> i = terms.iterator();
             // go through all search terms

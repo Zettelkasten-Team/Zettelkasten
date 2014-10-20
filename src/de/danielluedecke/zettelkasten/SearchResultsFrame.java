@@ -444,7 +444,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
     private void makeMacBottomBar() {
         jPanel9.setVisible(false);
 
-        BottomBar macbottombar = new BottomBar(BottomBarSize.SMALL);
+        BottomBar macbottombar = new BottomBar(BottomBarSize.LARGE);
         macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(jLabelHits),20);
         macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(jLabel1),4);
         macbottombar.addComponentToLeft(jComboBoxSearches,4);

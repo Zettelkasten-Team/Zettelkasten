@@ -162,7 +162,7 @@ public class Synonyms {
      * @return all current synonyms as string array.
      */
     public String[] getAllSynonyms() {
-        LinkedList<String> synlist = new LinkedList<String>();
+        LinkedList<String> synlist = new LinkedList<>();
         // iterate all synonyms elements
         for (int i=0; i<getCount(); i++) {
             // retrieve synonyms
@@ -215,13 +215,7 @@ public class Synonyms {
             synonymsFile.getRootElement().addContent(synonym);
             setModified(true);
         }
-        catch (IllegalNameException ex) {
-            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-        }
-        catch (IllegalDataException ex) {
-            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-        }
-        catch (IllegalAddException ex) {
+        catch (IllegalNameException | IllegalDataException | IllegalAddException ex) {
             Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
         }
     }
@@ -326,10 +320,7 @@ public class Synonyms {
                 setModified(true);
             }
         }
-        catch (IllegalDataException ex) {
-            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-        }
-        catch (IllegalNameException ex) {
+        catch (IllegalDataException | IllegalNameException ex) {
             Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
         }
     }
@@ -363,7 +354,7 @@ public class Synonyms {
             return false;
         }
         // create array-list that will contain new synonym line
-        List<String> newline = new ArrayList<String>();
+        List<String> newline = new ArrayList<>();
         // add all "old", original synonyms
         newline.addAll(Arrays.asList(oriline));
         // now append all "merged" synonyms
@@ -411,10 +402,7 @@ public class Synonyms {
                 synonym.addContent(syn);
                 setModified(true);
             }
-            catch (IllegalAddException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-            }
-            catch (IllegalDataException ex) {
+            catch (IllegalAddException | IllegalDataException ex) {
                 Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
             }
         }

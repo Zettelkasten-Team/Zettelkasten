@@ -197,11 +197,7 @@ public class StenoData {
             // and add it to the document
             steno.getRootElement().addContent(e);
         }
-        catch (IllegalAddException ex) {
-            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-            return false;
-        }
-        catch (IllegalDataException ex) {
+        catch (IllegalAddException | IllegalDataException ex) {
             Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
             return false;
         }

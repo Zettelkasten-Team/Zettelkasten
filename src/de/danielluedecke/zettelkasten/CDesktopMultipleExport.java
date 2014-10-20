@@ -57,7 +57,7 @@ public class CDesktopMultipleExport extends javax.swing.JDialog {
      * create a variable for a list model. this list model is used for
      * the JList-component which displays the available desktop-names
      */
-    private DefaultListModel desktopListModel = new DefaultListModel();
+    private final DefaultListModel desktopListModel = new DefaultListModel();
     /**
      * 
      */
@@ -74,9 +74,14 @@ public class CDesktopMultipleExport extends javax.swing.JDialog {
     /**
      *
      */
-    private DesktopData desktopObj;
+    private final DesktopData desktopObj;
 
-    /** Creates new form CDesktopMultipleExport */
+    /**
+     * 
+     * @param parent
+     * @param desk
+     * @param settingsObj 
+     */
     public CDesktopMultipleExport(java.awt.Frame parent, DesktopData desk, Settings settingsObj) {
         super(parent);
         desktopObj = desk;
