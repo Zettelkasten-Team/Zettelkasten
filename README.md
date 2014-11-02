@@ -11,10 +11,12 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 ### Changelog der aktuellen Entwicklerversion
 
 #### Neue Funktionen und Änderungen
+* Manuelle Verweise können jetzt auch per Ctrl+Linksklick (bzw. Cmd+Linksklick auf OS X) im Zettelkopf entfernt werden.
 * Aktualisierung auf Java 7
 * Sourcecode von "Mac Widgets" wurde entfernt und die Bibliothek wieder eingebunden.
 
 #### Behobene Fehler
+* Wenn bei einer Neueinagbe eines Zettels ein manueller Verweis auf andere Zettel im Text mehrmals vorkam, wurde die Verweisnummer mehrmals in der Liste manueller Verweise angezeigt. Fehler behoben.
 * Tooltip im Neueingabefenster für "Übernehmen" überlagerte den Knopf, wurde entfernt.
 
 ### Screenshots

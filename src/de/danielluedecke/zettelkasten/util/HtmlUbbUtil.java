@@ -2032,7 +2032,7 @@ public class HtmlUbbUtil {
         return retval.toString();
     }
 
-    public static String getLinkedEntriesAsHtml(Settings settings, List<String> entries, String resmapstring) {
+    public static String getLinkedEntriesAsHtml(Daten dataObj, Settings settings, List<String> entries, String resmapstring) {
         // create an empty string buffer. this buffer contains the html-string
         // which is being display in the main window's entry remarks field
         StringBuilder retval = new StringBuilder("");
@@ -2064,7 +2064,13 @@ public class HtmlUbbUtil {
             Iterator<String> i = entries.iterator();
             while(i.hasNext()) {
                 String entry = i.next();
-                entrysb.append("<a href=\"#cr_").append(entry).append("\">").append(entry).append("</a>").append(" &middot; ");
+                try {
+                    int entrynr = Integer.parseInt(entry);
+                    String title = dataObj.getZettelTitle(entrynr);
+                    entrysb.append("<a href=\"#cr_").append(entry).append("\" alt=\"").append(title).append("\" title=\"").append(title).append("\">").append(entry).append("</a>").append(" &middot; ");
+                }
+                catch (NumberFormatException ex) {
+                }
             }
             // append string, but delete last 10 chars, which are " &middot; "
             retval.append(entrysb.toString().substring(0, entrysb.length()-10));

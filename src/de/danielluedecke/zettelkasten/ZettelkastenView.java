@@ -166,6 +166,9 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -849,6 +852,30 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 }
             }
         });
+        jEditorPaneIsFollower.addMouseMotionListener(new java.awt.event.MouseMotionListener() {
+            @Override
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                int pos = jEditorPaneIsFollower.viewToModel(evt.getPoint());
+                if (pos >= 0) {
+                    HTMLDocument hdoc = (HTMLDocument)jEditorPaneIsFollower.getDocument();
+                    javax.swing.text.Element e = hdoc.getCharacterElement(pos);
+                    AttributeSet a = e.getAttributes();
+                    String href = (String) a.getAttribute(javax.swing.text.html.HTML.Attribute.TITLE);
+                    if (href != null) {
+                        jEditorPaneIsFollower.setToolTipText(href);
+                    } else {
+                        jEditorPaneIsFollower.setToolTipText(null);
+                    }
+                }
+                else {
+                    jEditorPaneIsFollower.setToolTipText(null);
+                }
+            }
+            @Override
+            public void mouseDragged(java.awt.event.MouseEvent e) {
+                //
+            }
+        });
         jTableLinks.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override public void mousePressed(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
@@ -1159,21 +1186,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             @Override public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
                 // if the link was clicked, proceed
                 if (evt.getEventType()==HyperlinkEvent.EventType.ACTIVATED) {
-//                    if (PlatformUtils.isJava7OnMac()) {
-//                        // get input event with additional modifiers
-//                        java.awt.event.InputEvent inev = evt.getInputEvent();
-//                        // check whether shift key was pressed, and if so, remove manual link
-//                        if (inev.isControlDown() || inev.isMetaDown()) {
-//                            if (Tools.handleHyperlink(evt.getDescription(), data, displayedZettel)) {
-//                                updateZettelContent(displayedZettel);
-//                                updateTabbedPane();
-//                            }
-//                        }
-//                        else {
-//                            openHyperlink(evt.getDescription());
-//                        }
-//                    }
-                    openHyperlink(evt.getDescription());
+                    // get input event with additional modifiers
+                    java.awt.event.InputEvent inev = evt.getInputEvent();
+                    // check whether shift key was pressed, and if so, remove manual link
+                    if (inev.isControlDown() || inev.isMetaDown()) {
+                        if (Tools.removeHyperlink(evt.getDescription(), data, displayedZettel)) {
+                            updateZettelContent(displayedZettel);
+                            updateTabbedPane();
+                        }
+                    }
+                    else {
+                        openHyperlink(evt.getDescription());
+                    }
                 }
             }
         });
@@ -5538,7 +5562,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             for (String c : children) node.add(new DefaultMutableTreeNode(c));
         }
         // set cluster links
-        jEditorPaneClusterEntries.setText(HtmlUbbUtil.getLinkedEntriesAsHtml(settings, clusterList, "clusterListText"));
+        jEditorPaneClusterEntries.setText(HtmlUbbUtil.getLinkedEntriesAsHtml(data, settings, clusterList, "clusterListText"));
         // enable tree, showing that the the method has finihsed
         jTreeCluster.setEnabled(true);
         jTreeCluster.requestFocusInWindow();
@@ -6288,7 +6312,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             }
         }
         // when we found any entries, display jPanel
-        jEditorPaneIsFollower.setText(HtmlUbbUtil.getLinkedEntriesAsHtml(settings, isFollowerList, "isFollowerText"));
+        jEditorPaneIsFollower.setText(HtmlUbbUtil.getLinkedEntriesAsHtml(data, settings, isFollowerList, "isFollowerText"));
         // show/enabke related menu
         showTabMenu(viewMenuLuhmann);
     }
@@ -11559,16 +11583,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTableLinks.setShowVerticalLines(false);
         jTableLinks.getTableHeader().setReorderingAllowed(false);
         jScrollPane4.setViewportView(jTableLinks);
-        jTableLinks.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableLinks.columnModel.title0")); // NOI18N
-        jTableLinks.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableLinks.columnModel.title1")); // NOI18N
-        jTableLinks.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableLinks.columnModel.title2")); // NOI18N
-        jTableLinks.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("jTableLinks.columnModel.title3")); // NOI18N
+        if (jTableLinks.getColumnModel().getColumnCount() > 0) {
+            jTableLinks.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableLinks.columnModel.title0")); // NOI18N
+            jTableLinks.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableLinks.columnModel.title1")); // NOI18N
+            jTableLinks.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableLinks.columnModel.title2")); // NOI18N
+            jTableLinks.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("jTableLinks.columnModel.title3")); // NOI18N
+        }
 
         javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
         jPanel14.setLayout(jPanel14Layout);
         jPanel14Layout.setHorizontalGroup(
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
         );
         jPanel14Layout.setVerticalGroup(
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -11613,15 +11639,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTableManLinks.setName("jTableManLinks"); // NOI18N
         jTableManLinks.getTableHeader().setReorderingAllowed(false);
         jScrollPane15.setViewportView(jTableManLinks);
-        jTableManLinks.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableManLinks.columnModel.title0")); // NOI18N
-        jTableManLinks.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableManLinks.columnModel.title1")); // NOI18N
-        jTableManLinks.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableManLinks.columnModel.title2")); // NOI18N
+        if (jTableManLinks.getColumnModel().getColumnCount() > 0) {
+            jTableManLinks.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableManLinks.columnModel.title0")); // NOI18N
+            jTableManLinks.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableManLinks.columnModel.title1")); // NOI18N
+            jTableManLinks.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableManLinks.columnModel.title2")); // NOI18N
+        }
 
         javax.swing.GroupLayout jPanelManLinksLayout = new javax.swing.GroupLayout(jPanelManLinks);
         jPanelManLinks.setLayout(jPanelManLinksLayout);
         jPanelManLinksLayout.setHorizontalGroup(
             jPanelManLinksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane15, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+            .addComponent(jScrollPane15, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
         );
         jPanelManLinksLayout.setVerticalGroup(
             jPanelManLinksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -11663,8 +11691,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jScrollPane2.setName("jScrollPane2"); // NOI18N
 
         jEditorPaneIsFollower.setEditable(false);
-        jEditorPaneIsFollower.setBorder(null);
         jEditorPaneIsFollower.setContentType("text/html"); // NOI18N
+        jEditorPaneIsFollower.setDocument(new HTMLDocument());
+        jEditorPaneIsFollower.setEditorKit(new HTMLEditorKit());
         jEditorPaneIsFollower.setName("jEditorPaneIsFollower"); // NOI18N
         jScrollPane2.setViewportView(jEditorPaneIsFollower);
 
@@ -11674,7 +11703,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jPanel10.setLayout(jPanel10Layout);
         jPanel10Layout.setHorizontalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+            .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -11740,8 +11769,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTableKeywords.setShowVerticalLines(false);
         jTableKeywords.getTableHeader().setReorderingAllowed(false);
         jScrollPane6.setViewportView(jTableKeywords);
-        jTableKeywords.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableKeywords.columnModel.title0")); // NOI18N
-        jTableKeywords.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableKeywords.columnModel.title1")); // NOI18N
+        if (jTableKeywords.getColumnModel().getColumnCount() > 0) {
+            jTableKeywords.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableKeywords.columnModel.title0")); // NOI18N
+            jTableKeywords.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableKeywords.columnModel.title1")); // NOI18N
+        }
 
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
@@ -11772,7 +11803,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         .addComponent(jButtonRefreshKeywords, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jCheckBoxShowSynonyms)
-                        .addGap(0, 161, Short.MAX_VALUE)))
+                        .addGap(0, 102, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -11835,8 +11866,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTableAuthors.setName("jTableAuthors"); // NOI18N
         jTableAuthors.getTableHeader().setReorderingAllowed(false);
         jScrollPane7.setViewportView(jTableAuthors);
-        jTableAuthors.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableAuthors.columnModel.title0")); // NOI18N
-        jTableAuthors.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableAuthors.columnModel.title1")); // NOI18N
+        if (jTableAuthors.getColumnModel().getColumnCount() > 0) {
+            jTableAuthors.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableAuthors.columnModel.title0")); // NOI18N
+            jTableAuthors.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableAuthors.columnModel.title1")); // NOI18N
+        }
 
         jComboBoxAuthorType.setName("jComboBoxAuthorType"); // NOI18N
 
@@ -11844,7 +11877,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jPanel15.setLayout(jPanel15Layout);
         jPanel15Layout.setHorizontalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jComboBoxAuthorType, 0, 329, Short.MAX_VALUE)
+            .addComponent(jComboBoxAuthorType, 0, 270, Short.MAX_VALUE)
             .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
         );
         jPanel15Layout.setVerticalGroup(
@@ -11873,7 +11906,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jPanelDispAuthor.setLayout(jPanelDispAuthorLayout);
         jPanelDispAuthorLayout.setHorizontalGroup(
             jPanelDispAuthorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+            .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
         );
         jPanelDispAuthorLayout.setVerticalGroup(
             jPanelDispAuthorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -11893,7 +11926,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPaneAuthors, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(jSplitPaneAuthors, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(6, 6, 6)
                 .addComponent(jTextFieldFilterAuthors)
@@ -11946,11 +11979,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTableTitles.setName("jTableTitles"); // NOI18N
         jTableTitles.getTableHeader().setReorderingAllowed(false);
         jScrollPane8.setViewportView(jTableTitles);
-        jTableTitles.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title0")); // NOI18N
-        jTableTitles.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title1")); // NOI18N
-        jTableTitles.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title2")); // NOI18N
-        jTableTitles.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title3")); // NOI18N
-        jTableTitles.getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title4")); // NOI18N
+        if (jTableTitles.getColumnModel().getColumnCount() > 0) {
+            jTableTitles.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title0")); // NOI18N
+            jTableTitles.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title1")); // NOI18N
+            jTableTitles.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title2")); // NOI18N
+            jTableTitles.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title3")); // NOI18N
+            jTableTitles.getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title4")); // NOI18N
+        }
 
         jTextFieldFilterTitles.setToolTipText(resourceMap.getString("jTextFieldFilterTitles.toolTipText")); // NOI18N
         jTextFieldFilterTitles.setEnabled(false);
@@ -11969,7 +12004,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTextFieldFilterTitles, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
+                .addComponent(jTextFieldFilterTitles, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonRefreshTitles, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -12055,7 +12090,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         .addComponent(jButtonRefreshCluster, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel11Layout.createSequentialGroup()
                         .addComponent(jCheckBoxCluster)
-                        .addGap(0, 91, Short.MAX_VALUE)))
+                        .addGap(0, 32, Short.MAX_VALUE)))
                 .addContainerGap())
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -12118,8 +12153,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTableBookmarks.setShowVerticalLines(false);
         jTableBookmarks.getTableHeader().setReorderingAllowed(false);
         jScrollPane9.setViewportView(jTableBookmarks);
-        jTableBookmarks.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableBookmarks.columnModel.title0")); // NOI18N
-        jTableBookmarks.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableBookmarks.columnModel.title1")); // NOI18N
+        if (jTableBookmarks.getColumnModel().getColumnCount() > 0) {
+            jTableBookmarks.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableBookmarks.columnModel.title0")); // NOI18N
+            jTableBookmarks.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableBookmarks.columnModel.title1")); // NOI18N
+        }
 
         jSplitPane3.setLeftComponent(jScrollPane9);
 
@@ -12141,7 +12178,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jComboBoxBookmarkCategory, 0, 317, Short.MAX_VALUE)
+                .addComponent(jComboBoxBookmarkCategory, 0, 258, Short.MAX_VALUE)
                 .addContainerGap())
             .addComponent(jSplitPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
@@ -12191,9 +12228,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTableAttachments.setDragEnabled(true);
         jTableAttachments.setName("jTableAttachments"); // NOI18N
         jScrollPane13.setViewportView(jTableAttachments);
-        jTableAttachments.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableAttachments.columnModel.title0")); // NOI18N
-        jTableAttachments.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableAttachments.columnModel.title1")); // NOI18N
-        jTableAttachments.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableAttachments.columnModel.title2")); // NOI18N
+        if (jTableAttachments.getColumnModel().getColumnCount() > 0) {
+            jTableAttachments.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableAttachments.columnModel.title0")); // NOI18N
+            jTableAttachments.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableAttachments.columnModel.title1")); // NOI18N
+            jTableAttachments.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableAttachments.columnModel.title2")); // NOI18N
+        }
 
         jTextFieldFilterAttachments.setToolTipText(resourceMap.getString("jTextFieldFilterAttachments.toolTipText")); // NOI18N
         jTextFieldFilterAttachments.setEnabled(false);
@@ -12212,7 +12251,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTextFieldFilterAttachments, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
+                .addComponent(jTextFieldFilterAttachments, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonRefreshAttachments, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -12235,9 +12274,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jPanelMainRight.setLayout(jPanelMainRightLayout);
         jPanelMainRightLayout.setHorizontalGroup(
             jPanelMainRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 350, Short.MAX_VALUE)
+            .addGap(0, 291, Short.MAX_VALUE)
             .addGroup(jPanelMainRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jTabbedPaneMain))
+                .addComponent(jTabbedPaneMain, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE))
         );
         jPanelMainRightLayout.setVerticalGroup(
             jPanelMainRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

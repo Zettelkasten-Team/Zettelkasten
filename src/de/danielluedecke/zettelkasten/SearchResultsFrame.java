@@ -533,7 +533,6 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         });
         jEditorPaneSearchEntry.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
             @Override public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
-/*                
                 // get input event with additional modifiers
                 java.awt.event.InputEvent inev = evt.getInputEvent();
                 // check whether shift key was pressed, and if so, remove manual link
@@ -543,7 +542,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
                     // when we have a valid selection, go on
                     if (row!=-1) {
                         int displayedZettel = Integer.parseInt(jTableResults.getValueAt(row, 0).toString());
-                        if (Tools.handleHyperlink(evt.getDescription(), dataObj, displayedZettel)) {
+                        if (Tools.removeHyperlink(evt.getDescription(), dataObj, displayedZettel)) {
                             mainframe.updateDisplay();
                         }
                     }
@@ -551,8 +550,6 @@ public class SearchResultsFrame extends javax.swing.JFrame {
                 else {
                     openAttachment(evt);
                 }
-*/ 
-                openAttachment(evt);
             }
         });
         jTableResults.addMouseListener(new java.awt.event.MouseAdapter() {

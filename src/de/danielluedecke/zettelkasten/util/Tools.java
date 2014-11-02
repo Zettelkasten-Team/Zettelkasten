@@ -177,15 +177,22 @@ public class Tools {
      * @param displayedZettel
      * @return 
      */
-    public static boolean handleHyperlink(String linktype, Daten data, int displayedZettel) {
+    public static boolean removeHyperlink(String linktype, Daten data, int displayedZettel) {
         // here we have a cross reference to another entry
         if (linktype.startsWith("#cr_")) {
             // only remove manual links from activated entry!
             if (displayedZettel!=data.getCurrentZettelPos()) return false;
             try {
-                // remove manual link
-                data.deleteManualLinks(new String[]{linktype.substring(4)});
-                return true;
+                // if we have just a single selection, use phrasing for that message
+                String msg = resourceMap.getString("askForDeleteManLinksMsgSingle");
+                // ask whether author really should be deleted
+                int option = JOptionPane.showConfirmDialog(null, msg, resourceMap.getString("askForDeleteManLinksTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                // if yes, do so
+                if (JOptionPane.YES_OPTION == option ) {
+                    // remove manual link
+                    data.deleteManualLinks(new String[]{linktype.substring(4)});
+                    return true;
+                }                
             }
             catch (IndexOutOfBoundsException e) {
                 Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());

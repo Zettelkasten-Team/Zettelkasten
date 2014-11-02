@@ -7513,7 +7513,7 @@ public class Daten {
                 // the 2nd groups contains the manlink number as string
                 int ml = Integer.parseInt(dummy.substring(m.start(m.groupCount()-1), m.end(m.groupCount()-1)));
                 // add to result list
-                manlinknumbers.add(ml);
+                if (-1 == manlinknumbers.indexOf(ml)) manlinknumbers.add(ml);
             }
         }
         catch (PatternSyntaxException | IndexOutOfBoundsException | NumberFormatException ex) {
