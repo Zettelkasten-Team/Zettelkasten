@@ -310,10 +310,11 @@ public class HtmlUbbUtil {
                 try {
                     title = dataObj.getZettelTitle(Integer.parseInt(ml));
                     title = title.replace("\"", "").replace("'", "");
+                    title = title.trim();
                 }
                 catch (NumberFormatException ex) {
                 }
-                crossrefs.append("<a href=\"#cr_").append(ml).append("\" title=\"").append(title.trim()).append("\">").append(ml).append("</a>");
+                crossrefs.append("<a href=\"#cr_").append(ml).append("\" title=\"").append(title).append("\" alt=\"").append(title).append("\">").append(ml).append("</a>");
                 crossrefs.append(" &middot; ");
             }
             // append string, but delete last 10 chars, which are " &middot; "
@@ -868,9 +869,34 @@ public class HtmlUbbUtil {
      * @return a converted string with html-tags instead of ubb-tags
      */
     public static String convertUbbToHtml(Settings settings, Daten dataObj, BibTex bibtexObj, String c, int sourceframe, boolean isExport, boolean createHTMLFootnotes) {
-        int pos;
         // create new string
         String dummy = replaceUbbToHtml(c, settings.getMarkdownActivated(), (Constants.FRAME_DESKTOP==sourceframe), isExport);
+        // add title attributes to manual links
+        int pos = 0;
+        while (pos!=-1) {
+            // find manual link tag
+            pos = dummy.indexOf("href=\"#z_", pos);
+            if (pos!=-1) {
+                try {
+                    // find close
+                    int end = dummy.indexOf("\"", pos+9);
+                    // get and convert number
+                    int znr = Integer.parseInt(dummy.substring(pos+9, end));
+                    // retrieve title
+                    String title = dataObj.getZettelTitle(znr);
+                    // if we have title, add it
+                    if (!title.isEmpty()) {
+                        title = title.trim();
+                        dummy = dummy.substring(0, end+1) + " alt=\"" + title + "\"" + " title=\"" + title + "\"" + dummy.substring(end+1);
+                    }
+                    // increase pos counter
+                    pos = end + 10;
+                }
+                catch (NumberFormatException ex) {
+                    pos = pos + 10;
+                }
+            }
+        }
         // convert footnotes
         dummy = convertFootnotes(dataObj, bibtexObj, settings, dummy, false);
         // convert movie-tags
@@ -2066,7 +2092,7 @@ public class HtmlUbbUtil {
                 String entry = i.next();
                 try {
                     int entrynr = Integer.parseInt(entry);
-                    String title = dataObj.getZettelTitle(entrynr);
+                    String title = dataObj.getZettelTitle(entrynr).trim();
                     entrysb.append("<a href=\"#cr_").append(entry).append("\" alt=\"").append(title).append("\" title=\"").append(title).append("\">").append(entry).append("</a>").append(" &middot; ");
                 }
                 catch (NumberFormatException ex) {

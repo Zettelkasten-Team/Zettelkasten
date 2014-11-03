@@ -167,8 +167,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.AttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -558,6 +559,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         Tools.initLocaleForDefaultActions(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(ZettelkastenView.class, this));
         // init all swing components
         initComponents();
+        javax.swing.ToolTipManager.sharedInstance().registerComponent(jEditorPaneIsFollower);
         // set application icon
         getFrame().setIconImage(Constants.zknicon.getImage());
         //
@@ -850,30 +852,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 if (evt.isPopupTrigger() && !jPopupMenuMain.isVisible()) {
                     jPopupMenuMain.show(jEditorPaneEntry, evt.getPoint().x, evt.getPoint().y);
                 }
-            }
-        });
-        jEditorPaneIsFollower.addMouseMotionListener(new java.awt.event.MouseMotionListener() {
-            @Override
-            public void mouseMoved(java.awt.event.MouseEvent evt) {
-                int pos = jEditorPaneIsFollower.viewToModel(evt.getPoint());
-                if (pos >= 0) {
-                    HTMLDocument hdoc = (HTMLDocument)jEditorPaneIsFollower.getDocument();
-                    javax.swing.text.Element e = hdoc.getCharacterElement(pos);
-                    AttributeSet a = e.getAttributes();
-                    String href = (String) a.getAttribute(javax.swing.text.html.HTML.Attribute.TITLE);
-                    if (href != null) {
-                        jEditorPaneIsFollower.setToolTipText(href);
-                    } else {
-                        jEditorPaneIsFollower.setToolTipText(null);
-                    }
-                }
-                else {
-                    jEditorPaneIsFollower.setToolTipText(null);
-                }
-            }
-            @Override
-            public void mouseDragged(java.awt.event.MouseEvent e) {
-                //
             }
         });
         jTableLinks.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1199,6 +1177,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         openHyperlink(evt.getDescription());
                     }
                 }
+                else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {
+                    javax.swing.text.Element elem = evt.getSourceElement();
+                    if (elem != null) {
+                        AttributeSet attr = elem.getAttributes();
+                        AttributeSet a = (AttributeSet) attr.getAttribute(HTML.Tag.A);
+                        if (a != null) {
+                            jEditorPaneEntry.setToolTipText((String) a.getAttribute(HTML.Attribute.TITLE));
+                        }
+                    }
+                } 
+                else if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) {
+                    jEditorPaneEntry.setToolTipText(null);
+                }
             }
         });
         //
@@ -1220,6 +1211,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // if the link was clicked, proceed
                 if (evt.getEventType()==HyperlinkEvent.EventType.ACTIVATED) {
                     openHyperlink(evt.getDescription());
+                }
+                else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {
+                    javax.swing.text.Element elem = evt.getSourceElement();
+                    if (elem != null) {
+                        AttributeSet attr = elem.getAttributes();
+                        AttributeSet a = (AttributeSet) attr.getAttribute(HTML.Tag.A);
+                        if (a != null) {
+                            jEditorPaneClusterEntries.setToolTipText((String) a.getAttribute(HTML.Attribute.TITLE));
+                        }
+                    }
+                } 
+                else if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) {
+                    jEditorPaneClusterEntries.setToolTipText(null);
                 }
             }
         });
@@ -10987,3015 +10991,3032 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jScrollPane10 = new javax.swing.JScrollPane();
         jTreeLuhmann = new javax.swing.JTree();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jEditorPaneIsFollower = new javax.swing.JEditorPane();
-        jPanel2 = new javax.swing.JPanel();
-        jTextFieldFilterKeywords = new javax.swing.JTextField();
-        jButtonRefreshKeywords = new javax.swing.JButton();
-        jCheckBoxShowSynonyms = new javax.swing.JCheckBox();
-        jPanel16 = new javax.swing.JPanel();
-        jScrollPane17 = new javax.swing.JScrollPane();
-        jTreeKeywords = new javax.swing.JTree();
-        jScrollPane6 = new javax.swing.JScrollPane();
-        jTableKeywords = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
-        jPanel7 = new javax.swing.JPanel();
-        jTextFieldFilterAuthors = new javax.swing.JTextField();
-        jSplitPaneAuthors = new javax.swing.JSplitPane();
-        jPanel15 = new javax.swing.JPanel();
-        jScrollPane7 = new javax.swing.JScrollPane();
-        jTableAuthors = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
-        jComboBoxAuthorType = new javax.swing.JComboBox();
-        jPanelDispAuthor = new javax.swing.JPanel();
-        jScrollPane16 = new javax.swing.JScrollPane();
-        jEditorPaneDispAuthor = new javax.swing.JEditorPane();
-        jButtonRefreshAuthors = new javax.swing.JButton();
-        jPanel8 = new javax.swing.JPanel();
-        jScrollPane8 = new javax.swing.JScrollPane();
-        jTableTitles = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
-        jTextFieldFilterTitles = new javax.swing.JTextField();
-        jButtonRefreshTitles = new javax.swing.JButton();
-        jPanel11 = new javax.swing.JPanel();
-        jTextFieldFilterCluster = new javax.swing.JTextField();
-        jButtonRefreshCluster = new javax.swing.JButton();
-        jCheckBoxCluster = new javax.swing.JCheckBox();
-        jPanel3 = new javax.swing.JPanel();
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        jEditorPaneClusterEntries = new javax.swing.JEditorPane();
-        jScrollPane11 = new javax.swing.JScrollPane();
-        jTreeCluster = new javax.swing.JTree();
-        jPanel9 = new javax.swing.JPanel();
-        jComboBoxBookmarkCategory = new javax.swing.JComboBox();
-        jSplitPane3 = new javax.swing.JSplitPane();
-        jScrollPane9 = new javax.swing.JScrollPane();
-        jTableBookmarks = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
-        jScrollPane14 = new javax.swing.JScrollPane();
-        jEditorPaneBookmarkComment = new javax.swing.JEditorPane();
-        jPanel13 = new javax.swing.JPanel();
-        jScrollPane13 = new javax.swing.JScrollPane();
-        jTableAttachments = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
-        jTextFieldFilterAttachments = new javax.swing.JTextField();
-        jButtonRefreshAttachments = new javax.swing.JButton();
-        menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
-        newEntryMenuItem = new javax.swing.JMenuItem();
-        insertEntryMenuItem = new javax.swing.JMenuItem();
-        insertEntryAtMenuItem = new javax.swing.JMenuItem();
-        jSeparator104 = new javax.swing.JSeparator();
-        quickNewEntryMenuItem = new javax.swing.JMenuItem();
-        quickNewTitleEntryMenuItem = new javax.swing.JMenuItem();
-        jSeparator1 = new javax.swing.JSeparator();
-        duplicateEntryMenuItem = new javax.swing.JMenuItem();
-        jSeparator79 = new javax.swing.JSeparator();
-        openMenuItem = new javax.swing.JMenuItem();
-        recentDocsSubMenu = new javax.swing.JMenu();
-        recentDoc1 = new javax.swing.JMenuItem();
-        recentDoc2 = new javax.swing.JMenuItem();
-        recentDoc3 = new javax.swing.JMenuItem();
-        recentDoc4 = new javax.swing.JMenuItem();
-        recentDoc5 = new javax.swing.JMenuItem();
-        recentDoc6 = new javax.swing.JMenuItem();
-        recentDoc7 = new javax.swing.JMenuItem();
-        recentDoc8 = new javax.swing.JMenuItem();
-        jSeparator107 = new javax.swing.JSeparator();
-        saveMenuItem = new javax.swing.JMenuItem();
-        saveAsMenuItem = new javax.swing.JMenuItem();
-        jSeparator2 = new javax.swing.JSeparator();
-        newDesktopMenuItem = new javax.swing.JMenuItem();
-        newZettelkastenMenuItem = new javax.swing.JMenuItem();
-        jSeparator78 = new javax.swing.JSeparator();
-        importMenuItem = new javax.swing.JMenuItem();
-        exportMenuItem = new javax.swing.JMenuItem();
-        jSeparator77 = new javax.swing.JSeparator();
-        menuFileInformation = new javax.swing.JMenuItem();
-        jSeparatorExit = new javax.swing.JSeparator();
-        exitMenuItem = new javax.swing.JMenuItem();
-        editMenu = new javax.swing.JMenu();
-        editMenuItem = new javax.swing.JMenuItem();
-        jSeparator33 = new javax.swing.JSeparator();
-        deleteZettelMenuItem = new javax.swing.JMenuItem();
-        jSeparator6 = new javax.swing.JSeparator();
-        deleteKwFromListMenuItem = new javax.swing.JMenuItem();
-        jSeparator40 = new javax.swing.JSeparator();
-        copyMenuItem = new javax.swing.JMenuItem();
-        copyPlainMenuItem = new javax.swing.JMenuItem();
-        pasteMenuItem = new javax.swing.JMenuItem();
-        selectAllMenuItem = new javax.swing.JMenuItem();
-        jSeparator99 = new javax.swing.JSeparator();
-        addSelectionToKeywordMenuItem = new javax.swing.JMenuItem();
-        addFirstLineToTitleMenuItem = new javax.swing.JMenuItem();
-        addSelectionToTitleMenuItem = new javax.swing.JMenuItem();
-        jSeparator24 = new javax.swing.JSeparator();
-        manualInsertLinksMenuItem = new javax.swing.JMenuItem();
-        manualInsertMenuItem = new javax.swing.JMenuItem();
-        jSeparator41 = new javax.swing.JSeparator();
-        setBookmarkMenuItem = new javax.swing.JMenuItem();
-        addToDesktopMenuItem = new javax.swing.JMenuItem();
-        findMenu = new javax.swing.JMenu();
-        findMenuItem = new javax.swing.JMenuItem();
-        findReplaceMenuItem = new javax.swing.JMenuItem();
-        jSeparator31 = new javax.swing.JSeparator();
-        findEntryWithout = new javax.swing.JMenu();
-        findEntriesWithoutKeywords = new javax.swing.JMenuItem();
-        jSeparator69 = new javax.swing.JSeparator();
-        findEntriesWithoutAuthors = new javax.swing.JMenuItem();
-        jSeparator75 = new javax.swing.JSeparator();
-        findEntriesWithoutRemarks = new javax.swing.JMenuItem();
-        findEntriesWithRemarks = new javax.swing.JMenuItem();
-        jSeparator110 = new javax.swing.JSeparator();
-        findEntriesWithRatings = new javax.swing.JMenuItem();
-        findEntriesWithoutRatings = new javax.swing.JMenuItem();
-        jSeparator76 = new javax.swing.JSeparator();
-        findEntriesWithAttachments = new javax.swing.JMenuItem();
-        jSeparator83 = new javax.swing.JSeparator();
-        findEntriesFromCreatedTimestamp = new javax.swing.JMenuItem();
-        findEntriesFromEditedTimestamp = new javax.swing.JMenuItem();
-        jSeparator95 = new javax.swing.JSeparator();
-        findDoubleEntriesItem = new javax.swing.JMenuItem();
-        jSeparator68 = new javax.swing.JSeparator();
-        findEntryKeywordsMenu = new javax.swing.JMenu();
-        menuKwListSearchOr = new javax.swing.JMenuItem();
-        jSeparator19 = new javax.swing.JSeparator();
-        menuKwListSearchAnd = new javax.swing.JMenuItem();
-        jSeparator39 = new javax.swing.JSeparator();
-        menuKwListSearchNot = new javax.swing.JMenuItem();
-        jSeparator18 = new javax.swing.JSeparator();
-        liveSearchMenuItem = new javax.swing.JMenuItem();
-        jSeparator22 = new javax.swing.JSeparator();
-        homeMenuItem = new javax.swing.JMenuItem();
-        prevEntryMenuItem = new javax.swing.JMenuItem();
-        nextEntryMenuItem = new javax.swing.JMenuItem();
-        lastEntryMenuItem = new javax.swing.JMenuItem();
-        jSeparator72 = new javax.swing.JPopupMenu.Separator();
-        randomEntryMenuItem = new javax.swing.JMenuItem();
-        jSeparator111 = new javax.swing.JPopupMenu.Separator();
-        historyForMenuItem = new javax.swing.JMenuItem();
-        histroyBackMenuItem = new javax.swing.JMenuItem();
-        jSeparator112 = new javax.swing.JPopupMenu.Separator();
-        gotoEntryMenuItem = new javax.swing.JMenuItem();
-        viewMenu = new javax.swing.JMenu();
-        showLinksMenuItem = new javax.swing.JMenuItem();
-        showLuhmannMenuItem = new javax.swing.JMenuItem();
-        showKeywordsMenuItem = new javax.swing.JMenuItem();
-        showAuthorsMenuItem = new javax.swing.JMenuItem();
-        showTitlesMenuItem = new javax.swing.JMenuItem();
-        showClusterMenuItem = new javax.swing.JMenuItem();
-        showBookmarksMenuItem = new javax.swing.JMenuItem();
-        showAttachmentsMenuItem = new javax.swing.JMenuItem();
-        jSeparator23 = new javax.swing.JSeparator();
-        showCurrentEntryAgain = new javax.swing.JMenuItem();
-        jSeparator55 = new javax.swing.JSeparator();
-        showHighlightKeywords = new javax.swing.JCheckBoxMenuItem();
-        highlightSegmentsMenuItem = new javax.swing.JCheckBoxMenuItem();
-        viewMenuLinks = new javax.swing.JMenu();
-        viewMenuLinksKwListRefresh = new javax.swing.JMenuItem();
-        jSeparator116 = new javax.swing.JPopupMenu.Separator();
-        viewMenuLinksRemoveManLink = new javax.swing.JMenuItem();
-        jSeparator3 = new javax.swing.JSeparator();
-        viewMenuLinksKwListLogOr = new javax.swing.JCheckBoxMenuItem();
-        viewMenuLinksKwListLogAnd = new javax.swing.JCheckBoxMenuItem();
-        jSeparator53 = new javax.swing.JSeparator();
-        viewMenuLinksManLink = new javax.swing.JMenuItem();
-        viewMenuLinksLuhmann = new javax.swing.JMenuItem();
-        jSeparator58 = new javax.swing.JSeparator();
-        viewMenuLinksDesktop = new javax.swing.JMenuItem();
-        jSeparator100 = new javax.swing.JSeparator();
-        viewMenuLinksExport = new javax.swing.JMenuItem();
-        viewMenuExportToSearch = new javax.swing.JMenuItem();
-        viewMenuLuhmann = new javax.swing.JMenu();
-        viewMenuLuhmannDelete = new javax.swing.JMenuItem();
-        jSeparator61 = new javax.swing.JSeparator();
-        viewMenuLuhmannManLinks = new javax.swing.JMenuItem();
-        viewMenuLuhmannBookmarks = new javax.swing.JMenuItem();
-        jSeparator62 = new javax.swing.JSeparator();
-        viewMenuLuhmannDesktop = new javax.swing.JMenuItem();
-        jSeparator102 = new javax.swing.JSeparator();
-        viewMenuLuhmannExport = new javax.swing.JMenuItem();
-        viewMenuLuhmannExportSearch = new javax.swing.JMenuItem();
-        jSeparator117 = new javax.swing.JPopupMenu.Separator();
-        viewMenuLuhmannSortEntries = new javax.swing.JMenuItem();
-        jSeparator118 = new javax.swing.JPopupMenu.Separator();
-        viewMenuLuhmannShowNumbers = new javax.swing.JCheckBoxMenuItem();
-        viewMenuKeywords = new javax.swing.JMenu();
-        viewKeywordsCopy = new javax.swing.JMenuItem();
-        jSeparator25 = new javax.swing.JSeparator();
-        viewKeywordsSearchOr = new javax.swing.JMenuItem();
-        viewKeywordsSearchAnd = new javax.swing.JMenuItem();
-        viewKeywordsSearchNot = new javax.swing.JMenuItem();
-        jSeparator26 = new javax.swing.JSeparator();
-        viewKeywordsNew = new javax.swing.JMenuItem();
-        viewKeywordsEdit = new javax.swing.JMenuItem();
-        viewKeywordsDelete = new javax.swing.JMenuItem();
-        jSeparator27 = new javax.swing.JSeparator();
-        viewKeywordsAddToList = new javax.swing.JMenuItem();
-        jSeparator47 = new javax.swing.JSeparator();
-        viewKeywordsLuhmann = new javax.swing.JMenuItem();
-        viewKeywordsLuhmannAnd = new javax.swing.JMenuItem();
-        jSeparator67 = new javax.swing.JSeparator();
-        viewKeywordsManLinks = new javax.swing.JMenuItem();
-        viewKeywordsManLinksAnd = new javax.swing.JMenuItem();
-        jSeparator48 = new javax.swing.JSeparator();
-        viewKeywordsDesktop = new javax.swing.JMenuItem();
-        viewKeywordsDesktopAnd = new javax.swing.JMenuItem();
-        jSeparator80 = new javax.swing.JSeparator();
-        viewKeywordsExport = new javax.swing.JMenuItem();
-        viewMenuAuthors = new javax.swing.JMenu();
-        viewAuthorsCopy = new javax.swing.JMenuItem();
-        jSeparator28 = new javax.swing.JSeparator();
-        viewAuthorsSubFind = new javax.swing.JMenu();
-        viewAuthorsSearchOr = new javax.swing.JMenuItem();
-        viewAuthorsSearchAnd = new javax.swing.JMenuItem();
-        viewAuthorsSearchNot = new javax.swing.JMenuItem();
-        jSeparator29 = new javax.swing.JSeparator();
-        viewAuthorsSubEdit = new javax.swing.JMenu();
-        viewAuthorsNew = new javax.swing.JMenuItem();
-        viewAuthorsEdit = new javax.swing.JMenuItem();
-        viewAuthorsDelete = new javax.swing.JMenuItem();
-        jSeparator90 = new javax.swing.JSeparator();
-        viewAuthorsBibkey = new javax.swing.JMenuItem();
-        jSeparator30 = new javax.swing.JSeparator();
-        viewAuthorsSubAdd = new javax.swing.JMenu();
-        viewAuthorsAddToEntry = new javax.swing.JMenuItem();
-        jSeparator51 = new javax.swing.JSeparator();
-        viewAuthorsManLinks = new javax.swing.JMenuItem();
-        viewAuthorsManLinksAnd = new javax.swing.JMenuItem();
-        jSeparator71 = new javax.swing.JSeparator();
-        viewAuthorsAddLuhmann = new javax.swing.JMenuItem();
-        viewAuthorsAddLuhmannAnd = new javax.swing.JMenuItem();
-        jSeparator52 = new javax.swing.JSeparator();
-        viewAuthorsDesktop = new javax.swing.JMenuItem();
-        viewAuthorsDesktopAnd = new javax.swing.JMenuItem();
-        jSeparator81 = new javax.swing.JSeparator();
-        viewAuthorsImport = new javax.swing.JMenuItem();
-        viewAuthorsExport = new javax.swing.JMenuItem();
-        jSeparator92 = new javax.swing.JSeparator();
-        viewAuthorsAttachBibtexFile = new javax.swing.JMenuItem();
-        viewAuthorsRefreshBibtexFile = new javax.swing.JMenuItem();
-        viewMenuTitles = new javax.swing.JMenu();
-        viewTitlesCopy = new javax.swing.JMenuItem();
-        jSeparator43 = new javax.swing.JSeparator();
-        viewTitlesEdit = new javax.swing.JMenuItem();
-        viewTitlesDelete = new javax.swing.JMenuItem();
-        jSeparator65 = new javax.swing.JSeparator();
-        viewTitlesMoveEntry = new javax.swing.JMenuItem();
-        jSeparator105 = new javax.swing.JSeparator();
-        viewTitlesAutomaticFirstLine = new javax.swing.JMenuItem();
-        jSeparator42 = new javax.swing.JSeparator();
-        viewTitlesManLinks = new javax.swing.JMenuItem();
-        viewTitlesLuhmann = new javax.swing.JMenuItem();
-        viewTitlesBookmarks = new javax.swing.JMenuItem();
-        jSeparator113 = new javax.swing.JPopupMenu.Separator();
-        viewTitlesDesktop = new javax.swing.JMenuItem();
-        jSeparator108 = new javax.swing.JPopupMenu.Separator();
-        viewTitlesExport = new javax.swing.JMenuItem();
-        viewMenuCluster = new javax.swing.JMenu();
-        viewClusterExport = new javax.swing.JMenuItem();
-        viewClusterExportToSearch = new javax.swing.JMenuItem();
-        viewMenuBookmarks = new javax.swing.JMenu();
-        viewBookmarksEdit = new javax.swing.JMenuItem();
-        viewBookmarksDelete = new javax.swing.JMenuItem();
-        jSeparator35 = new javax.swing.JSeparator();
-        viewBookmarksEditCat = new javax.swing.JMenuItem();
-        viewBookmarksDeleteCat = new javax.swing.JMenuItem();
-        jSeparator37 = new javax.swing.JSeparator();
-        viewBookmarksManLink = new javax.swing.JMenuItem();
-        viewBookmarksAddLuhmann = new javax.swing.JMenuItem();
-        jSeparator59 = new javax.swing.JSeparator();
-        viewBookmarkDesktop = new javax.swing.JMenuItem();
-        jSeparator82 = new javax.swing.JSeparator();
-        viewBookmarksExport = new javax.swing.JMenuItem();
-        viewBookmarksExportSearch = new javax.swing.JMenuItem();
-        viewMenuAttachments = new javax.swing.JMenu();
-        viewAttachmentsCopy = new javax.swing.JMenuItem();
-        jSeparator84 = new javax.swing.JSeparator();
-        viewAttachmentEdit = new javax.swing.JMenuItem();
-        viewAttachmentsDelete = new javax.swing.JMenuItem();
-        jSeparator85 = new javax.swing.JSeparator();
-        viewMenuAttachmentGoto = new javax.swing.JMenuItem();
-        jSeparator93 = new javax.swing.JSeparator();
-        viewAttachmentsExport = new javax.swing.JMenuItem();
-        windowsMenu = new javax.swing.JMenu();
-        showSearchResultsMenuItem = new javax.swing.JMenuItem();
-        jSeparator44 = new javax.swing.JSeparator();
-        showDesktopMenuItem = new javax.swing.JMenuItem();
-        jSeparator109 = new javax.swing.JSeparator();
-        showNewEntryMenuItem = new javax.swing.JMenuItem();
-        jSeparator34 = new javax.swing.JPopupMenu.Separator();
-        showErrorLogMenuItem = new javax.swing.JMenuItem();
-        aboutMenu = new javax.swing.JMenu();
-        aboutMenuItem = new javax.swing.JMenuItem();
-        jSeparatorAbout1 = new javax.swing.JSeparator();
-        preferencesMenuItem = new javax.swing.JMenuItem();
-        statusPanel = new javax.swing.JPanel();
-        jPanel12 = new javax.swing.JPanel();
-        statusEntryLabel = new javax.swing.JLabel();
-        statusAnimationLabel = new javax.swing.JLabel();
-        jTextFieldEntryNumber = new javax.swing.JTextField();
-        statusOfEntryLabel = new javax.swing.JLabel();
-        buttonHistoryBack = new javax.swing.JButton();
-        buttonHistoryFore = new javax.swing.JButton();
-        statusMsgLabel = new javax.swing.JLabel();
-        statusErrorButton = new javax.swing.JButton();
-        statusDesktopEntryButton = new javax.swing.JButton();
-        toolBar = new javax.swing.JToolBar();
-        tb_newEntry = new javax.swing.JButton();
-        tb_open = new javax.swing.JButton();
-        tb_save = new javax.swing.JButton();
-        jSeparator4 = new javax.swing.JToolBar.Separator();
-        tb_edit = new javax.swing.JButton();
-        tb_delete = new javax.swing.JButton();
-        tb_copy = new javax.swing.JButton();
-        tb_paste = new javax.swing.JButton();
-        tb_selectall = new javax.swing.JButton();
-        jSeparator5 = new javax.swing.JToolBar.Separator();
-        tb_addmanlinks = new javax.swing.JButton();
-        tb_addluhmann = new javax.swing.JButton();
-        tb_addbookmark = new javax.swing.JButton();
-        tb_addtodesktop = new javax.swing.JButton();
-        jSeparator10 = new javax.swing.JToolBar.Separator();
-        tb_find = new javax.swing.JButton();
-        tb_first = new javax.swing.JButton();
-        tb_prev = new javax.swing.JButton();
-        tb_next = new javax.swing.JButton();
-        tb_last = new javax.swing.JButton();
-        jSeparator32 = new javax.swing.JToolBar.Separator();
-        jLabelMemory = new javax.swing.JLabel();
-        jPopupMenuKeywords = new javax.swing.JPopupMenu();
-        popupKeywordsCopy = new javax.swing.JMenuItem();
-        jSeparator8 = new javax.swing.JSeparator();
-        popupKeywordsSearchOr = new javax.swing.JMenuItem();
-        popupKeywordsSearchAnd = new javax.swing.JMenuItem();
-        popupKeywordsSearchNot = new javax.swing.JMenuItem();
-        jSeparator9 = new javax.swing.JSeparator();
-        popupKeywordsNew = new javax.swing.JMenuItem();
-        popupKeywordsEdit = new javax.swing.JMenuItem();
-        popupKeywordsDelete = new javax.swing.JMenuItem();
-        jSeparator7 = new javax.swing.JSeparator();
-        popupKeywordsAddToList = new javax.swing.JMenuItem();
-        jSeparator45 = new javax.swing.JSeparator();
-        popupKeywordsManLinks = new javax.swing.JMenuItem();
-        popupKeywordsManLinksAnd = new javax.swing.JMenuItem();
-        jSeparator66 = new javax.swing.JSeparator();
-        popupKeywordsLuhmann = new javax.swing.JMenuItem();
-        popupKeywordsLuhmannAnd = new javax.swing.JMenuItem();
-        jSeparator46 = new javax.swing.JSeparator();
-        popupKeywordsDesktop = new javax.swing.JMenuItem();
-        popupKeywordsDesktopAnd = new javax.swing.JMenuItem();
-        jPopupMenuKeywordList = new javax.swing.JPopupMenu();
-        popupKwListCopy = new javax.swing.JMenuItem();
-        jSeparator89 = new javax.swing.JSeparator();
-        popupKwListSearchOr = new javax.swing.JMenuItem();
-        popupKwListSearchAnd = new javax.swing.JMenuItem();
-        popupKwListSearchNot = new javax.swing.JMenuItem();
-        jSeparator13 = new javax.swing.JSeparator();
-        popupKwListHighlight = new javax.swing.JMenuItem();
-        popupKwListHighlightSegments = new javax.swing.JCheckBoxMenuItem();
-        popupKwListRefresh = new javax.swing.JMenuItem();
-        jSeparator11 = new javax.swing.JSeparator();
-        popupKwListLogOr = new javax.swing.JCheckBoxMenuItem();
-        popupKwListLogAnd = new javax.swing.JCheckBoxMenuItem();
-        jSeparator12 = new javax.swing.JSeparator();
-        popupKwListDelete = new javax.swing.JMenuItem();
-        jPopupMenuAuthors = new javax.swing.JPopupMenu();
-        popupAuthorsCopy = new javax.swing.JMenuItem();
-        jSeparator14 = new javax.swing.JSeparator();
-        popupAuthorsSearchLogOr = new javax.swing.JMenuItem();
-        popupAuthorsSearchLogAnd = new javax.swing.JMenuItem();
-        popupAuthorsSearchLogNot = new javax.swing.JMenuItem();
-        jSeparator15 = new javax.swing.JSeparator();
-        popupAuthorsNew = new javax.swing.JMenuItem();
-        popupAuthorsEdit = new javax.swing.JMenuItem();
-        popupAuthorsDelete = new javax.swing.JMenuItem();
-        jSeparator91 = new javax.swing.JSeparator();
-        popupAuthorsBibkey = new javax.swing.JMenuItem();
-        jSeparator16 = new javax.swing.JSeparator();
-        popupAuthorsAddToEntry = new javax.swing.JMenuItem();
-        jSeparator49 = new javax.swing.JSeparator();
-        popupAuthorsSubAdd = new javax.swing.JMenu();
-        popupAuthorsManLinks = new javax.swing.JMenuItem();
-        popupAuthorsManLinksAnd = new javax.swing.JMenuItem();
-        jSeparator70 = new javax.swing.JSeparator();
-        popupAuthorsLuhmann = new javax.swing.JMenuItem();
-        popupAuthorsLuhmannAnd = new javax.swing.JMenuItem();
-        jSeparator50 = new javax.swing.JSeparator();
-        popupAuthorsDesktop = new javax.swing.JMenuItem();
-        popupAuthorsDesktopAnd = new javax.swing.JMenuItem();
-        jSeparator96 = new javax.swing.JSeparator();
-        popupAuthorsImport = new javax.swing.JMenuItem();
-        jPopupMenuLuhmann = new javax.swing.JPopupMenu();
-        popupLuhmannAdd = new javax.swing.JMenuItem();
-        jSeparator17 = new javax.swing.JSeparator();
-        popupLuhmannDelete = new javax.swing.JMenuItem();
-        jSeparator60 = new javax.swing.JSeparator();
-        popupLuhmannManLinks = new javax.swing.JMenuItem();
-        popupLuhmannBookmarks = new javax.swing.JMenuItem();
-        jSeparator63 = new javax.swing.JSeparator();
-        popupLuhmannDesktop = new javax.swing.JMenuItem();
-        jPopupMenuTitles = new javax.swing.JPopupMenu();
-        popupTitlesCopy = new javax.swing.JMenuItem();
-        jSeparator20 = new javax.swing.JSeparator();
-        popupTitlesEdit = new javax.swing.JMenuItem();
-        popupTitlesEditEntry = new javax.swing.JMenuItem();
-        jSeparator103 = new javax.swing.JSeparator();
-        popupTitlesDelete = new javax.swing.JMenuItem();
-        jSeparator114 = new javax.swing.JPopupMenu.Separator();
-        popupTitleMoveEntry = new javax.swing.JMenuItem();
-        jSeparator106 = new javax.swing.JSeparator();
-        popupTitlesAutomaticTitle = new javax.swing.JMenuItem();
-        jSeparator21 = new javax.swing.JSeparator();
-        popupTitlesManLinks = new javax.swing.JMenuItem();
-        popupTitlesLuhmann = new javax.swing.JMenuItem();
-        popupTitlesBookmarks = new javax.swing.JMenuItem();
-        jSeparator64 = new javax.swing.JSeparator();
-        popupTitlesDesktop = new javax.swing.JMenuItem();
-        jPopupMenuBookmarks = new javax.swing.JPopupMenu();
-        popupBookmarksEdit = new javax.swing.JMenuItem();
-        popupBookmarksDelete = new javax.swing.JMenuItem();
-        jSeparator36 = new javax.swing.JSeparator();
-        popupBookmarksEditCat = new javax.swing.JMenuItem();
-        popupBookmarksDeleteCat = new javax.swing.JMenuItem();
-        jSeparator38 = new javax.swing.JSeparator();
-        popupBookmarksAddManLinks = new javax.swing.JMenuItem();
-        popupBookmarksAddLuhmann = new javax.swing.JMenuItem();
-        jSeparator56 = new javax.swing.JSeparator();
-        popupBookmarkAddDesktop = new javax.swing.JMenuItem();
-        jPopupMenuLinks = new javax.swing.JPopupMenu();
-        popupLinksRefresh = new javax.swing.JMenuItem();
-        jSeparator115 = new javax.swing.JPopupMenu.Separator();
-        popupLinkRemoveManLink = new javax.swing.JMenuItem();
-        jSeparator54 = new javax.swing.JSeparator();
-        popupLinksManLinks = new javax.swing.JMenuItem();
-        popupLinksLuhmann = new javax.swing.JMenuItem();
-        jSeparator57 = new javax.swing.JSeparator();
-        popupLinksDesktop = new javax.swing.JMenuItem();
-        jPopupMenuAttachments = new javax.swing.JPopupMenu();
-        popupAttachmentsCopy = new javax.swing.JMenuItem();
-        jSeparator87 = new javax.swing.JSeparator();
-        popupAttachmentsEdit = new javax.swing.JMenuItem();
-        popupAttachmentsDelete = new javax.swing.JMenuItem();
-        jSeparator94 = new javax.swing.JSeparator();
-        popupAttachmentsGoto = new javax.swing.JMenuItem();
-        jSeparator86 = new javax.swing.JSeparator();
-        popupAttachmentsExport = new javax.swing.JMenuItem();
-        jPopupMenuMain = new javax.swing.JPopupMenu();
-        popupMainCopy = new javax.swing.JMenuItem();
-        popupMainCopyPlain = new javax.swing.JMenuItem();
-        jSeparator88 = new javax.swing.JSeparator();
-        popupMainFind = new javax.swing.JMenuItem();
-        jSeparator97 = new javax.swing.JSeparator();
-        popupMainAddToKeyword = new javax.swing.JMenuItem();
-        jSeparator98 = new javax.swing.JSeparator();
-        popupMainSetFirstLineAsTitle = new javax.swing.JMenuItem();
-        popupMainSetSelectionAsTitle = new javax.swing.JMenuItem();
+        jEditorPaneIsFollower = new javax.swing.JEditorPane() {
+            @Override
+            public String getToolTipText(MouseEvent evt) {
+                String text = null;
+                int pos = viewToModel(evt.getPoint());
+                if (pos >= 0) {
+                    HTMLDocument hdoc = (HTMLDocument) getDocument();
+                    javax.swing.text.Element e = hdoc.getCharacterElement(pos);
+                    AttributeSet a = e.getAttributes();
 
-        mainPanel.setName("mainPanel"); // NOI18N
-        mainPanel.setLayout(new java.awt.BorderLayout());
+                    SimpleAttributeSet value = (SimpleAttributeSet) a.getAttribute(HTML.Tag.A);
+                    if (value != null) {
+                        String alt = (String) value.getAttribute(HTML.Attribute.TITLE);
+                        if (alt != null) {
+                            text = alt;
+                        }
+                    }
+                }
+                return text;
+            }};
+            jPanel2 = new javax.swing.JPanel();
+            jTextFieldFilterKeywords = new javax.swing.JTextField();
+            jButtonRefreshKeywords = new javax.swing.JButton();
+            jCheckBoxShowSynonyms = new javax.swing.JCheckBox();
+            jPanel16 = new javax.swing.JPanel();
+            jScrollPane17 = new javax.swing.JScrollPane();
+            jTreeKeywords = new javax.swing.JTree();
+            jScrollPane6 = new javax.swing.JScrollPane();
+            jTableKeywords = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+            jPanel7 = new javax.swing.JPanel();
+            jTextFieldFilterAuthors = new javax.swing.JTextField();
+            jSplitPaneAuthors = new javax.swing.JSplitPane();
+            jPanel15 = new javax.swing.JPanel();
+            jScrollPane7 = new javax.swing.JScrollPane();
+            jTableAuthors = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+            jComboBoxAuthorType = new javax.swing.JComboBox();
+            jPanelDispAuthor = new javax.swing.JPanel();
+            jScrollPane16 = new javax.swing.JScrollPane();
+            jEditorPaneDispAuthor = new javax.swing.JEditorPane();
+            jButtonRefreshAuthors = new javax.swing.JButton();
+            jPanel8 = new javax.swing.JPanel();
+            jScrollPane8 = new javax.swing.JScrollPane();
+            jTableTitles = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+            jTextFieldFilterTitles = new javax.swing.JTextField();
+            jButtonRefreshTitles = new javax.swing.JButton();
+            jPanel11 = new javax.swing.JPanel();
+            jTextFieldFilterCluster = new javax.swing.JTextField();
+            jButtonRefreshCluster = new javax.swing.JButton();
+            jCheckBoxCluster = new javax.swing.JCheckBox();
+            jPanel3 = new javax.swing.JPanel();
+            jSplitPane1 = new javax.swing.JSplitPane();
+            jScrollPane5 = new javax.swing.JScrollPane();
+            jEditorPaneClusterEntries = new javax.swing.JEditorPane();
+            jScrollPane11 = new javax.swing.JScrollPane();
+            jTreeCluster = new javax.swing.JTree();
+            jPanel9 = new javax.swing.JPanel();
+            jComboBoxBookmarkCategory = new javax.swing.JComboBox();
+            jSplitPane3 = new javax.swing.JSplitPane();
+            jScrollPane9 = new javax.swing.JScrollPane();
+            jTableBookmarks = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+            jScrollPane14 = new javax.swing.JScrollPane();
+            jEditorPaneBookmarkComment = new javax.swing.JEditorPane();
+            jPanel13 = new javax.swing.JPanel();
+            jScrollPane13 = new javax.swing.JScrollPane();
+            jTableAttachments = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+            jTextFieldFilterAttachments = new javax.swing.JTextField();
+            jButtonRefreshAttachments = new javax.swing.JButton();
+            menuBar = new javax.swing.JMenuBar();
+            fileMenu = new javax.swing.JMenu();
+            newEntryMenuItem = new javax.swing.JMenuItem();
+            insertEntryMenuItem = new javax.swing.JMenuItem();
+            insertEntryAtMenuItem = new javax.swing.JMenuItem();
+            jSeparator104 = new javax.swing.JSeparator();
+            quickNewEntryMenuItem = new javax.swing.JMenuItem();
+            quickNewTitleEntryMenuItem = new javax.swing.JMenuItem();
+            jSeparator1 = new javax.swing.JSeparator();
+            duplicateEntryMenuItem = new javax.swing.JMenuItem();
+            jSeparator79 = new javax.swing.JSeparator();
+            openMenuItem = new javax.swing.JMenuItem();
+            recentDocsSubMenu = new javax.swing.JMenu();
+            recentDoc1 = new javax.swing.JMenuItem();
+            recentDoc2 = new javax.swing.JMenuItem();
+            recentDoc3 = new javax.swing.JMenuItem();
+            recentDoc4 = new javax.swing.JMenuItem();
+            recentDoc5 = new javax.swing.JMenuItem();
+            recentDoc6 = new javax.swing.JMenuItem();
+            recentDoc7 = new javax.swing.JMenuItem();
+            recentDoc8 = new javax.swing.JMenuItem();
+            jSeparator107 = new javax.swing.JSeparator();
+            saveMenuItem = new javax.swing.JMenuItem();
+            saveAsMenuItem = new javax.swing.JMenuItem();
+            jSeparator2 = new javax.swing.JSeparator();
+            newDesktopMenuItem = new javax.swing.JMenuItem();
+            newZettelkastenMenuItem = new javax.swing.JMenuItem();
+            jSeparator78 = new javax.swing.JSeparator();
+            importMenuItem = new javax.swing.JMenuItem();
+            exportMenuItem = new javax.swing.JMenuItem();
+            jSeparator77 = new javax.swing.JSeparator();
+            menuFileInformation = new javax.swing.JMenuItem();
+            jSeparatorExit = new javax.swing.JSeparator();
+            exitMenuItem = new javax.swing.JMenuItem();
+            editMenu = new javax.swing.JMenu();
+            editMenuItem = new javax.swing.JMenuItem();
+            jSeparator33 = new javax.swing.JSeparator();
+            deleteZettelMenuItem = new javax.swing.JMenuItem();
+            jSeparator6 = new javax.swing.JSeparator();
+            deleteKwFromListMenuItem = new javax.swing.JMenuItem();
+            jSeparator40 = new javax.swing.JSeparator();
+            copyMenuItem = new javax.swing.JMenuItem();
+            copyPlainMenuItem = new javax.swing.JMenuItem();
+            pasteMenuItem = new javax.swing.JMenuItem();
+            selectAllMenuItem = new javax.swing.JMenuItem();
+            jSeparator99 = new javax.swing.JSeparator();
+            addSelectionToKeywordMenuItem = new javax.swing.JMenuItem();
+            addFirstLineToTitleMenuItem = new javax.swing.JMenuItem();
+            addSelectionToTitleMenuItem = new javax.swing.JMenuItem();
+            jSeparator24 = new javax.swing.JSeparator();
+            manualInsertLinksMenuItem = new javax.swing.JMenuItem();
+            manualInsertMenuItem = new javax.swing.JMenuItem();
+            jSeparator41 = new javax.swing.JSeparator();
+            setBookmarkMenuItem = new javax.swing.JMenuItem();
+            addToDesktopMenuItem = new javax.swing.JMenuItem();
+            findMenu = new javax.swing.JMenu();
+            findMenuItem = new javax.swing.JMenuItem();
+            findReplaceMenuItem = new javax.swing.JMenuItem();
+            jSeparator31 = new javax.swing.JSeparator();
+            findEntryWithout = new javax.swing.JMenu();
+            findEntriesWithoutKeywords = new javax.swing.JMenuItem();
+            jSeparator69 = new javax.swing.JSeparator();
+            findEntriesWithoutAuthors = new javax.swing.JMenuItem();
+            jSeparator75 = new javax.swing.JSeparator();
+            findEntriesWithoutRemarks = new javax.swing.JMenuItem();
+            findEntriesWithRemarks = new javax.swing.JMenuItem();
+            jSeparator110 = new javax.swing.JSeparator();
+            findEntriesWithRatings = new javax.swing.JMenuItem();
+            findEntriesWithoutRatings = new javax.swing.JMenuItem();
+            jSeparator76 = new javax.swing.JSeparator();
+            findEntriesWithAttachments = new javax.swing.JMenuItem();
+            jSeparator83 = new javax.swing.JSeparator();
+            findEntriesFromCreatedTimestamp = new javax.swing.JMenuItem();
+            findEntriesFromEditedTimestamp = new javax.swing.JMenuItem();
+            jSeparator95 = new javax.swing.JSeparator();
+            findDoubleEntriesItem = new javax.swing.JMenuItem();
+            jSeparator68 = new javax.swing.JSeparator();
+            findEntryKeywordsMenu = new javax.swing.JMenu();
+            menuKwListSearchOr = new javax.swing.JMenuItem();
+            jSeparator19 = new javax.swing.JSeparator();
+            menuKwListSearchAnd = new javax.swing.JMenuItem();
+            jSeparator39 = new javax.swing.JSeparator();
+            menuKwListSearchNot = new javax.swing.JMenuItem();
+            jSeparator18 = new javax.swing.JSeparator();
+            liveSearchMenuItem = new javax.swing.JMenuItem();
+            jSeparator22 = new javax.swing.JSeparator();
+            homeMenuItem = new javax.swing.JMenuItem();
+            prevEntryMenuItem = new javax.swing.JMenuItem();
+            nextEntryMenuItem = new javax.swing.JMenuItem();
+            lastEntryMenuItem = new javax.swing.JMenuItem();
+            jSeparator72 = new javax.swing.JPopupMenu.Separator();
+            randomEntryMenuItem = new javax.swing.JMenuItem();
+            jSeparator111 = new javax.swing.JPopupMenu.Separator();
+            historyForMenuItem = new javax.swing.JMenuItem();
+            histroyBackMenuItem = new javax.swing.JMenuItem();
+            jSeparator112 = new javax.swing.JPopupMenu.Separator();
+            gotoEntryMenuItem = new javax.swing.JMenuItem();
+            viewMenu = new javax.swing.JMenu();
+            showLinksMenuItem = new javax.swing.JMenuItem();
+            showLuhmannMenuItem = new javax.swing.JMenuItem();
+            showKeywordsMenuItem = new javax.swing.JMenuItem();
+            showAuthorsMenuItem = new javax.swing.JMenuItem();
+            showTitlesMenuItem = new javax.swing.JMenuItem();
+            showClusterMenuItem = new javax.swing.JMenuItem();
+            showBookmarksMenuItem = new javax.swing.JMenuItem();
+            showAttachmentsMenuItem = new javax.swing.JMenuItem();
+            jSeparator23 = new javax.swing.JSeparator();
+            showCurrentEntryAgain = new javax.swing.JMenuItem();
+            jSeparator55 = new javax.swing.JSeparator();
+            showHighlightKeywords = new javax.swing.JCheckBoxMenuItem();
+            highlightSegmentsMenuItem = new javax.swing.JCheckBoxMenuItem();
+            viewMenuLinks = new javax.swing.JMenu();
+            viewMenuLinksKwListRefresh = new javax.swing.JMenuItem();
+            jSeparator116 = new javax.swing.JPopupMenu.Separator();
+            viewMenuLinksRemoveManLink = new javax.swing.JMenuItem();
+            jSeparator3 = new javax.swing.JSeparator();
+            viewMenuLinksKwListLogOr = new javax.swing.JCheckBoxMenuItem();
+            viewMenuLinksKwListLogAnd = new javax.swing.JCheckBoxMenuItem();
+            jSeparator53 = new javax.swing.JSeparator();
+            viewMenuLinksManLink = new javax.swing.JMenuItem();
+            viewMenuLinksLuhmann = new javax.swing.JMenuItem();
+            jSeparator58 = new javax.swing.JSeparator();
+            viewMenuLinksDesktop = new javax.swing.JMenuItem();
+            jSeparator100 = new javax.swing.JSeparator();
+            viewMenuLinksExport = new javax.swing.JMenuItem();
+            viewMenuExportToSearch = new javax.swing.JMenuItem();
+            viewMenuLuhmann = new javax.swing.JMenu();
+            viewMenuLuhmannDelete = new javax.swing.JMenuItem();
+            jSeparator61 = new javax.swing.JSeparator();
+            viewMenuLuhmannManLinks = new javax.swing.JMenuItem();
+            viewMenuLuhmannBookmarks = new javax.swing.JMenuItem();
+            jSeparator62 = new javax.swing.JSeparator();
+            viewMenuLuhmannDesktop = new javax.swing.JMenuItem();
+            jSeparator102 = new javax.swing.JSeparator();
+            viewMenuLuhmannExport = new javax.swing.JMenuItem();
+            viewMenuLuhmannExportSearch = new javax.swing.JMenuItem();
+            jSeparator117 = new javax.swing.JPopupMenu.Separator();
+            viewMenuLuhmannSortEntries = new javax.swing.JMenuItem();
+            jSeparator118 = new javax.swing.JPopupMenu.Separator();
+            viewMenuLuhmannShowNumbers = new javax.swing.JCheckBoxMenuItem();
+            viewMenuKeywords = new javax.swing.JMenu();
+            viewKeywordsCopy = new javax.swing.JMenuItem();
+            jSeparator25 = new javax.swing.JSeparator();
+            viewKeywordsSearchOr = new javax.swing.JMenuItem();
+            viewKeywordsSearchAnd = new javax.swing.JMenuItem();
+            viewKeywordsSearchNot = new javax.swing.JMenuItem();
+            jSeparator26 = new javax.swing.JSeparator();
+            viewKeywordsNew = new javax.swing.JMenuItem();
+            viewKeywordsEdit = new javax.swing.JMenuItem();
+            viewKeywordsDelete = new javax.swing.JMenuItem();
+            jSeparator27 = new javax.swing.JSeparator();
+            viewKeywordsAddToList = new javax.swing.JMenuItem();
+            jSeparator47 = new javax.swing.JSeparator();
+            viewKeywordsLuhmann = new javax.swing.JMenuItem();
+            viewKeywordsLuhmannAnd = new javax.swing.JMenuItem();
+            jSeparator67 = new javax.swing.JSeparator();
+            viewKeywordsManLinks = new javax.swing.JMenuItem();
+            viewKeywordsManLinksAnd = new javax.swing.JMenuItem();
+            jSeparator48 = new javax.swing.JSeparator();
+            viewKeywordsDesktop = new javax.swing.JMenuItem();
+            viewKeywordsDesktopAnd = new javax.swing.JMenuItem();
+            jSeparator80 = new javax.swing.JSeparator();
+            viewKeywordsExport = new javax.swing.JMenuItem();
+            viewMenuAuthors = new javax.swing.JMenu();
+            viewAuthorsCopy = new javax.swing.JMenuItem();
+            jSeparator28 = new javax.swing.JSeparator();
+            viewAuthorsSubFind = new javax.swing.JMenu();
+            viewAuthorsSearchOr = new javax.swing.JMenuItem();
+            viewAuthorsSearchAnd = new javax.swing.JMenuItem();
+            viewAuthorsSearchNot = new javax.swing.JMenuItem();
+            jSeparator29 = new javax.swing.JSeparator();
+            viewAuthorsSubEdit = new javax.swing.JMenu();
+            viewAuthorsNew = new javax.swing.JMenuItem();
+            viewAuthorsEdit = new javax.swing.JMenuItem();
+            viewAuthorsDelete = new javax.swing.JMenuItem();
+            jSeparator90 = new javax.swing.JSeparator();
+            viewAuthorsBibkey = new javax.swing.JMenuItem();
+            jSeparator30 = new javax.swing.JSeparator();
+            viewAuthorsSubAdd = new javax.swing.JMenu();
+            viewAuthorsAddToEntry = new javax.swing.JMenuItem();
+            jSeparator51 = new javax.swing.JSeparator();
+            viewAuthorsManLinks = new javax.swing.JMenuItem();
+            viewAuthorsManLinksAnd = new javax.swing.JMenuItem();
+            jSeparator71 = new javax.swing.JSeparator();
+            viewAuthorsAddLuhmann = new javax.swing.JMenuItem();
+            viewAuthorsAddLuhmannAnd = new javax.swing.JMenuItem();
+            jSeparator52 = new javax.swing.JSeparator();
+            viewAuthorsDesktop = new javax.swing.JMenuItem();
+            viewAuthorsDesktopAnd = new javax.swing.JMenuItem();
+            jSeparator81 = new javax.swing.JSeparator();
+            viewAuthorsImport = new javax.swing.JMenuItem();
+            viewAuthorsExport = new javax.swing.JMenuItem();
+            jSeparator92 = new javax.swing.JSeparator();
+            viewAuthorsAttachBibtexFile = new javax.swing.JMenuItem();
+            viewAuthorsRefreshBibtexFile = new javax.swing.JMenuItem();
+            viewMenuTitles = new javax.swing.JMenu();
+            viewTitlesCopy = new javax.swing.JMenuItem();
+            jSeparator43 = new javax.swing.JSeparator();
+            viewTitlesEdit = new javax.swing.JMenuItem();
+            viewTitlesDelete = new javax.swing.JMenuItem();
+            jSeparator65 = new javax.swing.JSeparator();
+            viewTitlesMoveEntry = new javax.swing.JMenuItem();
+            jSeparator105 = new javax.swing.JSeparator();
+            viewTitlesAutomaticFirstLine = new javax.swing.JMenuItem();
+            jSeparator42 = new javax.swing.JSeparator();
+            viewTitlesManLinks = new javax.swing.JMenuItem();
+            viewTitlesLuhmann = new javax.swing.JMenuItem();
+            viewTitlesBookmarks = new javax.swing.JMenuItem();
+            jSeparator113 = new javax.swing.JPopupMenu.Separator();
+            viewTitlesDesktop = new javax.swing.JMenuItem();
+            jSeparator108 = new javax.swing.JPopupMenu.Separator();
+            viewTitlesExport = new javax.swing.JMenuItem();
+            viewMenuCluster = new javax.swing.JMenu();
+            viewClusterExport = new javax.swing.JMenuItem();
+            viewClusterExportToSearch = new javax.swing.JMenuItem();
+            viewMenuBookmarks = new javax.swing.JMenu();
+            viewBookmarksEdit = new javax.swing.JMenuItem();
+            viewBookmarksDelete = new javax.swing.JMenuItem();
+            jSeparator35 = new javax.swing.JSeparator();
+            viewBookmarksEditCat = new javax.swing.JMenuItem();
+            viewBookmarksDeleteCat = new javax.swing.JMenuItem();
+            jSeparator37 = new javax.swing.JSeparator();
+            viewBookmarksManLink = new javax.swing.JMenuItem();
+            viewBookmarksAddLuhmann = new javax.swing.JMenuItem();
+            jSeparator59 = new javax.swing.JSeparator();
+            viewBookmarkDesktop = new javax.swing.JMenuItem();
+            jSeparator82 = new javax.swing.JSeparator();
+            viewBookmarksExport = new javax.swing.JMenuItem();
+            viewBookmarksExportSearch = new javax.swing.JMenuItem();
+            viewMenuAttachments = new javax.swing.JMenu();
+            viewAttachmentsCopy = new javax.swing.JMenuItem();
+            jSeparator84 = new javax.swing.JSeparator();
+            viewAttachmentEdit = new javax.swing.JMenuItem();
+            viewAttachmentsDelete = new javax.swing.JMenuItem();
+            jSeparator85 = new javax.swing.JSeparator();
+            viewMenuAttachmentGoto = new javax.swing.JMenuItem();
+            jSeparator93 = new javax.swing.JSeparator();
+            viewAttachmentsExport = new javax.swing.JMenuItem();
+            windowsMenu = new javax.swing.JMenu();
+            showSearchResultsMenuItem = new javax.swing.JMenuItem();
+            jSeparator44 = new javax.swing.JSeparator();
+            showDesktopMenuItem = new javax.swing.JMenuItem();
+            jSeparator109 = new javax.swing.JSeparator();
+            showNewEntryMenuItem = new javax.swing.JMenuItem();
+            jSeparator34 = new javax.swing.JPopupMenu.Separator();
+            showErrorLogMenuItem = new javax.swing.JMenuItem();
+            aboutMenu = new javax.swing.JMenu();
+            aboutMenuItem = new javax.swing.JMenuItem();
+            jSeparatorAbout1 = new javax.swing.JSeparator();
+            preferencesMenuItem = new javax.swing.JMenuItem();
+            statusPanel = new javax.swing.JPanel();
+            jPanel12 = new javax.swing.JPanel();
+            statusEntryLabel = new javax.swing.JLabel();
+            statusAnimationLabel = new javax.swing.JLabel();
+            jTextFieldEntryNumber = new javax.swing.JTextField();
+            statusOfEntryLabel = new javax.swing.JLabel();
+            buttonHistoryBack = new javax.swing.JButton();
+            buttonHistoryFore = new javax.swing.JButton();
+            statusMsgLabel = new javax.swing.JLabel();
+            statusErrorButton = new javax.swing.JButton();
+            statusDesktopEntryButton = new javax.swing.JButton();
+            toolBar = new javax.swing.JToolBar();
+            tb_newEntry = new javax.swing.JButton();
+            tb_open = new javax.swing.JButton();
+            tb_save = new javax.swing.JButton();
+            jSeparator4 = new javax.swing.JToolBar.Separator();
+            tb_edit = new javax.swing.JButton();
+            tb_delete = new javax.swing.JButton();
+            tb_copy = new javax.swing.JButton();
+            tb_paste = new javax.swing.JButton();
+            tb_selectall = new javax.swing.JButton();
+            jSeparator5 = new javax.swing.JToolBar.Separator();
+            tb_addmanlinks = new javax.swing.JButton();
+            tb_addluhmann = new javax.swing.JButton();
+            tb_addbookmark = new javax.swing.JButton();
+            tb_addtodesktop = new javax.swing.JButton();
+            jSeparator10 = new javax.swing.JToolBar.Separator();
+            tb_find = new javax.swing.JButton();
+            tb_first = new javax.swing.JButton();
+            tb_prev = new javax.swing.JButton();
+            tb_next = new javax.swing.JButton();
+            tb_last = new javax.swing.JButton();
+            jSeparator32 = new javax.swing.JToolBar.Separator();
+            jLabelMemory = new javax.swing.JLabel();
+            jPopupMenuKeywords = new javax.swing.JPopupMenu();
+            popupKeywordsCopy = new javax.swing.JMenuItem();
+            jSeparator8 = new javax.swing.JSeparator();
+            popupKeywordsSearchOr = new javax.swing.JMenuItem();
+            popupKeywordsSearchAnd = new javax.swing.JMenuItem();
+            popupKeywordsSearchNot = new javax.swing.JMenuItem();
+            jSeparator9 = new javax.swing.JSeparator();
+            popupKeywordsNew = new javax.swing.JMenuItem();
+            popupKeywordsEdit = new javax.swing.JMenuItem();
+            popupKeywordsDelete = new javax.swing.JMenuItem();
+            jSeparator7 = new javax.swing.JSeparator();
+            popupKeywordsAddToList = new javax.swing.JMenuItem();
+            jSeparator45 = new javax.swing.JSeparator();
+            popupKeywordsManLinks = new javax.swing.JMenuItem();
+            popupKeywordsManLinksAnd = new javax.swing.JMenuItem();
+            jSeparator66 = new javax.swing.JSeparator();
+            popupKeywordsLuhmann = new javax.swing.JMenuItem();
+            popupKeywordsLuhmannAnd = new javax.swing.JMenuItem();
+            jSeparator46 = new javax.swing.JSeparator();
+            popupKeywordsDesktop = new javax.swing.JMenuItem();
+            popupKeywordsDesktopAnd = new javax.swing.JMenuItem();
+            jPopupMenuKeywordList = new javax.swing.JPopupMenu();
+            popupKwListCopy = new javax.swing.JMenuItem();
+            jSeparator89 = new javax.swing.JSeparator();
+            popupKwListSearchOr = new javax.swing.JMenuItem();
+            popupKwListSearchAnd = new javax.swing.JMenuItem();
+            popupKwListSearchNot = new javax.swing.JMenuItem();
+            jSeparator13 = new javax.swing.JSeparator();
+            popupKwListHighlight = new javax.swing.JMenuItem();
+            popupKwListHighlightSegments = new javax.swing.JCheckBoxMenuItem();
+            popupKwListRefresh = new javax.swing.JMenuItem();
+            jSeparator11 = new javax.swing.JSeparator();
+            popupKwListLogOr = new javax.swing.JCheckBoxMenuItem();
+            popupKwListLogAnd = new javax.swing.JCheckBoxMenuItem();
+            jSeparator12 = new javax.swing.JSeparator();
+            popupKwListDelete = new javax.swing.JMenuItem();
+            jPopupMenuAuthors = new javax.swing.JPopupMenu();
+            popupAuthorsCopy = new javax.swing.JMenuItem();
+            jSeparator14 = new javax.swing.JSeparator();
+            popupAuthorsSearchLogOr = new javax.swing.JMenuItem();
+            popupAuthorsSearchLogAnd = new javax.swing.JMenuItem();
+            popupAuthorsSearchLogNot = new javax.swing.JMenuItem();
+            jSeparator15 = new javax.swing.JSeparator();
+            popupAuthorsNew = new javax.swing.JMenuItem();
+            popupAuthorsEdit = new javax.swing.JMenuItem();
+            popupAuthorsDelete = new javax.swing.JMenuItem();
+            jSeparator91 = new javax.swing.JSeparator();
+            popupAuthorsBibkey = new javax.swing.JMenuItem();
+            jSeparator16 = new javax.swing.JSeparator();
+            popupAuthorsAddToEntry = new javax.swing.JMenuItem();
+            jSeparator49 = new javax.swing.JSeparator();
+            popupAuthorsSubAdd = new javax.swing.JMenu();
+            popupAuthorsManLinks = new javax.swing.JMenuItem();
+            popupAuthorsManLinksAnd = new javax.swing.JMenuItem();
+            jSeparator70 = new javax.swing.JSeparator();
+            popupAuthorsLuhmann = new javax.swing.JMenuItem();
+            popupAuthorsLuhmannAnd = new javax.swing.JMenuItem();
+            jSeparator50 = new javax.swing.JSeparator();
+            popupAuthorsDesktop = new javax.swing.JMenuItem();
+            popupAuthorsDesktopAnd = new javax.swing.JMenuItem();
+            jSeparator96 = new javax.swing.JSeparator();
+            popupAuthorsImport = new javax.swing.JMenuItem();
+            jPopupMenuLuhmann = new javax.swing.JPopupMenu();
+            popupLuhmannAdd = new javax.swing.JMenuItem();
+            jSeparator17 = new javax.swing.JSeparator();
+            popupLuhmannDelete = new javax.swing.JMenuItem();
+            jSeparator60 = new javax.swing.JSeparator();
+            popupLuhmannManLinks = new javax.swing.JMenuItem();
+            popupLuhmannBookmarks = new javax.swing.JMenuItem();
+            jSeparator63 = new javax.swing.JSeparator();
+            popupLuhmannDesktop = new javax.swing.JMenuItem();
+            jPopupMenuTitles = new javax.swing.JPopupMenu();
+            popupTitlesCopy = new javax.swing.JMenuItem();
+            jSeparator20 = new javax.swing.JSeparator();
+            popupTitlesEdit = new javax.swing.JMenuItem();
+            popupTitlesEditEntry = new javax.swing.JMenuItem();
+            jSeparator103 = new javax.swing.JSeparator();
+            popupTitlesDelete = new javax.swing.JMenuItem();
+            jSeparator114 = new javax.swing.JPopupMenu.Separator();
+            popupTitleMoveEntry = new javax.swing.JMenuItem();
+            jSeparator106 = new javax.swing.JSeparator();
+            popupTitlesAutomaticTitle = new javax.swing.JMenuItem();
+            jSeparator21 = new javax.swing.JSeparator();
+            popupTitlesManLinks = new javax.swing.JMenuItem();
+            popupTitlesLuhmann = new javax.swing.JMenuItem();
+            popupTitlesBookmarks = new javax.swing.JMenuItem();
+            jSeparator64 = new javax.swing.JSeparator();
+            popupTitlesDesktop = new javax.swing.JMenuItem();
+            jPopupMenuBookmarks = new javax.swing.JPopupMenu();
+            popupBookmarksEdit = new javax.swing.JMenuItem();
+            popupBookmarksDelete = new javax.swing.JMenuItem();
+            jSeparator36 = new javax.swing.JSeparator();
+            popupBookmarksEditCat = new javax.swing.JMenuItem();
+            popupBookmarksDeleteCat = new javax.swing.JMenuItem();
+            jSeparator38 = new javax.swing.JSeparator();
+            popupBookmarksAddManLinks = new javax.swing.JMenuItem();
+            popupBookmarksAddLuhmann = new javax.swing.JMenuItem();
+            jSeparator56 = new javax.swing.JSeparator();
+            popupBookmarkAddDesktop = new javax.swing.JMenuItem();
+            jPopupMenuLinks = new javax.swing.JPopupMenu();
+            popupLinksRefresh = new javax.swing.JMenuItem();
+            jSeparator115 = new javax.swing.JPopupMenu.Separator();
+            popupLinkRemoveManLink = new javax.swing.JMenuItem();
+            jSeparator54 = new javax.swing.JSeparator();
+            popupLinksManLinks = new javax.swing.JMenuItem();
+            popupLinksLuhmann = new javax.swing.JMenuItem();
+            jSeparator57 = new javax.swing.JSeparator();
+            popupLinksDesktop = new javax.swing.JMenuItem();
+            jPopupMenuAttachments = new javax.swing.JPopupMenu();
+            popupAttachmentsCopy = new javax.swing.JMenuItem();
+            jSeparator87 = new javax.swing.JSeparator();
+            popupAttachmentsEdit = new javax.swing.JMenuItem();
+            popupAttachmentsDelete = new javax.swing.JMenuItem();
+            jSeparator94 = new javax.swing.JSeparator();
+            popupAttachmentsGoto = new javax.swing.JMenuItem();
+            jSeparator86 = new javax.swing.JSeparator();
+            popupAttachmentsExport = new javax.swing.JMenuItem();
+            jPopupMenuMain = new javax.swing.JPopupMenu();
+            popupMainCopy = new javax.swing.JMenuItem();
+            popupMainCopyPlain = new javax.swing.JMenuItem();
+            jSeparator88 = new javax.swing.JSeparator();
+            popupMainFind = new javax.swing.JMenuItem();
+            jSeparator97 = new javax.swing.JSeparator();
+            popupMainAddToKeyword = new javax.swing.JMenuItem();
+            jSeparator98 = new javax.swing.JSeparator();
+            popupMainSetFirstLineAsTitle = new javax.swing.JMenuItem();
+            popupMainSetSelectionAsTitle = new javax.swing.JMenuItem();
 
-        jSplitPaneMain1.setBorder(null);
-        jSplitPaneMain1.setDividerLocation(650);
-        jSplitPaneMain1.setName("jSplitPaneMain1"); // NOI18N
-        jSplitPaneMain1.setOneTouchExpandable(true);
+            mainPanel.setName("mainPanel"); // NOI18N
+            mainPanel.setLayout(new java.awt.BorderLayout());
 
-        jSplitPaneMain2.setBorder(null);
-        jSplitPaneMain2.setDividerLocation(440);
-        jSplitPaneMain2.setName("jSplitPaneMain2"); // NOI18N
-        jSplitPaneMain2.setOneTouchExpandable(true);
+            jSplitPaneMain1.setBorder(null);
+            jSplitPaneMain1.setDividerLocation(650);
+            jSplitPaneMain1.setName("jSplitPaneMain1"); // NOI18N
+            jSplitPaneMain1.setOneTouchExpandable(true);
 
-        jPanel17.setName("jPanel17"); // NOI18N
+            jSplitPaneMain2.setBorder(null);
+            jSplitPaneMain2.setDividerLocation(440);
+            jSplitPaneMain2.setName("jSplitPaneMain2"); // NOI18N
+            jSplitPaneMain2.setOneTouchExpandable(true);
 
-        jScrollPane1.setBorder(null);
-        jScrollPane1.setName("jScrollPane1"); // NOI18N
+            jPanel17.setName("jPanel17"); // NOI18N
 
-        jEditorPaneEntry.setEditable(false);
-        jEditorPaneEntry.setBorder(null);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(ZettelkastenView.class);
-        jEditorPaneEntry.setContentType(resourceMap.getString("jEditorPaneEntry.contentType")); // NOI18N
-        jEditorPaneEntry.setName("jEditorPaneEntry"); // NOI18N
-        jScrollPane1.setViewportView(jEditorPaneEntry);
+            jScrollPane1.setBorder(null);
+            jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        jPanelLiveSearch.setName("jPanelLiveSearch"); // NOI18N
+            jEditorPaneEntry.setEditable(false);
+            jEditorPaneEntry.setBorder(null);
+            org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(ZettelkastenView.class);
+            jEditorPaneEntry.setContentType(resourceMap.getString("jEditorPaneEntry.contentType")); // NOI18N
+            jEditorPaneEntry.setName("jEditorPaneEntry"); // NOI18N
+            jScrollPane1.setViewportView(jEditorPaneEntry);
 
-        jTextFieldLiveSearch.setText(resourceMap.getString("jTextFieldLiveSearch.text")); // NOI18N
-        jTextFieldLiveSearch.setToolTipText(resourceMap.getString("jTextFieldLiveSearch.toolTipText")); // NOI18N
-        jTextFieldLiveSearch.setName("jTextFieldLiveSearch"); // NOI18N
+            jPanelLiveSearch.setName("jPanelLiveSearch"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(ZettelkastenView.class, this);
-        jButton1.setAction(actionMap.get("findLiveCancel")); // NOI18N
-        jButton1.setIcon(resourceMap.getIcon("jButton1.icon")); // NOI18N
-        jButton1.setBorderPainted(false);
-        jButton1.setContentAreaFilled(false);
-        jButton1.setFocusPainted(false);
-        jButton1.setName("jButton1"); // NOI18N
+            jTextFieldLiveSearch.setText(resourceMap.getString("jTextFieldLiveSearch.text")); // NOI18N
+            jTextFieldLiveSearch.setToolTipText(resourceMap.getString("jTextFieldLiveSearch.toolTipText")); // NOI18N
+            jTextFieldLiveSearch.setName("jTextFieldLiveSearch"); // NOI18N
 
-        javax.swing.GroupLayout jPanelLiveSearchLayout = new javax.swing.GroupLayout(jPanelLiveSearch);
-        jPanelLiveSearch.setLayout(jPanelLiveSearchLayout);
-        jPanelLiveSearchLayout.setHorizontalGroup(
-            jPanelLiveSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelLiveSearchLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTextFieldLiveSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        jPanelLiveSearchLayout.setVerticalGroup(
-            jPanelLiveSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelLiveSearchLayout.createSequentialGroup()
-                .addGap(3, 3, 3)
-                .addGroup(jPanelLiveSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextFieldLiveSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(3, 3, 3))
-        );
+            javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(ZettelkastenView.class, this);
+            jButton1.setAction(actionMap.get("findLiveCancel")); // NOI18N
+            jButton1.setIcon(resourceMap.getIcon("jButton1.icon")); // NOI18N
+            jButton1.setBorderPainted(false);
+            jButton1.setContentAreaFilled(false);
+            jButton1.setFocusPainted(false);
+            jButton1.setName("jButton1"); // NOI18N
 
-        javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
-        jPanel17.setLayout(jPanel17Layout);
-        jPanel17Layout.setHorizontalGroup(
-            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
-            .addComponent(jPanelLiveSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel17Layout.setVerticalGroup(
-            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel17Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
-                .addGap(0, 0, 0)
-                .addComponent(jPanelLiveSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+            javax.swing.GroupLayout jPanelLiveSearchLayout = new javax.swing.GroupLayout(jPanelLiveSearch);
+            jPanelLiveSearch.setLayout(jPanelLiveSearchLayout);
+            jPanelLiveSearchLayout.setHorizontalGroup(
+                jPanelLiveSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelLiveSearchLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jTextFieldLiveSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap())
+            );
+            jPanelLiveSearchLayout.setVerticalGroup(
+                jPanelLiveSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelLiveSearchLayout.createSequentialGroup()
+                    .addGap(3, 3, 3)
+                    .addGroup(jPanelLiveSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jTextFieldLiveSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGap(3, 3, 3))
+            );
 
-        jSplitPaneMain2.setLeftComponent(jPanel17);
+            javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
+            jPanel17.setLayout(jPanel17Layout);
+            jPanel17Layout.setHorizontalGroup(
+                jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+                .addComponent(jPanelLiveSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            );
+            jPanel17Layout.setVerticalGroup(
+                jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel17Layout.createSequentialGroup()
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
+                    .addGap(0, 0, 0)
+                    .addComponent(jPanelLiveSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            );
 
-        jScrollPane3.setBorder(null);
-        jScrollPane3.setName("jScrollPane3"); // NOI18N
+            jSplitPaneMain2.setLeftComponent(jPanel17);
 
-        jListEntryKeywords.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jListEntryKeywords.border.title"))); // NOI18N
-        jListEntryKeywords.setModel(keywordListModel);
-        jListEntryKeywords.setName("jListEntryKeywords"); // NOI18N
-        jListEntryKeywords.setVisibleRowCount(-1);
-        jScrollPane3.setViewportView(jListEntryKeywords);
+            jScrollPane3.setBorder(null);
+            jScrollPane3.setName("jScrollPane3"); // NOI18N
 
-        jSplitPaneMain2.setRightComponent(jScrollPane3);
+            jListEntryKeywords.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jListEntryKeywords.border.title"))); // NOI18N
+            jListEntryKeywords.setModel(keywordListModel);
+            jListEntryKeywords.setName("jListEntryKeywords"); // NOI18N
+            jListEntryKeywords.setVisibleRowCount(-1);
+            jScrollPane3.setViewportView(jListEntryKeywords);
 
-        jSplitPaneMain1.setLeftComponent(jSplitPaneMain2);
+            jSplitPaneMain2.setRightComponent(jScrollPane3);
 
-        jPanelMainRight.setName("jPanelMainRight"); // NOI18N
+            jSplitPaneMain1.setLeftComponent(jSplitPaneMain2);
 
-        jTabbedPaneMain.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
-        jTabbedPaneMain.setName("jTabbedPaneMain"); // NOI18N
+            jPanelMainRight.setName("jPanelMainRight"); // NOI18N
 
-        jPanel1.setName("jPanel1"); // NOI18N
+            jTabbedPaneMain.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+            jTabbedPaneMain.setName("jTabbedPaneMain"); // NOI18N
 
-        jSplitPaneLinks.setBorder(null);
-        jSplitPaneLinks.setDividerLocation(250);
-        jSplitPaneLinks.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPaneLinks.setName("jSplitPaneLinks"); // NOI18N
-        jSplitPaneLinks.setOneTouchExpandable(true);
+            jPanel1.setName("jPanel1"); // NOI18N
 
-        jPanel14.setName("jPanel14"); // NOI18N
+            jSplitPaneLinks.setBorder(null);
+            jSplitPaneLinks.setDividerLocation(250);
+            jSplitPaneLinks.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+            jSplitPaneLinks.setName("jSplitPaneLinks"); // NOI18N
+            jSplitPaneLinks.setOneTouchExpandable(true);
 
-        jScrollPane4.setName("jScrollPane4"); // NOI18N
+            jPanel14.setName("jPanel14"); // NOI18N
 
-        jTableLinks.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            jScrollPane4.setName("jScrollPane4"); // NOI18N
 
-            },
-            new String [] {
-                "Zettel", "Überschrift", "Relevanz", "Bewertung"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Float.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
+            jTableLinks.setModel(new javax.swing.table.DefaultTableModel(
+                new Object [][] {
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
+                },
+                new String [] {
+                    "Zettel", "Überschrift", "Relevanz", "Bewertung"
+                }
+            ) {
+                Class[] types = new Class [] {
+                    java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Float.class
+                };
+                boolean[] canEdit = new boolean [] {
+                    false, false, false, false
+                };
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jTableLinks.setDragEnabled(true);
-        jTableLinks.setName("jTableLinks"); // NOI18N
-        jTableLinks.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jTableLinks.setShowVerticalLines(false);
-        jTableLinks.getTableHeader().setReorderingAllowed(false);
-        jScrollPane4.setViewportView(jTableLinks);
-        if (jTableLinks.getColumnModel().getColumnCount() > 0) {
-            jTableLinks.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableLinks.columnModel.title0")); // NOI18N
-            jTableLinks.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableLinks.columnModel.title1")); // NOI18N
-            jTableLinks.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableLinks.columnModel.title2")); // NOI18N
-            jTableLinks.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("jTableLinks.columnModel.title3")); // NOI18N
-        }
+                public Class getColumnClass(int columnIndex) {
+                    return types [columnIndex];
+                }
 
-        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
-        jPanel14.setLayout(jPanel14Layout);
-        jPanel14Layout.setHorizontalGroup(
-            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-        );
-        jPanel14Layout.setVerticalGroup(
-            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
-        );
-
-        jSplitPaneLinks.setTopComponent(jPanel14);
-
-        jPanelManLinks.setName("jPanelManLinks"); // NOI18N
-
-        jScrollPane15.setBorder(null);
-        jScrollPane15.setName("jScrollPane15"); // NOI18N
-
-        jTableManLinks.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "Eintrag", "Überschrift", "Bewertung"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Float.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit [columnIndex];
+                }
+            });
+            jTableLinks.setDragEnabled(true);
+            jTableLinks.setName("jTableLinks"); // NOI18N
+            jTableLinks.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+            jTableLinks.setShowVerticalLines(false);
+            jTableLinks.getTableHeader().setReorderingAllowed(false);
+            jScrollPane4.setViewportView(jTableLinks);
+            if (jTableLinks.getColumnModel().getColumnCount() > 0) {
+                jTableLinks.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableLinks.columnModel.title0")); // NOI18N
+                jTableLinks.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableLinks.columnModel.title1")); // NOI18N
+                jTableLinks.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableLinks.columnModel.title2")); // NOI18N
+                jTableLinks.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("jTableLinks.columnModel.title3")); // NOI18N
             }
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jTableManLinks.setToolTipText(resourceMap.getString("jTableManLinks.toolTipText")); // NOI18N
-        jTableManLinks.setDragEnabled(true);
-        jTableManLinks.setName("jTableManLinks"); // NOI18N
-        jTableManLinks.getTableHeader().setReorderingAllowed(false);
-        jScrollPane15.setViewportView(jTableManLinks);
-        if (jTableManLinks.getColumnModel().getColumnCount() > 0) {
-            jTableManLinks.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableManLinks.columnModel.title0")); // NOI18N
-            jTableManLinks.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableManLinks.columnModel.title1")); // NOI18N
-            jTableManLinks.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableManLinks.columnModel.title2")); // NOI18N
-        }
+            javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
+            jPanel14.setLayout(jPanel14Layout);
+            jPanel14Layout.setHorizontalGroup(
+                jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+            );
+            jPanel14Layout.setVerticalGroup(
+                jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+            );
 
-        javax.swing.GroupLayout jPanelManLinksLayout = new javax.swing.GroupLayout(jPanelManLinks);
-        jPanelManLinks.setLayout(jPanelManLinksLayout);
-        jPanelManLinksLayout.setHorizontalGroup(
-            jPanelManLinksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane15, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-        );
-        jPanelManLinksLayout.setVerticalGroup(
-            jPanelManLinksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane15, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
-        );
+            jSplitPaneLinks.setTopComponent(jPanel14);
 
-        jSplitPaneLinks.setRightComponent(jPanelManLinks);
+            jPanelManLinks.setName("jPanelManLinks"); // NOI18N
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPaneLinks)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPaneLinks)
-        );
+            jScrollPane15.setBorder(null);
+            jScrollPane15.setName("jScrollPane15"); // NOI18N
 
-        jTabbedPaneMain.addTab(resourceMap.getString("jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
+            jTableManLinks.setModel(new javax.swing.table.DefaultTableModel(
+                new Object [][] {
+                    {null, null, null},
+                    {null, null, null},
+                    {null, null, null},
+                    {null, null, null}
+                },
+                new String [] {
+                    "Eintrag", "Überschrift", "Bewertung"
+                }
+            ) {
+                Class[] types = new Class [] {
+                    java.lang.Integer.class, java.lang.String.class, java.lang.Float.class
+                };
+                boolean[] canEdit = new boolean [] {
+                    false, false, false
+                };
 
-        jPanel10.setName("jPanel10"); // NOI18N
+                public Class getColumnClass(int columnIndex) {
+                    return types [columnIndex];
+                }
 
-        jSplitPane2.setBorder(null);
-        jSplitPane2.setDividerLocation(420);
-        jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane2.setName("jSplitPane2"); // NOI18N
-
-        jScrollPane10.setBorder(null);
-        jScrollPane10.setName("jScrollPane10"); // NOI18N
-
-        jTreeLuhmann.setDragEnabled(true);
-        jTreeLuhmann.setName("jTreeLuhmann"); // NOI18N
-        jScrollPane10.setViewportView(jTreeLuhmann);
-
-        jSplitPane2.setTopComponent(jScrollPane10);
-
-        jScrollPane2.setBorder(null);
-        jScrollPane2.setName("jScrollPane2"); // NOI18N
-
-        jEditorPaneIsFollower.setEditable(false);
-        jEditorPaneIsFollower.setContentType("text/html"); // NOI18N
-        jEditorPaneIsFollower.setDocument(new HTMLDocument());
-        jEditorPaneIsFollower.setEditorKit(new HTMLEditorKit());
-        jEditorPaneIsFollower.setName("jEditorPaneIsFollower"); // NOI18N
-        jScrollPane2.setViewportView(jEditorPaneIsFollower);
-
-        jSplitPane2.setRightComponent(jScrollPane2);
-
-        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
-        jPanel10.setLayout(jPanel10Layout);
-        jPanel10Layout.setHorizontalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-        );
-        jPanel10Layout.setVerticalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
-        );
-
-        jTabbedPaneMain.addTab(resourceMap.getString("jPanel10.TabConstraints.tabTitle"), jPanel10); // NOI18N
-
-        jPanel2.setName("jPanel2"); // NOI18N
-
-        jTextFieldFilterKeywords.setText(resourceMap.getString("jTextFieldFilterKeywords.text")); // NOI18N
-        jTextFieldFilterKeywords.setToolTipText(resourceMap.getString("jTextFieldFilterKeywords.toolTipText")); // NOI18N
-        jTextFieldFilterKeywords.setEnabled(false);
-        jTextFieldFilterKeywords.setName("jTextFieldFilterKeywords"); // NOI18N
-
-        jButtonRefreshKeywords.setAction(actionMap.get("refreshKeywordList")); // NOI18N
-        jButtonRefreshKeywords.setIcon(resourceMap.getIcon("jButtonRefreshKeywords.icon")); // NOI18N
-        jButtonRefreshKeywords.setBorderPainted(false);
-        jButtonRefreshKeywords.setContentAreaFilled(false);
-        jButtonRefreshKeywords.setFocusPainted(false);
-        jButtonRefreshKeywords.setName("jButtonRefreshKeywords"); // NOI18N
-
-        jCheckBoxShowSynonyms.setText(resourceMap.getString("jCheckBoxShowSynonyms.text")); // NOI18N
-        jCheckBoxShowSynonyms.setToolTipText(resourceMap.getString("jCheckBoxShowSynonyms.toolTipText")); // NOI18N
-        jCheckBoxShowSynonyms.setName("jCheckBoxShowSynonyms"); // NOI18N
-
-        jPanel16.setName("jPanel16"); // NOI18N
-
-        jScrollPane17.setBorder(null);
-        jScrollPane17.setName("jScrollPane17"); // NOI18N
-
-        jTreeKeywords.setName("jTreeKeywords"); // NOI18N
-        jScrollPane17.setViewportView(jTreeKeywords);
-
-        jScrollPane6.setBorder(null);
-        jScrollPane6.setName("jScrollPane6"); // NOI18N
-
-        jTableKeywords.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Schlagwörter", "Häufigkeit"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit [columnIndex];
+                }
+            });
+            jTableManLinks.setToolTipText(resourceMap.getString("jTableManLinks.toolTipText")); // NOI18N
+            jTableManLinks.setDragEnabled(true);
+            jTableManLinks.setName("jTableManLinks"); // NOI18N
+            jTableManLinks.getTableHeader().setReorderingAllowed(false);
+            jScrollPane15.setViewportView(jTableManLinks);
+            if (jTableManLinks.getColumnModel().getColumnCount() > 0) {
+                jTableManLinks.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableManLinks.columnModel.title0")); // NOI18N
+                jTableManLinks.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableManLinks.columnModel.title1")); // NOI18N
+                jTableManLinks.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableManLinks.columnModel.title2")); // NOI18N
             }
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jTableKeywords.setDragEnabled(true);
-        jTableKeywords.setName("jTableKeywords"); // NOI18N
-        jTableKeywords.setShowVerticalLines(false);
-        jTableKeywords.getTableHeader().setReorderingAllowed(false);
-        jScrollPane6.setViewportView(jTableKeywords);
-        if (jTableKeywords.getColumnModel().getColumnCount() > 0) {
-            jTableKeywords.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableKeywords.columnModel.title0")); // NOI18N
-            jTableKeywords.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableKeywords.columnModel.title1")); // NOI18N
-        }
+            javax.swing.GroupLayout jPanelManLinksLayout = new javax.swing.GroupLayout(jPanelManLinks);
+            jPanelManLinks.setLayout(jPanelManLinksLayout);
+            jPanelManLinksLayout.setHorizontalGroup(
+                jPanelManLinksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jScrollPane15, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+            );
+            jPanelManLinksLayout.setVerticalGroup(
+                jPanelManLinksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jScrollPane15, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+            );
 
-        javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
-        jPanel16.setLayout(jPanel16Layout);
-        jPanel16Layout.setHorizontalGroup(
-            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane17, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
-            .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
-        );
-        jPanel16Layout.setVerticalGroup(
-            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane17, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+            jSplitPaneLinks.setRightComponent(jPanelManLinks);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jTextFieldFilterKeywords, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonRefreshKeywords, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jCheckBoxShowSynonyms)
-                        .addGap(0, 102, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jCheckBoxShowSynonyms)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldFilterKeywords, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButtonRefreshKeywords))
-                .addContainerGap())
-        );
+            javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+            jPanel1.setLayout(jPanel1Layout);
+            jPanel1Layout.setHorizontalGroup(
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jSplitPaneLinks)
+            );
+            jPanel1Layout.setVerticalGroup(
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jSplitPaneLinks)
+            );
 
-        jTabbedPaneMain.addTab(resourceMap.getString("jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
+            jTabbedPaneMain.addTab(resourceMap.getString("jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
 
-        jPanel7.setName("jPanel7"); // NOI18N
+            jPanel10.setName("jPanel10"); // NOI18N
 
-        jTextFieldFilterAuthors.setToolTipText(resourceMap.getString("jTextFieldFilterAuthors.toolTipText")); // NOI18N
-        jTextFieldFilterAuthors.setEnabled(false);
-        jTextFieldFilterAuthors.setName("jTextFieldFilterAuthors"); // NOI18N
+            jSplitPane2.setBorder(null);
+            jSplitPane2.setDividerLocation(420);
+            jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+            jSplitPane2.setName("jSplitPane2"); // NOI18N
 
-        jSplitPaneAuthors.setBorder(null);
-        jSplitPaneAuthors.setDividerLocation(270);
-        jSplitPaneAuthors.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPaneAuthors.setName("jSplitPaneAuthors"); // NOI18N
-        jSplitPaneAuthors.setOneTouchExpandable(true);
+            jScrollPane10.setBorder(null);
+            jScrollPane10.setName("jScrollPane10"); // NOI18N
 
-        jPanel15.setName("jPanel15"); // NOI18N
+            jTreeLuhmann.setDragEnabled(true);
+            jTreeLuhmann.setName("jTreeLuhmann"); // NOI18N
+            jScrollPane10.setViewportView(jTreeLuhmann);
 
-        jScrollPane7.setBorder(null);
-        jScrollPane7.setName("jScrollPane7"); // NOI18N
+            jSplitPane2.setTopComponent(jScrollPane10);
 
-        jTableAuthors.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            jScrollPane2.setBorder(null);
+            jScrollPane2.setName("jScrollPane2"); // NOI18N
 
-            },
-            new String [] {
-                "Autoren", "Häufigkeit"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
+            jEditorPaneIsFollower.setEditable(false);
+            jEditorPaneIsFollower.setContentType("text/html"); // NOI18N
+            jEditorPaneIsFollower.setName("jEditorPaneIsFollower"); // NOI18N
+            jScrollPane2.setViewportView(jEditorPaneIsFollower);
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
+            jSplitPane2.setRightComponent(jScrollPane2);
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jTableAuthors.setDragEnabled(true);
-        jTableAuthors.setName("jTableAuthors"); // NOI18N
-        jTableAuthors.getTableHeader().setReorderingAllowed(false);
-        jScrollPane7.setViewportView(jTableAuthors);
-        if (jTableAuthors.getColumnModel().getColumnCount() > 0) {
-            jTableAuthors.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableAuthors.columnModel.title0")); // NOI18N
-            jTableAuthors.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableAuthors.columnModel.title1")); // NOI18N
-        }
+            javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+            jPanel10.setLayout(jPanel10Layout);
+            jPanel10Layout.setHorizontalGroup(
+                jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jSplitPane2)
+            );
+            jPanel10Layout.setVerticalGroup(
+                jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
+            );
 
-        jComboBoxAuthorType.setName("jComboBoxAuthorType"); // NOI18N
+            jTabbedPaneMain.addTab(resourceMap.getString("jPanel10.TabConstraints.tabTitle"), jPanel10); // NOI18N
 
-        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
-        jPanel15.setLayout(jPanel15Layout);
-        jPanel15Layout.setHorizontalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jComboBoxAuthorType, 0, 270, Short.MAX_VALUE)
-            .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
-        );
-        jPanel15Layout.setVerticalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel15Layout.createSequentialGroup()
-                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBoxAuthorType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(3, 3, 3))
-        );
+            jPanel2.setName("jPanel2"); // NOI18N
 
-        jSplitPaneAuthors.setTopComponent(jPanel15);
+            jTextFieldFilterKeywords.setText(resourceMap.getString("jTextFieldFilterKeywords.text")); // NOI18N
+            jTextFieldFilterKeywords.setToolTipText(resourceMap.getString("jTextFieldFilterKeywords.toolTipText")); // NOI18N
+            jTextFieldFilterKeywords.setEnabled(false);
+            jTextFieldFilterKeywords.setName("jTextFieldFilterKeywords"); // NOI18N
 
-        jPanelDispAuthor.setName("jPanelDispAuthor"); // NOI18N
+            jButtonRefreshKeywords.setAction(actionMap.get("refreshKeywordList")); // NOI18N
+            jButtonRefreshKeywords.setIcon(resourceMap.getIcon("jButtonRefreshKeywords.icon")); // NOI18N
+            jButtonRefreshKeywords.setBorderPainted(false);
+            jButtonRefreshKeywords.setContentAreaFilled(false);
+            jButtonRefreshKeywords.setFocusPainted(false);
+            jButtonRefreshKeywords.setName("jButtonRefreshKeywords"); // NOI18N
 
-        jScrollPane16.setBorder(null);
-        jScrollPane16.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane16.setName("jScrollPane16"); // NOI18N
+            jCheckBoxShowSynonyms.setText(resourceMap.getString("jCheckBoxShowSynonyms.text")); // NOI18N
+            jCheckBoxShowSynonyms.setToolTipText(resourceMap.getString("jCheckBoxShowSynonyms.toolTipText")); // NOI18N
+            jCheckBoxShowSynonyms.setName("jCheckBoxShowSynonyms"); // NOI18N
 
-        jEditorPaneDispAuthor.setEditable(false);
-        jEditorPaneDispAuthor.setContentType(resourceMap.getString("jEditorPaneDispAuthor.contentType")); // NOI18N
-        jEditorPaneDispAuthor.setName("jEditorPaneDispAuthor"); // NOI18N
-        jScrollPane16.setViewportView(jEditorPaneDispAuthor);
+            jPanel16.setName("jPanel16"); // NOI18N
 
-        javax.swing.GroupLayout jPanelDispAuthorLayout = new javax.swing.GroupLayout(jPanelDispAuthor);
-        jPanelDispAuthor.setLayout(jPanelDispAuthorLayout);
-        jPanelDispAuthorLayout.setHorizontalGroup(
-            jPanelDispAuthorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-        );
-        jPanelDispAuthorLayout.setVerticalGroup(
-            jPanelDispAuthorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
-        );
+            jScrollPane17.setBorder(null);
+            jScrollPane17.setName("jScrollPane17"); // NOI18N
 
-        jSplitPaneAuthors.setRightComponent(jPanelDispAuthor);
+            jTreeKeywords.setName("jTreeKeywords"); // NOI18N
+            jScrollPane17.setViewportView(jTreeKeywords);
 
-        jButtonRefreshAuthors.setAction(actionMap.get("refreshAuthorList")); // NOI18N
-        jButtonRefreshAuthors.setIcon(resourceMap.getIcon("jButtonRefreshAuthors.icon")); // NOI18N
-        jButtonRefreshAuthors.setBorderPainted(false);
-        jButtonRefreshAuthors.setContentAreaFilled(false);
-        jButtonRefreshAuthors.setFocusPainted(false);
-        jButtonRefreshAuthors.setName("jButtonRefreshAuthors"); // NOI18N
+            jScrollPane6.setBorder(null);
+            jScrollPane6.setName("jScrollPane6"); // NOI18N
 
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPaneAuthors, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(jTextFieldFilterAuthors)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonRefreshAuthors, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                .addComponent(jSplitPaneAuthors)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTextFieldFilterAuthors, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonRefreshAuthors))
-                .addContainerGap())
-        );
+            jTableKeywords.setModel(new javax.swing.table.DefaultTableModel(
+                new Object [][] {
 
-        jTabbedPaneMain.addTab(resourceMap.getString("jPanel7.TabConstraints.tabTitle"), jPanel7); // NOI18N
+                },
+                new String [] {
+                    "Schlagwörter", "Häufigkeit"
+                }
+            ) {
+                Class[] types = new Class [] {
+                    java.lang.String.class, java.lang.Integer.class
+                };
+                boolean[] canEdit = new boolean [] {
+                    false, false
+                };
 
-        jPanel8.setName("jPanel8"); // NOI18N
+                public Class getColumnClass(int columnIndex) {
+                    return types [columnIndex];
+                }
 
-        jScrollPane8.setBorder(null);
-        jScrollPane8.setName("jScrollPane8"); // NOI18N
-
-        jTableTitles.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Zettel", "Überschrift", "Erstellt", "Geändert", "Bewertung"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit [columnIndex];
+                }
+            });
+            jTableKeywords.setDragEnabled(true);
+            jTableKeywords.setName("jTableKeywords"); // NOI18N
+            jTableKeywords.setShowVerticalLines(false);
+            jTableKeywords.getTableHeader().setReorderingAllowed(false);
+            jScrollPane6.setViewportView(jTableKeywords);
+            if (jTableKeywords.getColumnModel().getColumnCount() > 0) {
+                jTableKeywords.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableKeywords.columnModel.title0")); // NOI18N
+                jTableKeywords.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableKeywords.columnModel.title1")); // NOI18N
             }
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+            javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
+            jPanel16.setLayout(jPanel16Layout);
+            jPanel16Layout.setHorizontalGroup(
+                jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jScrollPane17, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+            );
+            jPanel16Layout.setVerticalGroup(
+                jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jScrollPane17, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+            );
+
+            javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+            jPanel2.setLayout(jPanel2Layout);
+            jPanel2Layout.setHorizontalGroup(
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jPanel16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                            .addComponent(jTextFieldFilterKeywords, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButtonRefreshKeywords, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(jCheckBoxShowSynonyms)
+                            .addGap(0, 102, Short.MAX_VALUE)))
+                    .addContainerGap())
+            );
+            jPanel2Layout.setVerticalGroup(
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                    .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(jCheckBoxShowSynonyms)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jTextFieldFilterKeywords, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButtonRefreshKeywords))
+                    .addContainerGap())
+            );
+
+            jTabbedPaneMain.addTab(resourceMap.getString("jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
+
+            jPanel7.setName("jPanel7"); // NOI18N
+
+            jTextFieldFilterAuthors.setToolTipText(resourceMap.getString("jTextFieldFilterAuthors.toolTipText")); // NOI18N
+            jTextFieldFilterAuthors.setEnabled(false);
+            jTextFieldFilterAuthors.setName("jTextFieldFilterAuthors"); // NOI18N
+
+            jSplitPaneAuthors.setBorder(null);
+            jSplitPaneAuthors.setDividerLocation(270);
+            jSplitPaneAuthors.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+            jSplitPaneAuthors.setName("jSplitPaneAuthors"); // NOI18N
+            jSplitPaneAuthors.setOneTouchExpandable(true);
+
+            jPanel15.setName("jPanel15"); // NOI18N
+
+            jScrollPane7.setBorder(null);
+            jScrollPane7.setName("jScrollPane7"); // NOI18N
+
+            jTableAuthors.setModel(new javax.swing.table.DefaultTableModel(
+                new Object [][] {
+
+                },
+                new String [] {
+                    "Autoren", "Häufigkeit"
+                }
+            ) {
+                Class[] types = new Class [] {
+                    java.lang.String.class, java.lang.Integer.class
+                };
+                boolean[] canEdit = new boolean [] {
+                    false, false
+                };
+
+                public Class getColumnClass(int columnIndex) {
+                    return types [columnIndex];
+                }
+
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit [columnIndex];
+                }
+            });
+            jTableAuthors.setDragEnabled(true);
+            jTableAuthors.setName("jTableAuthors"); // NOI18N
+            jTableAuthors.getTableHeader().setReorderingAllowed(false);
+            jScrollPane7.setViewportView(jTableAuthors);
+            if (jTableAuthors.getColumnModel().getColumnCount() > 0) {
+                jTableAuthors.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableAuthors.columnModel.title0")); // NOI18N
+                jTableAuthors.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableAuthors.columnModel.title1")); // NOI18N
             }
-        });
-        jTableTitles.setDragEnabled(true);
-        jTableTitles.setName("jTableTitles"); // NOI18N
-        jTableTitles.getTableHeader().setReorderingAllowed(false);
-        jScrollPane8.setViewportView(jTableTitles);
-        if (jTableTitles.getColumnModel().getColumnCount() > 0) {
-            jTableTitles.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title0")); // NOI18N
-            jTableTitles.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title1")); // NOI18N
-            jTableTitles.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title2")); // NOI18N
-            jTableTitles.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title3")); // NOI18N
-            jTableTitles.getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title4")); // NOI18N
-        }
 
-        jTextFieldFilterTitles.setToolTipText(resourceMap.getString("jTextFieldFilterTitles.toolTipText")); // NOI18N
-        jTextFieldFilterTitles.setEnabled(false);
-        jTextFieldFilterTitles.setName("jTextFieldFilterTitles"); // NOI18N
+            jComboBoxAuthorType.setName("jComboBoxAuthorType"); // NOI18N
 
-        jButtonRefreshTitles.setAction(actionMap.get("refreshTitleList")); // NOI18N
-        jButtonRefreshTitles.setIcon(resourceMap.getIcon("jButtonRefreshTitles.icon")); // NOI18N
-        jButtonRefreshTitles.setBorderPainted(false);
-        jButtonRefreshTitles.setContentAreaFilled(false);
-        jButtonRefreshTitles.setFocusPainted(false);
-        jButtonRefreshTitles.setName("jButtonRefreshTitles"); // NOI18N
+            javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
+            jPanel15.setLayout(jPanel15Layout);
+            jPanel15Layout.setHorizontalGroup(
+                jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jComboBoxAuthorType, 0, 270, Short.MAX_VALUE)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+            );
+            jPanel15Layout.setVerticalGroup(
+                jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel15Layout.createSequentialGroup()
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jComboBoxAuthorType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(3, 3, 3))
+            );
 
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTextFieldFilterTitles, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonRefreshTitles, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
-        );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButtonRefreshTitles)
-                    .addComponent(jTextFieldFilterTitles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
+            jSplitPaneAuthors.setTopComponent(jPanel15);
 
-        jTabbedPaneMain.addTab(resourceMap.getString("jPanel8.TabConstraints.tabTitle"), jPanel8); // NOI18N
+            jPanelDispAuthor.setName("jPanelDispAuthor"); // NOI18N
 
-        jPanel11.setName("jPanel11"); // NOI18N
+            jScrollPane16.setBorder(null);
+            jScrollPane16.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            jScrollPane16.setName("jScrollPane16"); // NOI18N
 
-        jTextFieldFilterCluster.setToolTipText(resourceMap.getString("jTextFieldFilterCluster.toolTipText")); // NOI18N
-        jTextFieldFilterCluster.setEnabled(false);
-        jTextFieldFilterCluster.setName("jTextFieldFilterCluster"); // NOI18N
+            jEditorPaneDispAuthor.setEditable(false);
+            jEditorPaneDispAuthor.setContentType(resourceMap.getString("jEditorPaneDispAuthor.contentType")); // NOI18N
+            jEditorPaneDispAuthor.setName("jEditorPaneDispAuthor"); // NOI18N
+            jScrollPane16.setViewportView(jEditorPaneDispAuthor);
 
-        jButtonRefreshCluster.setAction(actionMap.get("refreshClusterList")); // NOI18N
-        jButtonRefreshCluster.setIcon(resourceMap.getIcon("jButtonRefreshCluster.icon")); // NOI18N
-        jButtonRefreshCluster.setBorderPainted(false);
-        jButtonRefreshCluster.setContentAreaFilled(false);
-        jButtonRefreshCluster.setFocusPainted(false);
-        jButtonRefreshCluster.setName("jButtonRefreshCluster"); // NOI18N
+            javax.swing.GroupLayout jPanelDispAuthorLayout = new javax.swing.GroupLayout(jPanelDispAuthor);
+            jPanelDispAuthor.setLayout(jPanelDispAuthorLayout);
+            jPanelDispAuthorLayout.setHorizontalGroup(
+                jPanelDispAuthorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+            );
+            jPanelDispAuthorLayout.setVerticalGroup(
+                jPanelDispAuthorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
+            );
 
-        jCheckBoxCluster.setText(resourceMap.getString("jCheckBoxCluster.text")); // NOI18N
-        jCheckBoxCluster.setToolTipText(resourceMap.getString("jCheckBoxCluster.toolTipText")); // NOI18N
-        jCheckBoxCluster.setName("jCheckBoxCluster"); // NOI18N
+            jSplitPaneAuthors.setRightComponent(jPanelDispAuthor);
 
-        jPanel3.setName("jPanel3"); // NOI18N
+            jButtonRefreshAuthors.setAction(actionMap.get("refreshAuthorList")); // NOI18N
+            jButtonRefreshAuthors.setIcon(resourceMap.getIcon("jButtonRefreshAuthors.icon")); // NOI18N
+            jButtonRefreshAuthors.setBorderPainted(false);
+            jButtonRefreshAuthors.setContentAreaFilled(false);
+            jButtonRefreshAuthors.setFocusPainted(false);
+            jButtonRefreshAuthors.setName("jButtonRefreshAuthors"); // NOI18N
 
-        jSplitPane1.setBorder(null);
-        jSplitPane1.setDividerLocation(310);
-        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane1.setName("jSplitPane1"); // NOI18N
+            javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+            jPanel7.setLayout(jPanel7Layout);
+            jPanel7Layout.setHorizontalGroup(
+                jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jSplitPaneAuthors, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+                .addGroup(jPanel7Layout.createSequentialGroup()
+                    .addGap(6, 6, 6)
+                    .addComponent(jTextFieldFilterAuthors)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jButtonRefreshAuthors, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap())
+            );
+            jPanel7Layout.setVerticalGroup(
+                jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                    .addComponent(jSplitPaneAuthors)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jTextFieldFilterAuthors, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonRefreshAuthors))
+                    .addContainerGap())
+            );
 
-        jScrollPane5.setBorder(null);
-        jScrollPane5.setName("jScrollPane5"); // NOI18N
+            jTabbedPaneMain.addTab(resourceMap.getString("jPanel7.TabConstraints.tabTitle"), jPanel7); // NOI18N
 
-        jEditorPaneClusterEntries.setEditable(false);
-        jEditorPaneClusterEntries.setContentType("text/html"); // NOI18N
-        jEditorPaneClusterEntries.setName("jEditorPaneClusterEntries"); // NOI18N
-        jScrollPane5.setViewportView(jEditorPaneClusterEntries);
+            jPanel8.setName("jPanel8"); // NOI18N
 
-        jSplitPane1.setBottomComponent(jScrollPane5);
+            jScrollPane8.setBorder(null);
+            jScrollPane8.setName("jScrollPane8"); // NOI18N
 
-        jScrollPane11.setBorder(null);
-        jScrollPane11.setName("jScrollPane11"); // NOI18N
+            jTableTitles.setModel(new javax.swing.table.DefaultTableModel(
+                new Object [][] {
 
-        jTreeCluster.setName("jTreeCluster"); // NOI18N
-        jTreeCluster.setRootVisible(false);
-        jScrollPane11.setViewportView(jTreeCluster);
+                },
+                new String [] {
+                    "Zettel", "Überschrift", "Erstellt", "Geändert", "Bewertung"
+                }
+            ) {
+                Class[] types = new Class [] {
+                    java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class
+                };
+                boolean[] canEdit = new boolean [] {
+                    false, false, false, false, false
+                };
 
-        jSplitPane1.setLeftComponent(jScrollPane11);
+                public Class getColumnClass(int columnIndex) {
+                    return types [columnIndex];
+                }
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
-        );
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit [columnIndex];
+                }
+            });
+            jTableTitles.setDragEnabled(true);
+            jTableTitles.setName("jTableTitles"); // NOI18N
+            jTableTitles.getTableHeader().setReorderingAllowed(false);
+            jScrollPane8.setViewportView(jTableTitles);
+            if (jTableTitles.getColumnModel().getColumnCount() > 0) {
+                jTableTitles.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title0")); // NOI18N
+                jTableTitles.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title1")); // NOI18N
+                jTableTitles.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title2")); // NOI18N
+                jTableTitles.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title3")); // NOI18N
+                jTableTitles.getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title4")); // NOI18N
+            }
 
-        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
-        jPanel11.setLayout(jPanel11Layout);
-        jPanel11Layout.setHorizontalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel11Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jTextFieldFilterCluster)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonRefreshCluster, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel11Layout.createSequentialGroup()
-                        .addComponent(jCheckBoxCluster)
-                        .addGap(0, 32, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel11Layout.setVerticalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
+            jTextFieldFilterTitles.setToolTipText(resourceMap.getString("jTextFieldFilterTitles.toolTipText")); // NOI18N
+            jTextFieldFilterTitles.setEnabled(false);
+            jTextFieldFilterTitles.setName("jTextFieldFilterTitles"); // NOI18N
+
+            jButtonRefreshTitles.setAction(actionMap.get("refreshTitleList")); // NOI18N
+            jButtonRefreshTitles.setIcon(resourceMap.getIcon("jButtonRefreshTitles.icon")); // NOI18N
+            jButtonRefreshTitles.setBorderPainted(false);
+            jButtonRefreshTitles.setContentAreaFilled(false);
+            jButtonRefreshTitles.setFocusPainted(false);
+            jButtonRefreshTitles.setName("jButtonRefreshTitles"); // NOI18N
+
+            javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+            jPanel8.setLayout(jPanel8Layout);
+            jPanel8Layout.setHorizontalGroup(
+                jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jTextFieldFilterTitles, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jButtonRefreshTitles, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap())
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+            );
+            jPanel8Layout.setVerticalGroup(
+                jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jButtonRefreshTitles)
+                        .addComponent(jTextFieldFilterTitles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap())
+            );
+
+            jTabbedPaneMain.addTab(resourceMap.getString("jPanel8.TabConstraints.tabTitle"), jPanel8); // NOI18N
+
+            jPanel11.setName("jPanel11"); // NOI18N
+
+            jTextFieldFilterCluster.setToolTipText(resourceMap.getString("jTextFieldFilterCluster.toolTipText")); // NOI18N
+            jTextFieldFilterCluster.setEnabled(false);
+            jTextFieldFilterCluster.setName("jTextFieldFilterCluster"); // NOI18N
+
+            jButtonRefreshCluster.setAction(actionMap.get("refreshClusterList")); // NOI18N
+            jButtonRefreshCluster.setIcon(resourceMap.getIcon("jButtonRefreshCluster.icon")); // NOI18N
+            jButtonRefreshCluster.setBorderPainted(false);
+            jButtonRefreshCluster.setContentAreaFilled(false);
+            jButtonRefreshCluster.setFocusPainted(false);
+            jButtonRefreshCluster.setName("jButtonRefreshCluster"); // NOI18N
+
+            jCheckBoxCluster.setText(resourceMap.getString("jCheckBoxCluster.text")); // NOI18N
+            jCheckBoxCluster.setToolTipText(resourceMap.getString("jCheckBoxCluster.toolTipText")); // NOI18N
+            jCheckBoxCluster.setName("jCheckBoxCluster"); // NOI18N
+
+            jPanel3.setName("jPanel3"); // NOI18N
+
+            jSplitPane1.setBorder(null);
+            jSplitPane1.setDividerLocation(310);
+            jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+            jSplitPane1.setName("jSplitPane1"); // NOI18N
+
+            jScrollPane5.setBorder(null);
+            jScrollPane5.setName("jScrollPane5"); // NOI18N
+
+            jEditorPaneClusterEntries.setEditable(false);
+            jEditorPaneClusterEntries.setContentType("text/html"); // NOI18N
+            jEditorPaneClusterEntries.setName("jEditorPaneClusterEntries"); // NOI18N
+            jScrollPane5.setViewportView(jEditorPaneClusterEntries);
+
+            jSplitPane1.setBottomComponent(jScrollPane5);
+
+            jScrollPane11.setBorder(null);
+            jScrollPane11.setName("jScrollPane11"); // NOI18N
+
+            jTreeCluster.setName("jTreeCluster"); // NOI18N
+            jTreeCluster.setRootVisible(false);
+            jScrollPane11.setViewportView(jTreeCluster);
+
+            jSplitPane1.setLeftComponent(jScrollPane11);
+
+            javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+            jPanel3.setLayout(jPanel3Layout);
+            jPanel3Layout.setHorizontalGroup(
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jSplitPane1)
+            );
+            jPanel3Layout.setVerticalGroup(
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
+            );
+
+            javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+            jPanel11.setLayout(jPanel11Layout);
+            jPanel11Layout.setHorizontalGroup(
+                jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel11Layout.createSequentialGroup()
+                    .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel11Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jTextFieldFilterCluster)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButtonRefreshCluster, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel11Layout.createSequentialGroup()
+                            .addComponent(jCheckBoxCluster)
+                            .addGap(0, 32, Short.MAX_VALUE)))
+                    .addContainerGap())
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBoxCluster)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTextFieldFilterCluster, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonRefreshCluster))
-                .addContainerGap())
-        );
+            );
+            jPanel11Layout.setVerticalGroup(
+                jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel11Layout.createSequentialGroup()
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jCheckBoxCluster)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jTextFieldFilterCluster, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonRefreshCluster))
+                    .addContainerGap())
+            );
 
-        jTabbedPaneMain.addTab(resourceMap.getString("jPanel11.TabConstraints.tabTitle"), jPanel11); // NOI18N
+            jTabbedPaneMain.addTab(resourceMap.getString("jPanel11.TabConstraints.tabTitle"), jPanel11); // NOI18N
 
-        jPanel9.setName("jPanel9"); // NOI18N
+            jPanel9.setName("jPanel9"); // NOI18N
 
-        jComboBoxBookmarkCategory.setToolTipText(resourceMap.getString("jComboBoxBookmarkCategory.toolTipText")); // NOI18N
-        jComboBoxBookmarkCategory.setName("jComboBoxBookmarkCategory"); // NOI18N
+            jComboBoxBookmarkCategory.setToolTipText(resourceMap.getString("jComboBoxBookmarkCategory.toolTipText")); // NOI18N
+            jComboBoxBookmarkCategory.setName("jComboBoxBookmarkCategory"); // NOI18N
 
-        jSplitPane3.setBorder(null);
-        jSplitPane3.setDividerLocation(380);
-        jSplitPane3.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane3.setName("jSplitPane3"); // NOI18N
+            jSplitPane3.setBorder(null);
+            jSplitPane3.setDividerLocation(380);
+            jSplitPane3.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+            jSplitPane3.setName("jSplitPane3"); // NOI18N
 
-        jScrollPane9.setBorder(null);
-        jScrollPane9.setName("jScrollPane9"); // NOI18N
+            jScrollPane9.setBorder(null);
+            jScrollPane9.setName("jScrollPane9"); // NOI18N
 
-        jTableBookmarks.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
-            },
-            new String [] {
-                "Eintrag", "Kategorie"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
+            jTableBookmarks.setModel(new javax.swing.table.DefaultTableModel(
+                new Object [][] {
+                    {null, null},
+                    {null, null},
+                    {null, null},
+                    {null, null}
+                },
+                new String [] {
+                    "Eintrag", "Kategorie"
+                }
+            ) {
+                Class[] types = new Class [] {
+                    java.lang.Integer.class, java.lang.String.class
+                };
+                boolean[] canEdit = new boolean [] {
+                    false, false
+                };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
+                public Class getColumnClass(int columnIndex) {
+                    return types [columnIndex];
+                }
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jTableBookmarks.setDragEnabled(true);
-        jTableBookmarks.setName("jTableBookmarks"); // NOI18N
-        jTableBookmarks.setShowVerticalLines(false);
-        jTableBookmarks.getTableHeader().setReorderingAllowed(false);
-        jScrollPane9.setViewportView(jTableBookmarks);
-        if (jTableBookmarks.getColumnModel().getColumnCount() > 0) {
-            jTableBookmarks.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableBookmarks.columnModel.title0")); // NOI18N
-            jTableBookmarks.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableBookmarks.columnModel.title1")); // NOI18N
-        }
-
-        jSplitPane3.setLeftComponent(jScrollPane9);
-
-        jScrollPane14.setBorder(null);
-        jScrollPane14.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane14.setName("jScrollPane14"); // NOI18N
-
-        jEditorPaneBookmarkComment.setEditable(false);
-        jEditorPaneBookmarkComment.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jEditorPaneBookmarkComment.border.title"))); // NOI18N
-        jEditorPaneBookmarkComment.setContentType(resourceMap.getString("jEditorPaneBookmarkComment.contentType")); // NOI18N
-        jEditorPaneBookmarkComment.setName("jEditorPaneBookmarkComment"); // NOI18N
-        jScrollPane14.setViewportView(jEditorPaneBookmarkComment);
-
-        jSplitPane3.setRightComponent(jScrollPane14);
-
-        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-        jPanel9.setLayout(jPanel9Layout);
-        jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jComboBoxBookmarkCategory, 0, 258, Short.MAX_VALUE)
-                .addContainerGap())
-            .addComponent(jSplitPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-        );
-        jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                .addComponent(jSplitPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBoxBookmarkCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        jTabbedPaneMain.addTab(resourceMap.getString("jPanel9.TabConstraints.tabTitle"), jPanel9); // NOI18N
-
-        jPanel13.setName("jPanel13"); // NOI18N
-
-        jScrollPane13.setBorder(null);
-        jScrollPane13.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane13.setName("jScrollPane13"); // NOI18N
-
-        jTableAttachments.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "Anhang", "Typ", "Zettel"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit [columnIndex];
+                }
+            });
+            jTableBookmarks.setDragEnabled(true);
+            jTableBookmarks.setName("jTableBookmarks"); // NOI18N
+            jTableBookmarks.setShowVerticalLines(false);
+            jTableBookmarks.getTableHeader().setReorderingAllowed(false);
+            jScrollPane9.setViewportView(jTableBookmarks);
+            if (jTableBookmarks.getColumnModel().getColumnCount() > 0) {
+                jTableBookmarks.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableBookmarks.columnModel.title0")); // NOI18N
+                jTableBookmarks.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableBookmarks.columnModel.title1")); // NOI18N
             }
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+            jSplitPane3.setLeftComponent(jScrollPane9);
+
+            jScrollPane14.setBorder(null);
+            jScrollPane14.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            jScrollPane14.setName("jScrollPane14"); // NOI18N
+
+            jEditorPaneBookmarkComment.setEditable(false);
+            jEditorPaneBookmarkComment.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jEditorPaneBookmarkComment.border.title"))); // NOI18N
+            jEditorPaneBookmarkComment.setContentType(resourceMap.getString("jEditorPaneBookmarkComment.contentType")); // NOI18N
+            jEditorPaneBookmarkComment.setName("jEditorPaneBookmarkComment"); // NOI18N
+            jScrollPane14.setViewportView(jEditorPaneBookmarkComment);
+
+            jSplitPane3.setRightComponent(jScrollPane14);
+
+            javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+            jPanel9.setLayout(jPanel9Layout);
+            jPanel9Layout.setHorizontalGroup(
+                jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jComboBoxBookmarkCategory, 0, 258, Short.MAX_VALUE)
+                    .addContainerGap())
+                .addComponent(jSplitPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            );
+            jPanel9Layout.setVerticalGroup(
+                jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                    .addComponent(jSplitPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jComboBoxBookmarkCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap())
+            );
+
+            jTabbedPaneMain.addTab(resourceMap.getString("jPanel9.TabConstraints.tabTitle"), jPanel9); // NOI18N
+
+            jPanel13.setName("jPanel13"); // NOI18N
+
+            jScrollPane13.setBorder(null);
+            jScrollPane13.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            jScrollPane13.setName("jScrollPane13"); // NOI18N
+
+            jTableAttachments.setModel(new javax.swing.table.DefaultTableModel(
+                new Object [][] {
+                    {null, null, null},
+                    {null, null, null},
+                    {null, null, null},
+                    {null, null, null}
+                },
+                new String [] {
+                    "Anhang", "Typ", "Zettel"
+                }
+            ) {
+                Class[] types = new Class [] {
+                    java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+                };
+                boolean[] canEdit = new boolean [] {
+                    false, false, false
+                };
+
+                public Class getColumnClass(int columnIndex) {
+                    return types [columnIndex];
+                }
+
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit [columnIndex];
+                }
+            });
+            jTableAttachments.setDragEnabled(true);
+            jTableAttachments.setName("jTableAttachments"); // NOI18N
+            jScrollPane13.setViewportView(jTableAttachments);
+            if (jTableAttachments.getColumnModel().getColumnCount() > 0) {
+                jTableAttachments.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableAttachments.columnModel.title0")); // NOI18N
+                jTableAttachments.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableAttachments.columnModel.title1")); // NOI18N
+                jTableAttachments.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableAttachments.columnModel.title2")); // NOI18N
             }
-        });
-        jTableAttachments.setDragEnabled(true);
-        jTableAttachments.setName("jTableAttachments"); // NOI18N
-        jScrollPane13.setViewportView(jTableAttachments);
-        if (jTableAttachments.getColumnModel().getColumnCount() > 0) {
-            jTableAttachments.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableAttachments.columnModel.title0")); // NOI18N
-            jTableAttachments.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableAttachments.columnModel.title1")); // NOI18N
-            jTableAttachments.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableAttachments.columnModel.title2")); // NOI18N
-        }
-
-        jTextFieldFilterAttachments.setToolTipText(resourceMap.getString("jTextFieldFilterAttachments.toolTipText")); // NOI18N
-        jTextFieldFilterAttachments.setEnabled(false);
-        jTextFieldFilterAttachments.setName("jTextFieldFilterAttachments"); // NOI18N
-
-        jButtonRefreshAttachments.setAction(actionMap.get("refreshAttachmentList")); // NOI18N
-        jButtonRefreshAttachments.setIcon(resourceMap.getIcon("jButtonRefreshAttachments.icon")); // NOI18N
-        jButtonRefreshAttachments.setBorderPainted(false);
-        jButtonRefreshAttachments.setContentAreaFilled(false);
-        jButtonRefreshAttachments.setFocusPainted(false);
-        jButtonRefreshAttachments.setName("jButtonRefreshAttachments"); // NOI18N
-
-        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
-        jPanel13.setLayout(jPanel13Layout);
-        jPanel13Layout.setHorizontalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTextFieldFilterAttachments, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonRefreshAttachments, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addComponent(jScrollPane13, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
-        );
-        jPanel13Layout.setVerticalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
-                .addComponent(jScrollPane13, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTextFieldFilterAttachments, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonRefreshAttachments))
-                .addContainerGap())
-        );
-
-        jTabbedPaneMain.addTab(resourceMap.getString("jPanel13.TabConstraints.tabTitle"), jPanel13); // NOI18N
-
-        javax.swing.GroupLayout jPanelMainRightLayout = new javax.swing.GroupLayout(jPanelMainRight);
-        jPanelMainRight.setLayout(jPanelMainRightLayout);
-        jPanelMainRightLayout.setHorizontalGroup(
-            jPanelMainRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 291, Short.MAX_VALUE)
-            .addGroup(jPanelMainRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jTabbedPaneMain, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE))
-        );
-        jPanelMainRightLayout.setVerticalGroup(
-            jPanelMainRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 532, Short.MAX_VALUE)
-            .addGroup(jPanelMainRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jTabbedPaneMain, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 532, Short.MAX_VALUE))
-        );
-
-        jSplitPaneMain1.setRightComponent(jPanelMainRight);
-
-        mainPanel.add(jSplitPaneMain1, java.awt.BorderLayout.CENTER);
-
-        menuBar.setName("menuBar"); // NOI18N
-
-        fileMenu.setText(resourceMap.getString("fileMenu.text")); // NOI18N
-        fileMenu.setName("fileMenu"); // NOI18N
-
-        newEntryMenuItem.setAction(actionMap.get("newEntry")); // NOI18N
-        newEntryMenuItem.setName("newEntryMenuItem"); // NOI18N
-        fileMenu.add(newEntryMenuItem);
-
-        insertEntryMenuItem.setAction(actionMap.get("insertEntry")); // NOI18N
-        insertEntryMenuItem.setName("insertEntryMenuItem"); // NOI18N
-        fileMenu.add(insertEntryMenuItem);
-
-        insertEntryAtMenuItem.setAction(actionMap.get("insertEntryAt")); // NOI18N
-        insertEntryAtMenuItem.setName("insertEntryAtMenuItem"); // NOI18N
-        fileMenu.add(insertEntryAtMenuItem);
-
-        jSeparator104.setName("jSeparator104"); // NOI18N
-        fileMenu.add(jSeparator104);
-
-        quickNewEntryMenuItem.setAction(actionMap.get("quickNewEntry")); // NOI18N
-        quickNewEntryMenuItem.setName("quickNewEntryMenuItem"); // NOI18N
-        fileMenu.add(quickNewEntryMenuItem);
-
-        quickNewTitleEntryMenuItem.setAction(actionMap.get("quickNewEntryWithTitle")); // NOI18N
-        quickNewTitleEntryMenuItem.setName("quickNewTitleEntryMenuItem"); // NOI18N
-        fileMenu.add(quickNewTitleEntryMenuItem);
-
-        jSeparator1.setName("jSeparator1"); // NOI18N
-        fileMenu.add(jSeparator1);
-
-        duplicateEntryMenuItem.setAction(actionMap.get("duplicateEntry")); // NOI18N
-        duplicateEntryMenuItem.setName("duplicateEntryMenuItem"); // NOI18N
-        fileMenu.add(duplicateEntryMenuItem);
-
-        jSeparator79.setName("jSeparator79"); // NOI18N
-        fileMenu.add(jSeparator79);
 
-        openMenuItem.setAction(actionMap.get("openDocument")); // NOI18N
-        openMenuItem.setName("openMenuItem"); // NOI18N
-        fileMenu.add(openMenuItem);
+            jTextFieldFilterAttachments.setToolTipText(resourceMap.getString("jTextFieldFilterAttachments.toolTipText")); // NOI18N
+            jTextFieldFilterAttachments.setEnabled(false);
+            jTextFieldFilterAttachments.setName("jTextFieldFilterAttachments"); // NOI18N
+
+            jButtonRefreshAttachments.setAction(actionMap.get("refreshAttachmentList")); // NOI18N
+            jButtonRefreshAttachments.setIcon(resourceMap.getIcon("jButtonRefreshAttachments.icon")); // NOI18N
+            jButtonRefreshAttachments.setBorderPainted(false);
+            jButtonRefreshAttachments.setContentAreaFilled(false);
+            jButtonRefreshAttachments.setFocusPainted(false);
+            jButtonRefreshAttachments.setName("jButtonRefreshAttachments"); // NOI18N
+
+            javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
+            jPanel13.setLayout(jPanel13Layout);
+            jPanel13Layout.setHorizontalGroup(
+                jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jTextFieldFilterAttachments, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jButtonRefreshAttachments, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap())
+                .addComponent(jScrollPane13, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+            );
+            jPanel13Layout.setVerticalGroup(
+                jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
+                    .addComponent(jScrollPane13, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jTextFieldFilterAttachments, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonRefreshAttachments))
+                    .addContainerGap())
+            );
+
+            jTabbedPaneMain.addTab(resourceMap.getString("jPanel13.TabConstraints.tabTitle"), jPanel13); // NOI18N
+
+            javax.swing.GroupLayout jPanelMainRightLayout = new javax.swing.GroupLayout(jPanelMainRight);
+            jPanelMainRight.setLayout(jPanelMainRightLayout);
+            jPanelMainRightLayout.setHorizontalGroup(
+                jPanelMainRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(0, 291, Short.MAX_VALUE)
+                .addGroup(jPanelMainRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTabbedPaneMain, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE))
+            );
+            jPanelMainRightLayout.setVerticalGroup(
+                jPanelMainRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(0, 532, Short.MAX_VALUE)
+                .addGroup(jPanelMainRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTabbedPaneMain, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 532, Short.MAX_VALUE))
+            );
+
+            jSplitPaneMain1.setRightComponent(jPanelMainRight);
+
+            mainPanel.add(jSplitPaneMain1, java.awt.BorderLayout.CENTER);
+
+            menuBar.setName("menuBar"); // NOI18N
+
+            fileMenu.setText(resourceMap.getString("fileMenu.text")); // NOI18N
+            fileMenu.setName("fileMenu"); // NOI18N
+
+            newEntryMenuItem.setAction(actionMap.get("newEntry")); // NOI18N
+            newEntryMenuItem.setName("newEntryMenuItem"); // NOI18N
+            fileMenu.add(newEntryMenuItem);
+
+            insertEntryMenuItem.setAction(actionMap.get("insertEntry")); // NOI18N
+            insertEntryMenuItem.setName("insertEntryMenuItem"); // NOI18N
+            fileMenu.add(insertEntryMenuItem);
+
+            insertEntryAtMenuItem.setAction(actionMap.get("insertEntryAt")); // NOI18N
+            insertEntryAtMenuItem.setName("insertEntryAtMenuItem"); // NOI18N
+            fileMenu.add(insertEntryAtMenuItem);
+
+            jSeparator104.setName("jSeparator104"); // NOI18N
+            fileMenu.add(jSeparator104);
+
+            quickNewEntryMenuItem.setAction(actionMap.get("quickNewEntry")); // NOI18N
+            quickNewEntryMenuItem.setName("quickNewEntryMenuItem"); // NOI18N
+            fileMenu.add(quickNewEntryMenuItem);
 
-        recentDocsSubMenu.setText(resourceMap.getString("recentDocsSubMenu.text")); // NOI18N
-        recentDocsSubMenu.setName("recentDocsSubMenu"); // NOI18N
+            quickNewTitleEntryMenuItem.setAction(actionMap.get("quickNewEntryWithTitle")); // NOI18N
+            quickNewTitleEntryMenuItem.setName("quickNewTitleEntryMenuItem"); // NOI18N
+            fileMenu.add(quickNewTitleEntryMenuItem);
 
-        recentDoc1.setName("recentDoc1"); // NOI18N
-        recentDocsSubMenu.add(recentDoc1);
+            jSeparator1.setName("jSeparator1"); // NOI18N
+            fileMenu.add(jSeparator1);
 
-        recentDoc2.setName("recentDoc2"); // NOI18N
-        recentDocsSubMenu.add(recentDoc2);
+            duplicateEntryMenuItem.setAction(actionMap.get("duplicateEntry")); // NOI18N
+            duplicateEntryMenuItem.setName("duplicateEntryMenuItem"); // NOI18N
+            fileMenu.add(duplicateEntryMenuItem);
 
-        recentDoc3.setName("recentDoc3"); // NOI18N
-        recentDocsSubMenu.add(recentDoc3);
+            jSeparator79.setName("jSeparator79"); // NOI18N
+            fileMenu.add(jSeparator79);
 
-        recentDoc4.setName("recentDoc4"); // NOI18N
-        recentDocsSubMenu.add(recentDoc4);
+            openMenuItem.setAction(actionMap.get("openDocument")); // NOI18N
+            openMenuItem.setName("openMenuItem"); // NOI18N
+            fileMenu.add(openMenuItem);
 
-        recentDoc5.setName("recentDoc5"); // NOI18N
-        recentDocsSubMenu.add(recentDoc5);
+            recentDocsSubMenu.setText(resourceMap.getString("recentDocsSubMenu.text")); // NOI18N
+            recentDocsSubMenu.setName("recentDocsSubMenu"); // NOI18N
 
-        recentDoc6.setName("recentDoc6"); // NOI18N
-        recentDocsSubMenu.add(recentDoc6);
+            recentDoc1.setName("recentDoc1"); // NOI18N
+            recentDocsSubMenu.add(recentDoc1);
 
-        recentDoc7.setName("recentDoc7"); // NOI18N
-        recentDocsSubMenu.add(recentDoc7);
+            recentDoc2.setName("recentDoc2"); // NOI18N
+            recentDocsSubMenu.add(recentDoc2);
 
-        recentDoc8.setName("recentDoc8"); // NOI18N
-        recentDocsSubMenu.add(recentDoc8);
+            recentDoc3.setName("recentDoc3"); // NOI18N
+            recentDocsSubMenu.add(recentDoc3);
 
-        fileMenu.add(recentDocsSubMenu);
+            recentDoc4.setName("recentDoc4"); // NOI18N
+            recentDocsSubMenu.add(recentDoc4);
 
-        jSeparator107.setName("jSeparator107"); // NOI18N
-        fileMenu.add(jSeparator107);
+            recentDoc5.setName("recentDoc5"); // NOI18N
+            recentDocsSubMenu.add(recentDoc5);
 
-        saveMenuItem.setAction(actionMap.get("saveDocument")); // NOI18N
-        saveMenuItem.setName("saveMenuItem"); // NOI18N
-        fileMenu.add(saveMenuItem);
+            recentDoc6.setName("recentDoc6"); // NOI18N
+            recentDocsSubMenu.add(recentDoc6);
 
-        saveAsMenuItem.setAction(actionMap.get("saveDocumentAs")); // NOI18N
-        saveAsMenuItem.setName("saveAsMenuItem"); // NOI18N
-        fileMenu.add(saveAsMenuItem);
+            recentDoc7.setName("recentDoc7"); // NOI18N
+            recentDocsSubMenu.add(recentDoc7);
 
-        jSeparator2.setName("jSeparator2"); // NOI18N
-        fileMenu.add(jSeparator2);
+            recentDoc8.setName("recentDoc8"); // NOI18N
+            recentDocsSubMenu.add(recentDoc8);
 
-        newDesktopMenuItem.setAction(actionMap.get("newDesktop")); // NOI18N
-        newDesktopMenuItem.setName("newDesktopMenuItem"); // NOI18N
-        fileMenu.add(newDesktopMenuItem);
+            fileMenu.add(recentDocsSubMenu);
 
-        newZettelkastenMenuItem.setAction(actionMap.get("newZettelkasten")); // NOI18N
-        newZettelkastenMenuItem.setName("newZettelkastenMenuItem"); // NOI18N
-        fileMenu.add(newZettelkastenMenuItem);
+            jSeparator107.setName("jSeparator107"); // NOI18N
+            fileMenu.add(jSeparator107);
 
-        jSeparator78.setName("jSeparator78"); // NOI18N
-        fileMenu.add(jSeparator78);
+            saveMenuItem.setAction(actionMap.get("saveDocument")); // NOI18N
+            saveMenuItem.setName("saveMenuItem"); // NOI18N
+            fileMenu.add(saveMenuItem);
 
-        importMenuItem.setAction(actionMap.get("importWindow")); // NOI18N
-        importMenuItem.setName("importMenuItem"); // NOI18N
-        fileMenu.add(importMenuItem);
+            saveAsMenuItem.setAction(actionMap.get("saveDocumentAs")); // NOI18N
+            saveAsMenuItem.setName("saveAsMenuItem"); // NOI18N
+            fileMenu.add(saveAsMenuItem);
 
-        exportMenuItem.setAction(actionMap.get("exportWindow")); // NOI18N
-        exportMenuItem.setName("exportMenuItem"); // NOI18N
-        fileMenu.add(exportMenuItem);
+            jSeparator2.setName("jSeparator2"); // NOI18N
+            fileMenu.add(jSeparator2);
 
-        jSeparator77.setName("jSeparator77"); // NOI18N
-        fileMenu.add(jSeparator77);
+            newDesktopMenuItem.setAction(actionMap.get("newDesktop")); // NOI18N
+            newDesktopMenuItem.setName("newDesktopMenuItem"); // NOI18N
+            fileMenu.add(newDesktopMenuItem);
 
-        menuFileInformation.setAction(actionMap.get("showInformationBox")); // NOI18N
-        menuFileInformation.setName("menuFileInformation"); // NOI18N
-        fileMenu.add(menuFileInformation);
+            newZettelkastenMenuItem.setAction(actionMap.get("newZettelkasten")); // NOI18N
+            newZettelkastenMenuItem.setName("newZettelkastenMenuItem"); // NOI18N
+            fileMenu.add(newZettelkastenMenuItem);
 
-        jSeparatorExit.setName("jSeparatorExit"); // NOI18N
-        fileMenu.add(jSeparatorExit);
+            jSeparator78.setName("jSeparator78"); // NOI18N
+            fileMenu.add(jSeparator78);
 
-        exitMenuItem.setAction(actionMap.get("quit")); // NOI18N
-        exitMenuItem.setName("exitMenuItem"); // NOI18N
-        fileMenu.add(exitMenuItem);
+            importMenuItem.setAction(actionMap.get("importWindow")); // NOI18N
+            importMenuItem.setName("importMenuItem"); // NOI18N
+            fileMenu.add(importMenuItem);
 
-        menuBar.add(fileMenu);
+            exportMenuItem.setAction(actionMap.get("exportWindow")); // NOI18N
+            exportMenuItem.setName("exportMenuItem"); // NOI18N
+            fileMenu.add(exportMenuItem);
 
-        editMenu.setText(resourceMap.getString("editMenu.text")); // NOI18N
-        editMenu.setName("editMenu"); // NOI18N
+            jSeparator77.setName("jSeparator77"); // NOI18N
+            fileMenu.add(jSeparator77);
 
-        editMenuItem.setAction(actionMap.get("editEntry")); // NOI18N
-        editMenuItem.setName("editMenuItem"); // NOI18N
-        editMenu.add(editMenuItem);
+            menuFileInformation.setAction(actionMap.get("showInformationBox")); // NOI18N
+            menuFileInformation.setName("menuFileInformation"); // NOI18N
+            fileMenu.add(menuFileInformation);
 
-        jSeparator33.setName("jSeparator33"); // NOI18N
-        editMenu.add(jSeparator33);
+            jSeparatorExit.setName("jSeparatorExit"); // NOI18N
+            fileMenu.add(jSeparatorExit);
 
-        deleteZettelMenuItem.setAction(actionMap.get("deleteCurrentEntry")); // NOI18N
-        deleteZettelMenuItem.setName("deleteZettelMenuItem"); // NOI18N
-        editMenu.add(deleteZettelMenuItem);
+            exitMenuItem.setAction(actionMap.get("quit")); // NOI18N
+            exitMenuItem.setName("exitMenuItem"); // NOI18N
+            fileMenu.add(exitMenuItem);
 
-        jSeparator6.setName("jSeparator6"); // NOI18N
-        editMenu.add(jSeparator6);
+            menuBar.add(fileMenu);
 
-        deleteKwFromListMenuItem.setAction(actionMap.get("deleteKeywordFromEntry")); // NOI18N
-        deleteKwFromListMenuItem.setName("deleteKwFromListMenuItem"); // NOI18N
-        editMenu.add(deleteKwFromListMenuItem);
+            editMenu.setText(resourceMap.getString("editMenu.text")); // NOI18N
+            editMenu.setName("editMenu"); // NOI18N
 
-        jSeparator40.setName("jSeparator40"); // NOI18N
-        editMenu.add(jSeparator40);
+            editMenuItem.setAction(actionMap.get("editEntry")); // NOI18N
+            editMenuItem.setName("editMenuItem"); // NOI18N
+            editMenu.add(editMenuItem);
 
-        copyMenuItem.setAction(actionMap.get("copy"));
-        copyMenuItem.setName("copyMenuItem"); // NOI18N
-        editMenu.add(copyMenuItem);
+            jSeparator33.setName("jSeparator33"); // NOI18N
+            editMenu.add(jSeparator33);
 
-        copyPlainMenuItem.setAction(actionMap.get("copyPlain")); // NOI18N
-        copyPlainMenuItem.setName("copyPlainMenuItem"); // NOI18N
-        editMenu.add(copyPlainMenuItem);
+            deleteZettelMenuItem.setAction(actionMap.get("deleteCurrentEntry")); // NOI18N
+            deleteZettelMenuItem.setName("deleteZettelMenuItem"); // NOI18N
+            editMenu.add(deleteZettelMenuItem);
 
-        pasteMenuItem.setAction(actionMap.get("paste"));
-        pasteMenuItem.setName("pasteMenuItem"); // NOI18N
-        editMenu.add(pasteMenuItem);
+            jSeparator6.setName("jSeparator6"); // NOI18N
+            editMenu.add(jSeparator6);
 
-        selectAllMenuItem.setAction(actionMap.get("selectAllText")); // NOI18N
-        selectAllMenuItem.setName("selectAllMenuItem"); // NOI18N
-        editMenu.add(selectAllMenuItem);
+            deleteKwFromListMenuItem.setAction(actionMap.get("deleteKeywordFromEntry")); // NOI18N
+            deleteKwFromListMenuItem.setName("deleteKwFromListMenuItem"); // NOI18N
+            editMenu.add(deleteKwFromListMenuItem);
 
-        jSeparator99.setName("jSeparator99"); // NOI18N
-        editMenu.add(jSeparator99);
+            jSeparator40.setName("jSeparator40"); // NOI18N
+            editMenu.add(jSeparator40);
 
-        addSelectionToKeywordMenuItem.setAction(actionMap.get("addToKeywordList")); // NOI18N
-        addSelectionToKeywordMenuItem.setName("addSelectionToKeywordMenuItem"); // NOI18N
-        editMenu.add(addSelectionToKeywordMenuItem);
+            copyMenuItem.setAction(actionMap.get("copy"));
+            copyMenuItem.setName("copyMenuItem"); // NOI18N
+            editMenu.add(copyMenuItem);
 
-        addFirstLineToTitleMenuItem.setAction(actionMap.get("setFirstLineAsTitle")); // NOI18N
-        addFirstLineToTitleMenuItem.setName("addFirstLineToTitleMenuItem"); // NOI18N
-        editMenu.add(addFirstLineToTitleMenuItem);
+            copyPlainMenuItem.setAction(actionMap.get("copyPlain")); // NOI18N
+            copyPlainMenuItem.setName("copyPlainMenuItem"); // NOI18N
+            editMenu.add(copyPlainMenuItem);
 
-        addSelectionToTitleMenuItem.setAction(actionMap.get("setSelectionAsTitle")); // NOI18N
-        addSelectionToTitleMenuItem.setName("addSelectionToTitleMenuItem"); // NOI18N
-        editMenu.add(addSelectionToTitleMenuItem);
+            pasteMenuItem.setAction(actionMap.get("paste"));
+            pasteMenuItem.setName("pasteMenuItem"); // NOI18N
+            editMenu.add(pasteMenuItem);
 
-        jSeparator24.setName("jSeparator24"); // NOI18N
-        editMenu.add(jSeparator24);
+            selectAllMenuItem.setAction(actionMap.get("selectAllText")); // NOI18N
+            selectAllMenuItem.setName("selectAllMenuItem"); // NOI18N
+            editMenu.add(selectAllMenuItem);
 
-        manualInsertLinksMenuItem.setAction(actionMap.get("manualInsertLinks")); // NOI18N
-        manualInsertLinksMenuItem.setName("manualInsertLinksMenuItem"); // NOI18N
-        editMenu.add(manualInsertLinksMenuItem);
+            jSeparator99.setName("jSeparator99"); // NOI18N
+            editMenu.add(jSeparator99);
 
-        manualInsertMenuItem.setAction(actionMap.get("manualInsertEntry")); // NOI18N
-        manualInsertMenuItem.setName("manualInsertMenuItem"); // NOI18N
-        editMenu.add(manualInsertMenuItem);
+            addSelectionToKeywordMenuItem.setAction(actionMap.get("addToKeywordList")); // NOI18N
+            addSelectionToKeywordMenuItem.setName("addSelectionToKeywordMenuItem"); // NOI18N
+            editMenu.add(addSelectionToKeywordMenuItem);
 
-        jSeparator41.setName("jSeparator41"); // NOI18N
-        editMenu.add(jSeparator41);
+            addFirstLineToTitleMenuItem.setAction(actionMap.get("setFirstLineAsTitle")); // NOI18N
+            addFirstLineToTitleMenuItem.setName("addFirstLineToTitleMenuItem"); // NOI18N
+            editMenu.add(addFirstLineToTitleMenuItem);
 
-        setBookmarkMenuItem.setAction(actionMap.get("addToBookmark")); // NOI18N
-        setBookmarkMenuItem.setName("setBookmarkMenuItem"); // NOI18N
-        editMenu.add(setBookmarkMenuItem);
+            addSelectionToTitleMenuItem.setAction(actionMap.get("setSelectionAsTitle")); // NOI18N
+            addSelectionToTitleMenuItem.setName("addSelectionToTitleMenuItem"); // NOI18N
+            editMenu.add(addSelectionToTitleMenuItem);
 
-        addToDesktopMenuItem.setAction(actionMap.get("addToDesktop")); // NOI18N
-        addToDesktopMenuItem.setName("addToDesktopMenuItem"); // NOI18N
-        editMenu.add(addToDesktopMenuItem);
+            jSeparator24.setName("jSeparator24"); // NOI18N
+            editMenu.add(jSeparator24);
 
-        menuBar.add(editMenu);
+            manualInsertLinksMenuItem.setAction(actionMap.get("manualInsertLinks")); // NOI18N
+            manualInsertLinksMenuItem.setName("manualInsertLinksMenuItem"); // NOI18N
+            editMenu.add(manualInsertLinksMenuItem);
 
-        findMenu.setText(resourceMap.getString("findMenu.text")); // NOI18N
-        findMenu.setName("findMenu"); // NOI18N
+            manualInsertMenuItem.setAction(actionMap.get("manualInsertEntry")); // NOI18N
+            manualInsertMenuItem.setName("manualInsertMenuItem"); // NOI18N
+            editMenu.add(manualInsertMenuItem);
 
-        findMenuItem.setAction(actionMap.get("find")); // NOI18N
-        findMenuItem.setName("findMenuItem"); // NOI18N
-        findMenu.add(findMenuItem);
+            jSeparator41.setName("jSeparator41"); // NOI18N
+            editMenu.add(jSeparator41);
 
-        findReplaceMenuItem.setAction(actionMap.get("replace")); // NOI18N
-        findReplaceMenuItem.setName("findReplaceMenuItem"); // NOI18N
-        findMenu.add(findReplaceMenuItem);
+            setBookmarkMenuItem.setAction(actionMap.get("addToBookmark")); // NOI18N
+            setBookmarkMenuItem.setName("setBookmarkMenuItem"); // NOI18N
+            editMenu.add(setBookmarkMenuItem);
 
-        jSeparator31.setName("jSeparator31"); // NOI18N
-        findMenu.add(jSeparator31);
+            addToDesktopMenuItem.setAction(actionMap.get("addToDesktop")); // NOI18N
+            addToDesktopMenuItem.setName("addToDesktopMenuItem"); // NOI18N
+            editMenu.add(addToDesktopMenuItem);
 
-        findEntryWithout.setText(resourceMap.getString("findEntryWithout.text")); // NOI18N
-        findEntryWithout.setName("findEntryWithout"); // NOI18N
+            menuBar.add(editMenu);
 
-        findEntriesWithoutKeywords.setAction(actionMap.get("findWithoutKeywords")); // NOI18N
-        findEntriesWithoutKeywords.setName("findEntriesWithoutKeywords"); // NOI18N
-        findEntryWithout.add(findEntriesWithoutKeywords);
+            findMenu.setText(resourceMap.getString("findMenu.text")); // NOI18N
+            findMenu.setName("findMenu"); // NOI18N
 
-        jSeparator69.setName("jSeparator69"); // NOI18N
-        findEntryWithout.add(jSeparator69);
+            findMenuItem.setAction(actionMap.get("find")); // NOI18N
+            findMenuItem.setName("findMenuItem"); // NOI18N
+            findMenu.add(findMenuItem);
 
-        findEntriesWithoutAuthors.setAction(actionMap.get("findWithoutAuthors")); // NOI18N
-        findEntriesWithoutAuthors.setName("findEntriesWithoutAuthors"); // NOI18N
-        findEntryWithout.add(findEntriesWithoutAuthors);
+            findReplaceMenuItem.setAction(actionMap.get("replace")); // NOI18N
+            findReplaceMenuItem.setName("findReplaceMenuItem"); // NOI18N
+            findMenu.add(findReplaceMenuItem);
 
-        jSeparator75.setName("jSeparator75"); // NOI18N
-        findEntryWithout.add(jSeparator75);
+            jSeparator31.setName("jSeparator31"); // NOI18N
+            findMenu.add(jSeparator31);
 
-        findEntriesWithoutRemarks.setAction(actionMap.get("findWithoutRemarks")); // NOI18N
-        findEntriesWithoutRemarks.setName("findEntriesWithoutRemarks"); // NOI18N
-        findEntryWithout.add(findEntriesWithoutRemarks);
+            findEntryWithout.setText(resourceMap.getString("findEntryWithout.text")); // NOI18N
+            findEntryWithout.setName("findEntryWithout"); // NOI18N
 
-        findEntriesWithRemarks.setAction(actionMap.get("findWithRemarks")); // NOI18N
-        findEntriesWithRemarks.setName("findEntriesWithRemarks"); // NOI18N
-        findEntryWithout.add(findEntriesWithRemarks);
+            findEntriesWithoutKeywords.setAction(actionMap.get("findWithoutKeywords")); // NOI18N
+            findEntriesWithoutKeywords.setName("findEntriesWithoutKeywords"); // NOI18N
+            findEntryWithout.add(findEntriesWithoutKeywords);
 
-        jSeparator110.setName("jSeparator110"); // NOI18N
-        findEntryWithout.add(jSeparator110);
+            jSeparator69.setName("jSeparator69"); // NOI18N
+            findEntryWithout.add(jSeparator69);
 
-        findEntriesWithRatings.setAction(actionMap.get("findWithRating")); // NOI18N
-        findEntriesWithRatings.setName("findEntriesWithRatings"); // NOI18N
-        findEntryWithout.add(findEntriesWithRatings);
+            findEntriesWithoutAuthors.setAction(actionMap.get("findWithoutAuthors")); // NOI18N
+            findEntriesWithoutAuthors.setName("findEntriesWithoutAuthors"); // NOI18N
+            findEntryWithout.add(findEntriesWithoutAuthors);
 
-        findEntriesWithoutRatings.setAction(actionMap.get("findWithoutRating")); // NOI18N
-        findEntriesWithoutRatings.setName("findEntriesWithoutRatings"); // NOI18N
-        findEntryWithout.add(findEntriesWithoutRatings);
+            jSeparator75.setName("jSeparator75"); // NOI18N
+            findEntryWithout.add(jSeparator75);
 
-        jSeparator76.setName("jSeparator76"); // NOI18N
-        findEntryWithout.add(jSeparator76);
+            findEntriesWithoutRemarks.setAction(actionMap.get("findWithoutRemarks")); // NOI18N
+            findEntriesWithoutRemarks.setName("findEntriesWithoutRemarks"); // NOI18N
+            findEntryWithout.add(findEntriesWithoutRemarks);
 
-        findEntriesWithAttachments.setAction(actionMap.get("findWithAttachments")); // NOI18N
-        findEntriesWithAttachments.setName("findEntriesWithAttachments"); // NOI18N
-        findEntryWithout.add(findEntriesWithAttachments);
+            findEntriesWithRemarks.setAction(actionMap.get("findWithRemarks")); // NOI18N
+            findEntriesWithRemarks.setName("findEntriesWithRemarks"); // NOI18N
+            findEntryWithout.add(findEntriesWithRemarks);
 
-        jSeparator83.setName("jSeparator83"); // NOI18N
-        findEntryWithout.add(jSeparator83);
+            jSeparator110.setName("jSeparator110"); // NOI18N
+            findEntryWithout.add(jSeparator110);
 
-        findEntriesFromCreatedTimestamp.setAction(actionMap.get("findEntriesWithTimeStampCreated")); // NOI18N
-        findEntriesFromCreatedTimestamp.setName("findEntriesFromCreatedTimestamp"); // NOI18N
-        findEntryWithout.add(findEntriesFromCreatedTimestamp);
+            findEntriesWithRatings.setAction(actionMap.get("findWithRating")); // NOI18N
+            findEntriesWithRatings.setName("findEntriesWithRatings"); // NOI18N
+            findEntryWithout.add(findEntriesWithRatings);
 
-        findEntriesFromEditedTimestamp.setAction(actionMap.get("findEntriesWithTimeStampEdited")); // NOI18N
-        findEntriesFromEditedTimestamp.setName("findEntriesFromEditedTimestamp"); // NOI18N
-        findEntryWithout.add(findEntriesFromEditedTimestamp);
+            findEntriesWithoutRatings.setAction(actionMap.get("findWithoutRating")); // NOI18N
+            findEntriesWithoutRatings.setName("findEntriesWithoutRatings"); // NOI18N
+            findEntryWithout.add(findEntriesWithoutRatings);
 
-        jSeparator95.setName("jSeparator95"); // NOI18N
-        findEntryWithout.add(jSeparator95);
+            jSeparator76.setName("jSeparator76"); // NOI18N
+            findEntryWithout.add(jSeparator76);
 
-        findDoubleEntriesItem.setAction(actionMap.get("findDoubleEntries")); // NOI18N
-        findDoubleEntriesItem.setName("findDoubleEntriesItem"); // NOI18N
-        findEntryWithout.add(findDoubleEntriesItem);
+            findEntriesWithAttachments.setAction(actionMap.get("findWithAttachments")); // NOI18N
+            findEntriesWithAttachments.setName("findEntriesWithAttachments"); // NOI18N
+            findEntryWithout.add(findEntriesWithAttachments);
 
-        findMenu.add(findEntryWithout);
+            jSeparator83.setName("jSeparator83"); // NOI18N
+            findEntryWithout.add(jSeparator83);
 
-        jSeparator68.setName("jSeparator68"); // NOI18N
-        findMenu.add(jSeparator68);
+            findEntriesFromCreatedTimestamp.setAction(actionMap.get("findEntriesWithTimeStampCreated")); // NOI18N
+            findEntriesFromCreatedTimestamp.setName("findEntriesFromCreatedTimestamp"); // NOI18N
+            findEntryWithout.add(findEntriesFromCreatedTimestamp);
 
-        findEntryKeywordsMenu.setText(resourceMap.getString("findEntryKeywordsMenu.text")); // NOI18N
-        findEntryKeywordsMenu.setName("findEntryKeywordsMenu"); // NOI18N
+            findEntriesFromEditedTimestamp.setAction(actionMap.get("findEntriesWithTimeStampEdited")); // NOI18N
+            findEntriesFromEditedTimestamp.setName("findEntriesFromEditedTimestamp"); // NOI18N
+            findEntryWithout.add(findEntriesFromEditedTimestamp);
 
-        menuKwListSearchOr.setAction(actionMap.get("searchKeywordsFromListLogOr")); // NOI18N
-        menuKwListSearchOr.setName("menuKwListSearchOr"); // NOI18N
-        findEntryKeywordsMenu.add(menuKwListSearchOr);
+            jSeparator95.setName("jSeparator95"); // NOI18N
+            findEntryWithout.add(jSeparator95);
 
-        jSeparator19.setName("jSeparator19"); // NOI18N
-        findEntryKeywordsMenu.add(jSeparator19);
+            findDoubleEntriesItem.setAction(actionMap.get("findDoubleEntries")); // NOI18N
+            findDoubleEntriesItem.setName("findDoubleEntriesItem"); // NOI18N
+            findEntryWithout.add(findDoubleEntriesItem);
 
-        menuKwListSearchAnd.setAction(actionMap.get("searchKeywordsFromListLogAnd")); // NOI18N
-        menuKwListSearchAnd.setName("menuKwListSearchAnd"); // NOI18N
-        findEntryKeywordsMenu.add(menuKwListSearchAnd);
+            findMenu.add(findEntryWithout);
 
-        jSeparator39.setName("jSeparator39"); // NOI18N
-        findEntryKeywordsMenu.add(jSeparator39);
+            jSeparator68.setName("jSeparator68"); // NOI18N
+            findMenu.add(jSeparator68);
 
-        menuKwListSearchNot.setAction(actionMap.get("searchKeywordsFromListLogNot")); // NOI18N
-        menuKwListSearchNot.setName("menuKwListSearchNot"); // NOI18N
-        findEntryKeywordsMenu.add(menuKwListSearchNot);
+            findEntryKeywordsMenu.setText(resourceMap.getString("findEntryKeywordsMenu.text")); // NOI18N
+            findEntryKeywordsMenu.setName("findEntryKeywordsMenu"); // NOI18N
 
-        findMenu.add(findEntryKeywordsMenu);
+            menuKwListSearchOr.setAction(actionMap.get("searchKeywordsFromListLogOr")); // NOI18N
+            menuKwListSearchOr.setName("menuKwListSearchOr"); // NOI18N
+            findEntryKeywordsMenu.add(menuKwListSearchOr);
 
-        jSeparator18.setName("jSeparator18"); // NOI18N
-        findMenu.add(jSeparator18);
+            jSeparator19.setName("jSeparator19"); // NOI18N
+            findEntryKeywordsMenu.add(jSeparator19);
 
-        liveSearchMenuItem.setAction(actionMap.get("findLive")); // NOI18N
-        liveSearchMenuItem.setName("liveSearchMenuItem"); // NOI18N
-        findMenu.add(liveSearchMenuItem);
+            menuKwListSearchAnd.setAction(actionMap.get("searchKeywordsFromListLogAnd")); // NOI18N
+            menuKwListSearchAnd.setName("menuKwListSearchAnd"); // NOI18N
+            findEntryKeywordsMenu.add(menuKwListSearchAnd);
 
-        jSeparator22.setName("jSeparator22"); // NOI18N
-        findMenu.add(jSeparator22);
+            jSeparator39.setName("jSeparator39"); // NOI18N
+            findEntryKeywordsMenu.add(jSeparator39);
 
-        homeMenuItem.setAction(actionMap.get("showFirstEntry")); // NOI18N
-        homeMenuItem.setName("homeMenuItem"); // NOI18N
-        findMenu.add(homeMenuItem);
+            menuKwListSearchNot.setAction(actionMap.get("searchKeywordsFromListLogNot")); // NOI18N
+            menuKwListSearchNot.setName("menuKwListSearchNot"); // NOI18N
+            findEntryKeywordsMenu.add(menuKwListSearchNot);
 
-        prevEntryMenuItem.setAction(actionMap.get("showPrevEntry")); // NOI18N
-        prevEntryMenuItem.setName("prevEntryMenuItem"); // NOI18N
-        findMenu.add(prevEntryMenuItem);
+            findMenu.add(findEntryKeywordsMenu);
 
-        nextEntryMenuItem.setAction(actionMap.get("showNextEntry")); // NOI18N
-        nextEntryMenuItem.setName("nextEntryMenuItem"); // NOI18N
-        findMenu.add(nextEntryMenuItem);
+            jSeparator18.setName("jSeparator18"); // NOI18N
+            findMenu.add(jSeparator18);
 
-        lastEntryMenuItem.setAction(actionMap.get("showLastEntry")); // NOI18N
-        lastEntryMenuItem.setName("lastEntryMenuItem"); // NOI18N
-        findMenu.add(lastEntryMenuItem);
+            liveSearchMenuItem.setAction(actionMap.get("findLive")); // NOI18N
+            liveSearchMenuItem.setName("liveSearchMenuItem"); // NOI18N
+            findMenu.add(liveSearchMenuItem);
 
-        jSeparator72.setName("jSeparator72"); // NOI18N
-        findMenu.add(jSeparator72);
+            jSeparator22.setName("jSeparator22"); // NOI18N
+            findMenu.add(jSeparator22);
 
-        randomEntryMenuItem.setAction(actionMap.get("showRandomEntry")); // NOI18N
-        randomEntryMenuItem.setName("randomEntryMenuItem"); // NOI18N
-        findMenu.add(randomEntryMenuItem);
+            homeMenuItem.setAction(actionMap.get("showFirstEntry")); // NOI18N
+            homeMenuItem.setName("homeMenuItem"); // NOI18N
+            findMenu.add(homeMenuItem);
 
-        jSeparator111.setName("jSeparator111"); // NOI18N
-        findMenu.add(jSeparator111);
+            prevEntryMenuItem.setAction(actionMap.get("showPrevEntry")); // NOI18N
+            prevEntryMenuItem.setName("prevEntryMenuItem"); // NOI18N
+            findMenu.add(prevEntryMenuItem);
 
-        historyForMenuItem.setAction(actionMap.get("historyBack")); // NOI18N
-        historyForMenuItem.setText(resourceMap.getString("historyForMenuItem.text")); // NOI18N
-        historyForMenuItem.setName("historyForMenuItem"); // NOI18N
-        findMenu.add(historyForMenuItem);
+            nextEntryMenuItem.setAction(actionMap.get("showNextEntry")); // NOI18N
+            nextEntryMenuItem.setName("nextEntryMenuItem"); // NOI18N
+            findMenu.add(nextEntryMenuItem);
 
-        histroyBackMenuItem.setAction(actionMap.get("historyFor")); // NOI18N
-        histroyBackMenuItem.setText(resourceMap.getString("histroyBackMenuItem.text")); // NOI18N
-        histroyBackMenuItem.setName("histroyBackMenuItem"); // NOI18N
-        findMenu.add(histroyBackMenuItem);
+            lastEntryMenuItem.setAction(actionMap.get("showLastEntry")); // NOI18N
+            lastEntryMenuItem.setName("lastEntryMenuItem"); // NOI18N
+            findMenu.add(lastEntryMenuItem);
 
-        jSeparator112.setName("jSeparator112"); // NOI18N
-        findMenu.add(jSeparator112);
+            jSeparator72.setName("jSeparator72"); // NOI18N
+            findMenu.add(jSeparator72);
 
-        gotoEntryMenuItem.setAction(actionMap.get("gotoEntry")); // NOI18N
-        gotoEntryMenuItem.setName("gotoEntryMenuItem"); // NOI18N
-        findMenu.add(gotoEntryMenuItem);
+            randomEntryMenuItem.setAction(actionMap.get("showRandomEntry")); // NOI18N
+            randomEntryMenuItem.setName("randomEntryMenuItem"); // NOI18N
+            findMenu.add(randomEntryMenuItem);
 
-        menuBar.add(findMenu);
+            jSeparator111.setName("jSeparator111"); // NOI18N
+            findMenu.add(jSeparator111);
 
-        viewMenu.setText(resourceMap.getString("viewMenu.text")); // NOI18N
-        viewMenu.setName("viewMenu"); // NOI18N
+            historyForMenuItem.setAction(actionMap.get("historyBack")); // NOI18N
+            historyForMenuItem.setText(resourceMap.getString("historyForMenuItem.text")); // NOI18N
+            historyForMenuItem.setName("historyForMenuItem"); // NOI18N
+            findMenu.add(historyForMenuItem);
 
-        showLinksMenuItem.setAction(actionMap.get("menuShowLinks")); // NOI18N
-        showLinksMenuItem.setName("showLinksMenuItem"); // NOI18N
-        viewMenu.add(showLinksMenuItem);
+            histroyBackMenuItem.setAction(actionMap.get("historyFor")); // NOI18N
+            histroyBackMenuItem.setText(resourceMap.getString("histroyBackMenuItem.text")); // NOI18N
+            histroyBackMenuItem.setName("histroyBackMenuItem"); // NOI18N
+            findMenu.add(histroyBackMenuItem);
 
-        showLuhmannMenuItem.setAction(actionMap.get("menuShowLuhmann")); // NOI18N
-        showLuhmannMenuItem.setName("showLuhmannMenuItem"); // NOI18N
-        viewMenu.add(showLuhmannMenuItem);
+            jSeparator112.setName("jSeparator112"); // NOI18N
+            findMenu.add(jSeparator112);
 
-        showKeywordsMenuItem.setAction(actionMap.get("menuShowKeywords")); // NOI18N
-        showKeywordsMenuItem.setName("showKeywordsMenuItem"); // NOI18N
-        viewMenu.add(showKeywordsMenuItem);
+            gotoEntryMenuItem.setAction(actionMap.get("gotoEntry")); // NOI18N
+            gotoEntryMenuItem.setName("gotoEntryMenuItem"); // NOI18N
+            findMenu.add(gotoEntryMenuItem);
 
-        showAuthorsMenuItem.setAction(actionMap.get("menuShowAuthors")); // NOI18N
-        showAuthorsMenuItem.setName("showAuthorsMenuItem"); // NOI18N
-        viewMenu.add(showAuthorsMenuItem);
+            menuBar.add(findMenu);
 
-        showTitlesMenuItem.setAction(actionMap.get("menuShowTitles")); // NOI18N
-        showTitlesMenuItem.setName("showTitlesMenuItem"); // NOI18N
-        viewMenu.add(showTitlesMenuItem);
+            viewMenu.setText(resourceMap.getString("viewMenu.text")); // NOI18N
+            viewMenu.setName("viewMenu"); // NOI18N
 
-        showClusterMenuItem.setAction(actionMap.get("menuShowCluster")); // NOI18N
-        showClusterMenuItem.setName("showClusterMenuItem"); // NOI18N
-        viewMenu.add(showClusterMenuItem);
+            showLinksMenuItem.setAction(actionMap.get("menuShowLinks")); // NOI18N
+            showLinksMenuItem.setName("showLinksMenuItem"); // NOI18N
+            viewMenu.add(showLinksMenuItem);
 
-        showBookmarksMenuItem.setAction(actionMap.get("menuShowBookmarks")); // NOI18N
-        showBookmarksMenuItem.setName("showBookmarksMenuItem"); // NOI18N
-        viewMenu.add(showBookmarksMenuItem);
+            showLuhmannMenuItem.setAction(actionMap.get("menuShowLuhmann")); // NOI18N
+            showLuhmannMenuItem.setName("showLuhmannMenuItem"); // NOI18N
+            viewMenu.add(showLuhmannMenuItem);
 
-        showAttachmentsMenuItem.setAction(actionMap.get("menuShowAttachments")); // NOI18N
-        showAttachmentsMenuItem.setName("showAttachmentsMenuItem"); // NOI18N
-        viewMenu.add(showAttachmentsMenuItem);
+            showKeywordsMenuItem.setAction(actionMap.get("menuShowKeywords")); // NOI18N
+            showKeywordsMenuItem.setName("showKeywordsMenuItem"); // NOI18N
+            viewMenu.add(showKeywordsMenuItem);
 
-        jSeparator23.setName("jSeparator23"); // NOI18N
-        viewMenu.add(jSeparator23);
+            showAuthorsMenuItem.setAction(actionMap.get("menuShowAuthors")); // NOI18N
+            showAuthorsMenuItem.setName("showAuthorsMenuItem"); // NOI18N
+            viewMenu.add(showAuthorsMenuItem);
 
-        showCurrentEntryAgain.setAction(actionMap.get("updateDisplay")); // NOI18N
-        showCurrentEntryAgain.setName("showCurrentEntryAgain"); // NOI18N
-        viewMenu.add(showCurrentEntryAgain);
+            showTitlesMenuItem.setAction(actionMap.get("menuShowTitles")); // NOI18N
+            showTitlesMenuItem.setName("showTitlesMenuItem"); // NOI18N
+            viewMenu.add(showTitlesMenuItem);
 
-        jSeparator55.setName("jSeparator55"); // NOI18N
-        viewMenu.add(jSeparator55);
+            showClusterMenuItem.setAction(actionMap.get("menuShowCluster")); // NOI18N
+            showClusterMenuItem.setName("showClusterMenuItem"); // NOI18N
+            viewMenu.add(showClusterMenuItem);
 
-        showHighlightKeywords.setAction(actionMap.get("highlightKeywords")); // NOI18N
-        showHighlightKeywords.setSelected(true);
-        showHighlightKeywords.setName("showHighlightKeywords"); // NOI18N
-        viewMenu.add(showHighlightKeywords);
+            showBookmarksMenuItem.setAction(actionMap.get("menuShowBookmarks")); // NOI18N
+            showBookmarksMenuItem.setName("showBookmarksMenuItem"); // NOI18N
+            viewMenu.add(showBookmarksMenuItem);
 
-        highlightSegmentsMenuItem.setAction(actionMap.get("highlightSegments")); // NOI18N
-        highlightSegmentsMenuItem.setName("highlightSegmentsMenuItem"); // NOI18N
-        viewMenu.add(highlightSegmentsMenuItem);
+            showAttachmentsMenuItem.setAction(actionMap.get("menuShowAttachments")); // NOI18N
+            showAttachmentsMenuItem.setName("showAttachmentsMenuItem"); // NOI18N
+            viewMenu.add(showAttachmentsMenuItem);
 
-        menuBar.add(viewMenu);
+            jSeparator23.setName("jSeparator23"); // NOI18N
+            viewMenu.add(jSeparator23);
 
-        viewMenuLinks.setText(resourceMap.getString("viewMenuLinks.text")); // NOI18N
-        viewMenuLinks.setName("viewMenuLinks"); // NOI18N
+            showCurrentEntryAgain.setAction(actionMap.get("updateDisplay")); // NOI18N
+            showCurrentEntryAgain.setName("showCurrentEntryAgain"); // NOI18N
+            viewMenu.add(showCurrentEntryAgain);
 
-        viewMenuLinksKwListRefresh.setAction(actionMap.get("refreshFilteredLinks")); // NOI18N
-        viewMenuLinksKwListRefresh.setName("viewMenuLinksKwListRefresh"); // NOI18N
-        viewMenuLinks.add(viewMenuLinksKwListRefresh);
+            jSeparator55.setName("jSeparator55"); // NOI18N
+            viewMenu.add(jSeparator55);
 
-        jSeparator116.setName("jSeparator116"); // NOI18N
-        viewMenuLinks.add(jSeparator116);
+            showHighlightKeywords.setAction(actionMap.get("highlightKeywords")); // NOI18N
+            showHighlightKeywords.setSelected(true);
+            showHighlightKeywords.setName("showHighlightKeywords"); // NOI18N
+            viewMenu.add(showHighlightKeywords);
 
-        viewMenuLinksRemoveManLink.setAction(actionMap.get("deleteManualLink")); // NOI18N
-        viewMenuLinksRemoveManLink.setName("viewMenuLinksRemoveManLink"); // NOI18N
-        viewMenuLinks.add(viewMenuLinksRemoveManLink);
+            highlightSegmentsMenuItem.setAction(actionMap.get("highlightSegments")); // NOI18N
+            highlightSegmentsMenuItem.setName("highlightSegmentsMenuItem"); // NOI18N
+            viewMenu.add(highlightSegmentsMenuItem);
 
-        jSeparator3.setName("jSeparator3"); // NOI18N
-        viewMenuLinks.add(jSeparator3);
+            menuBar.add(viewMenu);
 
-        viewMenuLinksKwListLogOr.setAction(actionMap.get("keywordListLogOr")); // NOI18N
-        viewMenuLinksKwListLogOr.setSelected(true);
-        viewMenuLinksKwListLogOr.setName("viewMenuLinksKwListLogOr"); // NOI18N
-        viewMenuLinks.add(viewMenuLinksKwListLogOr);
+            viewMenuLinks.setText(resourceMap.getString("viewMenuLinks.text")); // NOI18N
+            viewMenuLinks.setName("viewMenuLinks"); // NOI18N
 
-        viewMenuLinksKwListLogAnd.setAction(actionMap.get("keywordListLogAnd")); // NOI18N
-        viewMenuLinksKwListLogAnd.setSelected(true);
-        viewMenuLinksKwListLogAnd.setName("viewMenuLinksKwListLogAnd"); // NOI18N
-        viewMenuLinks.add(viewMenuLinksKwListLogAnd);
+            viewMenuLinksKwListRefresh.setAction(actionMap.get("refreshFilteredLinks")); // NOI18N
+            viewMenuLinksKwListRefresh.setName("viewMenuLinksKwListRefresh"); // NOI18N
+            viewMenuLinks.add(viewMenuLinksKwListRefresh);
 
-        jSeparator53.setName("jSeparator53"); // NOI18N
-        viewMenuLinks.add(jSeparator53);
+            jSeparator116.setName("jSeparator116"); // NOI18N
+            viewMenuLinks.add(jSeparator116);
 
-        viewMenuLinksManLink.setAction(actionMap.get("addManLinks")); // NOI18N
-        viewMenuLinksManLink.setName("viewMenuLinksManLink"); // NOI18N
-        viewMenuLinks.add(viewMenuLinksManLink);
+            viewMenuLinksRemoveManLink.setAction(actionMap.get("deleteManualLink")); // NOI18N
+            viewMenuLinksRemoveManLink.setName("viewMenuLinksRemoveManLink"); // NOI18N
+            viewMenuLinks.add(viewMenuLinksRemoveManLink);
 
-        viewMenuLinksLuhmann.setAction(actionMap.get("addLuhmann")); // NOI18N
-        viewMenuLinksLuhmann.setName("viewMenuLinksLuhmann"); // NOI18N
-        viewMenuLinks.add(viewMenuLinksLuhmann);
+            jSeparator3.setName("jSeparator3"); // NOI18N
+            viewMenuLinks.add(jSeparator3);
 
-        jSeparator58.setName("jSeparator58"); // NOI18N
-        viewMenuLinks.add(jSeparator58);
+            viewMenuLinksKwListLogOr.setAction(actionMap.get("keywordListLogOr")); // NOI18N
+            viewMenuLinksKwListLogOr.setSelected(true);
+            viewMenuLinksKwListLogOr.setName("viewMenuLinksKwListLogOr"); // NOI18N
+            viewMenuLinks.add(viewMenuLinksKwListLogOr);
 
-        viewMenuLinksDesktop.setAction(actionMap.get("addDesktop")); // NOI18N
-        viewMenuLinksDesktop.setName("viewMenuLinksDesktop"); // NOI18N
-        viewMenuLinks.add(viewMenuLinksDesktop);
+            viewMenuLinksKwListLogAnd.setAction(actionMap.get("keywordListLogAnd")); // NOI18N
+            viewMenuLinksKwListLogAnd.setSelected(true);
+            viewMenuLinksKwListLogAnd.setName("viewMenuLinksKwListLogAnd"); // NOI18N
+            viewMenuLinks.add(viewMenuLinksKwListLogAnd);
 
-        jSeparator100.setName("jSeparator100"); // NOI18N
-        viewMenuLinks.add(jSeparator100);
+            jSeparator53.setName("jSeparator53"); // NOI18N
+            viewMenuLinks.add(jSeparator53);
 
-        viewMenuLinksExport.setAction(actionMap.get("exportLinks")); // NOI18N
-        viewMenuLinksExport.setName("viewMenuLinksExport"); // NOI18N
-        viewMenuLinks.add(viewMenuLinksExport);
+            viewMenuLinksManLink.setAction(actionMap.get("addManLinks")); // NOI18N
+            viewMenuLinksManLink.setName("viewMenuLinksManLink"); // NOI18N
+            viewMenuLinks.add(viewMenuLinksManLink);
 
-        viewMenuExportToSearch.setAction(actionMap.get("exportLinksToSearch")); // NOI18N
-        viewMenuExportToSearch.setName("viewMenuExportToSearch"); // NOI18N
-        viewMenuLinks.add(viewMenuExportToSearch);
+            viewMenuLinksLuhmann.setAction(actionMap.get("addLuhmann")); // NOI18N
+            viewMenuLinksLuhmann.setName("viewMenuLinksLuhmann"); // NOI18N
+            viewMenuLinks.add(viewMenuLinksLuhmann);
 
-        menuBar.add(viewMenuLinks);
+            jSeparator58.setName("jSeparator58"); // NOI18N
+            viewMenuLinks.add(jSeparator58);
 
-        viewMenuLuhmann.setText(resourceMap.getString("viewMenuLuhmann.text")); // NOI18N
-        viewMenuLuhmann.setName("viewMenuLuhmann"); // NOI18N
+            viewMenuLinksDesktop.setAction(actionMap.get("addDesktop")); // NOI18N
+            viewMenuLinksDesktop.setName("viewMenuLinksDesktop"); // NOI18N
+            viewMenuLinks.add(viewMenuLinksDesktop);
 
-        viewMenuLuhmannDelete.setAction(actionMap.get("deleteLuhmannFromEntry")); // NOI18N
-        viewMenuLuhmannDelete.setName("viewMenuLuhmannDelete"); // NOI18N
-        viewMenuLuhmann.add(viewMenuLuhmannDelete);
+            jSeparator100.setName("jSeparator100"); // NOI18N
+            viewMenuLinks.add(jSeparator100);
 
-        jSeparator61.setName("jSeparator61"); // NOI18N
-        viewMenuLuhmann.add(jSeparator61);
+            viewMenuLinksExport.setAction(actionMap.get("exportLinks")); // NOI18N
+            viewMenuLinksExport.setName("viewMenuLinksExport"); // NOI18N
+            viewMenuLinks.add(viewMenuLinksExport);
 
-        viewMenuLuhmannManLinks.setAction(actionMap.get("addManLinks")); // NOI18N
-        viewMenuLuhmannManLinks.setName("viewMenuLuhmannManLinks"); // NOI18N
-        viewMenuLuhmann.add(viewMenuLuhmannManLinks);
+            viewMenuExportToSearch.setAction(actionMap.get("exportLinksToSearch")); // NOI18N
+            viewMenuExportToSearch.setName("viewMenuExportToSearch"); // NOI18N
+            viewMenuLinks.add(viewMenuExportToSearch);
 
-        viewMenuLuhmannBookmarks.setAction(actionMap.get("addBookmarks")); // NOI18N
-        viewMenuLuhmannBookmarks.setName("viewMenuLuhmannBookmarks"); // NOI18N
-        viewMenuLuhmann.add(viewMenuLuhmannBookmarks);
+            menuBar.add(viewMenuLinks);
 
-        jSeparator62.setName("jSeparator62"); // NOI18N
-        viewMenuLuhmann.add(jSeparator62);
+            viewMenuLuhmann.setText(resourceMap.getString("viewMenuLuhmann.text")); // NOI18N
+            viewMenuLuhmann.setName("viewMenuLuhmann"); // NOI18N
 
-        viewMenuLuhmannDesktop.setAction(actionMap.get("addDesktop")); // NOI18N
-        viewMenuLuhmannDesktop.setName("viewMenuLuhmannDesktop"); // NOI18N
-        viewMenuLuhmann.add(viewMenuLuhmannDesktop);
+            viewMenuLuhmannDelete.setAction(actionMap.get("deleteLuhmannFromEntry")); // NOI18N
+            viewMenuLuhmannDelete.setName("viewMenuLuhmannDelete"); // NOI18N
+            viewMenuLuhmann.add(viewMenuLuhmannDelete);
 
-        jSeparator102.setName("jSeparator102"); // NOI18N
-        viewMenuLuhmann.add(jSeparator102);
+            jSeparator61.setName("jSeparator61"); // NOI18N
+            viewMenuLuhmann.add(jSeparator61);
 
-        viewMenuLuhmannExport.setAction(actionMap.get("exportLuhmann")); // NOI18N
-        viewMenuLuhmannExport.setName("viewMenuLuhmannExport"); // NOI18N
-        viewMenuLuhmann.add(viewMenuLuhmannExport);
+            viewMenuLuhmannManLinks.setAction(actionMap.get("addManLinks")); // NOI18N
+            viewMenuLuhmannManLinks.setName("viewMenuLuhmannManLinks"); // NOI18N
+            viewMenuLuhmann.add(viewMenuLuhmannManLinks);
 
-        viewMenuLuhmannExportSearch.setAction(actionMap.get("exportLuhmannToSearch")); // NOI18N
-        viewMenuLuhmannExportSearch.setName("viewMenuLuhmannExportSearch"); // NOI18N
-        viewMenuLuhmann.add(viewMenuLuhmannExportSearch);
+            viewMenuLuhmannBookmarks.setAction(actionMap.get("addBookmarks")); // NOI18N
+            viewMenuLuhmannBookmarks.setName("viewMenuLuhmannBookmarks"); // NOI18N
+            viewMenuLuhmann.add(viewMenuLuhmannBookmarks);
 
-        jSeparator117.setName("jSeparator117"); // NOI18N
-        viewMenuLuhmann.add(jSeparator117);
+            jSeparator62.setName("jSeparator62"); // NOI18N
+            viewMenuLuhmann.add(jSeparator62);
 
-        viewMenuLuhmannSortEntries.setAction(actionMap.get("sortLuhmann")); // NOI18N
-        viewMenuLuhmannSortEntries.setName("viewMenuLuhmannSortEntries"); // NOI18N
-        viewMenuLuhmann.add(viewMenuLuhmannSortEntries);
+            viewMenuLuhmannDesktop.setAction(actionMap.get("addDesktop")); // NOI18N
+            viewMenuLuhmannDesktop.setName("viewMenuLuhmannDesktop"); // NOI18N
+            viewMenuLuhmann.add(viewMenuLuhmannDesktop);
 
-        jSeparator118.setName("jSeparator118"); // NOI18N
-        viewMenuLuhmann.add(jSeparator118);
+            jSeparator102.setName("jSeparator102"); // NOI18N
+            viewMenuLuhmann.add(jSeparator102);
 
-        viewMenuLuhmannShowNumbers.setAction(actionMap.get("showLuhmannEntryNumber")); // NOI18N
-        viewMenuLuhmannShowNumbers.setSelected(true);
-        viewMenuLuhmannShowNumbers.setName("viewMenuLuhmannShowNumbers"); // NOI18N
-        viewMenuLuhmann.add(viewMenuLuhmannShowNumbers);
+            viewMenuLuhmannExport.setAction(actionMap.get("exportLuhmann")); // NOI18N
+            viewMenuLuhmannExport.setName("viewMenuLuhmannExport"); // NOI18N
+            viewMenuLuhmann.add(viewMenuLuhmannExport);
 
-        menuBar.add(viewMenuLuhmann);
+            viewMenuLuhmannExportSearch.setAction(actionMap.get("exportLuhmannToSearch")); // NOI18N
+            viewMenuLuhmannExportSearch.setName("viewMenuLuhmannExportSearch"); // NOI18N
+            viewMenuLuhmann.add(viewMenuLuhmannExportSearch);
 
-        viewMenuKeywords.setText(resourceMap.getString("viewMenuKeywords.text")); // NOI18N
-        viewMenuKeywords.setName("viewMenuKeywords"); // NOI18N
+            jSeparator117.setName("jSeparator117"); // NOI18N
+            viewMenuLuhmann.add(jSeparator117);
 
-        viewKeywordsCopy.setAction(actionMap.get("copy"));
-        viewKeywordsCopy.setName("viewKeywordsCopy"); // NOI18N
-        viewMenuKeywords.add(viewKeywordsCopy);
+            viewMenuLuhmannSortEntries.setAction(actionMap.get("sortLuhmann")); // NOI18N
+            viewMenuLuhmannSortEntries.setName("viewMenuLuhmannSortEntries"); // NOI18N
+            viewMenuLuhmann.add(viewMenuLuhmannSortEntries);
 
-        jSeparator25.setName("jSeparator25"); // NOI18N
-        viewMenuKeywords.add(jSeparator25);
+            jSeparator118.setName("jSeparator118"); // NOI18N
+            viewMenuLuhmann.add(jSeparator118);
 
-        viewKeywordsSearchOr.setAction(actionMap.get("searchLogOr")); // NOI18N
-        viewKeywordsSearchOr.setName("viewKeywordsSearchOr"); // NOI18N
-        viewMenuKeywords.add(viewKeywordsSearchOr);
+            viewMenuLuhmannShowNumbers.setAction(actionMap.get("showLuhmannEntryNumber")); // NOI18N
+            viewMenuLuhmannShowNumbers.setSelected(true);
+            viewMenuLuhmannShowNumbers.setName("viewMenuLuhmannShowNumbers"); // NOI18N
+            viewMenuLuhmann.add(viewMenuLuhmannShowNumbers);
 
-        viewKeywordsSearchAnd.setAction(actionMap.get("searchLogAnd")); // NOI18N
-        viewKeywordsSearchAnd.setName("viewKeywordsSearchAnd"); // NOI18N
-        viewMenuKeywords.add(viewKeywordsSearchAnd);
+            menuBar.add(viewMenuLuhmann);
 
-        viewKeywordsSearchNot.setAction(actionMap.get("searchLogNot")); // NOI18N
-        viewKeywordsSearchNot.setName("viewKeywordsSearchNot"); // NOI18N
-        viewMenuKeywords.add(viewKeywordsSearchNot);
+            viewMenuKeywords.setText(resourceMap.getString("viewMenuKeywords.text")); // NOI18N
+            viewMenuKeywords.setName("viewMenuKeywords"); // NOI18N
 
-        jSeparator26.setName("jSeparator26"); // NOI18N
-        viewMenuKeywords.add(jSeparator26);
+            viewKeywordsCopy.setAction(actionMap.get("copy"));
+            viewKeywordsCopy.setName("viewKeywordsCopy"); // NOI18N
+            viewMenuKeywords.add(viewKeywordsCopy);
 
-        viewKeywordsNew.setAction(actionMap.get("newKeyword")); // NOI18N
-        viewKeywordsNew.setName("viewKeywordsNew"); // NOI18N
-        viewMenuKeywords.add(viewKeywordsNew);
+            jSeparator25.setName("jSeparator25"); // NOI18N
+            viewMenuKeywords.add(jSeparator25);
 
-        viewKeywordsEdit.setAction(actionMap.get("editKeyword")); // NOI18N
-        viewKeywordsEdit.setName("viewKeywordsEdit"); // NOI18N
-        viewMenuKeywords.add(viewKeywordsEdit);
+            viewKeywordsSearchOr.setAction(actionMap.get("searchLogOr")); // NOI18N
+            viewKeywordsSearchOr.setName("viewKeywordsSearchOr"); // NOI18N
+            viewMenuKeywords.add(viewKeywordsSearchOr);
 
-        viewKeywordsDelete.setAction(actionMap.get("deleteKeyword")); // NOI18N
-        viewKeywordsDelete.setName("viewKeywordsDelete"); // NOI18N
-        viewMenuKeywords.add(viewKeywordsDelete);
+            viewKeywordsSearchAnd.setAction(actionMap.get("searchLogAnd")); // NOI18N
+            viewKeywordsSearchAnd.setName("viewKeywordsSearchAnd"); // NOI18N
+            viewMenuKeywords.add(viewKeywordsSearchAnd);
 
-        jSeparator27.setName("jSeparator27"); // NOI18N
-        viewMenuKeywords.add(jSeparator27);
+            viewKeywordsSearchNot.setAction(actionMap.get("searchLogNot")); // NOI18N
+            viewKeywordsSearchNot.setName("viewKeywordsSearchNot"); // NOI18N
+            viewMenuKeywords.add(viewKeywordsSearchNot);
 
-        viewKeywordsAddToList.setAction(actionMap.get("addKeywordToList")); // NOI18N
-        viewKeywordsAddToList.setName("viewKeywordsAddToList"); // NOI18N
-        viewMenuKeywords.add(viewKeywordsAddToList);
+            jSeparator26.setName("jSeparator26"); // NOI18N
+            viewMenuKeywords.add(jSeparator26);
 
-        jSeparator47.setName("jSeparator47"); // NOI18N
-        viewMenuKeywords.add(jSeparator47);
+            viewKeywordsNew.setAction(actionMap.get("newKeyword")); // NOI18N
+            viewKeywordsNew.setName("viewKeywordsNew"); // NOI18N
+            viewMenuKeywords.add(viewKeywordsNew);
 
-        viewKeywordsLuhmann.setAction(actionMap.get("addLuhmannLogOr")); // NOI18N
-        viewKeywordsLuhmann.setName("viewKeywordsLuhmann"); // NOI18N
-        viewMenuKeywords.add(viewKeywordsLuhmann);
+            viewKeywordsEdit.setAction(actionMap.get("editKeyword")); // NOI18N
+            viewKeywordsEdit.setName("viewKeywordsEdit"); // NOI18N
+            viewMenuKeywords.add(viewKeywordsEdit);
 
-        viewKeywordsLuhmannAnd.setAction(actionMap.get("addLuhmannLogAnd")); // NOI18N
-        viewKeywordsLuhmannAnd.setName("viewKeywordsLuhmannAnd"); // NOI18N
-        viewMenuKeywords.add(viewKeywordsLuhmannAnd);
+            viewKeywordsDelete.setAction(actionMap.get("deleteKeyword")); // NOI18N
+            viewKeywordsDelete.setName("viewKeywordsDelete"); // NOI18N
+            viewMenuKeywords.add(viewKeywordsDelete);
 
-        jSeparator67.setName("jSeparator67"); // NOI18N
-        viewMenuKeywords.add(jSeparator67);
+            jSeparator27.setName("jSeparator27"); // NOI18N
+            viewMenuKeywords.add(jSeparator27);
 
-        viewKeywordsManLinks.setAction(actionMap.get("addManLinksLogOr")); // NOI18N
-        viewKeywordsManLinks.setName("viewKeywordsManLinks"); // NOI18N
-        viewMenuKeywords.add(viewKeywordsManLinks);
+            viewKeywordsAddToList.setAction(actionMap.get("addKeywordToList")); // NOI18N
+            viewKeywordsAddToList.setName("viewKeywordsAddToList"); // NOI18N
+            viewMenuKeywords.add(viewKeywordsAddToList);
 
-        viewKeywordsManLinksAnd.setAction(actionMap.get("addManLinksLogAnd")); // NOI18N
-        viewKeywordsManLinksAnd.setName("viewKeywordsManLinksAnd"); // NOI18N
-        viewMenuKeywords.add(viewKeywordsManLinksAnd);
+            jSeparator47.setName("jSeparator47"); // NOI18N
+            viewMenuKeywords.add(jSeparator47);
 
-        jSeparator48.setName("jSeparator48"); // NOI18N
-        viewMenuKeywords.add(jSeparator48);
+            viewKeywordsLuhmann.setAction(actionMap.get("addLuhmannLogOr")); // NOI18N
+            viewKeywordsLuhmann.setName("viewKeywordsLuhmann"); // NOI18N
+            viewMenuKeywords.add(viewKeywordsLuhmann);
 
-        viewKeywordsDesktop.setAction(actionMap.get("addDesktopLogOr")); // NOI18N
-        viewKeywordsDesktop.setName("viewKeywordsDesktop"); // NOI18N
-        viewMenuKeywords.add(viewKeywordsDesktop);
+            viewKeywordsLuhmannAnd.setAction(actionMap.get("addLuhmannLogAnd")); // NOI18N
+            viewKeywordsLuhmannAnd.setName("viewKeywordsLuhmannAnd"); // NOI18N
+            viewMenuKeywords.add(viewKeywordsLuhmannAnd);
 
-        viewKeywordsDesktopAnd.setAction(actionMap.get("addDesktopLogAnd")); // NOI18N
-        viewKeywordsDesktopAnd.setName("viewKeywordsDesktopAnd"); // NOI18N
-        viewMenuKeywords.add(viewKeywordsDesktopAnd);
+            jSeparator67.setName("jSeparator67"); // NOI18N
+            viewMenuKeywords.add(jSeparator67);
 
-        jSeparator80.setName("jSeparator80"); // NOI18N
-        viewMenuKeywords.add(jSeparator80);
+            viewKeywordsManLinks.setAction(actionMap.get("addManLinksLogOr")); // NOI18N
+            viewKeywordsManLinks.setName("viewKeywordsManLinks"); // NOI18N
+            viewMenuKeywords.add(viewKeywordsManLinks);
 
-        viewKeywordsExport.setAction(actionMap.get("exportKeywords")); // NOI18N
-        viewKeywordsExport.setName("viewKeywordsExport"); // NOI18N
-        viewMenuKeywords.add(viewKeywordsExport);
+            viewKeywordsManLinksAnd.setAction(actionMap.get("addManLinksLogAnd")); // NOI18N
+            viewKeywordsManLinksAnd.setName("viewKeywordsManLinksAnd"); // NOI18N
+            viewMenuKeywords.add(viewKeywordsManLinksAnd);
 
-        menuBar.add(viewMenuKeywords);
+            jSeparator48.setName("jSeparator48"); // NOI18N
+            viewMenuKeywords.add(jSeparator48);
 
-        viewMenuAuthors.setText(resourceMap.getString("viewMenuAuthors.text")); // NOI18N
-        viewMenuAuthors.setName("viewMenuAuthors"); // NOI18N
+            viewKeywordsDesktop.setAction(actionMap.get("addDesktopLogOr")); // NOI18N
+            viewKeywordsDesktop.setName("viewKeywordsDesktop"); // NOI18N
+            viewMenuKeywords.add(viewKeywordsDesktop);
 
-        viewAuthorsCopy.setAction(actionMap.get("copy"));
-        viewAuthorsCopy.setName("viewAuthorsCopy"); // NOI18N
-        viewMenuAuthors.add(viewAuthorsCopy);
+            viewKeywordsDesktopAnd.setAction(actionMap.get("addDesktopLogAnd")); // NOI18N
+            viewKeywordsDesktopAnd.setName("viewKeywordsDesktopAnd"); // NOI18N
+            viewMenuKeywords.add(viewKeywordsDesktopAnd);
 
-        jSeparator28.setName("jSeparator28"); // NOI18N
-        viewMenuAuthors.add(jSeparator28);
+            jSeparator80.setName("jSeparator80"); // NOI18N
+            viewMenuKeywords.add(jSeparator80);
 
-        viewAuthorsSubFind.setText(resourceMap.getString("viewAuthorsSubFind.text")); // NOI18N
-        viewAuthorsSubFind.setName("viewAuthorsSubFind"); // NOI18N
+            viewKeywordsExport.setAction(actionMap.get("exportKeywords")); // NOI18N
+            viewKeywordsExport.setName("viewKeywordsExport"); // NOI18N
+            viewMenuKeywords.add(viewKeywordsExport);
 
-        viewAuthorsSearchOr.setAction(actionMap.get("searchLogOr")); // NOI18N
-        viewAuthorsSearchOr.setName("viewAuthorsSearchOr"); // NOI18N
-        viewAuthorsSubFind.add(viewAuthorsSearchOr);
+            menuBar.add(viewMenuKeywords);
 
-        viewAuthorsSearchAnd.setAction(actionMap.get("searchLogAnd")); // NOI18N
-        viewAuthorsSearchAnd.setName("viewAuthorsSearchAnd"); // NOI18N
-        viewAuthorsSubFind.add(viewAuthorsSearchAnd);
+            viewMenuAuthors.setText(resourceMap.getString("viewMenuAuthors.text")); // NOI18N
+            viewMenuAuthors.setName("viewMenuAuthors"); // NOI18N
 
-        viewAuthorsSearchNot.setAction(actionMap.get("searchLogNot")); // NOI18N
-        viewAuthorsSearchNot.setName("viewAuthorsSearchNot"); // NOI18N
-        viewAuthorsSubFind.add(viewAuthorsSearchNot);
+            viewAuthorsCopy.setAction(actionMap.get("copy"));
+            viewAuthorsCopy.setName("viewAuthorsCopy"); // NOI18N
+            viewMenuAuthors.add(viewAuthorsCopy);
 
-        viewMenuAuthors.add(viewAuthorsSubFind);
+            jSeparator28.setName("jSeparator28"); // NOI18N
+            viewMenuAuthors.add(jSeparator28);
 
-        jSeparator29.setName("jSeparator29"); // NOI18N
-        viewMenuAuthors.add(jSeparator29);
+            viewAuthorsSubFind.setText(resourceMap.getString("viewAuthorsSubFind.text")); // NOI18N
+            viewAuthorsSubFind.setName("viewAuthorsSubFind"); // NOI18N
 
-        viewAuthorsSubEdit.setText(resourceMap.getString("viewAuthorsSubEdit.text")); // NOI18N
-        viewAuthorsSubEdit.setName("viewAuthorsSubEdit"); // NOI18N
+            viewAuthorsSearchOr.setAction(actionMap.get("searchLogOr")); // NOI18N
+            viewAuthorsSearchOr.setName("viewAuthorsSearchOr"); // NOI18N
+            viewAuthorsSubFind.add(viewAuthorsSearchOr);
 
-        viewAuthorsNew.setAction(actionMap.get("newAuthor")); // NOI18N
-        viewAuthorsNew.setName("viewAuthorsNew"); // NOI18N
-        viewAuthorsSubEdit.add(viewAuthorsNew);
+            viewAuthorsSearchAnd.setAction(actionMap.get("searchLogAnd")); // NOI18N
+            viewAuthorsSearchAnd.setName("viewAuthorsSearchAnd"); // NOI18N
+            viewAuthorsSubFind.add(viewAuthorsSearchAnd);
 
-        viewAuthorsEdit.setAction(actionMap.get("editAuthor")); // NOI18N
-        viewAuthorsEdit.setName("viewAuthorsEdit"); // NOI18N
-        viewAuthorsSubEdit.add(viewAuthorsEdit);
+            viewAuthorsSearchNot.setAction(actionMap.get("searchLogNot")); // NOI18N
+            viewAuthorsSearchNot.setName("viewAuthorsSearchNot"); // NOI18N
+            viewAuthorsSubFind.add(viewAuthorsSearchNot);
 
-        viewAuthorsDelete.setAction(actionMap.get("deleteAuthor")); // NOI18N
-        viewAuthorsDelete.setName("viewAuthorsDelete"); // NOI18N
-        viewAuthorsSubEdit.add(viewAuthorsDelete);
+            viewMenuAuthors.add(viewAuthorsSubFind);
 
-        jSeparator90.setName("jSeparator90"); // NOI18N
-        viewAuthorsSubEdit.add(jSeparator90);
+            jSeparator29.setName("jSeparator29"); // NOI18N
+            viewMenuAuthors.add(jSeparator29);
 
-        viewAuthorsBibkey.setAction(actionMap.get("changeBibkey")); // NOI18N
-        viewAuthorsBibkey.setName("viewAuthorsBibkey"); // NOI18N
-        viewAuthorsSubEdit.add(viewAuthorsBibkey);
+            viewAuthorsSubEdit.setText(resourceMap.getString("viewAuthorsSubEdit.text")); // NOI18N
+            viewAuthorsSubEdit.setName("viewAuthorsSubEdit"); // NOI18N
 
-        viewMenuAuthors.add(viewAuthorsSubEdit);
+            viewAuthorsNew.setAction(actionMap.get("newAuthor")); // NOI18N
+            viewAuthorsNew.setName("viewAuthorsNew"); // NOI18N
+            viewAuthorsSubEdit.add(viewAuthorsNew);
 
-        jSeparator30.setName("jSeparator30"); // NOI18N
-        viewMenuAuthors.add(jSeparator30);
+            viewAuthorsEdit.setAction(actionMap.get("editAuthor")); // NOI18N
+            viewAuthorsEdit.setName("viewAuthorsEdit"); // NOI18N
+            viewAuthorsSubEdit.add(viewAuthorsEdit);
 
-        viewAuthorsSubAdd.setText(resourceMap.getString("viewAuthorsSubAdd.text")); // NOI18N
-        viewAuthorsSubAdd.setName("viewAuthorsSubAdd"); // NOI18N
+            viewAuthorsDelete.setAction(actionMap.get("deleteAuthor")); // NOI18N
+            viewAuthorsDelete.setName("viewAuthorsDelete"); // NOI18N
+            viewAuthorsSubEdit.add(viewAuthorsDelete);
 
-        viewAuthorsAddToEntry.setAction(actionMap.get("addAuthorToList")); // NOI18N
-        viewAuthorsAddToEntry.setName("viewAuthorsAddToEntry"); // NOI18N
-        viewAuthorsSubAdd.add(viewAuthorsAddToEntry);
+            jSeparator90.setName("jSeparator90"); // NOI18N
+            viewAuthorsSubEdit.add(jSeparator90);
 
-        jSeparator51.setName("jSeparator51"); // NOI18N
-        viewAuthorsSubAdd.add(jSeparator51);
+            viewAuthorsBibkey.setAction(actionMap.get("changeBibkey")); // NOI18N
+            viewAuthorsBibkey.setName("viewAuthorsBibkey"); // NOI18N
+            viewAuthorsSubEdit.add(viewAuthorsBibkey);
 
-        viewAuthorsManLinks.setAction(actionMap.get("addManLinksLogOr")); // NOI18N
-        viewAuthorsManLinks.setName("viewAuthorsManLinks"); // NOI18N
-        viewAuthorsSubAdd.add(viewAuthorsManLinks);
+            viewMenuAuthors.add(viewAuthorsSubEdit);
 
-        viewAuthorsManLinksAnd.setAction(actionMap.get("addManLinksLogAnd")); // NOI18N
-        viewAuthorsManLinksAnd.setName("viewAuthorsManLinksAnd"); // NOI18N
-        viewAuthorsSubAdd.add(viewAuthorsManLinksAnd);
+            jSeparator30.setName("jSeparator30"); // NOI18N
+            viewMenuAuthors.add(jSeparator30);
 
-        jSeparator71.setName("jSeparator71"); // NOI18N
-        viewAuthorsSubAdd.add(jSeparator71);
+            viewAuthorsSubAdd.setText(resourceMap.getString("viewAuthorsSubAdd.text")); // NOI18N
+            viewAuthorsSubAdd.setName("viewAuthorsSubAdd"); // NOI18N
 
-        viewAuthorsAddLuhmann.setAction(actionMap.get("addLuhmannLogOr")); // NOI18N
-        viewAuthorsAddLuhmann.setName("viewAuthorsAddLuhmann"); // NOI18N
-        viewAuthorsSubAdd.add(viewAuthorsAddLuhmann);
+            viewAuthorsAddToEntry.setAction(actionMap.get("addAuthorToList")); // NOI18N
+            viewAuthorsAddToEntry.setName("viewAuthorsAddToEntry"); // NOI18N
+            viewAuthorsSubAdd.add(viewAuthorsAddToEntry);
 
-        viewAuthorsAddLuhmannAnd.setAction(actionMap.get("addLuhmannLogAnd")); // NOI18N
-        viewAuthorsAddLuhmannAnd.setName("viewAuthorsAddLuhmannAnd"); // NOI18N
-        viewAuthorsSubAdd.add(viewAuthorsAddLuhmannAnd);
+            jSeparator51.setName("jSeparator51"); // NOI18N
+            viewAuthorsSubAdd.add(jSeparator51);
 
-        jSeparator52.setName("jSeparator52"); // NOI18N
-        viewAuthorsSubAdd.add(jSeparator52);
+            viewAuthorsManLinks.setAction(actionMap.get("addManLinksLogOr")); // NOI18N
+            viewAuthorsManLinks.setName("viewAuthorsManLinks"); // NOI18N
+            viewAuthorsSubAdd.add(viewAuthorsManLinks);
 
-        viewAuthorsDesktop.setAction(actionMap.get("addDesktopLogOr")); // NOI18N
-        viewAuthorsDesktop.setName("viewAuthorsDesktop"); // NOI18N
-        viewAuthorsSubAdd.add(viewAuthorsDesktop);
+            viewAuthorsManLinksAnd.setAction(actionMap.get("addManLinksLogAnd")); // NOI18N
+            viewAuthorsManLinksAnd.setName("viewAuthorsManLinksAnd"); // NOI18N
+            viewAuthorsSubAdd.add(viewAuthorsManLinksAnd);
 
-        viewAuthorsDesktopAnd.setAction(actionMap.get("addDesktopLogAnd")); // NOI18N
-        viewAuthorsDesktopAnd.setName("viewAuthorsDesktopAnd"); // NOI18N
-        viewAuthorsSubAdd.add(viewAuthorsDesktopAnd);
+            jSeparator71.setName("jSeparator71"); // NOI18N
+            viewAuthorsSubAdd.add(jSeparator71);
 
-        viewMenuAuthors.add(viewAuthorsSubAdd);
+            viewAuthorsAddLuhmann.setAction(actionMap.get("addLuhmannLogOr")); // NOI18N
+            viewAuthorsAddLuhmann.setName("viewAuthorsAddLuhmann"); // NOI18N
+            viewAuthorsSubAdd.add(viewAuthorsAddLuhmann);
 
-        jSeparator81.setName("jSeparator81"); // NOI18N
-        viewMenuAuthors.add(jSeparator81);
+            viewAuthorsAddLuhmannAnd.setAction(actionMap.get("addLuhmannLogAnd")); // NOI18N
+            viewAuthorsAddLuhmannAnd.setName("viewAuthorsAddLuhmannAnd"); // NOI18N
+            viewAuthorsSubAdd.add(viewAuthorsAddLuhmannAnd);
 
-        viewAuthorsImport.setAction(actionMap.get("importAuthors")); // NOI18N
-        viewAuthorsImport.setName("viewAuthorsImport"); // NOI18N
-        viewMenuAuthors.add(viewAuthorsImport);
+            jSeparator52.setName("jSeparator52"); // NOI18N
+            viewAuthorsSubAdd.add(jSeparator52);
 
-        viewAuthorsExport.setAction(actionMap.get("exportAuthors")); // NOI18N
-        viewAuthorsExport.setName("viewAuthorsExport"); // NOI18N
-        viewMenuAuthors.add(viewAuthorsExport);
+            viewAuthorsDesktop.setAction(actionMap.get("addDesktopLogOr")); // NOI18N
+            viewAuthorsDesktop.setName("viewAuthorsDesktop"); // NOI18N
+            viewAuthorsSubAdd.add(viewAuthorsDesktop);
 
-        jSeparator92.setName("jSeparator92"); // NOI18N
-        viewMenuAuthors.add(jSeparator92);
+            viewAuthorsDesktopAnd.setAction(actionMap.get("addDesktopLogAnd")); // NOI18N
+            viewAuthorsDesktopAnd.setName("viewAuthorsDesktopAnd"); // NOI18N
+            viewAuthorsSubAdd.add(viewAuthorsDesktopAnd);
 
-        viewAuthorsAttachBibtexFile.setAction(actionMap.get("attachBibtexFile")); // NOI18N
-        viewAuthorsAttachBibtexFile.setName("viewAuthorsAttachBibtexFile"); // NOI18N
-        viewMenuAuthors.add(viewAuthorsAttachBibtexFile);
+            viewMenuAuthors.add(viewAuthorsSubAdd);
 
-        viewAuthorsRefreshBibtexFile.setAction(actionMap.get("refreshBibTexFile")); // NOI18N
-        viewAuthorsRefreshBibtexFile.setName("viewAuthorsRefreshBibtexFile"); // NOI18N
-        viewMenuAuthors.add(viewAuthorsRefreshBibtexFile);
+            jSeparator81.setName("jSeparator81"); // NOI18N
+            viewMenuAuthors.add(jSeparator81);
 
-        menuBar.add(viewMenuAuthors);
+            viewAuthorsImport.setAction(actionMap.get("importAuthors")); // NOI18N
+            viewAuthorsImport.setName("viewAuthorsImport"); // NOI18N
+            viewMenuAuthors.add(viewAuthorsImport);
 
-        viewMenuTitles.setText(resourceMap.getString("viewMenuTitles.text")); // NOI18N
-        viewMenuTitles.setName("viewMenuTitles"); // NOI18N
+            viewAuthorsExport.setAction(actionMap.get("exportAuthors")); // NOI18N
+            viewAuthorsExport.setName("viewAuthorsExport"); // NOI18N
+            viewMenuAuthors.add(viewAuthorsExport);
 
-        viewTitlesCopy.setAction(actionMap.get("copy"));
-        viewTitlesCopy.setName("viewTitlesCopy"); // NOI18N
-        viewMenuTitles.add(viewTitlesCopy);
+            jSeparator92.setName("jSeparator92"); // NOI18N
+            viewMenuAuthors.add(jSeparator92);
 
-        jSeparator43.setName("jSeparator43"); // NOI18N
-        viewMenuTitles.add(jSeparator43);
+            viewAuthorsAttachBibtexFile.setAction(actionMap.get("attachBibtexFile")); // NOI18N
+            viewAuthorsAttachBibtexFile.setName("viewAuthorsAttachBibtexFile"); // NOI18N
+            viewMenuAuthors.add(viewAuthorsAttachBibtexFile);
 
-        viewTitlesEdit.setAction(actionMap.get("editTitle")); // NOI18N
-        viewTitlesEdit.setName("viewTitlesEdit"); // NOI18N
-        viewMenuTitles.add(viewTitlesEdit);
+            viewAuthorsRefreshBibtexFile.setAction(actionMap.get("refreshBibTexFile")); // NOI18N
+            viewAuthorsRefreshBibtexFile.setName("viewAuthorsRefreshBibtexFile"); // NOI18N
+            viewMenuAuthors.add(viewAuthorsRefreshBibtexFile);
 
-        viewTitlesDelete.setAction(actionMap.get("deleteEntry")); // NOI18N
-        viewTitlesDelete.setName("viewTitlesDelete"); // NOI18N
-        viewMenuTitles.add(viewTitlesDelete);
+            menuBar.add(viewMenuAuthors);
 
-        jSeparator65.setName("jSeparator65"); // NOI18N
-        viewMenuTitles.add(jSeparator65);
+            viewMenuTitles.setText(resourceMap.getString("viewMenuTitles.text")); // NOI18N
+            viewMenuTitles.setName("viewMenuTitles"); // NOI18N
 
-        viewTitlesMoveEntry.setAction(actionMap.get("moveEntry")); // NOI18N
-        viewTitlesMoveEntry.setName("viewTitlesMoveEntry"); // NOI18N
-        viewMenuTitles.add(viewTitlesMoveEntry);
+            viewTitlesCopy.setAction(actionMap.get("copy"));
+            viewTitlesCopy.setName("viewTitlesCopy"); // NOI18N
+            viewMenuTitles.add(viewTitlesCopy);
 
-        jSeparator105.setName("jSeparator105"); // NOI18N
-        viewMenuTitles.add(jSeparator105);
+            jSeparator43.setName("jSeparator43"); // NOI18N
+            viewMenuTitles.add(jSeparator43);
 
-        viewTitlesAutomaticFirstLine.setAction(actionMap.get("automaticFirstLineAsTitle")); // NOI18N
-        viewTitlesAutomaticFirstLine.setName("viewTitlesAutomaticFirstLine"); // NOI18N
-        viewMenuTitles.add(viewTitlesAutomaticFirstLine);
+            viewTitlesEdit.setAction(actionMap.get("editTitle")); // NOI18N
+            viewTitlesEdit.setName("viewTitlesEdit"); // NOI18N
+            viewMenuTitles.add(viewTitlesEdit);
 
-        jSeparator42.setName("jSeparator42"); // NOI18N
-        viewMenuTitles.add(jSeparator42);
+            viewTitlesDelete.setAction(actionMap.get("deleteEntry")); // NOI18N
+            viewTitlesDelete.setName("viewTitlesDelete"); // NOI18N
+            viewMenuTitles.add(viewTitlesDelete);
 
-        viewTitlesManLinks.setAction(actionMap.get("addManLinks")); // NOI18N
-        viewTitlesManLinks.setName("viewTitlesManLinks"); // NOI18N
-        viewMenuTitles.add(viewTitlesManLinks);
+            jSeparator65.setName("jSeparator65"); // NOI18N
+            viewMenuTitles.add(jSeparator65);
 
-        viewTitlesLuhmann.setAction(actionMap.get("addLuhmann")); // NOI18N
-        viewTitlesLuhmann.setName("viewTitlesLuhmann"); // NOI18N
-        viewMenuTitles.add(viewTitlesLuhmann);
+            viewTitlesMoveEntry.setAction(actionMap.get("moveEntry")); // NOI18N
+            viewTitlesMoveEntry.setName("viewTitlesMoveEntry"); // NOI18N
+            viewMenuTitles.add(viewTitlesMoveEntry);
 
-        viewTitlesBookmarks.setAction(actionMap.get("addBookmarks")); // NOI18N
-        viewTitlesBookmarks.setName("viewTitlesBookmarks"); // NOI18N
-        viewMenuTitles.add(viewTitlesBookmarks);
+            jSeparator105.setName("jSeparator105"); // NOI18N
+            viewMenuTitles.add(jSeparator105);
 
-        jSeparator113.setName("jSeparator113"); // NOI18N
-        viewMenuTitles.add(jSeparator113);
+            viewTitlesAutomaticFirstLine.setAction(actionMap.get("automaticFirstLineAsTitle")); // NOI18N
+            viewTitlesAutomaticFirstLine.setName("viewTitlesAutomaticFirstLine"); // NOI18N
+            viewMenuTitles.add(viewTitlesAutomaticFirstLine);
 
-        viewTitlesDesktop.setAction(actionMap.get("addDesktop")); // NOI18N
-        viewTitlesDesktop.setName("viewTitlesDesktop"); // NOI18N
-        viewMenuTitles.add(viewTitlesDesktop);
+            jSeparator42.setName("jSeparator42"); // NOI18N
+            viewMenuTitles.add(jSeparator42);
 
-        jSeparator108.setName("jSeparator108"); // NOI18N
-        viewMenuTitles.add(jSeparator108);
+            viewTitlesManLinks.setAction(actionMap.get("addManLinks")); // NOI18N
+            viewTitlesManLinks.setName("viewTitlesManLinks"); // NOI18N
+            viewMenuTitles.add(viewTitlesManLinks);
 
-        viewTitlesExport.setAction(actionMap.get("exportTitles")); // NOI18N
-        viewTitlesExport.setName("viewTitlesExport"); // NOI18N
-        viewMenuTitles.add(viewTitlesExport);
+            viewTitlesLuhmann.setAction(actionMap.get("addLuhmann")); // NOI18N
+            viewTitlesLuhmann.setName("viewTitlesLuhmann"); // NOI18N
+            viewMenuTitles.add(viewTitlesLuhmann);
 
-        menuBar.add(viewMenuTitles);
+            viewTitlesBookmarks.setAction(actionMap.get("addBookmarks")); // NOI18N
+            viewTitlesBookmarks.setName("viewTitlesBookmarks"); // NOI18N
+            viewMenuTitles.add(viewTitlesBookmarks);
 
-        viewMenuCluster.setText(resourceMap.getString("viewMenuCluster.text")); // NOI18N
-        viewMenuCluster.setName("viewMenuCluster"); // NOI18N
+            jSeparator113.setName("jSeparator113"); // NOI18N
+            viewMenuTitles.add(jSeparator113);
 
-        viewClusterExport.setAction(actionMap.get("exportCluster")); // NOI18N
-        viewClusterExport.setName("viewClusterExport"); // NOI18N
-        viewMenuCluster.add(viewClusterExport);
+            viewTitlesDesktop.setAction(actionMap.get("addDesktop")); // NOI18N
+            viewTitlesDesktop.setName("viewTitlesDesktop"); // NOI18N
+            viewMenuTitles.add(viewTitlesDesktop);
 
-        viewClusterExportToSearch.setAction(actionMap.get("exportClusterToSearch")); // NOI18N
-        viewClusterExportToSearch.setName("viewClusterExportToSearch"); // NOI18N
-        viewMenuCluster.add(viewClusterExportToSearch);
+            jSeparator108.setName("jSeparator108"); // NOI18N
+            viewMenuTitles.add(jSeparator108);
 
-        menuBar.add(viewMenuCluster);
+            viewTitlesExport.setAction(actionMap.get("exportTitles")); // NOI18N
+            viewTitlesExport.setName("viewTitlesExport"); // NOI18N
+            viewMenuTitles.add(viewTitlesExport);
 
-        viewMenuBookmarks.setText(resourceMap.getString("viewMenuBookmarks.text")); // NOI18N
-        viewMenuBookmarks.setName("viewMenuBookmarks"); // NOI18N
+            menuBar.add(viewMenuTitles);
 
-        viewBookmarksEdit.setAction(actionMap.get("editBookmark")); // NOI18N
-        viewBookmarksEdit.setName("viewBookmarksEdit"); // NOI18N
-        viewMenuBookmarks.add(viewBookmarksEdit);
+            viewMenuCluster.setText(resourceMap.getString("viewMenuCluster.text")); // NOI18N
+            viewMenuCluster.setName("viewMenuCluster"); // NOI18N
 
-        viewBookmarksDelete.setAction(actionMap.get("deleteBookmark")); // NOI18N
-        viewBookmarksDelete.setName("viewBookmarksDelete"); // NOI18N
-        viewMenuBookmarks.add(viewBookmarksDelete);
+            viewClusterExport.setAction(actionMap.get("exportCluster")); // NOI18N
+            viewClusterExport.setName("viewClusterExport"); // NOI18N
+            viewMenuCluster.add(viewClusterExport);
 
-        jSeparator35.setName("jSeparator35"); // NOI18N
-        viewMenuBookmarks.add(jSeparator35);
+            viewClusterExportToSearch.setAction(actionMap.get("exportClusterToSearch")); // NOI18N
+            viewClusterExportToSearch.setName("viewClusterExportToSearch"); // NOI18N
+            viewMenuCluster.add(viewClusterExportToSearch);
 
-        viewBookmarksEditCat.setAction(actionMap.get("editBookmarkCategory")); // NOI18N
-        viewBookmarksEditCat.setName("viewBookmarksEditCat"); // NOI18N
-        viewMenuBookmarks.add(viewBookmarksEditCat);
+            menuBar.add(viewMenuCluster);
 
-        viewBookmarksDeleteCat.setAction(actionMap.get("deleteBookmarkCategory")); // NOI18N
-        viewBookmarksDeleteCat.setName("viewBookmarksDeleteCat"); // NOI18N
-        viewMenuBookmarks.add(viewBookmarksDeleteCat);
+            viewMenuBookmarks.setText(resourceMap.getString("viewMenuBookmarks.text")); // NOI18N
+            viewMenuBookmarks.setName("viewMenuBookmarks"); // NOI18N
 
-        jSeparator37.setName("jSeparator37"); // NOI18N
-        viewMenuBookmarks.add(jSeparator37);
+            viewBookmarksEdit.setAction(actionMap.get("editBookmark")); // NOI18N
+            viewBookmarksEdit.setName("viewBookmarksEdit"); // NOI18N
+            viewMenuBookmarks.add(viewBookmarksEdit);
 
-        viewBookmarksManLink.setAction(actionMap.get("addManLinks")); // NOI18N
-        viewBookmarksManLink.setName("viewBookmarksManLink"); // NOI18N
-        viewMenuBookmarks.add(viewBookmarksManLink);
+            viewBookmarksDelete.setAction(actionMap.get("deleteBookmark")); // NOI18N
+            viewBookmarksDelete.setName("viewBookmarksDelete"); // NOI18N
+            viewMenuBookmarks.add(viewBookmarksDelete);
 
-        viewBookmarksAddLuhmann.setAction(actionMap.get("addLuhmann")); // NOI18N
-        viewBookmarksAddLuhmann.setName("viewBookmarksAddLuhmann"); // NOI18N
-        viewMenuBookmarks.add(viewBookmarksAddLuhmann);
+            jSeparator35.setName("jSeparator35"); // NOI18N
+            viewMenuBookmarks.add(jSeparator35);
 
-        jSeparator59.setName("jSeparator59"); // NOI18N
-        viewMenuBookmarks.add(jSeparator59);
+            viewBookmarksEditCat.setAction(actionMap.get("editBookmarkCategory")); // NOI18N
+            viewBookmarksEditCat.setName("viewBookmarksEditCat"); // NOI18N
+            viewMenuBookmarks.add(viewBookmarksEditCat);
 
-        viewBookmarkDesktop.setAction(actionMap.get("addDesktop")); // NOI18N
-        viewBookmarkDesktop.setName("viewBookmarkDesktop"); // NOI18N
-        viewMenuBookmarks.add(viewBookmarkDesktop);
+            viewBookmarksDeleteCat.setAction(actionMap.get("deleteBookmarkCategory")); // NOI18N
+            viewBookmarksDeleteCat.setName("viewBookmarksDeleteCat"); // NOI18N
+            viewMenuBookmarks.add(viewBookmarksDeleteCat);
 
-        jSeparator82.setName("jSeparator82"); // NOI18N
-        viewMenuBookmarks.add(jSeparator82);
+            jSeparator37.setName("jSeparator37"); // NOI18N
+            viewMenuBookmarks.add(jSeparator37);
 
-        viewBookmarksExport.setAction(actionMap.get("exportBookmarks")); // NOI18N
-        viewBookmarksExport.setName("viewBookmarksExport"); // NOI18N
-        viewMenuBookmarks.add(viewBookmarksExport);
+            viewBookmarksManLink.setAction(actionMap.get("addManLinks")); // NOI18N
+            viewBookmarksManLink.setName("viewBookmarksManLink"); // NOI18N
+            viewMenuBookmarks.add(viewBookmarksManLink);
 
-        viewBookmarksExportSearch.setAction(actionMap.get("exportBookmarksToSearch")); // NOI18N
-        viewBookmarksExportSearch.setName("viewBookmarksExportSearch"); // NOI18N
-        viewMenuBookmarks.add(viewBookmarksExportSearch);
+            viewBookmarksAddLuhmann.setAction(actionMap.get("addLuhmann")); // NOI18N
+            viewBookmarksAddLuhmann.setName("viewBookmarksAddLuhmann"); // NOI18N
+            viewMenuBookmarks.add(viewBookmarksAddLuhmann);
 
-        menuBar.add(viewMenuBookmarks);
+            jSeparator59.setName("jSeparator59"); // NOI18N
+            viewMenuBookmarks.add(jSeparator59);
 
-        viewMenuAttachments.setText(resourceMap.getString("viewMenuAttachments.text")); // NOI18N
-        viewMenuAttachments.setName("viewMenuAttachments"); // NOI18N
+            viewBookmarkDesktop.setAction(actionMap.get("addDesktop")); // NOI18N
+            viewBookmarkDesktop.setName("viewBookmarkDesktop"); // NOI18N
+            viewMenuBookmarks.add(viewBookmarkDesktop);
 
-        viewAttachmentsCopy.setAction(actionMap.get("copy"));
-        viewAttachmentsCopy.setName("viewAttachmentsCopy"); // NOI18N
-        viewMenuAttachments.add(viewAttachmentsCopy);
+            jSeparator82.setName("jSeparator82"); // NOI18N
+            viewMenuBookmarks.add(jSeparator82);
 
-        jSeparator84.setName("jSeparator84"); // NOI18N
-        viewMenuAttachments.add(jSeparator84);
+            viewBookmarksExport.setAction(actionMap.get("exportBookmarks")); // NOI18N
+            viewBookmarksExport.setName("viewBookmarksExport"); // NOI18N
+            viewMenuBookmarks.add(viewBookmarksExport);
 
-        viewAttachmentEdit.setAction(actionMap.get("editAttachment")); // NOI18N
-        viewAttachmentEdit.setName("viewAttachmentEdit"); // NOI18N
-        viewMenuAttachments.add(viewAttachmentEdit);
+            viewBookmarksExportSearch.setAction(actionMap.get("exportBookmarksToSearch")); // NOI18N
+            viewBookmarksExportSearch.setName("viewBookmarksExportSearch"); // NOI18N
+            viewMenuBookmarks.add(viewBookmarksExportSearch);
 
-        viewAttachmentsDelete.setAction(actionMap.get("deleteAttachment")); // NOI18N
-        viewAttachmentsDelete.setName("viewAttachmentsDelete"); // NOI18N
-        viewMenuAttachments.add(viewAttachmentsDelete);
+            menuBar.add(viewMenuBookmarks);
 
-        jSeparator85.setName("jSeparator85"); // NOI18N
-        viewMenuAttachments.add(jSeparator85);
+            viewMenuAttachments.setText(resourceMap.getString("viewMenuAttachments.text")); // NOI18N
+            viewMenuAttachments.setName("viewMenuAttachments"); // NOI18N
 
-        viewMenuAttachmentGoto.setAction(actionMap.get("openAttachmentDirectory")); // NOI18N
-        viewMenuAttachmentGoto.setName("viewMenuAttachmentGoto"); // NOI18N
-        viewMenuAttachments.add(viewMenuAttachmentGoto);
+            viewAttachmentsCopy.setAction(actionMap.get("copy"));
+            viewAttachmentsCopy.setName("viewAttachmentsCopy"); // NOI18N
+            viewMenuAttachments.add(viewAttachmentsCopy);
 
-        jSeparator93.setName("jSeparator93"); // NOI18N
-        viewMenuAttachments.add(jSeparator93);
+            jSeparator84.setName("jSeparator84"); // NOI18N
+            viewMenuAttachments.add(jSeparator84);
 
-        viewAttachmentsExport.setAction(actionMap.get("exportAttachments")); // NOI18N
-        viewAttachmentsExport.setName("viewAttachmentsExport"); // NOI18N
-        viewMenuAttachments.add(viewAttachmentsExport);
+            viewAttachmentEdit.setAction(actionMap.get("editAttachment")); // NOI18N
+            viewAttachmentEdit.setName("viewAttachmentEdit"); // NOI18N
+            viewMenuAttachments.add(viewAttachmentEdit);
 
-        menuBar.add(viewMenuAttachments);
+            viewAttachmentsDelete.setAction(actionMap.get("deleteAttachment")); // NOI18N
+            viewAttachmentsDelete.setName("viewAttachmentsDelete"); // NOI18N
+            viewMenuAttachments.add(viewAttachmentsDelete);
 
-        windowsMenu.setText(resourceMap.getString("windowsMenu.text")); // NOI18N
-        windowsMenu.setName("windowsMenu"); // NOI18N
+            jSeparator85.setName("jSeparator85"); // NOI18N
+            viewMenuAttachments.add(jSeparator85);
 
-        showSearchResultsMenuItem.setAction(actionMap.get("showSearchResultWindow")); // NOI18N
-        showSearchResultsMenuItem.setName("showSearchResultsMenuItem"); // NOI18N
-        windowsMenu.add(showSearchResultsMenuItem);
+            viewMenuAttachmentGoto.setAction(actionMap.get("openAttachmentDirectory")); // NOI18N
+            viewMenuAttachmentGoto.setName("viewMenuAttachmentGoto"); // NOI18N
+            viewMenuAttachments.add(viewMenuAttachmentGoto);
 
-        jSeparator44.setName("jSeparator44"); // NOI18N
-        windowsMenu.add(jSeparator44);
+            jSeparator93.setName("jSeparator93"); // NOI18N
+            viewMenuAttachments.add(jSeparator93);
 
-        showDesktopMenuItem.setAction(actionMap.get("showDesktopWindow")); // NOI18N
-        showDesktopMenuItem.setName("showDesktopMenuItem"); // NOI18N
-        windowsMenu.add(showDesktopMenuItem);
+            viewAttachmentsExport.setAction(actionMap.get("exportAttachments")); // NOI18N
+            viewAttachmentsExport.setName("viewAttachmentsExport"); // NOI18N
+            viewMenuAttachments.add(viewAttachmentsExport);
 
-        jSeparator109.setName("jSeparator109"); // NOI18N
-        windowsMenu.add(jSeparator109);
+            menuBar.add(viewMenuAttachments);
 
-        showNewEntryMenuItem.setAction(actionMap.get("showNewEntryWindow")); // NOI18N
-        showNewEntryMenuItem.setName("showNewEntryMenuItem"); // NOI18N
-        windowsMenu.add(showNewEntryMenuItem);
+            windowsMenu.setText(resourceMap.getString("windowsMenu.text")); // NOI18N
+            windowsMenu.setName("windowsMenu"); // NOI18N
 
-        jSeparator34.setName("jSeparator34"); // NOI18N
-        windowsMenu.add(jSeparator34);
+            showSearchResultsMenuItem.setAction(actionMap.get("showSearchResultWindow")); // NOI18N
+            showSearchResultsMenuItem.setName("showSearchResultsMenuItem"); // NOI18N
+            windowsMenu.add(showSearchResultsMenuItem);
 
-        showErrorLogMenuItem.setAction(actionMap.get("showErrorLog")); // NOI18N
-        showErrorLogMenuItem.setName("showErrorLogMenuItem"); // NOI18N
-        windowsMenu.add(showErrorLogMenuItem);
+            jSeparator44.setName("jSeparator44"); // NOI18N
+            windowsMenu.add(jSeparator44);
 
-        menuBar.add(windowsMenu);
+            showDesktopMenuItem.setAction(actionMap.get("showDesktopWindow")); // NOI18N
+            showDesktopMenuItem.setName("showDesktopMenuItem"); // NOI18N
+            windowsMenu.add(showDesktopMenuItem);
 
-        aboutMenu.setText(resourceMap.getString("aboutMenu.text")); // NOI18N
-        aboutMenu.setName("aboutMenu"); // NOI18N
+            jSeparator109.setName("jSeparator109"); // NOI18N
+            windowsMenu.add(jSeparator109);
 
-        aboutMenuItem.setAction(actionMap.get("showAboutBox")); // NOI18N
-        aboutMenuItem.setName("aboutMenuItem"); // NOI18N
-        aboutMenu.add(aboutMenuItem);
+            showNewEntryMenuItem.setAction(actionMap.get("showNewEntryWindow")); // NOI18N
+            showNewEntryMenuItem.setName("showNewEntryMenuItem"); // NOI18N
+            windowsMenu.add(showNewEntryMenuItem);
 
-        jSeparatorAbout1.setName("jSeparatorAbout1"); // NOI18N
-        aboutMenu.add(jSeparatorAbout1);
+            jSeparator34.setName("jSeparator34"); // NOI18N
+            windowsMenu.add(jSeparator34);
 
-        preferencesMenuItem.setAction(actionMap.get("settingsWindow")); // NOI18N
-        preferencesMenuItem.setName("preferencesMenuItem"); // NOI18N
-        aboutMenu.add(preferencesMenuItem);
+            showErrorLogMenuItem.setAction(actionMap.get("showErrorLog")); // NOI18N
+            showErrorLogMenuItem.setName("showErrorLogMenuItem"); // NOI18N
+            windowsMenu.add(showErrorLogMenuItem);
 
-        menuBar.add(aboutMenu);
+            menuBar.add(windowsMenu);
 
-        statusPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, resourceMap.getColor("statusPanel.border.matteColor"))); // NOI18N
-        statusPanel.setMinimumSize(new java.awt.Dimension(200, 16));
-        statusPanel.setName("statusPanel"); // NOI18N
+            aboutMenu.setText(resourceMap.getString("aboutMenu.text")); // NOI18N
+            aboutMenu.setName("aboutMenu"); // NOI18N
 
-        jPanel12.setName("jPanel12"); // NOI18N
+            aboutMenuItem.setAction(actionMap.get("showAboutBox")); // NOI18N
+            aboutMenuItem.setName("aboutMenuItem"); // NOI18N
+            aboutMenu.add(aboutMenuItem);
 
-        statusEntryLabel.setText(resourceMap.getString("statusEntryLabel.text")); // NOI18N
-        statusEntryLabel.setName("statusEntryLabel"); // NOI18N
+            jSeparatorAbout1.setName("jSeparatorAbout1"); // NOI18N
+            aboutMenu.add(jSeparatorAbout1);
 
-        statusAnimationLabel.setName("statusAnimationLabel"); // NOI18N
+            preferencesMenuItem.setAction(actionMap.get("settingsWindow")); // NOI18N
+            preferencesMenuItem.setName("preferencesMenuItem"); // NOI18N
+            aboutMenu.add(preferencesMenuItem);
 
-        jTextFieldEntryNumber.setColumns(4);
-        jTextFieldEntryNumber.setText(resourceMap.getString("jTextFieldEntryNumber.text")); // NOI18N
-        jTextFieldEntryNumber.setToolTipText(resourceMap.getString("jTextFieldEntryNumber.toolTipText")); // NOI18N
-        jTextFieldEntryNumber.setName("jTextFieldEntryNumber"); // NOI18N
+            menuBar.add(aboutMenu);
 
-        statusOfEntryLabel.setText(resourceMap.getString("statusOfEntryLabel.text")); // NOI18N
-        statusOfEntryLabel.setName("statusOfEntryLabel"); // NOI18N
+            statusPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, resourceMap.getColor("statusPanel.border.matteColor"))); // NOI18N
+            statusPanel.setMinimumSize(new java.awt.Dimension(200, 16));
+            statusPanel.setName("statusPanel"); // NOI18N
 
-        buttonHistoryBack.setAction(actionMap.get("historyBack")); // NOI18N
-        buttonHistoryBack.setIcon(resourceMap.getIcon("buttonHistoryBack.icon")); // NOI18N
-        buttonHistoryBack.setBorderPainted(false);
-        buttonHistoryBack.setContentAreaFilled(false);
-        buttonHistoryBack.setFocusPainted(false);
-        buttonHistoryBack.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        buttonHistoryBack.setName("buttonHistoryBack"); // NOI18N
+            jPanel12.setName("jPanel12"); // NOI18N
 
-        buttonHistoryFore.setAction(actionMap.get("historyFor")); // NOI18N
-        buttonHistoryFore.setIcon(resourceMap.getIcon("buttonHistoryFore.icon")); // NOI18N
-        buttonHistoryFore.setBorderPainted(false);
-        buttonHistoryFore.setContentAreaFilled(false);
-        buttonHistoryFore.setFocusPainted(false);
-        buttonHistoryFore.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        buttonHistoryFore.setName("buttonHistoryFore"); // NOI18N
+            statusEntryLabel.setText(resourceMap.getString("statusEntryLabel.text")); // NOI18N
+            statusEntryLabel.setName("statusEntryLabel"); // NOI18N
 
-        statusMsgLabel.setText(resourceMap.getString("statusMsgLabel.text")); // NOI18N
-        statusMsgLabel.setName("statusMsgLabel"); // NOI18N
+            statusAnimationLabel.setName("statusAnimationLabel"); // NOI18N
 
-        statusErrorButton.setAction(actionMap.get("showErrorLog")); // NOI18N
-        statusErrorButton.setIcon(resourceMap.getIcon("statusErrorButton.icon")); // NOI18N
-        statusErrorButton.setText(resourceMap.getString("statusErrorButton.text")); // NOI18N
-        statusErrorButton.setToolTipText(resourceMap.getString("statusErrorButton.toolTipText")); // NOI18N
-        statusErrorButton.setBorderPainted(false);
-        statusErrorButton.setContentAreaFilled(false);
-        statusErrorButton.setFocusPainted(false);
-        statusErrorButton.setName("statusErrorButton"); // NOI18N
+            jTextFieldEntryNumber.setColumns(4);
+            jTextFieldEntryNumber.setText(resourceMap.getString("jTextFieldEntryNumber.text")); // NOI18N
+            jTextFieldEntryNumber.setToolTipText(resourceMap.getString("jTextFieldEntryNumber.toolTipText")); // NOI18N
+            jTextFieldEntryNumber.setName("jTextFieldEntryNumber"); // NOI18N
 
-        statusDesktopEntryButton.setAction(actionMap.get("showEntryInDesktopWindow")); // NOI18N
-        statusDesktopEntryButton.setIcon(resourceMap.getIcon("statusDesktopEntryButton.icon")); // NOI18N
-        statusDesktopEntryButton.setText(resourceMap.getString("statusDesktopEntryButton.text")); // NOI18N
-        statusDesktopEntryButton.setToolTipText(resourceMap.getString("statusDesktopEntryButton.toolTipText")); // NOI18N
-        statusDesktopEntryButton.setBorderPainted(false);
-        statusDesktopEntryButton.setContentAreaFilled(false);
-        statusDesktopEntryButton.setFocusPainted(false);
-        statusDesktopEntryButton.setName("statusDesktopEntryButton"); // NOI18N
+            statusOfEntryLabel.setText(resourceMap.getString("statusOfEntryLabel.text")); // NOI18N
+            statusOfEntryLabel.setName("statusOfEntryLabel"); // NOI18N
 
-        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
-        jPanel12.setLayout(jPanel12Layout);
-        jPanel12Layout.setHorizontalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
-                .addComponent(statusEntryLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextFieldEntryNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(statusOfEntryLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonHistoryBack, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonHistoryFore, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 743, Short.MAX_VALUE)
+            buttonHistoryBack.setAction(actionMap.get("historyBack")); // NOI18N
+            buttonHistoryBack.setIcon(resourceMap.getIcon("buttonHistoryBack.icon")); // NOI18N
+            buttonHistoryBack.setBorderPainted(false);
+            buttonHistoryBack.setContentAreaFilled(false);
+            buttonHistoryBack.setFocusPainted(false);
+            buttonHistoryBack.setMargin(new java.awt.Insets(0, 0, 0, 0));
+            buttonHistoryBack.setName("buttonHistoryBack"); // NOI18N
+
+            buttonHistoryFore.setAction(actionMap.get("historyFor")); // NOI18N
+            buttonHistoryFore.setIcon(resourceMap.getIcon("buttonHistoryFore.icon")); // NOI18N
+            buttonHistoryFore.setBorderPainted(false);
+            buttonHistoryFore.setContentAreaFilled(false);
+            buttonHistoryFore.setFocusPainted(false);
+            buttonHistoryFore.setMargin(new java.awt.Insets(0, 0, 0, 0));
+            buttonHistoryFore.setName("buttonHistoryFore"); // NOI18N
+
+            statusMsgLabel.setText(resourceMap.getString("statusMsgLabel.text")); // NOI18N
+            statusMsgLabel.setName("statusMsgLabel"); // NOI18N
+
+            statusErrorButton.setAction(actionMap.get("showErrorLog")); // NOI18N
+            statusErrorButton.setIcon(resourceMap.getIcon("statusErrorButton.icon")); // NOI18N
+            statusErrorButton.setText(resourceMap.getString("statusErrorButton.text")); // NOI18N
+            statusErrorButton.setToolTipText(resourceMap.getString("statusErrorButton.toolTipText")); // NOI18N
+            statusErrorButton.setBorderPainted(false);
+            statusErrorButton.setContentAreaFilled(false);
+            statusErrorButton.setFocusPainted(false);
+            statusErrorButton.setName("statusErrorButton"); // NOI18N
+
+            statusDesktopEntryButton.setAction(actionMap.get("showEntryInDesktopWindow")); // NOI18N
+            statusDesktopEntryButton.setIcon(resourceMap.getIcon("statusDesktopEntryButton.icon")); // NOI18N
+            statusDesktopEntryButton.setText(resourceMap.getString("statusDesktopEntryButton.text")); // NOI18N
+            statusDesktopEntryButton.setToolTipText(resourceMap.getString("statusDesktopEntryButton.toolTipText")); // NOI18N
+            statusDesktopEntryButton.setBorderPainted(false);
+            statusDesktopEntryButton.setContentAreaFilled(false);
+            statusDesktopEntryButton.setFocusPainted(false);
+            statusDesktopEntryButton.setName("statusDesktopEntryButton"); // NOI18N
+
+            javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+            jPanel12.setLayout(jPanel12Layout);
+            jPanel12Layout.setHorizontalGroup(
+                jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
+                    .addComponent(statusEntryLabel)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jTextFieldEntryNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(statusOfEntryLabel)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(buttonHistoryBack, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(buttonHistoryFore, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel12Layout.createSequentialGroup()
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 743, Short.MAX_VALUE)
+                            .addComponent(statusMsgLabel)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(statusAnimationLabel))
+                        .addGroup(jPanel12Layout.createSequentialGroup()
+                            .addGap(6, 6, 6)
+                            .addComponent(statusErrorButton)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(statusDesktopEntryButton)
+                            .addContainerGap())))
+            );
+            jPanel12Layout.setVerticalGroup(
+                jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel12Layout.createSequentialGroup()
+                    .addGap(3, 3, 3)
+                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(statusEntryLabel)
+                            .addComponent(jTextFieldEntryNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(statusOfEntryLabel))
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(buttonHistoryFore, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(buttonHistoryBack, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addComponent(statusAnimationLabel)
                         .addComponent(statusMsgLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(statusAnimationLabel))
-                    .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
                         .addComponent(statusErrorButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(statusDesktopEntryButton)
-                        .addContainerGap())))
-        );
-        jPanel12Layout.setVerticalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel12Layout.createSequentialGroup()
-                .addGap(3, 3, 3)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(statusEntryLabel)
-                        .addComponent(jTextFieldEntryNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(statusOfEntryLabel))
-                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(buttonHistoryFore, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(buttonHistoryBack, javax.swing.GroupLayout.Alignment.LEADING))
-                    .addComponent(statusAnimationLabel)
-                    .addComponent(statusMsgLabel)
-                    .addComponent(statusErrorButton)
-                    .addComponent(statusDesktopEntryButton))
-                .addGap(3, 3, 3))
-        );
-
-        javax.swing.GroupLayout statusPanelLayout = new javax.swing.GroupLayout(statusPanel);
-        statusPanel.setLayout(statusPanelLayout);
-        statusPanelLayout.setHorizontalGroup(
-            statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(statusPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        statusPanelLayout.setVerticalGroup(
-            statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statusPanelLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
-        toolBar.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, resourceMap.getColor("toolBar.border.matteColor"))); // NOI18N
-        toolBar.setFloatable(false);
-        toolBar.setMinimumSize(new java.awt.Dimension(300, 20));
-        toolBar.setName("toolBar"); // NOI18N
-
-        tb_newEntry.setAction(actionMap.get("newEntry")); // NOI18N
-        tb_newEntry.setText(resourceMap.getString("tb_newEntry.text")); // NOI18N
-        tb_newEntry.setBorderPainted(false);
-        tb_newEntry.setFocusPainted(false);
-        tb_newEntry.setFocusable(false);
-        tb_newEntry.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_newEntry.setName("tb_newEntry"); // NOI18N
-        tb_newEntry.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(tb_newEntry);
-
-        tb_open.setAction(actionMap.get("openDocument")); // NOI18N
-        tb_open.setText(resourceMap.getString("tb_open.text")); // NOI18N
-        tb_open.setBorderPainted(false);
-        tb_open.setFocusPainted(false);
-        tb_open.setFocusable(false);
-        tb_open.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_open.setName("tb_open"); // NOI18N
-        tb_open.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(tb_open);
-
-        tb_save.setAction(actionMap.get("saveDocument")); // NOI18N
-        tb_save.setText(resourceMap.getString("tb_save.text")); // NOI18N
-        tb_save.setBorderPainted(false);
-        tb_save.setFocusPainted(false);
-        tb_save.setFocusable(false);
-        tb_save.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_save.setName("tb_save"); // NOI18N
-        tb_save.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(tb_save);
-
-        jSeparator4.setName("jSeparator4"); // NOI18N
-        toolBar.add(jSeparator4);
-
-        tb_edit.setAction(actionMap.get("editEntry")); // NOI18N
-        tb_edit.setText(resourceMap.getString("tb_edit.text")); // NOI18N
-        tb_edit.setBorderPainted(false);
-        tb_edit.setFocusPainted(false);
-        tb_edit.setFocusable(false);
-        tb_edit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_edit.setName("tb_edit"); // NOI18N
-        tb_edit.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(tb_edit);
-
-        tb_delete.setAction(actionMap.get("deleteCurrentEntry")); // NOI18N
-        tb_delete.setText(resourceMap.getString("tb_delete.text")); // NOI18N
-        tb_delete.setBorderPainted(false);
-        tb_delete.setFocusPainted(false);
-        tb_delete.setFocusable(false);
-        tb_delete.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_delete.setName("tb_delete"); // NOI18N
-        tb_delete.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(tb_delete);
-
-        tb_copy.setAction(actionMap.get("copy"));
-        tb_copy.setBorderPainted(false);
-        tb_copy.setFocusPainted(false);
-        tb_copy.setFocusable(false);
-        tb_copy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_copy.setName("tb_copy"); // NOI18N
-        tb_copy.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(tb_copy);
-
-        tb_paste.setAction(actionMap.get("paste"));
-        tb_paste.setBorderPainted(false);
-        tb_paste.setFocusPainted(false);
-        tb_paste.setFocusable(false);
-        tb_paste.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_paste.setName("tb_paste"); // NOI18N
-        tb_paste.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(tb_paste);
-
-        tb_selectall.setAction(actionMap.get("selectAllText")); // NOI18N
-        tb_selectall.setText(resourceMap.getString("tb_selectall.text")); // NOI18N
-        tb_selectall.setBorderPainted(false);
-        tb_selectall.setFocusPainted(false);
-        tb_selectall.setFocusable(false);
-        tb_selectall.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_selectall.setName("tb_selectall"); // NOI18N
-        tb_selectall.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(tb_selectall);
-
-        jSeparator5.setName("jSeparator5"); // NOI18N
-        toolBar.add(jSeparator5);
-
-        tb_addmanlinks.setAction(actionMap.get("manualInsertLinks")); // NOI18N
-        tb_addmanlinks.setText(resourceMap.getString("tb_addmanlinks.text")); // NOI18N
-        tb_addmanlinks.setBorderPainted(false);
-        tb_addmanlinks.setFocusPainted(false);
-        tb_addmanlinks.setFocusable(false);
-        tb_addmanlinks.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_addmanlinks.setName("tb_addmanlinks"); // NOI18N
-        tb_addmanlinks.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(tb_addmanlinks);
-
-        tb_addluhmann.setAction(actionMap.get("manualInsertEntry")); // NOI18N
-        tb_addluhmann.setText(resourceMap.getString("tb_addluhmann.text")); // NOI18N
-        tb_addluhmann.setBorderPainted(false);
-        tb_addluhmann.setFocusPainted(false);
-        tb_addluhmann.setFocusable(false);
-        tb_addluhmann.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_addluhmann.setName("tb_addluhmann"); // NOI18N
-        tb_addluhmann.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(tb_addluhmann);
-
-        tb_addbookmark.setAction(actionMap.get("addToBookmark")); // NOI18N
-        tb_addbookmark.setText(resourceMap.getString("tb_addbookmark.text")); // NOI18N
-        tb_addbookmark.setBorderPainted(false);
-        tb_addbookmark.setFocusPainted(false);
-        tb_addbookmark.setFocusable(false);
-        tb_addbookmark.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_addbookmark.setName("tb_addbookmark"); // NOI18N
-        tb_addbookmark.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(tb_addbookmark);
-
-        tb_addtodesktop.setAction(actionMap.get("addToDesktop")); // NOI18N
-        tb_addtodesktop.setText(resourceMap.getString("tb_addtodesktop.text")); // NOI18N
-        tb_addtodesktop.setBorderPainted(false);
-        tb_addtodesktop.setFocusPainted(false);
-        tb_addtodesktop.setFocusable(false);
-        tb_addtodesktop.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_addtodesktop.setName("tb_addtodesktop"); // NOI18N
-        tb_addtodesktop.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(tb_addtodesktop);
-
-        jSeparator10.setName("jSeparator10"); // NOI18N
-        toolBar.add(jSeparator10);
-
-        tb_find.setAction(actionMap.get("find")); // NOI18N
-        tb_find.setText(resourceMap.getString("tb_find.text")); // NOI18N
-        tb_find.setBorderPainted(false);
-        tb_find.setFocusPainted(false);
-        tb_find.setFocusable(false);
-        tb_find.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_find.setName("tb_find"); // NOI18N
-        tb_find.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(tb_find);
-
-        tb_first.setAction(actionMap.get("showFirstEntry")); // NOI18N
-        tb_first.setText(resourceMap.getString("tb_first.text")); // NOI18N
-        tb_first.setBorderPainted(false);
-        tb_first.setFocusPainted(false);
-        tb_first.setFocusable(false);
-        tb_first.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_first.setName("tb_first"); // NOI18N
-        tb_first.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(tb_first);
-
-        tb_prev.setAction(actionMap.get("showPrevEntry")); // NOI18N
-        tb_prev.setText(resourceMap.getString("tb_prev.text")); // NOI18N
-        tb_prev.setBorderPainted(false);
-        tb_prev.setFocusPainted(false);
-        tb_prev.setFocusable(false);
-        tb_prev.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_prev.setName("tb_prev"); // NOI18N
-        tb_prev.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(tb_prev);
-
-        tb_next.setAction(actionMap.get("showNextEntry")); // NOI18N
-        tb_next.setText(resourceMap.getString("tb_next.text")); // NOI18N
-        tb_next.setBorderPainted(false);
-        tb_next.setFocusPainted(false);
-        tb_next.setFocusable(false);
-        tb_next.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_next.setName("tb_next"); // NOI18N
-        tb_next.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(tb_next);
-
-        tb_last.setAction(actionMap.get("showLastEntry")); // NOI18N
-        tb_last.setText(resourceMap.getString("tb_last.text")); // NOI18N
-        tb_last.setBorderPainted(false);
-        tb_last.setFocusPainted(false);
-        tb_last.setFocusable(false);
-        tb_last.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_last.setName("tb_last"); // NOI18N
-        tb_last.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(tb_last);
-
-        jSeparator32.setName("jSeparator32"); // NOI18N
-        toolBar.add(jSeparator32);
-
-        jLabelMemory.setName("jLabelMemory"); // NOI18N
-        toolBar.add(jLabelMemory);
-
-        jPopupMenuKeywords.setName("jPopupMenuKeywords"); // NOI18N
-
-        popupKeywordsCopy.setAction(actionMap.get("copy"));
-        popupKeywordsCopy.setName("popupKeywordsCopy"); // NOI18N
-        jPopupMenuKeywords.add(popupKeywordsCopy);
-
-        jSeparator8.setName("jSeparator8"); // NOI18N
-        jPopupMenuKeywords.add(jSeparator8);
-
-        popupKeywordsSearchOr.setAction(actionMap.get("searchLogOr")); // NOI18N
-        popupKeywordsSearchOr.setName("popupKeywordsSearchOr"); // NOI18N
-        jPopupMenuKeywords.add(popupKeywordsSearchOr);
-
-        popupKeywordsSearchAnd.setAction(actionMap.get("searchLogAnd")); // NOI18N
-        popupKeywordsSearchAnd.setName("popupKeywordsSearchAnd"); // NOI18N
-        jPopupMenuKeywords.add(popupKeywordsSearchAnd);
-
-        popupKeywordsSearchNot.setAction(actionMap.get("searchLogNot")); // NOI18N
-        popupKeywordsSearchNot.setName("popupKeywordsSearchNot"); // NOI18N
-        jPopupMenuKeywords.add(popupKeywordsSearchNot);
-
-        jSeparator9.setName("jSeparator9"); // NOI18N
-        jPopupMenuKeywords.add(jSeparator9);
-
-        popupKeywordsNew.setAction(actionMap.get("newKeyword")); // NOI18N
-        popupKeywordsNew.setName("popupKeywordsNew"); // NOI18N
-        jPopupMenuKeywords.add(popupKeywordsNew);
-
-        popupKeywordsEdit.setAction(actionMap.get("editKeyword")); // NOI18N
-        popupKeywordsEdit.setName("popupKeywordsEdit"); // NOI18N
-        jPopupMenuKeywords.add(popupKeywordsEdit);
-
-        popupKeywordsDelete.setAction(actionMap.get("deleteKeyword")); // NOI18N
-        popupKeywordsDelete.setName("popupKeywordsDelete"); // NOI18N
-        jPopupMenuKeywords.add(popupKeywordsDelete);
-
-        jSeparator7.setName("jSeparator7"); // NOI18N
-        jPopupMenuKeywords.add(jSeparator7);
-
-        popupKeywordsAddToList.setAction(actionMap.get("addKeywordToList")); // NOI18N
-        popupKeywordsAddToList.setName("popupKeywordsAddToList"); // NOI18N
-        jPopupMenuKeywords.add(popupKeywordsAddToList);
-
-        jSeparator45.setName("jSeparator45"); // NOI18N
-        jPopupMenuKeywords.add(jSeparator45);
-
-        popupKeywordsManLinks.setAction(actionMap.get("addManLinksLogOr")); // NOI18N
-        popupKeywordsManLinks.setName("popupKeywordsManLinks"); // NOI18N
-        jPopupMenuKeywords.add(popupKeywordsManLinks);
-
-        popupKeywordsManLinksAnd.setAction(actionMap.get("addManLinksLogAnd")); // NOI18N
-        popupKeywordsManLinksAnd.setName("popupKeywordsManLinksAnd"); // NOI18N
-        jPopupMenuKeywords.add(popupKeywordsManLinksAnd);
-
-        jSeparator66.setName("jSeparator66"); // NOI18N
-        jPopupMenuKeywords.add(jSeparator66);
-
-        popupKeywordsLuhmann.setAction(actionMap.get("addLuhmannLogOr")); // NOI18N
-        popupKeywordsLuhmann.setName("popupKeywordsLuhmann"); // NOI18N
-        jPopupMenuKeywords.add(popupKeywordsLuhmann);
-
-        popupKeywordsLuhmannAnd.setAction(actionMap.get("addLuhmannLogAnd")); // NOI18N
-        popupKeywordsLuhmannAnd.setName("popupKeywordsLuhmannAnd"); // NOI18N
-        jPopupMenuKeywords.add(popupKeywordsLuhmannAnd);
-
-        jSeparator46.setName("jSeparator46"); // NOI18N
-        jPopupMenuKeywords.add(jSeparator46);
-
-        popupKeywordsDesktop.setAction(actionMap.get("addDesktopLogOr")); // NOI18N
-        popupKeywordsDesktop.setName("popupKeywordsDesktop"); // NOI18N
-        jPopupMenuKeywords.add(popupKeywordsDesktop);
-
-        popupKeywordsDesktopAnd.setAction(actionMap.get("addDesktopLogAnd")); // NOI18N
-        popupKeywordsDesktopAnd.setName("popupKeywordsDesktopAnd"); // NOI18N
-        jPopupMenuKeywords.add(popupKeywordsDesktopAnd);
-
-        jPopupMenuKeywordList.setName("jPopupMenuKeywordList"); // NOI18N
-
-        popupKwListCopy.setAction(actionMap.get("copy"));
-        popupKwListCopy.setName("popupKwListCopy"); // NOI18N
-        jPopupMenuKeywordList.add(popupKwListCopy);
-
-        jSeparator89.setName("jSeparator89"); // NOI18N
-        jPopupMenuKeywordList.add(jSeparator89);
-
-        popupKwListSearchOr.setAction(actionMap.get("searchKeywordsFromListLogOr")); // NOI18N
-        popupKwListSearchOr.setName("popupKwListSearchOr"); // NOI18N
-        jPopupMenuKeywordList.add(popupKwListSearchOr);
-
-        popupKwListSearchAnd.setAction(actionMap.get("searchKeywordsFromListLogAnd")); // NOI18N
-        popupKwListSearchAnd.setName("popupKwListSearchAnd"); // NOI18N
-        jPopupMenuKeywordList.add(popupKwListSearchAnd);
-
-        popupKwListSearchNot.setAction(actionMap.get("searchKeywordsFromListLogNot")); // NOI18N
-        popupKwListSearchNot.setName("popupKwListSearchNot"); // NOI18N
-        jPopupMenuKeywordList.add(popupKwListSearchNot);
-
-        jSeparator13.setName("jSeparator13"); // NOI18N
-        jPopupMenuKeywordList.add(jSeparator13);
-
-        popupKwListHighlight.setAction(actionMap.get("highlightKeywords")); // NOI18N
-        popupKwListHighlight.setName("popupKwListHighlight"); // NOI18N
-        jPopupMenuKeywordList.add(popupKwListHighlight);
-
-        popupKwListHighlightSegments.setAction(actionMap.get("highlightSegments")); // NOI18N
-        popupKwListHighlightSegments.setName("popupKwListHighlightSegments"); // NOI18N
-        jPopupMenuKeywordList.add(popupKwListHighlightSegments);
-
-        popupKwListRefresh.setAction(actionMap.get("refreshFilteredLinks")); // NOI18N
-        popupKwListRefresh.setName("popupKwListRefresh"); // NOI18N
-        jPopupMenuKeywordList.add(popupKwListRefresh);
-
-        jSeparator11.setName("jSeparator11"); // NOI18N
-        jPopupMenuKeywordList.add(jSeparator11);
-
-        popupKwListLogOr.setAction(actionMap.get("keywordListLogOr")); // NOI18N
-        popupKwListLogOr.setSelected(true);
-        popupKwListLogOr.setName("popupKwListLogOr"); // NOI18N
-        jPopupMenuKeywordList.add(popupKwListLogOr);
-
-        popupKwListLogAnd.setAction(actionMap.get("keywordListLogAnd")); // NOI18N
-        popupKwListLogAnd.setSelected(true);
-        popupKwListLogAnd.setName("popupKwListLogAnd"); // NOI18N
-        jPopupMenuKeywordList.add(popupKwListLogAnd);
-
-        jSeparator12.setName("jSeparator12"); // NOI18N
-        jPopupMenuKeywordList.add(jSeparator12);
-
-        popupKwListDelete.setAction(actionMap.get("deleteKeywordFromEntry")); // NOI18N
-        popupKwListDelete.setName("popupKwListDelete"); // NOI18N
-        jPopupMenuKeywordList.add(popupKwListDelete);
-
-        jPopupMenuAuthors.setName("jPopupMenuAuthors"); // NOI18N
-
-        popupAuthorsCopy.setAction(actionMap.get("copy"));
-        popupAuthorsCopy.setName("popupAuthorsCopy"); // NOI18N
-        jPopupMenuAuthors.add(popupAuthorsCopy);
-
-        jSeparator14.setName("jSeparator14"); // NOI18N
-        jPopupMenuAuthors.add(jSeparator14);
-
-        popupAuthorsSearchLogOr.setAction(actionMap.get("searchLogOr")); // NOI18N
-        popupAuthorsSearchLogOr.setName("popupAuthorsSearchLogOr"); // NOI18N
-        jPopupMenuAuthors.add(popupAuthorsSearchLogOr);
-
-        popupAuthorsSearchLogAnd.setAction(actionMap.get("searchLogAnd")); // NOI18N
-        popupAuthorsSearchLogAnd.setName("popupAuthorsSearchLogAnd"); // NOI18N
-        jPopupMenuAuthors.add(popupAuthorsSearchLogAnd);
-
-        popupAuthorsSearchLogNot.setAction(actionMap.get("searchLogNot")); // NOI18N
-        popupAuthorsSearchLogNot.setName("popupAuthorsSearchLogNot"); // NOI18N
-        jPopupMenuAuthors.add(popupAuthorsSearchLogNot);
-
-        jSeparator15.setName("jSeparator15"); // NOI18N
-        jPopupMenuAuthors.add(jSeparator15);
-
-        popupAuthorsNew.setAction(actionMap.get("newAuthor")); // NOI18N
-        popupAuthorsNew.setName("popupAuthorsNew"); // NOI18N
-        jPopupMenuAuthors.add(popupAuthorsNew);
-
-        popupAuthorsEdit.setAction(actionMap.get("editAuthor")); // NOI18N
-        popupAuthorsEdit.setName("popupAuthorsEdit"); // NOI18N
-        jPopupMenuAuthors.add(popupAuthorsEdit);
-
-        popupAuthorsDelete.setAction(actionMap.get("deleteAuthor")); // NOI18N
-        popupAuthorsDelete.setName("popupAuthorsDelete"); // NOI18N
-        jPopupMenuAuthors.add(popupAuthorsDelete);
-
-        jSeparator91.setName("jSeparator91"); // NOI18N
-        jPopupMenuAuthors.add(jSeparator91);
-
-        popupAuthorsBibkey.setAction(actionMap.get("changeBibkey")); // NOI18N
-        popupAuthorsBibkey.setName("popupAuthorsBibkey"); // NOI18N
-        jPopupMenuAuthors.add(popupAuthorsBibkey);
-
-        jSeparator16.setName("jSeparator16"); // NOI18N
-        jPopupMenuAuthors.add(jSeparator16);
-
-        popupAuthorsAddToEntry.setAction(actionMap.get("addAuthorToList")); // NOI18N
-        popupAuthorsAddToEntry.setName("popupAuthorsAddToEntry"); // NOI18N
-        jPopupMenuAuthors.add(popupAuthorsAddToEntry);
-
-        jSeparator49.setName("jSeparator49"); // NOI18N
-        jPopupMenuAuthors.add(jSeparator49);
-
-        popupAuthorsSubAdd.setText(resourceMap.getString("popupAuthorsSubAdd.text")); // NOI18N
-        popupAuthorsSubAdd.setName("popupAuthorsSubAdd"); // NOI18N
-
-        popupAuthorsManLinks.setAction(actionMap.get("addManLinksLogOr")); // NOI18N
-        popupAuthorsManLinks.setName("popupAuthorsManLinks"); // NOI18N
-        popupAuthorsSubAdd.add(popupAuthorsManLinks);
-
-        popupAuthorsManLinksAnd.setAction(actionMap.get("addManLinksLogAnd")); // NOI18N
-        popupAuthorsManLinksAnd.setName("popupAuthorsManLinksAnd"); // NOI18N
-        popupAuthorsSubAdd.add(popupAuthorsManLinksAnd);
-
-        jSeparator70.setName("jSeparator70"); // NOI18N
-        popupAuthorsSubAdd.add(jSeparator70);
-
-        popupAuthorsLuhmann.setAction(actionMap.get("addLuhmannLogOr")); // NOI18N
-        popupAuthorsLuhmann.setName("popupAuthorsLuhmann"); // NOI18N
-        popupAuthorsSubAdd.add(popupAuthorsLuhmann);
-
-        popupAuthorsLuhmannAnd.setAction(actionMap.get("addLuhmannLogAnd")); // NOI18N
-        popupAuthorsLuhmannAnd.setName("popupAuthorsLuhmannAnd"); // NOI18N
-        popupAuthorsSubAdd.add(popupAuthorsLuhmannAnd);
-
-        jSeparator50.setName("jSeparator50"); // NOI18N
-        popupAuthorsSubAdd.add(jSeparator50);
-
-        popupAuthorsDesktop.setAction(actionMap.get("addDesktopLogOr")); // NOI18N
-        popupAuthorsDesktop.setName("popupAuthorsDesktop"); // NOI18N
-        popupAuthorsSubAdd.add(popupAuthorsDesktop);
-
-        popupAuthorsDesktopAnd.setAction(actionMap.get("addDesktopLogAnd")); // NOI18N
-        popupAuthorsDesktopAnd.setName("popupAuthorsDesktopAnd"); // NOI18N
-        popupAuthorsSubAdd.add(popupAuthorsDesktopAnd);
-
-        jPopupMenuAuthors.add(popupAuthorsSubAdd);
-
-        jSeparator96.setName("jSeparator96"); // NOI18N
-        jPopupMenuAuthors.add(jSeparator96);
-
-        popupAuthorsImport.setAction(actionMap.get("importAuthors")); // NOI18N
-        popupAuthorsImport.setName("popupAuthorsImport"); // NOI18N
-        jPopupMenuAuthors.add(popupAuthorsImport);
-
-        jPopupMenuLuhmann.setName("jPopupMenuLuhmann"); // NOI18N
-
-        popupLuhmannAdd.setAction(actionMap.get("manualInsertEntry")); // NOI18N
-        popupLuhmannAdd.setName("popupLuhmannAdd"); // NOI18N
-        jPopupMenuLuhmann.add(popupLuhmannAdd);
-
-        jSeparator17.setName("jSeparator17"); // NOI18N
-        jPopupMenuLuhmann.add(jSeparator17);
-
-        popupLuhmannDelete.setAction(actionMap.get("deleteLuhmannFromEntry")); // NOI18N
-        popupLuhmannDelete.setName("popupLuhmannDelete"); // NOI18N
-        jPopupMenuLuhmann.add(popupLuhmannDelete);
-
-        jSeparator60.setName("jSeparator60"); // NOI18N
-        jPopupMenuLuhmann.add(jSeparator60);
-
-        popupLuhmannManLinks.setAction(actionMap.get("addManLinks")); // NOI18N
-        popupLuhmannManLinks.setName("popupLuhmannManLinks"); // NOI18N
-        jPopupMenuLuhmann.add(popupLuhmannManLinks);
-
-        popupLuhmannBookmarks.setAction(actionMap.get("addBookmarks")); // NOI18N
-        popupLuhmannBookmarks.setName("popupLuhmannBookmarks"); // NOI18N
-        jPopupMenuLuhmann.add(popupLuhmannBookmarks);
-
-        jSeparator63.setName("jSeparator63"); // NOI18N
-        jPopupMenuLuhmann.add(jSeparator63);
-
-        popupLuhmannDesktop.setAction(actionMap.get("addDesktop")); // NOI18N
-        popupLuhmannDesktop.setName("popupLuhmannDesktop"); // NOI18N
-        jPopupMenuLuhmann.add(popupLuhmannDesktop);
-
-        jPopupMenuTitles.setName("jPopupMenuTitles"); // NOI18N
-
-        popupTitlesCopy.setAction(actionMap.get("copy"));
-        popupTitlesCopy.setName("popupTitlesCopy"); // NOI18N
-        jPopupMenuTitles.add(popupTitlesCopy);
-
-        jSeparator20.setName("jSeparator20"); // NOI18N
-        jPopupMenuTitles.add(jSeparator20);
-
-        popupTitlesEdit.setAction(actionMap.get("editTitle")); // NOI18N
-        popupTitlesEdit.setName("popupTitlesEdit"); // NOI18N
-        jPopupMenuTitles.add(popupTitlesEdit);
-
-        popupTitlesEditEntry.setAction(actionMap.get("editEntry")); // NOI18N
-        popupTitlesEditEntry.setName("popupTitlesEditEntry"); // NOI18N
-        jPopupMenuTitles.add(popupTitlesEditEntry);
-
-        jSeparator103.setName("jSeparator103"); // NOI18N
-        jPopupMenuTitles.add(jSeparator103);
-
-        popupTitlesDelete.setAction(actionMap.get("deleteEntry")); // NOI18N
-        popupTitlesDelete.setName("popupTitlesDelete"); // NOI18N
-        jPopupMenuTitles.add(popupTitlesDelete);
-
-        jSeparator114.setName("jSeparator114"); // NOI18N
-        jPopupMenuTitles.add(jSeparator114);
-
-        popupTitleMoveEntry.setAction(actionMap.get("moveEntry")); // NOI18N
-        popupTitleMoveEntry.setName("popupTitleMoveEntry"); // NOI18N
-        jPopupMenuTitles.add(popupTitleMoveEntry);
-
-        jSeparator106.setName("jSeparator106"); // NOI18N
-        jPopupMenuTitles.add(jSeparator106);
-
-        popupTitlesAutomaticTitle.setAction(actionMap.get("automaticFirstLineAsTitle")); // NOI18N
-        popupTitlesAutomaticTitle.setName("popupTitlesAutomaticTitle"); // NOI18N
-        jPopupMenuTitles.add(popupTitlesAutomaticTitle);
-
-        jSeparator21.setName("jSeparator21"); // NOI18N
-        jPopupMenuTitles.add(jSeparator21);
-
-        popupTitlesManLinks.setAction(actionMap.get("addManLinks")); // NOI18N
-        popupTitlesManLinks.setName("popupTitlesManLinks"); // NOI18N
-        jPopupMenuTitles.add(popupTitlesManLinks);
-
-        popupTitlesLuhmann.setAction(actionMap.get("addLuhmann")); // NOI18N
-        popupTitlesLuhmann.setName("popupTitlesLuhmann"); // NOI18N
-        jPopupMenuTitles.add(popupTitlesLuhmann);
-
-        popupTitlesBookmarks.setAction(actionMap.get("addBookmarks")); // NOI18N
-        popupTitlesBookmarks.setName("popupTitlesBookmarks"); // NOI18N
-        jPopupMenuTitles.add(popupTitlesBookmarks);
-
-        jSeparator64.setName("jSeparator64"); // NOI18N
-        jPopupMenuTitles.add(jSeparator64);
-
-        popupTitlesDesktop.setAction(actionMap.get("addDesktop")); // NOI18N
-        popupTitlesDesktop.setName("popupTitlesDesktop"); // NOI18N
-        jPopupMenuTitles.add(popupTitlesDesktop);
-
-        jPopupMenuBookmarks.setName("jPopupMenuBookmarks"); // NOI18N
-
-        popupBookmarksEdit.setAction(actionMap.get("editBookmark")); // NOI18N
-        popupBookmarksEdit.setName("popupBookmarksEdit"); // NOI18N
-        jPopupMenuBookmarks.add(popupBookmarksEdit);
-
-        popupBookmarksDelete.setAction(actionMap.get("deleteBookmark")); // NOI18N
-        popupBookmarksDelete.setName("popupBookmarksDelete"); // NOI18N
-        jPopupMenuBookmarks.add(popupBookmarksDelete);
-
-        jSeparator36.setName("jSeparator36"); // NOI18N
-        jPopupMenuBookmarks.add(jSeparator36);
-
-        popupBookmarksEditCat.setAction(actionMap.get("editBookmarkCategory")); // NOI18N
-        popupBookmarksEditCat.setName("popupBookmarksEditCat"); // NOI18N
-        jPopupMenuBookmarks.add(popupBookmarksEditCat);
-
-        popupBookmarksDeleteCat.setAction(actionMap.get("deleteBookmarkCategory")); // NOI18N
-        popupBookmarksDeleteCat.setName("popupBookmarksDeleteCat"); // NOI18N
-        jPopupMenuBookmarks.add(popupBookmarksDeleteCat);
-
-        jSeparator38.setName("jSeparator38"); // NOI18N
-        jPopupMenuBookmarks.add(jSeparator38);
-
-        popupBookmarksAddManLinks.setAction(actionMap.get("addManLinks")); // NOI18N
-        popupBookmarksAddManLinks.setName("popupBookmarksAddManLinks"); // NOI18N
-        jPopupMenuBookmarks.add(popupBookmarksAddManLinks);
-
-        popupBookmarksAddLuhmann.setAction(actionMap.get("addLuhmann")); // NOI18N
-        popupBookmarksAddLuhmann.setName("popupBookmarksAddLuhmann"); // NOI18N
-        jPopupMenuBookmarks.add(popupBookmarksAddLuhmann);
-
-        jSeparator56.setName("jSeparator56"); // NOI18N
-        jPopupMenuBookmarks.add(jSeparator56);
-
-        popupBookmarkAddDesktop.setAction(actionMap.get("addDesktop")); // NOI18N
-        popupBookmarkAddDesktop.setName("popupBookmarkAddDesktop"); // NOI18N
-        jPopupMenuBookmarks.add(popupBookmarkAddDesktop);
-
-        jPopupMenuLinks.setName("jPopupMenuLinks"); // NOI18N
-
-        popupLinksRefresh.setAction(actionMap.get("refreshFilteredLinks")); // NOI18N
-        popupLinksRefresh.setName("popupLinksRefresh"); // NOI18N
-        jPopupMenuLinks.add(popupLinksRefresh);
-
-        jSeparator115.setName("jSeparator115"); // NOI18N
-        jPopupMenuLinks.add(jSeparator115);
-
-        popupLinkRemoveManLink.setAction(actionMap.get("deleteManualLink")); // NOI18N
-        popupLinkRemoveManLink.setName("popupLinkRemoveManLink"); // NOI18N
-        jPopupMenuLinks.add(popupLinkRemoveManLink);
-
-        jSeparator54.setName("jSeparator54"); // NOI18N
-        jPopupMenuLinks.add(jSeparator54);
-
-        popupLinksManLinks.setAction(actionMap.get("addManLinks")); // NOI18N
-        popupLinksManLinks.setName("popupLinksManLinks"); // NOI18N
-        jPopupMenuLinks.add(popupLinksManLinks);
-
-        popupLinksLuhmann.setAction(actionMap.get("addLuhmann")); // NOI18N
-        popupLinksLuhmann.setName("popupLinksLuhmann"); // NOI18N
-        jPopupMenuLinks.add(popupLinksLuhmann);
-
-        jSeparator57.setName("jSeparator57"); // NOI18N
-        jPopupMenuLinks.add(jSeparator57);
-
-        popupLinksDesktop.setAction(actionMap.get("addDesktop")); // NOI18N
-        popupLinksDesktop.setName("popupLinksDesktop"); // NOI18N
-        jPopupMenuLinks.add(popupLinksDesktop);
-
-        jPopupMenuAttachments.setName("jPopupMenuAttachments"); // NOI18N
-
-        popupAttachmentsCopy.setAction(actionMap.get("copy"));
-        popupAttachmentsCopy.setName("popupAttachmentsCopy"); // NOI18N
-        jPopupMenuAttachments.add(popupAttachmentsCopy);
-
-        jSeparator87.setName("jSeparator87"); // NOI18N
-        jPopupMenuAttachments.add(jSeparator87);
-
-        popupAttachmentsEdit.setAction(actionMap.get("editAttachment")); // NOI18N
-        popupAttachmentsEdit.setName("popupAttachmentsEdit"); // NOI18N
-        jPopupMenuAttachments.add(popupAttachmentsEdit);
-
-        popupAttachmentsDelete.setAction(actionMap.get("deleteAttachment")); // NOI18N
-        popupAttachmentsDelete.setName("popupAttachmentsDelete"); // NOI18N
-        jPopupMenuAttachments.add(popupAttachmentsDelete);
-
-        jSeparator94.setName("jSeparator94"); // NOI18N
-        jPopupMenuAttachments.add(jSeparator94);
-
-        popupAttachmentsGoto.setAction(actionMap.get("openAttachmentDirectory")); // NOI18N
-        popupAttachmentsGoto.setName("popupAttachmentsGoto"); // NOI18N
-        jPopupMenuAttachments.add(popupAttachmentsGoto);
-
-        jSeparator86.setName("jSeparator86"); // NOI18N
-        jPopupMenuAttachments.add(jSeparator86);
-
-        popupAttachmentsExport.setAction(actionMap.get("exportAttachments")); // NOI18N
-        popupAttachmentsExport.setName("popupAttachmentsExport"); // NOI18N
-        jPopupMenuAttachments.add(popupAttachmentsExport);
-
-        jPopupMenuMain.setName("jPopupMenuMain"); // NOI18N
-
-        popupMainCopy.setAction(actionMap.get("copy"));
-        popupMainCopy.setName("popupMainCopy"); // NOI18N
-        jPopupMenuMain.add(popupMainCopy);
-
-        popupMainCopyPlain.setAction(actionMap.get("copyPlain")); // NOI18N
-        popupMainCopyPlain.setName("popupMainCopyPlain"); // NOI18N
-        jPopupMenuMain.add(popupMainCopyPlain);
-
-        jSeparator88.setName("jSeparator88"); // NOI18N
-        jPopupMenuMain.add(jSeparator88);
-
-        popupMainFind.setAction(actionMap.get("findFromSelection")); // NOI18N
-        popupMainFind.setName("popupMainFind"); // NOI18N
-        jPopupMenuMain.add(popupMainFind);
-
-        jSeparator97.setName("jSeparator97"); // NOI18N
-        jPopupMenuMain.add(jSeparator97);
-
-        popupMainAddToKeyword.setAction(actionMap.get("addToKeywordList")); // NOI18N
-        popupMainAddToKeyword.setName("popupMainAddToKeyword"); // NOI18N
-        jPopupMenuMain.add(popupMainAddToKeyword);
-
-        jSeparator98.setName("jSeparator98"); // NOI18N
-        jPopupMenuMain.add(jSeparator98);
-
-        popupMainSetFirstLineAsTitle.setAction(actionMap.get("setFirstLineAsTitle")); // NOI18N
-        popupMainSetFirstLineAsTitle.setName("popupMainSetFirstLineAsTitle"); // NOI18N
-        jPopupMenuMain.add(popupMainSetFirstLineAsTitle);
-
-        popupMainSetSelectionAsTitle.setAction(actionMap.get("setSelectionAsTitle")); // NOI18N
-        popupMainSetSelectionAsTitle.setName("popupMainSetSelectionAsTitle"); // NOI18N
-        jPopupMenuMain.add(popupMainSetSelectionAsTitle);
-
-        setComponent(mainPanel);
-        setMenuBar(menuBar);
-        setStatusBar(statusPanel);
-        setToolBar(toolBar);
-    }// </editor-fold>//GEN-END:initComponents
+                        .addComponent(statusDesktopEntryButton))
+                    .addGap(3, 3, 3))
+            );
+
+            javax.swing.GroupLayout statusPanelLayout = new javax.swing.GroupLayout(statusPanel);
+            statusPanel.setLayout(statusPanelLayout);
+            statusPanelLayout.setHorizontalGroup(
+                statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(statusPanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap())
+            );
+            statusPanelLayout.setVerticalGroup(
+                statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statusPanelLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            );
+
+            toolBar.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, resourceMap.getColor("toolBar.border.matteColor"))); // NOI18N
+            toolBar.setFloatable(false);
+            toolBar.setMinimumSize(new java.awt.Dimension(300, 20));
+            toolBar.setName("toolBar"); // NOI18N
+
+            tb_newEntry.setAction(actionMap.get("newEntry")); // NOI18N
+            tb_newEntry.setText(resourceMap.getString("tb_newEntry.text")); // NOI18N
+            tb_newEntry.setBorderPainted(false);
+            tb_newEntry.setFocusPainted(false);
+            tb_newEntry.setFocusable(false);
+            tb_newEntry.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            tb_newEntry.setName("tb_newEntry"); // NOI18N
+            tb_newEntry.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+            toolBar.add(tb_newEntry);
+
+            tb_open.setAction(actionMap.get("openDocument")); // NOI18N
+            tb_open.setText(resourceMap.getString("tb_open.text")); // NOI18N
+            tb_open.setBorderPainted(false);
+            tb_open.setFocusPainted(false);
+            tb_open.setFocusable(false);
+            tb_open.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            tb_open.setName("tb_open"); // NOI18N
+            tb_open.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+            toolBar.add(tb_open);
+
+            tb_save.setAction(actionMap.get("saveDocument")); // NOI18N
+            tb_save.setText(resourceMap.getString("tb_save.text")); // NOI18N
+            tb_save.setBorderPainted(false);
+            tb_save.setFocusPainted(false);
+            tb_save.setFocusable(false);
+            tb_save.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            tb_save.setName("tb_save"); // NOI18N
+            tb_save.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+            toolBar.add(tb_save);
+
+            jSeparator4.setName("jSeparator4"); // NOI18N
+            toolBar.add(jSeparator4);
+
+            tb_edit.setAction(actionMap.get("editEntry")); // NOI18N
+            tb_edit.setText(resourceMap.getString("tb_edit.text")); // NOI18N
+            tb_edit.setBorderPainted(false);
+            tb_edit.setFocusPainted(false);
+            tb_edit.setFocusable(false);
+            tb_edit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            tb_edit.setName("tb_edit"); // NOI18N
+            tb_edit.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+            toolBar.add(tb_edit);
+
+            tb_delete.setAction(actionMap.get("deleteCurrentEntry")); // NOI18N
+            tb_delete.setText(resourceMap.getString("tb_delete.text")); // NOI18N
+            tb_delete.setBorderPainted(false);
+            tb_delete.setFocusPainted(false);
+            tb_delete.setFocusable(false);
+            tb_delete.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            tb_delete.setName("tb_delete"); // NOI18N
+            tb_delete.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+            toolBar.add(tb_delete);
+
+            tb_copy.setAction(actionMap.get("copy"));
+            tb_copy.setBorderPainted(false);
+            tb_copy.setFocusPainted(false);
+            tb_copy.setFocusable(false);
+            tb_copy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            tb_copy.setName("tb_copy"); // NOI18N
+            tb_copy.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+            toolBar.add(tb_copy);
+
+            tb_paste.setAction(actionMap.get("paste"));
+            tb_paste.setBorderPainted(false);
+            tb_paste.setFocusPainted(false);
+            tb_paste.setFocusable(false);
+            tb_paste.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            tb_paste.setName("tb_paste"); // NOI18N
+            tb_paste.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+            toolBar.add(tb_paste);
+
+            tb_selectall.setAction(actionMap.get("selectAllText")); // NOI18N
+            tb_selectall.setText(resourceMap.getString("tb_selectall.text")); // NOI18N
+            tb_selectall.setBorderPainted(false);
+            tb_selectall.setFocusPainted(false);
+            tb_selectall.setFocusable(false);
+            tb_selectall.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            tb_selectall.setName("tb_selectall"); // NOI18N
+            tb_selectall.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+            toolBar.add(tb_selectall);
+
+            jSeparator5.setName("jSeparator5"); // NOI18N
+            toolBar.add(jSeparator5);
+
+            tb_addmanlinks.setAction(actionMap.get("manualInsertLinks")); // NOI18N
+            tb_addmanlinks.setText(resourceMap.getString("tb_addmanlinks.text")); // NOI18N
+            tb_addmanlinks.setBorderPainted(false);
+            tb_addmanlinks.setFocusPainted(false);
+            tb_addmanlinks.setFocusable(false);
+            tb_addmanlinks.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            tb_addmanlinks.setName("tb_addmanlinks"); // NOI18N
+            tb_addmanlinks.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+            toolBar.add(tb_addmanlinks);
+
+            tb_addluhmann.setAction(actionMap.get("manualInsertEntry")); // NOI18N
+            tb_addluhmann.setText(resourceMap.getString("tb_addluhmann.text")); // NOI18N
+            tb_addluhmann.setBorderPainted(false);
+            tb_addluhmann.setFocusPainted(false);
+            tb_addluhmann.setFocusable(false);
+            tb_addluhmann.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            tb_addluhmann.setName("tb_addluhmann"); // NOI18N
+            tb_addluhmann.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+            toolBar.add(tb_addluhmann);
+
+            tb_addbookmark.setAction(actionMap.get("addToBookmark")); // NOI18N
+            tb_addbookmark.setText(resourceMap.getString("tb_addbookmark.text")); // NOI18N
+            tb_addbookmark.setBorderPainted(false);
+            tb_addbookmark.setFocusPainted(false);
+            tb_addbookmark.setFocusable(false);
+            tb_addbookmark.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            tb_addbookmark.setName("tb_addbookmark"); // NOI18N
+            tb_addbookmark.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+            toolBar.add(tb_addbookmark);
+
+            tb_addtodesktop.setAction(actionMap.get("addToDesktop")); // NOI18N
+            tb_addtodesktop.setText(resourceMap.getString("tb_addtodesktop.text")); // NOI18N
+            tb_addtodesktop.setBorderPainted(false);
+            tb_addtodesktop.setFocusPainted(false);
+            tb_addtodesktop.setFocusable(false);
+            tb_addtodesktop.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            tb_addtodesktop.setName("tb_addtodesktop"); // NOI18N
+            tb_addtodesktop.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+            toolBar.add(tb_addtodesktop);
+
+            jSeparator10.setName("jSeparator10"); // NOI18N
+            toolBar.add(jSeparator10);
+
+            tb_find.setAction(actionMap.get("find")); // NOI18N
+            tb_find.setText(resourceMap.getString("tb_find.text")); // NOI18N
+            tb_find.setBorderPainted(false);
+            tb_find.setFocusPainted(false);
+            tb_find.setFocusable(false);
+            tb_find.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            tb_find.setName("tb_find"); // NOI18N
+            tb_find.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+            toolBar.add(tb_find);
+
+            tb_first.setAction(actionMap.get("showFirstEntry")); // NOI18N
+            tb_first.setText(resourceMap.getString("tb_first.text")); // NOI18N
+            tb_first.setBorderPainted(false);
+            tb_first.setFocusPainted(false);
+            tb_first.setFocusable(false);
+            tb_first.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            tb_first.setName("tb_first"); // NOI18N
+            tb_first.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+            toolBar.add(tb_first);
+
+            tb_prev.setAction(actionMap.get("showPrevEntry")); // NOI18N
+            tb_prev.setText(resourceMap.getString("tb_prev.text")); // NOI18N
+            tb_prev.setBorderPainted(false);
+            tb_prev.setFocusPainted(false);
+            tb_prev.setFocusable(false);
+            tb_prev.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            tb_prev.setName("tb_prev"); // NOI18N
+            tb_prev.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+            toolBar.add(tb_prev);
+
+            tb_next.setAction(actionMap.get("showNextEntry")); // NOI18N
+            tb_next.setText(resourceMap.getString("tb_next.text")); // NOI18N
+            tb_next.setBorderPainted(false);
+            tb_next.setFocusPainted(false);
+            tb_next.setFocusable(false);
+            tb_next.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            tb_next.setName("tb_next"); // NOI18N
+            tb_next.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+            toolBar.add(tb_next);
+
+            tb_last.setAction(actionMap.get("showLastEntry")); // NOI18N
+            tb_last.setText(resourceMap.getString("tb_last.text")); // NOI18N
+            tb_last.setBorderPainted(false);
+            tb_last.setFocusPainted(false);
+            tb_last.setFocusable(false);
+            tb_last.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            tb_last.setName("tb_last"); // NOI18N
+            tb_last.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+            toolBar.add(tb_last);
+
+            jSeparator32.setName("jSeparator32"); // NOI18N
+            toolBar.add(jSeparator32);
+
+            jLabelMemory.setName("jLabelMemory"); // NOI18N
+            toolBar.add(jLabelMemory);
+
+            jPopupMenuKeywords.setName("jPopupMenuKeywords"); // NOI18N
+
+            popupKeywordsCopy.setAction(actionMap.get("copy"));
+            popupKeywordsCopy.setName("popupKeywordsCopy"); // NOI18N
+            jPopupMenuKeywords.add(popupKeywordsCopy);
+
+            jSeparator8.setName("jSeparator8"); // NOI18N
+            jPopupMenuKeywords.add(jSeparator8);
+
+            popupKeywordsSearchOr.setAction(actionMap.get("searchLogOr")); // NOI18N
+            popupKeywordsSearchOr.setName("popupKeywordsSearchOr"); // NOI18N
+            jPopupMenuKeywords.add(popupKeywordsSearchOr);
+
+            popupKeywordsSearchAnd.setAction(actionMap.get("searchLogAnd")); // NOI18N
+            popupKeywordsSearchAnd.setName("popupKeywordsSearchAnd"); // NOI18N
+            jPopupMenuKeywords.add(popupKeywordsSearchAnd);
+
+            popupKeywordsSearchNot.setAction(actionMap.get("searchLogNot")); // NOI18N
+            popupKeywordsSearchNot.setName("popupKeywordsSearchNot"); // NOI18N
+            jPopupMenuKeywords.add(popupKeywordsSearchNot);
+
+            jSeparator9.setName("jSeparator9"); // NOI18N
+            jPopupMenuKeywords.add(jSeparator9);
+
+            popupKeywordsNew.setAction(actionMap.get("newKeyword")); // NOI18N
+            popupKeywordsNew.setName("popupKeywordsNew"); // NOI18N
+            jPopupMenuKeywords.add(popupKeywordsNew);
+
+            popupKeywordsEdit.setAction(actionMap.get("editKeyword")); // NOI18N
+            popupKeywordsEdit.setName("popupKeywordsEdit"); // NOI18N
+            jPopupMenuKeywords.add(popupKeywordsEdit);
+
+            popupKeywordsDelete.setAction(actionMap.get("deleteKeyword")); // NOI18N
+            popupKeywordsDelete.setName("popupKeywordsDelete"); // NOI18N
+            jPopupMenuKeywords.add(popupKeywordsDelete);
+
+            jSeparator7.setName("jSeparator7"); // NOI18N
+            jPopupMenuKeywords.add(jSeparator7);
+
+            popupKeywordsAddToList.setAction(actionMap.get("addKeywordToList")); // NOI18N
+            popupKeywordsAddToList.setName("popupKeywordsAddToList"); // NOI18N
+            jPopupMenuKeywords.add(popupKeywordsAddToList);
+
+            jSeparator45.setName("jSeparator45"); // NOI18N
+            jPopupMenuKeywords.add(jSeparator45);
+
+            popupKeywordsManLinks.setAction(actionMap.get("addManLinksLogOr")); // NOI18N
+            popupKeywordsManLinks.setName("popupKeywordsManLinks"); // NOI18N
+            jPopupMenuKeywords.add(popupKeywordsManLinks);
+
+            popupKeywordsManLinksAnd.setAction(actionMap.get("addManLinksLogAnd")); // NOI18N
+            popupKeywordsManLinksAnd.setName("popupKeywordsManLinksAnd"); // NOI18N
+            jPopupMenuKeywords.add(popupKeywordsManLinksAnd);
+
+            jSeparator66.setName("jSeparator66"); // NOI18N
+            jPopupMenuKeywords.add(jSeparator66);
+
+            popupKeywordsLuhmann.setAction(actionMap.get("addLuhmannLogOr")); // NOI18N
+            popupKeywordsLuhmann.setName("popupKeywordsLuhmann"); // NOI18N
+            jPopupMenuKeywords.add(popupKeywordsLuhmann);
+
+            popupKeywordsLuhmannAnd.setAction(actionMap.get("addLuhmannLogAnd")); // NOI18N
+            popupKeywordsLuhmannAnd.setName("popupKeywordsLuhmannAnd"); // NOI18N
+            jPopupMenuKeywords.add(popupKeywordsLuhmannAnd);
+
+            jSeparator46.setName("jSeparator46"); // NOI18N
+            jPopupMenuKeywords.add(jSeparator46);
+
+            popupKeywordsDesktop.setAction(actionMap.get("addDesktopLogOr")); // NOI18N
+            popupKeywordsDesktop.setName("popupKeywordsDesktop"); // NOI18N
+            jPopupMenuKeywords.add(popupKeywordsDesktop);
+
+            popupKeywordsDesktopAnd.setAction(actionMap.get("addDesktopLogAnd")); // NOI18N
+            popupKeywordsDesktopAnd.setName("popupKeywordsDesktopAnd"); // NOI18N
+            jPopupMenuKeywords.add(popupKeywordsDesktopAnd);
+
+            jPopupMenuKeywordList.setName("jPopupMenuKeywordList"); // NOI18N
+
+            popupKwListCopy.setAction(actionMap.get("copy"));
+            popupKwListCopy.setName("popupKwListCopy"); // NOI18N
+            jPopupMenuKeywordList.add(popupKwListCopy);
+
+            jSeparator89.setName("jSeparator89"); // NOI18N
+            jPopupMenuKeywordList.add(jSeparator89);
+
+            popupKwListSearchOr.setAction(actionMap.get("searchKeywordsFromListLogOr")); // NOI18N
+            popupKwListSearchOr.setName("popupKwListSearchOr"); // NOI18N
+            jPopupMenuKeywordList.add(popupKwListSearchOr);
+
+            popupKwListSearchAnd.setAction(actionMap.get("searchKeywordsFromListLogAnd")); // NOI18N
+            popupKwListSearchAnd.setName("popupKwListSearchAnd"); // NOI18N
+            jPopupMenuKeywordList.add(popupKwListSearchAnd);
+
+            popupKwListSearchNot.setAction(actionMap.get("searchKeywordsFromListLogNot")); // NOI18N
+            popupKwListSearchNot.setName("popupKwListSearchNot"); // NOI18N
+            jPopupMenuKeywordList.add(popupKwListSearchNot);
+
+            jSeparator13.setName("jSeparator13"); // NOI18N
+            jPopupMenuKeywordList.add(jSeparator13);
+
+            popupKwListHighlight.setAction(actionMap.get("highlightKeywords")); // NOI18N
+            popupKwListHighlight.setName("popupKwListHighlight"); // NOI18N
+            jPopupMenuKeywordList.add(popupKwListHighlight);
+
+            popupKwListHighlightSegments.setAction(actionMap.get("highlightSegments")); // NOI18N
+            popupKwListHighlightSegments.setName("popupKwListHighlightSegments"); // NOI18N
+            jPopupMenuKeywordList.add(popupKwListHighlightSegments);
+
+            popupKwListRefresh.setAction(actionMap.get("refreshFilteredLinks")); // NOI18N
+            popupKwListRefresh.setName("popupKwListRefresh"); // NOI18N
+            jPopupMenuKeywordList.add(popupKwListRefresh);
+
+            jSeparator11.setName("jSeparator11"); // NOI18N
+            jPopupMenuKeywordList.add(jSeparator11);
+
+            popupKwListLogOr.setAction(actionMap.get("keywordListLogOr")); // NOI18N
+            popupKwListLogOr.setSelected(true);
+            popupKwListLogOr.setName("popupKwListLogOr"); // NOI18N
+            jPopupMenuKeywordList.add(popupKwListLogOr);
+
+            popupKwListLogAnd.setAction(actionMap.get("keywordListLogAnd")); // NOI18N
+            popupKwListLogAnd.setSelected(true);
+            popupKwListLogAnd.setName("popupKwListLogAnd"); // NOI18N
+            jPopupMenuKeywordList.add(popupKwListLogAnd);
+
+            jSeparator12.setName("jSeparator12"); // NOI18N
+            jPopupMenuKeywordList.add(jSeparator12);
+
+            popupKwListDelete.setAction(actionMap.get("deleteKeywordFromEntry")); // NOI18N
+            popupKwListDelete.setName("popupKwListDelete"); // NOI18N
+            jPopupMenuKeywordList.add(popupKwListDelete);
+
+            jPopupMenuAuthors.setName("jPopupMenuAuthors"); // NOI18N
+
+            popupAuthorsCopy.setAction(actionMap.get("copy"));
+            popupAuthorsCopy.setName("popupAuthorsCopy"); // NOI18N
+            jPopupMenuAuthors.add(popupAuthorsCopy);
+
+            jSeparator14.setName("jSeparator14"); // NOI18N
+            jPopupMenuAuthors.add(jSeparator14);
+
+            popupAuthorsSearchLogOr.setAction(actionMap.get("searchLogOr")); // NOI18N
+            popupAuthorsSearchLogOr.setName("popupAuthorsSearchLogOr"); // NOI18N
+            jPopupMenuAuthors.add(popupAuthorsSearchLogOr);
+
+            popupAuthorsSearchLogAnd.setAction(actionMap.get("searchLogAnd")); // NOI18N
+            popupAuthorsSearchLogAnd.setName("popupAuthorsSearchLogAnd"); // NOI18N
+            jPopupMenuAuthors.add(popupAuthorsSearchLogAnd);
+
+            popupAuthorsSearchLogNot.setAction(actionMap.get("searchLogNot")); // NOI18N
+            popupAuthorsSearchLogNot.setName("popupAuthorsSearchLogNot"); // NOI18N
+            jPopupMenuAuthors.add(popupAuthorsSearchLogNot);
+
+            jSeparator15.setName("jSeparator15"); // NOI18N
+            jPopupMenuAuthors.add(jSeparator15);
+
+            popupAuthorsNew.setAction(actionMap.get("newAuthor")); // NOI18N
+            popupAuthorsNew.setName("popupAuthorsNew"); // NOI18N
+            jPopupMenuAuthors.add(popupAuthorsNew);
+
+            popupAuthorsEdit.setAction(actionMap.get("editAuthor")); // NOI18N
+            popupAuthorsEdit.setName("popupAuthorsEdit"); // NOI18N
+            jPopupMenuAuthors.add(popupAuthorsEdit);
+
+            popupAuthorsDelete.setAction(actionMap.get("deleteAuthor")); // NOI18N
+            popupAuthorsDelete.setName("popupAuthorsDelete"); // NOI18N
+            jPopupMenuAuthors.add(popupAuthorsDelete);
+
+            jSeparator91.setName("jSeparator91"); // NOI18N
+            jPopupMenuAuthors.add(jSeparator91);
+
+            popupAuthorsBibkey.setAction(actionMap.get("changeBibkey")); // NOI18N
+            popupAuthorsBibkey.setName("popupAuthorsBibkey"); // NOI18N
+            jPopupMenuAuthors.add(popupAuthorsBibkey);
+
+            jSeparator16.setName("jSeparator16"); // NOI18N
+            jPopupMenuAuthors.add(jSeparator16);
+
+            popupAuthorsAddToEntry.setAction(actionMap.get("addAuthorToList")); // NOI18N
+            popupAuthorsAddToEntry.setName("popupAuthorsAddToEntry"); // NOI18N
+            jPopupMenuAuthors.add(popupAuthorsAddToEntry);
+
+            jSeparator49.setName("jSeparator49"); // NOI18N
+            jPopupMenuAuthors.add(jSeparator49);
+
+            popupAuthorsSubAdd.setText(resourceMap.getString("popupAuthorsSubAdd.text")); // NOI18N
+            popupAuthorsSubAdd.setName("popupAuthorsSubAdd"); // NOI18N
+
+            popupAuthorsManLinks.setAction(actionMap.get("addManLinksLogOr")); // NOI18N
+            popupAuthorsManLinks.setName("popupAuthorsManLinks"); // NOI18N
+            popupAuthorsSubAdd.add(popupAuthorsManLinks);
+
+            popupAuthorsManLinksAnd.setAction(actionMap.get("addManLinksLogAnd")); // NOI18N
+            popupAuthorsManLinksAnd.setName("popupAuthorsManLinksAnd"); // NOI18N
+            popupAuthorsSubAdd.add(popupAuthorsManLinksAnd);
+
+            jSeparator70.setName("jSeparator70"); // NOI18N
+            popupAuthorsSubAdd.add(jSeparator70);
+
+            popupAuthorsLuhmann.setAction(actionMap.get("addLuhmannLogOr")); // NOI18N
+            popupAuthorsLuhmann.setName("popupAuthorsLuhmann"); // NOI18N
+            popupAuthorsSubAdd.add(popupAuthorsLuhmann);
+
+            popupAuthorsLuhmannAnd.setAction(actionMap.get("addLuhmannLogAnd")); // NOI18N
+            popupAuthorsLuhmannAnd.setName("popupAuthorsLuhmannAnd"); // NOI18N
+            popupAuthorsSubAdd.add(popupAuthorsLuhmannAnd);
+
+            jSeparator50.setName("jSeparator50"); // NOI18N
+            popupAuthorsSubAdd.add(jSeparator50);
+
+            popupAuthorsDesktop.setAction(actionMap.get("addDesktopLogOr")); // NOI18N
+            popupAuthorsDesktop.setName("popupAuthorsDesktop"); // NOI18N
+            popupAuthorsSubAdd.add(popupAuthorsDesktop);
+
+            popupAuthorsDesktopAnd.setAction(actionMap.get("addDesktopLogAnd")); // NOI18N
+            popupAuthorsDesktopAnd.setName("popupAuthorsDesktopAnd"); // NOI18N
+            popupAuthorsSubAdd.add(popupAuthorsDesktopAnd);
+
+            jPopupMenuAuthors.add(popupAuthorsSubAdd);
+
+            jSeparator96.setName("jSeparator96"); // NOI18N
+            jPopupMenuAuthors.add(jSeparator96);
+
+            popupAuthorsImport.setAction(actionMap.get("importAuthors")); // NOI18N
+            popupAuthorsImport.setName("popupAuthorsImport"); // NOI18N
+            jPopupMenuAuthors.add(popupAuthorsImport);
+
+            jPopupMenuLuhmann.setName("jPopupMenuLuhmann"); // NOI18N
+
+            popupLuhmannAdd.setAction(actionMap.get("manualInsertEntry")); // NOI18N
+            popupLuhmannAdd.setName("popupLuhmannAdd"); // NOI18N
+            jPopupMenuLuhmann.add(popupLuhmannAdd);
+
+            jSeparator17.setName("jSeparator17"); // NOI18N
+            jPopupMenuLuhmann.add(jSeparator17);
+
+            popupLuhmannDelete.setAction(actionMap.get("deleteLuhmannFromEntry")); // NOI18N
+            popupLuhmannDelete.setName("popupLuhmannDelete"); // NOI18N
+            jPopupMenuLuhmann.add(popupLuhmannDelete);
+
+            jSeparator60.setName("jSeparator60"); // NOI18N
+            jPopupMenuLuhmann.add(jSeparator60);
+
+            popupLuhmannManLinks.setAction(actionMap.get("addManLinks")); // NOI18N
+            popupLuhmannManLinks.setName("popupLuhmannManLinks"); // NOI18N
+            jPopupMenuLuhmann.add(popupLuhmannManLinks);
+
+            popupLuhmannBookmarks.setAction(actionMap.get("addBookmarks")); // NOI18N
+            popupLuhmannBookmarks.setName("popupLuhmannBookmarks"); // NOI18N
+            jPopupMenuLuhmann.add(popupLuhmannBookmarks);
+
+            jSeparator63.setName("jSeparator63"); // NOI18N
+            jPopupMenuLuhmann.add(jSeparator63);
+
+            popupLuhmannDesktop.setAction(actionMap.get("addDesktop")); // NOI18N
+            popupLuhmannDesktop.setName("popupLuhmannDesktop"); // NOI18N
+            jPopupMenuLuhmann.add(popupLuhmannDesktop);
+
+            jPopupMenuTitles.setName("jPopupMenuTitles"); // NOI18N
+
+            popupTitlesCopy.setAction(actionMap.get("copy"));
+            popupTitlesCopy.setName("popupTitlesCopy"); // NOI18N
+            jPopupMenuTitles.add(popupTitlesCopy);
+
+            jSeparator20.setName("jSeparator20"); // NOI18N
+            jPopupMenuTitles.add(jSeparator20);
+
+            popupTitlesEdit.setAction(actionMap.get("editTitle")); // NOI18N
+            popupTitlesEdit.setName("popupTitlesEdit"); // NOI18N
+            jPopupMenuTitles.add(popupTitlesEdit);
+
+            popupTitlesEditEntry.setAction(actionMap.get("editEntry")); // NOI18N
+            popupTitlesEditEntry.setName("popupTitlesEditEntry"); // NOI18N
+            jPopupMenuTitles.add(popupTitlesEditEntry);
+
+            jSeparator103.setName("jSeparator103"); // NOI18N
+            jPopupMenuTitles.add(jSeparator103);
+
+            popupTitlesDelete.setAction(actionMap.get("deleteEntry")); // NOI18N
+            popupTitlesDelete.setName("popupTitlesDelete"); // NOI18N
+            jPopupMenuTitles.add(popupTitlesDelete);
+
+            jSeparator114.setName("jSeparator114"); // NOI18N
+            jPopupMenuTitles.add(jSeparator114);
+
+            popupTitleMoveEntry.setAction(actionMap.get("moveEntry")); // NOI18N
+            popupTitleMoveEntry.setName("popupTitleMoveEntry"); // NOI18N
+            jPopupMenuTitles.add(popupTitleMoveEntry);
+
+            jSeparator106.setName("jSeparator106"); // NOI18N
+            jPopupMenuTitles.add(jSeparator106);
+
+            popupTitlesAutomaticTitle.setAction(actionMap.get("automaticFirstLineAsTitle")); // NOI18N
+            popupTitlesAutomaticTitle.setName("popupTitlesAutomaticTitle"); // NOI18N
+            jPopupMenuTitles.add(popupTitlesAutomaticTitle);
+
+            jSeparator21.setName("jSeparator21"); // NOI18N
+            jPopupMenuTitles.add(jSeparator21);
+
+            popupTitlesManLinks.setAction(actionMap.get("addManLinks")); // NOI18N
+            popupTitlesManLinks.setName("popupTitlesManLinks"); // NOI18N
+            jPopupMenuTitles.add(popupTitlesManLinks);
+
+            popupTitlesLuhmann.setAction(actionMap.get("addLuhmann")); // NOI18N
+            popupTitlesLuhmann.setName("popupTitlesLuhmann"); // NOI18N
+            jPopupMenuTitles.add(popupTitlesLuhmann);
+
+            popupTitlesBookmarks.setAction(actionMap.get("addBookmarks")); // NOI18N
+            popupTitlesBookmarks.setName("popupTitlesBookmarks"); // NOI18N
+            jPopupMenuTitles.add(popupTitlesBookmarks);
+
+            jSeparator64.setName("jSeparator64"); // NOI18N
+            jPopupMenuTitles.add(jSeparator64);
+
+            popupTitlesDesktop.setAction(actionMap.get("addDesktop")); // NOI18N
+            popupTitlesDesktop.setName("popupTitlesDesktop"); // NOI18N
+            jPopupMenuTitles.add(popupTitlesDesktop);
+
+            jPopupMenuBookmarks.setName("jPopupMenuBookmarks"); // NOI18N
+
+            popupBookmarksEdit.setAction(actionMap.get("editBookmark")); // NOI18N
+            popupBookmarksEdit.setName("popupBookmarksEdit"); // NOI18N
+            jPopupMenuBookmarks.add(popupBookmarksEdit);
+
+            popupBookmarksDelete.setAction(actionMap.get("deleteBookmark")); // NOI18N
+            popupBookmarksDelete.setName("popupBookmarksDelete"); // NOI18N
+            jPopupMenuBookmarks.add(popupBookmarksDelete);
+
+            jSeparator36.setName("jSeparator36"); // NOI18N
+            jPopupMenuBookmarks.add(jSeparator36);
+
+            popupBookmarksEditCat.setAction(actionMap.get("editBookmarkCategory")); // NOI18N
+            popupBookmarksEditCat.setName("popupBookmarksEditCat"); // NOI18N
+            jPopupMenuBookmarks.add(popupBookmarksEditCat);
+
+            popupBookmarksDeleteCat.setAction(actionMap.get("deleteBookmarkCategory")); // NOI18N
+            popupBookmarksDeleteCat.setName("popupBookmarksDeleteCat"); // NOI18N
+            jPopupMenuBookmarks.add(popupBookmarksDeleteCat);
+
+            jSeparator38.setName("jSeparator38"); // NOI18N
+            jPopupMenuBookmarks.add(jSeparator38);
+
+            popupBookmarksAddManLinks.setAction(actionMap.get("addManLinks")); // NOI18N
+            popupBookmarksAddManLinks.setName("popupBookmarksAddManLinks"); // NOI18N
+            jPopupMenuBookmarks.add(popupBookmarksAddManLinks);
+
+            popupBookmarksAddLuhmann.setAction(actionMap.get("addLuhmann")); // NOI18N
+            popupBookmarksAddLuhmann.setName("popupBookmarksAddLuhmann"); // NOI18N
+            jPopupMenuBookmarks.add(popupBookmarksAddLuhmann);
+
+            jSeparator56.setName("jSeparator56"); // NOI18N
+            jPopupMenuBookmarks.add(jSeparator56);
+
+            popupBookmarkAddDesktop.setAction(actionMap.get("addDesktop")); // NOI18N
+            popupBookmarkAddDesktop.setName("popupBookmarkAddDesktop"); // NOI18N
+            jPopupMenuBookmarks.add(popupBookmarkAddDesktop);
+
+            jPopupMenuLinks.setName("jPopupMenuLinks"); // NOI18N
+
+            popupLinksRefresh.setAction(actionMap.get("refreshFilteredLinks")); // NOI18N
+            popupLinksRefresh.setName("popupLinksRefresh"); // NOI18N
+            jPopupMenuLinks.add(popupLinksRefresh);
+
+            jSeparator115.setName("jSeparator115"); // NOI18N
+            jPopupMenuLinks.add(jSeparator115);
+
+            popupLinkRemoveManLink.setAction(actionMap.get("deleteManualLink")); // NOI18N
+            popupLinkRemoveManLink.setName("popupLinkRemoveManLink"); // NOI18N
+            jPopupMenuLinks.add(popupLinkRemoveManLink);
+
+            jSeparator54.setName("jSeparator54"); // NOI18N
+            jPopupMenuLinks.add(jSeparator54);
+
+            popupLinksManLinks.setAction(actionMap.get("addManLinks")); // NOI18N
+            popupLinksManLinks.setName("popupLinksManLinks"); // NOI18N
+            jPopupMenuLinks.add(popupLinksManLinks);
+
+            popupLinksLuhmann.setAction(actionMap.get("addLuhmann")); // NOI18N
+            popupLinksLuhmann.setName("popupLinksLuhmann"); // NOI18N
+            jPopupMenuLinks.add(popupLinksLuhmann);
+
+            jSeparator57.setName("jSeparator57"); // NOI18N
+            jPopupMenuLinks.add(jSeparator57);
+
+            popupLinksDesktop.setAction(actionMap.get("addDesktop")); // NOI18N
+            popupLinksDesktop.setName("popupLinksDesktop"); // NOI18N
+            jPopupMenuLinks.add(popupLinksDesktop);
+
+            jPopupMenuAttachments.setName("jPopupMenuAttachments"); // NOI18N
+
+            popupAttachmentsCopy.setAction(actionMap.get("copy"));
+            popupAttachmentsCopy.setName("popupAttachmentsCopy"); // NOI18N
+            jPopupMenuAttachments.add(popupAttachmentsCopy);
+
+            jSeparator87.setName("jSeparator87"); // NOI18N
+            jPopupMenuAttachments.add(jSeparator87);
+
+            popupAttachmentsEdit.setAction(actionMap.get("editAttachment")); // NOI18N
+            popupAttachmentsEdit.setName("popupAttachmentsEdit"); // NOI18N
+            jPopupMenuAttachments.add(popupAttachmentsEdit);
+
+            popupAttachmentsDelete.setAction(actionMap.get("deleteAttachment")); // NOI18N
+            popupAttachmentsDelete.setName("popupAttachmentsDelete"); // NOI18N
+            jPopupMenuAttachments.add(popupAttachmentsDelete);
+
+            jSeparator94.setName("jSeparator94"); // NOI18N
+            jPopupMenuAttachments.add(jSeparator94);
+
+            popupAttachmentsGoto.setAction(actionMap.get("openAttachmentDirectory")); // NOI18N
+            popupAttachmentsGoto.setName("popupAttachmentsGoto"); // NOI18N
+            jPopupMenuAttachments.add(popupAttachmentsGoto);
+
+            jSeparator86.setName("jSeparator86"); // NOI18N
+            jPopupMenuAttachments.add(jSeparator86);
+
+            popupAttachmentsExport.setAction(actionMap.get("exportAttachments")); // NOI18N
+            popupAttachmentsExport.setName("popupAttachmentsExport"); // NOI18N
+            jPopupMenuAttachments.add(popupAttachmentsExport);
+
+            jPopupMenuMain.setName("jPopupMenuMain"); // NOI18N
+
+            popupMainCopy.setAction(actionMap.get("copy"));
+            popupMainCopy.setName("popupMainCopy"); // NOI18N
+            jPopupMenuMain.add(popupMainCopy);
+
+            popupMainCopyPlain.setAction(actionMap.get("copyPlain")); // NOI18N
+            popupMainCopyPlain.setName("popupMainCopyPlain"); // NOI18N
+            jPopupMenuMain.add(popupMainCopyPlain);
+
+            jSeparator88.setName("jSeparator88"); // NOI18N
+            jPopupMenuMain.add(jSeparator88);
+
+            popupMainFind.setAction(actionMap.get("findFromSelection")); // NOI18N
+            popupMainFind.setName("popupMainFind"); // NOI18N
+            jPopupMenuMain.add(popupMainFind);
+
+            jSeparator97.setName("jSeparator97"); // NOI18N
+            jPopupMenuMain.add(jSeparator97);
+
+            popupMainAddToKeyword.setAction(actionMap.get("addToKeywordList")); // NOI18N
+            popupMainAddToKeyword.setName("popupMainAddToKeyword"); // NOI18N
+            jPopupMenuMain.add(popupMainAddToKeyword);
+
+            jSeparator98.setName("jSeparator98"); // NOI18N
+            jPopupMenuMain.add(jSeparator98);
+
+            popupMainSetFirstLineAsTitle.setAction(actionMap.get("setFirstLineAsTitle")); // NOI18N
+            popupMainSetFirstLineAsTitle.setName("popupMainSetFirstLineAsTitle"); // NOI18N
+            jPopupMenuMain.add(popupMainSetFirstLineAsTitle);
+
+            popupMainSetSelectionAsTitle.setAction(actionMap.get("setSelectionAsTitle")); // NOI18N
+            popupMainSetSelectionAsTitle.setName("popupMainSetSelectionAsTitle"); // NOI18N
+            jPopupMenuMain.add(popupMainSetSelectionAsTitle);
+
+            setComponent(mainPanel);
+            setMenuBar(menuBar);
+            setStatusBar(statusPanel);
+            setToolBar(toolBar);
+        }// </editor-fold>//GEN-END:initComponents
 
 
 /**

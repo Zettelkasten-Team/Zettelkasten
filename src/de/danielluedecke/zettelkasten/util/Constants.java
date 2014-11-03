@@ -49,7 +49,7 @@ public class Constants {
     /**
      * This variable stores the current programme and build version number
      */
-    public static final String BUILD_VERSION = "3.2.4.3 (Build 20140418)";
+    public static final String BUILD_VERSION = "3.2.5 (Build 20141103)";
     /**
      * This constants stores the website-address where the Zettelkasten can be downloaded:<br><br>
      * {@code http://zettelkasten.danielluedecke.de/download.php}
