@@ -11,8 +11,8 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 ### Changelog der aktuellen Entwicklerversion
 
 #### Neue Funktionen und Änderungen
-* Manuelle Verweise bzw. Querverweise im Text auf andere Zettel sowie im Kopfbereich von Zetteln haben jetzt Tooltips, in denen der Titel der verlinkten Zettels angezeigt wird.
-* Einträge bzw. Zettelnummern in der Registerkarte _Folgezettel_ (übergeordnete Zettel) bzw. _Cluster_ haben jetzt Tooltips, in denen der Titel der verlinkten Zettels angezeigt wird.
+* Manuelle Verweise bzw. Querverweise im Text auf andere Zettel sowie im Kopfbereich von Zetteln haben jetzt Tooltips, in denen die Überschrift der verlinkten Zettel angezeigt wird.
+* Einträge bzw. Zettelnummern in der Registerkarte _Folgezettel_ (übergeordnete Zettel) bzw. _Cluster_ haben jetzt Tooltips, in denen die Überschrift der verlinkten Zettel angezeigt wird.
 * Manuelle Verweise können jetzt auch per Ctrl+Linksklick (bzw. Cmd+Linksklick auf OS X) im Zettelkopf entfernt werden.
 * Aktualisierung auf Java 7
 * Sourcecode von "Mac Widgets" wurde entfernt und die Bibliothek wieder eingebunden.
