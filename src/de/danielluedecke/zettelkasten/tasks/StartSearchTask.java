@@ -57,20 +57,20 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
     /**
      * Daten object, which contains the XML data of the Zettelkasten
      */
-    private Daten dataObj;
+    private final Daten dataObj;
     /**
      * A reference to the SearchRequests-class which stores the searchterms and other
      * search settings like case-sensitive search, where to search in and so on...
      */
-    private SearchRequests searchrequest;
+    private final SearchRequests searchrequest;
     /**
      *
      */
-    private Synonyms synonymsObj;
+    private final Synonyms synonymsObj;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(StartSearchTask.class);
     /**
@@ -87,27 +87,27 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
      *
      * See {@link Constants} for more details.
      */
-    private int where;
+    private final int where;
     /**
      * Indicates the logical-combination of search-terms. See constants below for more details.
      */
-    private int logical;
+    private final int logical;
     /**
      * Indicates whether a search should look for whole words only, or if a match is also given
      * when the search terms is only part of a found word.
      */
-    private boolean wholeword;
+    private final boolean wholeword;
     /**
      * Indicates whether the search is case sensitive (true) or not (false)
      */
-    private boolean matchcase;
+    private final boolean matchcase;
     /**
      * the class CStartSearch is not only used for search requests, but also for finding
      * entries that should be added to the desktop or as luhmann-numbers. If we don't
      * need the searchresults to be added to the {@link SearchRequests} class, we have
      * to set this parameter to "true", false if we want to have a "real" search.
      */
-    private boolean desktoponly;
+    private final boolean desktoponly;
     /**
      * whether the search should include synonyms or not
      */
@@ -139,8 +139,8 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
      */
     private int typeOfSearch = Constants.SEARCH_USUAL;
 
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
 
     /**
      *
@@ -218,7 +218,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
         // filter these entries
         if (timesearch) {
             // create new list for integer values
-            List<Integer> intlist = new ArrayList<Integer>();
+            List<Integer> intlist = new ArrayList<>();
             // go through all entries
             for (int cnt=0; cnt<searchEntries.length;cnt++ ) {
                 // get entrynumber
@@ -290,7 +290,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                 // get the amount of entries
                 int len = searchEntries.length;
                 // init a linked list that temporarily stores the found entry-numbers
-                List<Integer> finalresults = new ArrayList<Integer>();
+                List<Integer> finalresults = new ArrayList<>();
                 // iterate all entries where the search should be applied to...
                 // this may differ. a search request from the main-window usually searches through
                 // all entries, while a filter of search results only is applied to certain entries.
@@ -440,7 +440,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         }
                         // create array list. here we will store the original search terms from
                         // the search that was filtered, and the new search term from the filter-request
-                        List<String> newsearchterms = new ArrayList<String>();
+                        List<String> newsearchterms = new ArrayList<>();
                         // get original search terms
                         String[] orisearchterms = searchrequest.getSearchTerms(searchrequest.getCurrentSearch());
                         // for (String s : orisearchterms) newsearchterms.add(s);
@@ -606,7 +606,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                 // get the amount of entries
                 len = searchEntries.length;
                 // init a stringbuffer that temporarily stores the found entry-numbers
-                 finalresults = new ArrayList<Integer>();
+                 finalresults = new ArrayList<>();
                 // iterate all entries where the search should be applied to...
                 // this may differ. a search request from the main-window usually searches through
                 // all entries, while a filter of search results only is applied to certain entries.
@@ -638,7 +638,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                 // get the amount of entries
                 len = searchEntries.length;
                 // init a stringbuffer that temporarily stores the found entry-numbers
-                 finalresults = new ArrayList<Integer>();
+                 finalresults = new ArrayList<>();
                 // iterate all entries where the search should be applied to...
                 // this may differ. a search request from the main-window usually searches through
                 // all entries, while a filter of search results only is applied to certain entries.
@@ -670,7 +670,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                 // get the amount of entries
                 len = searchEntries.length;
                 // init a stringbuffer that temporarily stores the found entry-numbers
-                 finalresults = new ArrayList<Integer>();
+                 finalresults = new ArrayList<>();
                 // iterate all entries where the search should be applied to...
                 // this may differ. a search request from the main-window usually searches through
                 // all entries, while a filter of search results only is applied to certain entries.
@@ -716,7 +716,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                 // get the amount of entries
                 len = searchEntries.length;
                 // init a stringbuffer that temporarily stores the found entry-numbers
-                 finalresults = new ArrayList<Integer>();
+                 finalresults = new ArrayList<>();
                 // iterate all entries where the search should be applied to...
                 // this may differ. a search request from the main-window usually searches through
                 // all entries, while a filter of search results only is applied to certain entries.
@@ -748,7 +748,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                 // get the amount of entries
                 len = searchEntries.length;
                 // init a stringbuffer that temporarily stores the found entry-numbers
-                 finalresults = new ArrayList<Integer>();
+                finalresults = new ArrayList<>();
 
                 // iterate all entries where the search should be applied to...
                 // this may differ. a search request from the main-window usually searches through
@@ -782,7 +782,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                 // get the amount of entries
                 len = searchEntries.length;
                 // init a stringbuffer that temporarily stores the found entry-numbers
-                 finalresults = new ArrayList<Integer>();
+                 finalresults = new ArrayList<>();
                 // iterate all entries where the search should be applied to...
                 // this may differ. a search request from the main-window usually searches through
                 // all entries, while a filter of search results only is applied to certain entries.
@@ -821,7 +821,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                 // get the amount of entries
                 len = searchEntries.length;
                 // init a stringbuffer that temporarily stores the found entry-numbers
-                 finalresults = new ArrayList<Integer>();
+                 finalresults = new ArrayList<>();
                 // iterate all entries where the search should be applied to...
                 // this may differ. a search request from the main-window usually searches through
                 // all entries, while a filter of search results only is applied to certain entries.
@@ -953,7 +953,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
             if (Constants.SEARCH_LINKS==type) {
                 // get the content of an entry
                 List<Element> attachments = dataObj.getAttachments(searchnr);
-                List<String> content = new ArrayList<String>();
+                List<String> content = new ArrayList<>();
                 // check whether we have any attachments at all
                 if (attachments!=null) {
                     // create iterator
@@ -1026,7 +1026,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                 // else, if we have no searchterms, just set the current searchterm
                 else synline = new String[] {dummysearchterms[count]};
                 // go through all searchterms, including synonyms for the search term
-                for (int syncount=0; syncount<synline.length; syncount++) {
+                for (String synline1 : synline) {
                     // if we have whole-word-search, identify search results by
                     // comparing the keyword-index-numbers
                     if (wholeword) {
@@ -1035,13 +1035,17 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         boolean somethingfound = false;
                         // when we have a whole-word-search, we can use an already existing
                         // method to check whether this keyword exists in an entry or not
-                        if (Constants.SEARCH_KEYWORDS==type) somethingfound = dataObj.existsInKeywords(synline[syncount], searchnr, matchcase);
-                        if (Constants.SEARCH_AUTHOR==type) somethingfound = dataObj.existsInAuthors(synline[syncount], searchnr);
+                        if (Constants.SEARCH_KEYWORDS==type) {
+                            somethingfound = dataObj.existsInKeywords(synline1, searchnr, matchcase);
+                        }
+                        if (Constants.SEARCH_AUTHOR==type) {
+                            somethingfound = dataObj.existsInAuthors(synline1, searchnr);
+                        }
                         // in all other cases, retrieve the whole text/content
                         if (Constants.SEARCH_CONTENT==type ||
-                            Constants.SEARCH_REMARKS==type ||
-                            Constants.SEARCH_LINKS==type ||
-                            Constants.SEARCH_TITLE==type) {
+                                Constants.SEARCH_REMARKS==type ||
+                                Constants.SEARCH_LINKS==type ||
+                                Constants.SEARCH_TITLE==type) {
                             // create emptry string
                             String content = "";
                             // now, depending on the part of entry we want to look, retrieve the related content
@@ -1069,7 +1073,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                             // iterate the array of keyword- or author-strings of that entry
                             for (String loop : sterms) {
                                 // get search term
-                                String stsearch = synline[syncount];
+                                String stsearch = synline1;
                                 // if the search is not case-sensitive, convert to lowercase
                                 if (!matchcase) loop = loop.toLowerCase();
                                 // when we found something, tell that our found indicator
@@ -1092,10 +1096,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                             // leave synonym-loop, we don't need to look for further synomyns
                             break;
                         }
-                    }
-                    // if we don't have whole-word-search, identify search results by
-                    // comparing the strings
-                    else {
+                    } else {
                         // prepare searchterms.
                         String[] sterms = null;
                         // prepare found-indicator
@@ -1106,9 +1107,9 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         if (Constants.SEARCH_KEYWORDS==type) sterms = dataObj.getKeywords(searchnr);
                         // in all other cases, retrieve the whole text/content
                         if (Constants.SEARCH_CONTENT==type ||
-                            Constants.SEARCH_REMARKS==type ||
-                            Constants.SEARCH_LINKS==type ||
-                            Constants.SEARCH_TITLE==type) {
+                                Constants.SEARCH_REMARKS==type ||
+                                Constants.SEARCH_LINKS==type ||
+                                Constants.SEARCH_TITLE==type) {
                             // create emptry string
                             String content = "";
                             // now, depending on the part of entry we want to look, retrieve the related content
@@ -1129,7 +1130,9 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                             // if the search is not case-sensitive, convert to lowercase
                             if (!matchcase) content = content.toLowerCase();
                             // if the content contains the searchterm, set foundindicator to true
-                            if (content.contains(synline[syncount])) somethingfound = true;
+                            if (content.contains(synline1)) {
+                                somethingfound = true;
+                            }
                         }
                         // when we are looking for keywords or authors, the variable "sterms" is not null
                         // if we were looking for content, title or remarks, sterms is null, so this part
@@ -1138,7 +1141,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                             // iterate the array of keyword- or author-strings of that entry
                             for (String loop : sterms) {
                                 // get search term
-                                String stsearch = synline[syncount];
+                                String stsearch = synline1;
                                 // if the search is not case-sensitive, convert to lowercase
                                 if (!matchcase) loop = loop.toLowerCase();
                                 // when we found something, tell that our found indicator

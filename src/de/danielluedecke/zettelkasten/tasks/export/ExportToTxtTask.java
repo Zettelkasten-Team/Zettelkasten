@@ -55,53 +55,53 @@ public class ExportToTxtTask extends org.jdesktop.application.Task<Object, Void>
      * Reference to the CDaten object, which contains the XML data of the Zettelkasten
      * will be passed as parameter in the constructor, see below
      */
-    private Daten dataObj;
+    private final Daten dataObj;
     /**
      *
      */
-    private DesktopData desktopObj;
+    private final DesktopData desktopObj;
     /**
      * 
      */
-    private BibTex bibtexObj;
+    private final BibTex bibtexObj;
     /**
      *
      */
-    private TasksData taskinfo;
+    private final TasksData taskinfo;
     /**
      *
      */
-    private Settings settingsObj;
+    private final Settings settingsObj;
     /**
      * Indicates whether or not a bibtex-file from the exported entries should be created or not
      */
-    private boolean exportbibtex;
+    private final boolean exportbibtex;
     /**
      * Defines whether each headline of any entry has its entry-number as prefix. If
      * set to {@code true}, each entry's title will appear as <i>Entry XY: entry title</i>,
      * if set to {@code false}, a title will just appear as <i>entry title</i>, or left out
      * if title is empty.
      */
-    private boolean zettelNumberAsPrefix;
+    private final boolean zettelNumberAsPrefix;
     /**
      *
      */
-    private boolean isHeadingVisible;
+    private final boolean isHeadingVisible;
     /**
      * This variable stores the parts which should be exported. It's a mix of
      * ORed constants, see below
      */
-    private int exportparts;
+    private final int exportparts;
     /**
      * indicates which type of data format should be exported to.
      * refer to the Zettelkasten.view properties file (resources) to see
      * which number is which file type.
      */
-    private int exporttype;
+    private final int exporttype;
     /**
      * file path to export file
      */
-    private File filepath;
+    private final File filepath;
     /**
      *
      */
@@ -125,17 +125,18 @@ public class ExportToTxtTask extends org.jdesktop.application.Task<Object, Void>
     /**
      *
      */
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap = 
+    private final org.jdesktop.application.ResourceMap resourceMap = 
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(ExportTask.class);
     
     /**
      * 
+     * @param app
      * @param parent the dialog's parent frame
      * @param label
      * @param td a reference to the TaskDatas-class
@@ -190,7 +191,7 @@ public class ExportToTxtTask extends org.jdesktop.application.Task<Object, Void>
         // if this array is null, we assume that *all* entries have to be exported. thus, insert
         // all entry-numbers here
         if (null==exportentries) {
-            exportentries = new ArrayList<Object>();
+            exportentries = new ArrayList<>();
             // copy all entry-numbers to array. remember that the entrynumbers range from 1 to site of file.
             for (int cnt=0; cnt<dataObj.getCount(Daten.ZKNCOUNT); cnt++) {
                 // only add entries that are not empty

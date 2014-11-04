@@ -70,10 +70,8 @@ public abstract class EntryStringTransferHandler extends TransferHandler {
                 String str = (String)t.getTransferData(DataFlavor.stringFlavor);
                 return importString(c, str);
                 // return true;
-            } catch (UnsupportedFlavorException ufe) {
+            } catch (UnsupportedFlavorException | IOException ufe) {
                 Constants.zknlogger.log(Level.WARNING,ufe.getLocalizedMessage());
-            } catch (IOException ioe) {
-                Constants.zknlogger.log(Level.WARNING,ioe.getLocalizedMessage());
             }
         }
 
@@ -99,8 +97,8 @@ public abstract class EntryStringTransferHandler extends TransferHandler {
             return false;
         }
 
-        for (int i = 0; i < flavors.length; i++) {
-            if (DataFlavor.stringFlavor.equals(flavors[i])) {
+        for (DataFlavor flavor : flavors) {
+            if (DataFlavor.stringFlavor.equals(flavor)) {
                 return true;
             }
         }

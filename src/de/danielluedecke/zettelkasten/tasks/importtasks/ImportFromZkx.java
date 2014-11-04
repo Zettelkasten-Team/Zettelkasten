@@ -64,30 +64,30 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
      * Reference to the Daten object, which contains the XML data of the Zettelkasten.
      * will be passed as parameter in the constructor, see below
      */
-    private Daten dataObj;
+    private final Daten dataObj;
     /**
      *
      */
-    private TasksData taskinfo;
+    private final TasksData taskinfo;
     /**
      * Reference to the Bookmarks object, which contains the XML data of the bookmarks.
      * will be passed as parameter in the constructor, see below
      */
-    private Bookmarks bookmarksObj;
+    private final Bookmarks bookmarksObj;
     /**
      * Reference to the DesktopData object, which contains the XML data of the desktop.
      * will be passed as parameter in the constructor, see below
      */
-    private DesktopData desktopObj;
+    private final DesktopData desktopObj;
     /**
      * SearchRequests object, which contains the XML data of the searchrequests and -result
      * that are related with this data file
      */
-    private SearchRequests searchrequestsObj;
+    private final SearchRequests searchrequestsObj;
     /**
      * file path to import file
      */
-    private File filepath;
+    private final File filepath;
     /**
      * A default timestamp for importing old datafiles. Sometimes entries of old data files may
      * not contain timestamps. so we can insert a default value here...
@@ -96,14 +96,14 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
     /**
      *
      */
-    private StringBuilder importedTypesMessage = new StringBuilder("");
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final StringBuilder importedTypesMessage = new StringBuilder("");
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
 
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(ImportTask.class);
 
@@ -174,50 +174,50 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
             // *without* temporarily saving them to harddisk
             for (int cnt=0; cnt<dataObj.getFilesToLoadCount(); cnt++) {
                 // open the zip-file
-                ZipInputStream zip = new ZipInputStream(new FileInputStream(filepath));
-                ZipEntry zentry;
-                // now iterate the zip-file, searching for the requested file in it
-                while ((zentry=zip.getNextEntry())!=null) {
-                    String entryname = zentry.getName();
-                    // if the found file matches the requested one, start the SAXBuilder
-                    if (entryname.equals(dataObj.getFileToLoad(cnt))) {
-                        try {
-                            SAXBuilder builder = new SAXBuilder();
-                            Document doc = builder.build(zip);
-                            // compare, which file we have retrieved, so we store the data
-                            // correctly on our data-object
-                            if (entryname.equals(Constants.metainfFileName)) {
-                                meta3Doc = doc;
+                try (ZipInputStream zip = new ZipInputStream(new FileInputStream(filepath))) {
+                    ZipEntry zentry;
+                    // now iterate the zip-file, searching for the requested file in it
+                    while ((zentry=zip.getNextEntry())!=null) {
+                        String entryname = zentry.getName();
+                        // if the found file matches the requested one, start the SAXBuilder
+                        if (entryname.equals(dataObj.getFileToLoad(cnt))) {
+                            try {
+                                SAXBuilder builder = new SAXBuilder();
+                                Document doc = builder.build(zip);
+                                // compare, which file we have retrieved, so we store the data
+                                // correctly on our data-object
+                                if (entryname.equals(Constants.metainfFileName)) {
+                                    meta3Doc = doc;
+                                }
+                                if (entryname.equals(Constants.zknFileName)) {
+                                    zkn3Doc = doc;
+                                }
+                                if (entryname.equals(Constants.authorFileName)) {
+                                    author3Doc = doc;
+                                }
+                                if (entryname.equals(Constants.keywordFileName)) {
+                                    keyword3Doc = doc;
+                                }
+                                if (entryname.equals(Constants.bookmarksFileName)) {
+                                    bookmark3Doc = doc;
+                                }
+                                if (entryname.equals(Constants.searchrequestsFileName)) {
+                                    search3Doc = doc;
+                                }
+                                if (entryname.equals(Constants.desktopFileName)) {
+                                    desktop3Doc = doc;
+                                }
+                                if (entryname.equals(Constants.desktopModifiedEntriesFileName)) {
+                                    desktopModifiedEntries3Doc = doc;
+                                }
+                                break;
                             }
-                            if (entryname.equals(Constants.zknFileName)) {
-                                zkn3Doc = doc;
+                            catch (JDOMException e) {
+                                Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
                             }
-                            if (entryname.equals(Constants.authorFileName)) {
-                                author3Doc = doc;
-                            }
-                            if (entryname.equals(Constants.keywordFileName)) {
-                                keyword3Doc = doc;
-                            }
-                            if (entryname.equals(Constants.bookmarksFileName)) {
-                                bookmark3Doc = doc;
-                            }
-                            if (entryname.equals(Constants.searchrequestsFileName)) {
-                                search3Doc = doc;
-                            }
-                            if (entryname.equals(Constants.desktopFileName)) {
-                                desktop3Doc = doc;
-                            }
-                            if (entryname.equals(Constants.desktopModifiedEntriesFileName)) {
-                                desktopModifiedEntries3Doc = doc;
-                            }
-                            break;
-                        }
-                        catch (JDOMException e) {
-                            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
                         }
                     }
                 }
-                zip.close();
             }
             // retrieve version-element
             Element ver_el = meta3Doc.getRootElement().getChild("version");
@@ -283,11 +283,11 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
                     // create new stringbuilder that will contain the new index-numbers
                     StringBuilder sb = new StringBuilder("");
                     // iterate the array
-                    for (int c=0;c<aun.length;c++) {
+                    for (String aun1 : aun) {
                         // get the related author-element from the author-file.
                         // the needed author-index-number is stored as integer (string-value)
                         // in the author-indexnumbers-array "aun".
-                        Element dummyauthor = (Element)author3Doc.getRootElement().getContent(Integer.parseInt(aun[c])-1);
+                        Element dummyauthor = (Element) author3Doc.getRootElement().getContent(Integer.parseInt(aun1) - 1);
                         // get the string value for that author
                         String authorstring = dummyauthor.getText();
                         // if we have any author, go on..
@@ -317,11 +317,11 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
                     // create new stringbuilder that will contain the new index-numbers
                     StringBuilder sb = new StringBuilder("");
                     // iterate the array
-                    for (int c=0;c<kwn.length;c++) {
+                    for (String kwn1 : kwn) {
                         // get the related keyword-element from the keyword-file.
                         // the needed keyword-index-number is stored as integer (string-value)
                         // in the keyword-indexnumbers-array "kwn".
-                        Element dummykeyword = (Element)keyword3Doc.getRootElement().getContent(Integer.parseInt(kwn[c])-1);
+                        Element dummykeyword = (Element) keyword3Doc.getRootElement().getContent(Integer.parseInt(kwn1) - 1);
                         // get the string value for that keyword
                         String keywordstring = dummykeyword.getText();
                         // if we have any keywords, go on..

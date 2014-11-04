@@ -50,7 +50,7 @@ import javax.swing.tree.TreePath;
  */
 public class TreeUtil {
 
-    private static final List<String> collapsedNodes = new ArrayList<String>();
+    private static final List<String> collapsedNodes = new ArrayList<>();
     
     /**
      * This method extracts a node's ID.

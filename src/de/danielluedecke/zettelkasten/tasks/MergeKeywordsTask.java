@@ -46,19 +46,19 @@ public class MergeKeywordsTask extends org.jdesktop.application.Task<Object, Voi
     /**
      * Reference to the main data class
      */
-    private Daten dataObj;
-    private TasksData taskdata;
-    private String oldKw;
-    private String newKw;
-    private JTable kwtable;
-    private int selectedrow;
-    private LinkedList<Object[]> linkedkeywords;
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final Daten dataObj;
+    private final TasksData taskdata;
+    private final String oldKw;
+    private final String newKw;
+    private final JTable kwtable;
+    private final int selectedrow;
+    private final LinkedList<Object[]> linkedkeywords;
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(MergeKeywordsTask.class);
 

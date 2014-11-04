@@ -77,8 +77,7 @@ public class NewEntryFrameUtil {
                             ta.replaceSelection("\t");
                         }
                     }
-                } catch (IndexOutOfBoundsException ex) {
-                } catch (IllegalArgumentException ex) {
+                } catch (IndexOutOfBoundsException | IllegalArgumentException ex) {
                 }
             } else {
                 if (!ta.getName().equals("jTextAreaAuthor")) {
@@ -121,8 +120,7 @@ public class NewEntryFrameUtil {
                         // <ALT>+0132 bzw.
                         // <ALT>+0147 typographische Anführungszeichen oben / unten hin.
                     }
-                } catch (IndexOutOfBoundsException ex) {
-                } catch (IllegalArgumentException ex) {
+                } catch (IndexOutOfBoundsException | IllegalArgumentException ex) {
                 }
             }
         }
@@ -139,43 +137,59 @@ public class NewEntryFrameUtil {
             try {
                 String tag = ta.getText(caret - 3, 3);
                 String closetag = "";
-                if (tag.equals(Constants.FORMAT_BOLD_OPEN)) {
-                    closetag = Constants.FORMAT_BOLD_CLOSE;
-                } else if (tag.equals(Constants.FORMAT_ITALIC_OPEN)) {
-                    closetag = Constants.FORMAT_ITALIC_CLOSE;
-                } else if (tag.equals(Constants.FORMAT_UNDERLINE_OPEN)) {
-                    closetag = Constants.FORMAT_UNDERLINE_CLOSE;
-                } else if (tag.equals(Constants.FORMAT_STRIKE_OPEN)) {
-                    closetag = Constants.FORMAT_STRIKE_CLOSE;
-                } else if (tag.equals(Constants.FORMAT_ALIGNCENTER_OPEN)) {
-                    closetag = Constants.FORMAT_ALIGNCENTER_CLOSE;
-                } else if (tag.equals(Constants.FORMAT_ALIGNJUSTIFY_OPEN)) {
-                    closetag = Constants.FORMAT_ALIGNJUSTIFY_CLOSE;
-                } else if (tag.equals(Constants.FORMAT_ALIGNLEFT_OPEN)) {
-                    closetag = Constants.FORMAT_ALIGNLEFT_CLOSE;
-                } else if (tag.equals(Constants.FORMAT_ALIGNRIGHT_OPEN)) {
-                    closetag = Constants.FORMAT_ALIGNRIGHT_CLOSE;
-                } else if (tag.equals(Constants.FORMAT_LIST_OPEN)) {
-                    closetag = Constants.FORMAT_LIST_CLOSE;
-                } else if (tag.equals(Constants.FORMAT_LISTITEM_OPEN)) {
-                    closetag = Constants.FORMAT_LISTITEM_CLOSE;
-                } else if (tag.equals(Constants.FORMAT_NUMBEREDLIST_OPEN)) {
-                    closetag = Constants.FORMAT_NUMBEREDLIST_CLOSE;
-                } else if (tag.equals(Constants.FORMAT_SUP_OPEN)) {
-                    closetag = Constants.FORMAT_SUP_CLOSE;
-                } else if (tag.equals(Constants.FORMAT_SUB_OPEN)) {
-                    closetag = Constants.FORMAT_SUB_CLOSE;
-                } else if (tag.equals(Constants.FORMAT_QUOTE_OPEN)) {
-                    closetag = Constants.FORMAT_QUOTE_CLOSE;
-                } else if (tag.equals(Constants.FORMAT_H1_OPEN)) {
-                    closetag = Constants.FORMAT_H1_CLOSE;
-                } else if (tag.equals(Constants.FORMAT_H2_OPEN)) {
-                    closetag = Constants.FORMAT_H2_CLOSE;
+                switch (tag) {
+                    case Constants.FORMAT_BOLD_OPEN:
+                        closetag = Constants.FORMAT_BOLD_CLOSE;
+                        break;
+                    case Constants.FORMAT_ITALIC_OPEN:
+                        closetag = Constants.FORMAT_ITALIC_CLOSE;
+                        break;
+                    case Constants.FORMAT_UNDERLINE_OPEN:
+                        closetag = Constants.FORMAT_UNDERLINE_CLOSE;
+                        break;
+                    case Constants.FORMAT_STRIKE_OPEN:
+                        closetag = Constants.FORMAT_STRIKE_CLOSE;
+                        break;
+                    case Constants.FORMAT_ALIGNCENTER_OPEN:
+                        closetag = Constants.FORMAT_ALIGNCENTER_CLOSE;
+                        break;
+                    case Constants.FORMAT_ALIGNJUSTIFY_OPEN:
+                        closetag = Constants.FORMAT_ALIGNJUSTIFY_CLOSE;
+                        break;
+                    case Constants.FORMAT_ALIGNLEFT_OPEN:
+                        closetag = Constants.FORMAT_ALIGNLEFT_CLOSE;
+                        break;
+                    case Constants.FORMAT_ALIGNRIGHT_OPEN:
+                        closetag = Constants.FORMAT_ALIGNRIGHT_CLOSE;
+                        break;
+                    case Constants.FORMAT_LIST_OPEN:
+                        closetag = Constants.FORMAT_LIST_CLOSE;
+                        break;
+                    case Constants.FORMAT_LISTITEM_OPEN:
+                        closetag = Constants.FORMAT_LISTITEM_CLOSE;
+                        break;
+                    case Constants.FORMAT_NUMBEREDLIST_OPEN:
+                        closetag = Constants.FORMAT_NUMBEREDLIST_CLOSE;
+                        break;
+                    case Constants.FORMAT_SUP_OPEN:
+                        closetag = Constants.FORMAT_SUP_CLOSE;
+                        break;
+                    case Constants.FORMAT_SUB_OPEN:
+                        closetag = Constants.FORMAT_SUB_CLOSE;
+                        break;
+                    case Constants.FORMAT_QUOTE_OPEN:
+                        closetag = Constants.FORMAT_QUOTE_CLOSE;
+                        break;
+                    case Constants.FORMAT_H1_OPEN:
+                        closetag = Constants.FORMAT_H1_CLOSE;
+                        break;
+                    case Constants.FORMAT_H2_OPEN:
+                        closetag = Constants.FORMAT_H2_CLOSE;
+                        break;
                 }
                 ta.insert(closetag, caret);
                 ta.setCaretPosition(caret);
-            } catch (BadLocationException ex) {
-            } catch (IllegalArgumentException ex) {
+            } catch (BadLocationException | IllegalArgumentException ex) {
             }
         }
     }

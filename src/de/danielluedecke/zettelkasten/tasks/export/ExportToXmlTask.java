@@ -59,33 +59,33 @@ public class ExportToXmlTask extends org.jdesktop.application.Task<Object, Void>
      * Reference to the CDaten object, which contains the XML data of the Zettelkasten
      * will be passed as parameter in the constructor, see below
      */
-    private Daten dataObj;
-    private BibTex bibtexObj;
+    private final Daten dataObj;
+    private final BibTex bibtexObj;
     /**
      *
      */
-    private TasksData taskinfo;
+    private final TasksData taskinfo;
     /**
      * This variable indicates whether the author- and keyword-file should be exported
      * as separate files (just like the typical storage-system we use) or whether the 
      * author- and keyword-index-numbers should be replaced with the related string-values,
      * so the author- and keyword-information are all in one file
      */
-    private boolean allinone;
+    private final boolean allinone;
     /**
      * This variable stores the parts which should be exported. It's a mix of
      * ORed constants, see below
      */
-    private int exportparts;
+    private final int exportparts;
     /**
      * Indicates wheher the UBB-Fomattags should be removed and the entries should be exported
      * in plain text, without format-tags.
      */
-    private boolean removeformattags;
+    private final boolean removeformattags;
     /**
      * file path to export file
      */
-    private File filepath;
+    private final File filepath;
     /**
      *
      */
@@ -97,7 +97,7 @@ public class ExportToXmlTask extends org.jdesktop.application.Task<Object, Void>
     /**
      *
      */
-    private boolean exportbibtex;
+    private final boolean exportbibtex;
     /**
      * 
      */
@@ -105,12 +105,12 @@ public class ExportToXmlTask extends org.jdesktop.application.Task<Object, Void>
     /**
      *
      */
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap = 
+    private final org.jdesktop.application.ResourceMap resourceMap = 
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(ExportTask.class);
     
@@ -135,7 +135,7 @@ public class ExportToXmlTask extends org.jdesktop.application.Task<Object, Void>
         // if this array is null, we assume that *all* entries have to be exported. thus, insert
         // all entry-numbers here
         if (null==exportentries) {
-            exportentries = new ArrayList<Object>();
+            exportentries = new ArrayList<>();
             // copy all entry-numbers to array. remember that the entrynumbers range from 1 to site of file.
             for (int cnt=0; cnt<dataObj.getCount(Daten.ZKNCOUNT); cnt++) {
                 // only add entries that are not empty

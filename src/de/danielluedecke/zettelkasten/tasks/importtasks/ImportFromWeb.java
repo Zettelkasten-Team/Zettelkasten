@@ -38,7 +38,6 @@ import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.logging.Level;
@@ -52,22 +51,22 @@ public class ImportFromWeb extends org.jdesktop.application.Task<Object, Void> {
      * Reference to the Daten object, which contains the XML data of the Zettelkasten.
      * will be passed as parameter in the constructor, see below
      */
-    private Daten dataObj;
+    private final Daten dataObj;
     /**
      *
      */
-    private TasksData taskinfo;
-    private URL websiteurl;
+    private final TasksData taskinfo;
+    private final URL websiteurl;
     /**
      *
      */
-    private StringBuilder importedTypesMessage = new StringBuilder("");
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final StringBuilder importedTypesMessage = new StringBuilder("");
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(ImportTask.class);
 
@@ -107,14 +106,14 @@ public class ImportFromWeb extends org.jdesktop.application.Task<Object, Void> {
                 // open URL
                 BufferedReader in = new BufferedReader(new InputStreamReader(websiteurl.openStream(), "UTF-8"));
                 // buffer for stream
-                String buff = "";
+                String buff;
                 // read content of website and copy content to string builder
                 while ((buff=in.readLine())!=null) {
                     webpage.append(buff);
                 }
                 String content = webpage.toString();
                 // check whether we have wordpress page
-                if (content.indexOf("<meta name=\"generator\" content=\"WordPress")!=-1) {
+                if (content.contains("<meta name=\"generator\" content=\"WordPress")) {
                     pagetype = Constants.PAGE_TYPE_WORDPRESS;
                 }
                 // do import

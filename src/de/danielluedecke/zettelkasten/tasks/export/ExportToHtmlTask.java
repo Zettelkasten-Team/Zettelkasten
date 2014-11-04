@@ -185,7 +185,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
         // if this array is null, we assume that *all* entries have to be exported. thus, insert
         // all entry-numbers here
         if (null==exportentries) {
-            exportentries = new ArrayList<Object>();
+            exportentries = new ArrayList<>();
             // copy all entry-numbers to array. remember that the entrynumbers range from 1 to site of file.
             for (int cnt=0; cnt<dataObj.getCount(Daten.ZKNCOUNT); cnt++) {
                 // only add entries that are not empty
@@ -450,11 +450,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
                     // wait for other process to be finished
                     p.waitFor();
                     p.destroy();
-                } catch (IOException ex) {
-                    // and change indicator
-                    exportOk = false;
-                    Constants.zknlogger.log(Level.SEVERE,"Could not convert file! Either Pandoc is missing or export file not found.");
-                } catch (InterruptedException ex) {
+                } catch (IOException | InterruptedException ex) {
                     // and change indicator
                     exportOk = false;
                     Constants.zknlogger.log(Level.SEVERE,"Could not convert file! Either Pandoc is missing or export file not found.");

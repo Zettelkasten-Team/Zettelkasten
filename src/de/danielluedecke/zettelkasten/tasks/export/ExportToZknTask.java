@@ -59,20 +59,20 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
      * Reference to the CDaten object, which contains the XML data of the Zettelkasten
      * will be passed as parameter in the constructor, see below
      */
-    private Daten dataObj;
+    private final Daten dataObj;
     /**
      * 
      */
-    private Bookmarks bookmarksObj;
-    private BibTex bibtexObj;
+    private final Bookmarks bookmarksObj;
+    private final BibTex bibtexObj;
     /**
      *
      */
-    private TasksData taskinfo;
+    private final TasksData taskinfo;
     /**
      * file path to export file
      */
-    private File filepath;
+    private final File filepath;
     /**
      *
      */
@@ -81,7 +81,7 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
      *
      */
     private boolean exportOk;
-    private boolean exportbibtex;
+    private final boolean exportbibtex;
     /**
      * 
      */
@@ -89,12 +89,12 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
     /**
      *
      */
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap = 
+    private final org.jdesktop.application.ResourceMap resourceMap = 
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(ExportTask.class);
 
@@ -116,7 +116,7 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
         // if this array is null, we assume that *all* entries have to be exported. thus, insert
         // all entry-numbers here
         if (null==exportentries) {
-            exportentries = new ArrayList<Object>();
+            exportentries = new ArrayList<>();
             // copy all entry-numbers to array. remember that the entrynumbers range from 1 to site of file.
             for (int cnt=0; cnt<dataObj.getCount(Daten.ZKNCOUNT); cnt++) {
                 // only add entries that are not empty
@@ -155,16 +155,15 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
         // yet everything is ok...
         exportOk = true;
         // create list with all export entries...
-        ArrayList<Integer> entrylist = new ArrayList<Integer>();
+        ArrayList<Integer> entrylist = new ArrayList<>();
         // go through all elements of the data file
-        for (int cnt=0; cnt<exportentries.size(); cnt++) {
+        for (Object exportentrie : exportentries) {
             try {
                 // retrieve zettelnumber
-                int zettelnummer = Integer.parseInt(exportentries.get(cnt).toString());
+                int zettelnummer = Integer.parseInt(exportentrie.toString());
                 // and add it to list.
                 entrylist.add(zettelnummer);
-            }
-            catch (NumberFormatException e) {}
+            }catch (NumberFormatException e) {}
         }
         // sort array
         Collections.sort(entrylist);
@@ -195,9 +194,8 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
         // TODO schreibtisch-Daten: zettel-nummern in id's umwandeln und mitexportieren
         
         // export data to zkn3-file
-        try {
-            // open the outputstream
-            ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(filepath));
+        // open the outputstream
+        try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(filepath))) {
             // I first wanted to use a pretty output format, so advanced users who
             // extract the data file can better watch the xml-files. but somehow, this
             // lead to an error within the method "retrieveElement" in the class "CDaten.java",
@@ -222,15 +220,8 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
             zip.putNextEntry(new ZipEntry(Constants.bookmarksFileName));
             out.output(bookmarks, zip);
             // close zip-stream
-            zip.close();
         }
-        catch (IOException e) {
-            // log error-message
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
-            // change error-indicator
-            exportOk = false;
-        }
-        catch (SecurityException e) {
+        catch (IOException | SecurityException e) {
             // log error-message
             Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
             // change error-indicator

@@ -451,7 +451,7 @@ public class FileOperationsUtil {
         else {
             linkListModel = new DefaultListModel();
         }
-        List<String> addedValues = new ArrayList<String>();
+        List<String> addedValues = new ArrayList<>();
         // modified tag
         boolean modified = false;
         // declare constants for moving/copying files
@@ -483,7 +483,7 @@ public class FileOperationsUtil {
         String destdir = settingsObj.getAttachmentPath(dataObj.getUserAttachmentPath(),true);
         // create new linked list that will contain a "cleaned" list of files, i.e. only contains
         // those selected files that haven't been copied to the attachment directory yet.
-        LinkedList<File> newfiles = new LinkedList<File>();
+        LinkedList<File> newfiles = new LinkedList<>();
         // iterate array
         for (File cf : sources) {
             // first off all, let's check whether the user chose an already existing attachment-file
@@ -572,7 +572,7 @@ public class FileOperationsUtil {
                                                .replace("ß", "ss")
                                                .replace("\"", "");
                 // create destionation file
-                File dest = new File(destdir.toString()+withoutumlauts);
+                File dest = new File(destdir+withoutumlauts);
                 // create loop-indicator
                 boolean dest_ok = false;
                 // indicator whether further action is needed
@@ -621,7 +621,7 @@ public class FileOperationsUtil {
                             // if so, add extension here
                             if (!newfilename.endsWith("."+fileextension)) newfilename = newfilename.concat("."+fileextension);
                             // and create a new file
-                            dest = new File(destdir.toString()+newfilename);
+                            dest = new File(destdir+newfilename);
                         }
                     }
                     else {
@@ -718,8 +718,7 @@ public class FileOperationsUtil {
                         }
                     }
                 }
-                catch (IOException ex) {}
-                catch (SecurityException ex) {}
+                catch (IOException | SecurityException ex) {}
             }
         }
         return linkfile;

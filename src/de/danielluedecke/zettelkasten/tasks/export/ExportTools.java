@@ -158,7 +158,7 @@ public class ExportTools {
      */
     public static String createReferenceList(Daten dataObj, Settings settingsObj, String contentpage, String footnotetag, String footnoteclose, String headeropen, String headerclose, int listtype) {
         // now prepare a reference list from possible footnotes
-        LinkedList<String> footnotes = new LinkedList<String>();
+        LinkedList<String> footnotes = new LinkedList<>();
         // position index for finding the footnotes
         int pos = 0;
         // get length of footnote-tag, so we know where to look for the author-number within the footnote
@@ -304,7 +304,7 @@ public class ExportTools {
         if (bibtexObj.getCount()>0) {
             // this list will contain all found bibkeys within the authors
             // of the to be exported entries
-            ArrayList<String> foundbibkeys = new ArrayList<String>();
+            ArrayList<String> foundbibkeys = new ArrayList<>();
             for (Object exportentrie : exportentries) {
                 try {
                     // retrieve zettelnumber
@@ -401,8 +401,8 @@ public class ExportTools {
         String footRefOpen = (referenceAsFootnote) ? "\\footnote{\\cite{":"\\cite{";
         String footRefClose = (referenceAsFootnote) ? "}}":"}";
         // save find-position
-        List<Integer> start = new ArrayList<Integer>();
-        List<Integer> end = new ArrayList<Integer>();
+        List<Integer> start = new ArrayList<>();
+        List<Integer> end = new ArrayList<>();
         try {
             // create foot note patterm
             Pattern p = Pattern.compile("\\[fn ([^\\[]*)\\]");
@@ -427,13 +427,11 @@ public class ExportTools {
                 }
             }
         }
-        catch (PatternSyntaxException ex) {
+        catch (PatternSyntaxException | IndexOutOfBoundsException ex) {
         }
         catch (NumberFormatException ex) {
             Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
             Constants.zknlogger.log(Level.WARNING,"Could not convert author ID into author number!");
-        }
-        catch (IndexOutOfBoundsException ex) {
         }
         // return content. this string now has converted footnotes, where the referenced
         // author value contains a bibkey.

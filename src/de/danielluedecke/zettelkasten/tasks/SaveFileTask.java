@@ -145,11 +145,11 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
                 }
             }
         }
-        try {
-            // log file path
-            Constants.zknlogger.log(Level.INFO, "Saving file to {0}", fp.toString());
-            // open the outputstream
-            ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(fp));
+        // log file path
+        Constants.zknlogger.log(Level.INFO, "Saving file to {0}", fp.toString());
+        ByteArrayOutputStream bout;
+         // open the outputstream
+        try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(fp))) {
             // I first wanted to use a pretty output format, so advanced users who
             // extract the data file can better watch the xml-files. but somehow, this
             // lead to an error within the method "retrieveElement" in the class "Daten.java",
@@ -191,7 +191,7 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
             out.output(synonymsObj.getDocument(), zip);
             // save bibtex file
             zip.putNextEntry(new ZipEntry(Constants.bibTexFileName));
-            ByteArrayOutputStream bout = bibtexObj.saveFile();
+            bout = bibtexObj.saveFile();
             bout.writeTo(zip);
             // show status text
             msgLabel.setText(resourceMap.getString("msg6"));
@@ -203,7 +203,6 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
             zip.putNextEntry(new ZipEntry(Constants.desktopNotesFileName));
             out.output(desktopObj.getDesktopNotesData(), zip);
             // close zip-stream
-            zip.close();
             bout.close();
         }
         catch (IOException e) {

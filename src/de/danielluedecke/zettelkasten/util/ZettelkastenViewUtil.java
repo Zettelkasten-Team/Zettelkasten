@@ -327,287 +327,257 @@ public class ZettelkastenViewUtil {
         // here we have some "hidden features".
         String t = jTextFieldEntryNumber.getText();
         // the "?" shows a random entry
-        if (t.equals("?")) {
-            mainframe.showRandomEntry();
-        }
-        // the "m" toggles the memory-calculator on and off. The memory-usage will
-        // be displayed and also logged to the log-file
-        else if (t.equals("m")) {
-            mainframe.toggleMemoryTimer();
-            jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
-        }
-        // the "e" shows the current errorLog
-        else if (t.equals("e")) {
-            mainframe.showErrorLog();
-            jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
-        }
-        // the "cs" clears the search-results
-        else if (t.equals("cs")) {
-            // open a confirm dialog
-            int option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmClearSearchesMsg"), mainframe.getResourceMap().getString("confirmClearSearchesTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
-            // if action should be performed, do so
-            if (JOptionPane.YES_OPTION == option ) {
-                searchrequests.clear();
-                searchrequests.setModified(true);
-            }
-            jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
-        }
-        // the "cd" clears the desktop-data
-        else if (t.equals("cd")) {
-            // open a confirm dialog
-            int option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmClearDesktopMsg"), mainframe.getResourceMap().getString("confirmClearDesktopTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
-            // if action should be performed, do so
-            if (JOptionPane.YES_OPTION == option ) {
-                desktop.clear();
-                desktop.setModified(true);
-            }
-            jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
-        }
-        // the "cb" clears the bibtex-data
-        else if (t.equals("cb")) {
-            // open a confirm dialog
-            int option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmClearBibtexMsg"), mainframe.getResourceMap().getString("confirmClearBibtexTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
-            // if action should be performed, do so
-            if (JOptionPane.YES_OPTION == option ) {
-                bibtex.clearEntries();
-            }
-            jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
-        }
-        // the "rs" resets the settings-file
-        else if (t.equals("rs")) {
-            // open a confirm dialog
-            int option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmResetSettingsMsg"), mainframe.getResourceMap().getString("confirmResetSettingsTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
-            // if action should be performed, do so
-            if (JOptionPane.YES_OPTION == option ) {
-                settings.clear();
-            }
-            jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
-        }
-        // the "ra" resets the accelatorkeys-file
-        else if (t.equals("ra")) {
-            acceleratorKeys.initAcceleratorKeys();
-            jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
-        }
-        // the "s" opens the directory with the programme's settings-file
-        else if (t.equals("s")){
-            try {
-                Desktop.getDesktop().open(new File(FileOperationsUtil.getZettelkastenHomeDir(false)));
-            } catch (IOException ex) {
-                // log error-message
-                Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-            }
-            // show current entry number again
-            jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
-        }
-        // "rf" resets the frequencies of keywords and authors, i.e. the frequencies
-        // are "re-countet".
-        else if (t.equals("rf")) {
-            // open a confirm dialog
-            int option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmResetFreqMsg"), mainframe.getResourceMap().getString("confirmResetFreqTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
-            // if action should be performed, do so
-            if (JOptionPane.YES_OPTION == option ) {
-                // if dialog window isn't already created, do this now
-                if (null == taskDlg) {
-                    // get parent und init window
-                    taskDlg = new TaskProgressDialog(mainframe.getFrame(), TaskProgressDialog.TASK_UPDATEFILE, settings, data, desktop, bibtex, true);
-                    // center window
-                    taskDlg.setLocationRelativeTo(mainframe.getFrame());
+        switch (t) {
+            case "?":
+                mainframe.showRandomEntry();
+                break;
+            case "m":
+                mainframe.toggleMemoryTimer();
+                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                break;
+            case "e":
+                mainframe.showErrorLog();
+                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                break;
+            case "cs":
+                // open a confirm dialog
+                int option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmClearSearchesMsg"), mainframe.getResourceMap().getString("confirmClearSearchesTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                // if action should be performed, do so
+                if (JOptionPane.YES_OPTION == option ) {
+                    searchrequests.clear();
+                    searchrequests.setModified(true);
+                }       jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                break;
+            case "cd":
+                // open a confirm dialog
+                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmClearDesktopMsg"), mainframe.getResourceMap().getString("confirmClearDesktopTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                // if action should be performed, do so
+                if (JOptionPane.YES_OPTION == option ) {
+                    desktop.clear();
+                    desktop.setModified(true);
+                }       
+                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                break;
+            case "cb":
+                // open a confirm dialog
+                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmClearBibtexMsg"), mainframe.getResourceMap().getString("confirmClearBibtexTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                // if action should be performed, do so
+                if (JOptionPane.YES_OPTION == option ) {
+                    bibtex.clearEntries();
+                }       
+                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                break;
+            case "rs":
+                // open a confirm dialog
+                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmResetSettingsMsg"), mainframe.getResourceMap().getString("confirmResetSettingsTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                // if action should be performed, do so
+                if (JOptionPane.YES_OPTION == option ) {
+                    settings.clear();
                 }
-                ZettelkastenApp.getApplication().show(taskDlg);
-                // dispose the window and clear the object
-                taskDlg.dispose();
-                taskDlg = null;
-            }
-            jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
-        }
-        // "reo" resets the order of entries, so entries are shown in the order they are stored in the database
-        else if (t.equals("reo")) {
-            // open a confirm dialog
-            int option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmResetOrderMsg"), mainframe.getResourceMap().getString("confirmResetOrderTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
-            // if action should be performed, do so
-            if (JOptionPane.YES_OPTION == option ) {
-                // reset entry order
-                data.db_updateEntryOrderReferences();
-                // set current zettel to first zettel
-                data.setCurrentZettelPos(data.getFirstZettel());
-                // title-list is no longer up to date
-                data.setTitlelistUpToDate(false);
-                // update display
-                mainframe.updateDisplay();
-            }
-        }
-        // "m2u" converts all entries from markdown syntax to ubb syntax
-        else if (t.equals("m2u")) {
-            // open a confirm dialog
-            int option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmM2UMsg"), mainframe.getResourceMap().getString("confirmM2UTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
-            // if action should be performed, do so
-            if (JOptionPane.YES_OPTION == option ) {
-                // if dialog window isn't already created, do this now
-                if (null == taskDlg) {
-                    // get parent und init window
-                    taskDlg = new TaskProgressDialog(mainframe.getFrame(), TaskProgressDialog.TASK_CONVERTFORMATTAGS, data, Tools.MARKDOWN2UBB);
-                    // center window
-                    taskDlg.setLocationRelativeTo(mainframe.getFrame());
-                }
-                ZettelkastenApp.getApplication().show(taskDlg);
-                // dispose the window and clear the object
-                taskDlg.dispose();
-                taskDlg = null;
-                // update display
-                mainframe.updateDisplayParts(displayedZettel);
-            }
-        }
-        // "u2m" converts all entries from ubb syntax to markdown syntax
-        else if (t.equals("u2m")) {
-            // open a confirm dialog
-            int option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmU2MMsg"), mainframe.getResourceMap().getString("confirmU2MTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
-            // if action should be performed, do so
-            if (JOptionPane.YES_OPTION == option ) {
-                // if dialog window isn't already created, do this now
-                if (null == taskDlg) {
-                    // get parent und init window
-                    taskDlg = new TaskProgressDialog(mainframe.getFrame(), TaskProgressDialog.TASK_CONVERTFORMATTAGS, data, Tools.UBB2MARKDOWN);
-                    // center window
-                    taskDlg.setLocationRelativeTo(mainframe.getFrame());
-                }
-                ZettelkastenApp.getApplication().show(taskDlg);
-                // dispose the window and clear the object
-                taskDlg.dispose();
-                taskDlg = null;
-                // update display
-                mainframe.updateDisplayParts(displayedZettel);
-            }
-        }
-        // displays the current XML data base in an edit window
-        // just for testing purposes
-        else if (t.equals("xml")) {
-            // open an input-dialog, setting the selected value as default-value
-            if (null == biggerEditDlg) {
-                // create a new dialog with the bigger edit-field, passing some initial values
-                biggerEditDlg = new CBiggerEditField(mainframe.getFrame(),settings,"XML Database", Tools.retrieveXMLFileAsString(data), "", Constants.EDIT_OTHER);
-                // center window
-                biggerEditDlg.setLocationRelativeTo(mainframe.getFrame());
-            }
-            // show window
-            ZettelkastenApp.getApplication().show(biggerEditDlg);
-            // delete the input-dialog
-            biggerEditDlg.dispose();
-            biggerEditDlg=null;
-            jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
-        }
-        // displays the current bibtex file in an edit window
-        // just for testing purposes
-        else if (t.equals("bib")) {
-            // open an input-dialog, setting the selected value as default-value
-            if (null == biggerEditDlg) {
+                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                break;
+            case "ra":
+                acceleratorKeys.initAcceleratorKeys();
+                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                break;
+            case "s":
                 try {
+                    Desktop.getDesktop().open(new File(FileOperationsUtil.getZettelkastenHomeDir(false)));
+                } 
+                catch (IOException ex) {
+                    // log error-message
+                    Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
+                }   // show current entry number again
+                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                break;
+            case "rf":
+                // open a confirm dialog
+                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmResetFreqMsg"), mainframe.getResourceMap().getString("confirmResetFreqTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                // if action should be performed, do so
+                if (JOptionPane.YES_OPTION == option ) {
+                    // if dialog window isn't already created, do this now
+                    if (null == taskDlg) {
+                        // get parent und init window
+                        taskDlg = new TaskProgressDialog(mainframe.getFrame(), TaskProgressDialog.TASK_UPDATEFILE, settings, data, desktop, bibtex, true);
+                        // center window
+                        taskDlg.setLocationRelativeTo(mainframe.getFrame());
+                    }
+                    ZettelkastenApp.getApplication().show(taskDlg);
+                    // dispose the window and clear the object
+                    taskDlg.dispose();
+                    taskDlg = null;
+                }       
+                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                break;
+            case "reo":
+                // open a confirm dialog
+                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmResetOrderMsg"), mainframe.getResourceMap().getString("confirmResetOrderTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                // if action should be performed, do so
+                if (JOptionPane.YES_OPTION == option ) {
+                    // reset entry order
+                    data.db_updateEntryOrderReferences();
+                    // set current zettel to first zettel
+                    data.setCurrentZettelPos(data.getFirstZettel());
+                    // title-list is no longer up to date
+                    data.setTitlelistUpToDate(false);
+                    // update display
+                    mainframe.updateDisplay();
+                }       
+                break;
+            case "m2u":
+                // open a confirm dialog
+                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmM2UMsg"), mainframe.getResourceMap().getString("confirmM2UTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                // if action should be performed, do so
+                if (JOptionPane.YES_OPTION == option ) {
+                    // if dialog window isn't already created, do this now
+                    if (null == taskDlg) {
+                        // get parent und init window
+                        taskDlg = new TaskProgressDialog(mainframe.getFrame(), TaskProgressDialog.TASK_CONVERTFORMATTAGS, data, Tools.MARKDOWN2UBB);
+                        // center window
+                        taskDlg.setLocationRelativeTo(mainframe.getFrame());
+                    }
+                    ZettelkastenApp.getApplication().show(taskDlg);
+                    // dispose the window and clear the object
+                    taskDlg.dispose();
+                    taskDlg = null;
+                    // update display
+                    mainframe.updateDisplayParts(displayedZettel);
+                }       
+                break;
+            case "u2m":
+                // open a confirm dialog
+                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmU2MMsg"), mainframe.getResourceMap().getString("confirmU2MTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                // if action should be performed, do so
+                if (JOptionPane.YES_OPTION == option ) {
+                    // if dialog window isn't already created, do this now
+                    if (null == taskDlg) {
+                        // get parent und init window
+                        taskDlg = new TaskProgressDialog(mainframe.getFrame(), TaskProgressDialog.TASK_CONVERTFORMATTAGS, data, Tools.UBB2MARKDOWN);
+                        // center window
+                        taskDlg.setLocationRelativeTo(mainframe.getFrame());
+                    }
+                    ZettelkastenApp.getApplication().show(taskDlg);
+                    // dispose the window and clear the object
+                    taskDlg.dispose();
+                    taskDlg = null;
+                    // update display
+                    mainframe.updateDisplayParts(displayedZettel);
+                }       
+                break;
+            case "xml":
+                // open an input-dialog, setting the selected value as default-value
+                if (null == biggerEditDlg) {
                     // create a new dialog with the bigger edit-field, passing some initial values
-                    StringBuilder bibinfo = new StringBuilder("");
-                    bibinfo.append("BibTex-Daten (").append(String.valueOf(bibtex.getCount())).append(" Einträge)");
-                    biggerEditDlg = new CBiggerEditField(mainframe.getFrame(),settings,bibinfo.toString(), bibtex.saveFile().toString("UTF-8"), "", Constants.EDIT_OTHER);
+                    biggerEditDlg = new CBiggerEditField(mainframe.getFrame(),settings,"XML Database", Tools.retrieveXMLFileAsString(data), "", Constants.EDIT_OTHER);
                     // center window
                     biggerEditDlg.setLocationRelativeTo(mainframe.getFrame());
-                    // show window
-                    ZettelkastenApp.getApplication().show(biggerEditDlg);
-                }
-                catch (UnsupportedEncodingException ex) {
-                }
-            }
-            // delete the input-dialog
-            biggerEditDlg.dispose();
-            biggerEditDlg=null;
-            jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
-        }
-        // displays the entry in converted html format in an edit window
-        // just for testing purposes
-        else if (t.equals("html")) {
-            // open an input-dialog, setting the selected value as default-value
-            if (null == biggerEditDlg) {
-                // create a new dialog with the bigger edit-field, passing some initial values
-                biggerEditDlg = new CBiggerEditField(mainframe.getFrame(),settings,"HTML code of entry", data.getZettelContentAsHtml(displayedZettel), "", Constants.EDIT_OTHER);
-                // center window
-                biggerEditDlg.setLocationRelativeTo(mainframe.getFrame());
-            }
-            // show window
-            ZettelkastenApp.getApplication().show(biggerEditDlg);
-            // delete the input-dialog
-            biggerEditDlg.dispose();
-            biggerEditDlg=null;
-            jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
-        }
-        // displays the entry in converted html with style sheets format in an edit window
-        // just for testing purposes
-        else if (t.equals("html2")) {
-            // open an input-dialog, setting the selected value as default-value
-            if (null == biggerEditDlg) {
-                // create a new dialog with the bigger edit-field, passing some initial values
-                biggerEditDlg = new CBiggerEditField(mainframe.getFrame(),settings,"HTML code of entry", data.getEntryAsHtml(displayedZettel,null,Constants.FRAME_MAIN), "", Constants.EDIT_OTHER);
-                // center window
-                biggerEditDlg.setLocationRelativeTo(mainframe.getFrame());
-            }
-            // show window
-            ZettelkastenApp.getApplication().show(biggerEditDlg);
-            // delete the input-dialog
-            biggerEditDlg.dispose();
-            biggerEditDlg=null;
-            jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
-        }
-        // displays the entry in non-converted original format in an edit window
-        // just for testing purposes
-        else if (t.equals("ubb")) {
-            // open an input-dialog, setting the selected value as default-value
-            if (null == biggerEditDlg) {
-                // create a new dialog with the bigger edit-field, passing some initial values
-                biggerEditDlg = new CBiggerEditField(mainframe.getFrame(),settings,"Original (unformatted) code of entry", data.getZettelContent(displayedZettel), "", Constants.EDIT_OTHER);
-                // center window
-                biggerEditDlg.setLocationRelativeTo(mainframe.getFrame());
-            }
-            // show window
-            ZettelkastenApp.getApplication().show(biggerEditDlg);
-            // delete the input-dialog
-            biggerEditDlg.dispose();
-            biggerEditDlg=null;
-            jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
-        }
-        // copies the settings-files to the application's directory. this is helpful when the Zettelkasten
-        // needs to be portable, thus this function copies the settings-files to a usb-flash-device
-        else if (t.equals("usb")) {
-            // create filepath for destination of settings-file. the destination is the application's directory
-            File portableDestFile = new File(System.getProperty("user.dir")+File.separatorChar+"zettelkasten-settings.zks3");
-            // create source-filepath for the settings-file, which usually is located in a sub-directory of the user's home dir.
-            File portableSourceFile = new File(FileOperationsUtil.getZettelkastenHomeDir()+"zettelkasten-settings.zks3");
-            // if source-path is valid and the settings-file exists, copy it to the flash-device
-            if (portableSourceFile.exists()) {
-                try {
-                    FileOperationsUtil.copyFile(portableSourceFile, portableDestFile, 1024);
-                }
-                catch (IOException e) {
-                    Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
-                }
-            }
-            // create filepath for destination of settings-file. the destination is the application's directory
-            portableDestFile = new File(System.getProperty("user.dir")+File.separatorChar+"zettelkasten-data.zkd3");
-            // create source-filepath for the settings-file, which usually is located in a sub-directory of the user's home dir.
-            portableSourceFile = new File(FileOperationsUtil.getZettelkastenHomeDir()+"zettelkasten-data.zkd3");
-            // if source-path is valid and the settings-file exists, copy it to the flash-device
-            if (portableSourceFile.exists()) {
-                try {
-                    FileOperationsUtil.copyFile(portableSourceFile, portableDestFile, 1024);
-                }
-                catch (IOException e) {
-                    Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
-                }
-            }
-            jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
-        }
-        else {
-            try {
-                // convert string into int value and show the entry
-                mainframe.showEntry(Integer.parseInt(t));
-            } catch (NumberFormatException ex) {
-                // else reset textfield to old value
+                }   // show window
+                ZettelkastenApp.getApplication().show(biggerEditDlg);
+                // delete the input-dialog
+                biggerEditDlg.dispose();
+                biggerEditDlg=null;
                 jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
-            }
+                break;
+            case "bib":
+                // open an input-dialog, setting the selected value as default-value
+                if (null == biggerEditDlg) {
+                    try {
+                        // create a new dialog with the bigger edit-field, passing some initial values
+                        StringBuilder bibinfo = new StringBuilder("");
+                        bibinfo.append("BibTex-Daten (").append(String.valueOf(bibtex.getCount())).append(" Einträge)");
+                        biggerEditDlg = new CBiggerEditField(mainframe.getFrame(),settings,bibinfo.toString(), bibtex.saveFile().toString("UTF-8"), "", Constants.EDIT_OTHER);
+                        // center window
+                        biggerEditDlg.setLocationRelativeTo(mainframe.getFrame());
+                        // show window
+                        ZettelkastenApp.getApplication().show(biggerEditDlg);
+                    }
+                    catch (UnsupportedEncodingException ex) {
+                    }
+                }   // delete the input-dialog
+                biggerEditDlg.dispose();
+                biggerEditDlg=null;
+                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                break;
+            case "html":
+                // open an input-dialog, setting the selected value as default-value
+                if (null == biggerEditDlg) {
+                    // create a new dialog with the bigger edit-field, passing some initial values
+                    biggerEditDlg = new CBiggerEditField(mainframe.getFrame(),settings,"HTML code of entry", data.getZettelContentAsHtml(displayedZettel), "", Constants.EDIT_OTHER);
+                    // center window
+                    biggerEditDlg.setLocationRelativeTo(mainframe.getFrame());
+                }   
+                // show window
+                ZettelkastenApp.getApplication().show(biggerEditDlg);
+                // delete the input-dialog
+                biggerEditDlg.dispose();
+                biggerEditDlg=null;
+                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                break;
+            case "html2":
+                // open an input-dialog, setting the selected value as default-value
+                if (null == biggerEditDlg) {
+                    // create a new dialog with the bigger edit-field, passing some initial values
+                    biggerEditDlg = new CBiggerEditField(mainframe.getFrame(),settings,"HTML code of entry", data.getEntryAsHtml(displayedZettel,null,Constants.FRAME_MAIN), "", Constants.EDIT_OTHER);
+                    // center window
+                    biggerEditDlg.setLocationRelativeTo(mainframe.getFrame());
+                }   // show window
+                ZettelkastenApp.getApplication().show(biggerEditDlg);
+                // delete the input-dialog
+                biggerEditDlg.dispose();
+                biggerEditDlg=null;
+                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                break;
+            case "ubb":
+                // open an input-dialog, setting the selected value as default-value
+                if (null == biggerEditDlg) {
+                    // create a new dialog with the bigger edit-field, passing some initial values
+                    biggerEditDlg = new CBiggerEditField(mainframe.getFrame(),settings,"Original (unformatted) code of entry", data.getZettelContent(displayedZettel), "", Constants.EDIT_OTHER);
+                    // center window
+                    biggerEditDlg.setLocationRelativeTo(mainframe.getFrame());
+                }   // show window
+                ZettelkastenApp.getApplication().show(biggerEditDlg);
+                // delete the input-dialog
+                biggerEditDlg.dispose();
+                biggerEditDlg=null;
+                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                break;
+            case "usb":
+                // create filepath for destination of settings-file. the destination is the application's directory
+                File portableDestFile = new File(System.getProperty("user.dir")+File.separatorChar+"zettelkasten-settings.zks3");
+                // create source-filepath for the settings-file, which usually is located in a sub-directory of the user's home dir.
+                File portableSourceFile = new File(FileOperationsUtil.getZettelkastenHomeDir()+"zettelkasten-settings.zks3");
+                // if source-path is valid and the settings-file exists, copy it to the flash-device
+                if (portableSourceFile.exists()) {
+                    try {
+                        FileOperationsUtil.copyFile(portableSourceFile, portableDestFile, 1024);
+                    }
+                    catch (IOException e) {
+                        Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+                    }
+                }   // create filepath for destination of settings-file. the destination is the application's directory
+                portableDestFile = new File(System.getProperty("user.dir")+File.separatorChar+"zettelkasten-data.zkd3");
+                // create source-filepath for the settings-file, which usually is located in a sub-directory of the user's home dir.
+                portableSourceFile = new File(FileOperationsUtil.getZettelkastenHomeDir()+"zettelkasten-data.zkd3");
+                // if source-path is valid and the settings-file exists, copy it to the flash-device
+                if (portableSourceFile.exists()) {
+                    try {
+                        FileOperationsUtil.copyFile(portableSourceFile, portableDestFile, 1024);
+                    }
+                    catch (IOException e) {
+                        Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+                    }
+                }   jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                break;
+            default:
+                try {
+                    // convert string into int value and show the entry
+                    mainframe.showEntry(Integer.parseInt(t));
+                } 
+                catch (NumberFormatException ex) {
+                    // else reset textfield to old value
+                    jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                }   
+                break;
         }
     }    
     /**

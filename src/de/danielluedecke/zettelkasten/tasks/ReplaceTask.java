@@ -46,17 +46,17 @@ import javax.swing.JOptionPane;
  * @author danielludecke
  */
 public class ReplaceTask extends org.jdesktop.application.Task<Object, Void> {
-    private Daten dataObj;
-    private TasksData taskinfo;
+    private final Daten dataObj;
+    private final TasksData taskinfo;
     private String findTerm;
     private String replaceTerm;
     private int[] replaceEntries;
-    private int replaceWhere;
-    private boolean wholeword;
-    private boolean matchcase;
-    private boolean regex;
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final int replaceWhere;
+    private final boolean wholeword;
+    private final boolean matchcase;
+    private final boolean regex;
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
     /**
      * get the strings for file descriptions from the resource map
      */
@@ -235,7 +235,7 @@ public class ReplaceTask extends org.jdesktop.application.Task<Object, Void> {
                     // here we check whether we have made any changes at all...
                     boolean changesmade = false;
                     // this list stores all new attachment-values
-                    ArrayList<String> newarray = new ArrayList<String>();
+                    ArrayList<String> newarray = new ArrayList<>();
                     // go through all possible attachments
                     for (String oldatt : att) {
                         // replace findterm in old attachments

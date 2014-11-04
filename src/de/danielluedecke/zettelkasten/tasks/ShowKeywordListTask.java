@@ -52,28 +52,28 @@ public class ShowKeywordListTask extends org.jdesktop.application.Task<Object, V
     /**
      * Reference to the main data class
      */
-    private Daten dataObj;
+    private final Daten dataObj;
     /**
      * Reference to the synonyms class
      */
-    private Synonyms synonymsObj;
+    private final Synonyms synonymsObj;
     /**
      *
      */
-    private boolean includeSynonyms;
+    private final boolean includeSynonyms;
     /**
      * the table model from the main window's jtable, passed as parameter
      */
-    private DefaultTableModel tableModel;
+    private final DefaultTableModel tableModel;
 
     private ArrayList<Object[]> list;
 
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(ShowKeywordListTask.class);
 
@@ -112,7 +112,7 @@ public class ShowKeywordListTask extends org.jdesktop.application.Task<Object, V
         // not contain empty strings
         int cnt;
 
-        LinkedList<String> keywordlist = new LinkedList<String>();
+        LinkedList<String> keywordlist = new LinkedList<>();
 
         // go through all keywords of the keyword datafile
         for (cnt=0; cnt<count; cnt++) {
@@ -148,7 +148,7 @@ public class ShowKeywordListTask extends org.jdesktop.application.Task<Object, V
         // sort list
         Collections.sort(keywordlist, new Comparer());
         // create new instance of that variable
-        list = new ArrayList<Object[]>();
+        list = new ArrayList<>();
         // get list size
         int kwsize = keywordlist.size();
 

@@ -47,21 +47,21 @@ public class ShowTitleListTask extends org.jdesktop.application.Task<Object, Voi
     /**
      * Reference to the data class
      */
-    private Daten dataObj;
+    private final Daten dataObj;
     /**
      * the table model from the main window's jtable, passed as parameter
      */
-    private DefaultTableModel tableModel;
+    private final DefaultTableModel tableModel;
     private LinkedList<Object[]> list;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(ShowTitleListTask.class);
 
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
 
     ShowTitleListTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, DefaultTableModel tm) {
         // Runs on the EDT.  Copy GUI state that
@@ -88,7 +88,7 @@ public class ShowTitleListTask extends org.jdesktop.application.Task<Object, Voi
                 return null;
             }
             // create new instance of that variable
-            list = new LinkedList<Object[]>();
+            list = new LinkedList<>();
             // start with first entry in order
             int cnt = dataObj.getFirstZettel();
             // reset progress counter

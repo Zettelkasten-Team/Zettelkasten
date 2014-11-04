@@ -52,7 +52,7 @@ public class InitStatusbarForTasks {
     private final Icon[] busyIcons = new Icon[30];
     private int busyIconIndex = 0;
 
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(ZettelkastenView.class);
     
@@ -61,6 +61,9 @@ public class InitStatusbarForTasks {
      * Catches messages from the doInBackground task
      * and changes the progressbar state, the busy icon animation
      * and - if necessary - the status message.
+     * @param statusAnimationLabel
+     * @param progressBar
+     * @param statusMessageLabel
      */
     public InitStatusbarForTasks( final javax.swing.JLabel statusAnimationLabel,
                     final javax.swing.JProgressBar progressBar,
@@ -101,47 +104,38 @@ public class InitStatusbarForTasks {
             @Override
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 String propertyName = evt.getPropertyName();
-                // when a background thread starts, start the busy icon animation
-                if ("started".equals(propertyName)) {
-                    if (statusAnimationLabel!=null && !busyIconTimer.isRunning()) {
-                        statusAnimationLabel.setIcon(busyIcons[0]);
-                        busyIconIndex = 0;
-                        busyIconTimer.start();
-                    }
-                    // and make the progressbar visible, if we have one
-                    if (progressBar!=null) {
-                        progressBar.setVisible(true);
-                        progressBar.setIndeterminate(true);
-                    }
-                }
-                // when the thread finished working, stop animation, set idle icon
-                // and hide the progress bar
-                else if ("done".equals(propertyName)) {
-                    busyIconTimer.stop();
-                    if (statusAnimationLabel!=null) {
-                        statusAnimationLabel.setIcon(idleIcon);
-                    }
-                    if (progressBar!=null) {
-                        /*progressBar.setVisible(false);*/
-                        progressBar.setValue(0);
-                    }
-                }
-                else if ("message".equals(propertyName)) {
-                    if (statusMessageLabel!=null) {
-                        String text = (String) (evt.getNewValue());
-                        statusMessageLabel.setText((text == null) ? "" : text);
-                    }
-                }
-                // if a progress was indicated during the thread using the
-                // "setProgress(value,min,max)" method, we can change the state
-                // of the progress bar here.
-                else if ("progress".equals(propertyName)) {
-                    if (progressBar!=null) {
-                        int value = (Integer)(evt.getNewValue());
-                        progressBar.setVisible(true);
-                        progressBar.setIndeterminate(false);
-                        progressBar.setValue(value);
-                    }
+                if (null != propertyName) // when a background thread starts, start the busy icon animation
+                switch (propertyName) {
+                    case "started":
+                        if (statusAnimationLabel!=null && !busyIconTimer.isRunning()) {
+                            statusAnimationLabel.setIcon(busyIcons[0]);
+                            busyIconIndex = 0;
+                            busyIconTimer.start();
+                        }   // and make the progressbar visible, if we have one
+                        if (progressBar!=null) {
+                            progressBar.setVisible(true);
+                            progressBar.setIndeterminate(true);
+                        }   break;
+                    case "done":
+                        busyIconTimer.stop();
+                        if (statusAnimationLabel!=null) {
+                            statusAnimationLabel.setIcon(idleIcon);
+                        }   if (progressBar!=null) {
+                            /*progressBar.setVisible(false);*/
+                            progressBar.setValue(0);
+                    }   break;
+                    case "message":
+                        if (statusMessageLabel!=null) {
+                            String text = (String) (evt.getNewValue());
+                            statusMessageLabel.setText((text == null) ? "" : text);
+                    }   break;
+                    case "progress":
+                        if (progressBar!=null) {
+                            int value = (Integer)(evt.getNewValue());
+                            progressBar.setVisible(true);
+                            progressBar.setIndeterminate(false);
+                            progressBar.setValue(value);
+                    }   break;
                 }
             }
         });                

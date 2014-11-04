@@ -34,7 +34,6 @@ package de.danielluedecke.zettelkasten.tasks;
 
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -51,23 +50,23 @@ public class ShowAttachmentListTask extends org.jdesktop.application.Task<Object
     /**
      * Reference to the main data class
      */
-    private Daten dataObj;
+    private final Daten dataObj;
     /**
      * Reference to the data class
      */
-    private Settings settingsObj;
+    private final Settings settingsObj;
     /**
      * the table model from the main window's jtable, passed as parameter
      */
-    private DefaultTableModel tableModel;
+    private final DefaultTableModel tableModel;
     private LinkedList<Object[]> list;
 
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(ShowAttachmentListTask.class);
 
@@ -98,7 +97,7 @@ public class ShowAttachmentListTask extends org.jdesktop.application.Task<Object
             return null;
         }
         // create new instance of that variable
-        list = new LinkedList<Object[]>();
+        list = new LinkedList<>();
         // go through all entries
         for (int cnt=1; cnt<=dataObj.getCount(Daten.ZKNCOUNT); cnt++) {
             // get the attachments of each entry

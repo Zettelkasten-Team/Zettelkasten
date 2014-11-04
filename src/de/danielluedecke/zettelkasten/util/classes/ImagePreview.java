@@ -89,17 +89,20 @@ public class ImagePreview extends JComponent implements PropertyChangeListener {
         boolean update = false;
         String prop = e.getPropertyName();
 
-        //If the directory changed, don't show an image.
-        if (JFileChooser.DIRECTORY_CHANGED_PROPERTY.equals(prop)) {
-            file = null;
-            update = true;
+        if (null != prop) { //If the directory changed, don't show an image.
+            switch (prop) {
+                case JFileChooser.DIRECTORY_CHANGED_PROPERTY:
+                    file = null;
+                    update = true;
 
-        //If a file became selected, find out which one.
-        } else if (JFileChooser.SELECTED_FILE_CHANGED_PROPERTY.equals(prop)) {
-            file = (File) e.getNewValue();
-            update = true;
+                    //If a file became selected, find out which one.
+                    break;
+                case JFileChooser.SELECTED_FILE_CHANGED_PROPERTY:
+                    file = (File) e.getNewValue();
+                    update = true;
+                    break;
+            }
         }
-
         //Update the preview accordingly.
         if (update) {
             thumbnail = null;

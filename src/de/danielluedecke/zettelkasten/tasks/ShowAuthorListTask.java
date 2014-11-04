@@ -53,23 +53,23 @@ public class ShowAuthorListTask extends org.jdesktop.application.Task<Object, Vo
     /**
      * Reference to the main data class
      */
-    private Daten dataObj;
+    private final Daten dataObj;
     /**
      * the table model from the main window's jtable, passed as parameter
      */
-    private BibTex bibtexObj;
+    private final BibTex bibtexObj;
     private int entrytype = -1;
 
-    private DefaultTableModel tableModel;
+    private final DefaultTableModel tableModel;
 
     private ArrayList<Object[]> list;
 
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(ShowAuthorListTask.class);
 
@@ -108,7 +108,7 @@ public class ShowAuthorListTask extends org.jdesktop.application.Task<Object, Vo
         // not contain empty strings
         int cnt;
 
-        LinkedList<String> authorlist = new LinkedList<String>();
+        LinkedList<String> authorlist = new LinkedList<>();
         // go through all author-elements of the author datafile
         for (cnt=0; cnt<count; cnt++) {
             // get the authors as string
@@ -144,7 +144,7 @@ public class ShowAuthorListTask extends org.jdesktop.application.Task<Object, Vo
         // sort list
         Collections.sort(authorlist, new Comparer());
         // create new instance of that variable
-        list = new ArrayList<Object[]>();
+        list = new ArrayList<>();
         // get list size
         int ausize = authorlist.size();
         // go through all authors of the author-array
