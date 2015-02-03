@@ -1238,6 +1238,8 @@ public class SearchResultsFrame extends javax.swing.JFrame {
             jLabelHits.setText(sb.toString());
             // work done
             tableUpdateActive = false;
+            // enable filter text field
+            jTextFieldFilterList.setEnabled(true);
         }
     }
     

@@ -20,6 +20,7 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 #### Behobene Fehler
 * Wenn bei einer Neueinagbe eines Zettels ein manueller Verweis auf andere Zettel im Text mehrmals vorkam, wurde die Verweisnummer mehrmals in der Liste manueller Verweise angezeigt. Fehler behoben.
 * Tooltip im Neueingabefenster für "Übernehmen" überlagerte den Knopf, wurde entfernt.
+* Wenn im Suchergebnisfenster die Suchliste über das Textfeld unter der Liste gefiltert und kein Ergebnistreffer gefunden wurde, konnte man keine weiteren Eingaben in das Filtertextfeld vornehmen, nachdem die Suchliste wiederhergestellt wurde. Fehler behoben, jetzt sind wiederholte Filtervorgänge möglich.
 
 ### Screenshots
 Aktuelle Screenshots [gibt es hier](http://zettelkasten.danielluedecke.de/gallery.php).
