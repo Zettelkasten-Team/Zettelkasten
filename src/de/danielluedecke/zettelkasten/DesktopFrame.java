@@ -186,6 +186,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      *
      */
     private boolean isEditModeActive = false;
+    private boolean isSidebarHidden = true;
     /**
      * Indicates the number of that entry that should be immediately selected
      * after the treeview is updated
@@ -1035,6 +1036,32 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     }
 
 
+    /**
+     * Toggles the visibility of the notes-sidebar, i.e. either collapses or
+     * expands the splitpane on demand.
+     */
+    @Action
+    public void toggleNotesVisibility() {
+        isSidebarHidden = !isSidebarHidden;
+        if (isSidebarHidden) {
+            setSplitLocation(jSplitPaneDesktop2.getDividerLocation());
+            jSplitPaneDesktop2.setDividerLocation(1.0d);
+        }
+        else {
+            int pos = getSplitLocation();
+            if (-1==pos) pos =  mainframe.getWidth() - Constants.MIN_SIDEBAR_SIZE;
+            jSplitPaneDesktop2.setDividerLocation(pos);
+        }
+    }
+    private int savedDividerLocation = 0;
+    private void setSplitLocation(int pos) {
+        savedDividerLocation = pos;
+    }
+    private int getSplitLocation() {
+        return savedDividerLocation;
+    }
+    
+    
     @Action
     public void printContent() {
         javax.swing.JEditorPane tmpPane=new javax.swing.JEditorPane();
@@ -4006,6 +4033,8 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         viewFullScreenMenuItem = new javax.swing.JMenuItem();
         jSeparator26 = new javax.swing.JPopupMenu.Separator();
         showDesktopTreeEntryNumberMenuItem = new javax.swing.JCheckBoxMenuItem();
+        jSeparator30 = new javax.swing.JPopupMenu.Separator();
+        toggleNotesVisibility = new javax.swing.JMenuItem();
 
         jPopupMenuDesktop.setName("jPopupMenuDesktop"); // NOI18N
 
@@ -4374,7 +4403,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(jPanelLiveSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -4763,6 +4792,13 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         showDesktopTreeEntryNumberMenuItem.setName("showDesktopTreeEntryNumberMenuItem"); // NOI18N
         desktopMenuView.add(showDesktopTreeEntryNumberMenuItem);
 
+        jSeparator30.setName("jSeparator30"); // NOI18N
+        desktopMenuView.add(jSeparator30);
+
+        toggleNotesVisibility.setAction(actionMap.get("toggleNotesVisibility")); // NOI18N
+        toggleNotesVisibility.setName("toggleNotesVisibility"); // NOI18N
+        desktopMenuView.add(toggleNotesVisibility);
+
         jMenuBarDesktop.add(desktopMenuView);
 
         setJMenuBar(jMenuBarDesktop);
@@ -5133,6 +5169,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     private javax.swing.JSeparator jSeparator28;
     private javax.swing.JToolBar.Separator jSeparator29;
     private javax.swing.JToolBar.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator30;
     private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
@@ -5184,6 +5221,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     private javax.swing.JButton tb_paste;
     private javax.swing.JButton tb_refresh;
     private javax.swing.JButton tb_rename;
+    private javax.swing.JMenuItem toggleNotesVisibility;
     private javax.swing.JMenuItem updateViewMenuItem;
     private javax.swing.JMenuItem viewFullScreenMenuItem;
     // End of variables declaration//GEN-END:variables

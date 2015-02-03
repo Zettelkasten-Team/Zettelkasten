@@ -649,6 +649,19 @@
                 <Property name="name" type="java.lang.String" value="showDesktopTreeEntryNumberMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator30">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="jSeparator30" noResource="true"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="toggleNotesVisibility">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="de.danielluedecke.zettelkasten.DesktopFrame" id="toggleNotesVisibility" methodName="toggleNotesVisibility"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="toggleNotesVisibility" noResource="true"/>
+              </Properties>
+            </MenuItem>
           </SubComponents>
         </Menu>
       </SubComponents>

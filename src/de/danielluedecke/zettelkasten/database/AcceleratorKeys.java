@@ -1198,6 +1198,14 @@ public class AcceleratorKeys {
             acckey.setText("F5");
             acceleratorKeysDesktop.getRootElement().addContent(acckey);
         }
+        
+        // the accelerator for the "updateView" action
+        if (!findElement(DESKTOPKEYS,"toggleNotesVisibility")) {
+            acckey=new Element("key");
+            acckey.setAttribute("action", "toggleNotesVisibility");
+            acckey.setText("shift F11");
+            acceleratorKeysDesktop.getRootElement().addContent(acckey);
+        }
     }
 
     

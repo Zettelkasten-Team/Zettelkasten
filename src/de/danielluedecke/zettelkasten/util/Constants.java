@@ -458,6 +458,7 @@ public class Constants {
     public static final int FRAME_NEWENTRY = 3;
     public static final int FRAME_DESKTOP = 4;
     
+    public static final int MIN_SIDEBAR_SIZE = 250;
     
     /**
      * this is a usual search, that means the search results are added
