@@ -7,3 +7,10 @@
 /dist/
 /store/
 /build/classes/
+/target/
+
+# IDE Settings #
+nbproject/
+.classpath
+.settings/
+.project
