@@ -1,5 +1,7 @@
 package de.danielluedecke.zettelkasten.tasks.export;
 
+import static org.junit.Assert.assertFalse;
+
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -9,44 +11,32 @@ import javax.swing.JLabel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.jdesktop.application.Application;
-import org.jdesktop.application.SingleFrameApplication;
 import org.junit.Before;
 import org.junit.Test;
 
 import de.danielluedecke.zettelkasten.TestObjectFactory;
-import de.danielluedecke.zettelkasten.ZettelkastenView;
-import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
-import de.danielluedecke.zettelkasten.database.AutoKorrektur;
+import de.danielluedecke.zettelkasten.TestObjectFactory.ZKN3Settings;
 import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.database.StenoData;
-import de.danielluedecke.zettelkasten.database.Synonyms;
 import de.danielluedecke.zettelkasten.database.TasksData;
 
 public class TestExportToTexTask {
 
 	private ExportToTexTask exportToTexTask;
 	private Daten daten;
+	private ZKN3Settings settings;
 
 	@Before
 	public void initialize() throws Exception {
+		settings = TestObjectFactory.ZKN3Settings.ZKN3_TRICKY_MARKDOWN;
+		daten = TestObjectFactory.getDaten(settings);
+
 		JDialog parent = null;
 		Application app = org.jdesktop.application.Application
 				.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class);
 		JLabel label = new JLabel();
 		TasksData td = null;
-		AcceleratorKeys ak = new AcceleratorKeys();
-		Settings st = TestObjectFactory.ZKN3Settings.ZKN3_TRICKY_MARKDOWN.settings;
-		AutoKorrektur ac = null;
-		Synonyms sy = new Synonyms();
-		StenoData stn = null;
-		Daten d = new Daten(new ZettelkastenView(new SingleFrameApplication() {
-			@Override
-			protected void startup() {
-			}
-		}, st, ak, ac, sy, stn, td), null, null, null);
 		DesktopData dt = null;
 		File fp = null;
 		BibTex bto = null;
@@ -58,22 +48,54 @@ public class TestExportToTexTask {
 		boolean ihv = false;
 		boolean numberprefix = false;
 		boolean contenttable = false;
-		exportToTexTask = new ExportToTexTask(app, parent, label, td, d, dt,
-				st, bto, fp, ee, type, part, n, bibtex, ihv, numberprefix,
-				contenttable);
 
-		daten = TestObjectFactory
-				.getDaten(TestObjectFactory.ZKN3Settings.ZKN3_TRICKY_MARKDOWN);
+		exportToTexTask = new ExportToTexTask(app, parent, label, td, daten,
+				dt, settings.settings, bto, fp, ee, type, part, n, bibtex, ihv,
+				numberprefix, contenttable);
 	}
 
 	@Test
 	public void testBugMarkdownZitatWirdNichtKorrektNachLatexExportiert()
 			throws Exception {
-
 		String brokenExportString = daten.getZettelContent(1);
 
-		System.out.println(getConvertedTex(brokenExportString));
+		/*
+		 * It seems that the current implementation of
+		 * ExportToTexTask.convertedTex() does *not* convert any quotation tags
+		 * at all, neither in Markdown nor in UBB syntax:
+		 */
+		String convertedTex = getConvertedTex(brokenExportString);
+		System.out.println(convertedTex);
 
+		/*
+		 * After solving this issue, the following assertions should AFAIK not
+		 * fail:
+		 */
+		assertFalse("Converted string still contains quotation tags",
+				convertedTex.contains("[q]"));
+		assertFalse("Converted string still contains quotation tags",
+				convertedTex.contains("[/q]"));
+		assertFalse("Converted string still contains quotation tags",
+				convertedTex.contains(">"));
+	}
+
+	@Test
+	public void testMarkdownQuotationBecomesLaTeXRangle() throws Exception {
+		String inputString = daten.getZettelContent(1);
+
+		/*
+		 * It seems that convertSpecialChars() does not respect Markdown
+		 * quotations: ">" is escaped into "\rangle"
+		 */
+		String convertedTex = getConvertedTex(inputString);
+		System.out.println(convertedTex);
+
+		/*
+		 * After solving this issue, the following assertions should AFAIK not
+		 * fail:
+		 */
+		assertFalse("Quoted string is falsely introduced by \\rangle",
+				convertedTex.contains("\\rangle"));
 	}
 
 	/**

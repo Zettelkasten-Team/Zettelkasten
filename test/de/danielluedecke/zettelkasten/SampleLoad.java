@@ -16,13 +16,13 @@ public class SampleLoad {
 	@Before
 	public void initialize() throws Exception {
 		daten = TestObjectFactory
-				.getDaten(TestObjectFactory.ZKN3Settings.ZKN3_SAMPLE);
+				.getDaten(TestObjectFactory.ZKN3Settings.ZKN3_TRICKY_MARKDOWN);
 	}
 
 	@Test
 	public void testContentRetrieval() {
-		int zettelNumber = 42;		
-		Object content = daten.getZettelContent(zettelNumber);
+		int zettelNumber = 1;		
+		Object content = daten.getZettelContentAsHtml(zettelNumber);
 		assertFalse("Could not retrieve zettel content", content.toString()
 				.equals(""));
 		System.out.println("Content is " + content);

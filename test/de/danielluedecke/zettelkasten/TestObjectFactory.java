@@ -53,10 +53,12 @@ public class TestObjectFactory {
 	 * Abstracts sample files and settings
 	 */
 	public enum ZKN3Settings {
-		ZKN3_SAMPLE("zkn3_sample.zkn3", false), ZKN3_TRICKY_MARKDOWN(
+		ZKN3_SAMPLE("zkn3_sample.zkn3", false), ZKN3_TRICKY_NON_MARKDOWN(
+				"zkn3_tricky.zkn3", false), ZKN3_TRICKY_MARKDOWN(
 				"zkn3_tricky.zkn3", true);
 
 		public Settings settings;
+		public File file;
 
 		ZKN3Settings(String file, boolean markdownActivated) {
 			try {
@@ -66,8 +68,11 @@ public class TestObjectFactory {
 						TestObjectFactory.getInstance().synonyms,
 						TestObjectFactory.getInstance().stenoData);
 
-				settings.setFilePath(new File(TestObjectFactory.class
-						.getClassLoader().getResource(file).getPath()));
+				File fileObject = new File(TestObjectFactory.class
+						.getClassLoader().getResource(file).getPath());
+				settings.setFilePath(fileObject);
+				this.file = fileObject;
+				
 				settings.setMarkdownActivated(markdownActivated);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
