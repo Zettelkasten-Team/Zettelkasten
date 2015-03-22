@@ -462,8 +462,8 @@ public class CSearchDlg extends javax.swing.JDialog {
             // quotes are removed, since we don't need them...
             Matcher mat = Pattern.compile("(\"(.*?)\"|([^,]+)),?").matcher(st);
             // create a new list that will contain each found pattern (i.e. searchterm)
-            List<String> result = new ArrayList<String>();
-            while (mat.find()) result.add(mat.group(2) == null ? mat.group(3) : mat.group(2));
+            List<String> result = new ArrayList<>();
+            while (mat.find()) result.add(mat.group(2) == null ? mat.group(3).trim() : mat.group(2).trim());
             // and copy the list to our array...
             searchterms = result.toArray(new String[result.size()]);
         }

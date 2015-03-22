@@ -55,19 +55,24 @@ import org.jdesktop.application.Action;
  */
 public class CFindReplaceDialog extends javax.swing.JDialog {
 
-    private javax.swing.JTextArea textarea;
+    private final javax.swing.JTextArea textarea;
     private int findpos = -1;
-    private LinkedList<Integer[]> findselections = new LinkedList<Integer[]>();
+    private final LinkedList<Integer[]> findselections = new LinkedList<>();
     private static final int REPLACE_TEXT = 0;
     private static final int FIND_TEXT = 1;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CFindReplaceDialog.class);
 
-    /** Creates new form CFindReplaceDialog */
+    /** 
+     * Creates new form CFindReplaceDialog
+     * @param parent 
+     * @param ta 
+     * @param settingsObj 
+     */
     public CFindReplaceDialog(java.awt.Frame parent, javax.swing.JTextArea ta, Settings settingsObj) {
         super(parent);
         initComponents();
