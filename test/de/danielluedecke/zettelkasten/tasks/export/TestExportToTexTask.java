@@ -12,6 +12,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.jdesktop.application.Application;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.danielluedecke.zettelkasten.TestObjectFactory;
@@ -20,6 +21,8 @@ import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.DesktopData;
 import de.danielluedecke.zettelkasten.database.TasksData;
+import de.danielluedecke.zettelkasten.util.Constants;
+import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 
 public class TestExportToTexTask {
 
@@ -59,18 +62,30 @@ public class TestExportToTexTask {
 			throws Exception {
 		String brokenExportString = daten.getZettelContent(1);
 
+		// daten.get
+		System.out.println("String before tex convertion: "
+				+ brokenExportString);
 		/*
 		 * It seems that the current implementation of
 		 * ExportToTexTask.convertedTex() does *not* convert any quotation tags
 		 * at all, neither in Markdown nor in UBB syntax:
 		 */
 		String convertedTex = getConvertedTex(brokenExportString);
-		System.out.println(convertedTex);
+		System.out.println("String after getConvertedTex: " + convertedTex);
 
-		/*
-		 * After solving this issue, the following assertions should AFAIK not
-		 * fail:
-		 */
+		int exporttype = 13;
+		StringBuilder exportPage = new StringBuilder(
+				HtmlUbbUtil.convertUbbToTex(settings.settings, daten, new BibTex(null,
+						settings.settings), convertedTex,
+						settings.settings.getLatexExportFootnoteRef(),
+						settings.settings.getLatexExportCreateFormTags(),
+						Constants.EXP_TYPE_DESKTOP_TEX == exporttype,
+						settings.settings.getLatexExportRemoveNonStandardTags()));
+
+		String latexPage = exportPage.toString();
+		
+		System.out.println("exportPage after entire LaTex-Convertion: \n\n" + latexPage);
+		
 		assertFalse("Converted string still contains quotation tags",
 				convertedTex.contains("[q]"));
 		assertFalse("Converted string still contains quotation tags",
@@ -87,7 +102,7 @@ public class TestExportToTexTask {
 		 * It seems that convertSpecialChars() does not respect Markdown
 		 * quotations: ">" is escaped into "\rangle"
 		 */
-		
+
 		System.out.println("String before tex convertion: " + inputString);
 		String convertedTex = getConvertedTex(inputString);
 		System.out.println("String after tex convertion:  " + convertedTex);
