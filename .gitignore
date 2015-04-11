@@ -18,3 +18,6 @@ nbproject/
 
 # OS Meta Files #
 .DS_Store
+
+# ZKN backups #
+*.zkb3
