@@ -1019,7 +1019,13 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         dummy = dummy.replaceAll(Pattern.quote("↑"), Matcher.quoteReplacement("\\textuparrow"));
         dummy = dummy.replaceAll(Pattern.quote("↓"), Matcher.quoteReplacement("\\textdownarrow"));
         dummy = dummy.replaceAll(Pattern.quote("<"), Matcher.quoteReplacement("\\langle"));
-        dummy = dummy.replaceAll(Pattern.quote(">"), Matcher.quoteReplacement("\\rangle"));
+        
+        // XXX Hack: ">" should only be convered if Markdown is not enabled, otherwise, it will be
+        // taken as a quotation by subsequent components. (fixes bug reproduced by
+        // "testBugMarkdownZitatWirdNichtKorrektNachLatexExportiert")  
+        if (!settingsObj.getMarkdownActivated()) 
+        	dummy = dummy.replaceAll(Pattern.quote(">"), Matcher.quoteReplacement("\\rangle"));
+        
         dummy = dummy.replaceAll(Pattern.quote("§"), Matcher.quoteReplacement("\\textsection"));
         dummy = dummy.replaceAll(Pattern.quote("$"), Matcher.quoteReplacement("\\$"));
         dummy = dummy.replaceAll(Pattern.quote("€"), Matcher.quoteReplacement("\\texteuro"));
