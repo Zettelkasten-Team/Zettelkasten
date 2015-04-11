@@ -7,3 +7,17 @@
 /dist/
 /store/
 /build/classes/
+/target/
+
+# IDE Settings #
+nbproject/
+.classpath
+.settings/
+.project
+/bin/
+
+# OS Meta Files #
+.DS_Store
+
+# ZKN backups #
+*.zkb3

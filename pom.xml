@@ -1,0 +1,171 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>Zettelkasten</groupId>
+	<artifactId>Zettelkasten</artifactId>
+	<version>3.2.5</version>
+
+	<!-- Define a local repository for dependencies that are not available in 
+		public maven repositories, see http://stackoverflow.com/questions/2229757/maven-add-a-dependency-to-a-jar-by-relative-path/2230464#2230464 
+		Before using new jars as dependencies, they must be installed, e.g.: mvn 
+		deploy:deploy-file -Durl=file://local-repository/ -Dfile=lib/MacWidgets.jar 
+		-DgroupId=com.explodingpixels.macwidgets -DartifactId=macwidgets -Dpackaging=jar 
+		-Dversion=0.10.0 -->
+	<repositories>
+		<repository>
+			<id>my-local-repo</id>
+			<url>file://${basedir}/local-repository/</url>
+		</repository>
+	</repositories>
+
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
+		<resources>
+			<resource>
+				<directory>src</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source />
+					<target />
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>de.danielluedecke.zettelkasten.ZettelkastenApp</mainClass>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Ported from build.xml, inspired by https://github.com/todowiki/todowiki/blob/master/todowiki-core/pom.xml -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>run</id>
+						<phase>install</phase>
+						<configuration>
+							<target>
+								<taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask"
+									classpath="${basedir}/appbundler-1.0ea.jar" />
+
+								<mkdir dir="${basedir}/target/app" />
+								<bundleapp outputdirectory="${basedir}/target/app"
+									name="Zettelkasten" displayname="Zettelkasten"
+									identifier="de.danielluedecke.zettelkasten.ZettelkastenApp"
+									shortversion="${project.version}" icon="${basedir}/zkn3_2.icns"
+									applicationCategory="public.app-category.developer-tools"
+									mainclassname="de/danielluedecke/zettelkasten/ZettelkastenApp"
+									copyright="(c) 2001-2015 Daniel Lüdecke">
+									<classpath
+										file="${basedir}/target/${project.artifactId}-${project.version}.jar" />
+									<option value="-Dapple.laf.useScreenMenuBar=true" />
+								</bundleapp>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+		<slf4j.version>1.6.1</slf4j.version>
+	</properties>
+	<dependencies>
+
+		<dependency>
+			<groupId>com.jgoodies</groupId>
+			<artifactId>jgoodies-common</artifactId>
+			<version>1.7.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jgoodies</groupId>
+			<artifactId>jgoodies-forms</artifactId>
+			<version>1.7.2</version>
+		</dependency>
+		<dependency>
+			<groupId>au.com.bytecode</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom2</artifactId>
+			<version>2.0.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.seaglasslookandfeel</groupId>
+			<artifactId>seaglasslookandfeel</artifactId>
+			<version>0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jdesktop</groupId>
+			<artifactId>swing-worker</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.swinglabs</groupId>
+			<artifactId>swing-layout</artifactId>
+			<version>1.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jdesktop</groupId>
+			<artifactId>appframework</artifactId>
+			<version>1.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.explodingpixels.macwidgets</groupId>
+			<artifactId>macwidgets</artifactId>
+			<version>0.10.0</version>
+		</dependency>
+		<dependency>
+			<groupId>at.jta.winregistry</groupId>
+			<artifactId>winregistry</artifactId>
+			<version>4.5</version>
+		</dependency>
+		<dependency>
+			<groupId>bibtex</groupId>
+			<artifactId>javabib</artifactId>
+			<version>20040801</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.9</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>
