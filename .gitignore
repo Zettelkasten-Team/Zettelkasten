@@ -15,3 +15,6 @@ nbproject/
 .settings/
 .project
 /bin/
+
+# OS Meta Files #
+.DS_Store
