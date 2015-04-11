@@ -1999,6 +1999,9 @@ public class HtmlUbbUtil {
         // convert form-tags
         dummy = convertForms(settings, dataObj, dummy, Constants.EXP_TYPE_TEX, createFormTag, true);
         
+        // Convert [qm] ("inline quotes") to \enquote{} (fixes bug reproduced by "testBugMarkdownZitatWirdNichtKorrektNachLatexExportiert")
+        dummy = dummy.replaceAll("\\[qm\\](.*?)\\[/qm\\]", Matcher.quoteReplacement("\\enquote{")+"$1"+"}");
+        
         return dummy;
     }
 
