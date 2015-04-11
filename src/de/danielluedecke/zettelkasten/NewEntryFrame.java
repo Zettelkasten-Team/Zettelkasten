@@ -2682,14 +2682,16 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     @Action(enabledProperty = "authorSelected")
     public void insertFootnote() {
         // retrieve all selected authors
-        Object[] o = jListQuickInputAuthor.getSelectedValues();
+        List<Object> o = jListQuickInputAuthor.getSelectedValuesList();
         // if we have selections, go on
-        if (o.length>0) {
+        if (!o.isEmpty()) {
             // create stringbuilder for footnote-tags
             StringBuilder fn = new StringBuilder("");
-            for (Object o1 : o) {
+            // create list iterator
+            Iterator<Object> oink = o.iterator();
+            while (oink.hasNext()) {
                 // get each author string
-                String au = o1.toString();
+                String au = oink.next().toString();
                 // check whether author already exisrs in textfield
                 if (!checkForDoubleAuthors(au)) {
                     // if not, append author string
