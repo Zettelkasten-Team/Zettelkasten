@@ -87,8 +87,10 @@ public class TestExportToTexTask {
 		 * It seems that convertSpecialChars() does not respect Markdown
 		 * quotations: ">" is escaped into "\rangle"
 		 */
+		
+		System.out.println("String before tex convertion: " + inputString);
 		String convertedTex = getConvertedTex(inputString);
-		System.out.println(convertedTex);
+		System.out.println("String after tex convertion:  " + convertedTex);
 
 		/*
 		 * After solving this issue, the following assertions should AFAIK not
