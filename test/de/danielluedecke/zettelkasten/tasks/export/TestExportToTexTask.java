@@ -12,7 +12,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.jdesktop.application.Application;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import de.danielluedecke.zettelkasten.TestObjectFactory;
@@ -71,6 +70,11 @@ public class TestExportToTexTask {
 		 * at all, neither in Markdown nor in UBB syntax:
 		 */
 		String convertedTex = getConvertedTex(brokenExportString);
+
+		assertFalse(
+				"ConvertedTex string produced a \rangle from Markdown-quote '>'",
+				convertedTex.contains("\\rangle"));
+
 		System.out.println("String after getConvertedTex: " + convertedTex);
 
 		int exporttype = 13;
