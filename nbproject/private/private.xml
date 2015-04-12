@@ -120,18 +120,12 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/SearchResultsFrame.java</file>
-            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/ZettelkastenView.java</file>
             <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/README.md</file>
-            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/resources/licence.html</file>
-            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/NewEntryFrame.java</file>
             <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/util/Constants.java</file>
-            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/DesktopFrame.java</file>
-            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/database/Settings.java</file>
-            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/database/AcceleratorKeys.java</file>
-            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/CFindReplaceDialog.java</file>
-            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/CSearchDlg.java</file>
-            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/util/FileOperationsUtil.java</file>
+            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/ZettelkastenView.java</file>
+            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/tasks/export/ExportToTexTask.java</file>
+            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/test/de/danielluedecke/zettelkasten/SampleLoad.java</file>
+            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/test/de/danielluedecke/zettelkasten/tasks/export/TestExportToTexTask.java</file>
         </group>
     </open-files>
 </project-private>
