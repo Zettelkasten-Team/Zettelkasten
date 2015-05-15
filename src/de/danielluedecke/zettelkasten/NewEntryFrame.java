@@ -3082,12 +3082,22 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                 // select all content
                 ta.selectAll();
             }
+            // get selection range
+            int selstart = ta.getSelectionStart();
+            int selend = ta.getSelectionEnd();
+            // get textlength befor replacement
+            int length_before = text.length();
             // replace chars
             text = text.replace(old,replacewith);
+            // get textlength afterreplacement
+            int length_after = text.length();
             // set text back to field with focus
             ta.replaceSelection(text);
             // set the modified state
             setModified(true);
+            // set back selection
+            ta.setSelectionStart(selstart);
+            ta.setSelectionEnd(selend-(length_before-length_after));
         }
     }
 

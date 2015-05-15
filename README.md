@@ -16,6 +16,7 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 #### Behobene Fehler
 * Mehrere Suchbegriffe im Suchfenster, durch Kommata getrennt, werden jetzt von Leerzeichen bereinigt ([#27](https://github.com/sjPlot/Zettelkasten/issues/27)).
 * Markdown-Zitat werden jetzt korrekt nach LaTeX exportiert ([#31](https://github.com/sjPlot/Zettelkasten/issues/31)).
+* Doppelte Zeilenumbrüche entfernen bei Neueingabe wird jetzt nur auf Auswahl angewendet ([#16](https://github.com/sjPlot/Zettelkasten/issues/16)).
 
 ### Screenshots
 Aktuelle Screenshots [gibt es hier](http://zettelkasten.danielluedecke.de/gallery.php).
