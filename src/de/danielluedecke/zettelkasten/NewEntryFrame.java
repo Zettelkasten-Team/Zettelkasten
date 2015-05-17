@@ -2164,7 +2164,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      */
     private void surroundSelection(String opentag, String closetag) {
         // check whether tag is selected or not
-        if (null==jTextAreaEntry.getSelectedText()) {
+        if (null == jTextAreaEntry.getSelectedText()) {
             // get caret position
             int caret = jTextAreaEntry.getCaretPosition();
             // if we don't have any selection, just insert tags
@@ -2173,8 +2173,14 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             jTextAreaEntry.setCaretPosition(caret+opentag.length());
         }
         else {
-            // else surround selection with tags
-            jTextAreaEntry.replaceSelection(opentag+jTextAreaEntry.getSelectedText()+closetag);
+            // get selection offset
+            int sel_start = jTextAreaEntry.getSelectionStart();
+            int sel_end = jTextAreaEntry.getSelectionEnd();
+            // surround selection with tags
+            jTextAreaEntry.replaceSelection(opentag + jTextAreaEntry.getSelectedText() + closetag);
+            // set back selection
+            jTextAreaEntry.setSelectionStart(sel_start + opentag.length());
+            jTextAreaEntry.setSelectionEnd(sel_end + opentag.length());
         }
     }
     /**
