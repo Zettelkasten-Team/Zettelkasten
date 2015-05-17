@@ -2358,17 +2358,17 @@ public class Daten {
         // (into which the old author should be transformed)
         int newpos = getAuthorPosition(newau);
         // check whether both exist
-        if ((oldpos!=-1) && (newpos!=-1)) {
+        if ((oldpos != -1) && (newpos != -1)) {
             // now go through the whole dataset
-            for (int cnt=1; cnt<=getCount(ZKNCOUNT);cnt++) {
+            for (int cnt = 1; cnt <= getCount(ZKNCOUNT); cnt++) {
                 // check, which of each entry contains the old author
                 // now we have to add the new author-index-number,
                 // if it does not already exist. we don't need to delete the *old*
                 // index-number, because at the end we simply delete it with the
                 // "deleteAuthor()" method.
                 // if the new author doesn't exist, add it
-                if (existsInAuthors(oldau,cnt) && !existsInAuthors(newau,cnt)) {
-                    addAuthorToEntry(newau,cnt,1);
+                if (existsInAuthors(oldau, cnt) && !existsInAuthors(newau, cnt)) {
+                    addAuthorToEntry(newau, cnt, 1);
                 }
             }
             // finally, delete old author
@@ -2553,7 +2553,7 @@ public class Daten {
      */
     public int getAuthorPosition(String auth) {
         // check for valid value
-        if (null==auth || auth.trim().isEmpty()) {
+        if (null == auth || auth.trim().isEmpty()) {
             return -1;
         }
         // create a list of all author elements from the author xml file
@@ -2622,7 +2622,7 @@ public class Daten {
         // check whether author already exists
         int pos = getAuthorPosition(auth);
         // if author already exists, just increase counter
-        if (pos!=-1) {
+        if (pos != -1) {
             try {
                 // retrieve existing author
                 Element au = retrieveElement(authorFile, pos);
@@ -2663,7 +2663,10 @@ public class Daten {
                 catch (IndexOutOfBoundsException ex) {
                     auid = auth;
                 }                
-                updateAuthorTimestampAndID(au, freq, Tools.getTimeStampWithMilliseconds(), String.valueOf(emptypos)+auid+Tools.getTimeStampWithMilliseconds());
+                updateAuthorTimestampAndID(au, 
+                                           freq, 
+                                           Tools.getTimeStampWithMilliseconds(), 
+                                           String.valueOf(emptypos) + auid + Tools.getTimeStampWithMilliseconds());
                 // change list-up-to-date-state
                 setAuthorlistUpToDate(false);
                 // change modified state
@@ -3203,16 +3206,16 @@ public class Daten {
      */
     public boolean changeEntry(String title, String content, String[] authors, String[] keywords, String remarks, String[] links, String timestamp, int entrynumber) {
         // create a new zettel-element
-        Element zettel = retrieveElement(zknFile,entrynumber);
+        Element zettel = retrieveElement(zknFile, entrynumber);
         // create dummy element
         Element child;
         // if no entry exists, quit
-        if (null==zettel) return false;
+        if (null == zettel) return false;
         // first of all, we remove all authors and keywords from the existing entry
         // we do this to update the frequency of the authors and keywords, so when adding
         // authors/keywords to the data-file, which already belonged to the entry, we would
         // increase the frequency although those authors/keywords are not new
-        changeFrequencies(entrynumber,-1);
+        changeFrequencies(entrynumber, -1);
         // then, create form-images
         createFormImagesFromContent(content);
         try {
@@ -3222,7 +3225,7 @@ public class Daten {
             // retrieve the element
             child = zettel.getChild(ELEMENT_TITLE);
             // if child-element doesn't exist, add it to the zettel
-            if (null==child) {
+            if (null == child) {
                 // create new child element
                 child = new Element(ELEMENT_TITLE);
                 // and add it
@@ -3236,7 +3239,7 @@ public class Daten {
             // retrieve the element
             child = zettel.getChild(ELEMENT_CONTENT);
             // if child-element doesn't exist, add it to the zettel
-            if (null==child) {
+            if (null == child) {
                 // create new child element
                 child = new Element(ELEMENT_CONTENT);
                 // and add it
@@ -3250,7 +3253,7 @@ public class Daten {
             // retrieve the element
             child = zettel.getChild(ELEMENT_AUTHOR);
             // if child-element doesn't exist, add it to the zettel
-            if (null==child) {
+            if (null == child) {
                 // create new child element
                 child = new Element(ELEMENT_AUTHOR);
                 // and add it
@@ -3260,7 +3263,7 @@ public class Daten {
             // of the converted authors
             StringBuilder newau = new StringBuilder("");
             // check whether we have authors at all
-            if ((authors!=null) && (authors.length>0)) {
+            if ((authors != null) && (authors.length > 0)) {
                 // iterate the array and get the index number of each author string
                 // if a keauthoryword does not already exist, add it to the authorfile
                 for (String aut : authors) {
@@ -3271,7 +3274,7 @@ public class Daten {
                         // add it to the data file
                         // and store the position of the new added author in the
                         // variable authorPos
-                        int authorPos = addAuthor(aut,1);
+                        int authorPos = addAuthor(aut, 1);
                         // append the index number in the string buffer
                         newau.append(String.valueOf(authorPos));
                         // separator for the the index numbers, since more authors
@@ -3281,7 +3284,7 @@ public class Daten {
                 }
                 // shorten the stringbuffer by one char, since we have a
                 // superfluous comma char (see for-loop above)
-                if (newau.length()>0) newau.setLength(newau.length()-1);
+                if (newau.length() > 0) newau.setLength(newau.length()-1);
             }
             // store author index numbers
             child.setText(newau.toString());

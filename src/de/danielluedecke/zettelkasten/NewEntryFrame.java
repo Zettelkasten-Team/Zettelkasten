@@ -3644,12 +3644,12 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // init keyword-stringarray
         String[] keywords = new String[keywordListModel.getSize()];
         // iterate keywordarray
-        for (cnt=0; cnt<keywords.length;cnt++) keywords[cnt]=keywordListModel.get(cnt).toString();
+        for (cnt = 0; cnt < keywords.length; cnt++) keywords[cnt] = keywordListModel.get(cnt).toString();
         // ask the user if he wants to replace possible keywords, which appear as synonyms, but *not*
         // as index-word, with the related index-words...
         keywords = Tools.replaceSynonymsWithKeywords(synonymsObj, keywords);
         // check for cancel-action
-        if (null==keywords) {
+        if (null == keywords) {
             return false;
         }
         // get system line separator
@@ -3671,11 +3671,11 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // now we have to "clean" the lists. since each bullet point starts for optical reasons
         // in a new line, but in HTML-conversion this would mean additional <br>-tags within and
         // unorder list (<ul> and <li>), we remove all [br]-tags between the list tags.
-        content = content.replace(Constants.FORMAT_NUMBEREDLIST_OPEN+Constants.FORMAT_NEWLINE,Constants.FORMAT_NUMBEREDLIST_OPEN);
-        content = content.replace(Constants.FORMAT_NUMBEREDLIST_CLOSE+Constants.FORMAT_NEWLINE,Constants.FORMAT_NUMBEREDLIST_CLOSE);
-        content = content.replace(Constants.FORMAT_LIST_OPEN+Constants.FORMAT_NEWLINE,Constants.FORMAT_LIST_OPEN);
-        content = content.replace(Constants.FORMAT_LIST_CLOSE+Constants.FORMAT_NEWLINE,Constants.FORMAT_LIST_CLOSE);
-        content = content.replace(Constants.FORMAT_LISTITEM_CLOSE+Constants.FORMAT_NEWLINE,Constants.FORMAT_LISTITEM_CLOSE);
+        content = content.replace(Constants.FORMAT_NUMBEREDLIST_OPEN + Constants.FORMAT_NEWLINE, Constants.FORMAT_NUMBEREDLIST_OPEN);
+        content = content.replace(Constants.FORMAT_NUMBEREDLIST_CLOSE + Constants.FORMAT_NEWLINE, Constants.FORMAT_NUMBEREDLIST_CLOSE);
+        content = content.replace(Constants.FORMAT_LIST_OPEN + Constants.FORMAT_NEWLINE, Constants.FORMAT_LIST_OPEN);
+        content = content.replace(Constants.FORMAT_LIST_CLOSE + Constants.FORMAT_NEWLINE, Constants.FORMAT_LIST_CLOSE);
+        content = content.replace(Constants.FORMAT_LISTITEM_CLOSE + Constants.FORMAT_NEWLINE, Constants.FORMAT_LISTITEM_CLOSE);
         // check whether all chars are legal JDOM-chars. when copied text from clipboard,
         // it might be that the text contains illegal JDOM chars...
         content = Tools.isValidJDOMChars(content);
@@ -3706,16 +3706,19 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // init links-stringarray
         String[] links = new String[linkListModel.getSize()];
         // iterate linkarray
-        for (cnt=0; cnt<links.length;cnt++) links[cnt]=linkListModel.get(cnt).toString();
+        for (cnt = 0; cnt < links.length; cnt++) links[cnt] = linkListModel.get(cnt).toString();
         
         if (isEditMode()) {
             // change entry and fetch result
-            if (!dataObj.changeEntry(title,content,authors,keywords,remarks,links,Tools.getTimeStamp(),entryNumber)) {
-                JOptionPane.showMessageDialog(this,resourceMap.getString("errMsgChangeEntry"),resourceMap.getString("errMsgChangeEntryTitle"),JOptionPane.PLAIN_MESSAGE);
+            if (!dataObj.changeEntry(title, content, authors, keywords, remarks, links, Tools.getTimeStamp(), entryNumber)) {
+                JOptionPane.showMessageDialog(this,
+                                              resourceMap.getString("errMsgChangeEntry"), 
+                                              resourceMap.getString("errMsgChangeEntryTitle"),
+                                              JOptionPane.PLAIN_MESSAGE);
             }
             else {
                 // tell about success
-                Constants.zknlogger.log(Level.INFO,"Entry's changes applied.");
+                Constants.zknlogger.log(Level.INFO, "Entry's changes applied.");
             }
         }
         else {
@@ -3727,18 +3730,34 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // the zettel element.
             if (isDeleted) {
                 // add entry, and fetch result
-                int result = dataObj.addEntry(title,content,authors,keywords,remarks,links,Tools.getTimeStamp(),-1,true,entryNumber,insertAfterEntry);
+                int result = dataObj.addEntry(title,
+                                              content,
+                                              authors,
+                                              keywords,
+                                              remarks,
+                                              links,
+                                              Tools.getTimeStamp(),
+                                              -1,
+                                              true,
+                                              entryNumber,
+                                              insertAfterEntry);
                 // check whether result was an error when adding a follower-entry (trailing entry(
                 if (result==Daten.ADD_LUHMANNENTRY_ERR) {
-                    JOptionPane.showMessageDialog(this,resourceMap.getString("errMsgInsertEntry"),resourceMap.getString("errMsgInsertEntryTitle"),JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(this,
+                                                  resourceMap.getString("errMsgInsertEntry"),
+                                                  resourceMap.getString("errMsgInsertEntryTitle"),
+                                                  JOptionPane.PLAIN_MESSAGE);
                 }
                 // else check whether an error occured when adding a new entry
                 else if (result==Daten.ADD_ENTRY_ERR) {
-                    JOptionPane.showMessageDialog(this,resourceMap.getString("errMsgAddEntry"),resourceMap.getString("errMsgAddEntryTitle"),JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(this,
+                                                  resourceMap.getString("errMsgAddEntry"),
+                                                  resourceMap.getString("errMsgAddEntryTitle"),
+                                                  JOptionPane.PLAIN_MESSAGE);
                 }
                 else {
                     // tell about success
-                    Constants.zknlogger.log(Level.INFO,"New entry saved.");
+                    Constants.zknlogger.log(Level.INFO, "New entry saved.");
                 }
             }
             // here we have the user adding a new entry at the end of the XML-document.
@@ -3750,22 +3769,36 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             else {
                 // if we don't have to insert an entry here, indicate that by setting the
                 // entryNumber of the current entry to -1;
-                if (!luhmann) entryNumber=-1;
+                if (!luhmann) entryNumber = -1;
                 // else, we pass the number of the current entry just before the user clicked "insertEntry"
                 // to the addEntry-method, indicating that the index-number of the added entry should be
                 // included in the entry "entryNumber" luhmann-tag (that indicates follower- and sub-entrties).
-                int result = dataObj.addEntry(title,content,authors,keywords,remarks,links,Tools.getTimeStamp(),entryNumber,insertAfterEntry);
+                int result = dataObj.addEntry(title,
+                                              content,
+                                              authors,
+                                              keywords,
+                                              remarks,
+                                              links,
+                                              Tools.getTimeStamp(),
+                                              entryNumber,
+                                              insertAfterEntry);
                 // check whether result was an error when adding a follower-entry (trailing entry(
                 if (result==Daten.ADD_LUHMANNENTRY_ERR) {
-                    JOptionPane.showMessageDialog(this,resourceMap.getString("errMsgInsertEntry"),resourceMap.getString("errMsgInsertEntryTitle"),JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(this,
+                                                  resourceMap.getString("errMsgInsertEntry"),
+                                                  resourceMap.getString("errMsgInsertEntryTitle"),
+                                                  JOptionPane.PLAIN_MESSAGE);
                 }
                 // else check whether an error occured when adding a new entry
                 else if (result==Daten.ADD_ENTRY_ERR) {
-                    JOptionPane.showMessageDialog(this,resourceMap.getString("errMsgAddEntry"),resourceMap.getString("errMsgAddEntryTitle"),JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(this,
+                                                  resourceMap.getString("errMsgAddEntry"),
+                                                  resourceMap.getString("errMsgAddEntryTitle"),
+                                                  JOptionPane.PLAIN_MESSAGE);
                 }
                 else {
                     // tell about success
-                    Constants.zknlogger.log(Level.INFO,"New entry saved.");
+                    Constants.zknlogger.log(Level.INFO, "New entry saved.");
                 }
             }
         }
@@ -4030,7 +4063,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // if we have selections, go on
         if (!o.isEmpty()) {
             // go through all selected values
-            for (int cnt=o.size()-1; cnt>=0; cnt--) {
+            for (int cnt = o.size() - 1; cnt >= 0; cnt--) {
                 // get each keyword string
                 String kw = o.get(cnt).toString();
                 // check whether keyword already exisrs in the jlist
@@ -4085,9 +4118,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     @Action(enabledProperty = "authorSelected")
     public void addQuickAuthorToList() {
         // retrieve all selected authors
-        Object[] o = jListQuickInputAuthor.getSelectedValues();
+        List<Object> o = jListQuickInputAuthor.getSelectedValuesList();
         // if we have selections, go on
-        if (o.length>0) {
+        if (!o.isEmpty()) {
             for (Object o1 : o) {
                 // get each author string
                 String au = o1.toString();

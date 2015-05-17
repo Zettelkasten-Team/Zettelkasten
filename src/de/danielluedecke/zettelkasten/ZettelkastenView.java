@@ -4780,13 +4780,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     @Action(enabledProperty = "tableEntriesSelected")
     public void editAuthor() {
         // get selected authors
-        String[] selectedauthors = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors,0);
+        String[] selectedauthors = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors, 0);
         // if now row is selected, leave...
-        if (null==selectedauthors) return;
+        if (null == selectedauthors) {
+            return;
+        }
         // get selected rows. we need this numbers for setting back the new values, see below
         int[] selectedrows = jTableAuthors.getSelectedRows();
         // go through all selected keywords
-        for (int cnt=selectedauthors.length-1; cnt>=0; cnt--) {
+        for (int cnt=selectedauthors.length - 1; cnt >= 0; cnt--) {
             // save the old value
             String oldAu = selectedauthors[cnt];
             // save old bibkey value
@@ -4794,7 +4796,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // open an input-dialog, setting the selected value as default-value
             if (null == biggerEditDlg) {
                 // create a new dialog with the bigger edit-field, passing some initial values
-                biggerEditDlg = new CBiggerEditField(getFrame(),settings,getResourceMap().getString("editAuthorTitle"), oldAu, oldbibkey, Constants.EDIT_AUTHOR);
+                biggerEditDlg = new CBiggerEditField(getFrame(),
+                        settings,
+                        getResourceMap().getString("editAuthorTitle"),
+                        oldAu,
+                        oldbibkey,
+                        Constants.EDIT_AUTHOR);
                 // center window
                 biggerEditDlg.setLocationRelativeTo(getFrame());
             }
@@ -4805,11 +4812,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             String newBibKey = biggerEditDlg.getNewBibKey();
             // delete the input-dialog
             biggerEditDlg.dispose();
-            biggerEditDlg=null;
-            // if we have a valid return-value that does not equal the old value... (so changed were made)
-            if ((newAu!=null) && (newAu.length()>0) && (!oldAu.equalsIgnoreCase(newAu))) {
-                // check whether the value already exists
-                if (-1==data.getAuthorPosition(newAu)) {
+            biggerEditDlg = null;
+            // if we have a valid return-value that does not equal the old value... (so changes were made)
+            if (newAu != null && newAu.length() > 0) {
+                // check whether the value already exists, or if we have a case-change
+                if (-1 == data.getAuthorPosition(newAu) || oldAu.equalsIgnoreCase(newAu)) {
                     // change the existing value in the table
                     jTableAuthors.setValueAt(newAu, selectedrows[cnt], 0);
                     // get the index-number of the old author-string
@@ -4819,7 +4826,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     // if we have a filtered list, remove the element also from
                     // our refresh-list, so we don't show this item again when the list
                     // is being refreshed
-                    if (linkedauthorlist!=null) linkedauthorlist = updateLinkedList(linkedauthorlist,oldAu,newAu,0);
+                    if (linkedauthorlist != null) {
+                        linkedauthorlist = updateLinkedList(linkedauthorlist, oldAu, newAu, 0);
+                    }
                 }
                 else {
                     // the new name for author already exists, so we can offer to merge
@@ -4827,14 +4836,27 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     // old author is replaced by the existing one, when we merge them.
 
                     // create a JOptionPane with yes/no/cancel options
-                    int option = JOptionPane.showConfirmDialog(getFrame(), getResourceMap().getString("mergeAuthorMsg"), getResourceMap().getString("mergeAuthorTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    int option = JOptionPane.showConfirmDialog(getFrame(), 
+                            getResourceMap().getString("mergeAuthorMsg"), 
+                            getResourceMap().getString("mergeAuthorTitle"), 
+                            JOptionPane.YES_NO_OPTION, 
+                            JOptionPane.PLAIN_MESSAGE);
                     // if no merge is requested, leave method
                     if (JOptionPane.NO_OPTION == option ) return;
                     // merge the authors by opening a dialog with a background task
                     // if dialog window isn't already created, do this now
                     if (null == taskDlg) {
                         // get parent und init window
-                        taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_MERGEAUTHORS, data, taskinfo, oldAu, newAu, newBibKey, jTableAuthors, selectedrows[cnt], linkedauthorlist);
+                        taskDlg = new TaskProgressDialog(getFrame(), 
+                                TaskProgressDialog.TASK_MERGEAUTHORS, 
+                                data, 
+                                taskinfo, 
+                                oldAu, 
+                                newAu, 
+                                newBibKey, 
+                                jTableAuthors, 
+                                selectedrows[cnt], 
+                                linkedauthorlist);
                         // center window
                         taskDlg.setLocationRelativeTo(getFrame());
                     }
@@ -4845,11 +4867,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     // update the merged linked list
                     linkedauthorlist = taskinfo.getLinkedValues();
                     // show amount of entries
-                    statusMsgLabel.setText("("+String.valueOf(jTableAuthors.getRowCount())+" "+getResourceMap().getString("statusTextAuthors")+")");
+                    statusMsgLabel.setText("(" + String.valueOf(jTableAuthors.getRowCount()) + " " + getResourceMap().getString("statusTextAuthors") + ")");
                     // try to motivate garbage collector
                     System.gc();
                 }
-                // finally, update displayx
+                // finally, update display
                 updateDisplay();
                 // update authortext in textbox
                 showAuthorText();
