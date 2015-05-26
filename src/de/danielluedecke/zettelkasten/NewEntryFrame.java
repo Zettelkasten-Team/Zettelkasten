@@ -2410,6 +2410,19 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
 
     /**
      * Retrieves the text selection from the maintextfield and sourrounds
+     * it with the related format-tags. In this case we have a 
+     * inline-code blocks
+     */
+    @Action(enabledProperty = "focus")
+    public void formatInlineCode() {
+        // since we have multiple usage of the folliwing code, we simply
+        // put it in an own method
+        surroundSelection(Constants.FORMAT_MD_CODE_OPEN, Constants.FORMAT_MD_CODE_CLOSE);
+    }
+
+
+    /**
+     * Retrieves the text selection from the maintextfield and sourrounds
      * it with the related format-tags. In this case we have a quotation or citation.
      */
     @Action(enabledProperty = "segmentPossible")
@@ -2418,8 +2431,8 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // put it in an own method
         // get index of first selected item
         Object o = jListKeywords.getSelectedValue();
-        if (o!=null) {
-            surroundSelection("[s "+o.toString()+"]","[/s]");
+        if (o != null) {
+            surroundSelection("[s " + o.toString() + "]", "[/s]");
         }
     }
 
@@ -4806,6 +4819,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jMenuItemColor = new javax.swing.JMenuItem();
         jMenuItemHighlight = new javax.swing.JMenuItem();
         jMenuItemCode = new javax.swing.JMenuItem();
+        jMenuItemInlineCode = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JSeparator();
         jMenuItemAlignLeft = new javax.swing.JMenuItem();
         jMenuItemCenter = new javax.swing.JMenuItem();
@@ -5953,8 +5967,13 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         newEntryFormatMenu.add(jMenuItemHighlight);
 
         jMenuItemCode.setAction(actionMap.get("formatCode")); // NOI18N
+        jMenuItemCode.setToolTipText(resourceMap.getString("jMenuItemCode.toolTipText")); // NOI18N
         jMenuItemCode.setName("jMenuItemCode"); // NOI18N
         newEntryFormatMenu.add(jMenuItemCode);
+
+        jMenuItemInlineCode.setAction(actionMap.get("formatInlineCode")); // NOI18N
+        jMenuItemInlineCode.setName("jMenuItemInlineCode"); // NOI18N
+        newEntryFormatMenu.add(jMenuItemInlineCode);
 
         jSeparator4.setName("jSeparator4"); // NOI18N
         newEntryFormatMenu.add(jSeparator4);
@@ -6098,6 +6117,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     private javax.swing.JMenuItem jMenuItemHeading1;
     private javax.swing.JMenuItem jMenuItemHeading2;
     private javax.swing.JMenuItem jMenuItemHighlight;
+    private javax.swing.JMenuItem jMenuItemInlineCode;
     private javax.swing.JMenuItem jMenuItemInsertAttachment;
     private javax.swing.JMenuItem jMenuItemInsertFootnote;
     private javax.swing.JMenuItem jMenuItemInsertForm;

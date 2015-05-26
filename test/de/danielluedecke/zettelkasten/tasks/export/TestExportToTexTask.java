@@ -78,18 +78,17 @@ public class TestExportToTexTask {
 		System.out.println("String after getConvertedTex: " + convertedTex);
 
 		int exporttype = 13;
-		StringBuilder exportPage = new StringBuilder(
-				HtmlUbbUtil
-						.convertUbbToTex(settings.settings, daten, new BibTex(
-								null, settings.settings), convertedTex,
-								settings.settings.getLatexExportFootnoteRef(),
-								settings.settings
-										.getLatexExportCreateFormTags(),
-								Constants.EXP_TYPE_DESKTOP_TEX == exporttype,
-								settings.settings
-										.getLatexExportRemoveNonStandardTags()));
+		String exportPage = HtmlUbbUtil
+                        .convertUbbToTex(settings.settings, daten, new BibTex(
+                                null, settings.settings), convertedTex,
+                                settings.settings.getLatexExportFootnoteRef(),
+                                settings.settings
+                                        .getLatexExportCreateFormTags(),
+                                Constants.EXP_TYPE_DESKTOP_TEX == exporttype,
+                                settings.settings
+                                        .getLatexExportRemoveNonStandardTags());
 
-		String latexPage = exportPage.toString();
+		String latexPage = exportPage;
 
 		System.out.println("exportPage after entire LaTex-Convertion: \n\n"
 				+ latexPage);

@@ -30,7 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 package de.danielluedecke.zettelkasten.tasks.importtasks;
 
 import de.danielluedecke.zettelkasten.database.Bookmarks;
@@ -60,9 +59,10 @@ import org.jdom2.input.SAXBuilder;
  * @author Luedeke
  */
 public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
+
     /**
-     * Reference to the Daten object, which contains the XML data of the Zettelkasten.
-     * will be passed as parameter in the constructor, see below
+     * Reference to the Daten object, which contains the XML data of the Zettelkasten. will be
+     * passed as parameter in the constructor, see below
      */
     private final Daten dataObj;
     /**
@@ -70,27 +70,17 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
      */
     private final TasksData taskinfo;
     /**
-     * Reference to the Bookmarks object, which contains the XML data of the bookmarks.
-     * will be passed as parameter in the constructor, see below
+     * Reference to the Bookmarks object, which contains the XML data of the bookmarks. will be
+     * passed as parameter in the constructor, see below
      */
     private final Bookmarks bookmarksObj;
-    /**
-     * Reference to the DesktopData object, which contains the XML data of the desktop.
-     * will be passed as parameter in the constructor, see below
-     */
-    private final DesktopData desktopObj;
-    /**
-     * SearchRequests object, which contains the XML data of the searchrequests and -result
-     * that are related with this data file
-     */
-    private final SearchRequests searchrequestsObj;
     /**
      * file path to import file
      */
     private final File filepath;
     /**
-     * A default timestamp for importing old datafiles. Sometimes entries of old data files may
-     * not contain timestamps. so we can insert a default value here...
+     * A default timestamp for importing old datafiles. Sometimes entries of old data files may not
+     * contain timestamps. so we can insert a default value here...
      */
     private String defaulttimestamp;
     /**
@@ -103,12 +93,12 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private final org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(ImportTask.class);
+    private final org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(ImportTask.class);
 
     /**
-     * 
+     *
      * @param app
      * @param parent
      * @param label
@@ -118,7 +108,7 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
      * @param dt
      * @param sr
      * @param fp
-     * @param dts 
+     * @param dts
      */
     public ImportFromZkx(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label,
             TasksData td, Daten d, Bookmarks bm, DesktopData dt, SearchRequests sr,
@@ -128,22 +118,22 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
         dataObj = d;
         taskinfo = td;
         bookmarksObj = bm;
-        desktopObj = dt;
-        searchrequestsObj = sr;
         parentDialog = parent;
         msgLabel = label;
 
         filepath = fp;
         defaulttimestamp = dts;
 
-        if (null==defaulttimestamp) {
+        if (null == defaulttimestamp) {
             defaulttimestamp = Tools.getTimeStamp();
         }
         taskinfo.setImportOk(true);
         // set default import message
         msgLabel.setText(resourceMap.getString("importDlgMsgImport"));
     }
-    @Override protected Object doInBackground() {
+
+    @Override
+    protected Object doInBackground() {
         // what we do here is importing new zettelkasten-data (.zkn3).
         // in the beginning, we simply load the data-file. but when appending
         // it to the existing data, we need to convert the author- and keyword-
@@ -161,7 +151,7 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
         // create dummy-documents, where the imported data is stored.
         Document zkn3Doc = new Document(new Element("zettelkasten"));
         Document author3Doc = new Document(new Element("authors"));
-        Document keyword3Doc  = new Document(new Element(Daten.ELEMENT_KEYWORD));
+        Document keyword3Doc = new Document(new Element(Daten.ELEMENT_KEYWORD));
         Document bookmark3Doc = new Document(new Element("bookmarks"));
         Document search3Doc = new Document(new Element("searches"));
         Document desktop3Doc = new Document(new Element("desktops"));
@@ -172,12 +162,12 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
             // re-open the ZIP-file each time we want to retrieve an XML-file from it
             // this is necessary, because we want tot retrieve the zipped xml-files
             // *without* temporarily saving them to harddisk
-            for (int cnt=0; cnt<dataObj.getFilesToLoadCount(); cnt++) {
+            for (int cnt = 0; cnt < dataObj.getFilesToLoadCount(); cnt++) {
                 // open the zip-file
                 try (ZipInputStream zip = new ZipInputStream(new FileInputStream(filepath))) {
                     ZipEntry zentry;
                     // now iterate the zip-file, searching for the requested file in it
-                    while ((zentry=zip.getNextEntry())!=null) {
+                    while ((zentry = zip.getNextEntry()) != null) {
                         String entryname = zentry.getName();
                         // if the found file matches the requested one, start the SAXBuilder
                         if (entryname.equals(dataObj.getFileToLoad(cnt))) {
@@ -211,9 +201,8 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
                                     desktopModifiedEntries3Doc = doc;
                                 }
                                 break;
-                            }
-                            catch (JDOMException e) {
-                                Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+                            } catch (JDOMException e) {
+                                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                             }
                         }
                     }
@@ -224,10 +213,9 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
             // store fileformat-information
             String importedFileFormat = "";
             // check whether it's null or not
-            if (null==ver_el) {
+            if (null == ver_el) {
                 taskinfo.setImportOk(false);
-            }
-            else {
+            } else {
                 // get data-version of imported file
                 importedFileFormat = ver_el.getAttributeValue("id");
                 float lv = Float.parseFloat(importedFileFormat);
@@ -235,14 +223,19 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
                 // float cv = Float.parseFloat(currentFileFormat);
                 float cv = Float.parseFloat(Daten.backwardCompatibleVersion);
                 // check whether the current data-version is newer than the loaded one
-                taskinfo.setImportOk(lv>=cv);
+                taskinfo.setImportOk(lv >= cv);
             }
             // if we have not the right file-format, tell this the user...
             if (!taskinfo.isImportOk()) {
                 // log error-message
-                Constants.zknlogger.log(Level.WARNING, "Failed when importing Zettelkasten-data. Import-Fileversion: {0} Requested Fileversion: {1}", new Object[]{importedFileFormat, Daten.backwardCompatibleVersion});
+                Constants.zknlogger.log(Level.WARNING,
+                        "Failed when importing Zettelkasten-data. Import-Fileversion: {0} Requested Fileversion: {1}",
+                        new Object[]{importedFileFormat, Daten.backwardCompatibleVersion});
                 // display error message box
-                JOptionPane.showMessageDialog(null,resourceMap.getString("importDlgErrWrongFileFormat",Daten.backwardCompatibleVersion,importedFileFormat),resourceMap.getString("importDglErrTitle"),JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(null,
+                        resourceMap.getString("importDlgErrWrongFileFormat", Daten.backwardCompatibleVersion, importedFileFormat),
+                        resourceMap.getString("importDglErrTitle"),
+                        JOptionPane.PLAIN_MESSAGE);
                 // leave thread
                 return null;
             }
@@ -253,7 +246,7 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
             // get the length of the data
             final int len = zkn3Doc.getRootElement().getContentSize();
             // reset the progressbar
-            setProgress(0,0,len);
+            setProgress(0, 0, len);
             msgLabel.setText(resourceMap.getString("importDlgMsgEdit"));
             //
             // at first, add the description of the new importet zettelkasten
@@ -261,7 +254,7 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
             // get the child element
             Element el = meta3Doc.getRootElement().getChild(Daten.ELEMEMT_DESCRIPTION);
             // if we have any element, add description
-            if (el!=null) {
+            if (el != null) {
                 dataObj.addZknDescription(el.getText());
             }
             //
@@ -271,9 +264,9 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
             // go through all entries and prepare them and add them to the
             // main data file. especially the new author- and keyword-index-numbers
             // have to be prepared
-            for (int cnt=0; cnt<len; cnt++) {
+            for (int cnt = 0; cnt < len; cnt++) {
                 // get each child
-                Element z = (Element)zkn3Doc.getRootElement().getContent(cnt);
+                Element z = (Element) zkn3Doc.getRootElement().getContent(cnt);
                 // we only need to convert the author- and keyword-index-numbers.
                 // first we start with the author-index-numbers...
                 // if the author-element is not empty...
@@ -295,15 +288,15 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
                             // add author to the data file
                             // and store the position of the new added author in the
                             // variable authorPos
-                            int authorPos = dataObj.addAuthor(authorstring,1);
+                            int authorPos = dataObj.addAuthor(authorstring, 1);
                             // store author position as string value
                             sb.append(String.valueOf(authorPos));
                             sb.append(",");
                         }
                     }
                     // truncate last comma
-                    if (sb.length()>1) {
-                        sb.setLength(sb.length()-1);
+                    if (sb.length() > 1) {
+                        sb.setLength(sb.length() - 1);
                     }
                     // set new author-index-numbers
                     z.getChild(Daten.ELEMENT_AUTHOR).setText(sb.toString());
@@ -329,21 +322,21 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
                             // add it to the data file
                             // and store the position of the new added keyword in the
                             // variable keywordPos
-                            int keywordPos = dataObj.addKeyword(keywordstring,1);
+                            int keywordPos = dataObj.addKeyword(keywordstring, 1);
                             // store author position as string value
                             sb.append(String.valueOf(keywordPos));
                             sb.append(",");
                         }
                     }
                     // truncate last comma
-                    if (sb.length()>1) {
-                        sb.setLength(sb.length()-1);
+                    if (sb.length() > 1) {
+                        sb.setLength(sb.length() - 1);
                     }
                     // set new keyword-index-numbers
                     z.getChild(Daten.ELEMENT_KEYWORD).setText(sb.toString());
                 }
                 // update progressbar
-                setProgress(cnt,0,len);
+                setProgress(cnt, 0, len);
             }
             // now that all entries are converted, append the data to the existing file
             dataObj.appendZknData(zkn3Doc);
@@ -351,14 +344,14 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
             // TODO append search-data                        
             // append bookmarks
             bookmarksObj.appendBookmarks(dataObj, bookmark3Doc);
-        }
-        catch (IOException e) {
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+        } catch (IOException e) {
+            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
         }
         return null;  // return your result
     }
 
-    @Override protected void succeeded(Object result) {
+    @Override
+    protected void succeeded(Object result) {
         // Runs on the EDT.  Update the GUI based on
         // the result computed by doInBackground().
 
@@ -377,9 +370,10 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
         parentDialog.setVisible(false);
         parentDialog.dispose();
     }
+
     /**
-     * 
-     * @param zdoc 
+     *
+     * @param zdoc
      */
     private void removeDoubleEntries(Document zdoc) {
         // set new import message, telling that data conversion is proceeded
@@ -387,18 +381,18 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
         // create a list of all elements from the given xml file
         List<?> elementList = zdoc.getRootElement().getContent();
         // reset the progressbar
-        setProgress(0,0,elementList.size());
+        setProgress(0, 0, elementList.size());
         // the outer loop for the imported data
-        for (int cnt=0; cnt<elementList.size(); cnt++) {
+        for (int cnt = 0; cnt < elementList.size(); cnt++) {
             // get element of imported data file
             Element importentry = (Element) elementList.get(cnt);
             // now add id to zettel-element
             String id = importentry.getAttributeValue(Daten.ATTRIBUTE_ZETTEL_ID);
             // check for valid value
-            if (id!=null && !id.isEmpty()) {
+            if (id != null && !id.isEmpty()) {
                 // check whether Zettel with unique ID already exists
                 // in the current database
-                if (dataObj.findZettelFromID(id)!=-1) {
+                if (dataObj.findZettelFromID(id) != -1) {
                     // if yes, remove double entry from imported document
                     zdoc.getRootElement().getContent().remove(cnt);
                     // add number of removed entry to list. remember that
@@ -406,7 +400,7 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
                     // at zero.
                 }
             }
-            setProgress(cnt,0,elementList.size());
+            setProgress(cnt, 0, elementList.size());
         }
     }
 }

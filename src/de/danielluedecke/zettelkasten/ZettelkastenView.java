@@ -8517,7 +8517,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // check whether we have a new file-version of the data-format. if yes, do conversion now...
         if (data.isNewVersion()) {
             // tell user that the data file is being updated...
-            JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("updateDataMsg"), getResourceMap().getString("updateDataTitle"), JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(getFrame(), 
+                    getResourceMap().getString("updateDataMsg"), 
+                    getResourceMap().getString("updateDataTitle"), 
+                    JOptionPane.PLAIN_MESSAGE);
             // if dialog window isn't already created, do this now
             if (null == taskDlg) {
                 // get parent und init window

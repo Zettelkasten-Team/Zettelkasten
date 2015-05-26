@@ -163,8 +163,7 @@ public class UpdateFileTask extends org.jdesktop.application.Task<Object, Void> 
             dataObj.db_updateTimestampAttributes();
             updateType = updateType | UPDATE_TYPE_DATABASE;
         }
-
-        // Update to 3.4
+        // Update to 3.6
         // here we have to update from version 3.0, 3.1, 3.2, 3.3, 3.4 or 3.5 to 3.6
         if (verinfo!=null && (verinfo.equals("3.0") || verinfo.equals("3.1") || verinfo.equals("3.2") || 
                               verinfo.equals("3.3") || verinfo.equals("3.4") || verinfo.equals("3.5"))) {
@@ -176,6 +175,17 @@ public class UpdateFileTask extends org.jdesktop.application.Task<Object, Void> 
                 bibtexObj.setEntries(bibtexObj.getEntriesFromAttachedFile());
             }
             updateType = updateType | UPDATE_TYPE_BIBTEX;
+        }
+        // Update to 3.7
+        // here we have to update from version 3.0 till 3.6 to 3.7
+        if (verinfo!=null && (verinfo.equals("3.0") || verinfo.equals("3.1") || verinfo.equals("3.2") || 
+                              verinfo.equals("3.3") || verinfo.equals("3.4") || verinfo.equals("3.5") || 
+                              verinfo.equals("3.6"))) {
+            // change status message
+            msgLabel.setText(resourceMap.getString("msg4"));
+            // update inline-code format tags
+            dataObj.db_updateInlineCodeFormatting();
+            updateType = updateType | UPDATE_TYPE_DATABASE;
         }
         
         return null;  // return your result

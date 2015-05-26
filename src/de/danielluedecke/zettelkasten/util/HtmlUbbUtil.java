@@ -1294,10 +1294,7 @@ public class HtmlUbbUtil {
             dummy = dummy.replaceAll("\\*\\*(.*?)\\*\\*", "<b>$1</b>");
             // italic formatting
             dummy = dummy.replaceAll("_(.*?)_", "<i>$1</i>");
-
             dummy = dummy.replaceAll("\\*(.*?)\\*", "<i>$1</i>");
-            // code blocks formatting
-            dummy = dummy.replaceAll("\\`(.*?)\\`", "<code>$1</code>");
             // headlines
             dummy = dummy.replaceAll("(^|\\n)#{4} (.*)", head4md);
             dummy = dummy.replaceAll("(^|\\n)#{3} (.*)", head3md);
@@ -1314,6 +1311,8 @@ public class HtmlUbbUtil {
             // we need to replace non-tag-< and > here
             if (!isExport) dummy = dummy.replace(">", "&gt;").replace("<", "&lt;");
         }
+        // inline-code blocks formatting
+        dummy = dummy.replaceAll("\\`(.*?)\\`", "<code>$1</code>");
         // new line
         dummy = dummy.replace("[br]", "<br>");
         // hyperlinks
@@ -1344,8 +1343,8 @@ public class HtmlUbbUtil {
             dummy = dummy.replace("[qm]", "&ldquo;");
             dummy = dummy.replace("[/qm]", "&rdquo;");
         }
-        // code blocks formatting: [code] becomes <code>
-        dummy = dummy.replaceAll("\\[code\\](.*?)\\[/code\\]", "<code>$1</code>");
+        // code blocks formatting: [code] becomes <pre>
+        dummy = dummy.replaceAll("\\[code\\](.*?)\\[/code\\]", "<pre>$1</pre>");
         // strike-through formatting: [d] becomes <strike>
         dummy = dummy.replaceAll("\\[d\\](.*?)\\[/d\\]", "<strike>$1</strike>");
         // superscript: [sup] becomes <sup>
@@ -2337,7 +2336,7 @@ public class HtmlUbbUtil {
         retval.append(fontunit).append(";color:#");
         retval.append(settings.getQuoteFont(Settings.FONTCOLOR)).append("}").append(System.lineSeparator());
         // create style for code
-        retval.append("code");
+        retval.append("code, pre");
         retval.append("{font-family:");
         retval.append(settings.getCodeFont(Settings.FONTNAME));
         retval.append(";font-size:");

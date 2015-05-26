@@ -341,16 +341,25 @@ public class ZettelkastenViewUtil {
                 break;
             case "cs":
                 // open a confirm dialog
-                int option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmClearSearchesMsg"), mainframe.getResourceMap().getString("confirmClearSearchesTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                int option = JOptionPane.showConfirmDialog(mainframe.getFrame(),
+                        mainframe.getResourceMap().getString("confirmClearSearchesMsg"),
+                        mainframe.getResourceMap().getString("confirmClearSearchesTitle"),
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.PLAIN_MESSAGE);
                 // if action should be performed, do so
                 if (JOptionPane.YES_OPTION == option ) {
                     searchrequests.clear();
                     searchrequests.setModified(true);
-                }       jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                }       
+                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
                 break;
             case "cd":
                 // open a confirm dialog
-                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmClearDesktopMsg"), mainframe.getResourceMap().getString("confirmClearDesktopTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), 
+                        mainframe.getResourceMap().getString("confirmClearDesktopMsg"), 
+                        mainframe.getResourceMap().getString("confirmClearDesktopTitle"), 
+                        JOptionPane.YES_NO_OPTION, 
+                        JOptionPane.PLAIN_MESSAGE);
                 // if action should be performed, do so
                 if (JOptionPane.YES_OPTION == option ) {
                     desktop.clear();
@@ -360,7 +369,11 @@ public class ZettelkastenViewUtil {
                 break;
             case "cb":
                 // open a confirm dialog
-                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmClearBibtexMsg"), mainframe.getResourceMap().getString("confirmClearBibtexTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), 
+                        mainframe.getResourceMap().getString("confirmClearBibtexMsg"), 
+                        mainframe.getResourceMap().getString("confirmClearBibtexTitle"), 
+                        JOptionPane.YES_NO_OPTION, 
+                        JOptionPane.PLAIN_MESSAGE);
                 // if action should be performed, do so
                 if (JOptionPane.YES_OPTION == option ) {
                     bibtex.clearEntries();
@@ -369,7 +382,11 @@ public class ZettelkastenViewUtil {
                 break;
             case "rs":
                 // open a confirm dialog
-                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmResetSettingsMsg"), mainframe.getResourceMap().getString("confirmResetSettingsTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), 
+                        mainframe.getResourceMap().getString("confirmResetSettingsMsg"), 
+                        mainframe.getResourceMap().getString("confirmResetSettingsTitle"), 
+                        JOptionPane.YES_NO_OPTION, 
+                        JOptionPane.PLAIN_MESSAGE);
                 // if action should be performed, do so
                 if (JOptionPane.YES_OPTION == option ) {
                     settings.clear();
@@ -392,13 +409,23 @@ public class ZettelkastenViewUtil {
                 break;
             case "rf":
                 // open a confirm dialog
-                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmResetFreqMsg"), mainframe.getResourceMap().getString("confirmResetFreqTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), 
+                        mainframe.getResourceMap().getString("confirmResetFreqMsg"), 
+                        mainframe.getResourceMap().getString("confirmResetFreqTitle"), 
+                        JOptionPane.YES_NO_OPTION, 
+                        JOptionPane.PLAIN_MESSAGE);
                 // if action should be performed, do so
                 if (JOptionPane.YES_OPTION == option ) {
                     // if dialog window isn't already created, do this now
                     if (null == taskDlg) {
                         // get parent und init window
-                        taskDlg = new TaskProgressDialog(mainframe.getFrame(), TaskProgressDialog.TASK_UPDATEFILE, settings, data, desktop, bibtex, true);
+                        taskDlg = new TaskProgressDialog(mainframe.getFrame(), 
+                                TaskProgressDialog.TASK_UPDATEFILE, 
+                                settings, 
+                                data, 
+                                desktop, 
+                                bibtex, 
+                                true);
                         // center window
                         taskDlg.setLocationRelativeTo(mainframe.getFrame());
                     }
@@ -411,7 +438,11 @@ public class ZettelkastenViewUtil {
                 break;
             case "reo":
                 // open a confirm dialog
-                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmResetOrderMsg"), mainframe.getResourceMap().getString("confirmResetOrderTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), 
+                        mainframe.getResourceMap().getString("confirmResetOrderMsg"), 
+                        mainframe.getResourceMap().getString("confirmResetOrderTitle"), 
+                        JOptionPane.YES_NO_OPTION, 
+                        JOptionPane.PLAIN_MESSAGE);
                 // if action should be performed, do so
                 if (JOptionPane.YES_OPTION == option ) {
                     // reset entry order
@@ -426,7 +457,11 @@ public class ZettelkastenViewUtil {
                 break;
             case "m2u":
                 // open a confirm dialog
-                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), mainframe.getResourceMap().getString("confirmM2UMsg"), mainframe.getResourceMap().getString("confirmM2UTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                option = JOptionPane.showConfirmDialog(mainframe.getFrame(), 
+                        mainframe.getResourceMap().getString("confirmM2UMsg"), 
+                        mainframe.getResourceMap().getString("confirmM2UTitle"), 
+                        JOptionPane.YES_NO_OPTION, 
+                        JOptionPane.PLAIN_MESSAGE);
                 // if action should be performed, do so
                 if (JOptionPane.YES_OPTION == option ) {
                     // if dialog window isn't already created, do this now

@@ -74,7 +74,7 @@ public class Daten {
     /**
      * Constant for the current file version
      */
-    private static final String currentVersion = "3.6";
+    private static final String currentVersion = "3.7";
     public static final String backwardCompatibleVersion = "3.4";
     /**
      * A refrence to the settings class
@@ -1252,7 +1252,7 @@ public class Daten {
      * @return the element if a match was found, otherwise {@code null}
      */
     public Element retrieveZettel(int pos) {
-        return retrieveElement(zknFile,pos);
+        return retrieveElement(zknFile, pos);
     }
 
 
@@ -6185,6 +6185,49 @@ public class Daten {
                 zettel.removeChild("timestamp");
                 // and set timestamp as attributes
                 setTimestamp(zettel, created, edited);
+            }
+        }
+    }
+    /**
+     * This method updates the inline-code-format-tags in the data base.
+     */
+    public void db_updateInlineCodeFormatting() {
+        // iterate all elements
+        for (int cnt=1; cnt<=getCount(ZKNCOUNT); cnt++) {
+            // retrieve element
+            Element zettel = retrieveZettel(cnt);
+            // check for valid value
+            if (zettel != null && zettel.getChild(ELEMENT_CONTENT) != null) {
+                // get content
+                String inhalt = zettel.getChild(ELEMENT_CONTENT).getText();
+                // find code-tags
+                int start = 0;
+                int end = 0;
+                while (start != -1) {
+                    // find open-tag of code
+                    start = inhalt.indexOf(Constants.FORMAT_CODE_OPEN, start);
+                    // found?
+                    if (start != -1) {
+                        // if yes, find close-tag of code
+                        end = inhalt.indexOf(Constants.FORMAT_CODE_CLOSE, start);
+                        // check whether br-tag is inside tags
+                        int br_pos = inhalt.substring(start, end).indexOf(Constants.FORMAT_NEWLINE);
+                        // not found?
+                        if (br_pos == -1) {
+                            // if not, we have inline-code, so replace with `
+                            inhalt = inhalt.substring(0, start) + 
+                                    "`" +
+                                    inhalt.substring(start + Constants.FORMAT_CODE_OPEN.length(), end) +
+                                    "`" +
+                                    inhalt.substring(end + Constants.FORMAT_CODE_CLOSE.length());
+                            // set back content
+                            zettel.getChild(ELEMENT_CONTENT).setText(inhalt);
+                            start = 0;
+                        } else {
+                            start = end;
+                        }
+                    }
+                }
             }
         }
     }
