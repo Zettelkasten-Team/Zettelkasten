@@ -32,7 +32,7 @@
  */
 package de.danielluedecke.zettelkasten.tasks.export;
 
-import au.com.bytecode.opencsv.CSVWriter;
+import com.opencsv.CSVWriter;
 import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.TasksData;

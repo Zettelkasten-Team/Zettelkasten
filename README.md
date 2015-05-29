@@ -13,6 +13,7 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 #### Neue Funktionen und Änderungen
 * Mehrfachformatierungen während der Neueingabe wurden vereinfacht durch Beibehalten der Textauswahl. Damit lässt sich ein Wort oder Absatz schneller mit mehreren Formatierungen hintereinander auszeichnen ([#39](https://github.com/sjPlot/Zettelkasten/issues/39)).
 * `[code]` formatiert Code-Blocks mit eingerückten Leerzeichen (d.h. wandelt `[code]` in `<pre>` um). Inline-Code wird jetzt durch \` ausgezeichnet (\`code\`) ([#48](https://github.com/sjPlot/Zettelkasten/issues/48)).
+* Aktualisierung der [http://www.jdom.org](JDOM)- und [http://opencsv.sourceforge.net](OpenCSV)-Bibliotheken.
 
 #### Behobene Fehler
 * Mehrere Suchbegriffe im Suchfenster, durch Kommata getrennt, werden jetzt von Leerzeichen bereinigt ([#27](https://github.com/sjPlot/Zettelkasten/issues/27)).
