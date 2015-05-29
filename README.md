@@ -19,6 +19,7 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 * Markdown-Zitat werden jetzt korrekt nach LaTeX exportiert ([#31](https://github.com/sjPlot/Zettelkasten/issues/31)).
 * Doppelte Zeilenumbrüche entfernen bei Neueingabe wird jetzt nur auf Auswahl angewendet ([#16](https://github.com/sjPlot/Zettelkasten/issues/16)).
 * Literaturangaben waren nicht bearbeitbar, wenn lediglich Groß- in Kleinbuchstaben oder umgekehrt geändert wurden. Fehler behoben, ändern von Groß-/Kleinschreibung in Literaturangaben jetzt über die Registerkarte _Literatur_ möglich ([#47](https://github.com/sjPlot/Zettelkasten/issues/47)).
+* Querverweise auf einen gelöschten Zettel ließen sich nicht entfernen ([#38](https://github.com/sjPlot/Zettelkasten/issues/38)).
 
 ### Screenshots
 Aktuelle Screenshots [gibt es hier](http://zettelkasten.danielluedecke.de/gallery.php).

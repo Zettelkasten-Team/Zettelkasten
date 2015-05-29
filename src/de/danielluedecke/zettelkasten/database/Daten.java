@@ -1904,7 +1904,7 @@ public class Daten {
         // retrieve the entry-element at the given position
         Element zettel = retrieveElement(zknFile, pos);
         // if the entry-element exists...
-        if (zettel!=null) {
+        if (zettel != null) {
             // remove this entry from the visible order
             // therefore, the previous entry of this entry should point
             // to the next entry of this entry
@@ -1913,32 +1913,32 @@ public class Daten {
             // to the previous entry of this entry
             setPrevZettel(getNextZettel(pos), getPrevZettel(pos));
             // check whether deleted entry was first entry
-            if (pos==getFirstZettel()) {
+            if (pos == getFirstZettel()) {
                 setFirstZettel(getNextZettel(pos));
             }
             // check whether deleted entry was last entry
-            if (pos==getLastZettel()) {
+            if (pos == getLastZettel()) {
                 setLastZettel(getPrevZettel(pos));
             }
-            // change zettelcounter
-            zettelPos = getNextZettel(pos);
-            // check whether it's out of bounds
-            if (zettelPos>getCount(ZKNCOUNT) || zettelPos==-1) {
-                zettelPos = getFirstZettel();
-            }
-            // change author-and keyword-frequencies
-            changeFrequencies(pos,-1);
             // retrieve manual links, so we can delete the backlinks from other entries.
             // each manual link from this entry to other entries creates a "backlink" from
             // other entries to this one. if we delete the manual links from this entry,
             // all backlinks to this entry are removed.
             String[] manlinks = zettel.getChild(ELEMENT_MANLINKS).getText().split(",");
             // delete manual links
-            deleteManualLinks(manlinks);
+            deleteManualLinks(manlinks, pos);
+            // change zettelcounter
+            zettelPos = getNextZettel(pos);
+            // check whether it's out of bounds
+            if (zettelPos > getCount(ZKNCOUNT) || zettelPos == -1) {
+                zettelPos = getFirstZettel();
+            }
+            // change author-and keyword-frequencies
+            changeFrequencies(pos, -1);
             // ...delete entry's attributes
             zettel.setAttribute(ATTRIBUTE_ZETTEL_ID, "");
-            zettel.setAttribute(ATTRIBUTE_RATINGCOUNT,"");
-            zettel.setAttribute(ATTRIBUTE_RATING,"");
+            zettel.setAttribute(ATTRIBUTE_RATINGCOUNT, "");
+            zettel.setAttribute(ATTRIBUTE_RATING, "");
             zettel.setAttribute(ATTRIBUTE_NEXT_ZETTEL, "");
             zettel.setAttribute(ATTRIBUTE_PREV_ZETTEL, "");
             // ...delete entry's content
@@ -3734,26 +3734,31 @@ public class Daten {
 
     
     /**
+    /**
      * Removes one or more manual links from the current entry...
      * 
      * @param manlinks an integer-array with the manual links that should be removed...
+     * @param zpos the entry index number of the entry, which manual links should
+     * be removed.
      */
-    public void deleteManualLinks(String[] manlinks) {
+    public void deleteManualLinks(String[] manlinks, int zpos) {
         // get the current manual links...
-        int[] current_mls = getCurrentManualLinks();
+        int[] current_mls = getManualLinks(zpos);
         // if no manual links available, leave...
-        if ((null==current_mls)||(current_mls.length<1)) return;
+        if ((null == current_mls) || (current_mls.length < 1)) return;
         // if no manual links from parameter available, leave...
-        if ((null==manlinks)||(manlinks.length<1)) return;
+        if ((null == manlinks) || (manlinks.length < 1)) return;
         // create linked list and copy all current manual links to that list
         LinkedList<String> l = new LinkedList<>();
-        for (int ml : current_mls) l.add(String.valueOf(ml));
+        for (int ml : current_mls) {
+            l.add(String.valueOf(ml));
+        }
         // go through all entries that should be removed from the manual links...
         for (String mlparam : manlinks) {
             // find the entry in the linked list
             int pos = l.indexOf(mlparam);
             // if it exists, remove it.
-            if (pos!=-1) {
+            if (pos != -1) {
                 l.remove(pos);
                 // we also have to remove the *current* entry from the referred entry
                 try {
@@ -3764,7 +3769,7 @@ public class Daten {
                     StringBuilder sb = new StringBuilder("");
                     // get current entry position as string. we need to remove this value
                     // from the referred entry's manual links, given in the array "backlinks"
-                    String curentry = String.valueOf(zettelPos);
+                    String curentry = String.valueOf(zpos);
                     // go through all manual links of the referred entry
                     for (String bl : backlinks) {
                         // if the manual link of the referred entry is *not* the current entry...
@@ -3775,12 +3780,13 @@ public class Daten {
                         }
                     }
                     // delete last comma
-                    if (sb.length()>1) sb.setLength(sb.length()-1);
+                    if (sb.length() > 1) {
+                        sb.setLength(sb.length() - 1);
+                    }
                     // and update manual links of the referred entry
-                    setManualLinks(mlparamentry,sb.toString());
-                }
-                catch (NumberFormatException e) {
-                    Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+                    setManualLinks(mlparamentry, sb.toString());
+                } catch (NumberFormatException e) {
+                    Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
                 }
             }
         }
@@ -3797,9 +3803,21 @@ public class Daten {
             sb.append(",");
         }
         // truncate last comma
-        if (sb.length()>1) sb.setLength((sb.length()-1));
+        if (sb.length() > 1) {
+            sb.setLength((sb.length() - 1));
+        }
         // update manual links of current entry
-        setManualLinks(zettelPos,sb.toString());
+        setManualLinks(zpos, sb.toString());
+    }
+    
+    
+    /**
+     * Removes one or more manual links from the current entry...
+     * 
+     * @param manlinks an integer-array with the manual links that should be removed...
+     */
+    public void deleteManualLinks(String[] manlinks) {
+        deleteManualLinks(manlinks, zettelPos);
     }
     
     
