@@ -143,7 +143,6 @@
       <Properties>
         <Property name="text" type="java.lang.String" resourceKey="jCheckBoxImportKeywords.text"/>
         <Property name="toolTipText" type="java.lang.String" resourceKey="jCheckBoxImportKeywords.toolTipText"/>
-        <Property name="enabled" type="boolean" value="false"/>
         <Property name="name" type="java.lang.String" value="jCheckBoxImportKeywords" noResource="true"/>
       </Properties>
     </Component>

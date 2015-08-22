@@ -394,11 +394,11 @@ public class Daten {
         // reset all global variables
         modified = false;
         zknframe.resetBackupNecessary();
-        zknFile=null;
-        authorFile=null;
-        keywordFile=null;
-        metainfFile=null;
-        zknFileExport=null;
+        zknFile = null;
+        authorFile = null;
+        keywordFile = null;
+        metainfFile = null;
+        zknFileExport = null;
         // init the history array
         history = new int[HISTORY_MAX];
         // current position in the history array refers to the first element
@@ -410,9 +410,9 @@ public class Daten {
         // no update to the tabbed panes in the main window when nothing is loaded
         keywordlistUpToDate = true;
         authorlistUpToDate = true;
-        titlelistUpToDate=true;
-        clusterlistUpToDate=true;
-        attachmentlistUpToDate=true;
+        titlelistUpToDate = true;
+        clusterlistUpToDate = true;
+        attachmentlistUpToDate = true;
         // create "empty" XML JDom objects
         zknFile = new Document(new Element(DOCUMENT_ZETTELKASTEN));
         authorFile = new Document(new Element(DOCUMENT_AUTHORS));
@@ -455,71 +455,71 @@ public class Daten {
         allLuhmannNumbers.clear();
     }
 
-
     /**
-     * This method returns the version of the fileformat. the filestructure and data-storing
-     * might change due to further development of this programm, so here we can check
-     * for the current fileformat-version if necessary. This information is stored in the
-     * metainformation-file.
+     * This method returns the version of the fileformat. the filestructure and data-storing might
+     * change due to further development of this programm, so here we can check for the current
+     * fileformat-version if necessary. This information is stored in the metainformation-file.
      * <br><br>
      * This may differ from the version of the <i>current</i> fileformat. see
-     * {@link #getCurrentVersionInfo() getCurrentVersionInfo()} to retrieve the version-number
-     * of the current fileformat.
-     * 
-     * @return a string containing the version-number of the zettelkasten-file-format, or {@code null} if
-     * no such attribute exists
+     * {@link #getCurrentVersionInfo() getCurrentVersionInfo()} to retrieve the version-number of
+     * the current fileformat.
+     *
+     * @return a string containing the version-number of the zettelkasten-file-format, or
+     * {@code null} if no such attribute exists
      */
     public String getVersionInfo() {
         // retrieve version-element
         Element el = metainfFile.getRootElement().getChild(ELEMENT_VERSION_INFO);
         // check whether it's null or not
-        if (null==el) {
+        if (null == el) {
             // log error
-            Constants.zknlogger.log(Level.WARNING,"Could not read file version info. XML-element is null!");
+            Constants.zknlogger.log(Level.WARNING, "Could not read file version info. XML-element is null!");
             return null;
         }
         // get id-attribute
         String id = el.getAttributeValue("id");
         // check for valid value
-        if (null==id || id.isEmpty()) {
+        if (null == id || id.isEmpty()) {
             // log error
-            Constants.zknlogger.log(Level.WARNING,"Could not read file version info. XML-attribute is null!");
+            Constants.zknlogger.log(Level.WARNING, "Could not read file version info. XML-attribute is null!");
             return null;
         }
         // return the attribute value
         return id;
     }
-    
 
     /**
      * Retrieves the user defined path to attachments
+     *
      * @return the user defined path to attachments
      */
     public File getUserAttachmentPath() {
         // retrieve version-element
         Element el = metainfFile.getRootElement().getChild(ELEMENT_ATTACHMENT_PATH);
         // check whether it's null or not
-        if (null==el || el.getText().trim().isEmpty()) {
+        if (null == el || el.getText().trim().isEmpty()) {
             return null;
         }
         // else return the attribute value
         return new File(el.getText());
     }
+
     /**
      * Ssaves the user defined path to attachments
+     *
      * @param path the user defined path to attachments
      */
     public void setUserAttachmentPath(String path) {
         // retrieve version-element
         Element el = metainfFile.getRootElement().getChild(ELEMENT_ATTACHMENT_PATH);
         // check whether it's null or not
-        if (null==el) {
+        if (null == el) {
             // than create an empty atachment-path and add it
             el = new Element(ELEMENT_ATTACHMENT_PATH);
             metainfFile.getRootElement().addContent(el);
         }
         // check for valid parameter
-        if (path!=null) {
+        if (path != null) {
             // set new path
             el.setText(path);
             // and change modified state
@@ -527,36 +527,38 @@ public class Daten {
         }
     }
 
-
     /**
      * Retrieves the user defined path to images
+     *
      * @return the user defined path to images
      */
     public File getUserImagePath() {
         // retrieve version-element
         Element el = metainfFile.getRootElement().getChild(ELEMENT_IMAGE_PATH);
         // check whether it's null or not
-        if (null==el || el.getText().trim().isEmpty()) {
+        if (null == el || el.getText().trim().isEmpty()) {
             return null;
         }
         // else return the attribute value
         return new File(el.getText());
     }
+
     /**
      * Ssaves the user defined path to images
+     *
      * @param path the user defined path to images
      */
     public void setUserImagePath(String path) {
         // retrieve version-element
         Element el = metainfFile.getRootElement().getChild(ELEMENT_IMAGE_PATH);
         // check whether it's null or not
-        if (null==el) {
+        if (null == el) {
             // than create an empty atachment-path and add it
             el = new Element(ELEMENT_IMAGE_PATH);
             metainfFile.getRootElement().addContent(el);
         }
         // check for valid parameter
-        if (path!=null) {
+        if (path != null) {
             // set new path
             el.setText(path);
             // and change modified state
@@ -564,29 +566,31 @@ public class Daten {
         }
     }
 
-    
     /**
-     * This method returns the current (latest) version of the fileformat. This may differ from
-     * the version of the <i>loaded</i> file. see {@link #getVersionInfo() getVersionInfo()} to retrieve
+     * This method returns the current (latest) version of the fileformat. This may differ from the
+     * version of the <i>loaded</i> file. see {@link #getVersionInfo() getVersionInfo()} to retrieve
      * the version-number of the loaded fileformat.
      *
-     * @return a string containing the current (latest) version-number of the zettelkasten-file-format
+     * @return a string containing the current (latest) version-number of the
+     * zettelkasten-file-format
      */
     public String getCurrentVersionInfo() {
         // return the current version info
         return currentVersion;
     }
 
-
     /**
      * Set and Get the modified state of the meta-information
-     * @return 
+     *
+     * @return
      */
     public boolean isMetaModified() {
         return metamodified;
     }
+
     /**
      * Set and Get the modified state of the meta-information
+     *
      * @param m
      */
     public void setMetaModified(boolean m) {
@@ -594,124 +598,126 @@ public class Daten {
         zknframe.setBackupNecessary();
     }
 
-
     /**
      * Set and Get the modified state of the file
-     * @return 
+     *
+     * @return
      */
     public boolean isModified() {
         return modified;
     }
+
     /**
      * Set and Get the modified state of the file
+     *
      * @param m
      */
     public void setModified(boolean m) {
         modified = m;
         zknframe.setBackupNecessary();
     }
+
     /**
-     * Returns the size of this list. This list stores the xml-files which
-     * should be retrieved from the compressed main-datafile. See class
-     * CLoadDialog.java for more details.
+     * Returns the size of this list. This list stores the xml-files which should be retrieved from
+     * the compressed main-datafile. See class CLoadDialog.java for more details.
+     *
      * @return the amount of files to load from the main datafile
      */
     public int getFilesToLoadCount() {
         return filesToLoad.size();
     }
+
     /**
-     * Returns the filename of the xml-datafiles we want to retrieve from our
-     * compressed main-datafile. See class CLoadDialog.java for more details.
+     * Returns the filename of the xml-datafiles we want to retrieve from our compressed
+     * main-datafile. See class CLoadDialog.java for more details.
+     *
      * @param index (the element which should be retrieved)
      * @return (the string containing the filename of the xml-file we want to have)
      */
     public String getFileToLoad(int index) {
         return filesToLoad.get(index);
     }
-    
-    
+
     /**
-     * Set and Get the whole main data
-     * (Zettelkasten only, without Author and Keyword lists)
+     * Set and Get the whole main data (Zettelkasten only, without Author and Keyword lists)
+     *
      * @param zkd (zettelkasten xml datafile)
      */
     public void setZknData(Document zkd) {
         zknFile = zkd;
         setModified(true);
     }
+
     /**
-     * Set and Get the whole main data
-     * (Zettelkasten only, without Author and Keyword lists)
+     * Set and Get the whole main data (Zettelkasten only, without Author and Keyword lists)
+     *
      * @return zettelkasten xml datafile
      */
     public Document getZknData() {
         return zknFile;
     }
-    
 
     /**
-     * This method checks whether the current fileformat is of a <b>newer</b> version than the loaded data-file.
-     * if so, we have to convert the data into the new fileformat. use {@link #getVersionInfo() getVersionInfo()}
-     * and {@link #getCurrentVersionInfo() getCurrentVersionInfo()} to retrieve the version numbers of the loaded
-     * and current file-format.<br><br>
-     * <b>Important!</b> Use {@link #updateVersionInfo() updateVersionInfo()} to update the version-setting of the
-     * loaded data-file.
+     * This method checks whether the current fileformat is of a <b>newer</b> version than the
+     * loaded data-file. if so, we have to convert the data into the new fileformat. use
+     * {@link #getVersionInfo() getVersionInfo()} and
+     * {@link #getCurrentVersionInfo() getCurrentVersionInfo()} to retrieve the version numbers of
+     * the loaded and current file-format.<br><br>
+     * <b>Important!</b> Use {@link #updateVersionInfo() updateVersionInfo()} to update the
+     * version-setting of the loaded data-file.
      *
-     * @return {@code true} if the current, latest file-format is of a newer version than the loaded data-file.
-     * {@code false} if the loaded data-file is uptodate.
+     * @return {@code true} if the current, latest file-format is of a newer version than the loaded
+     * data-file. {@code false} if the loaded data-file is uptodate.
      */
     public boolean isNewVersion() {
         // get version info
         String verinfo = getVersionInfo();
         // check for valid value
-        if (verinfo!=null && !verinfo.isEmpty()) {
+        if (verinfo != null && !verinfo.isEmpty()) {
             // get data-version of loaded file
             float lv = Float.parseFloat(verinfo);
             // get current fileversion
             float cv = Float.parseFloat(currentVersion);
             // check whether the current data-version is newer than the loaded one
-            return (lv<cv);
+            return (lv < cv);
         }
         // log error
-        Constants.zknlogger.log(Level.WARNING,"Check for new file version failed. Could not read version info!");
+        Constants.zknlogger.log(Level.WARNING, "Check for new file version failed. Could not read version info!");
         return false;
     }
 
-
     /**
-     * This method checks whether the current fileformat is of an <b>older</b> version than the loaded data-file.
-     * This might be the case, if the loaded data-file was saved with a newer program-version than the currently
-     * used program.<br><br>
-     * If so, we have to tell the user that the file-format is not supported and cannot be opened with the
-     * current program-version.
+     * This method checks whether the current fileformat is of an <b>older</b> version than the
+     * loaded data-file. This might be the case, if the loaded data-file was saved with a newer
+     * program-version than the currently used program.<br><br>
+     * If so, we have to tell the user that the file-format is not supported and cannot be opened
+     * with the current program-version.
      *
-     * @return {@code true} if the current program-version cannot read the loaded data-file because it was saved
-     * with a newer program-version. {@code false} if the loaded data-file can be read.
+     * @return {@code true} if the current program-version cannot read the loaded data-file because
+     * it was saved with a newer program-version. {@code false} if the loaded data-file can be read.
      */
     public boolean isIncompatibleFile() {
         // get version info
         String verinfo = getVersionInfo();
         // check for valid value
-        if (verinfo!=null && !verinfo.isEmpty()) {
+        if (verinfo != null && !verinfo.isEmpty()) {
             // get data-version of loaded file
             float lv = Float.parseFloat(verinfo);
             // get current fileversion
             float cv = Float.parseFloat(currentVersion);
             // check whether the current data-version is newer than the loaded one
-            return (lv>cv);
+            return (lv > cv);
         }
         // log error
-        Constants.zknlogger.log(Level.WARNING,"Could not check for data compatibility. File version could not be read!");
+        Constants.zknlogger.log(Level.WARNING, "Could not check for data compatibility. File version could not be read!");
         return false;
     }
 
-
     /**
-     * This method appends a document with zettelkasten-data to an existing
-     * document.<br><br>
-     * This method is used when importing data. The imported data is appended
-     * to an existing, opened data file.
-     * 
+     * This method appends a document with zettelkasten-data to an existing document.<br><br>
+     * This method is used when importing data. The imported data is appended to an existing, opened
+     * data file.
+     *
      * @param zkd the zettelkasten-data in xml-document-format
      */
     public void appendZknData(Document zkd) {
@@ -726,18 +732,17 @@ public class Daten {
         // this detached the element from its former parent, so it can be added
         // to the new main-data-file
         // check whether we have any content left...
-        while (zkd.getRootElement().getContentSize()>0) {
+        while (zkd.getRootElement().getContentSize() > 0) {
             // try to remove/detach the child-element
-            if ((zettel=(Element)zkd.getRootElement().removeContent(0))!=null) {
+            if ((zettel = (Element) zkd.getRootElement().removeContent(0)) != null) {
                 // check whether the imported entry is empty or not
-                if (zettel.getChild(ELEMENT_CONTENT)!=null && !zettel.getChild(ELEMENT_CONTENT).getText().isEmpty()) {
+                if (zettel.getChild(ELEMENT_CONTENT) != null && !zettel.getChild(ELEMENT_CONTENT).getText().isEmpty()) {
                     try {
                         zknFile.getRootElement().addContent(zettel);
                         // set modified flag
                         mod = true;
-                    }
-                    catch (IllegalDataException | IllegalAddException ex) {
-                        Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
+                    } catch (IllegalDataException | IllegalAddException ex) {
+                        Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
                     }
                 }
             }
@@ -746,13 +751,13 @@ public class Daten {
         // if so, re-convert IDs to numbers
         if (mod) {
             // go through all new added entries
-            for (int cnt=currentpos+1; cnt<=getCount(ZKNCOUNT); cnt++) {
+            for (int cnt = currentpos + 1; cnt <= getCount(ZKNCOUNT); cnt++) {
                 // retrieve each new added entry
                 zettel = retrieveZettel(cnt);
                 // set back reference to current last entry
                 setPrevZettel(cnt, getLastZettel());
                 // set pointer from current last entry to this new imported/added entry
-                setNextZettel(getLastZettel(),cnt);
+                setNextZettel(getLastZettel(), cnt);
                 // set pointer from first entry to this entry
                 setPrevZettel(getFirstZettel(), cnt);
                 // set next pointer from this entry to first entry
@@ -773,74 +778,68 @@ public class Daten {
                 String content = zettel.getChild(ELEMENT_CONTENT).getText();
                 // check for footnotes
                 int pos = 0;
-                while (pos!=-1) {
+                while (pos != -1) {
                     // find the html-tag for the footnote
                     pos = content.indexOf(Constants.FORMAT_FOOTNOTE_OPEN, pos);
                     // if we found something...
-                    if (pos!=-1) {
+                    if (pos != -1) {
                         // find the closing quotes
-                        int end = content.indexOf("]", pos+2);
+                        int end = content.indexOf("]", pos + 2);
                         // if we found that as well...
-                        if (end!=-1) {
+                        if (end != -1) {
                             try {
                                 // extract footnote-number
-                                String fn = content.substring(pos+4, end);
+                                String fn = content.substring(pos + 4, end);
                                 // retrieve author ID from related footnote number
                                 try {
                                     int authorNr = getAuthorNumberFromID(fn);
                                     // replace author number with author ID inside footnote
-                                    content = content.substring(0, pos+4) + String.valueOf(authorNr) + content.substring(end);
-                                }
-                                catch (NumberFormatException ex) {
+                                    content = content.substring(0, pos + 4) + String.valueOf(authorNr) + content.substring(end);
+                                } catch (NumberFormatException ex) {
                                     // log error
-                                    Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-                                    Constants.zknlogger.log(Level.WARNING,"Could not convert author ID into author number!");
+                                    Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
+                                    Constants.zknlogger.log(Level.WARNING, "Could not convert author ID into author number!");
                                 }
-                            }
-                            catch (IndexOutOfBoundsException ex) {
+                            } catch (IndexOutOfBoundsException ex) {
                             }
                             // and add it to the linked list, if it doesn't already exist
                             // set pos to new position
                             pos = end;
-                        }
-                        else {
-                            pos = pos+4;
+                        } else {
+                            pos = pos + 4;
                         }
                     }
                 }
                 // check for manual links
                 pos = 0;
-                while (pos!=-1) {
+                while (pos != -1) {
                     // find the html-tag for the manual link
                     pos = content.indexOf(Constants.FORMAT_MANLINK_OPEN, pos);
                     // if we found something...
-                    if (pos!=-1) {
+                    if (pos != -1) {
                         // find the closing quotes
-                        int end = content.indexOf("]", pos+2);
+                        int end = content.indexOf("]", pos + 2);
                         // if we found that as well...
-                        if (end!=-1) {
+                        if (end != -1) {
                             try {
                                 // extract manual-link--number
-                                String ml = content.substring(pos+3, end);
+                                String ml = content.substring(pos + 3, end);
                                 // retrieve entry ID from related manual link number
                                 try {
                                     int zetNr = getZettelNumberFromID(ml);
                                     // replace author number with author ID inside footnote
-                                    content = content.substring(0, pos+3) + String.valueOf(zetNr) + content.substring(end);
-                                }
-                                catch (NumberFormatException ex) {
+                                    content = content.substring(0, pos + 3) + String.valueOf(zetNr) + content.substring(end);
+                                } catch (NumberFormatException ex) {
                                     // log error
-                                    Constants.zknlogger.log(Level.WARNING,"Could not convert entry ID into related manual link number!");
+                                    Constants.zknlogger.log(Level.WARNING, "Could not convert entry ID into related manual link number!");
                                 }
-                            }
-                            catch (IndexOutOfBoundsException ex) {
+                            } catch (IndexOutOfBoundsException ex) {
                             }
                             // and add it to the linked list, if it doesn't already exist
                             // set pos to new position
                             pos = end;
-                        }
-                        else {
-                            pos = pos+3;
+                        } else {
+                            pos = pos + 3;
                         }
                     }
                 }
@@ -854,62 +853,66 @@ public class Daten {
         }
     }
 
-
     /**
      * Set and Get the authorlist
+     *
      * @param ald authorlist xml datafile
      */
     public void setAuthorData(Document ald) {
         authorFile = ald;
         setModified(true);
     }
+
     /**
      * Set and Get the authorlist
+     *
      * @return authorlist xml datafile
      */
     public Document getAuthorData() {
         return authorFile;
     }
-    
 
     /**
      * Set and Get the keyword list
+     *
      * @param kld keyword xml datafile
      */
     public void setKeywordData(Document kld) {
         keywordFile = kld;
         setModified(true);
     }
+
     /**
      * This method returns the keyword data file as JDOM document
+     *
      * @return the keyword data file as JDOM document
      */
     public Document getKeywordData() {
         return keywordFile;
     }
 
-
     /**
      * Set and Get the metainformation of the zettelkasten-data
+     *
      * @param mid metainformation xml datafile
      */
     public void setMetaInformationData(Document mid) {
         metainfFile = mid;
         setMetaModified(true);
     }
+
     /**
      * This method returns the metainformation of the zettelkasten-data as JDOM document
+     *
      * @return the metainformation as JDOM document
      */
     public Document getMetaInformationData() {
         return metainfFile;
     }
-    
-    
+
     /**
-     * Set the whole zettelkasten
-     * (Zettelkasten with Author and Keyword lists)
-     * 
+     * Set the whole zettelkasten (Zettelkasten with Author and Keyword lists)
+     *
      * @param zkd a zettelkasten xml datafile
      * @param ald an authorlist xml datafile
      * @param kld a keywordlist xml datafile
@@ -923,37 +926,37 @@ public class Daten {
         setModified(true);
     }
 
-    
     /**
-     * This method returns the description of the zettelkasten-data, which is stored
-     * in the metainformation-file of the zipped data-file. Usually needed when showing
-     * information on the opened datafile
-     * 
+     * This method returns the description of the zettelkasten-data, which is stored in the
+     * metainformation-file of the zipped data-file. Usually needed when showing information on the
+     * opened datafile
+     *
      * @return a string with the description of this zettelkasten
      */
     public String getZknDescription() {
         // get the child element
         Element el = metainfFile.getRootElement().getChild(ELEMEMT_DESCRIPTION);
         // check whether it's null
-        if (null==el) {
+        if (null == el) {
             return "";
         }
         // else return element-text
         return el.getText();
     }
+
     /**
-     * This method sets the description of the zettelkasten-data, which is stored
-     * in the metainformation-file of the zipped data-file.
-     * 
+     * This method sets the description of the zettelkasten-data, which is stored in the
+     * metainformation-file of the zipped data-file.
+     *
      * @param desc a string with the description of this zettelkasten
-     * @return 
+     * @return
      */
     public boolean setZknDescription(String desc) {
         // get the element
         Element el = metainfFile.getRootElement().getChild(ELEMEMT_DESCRIPTION);
         try {
             // check whether element exists
-            if (null==el) {
+            if (null == el) {
                 // if element does not exist, create it
                 el = new Element(ELEMEMT_DESCRIPTION);
                 // and add it to the meta-xml-file
@@ -963,32 +966,33 @@ public class Daten {
             el.setText(desc);
             // change modified state
             setMetaModified(true);
-        }
-        catch (IllegalAddException | IllegalDataException ex) {
-            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
+        } catch (IllegalAddException | IllegalDataException ex) {
+            Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
             return false;
         }
         // return success
         return true;
     }
+
     /**
-     * This method adds another description of zettelkasten-data to the existing one.
-     * Usually this is need when appending Zettelkasten-datafiles.
-     * 
+     * This method adds another description of zettelkasten-data to the existing one. Usually this
+     * is need when appending Zettelkasten-datafiles.
+     *
      * @param desc
      */
     public void addZknDescription(String desc) {
         // if description is not empty, concatenate it to old description
         if (!desc.isEmpty()) {
-            if (setZknDescription(getZknDescription()+System.lineSeparator()+System.lineSeparator()+desc)) {
+            if (setZknDescription(getZknDescription() + System.lineSeparator() + System.lineSeparator() + desc)) {
                 setMetaModified(true);
             }
         }
     }
 
-
     /**
-     * This method changes the frequencies of an entry's authors and keywords by the given value {@code addvalue}.
+     * This method changes the frequencies of an entry's authors and keywords by the given value
+     * {@code addvalue}.
+     *
      * @param nr the entrynumber, which author- and keywords-frequencies should be changed
      * @param addvalue the amount of increase or decrease of each author/keyword-frequency
      */
@@ -997,28 +1001,27 @@ public class Daten {
         // therefore, we first retrieve all author-index-numbers from that entry
         int[] aus = getAuthorIndexNumbers(nr);
         // check whether we have any values at all
-        if (aus!=null && aus.length>0) {
+        if (aus != null && aus.length > 0) {
             // iterate the array
             for (int a : aus) {
                 // check for valid value
-                if (a!=-1) {
+                if (a != -1) {
                     try {
                         // retrieve existing author
                         Element au = retrieveElement(authorFile, a);
                         // chek for valid value
-                        if (au!=null) {
+                        if (au != null) {
                             // get the count-value, which indicates the frequency of occurences of this
                             // author in the whole data file
                             String freq = au.getAttributeValue(ATTRIBUTE_FREQUENCIES);
-                            if (freq!=null) {
+                            if (freq != null) {
                                 int f = Integer.parseInt(freq);
                                 // increase frequency by 1
-                                au.setAttribute(ATTRIBUTE_FREQUENCIES, String.valueOf(f+addvalue));
+                                au.setAttribute(ATTRIBUTE_FREQUENCIES, String.valueOf(f + addvalue));
                             }
                         }
-                    }
-                    catch (NumberFormatException | IllegalNameException | IllegalDataException ex) {
-                        Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
+                    } catch (NumberFormatException | IllegalNameException | IllegalDataException ex) {
+                        Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
                     }
                 }
             }
@@ -1026,54 +1029,52 @@ public class Daten {
         // now do this for the keywords. retrieve all keyword -index-numbers from that entry
         int[] kws = getKeywordIndexNumbers(nr);
         // check whether we have any values at all
-        if (kws!=null && kws.length>0) {
+        if (kws != null && kws.length > 0) {
             // iterate the array
             for (int k : kws) {
                 // check for valid value
-                if (k!=-1) {
+                if (k != -1) {
                     try {
                         // retrieve existing author
                         Element kw = retrieveElement(keywordFile, k);
                         // chek for valid value
-                        if (kw!=null) {
+                        if (kw != null) {
                             // get the count-value, which indicates the frequency of occurences of this
                             // keyword in the whole data file
                             String freq = kw.getAttributeValue(ATTRIBUTE_FREQUENCIES);
-                            if (freq!=null) {
+                            if (freq != null) {
                                 int f = Integer.parseInt(freq);
                                 // increase frequency by 1
-                                kw.setAttribute(ATTRIBUTE_FREQUENCIES, String.valueOf(f+addvalue));
+                                kw.setAttribute(ATTRIBUTE_FREQUENCIES, String.valueOf(f + addvalue));
                             }
                         }
-                    }
-                    catch (NumberFormatException | IllegalNameException | IllegalDataException ex) {
-                        Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
+                    } catch (NumberFormatException | IllegalNameException | IllegalDataException ex) {
+                        Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
                     }
                 }
             }
         }
     }
 
-
     /**
-     * This method duplicates an entry and inserts it at the end or the next empty place in the
-     * data file
-     * 
+     * This method duplicates an entry and inserts it at the end or the next empty place in the data
+     * file
+     *
      * @param nr the number of the entry that should be duplicated
-     * @return 
+     * @return
      */
     public boolean duplicateEntry(int nr) {
         // first of all, we duplicate all authors and keywords frequencies from the existing entry.
         // therefore, we first retrieve all author-index-numbers from that entry
-        changeFrequencies(nr,1);
+        changeFrequencies(nr, 1);
         // retrieve entry that should be duplicated
-        Element oldzettel = retrieveElement(zknFile,nr);
+        Element oldzettel = retrieveElement(zknFile, nr);
         // create new zettel
         Element zettel = new Element(ELEMENT_ZETTEL);
         // check whether we have any empty elements in between where we can insert the new entry
         int emptypos = retrieveFirstEmptyEntry();
         // if we have any empty elements...
-        if (emptypos!=-1 && settings.getInsertNewEntryAtEmpty()) {
+        if (emptypos != -1 && settings.getInsertNewEntryAtEmpty()) {
             // retrieve empty element
             zettel = retrieveElement(zknFile, emptypos);
             // and remove former content, so we can add new content
@@ -1166,15 +1167,14 @@ public class Daten {
             // complete datafile
             //
             // if we have any empty elements, go on here
-            if (emptypos!=-1 && settings.getInsertNewEntryAtEmpty()) {
+            if (emptypos != -1 && settings.getInsertNewEntryAtEmpty()) {
                 // return the empty-position, which is now filled with the new author-value
                 zettelPos = emptypos;
-            }
-            else {
+            } else {
                 // finally, add the whole element to the data file
                 zknFile.getRootElement().addContent(zettel);
                 // set the zettel-position to the new entry
-                zettelPos=getCount(ZKNCOUNT);
+                zettelPos = getCount(ZKNCOUNT);
             }
             // duplicate this entry into the correct entry order
             // by changing the prev/nex references (or pointers) of the entries.
@@ -1183,49 +1183,42 @@ public class Daten {
             setTitlelistUpToDate(false);
             // set modified state
             setModified(true);
-        }
-        catch (IllegalAddException | IllegalDataException ex) {
+        } catch (IllegalAddException | IllegalDataException ex) {
             Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
             return false;
         }
         return true;
     }
 
-    
     /**
-     * This function retrieves an element of a xml document at a given
-     * position. used for other methods like getAuthor or
-     * getKeyword.<br><br>
+     * This function retrieves an element of a xml document at a given position. used for other
+     * methods like getAuthor or getKeyword.<br><br>
      * <b>Caution!</b> The position {@code pos} is a value from <b>1</b> to
-     * {@link #getCount(int) getCount()} - in contrary
-     * to usual array handling where the range is from 0 to (size-1).
-     * 
-     * @param doc the xml document where to look for elements. use following parameters:<br>
-     * - {@link #authorFile authorFile}<br>
-     * - {@link #keywordFile keywordFile}<br>
-     * - {@link #zknFile zknFile}
+     * {@link #getCount(int) getCount()} - in contrary to usual array handling where the range is
+     * from 0 to (size-1).
+     *
+     * @param doc the xml document where to look for elements. use following parameters:<br> -
+     * {@link #authorFile authorFile}<br> - {@link #keywordFile keywordFile}<br> -
+     * {@link #zknFile zknFile}
      * @param pos the position of the element. must be a value from <b>1</b> to
      * {@link #getCount(int) getCount()}.
      * @return the element if a match was found, otherwise {@code null}
      */
     private Element retrieveElement(Document doc, int pos) {
         // create a list of all elements from the given xml file
-        try { 
+        try {
             List<?> elementList = doc.getRootElement().getContent();
             // and return the requestet Element
             try {
-                return (Element) elementList.get(pos-1);
-            }
-            catch (IndexOutOfBoundsException e) {
+                return (Element) elementList.get(pos - 1);
+            } catch (IndexOutOfBoundsException e) {
                 return null;
             }
-        }
-        catch (IllegalStateException e) {
-            Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+        } catch (IllegalStateException e) {
+            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
             return null;
         }
     }
-
 
     /**
      * This method updates the version-information of the loaded file to the latest version number.
@@ -1234,27 +1227,26 @@ public class Daten {
         // retrieve version-element
         Element el = metainfFile.getRootElement().getChild(ELEMENT_VERSION_INFO);
         // check whether it's null or not
-        if (el!=null) {
-            el.setAttribute("id",currentVersion);
+        if (el != null) {
+            el.setAttribute("id", currentVersion);
         }
     }
 
-
     /**
-     * This function retrieves an element of a xml document at a given
-     * position. used for the export of entries, for instance.
+     * This function retrieves an element of a xml document at a given position. used for the export
+     * of entries, for instance.
      * <br><br>
      * <b>Caution!</b> The position {@code pos} is a value from <b>1</b> to
-     * {@link #getCount(int) getCount(ZKNCOUNT)} - in contrary
-     * to usual array handling where the range is from 0 to (size-1).
+     * {@link #getCount(int) getCount(ZKNCOUNT)} - in contrary to usual array handling where the
+     * range is from 0 to (size-1).
      *
-     * @param pos the position of the element, ranged from 1 to {@link #getCount(int) getCount(ZKNCOUNT)}
+     * @param pos the position of the element, ranged from 1 to
+     * {@link #getCount(int) getCount(ZKNCOUNT)}
      * @return the element if a match was found, otherwise {@code null}
      */
     public Element retrieveZettel(int pos) {
         return retrieveElement(zknFile, pos);
     }
-
 
     /**
      * This method returns the position of a keyword in the keyword XML file {@link #keywordFile}.
@@ -1267,18 +1259,20 @@ public class Daten {
         return getKeywordPosition(kw, true);
     }
 
-
     /**
      * This method returns the position of a keyword in the keyword XML file {@link #keywordFile}.
      * if the keyword doesn't exist, the return value is {@code -1}.
-     * 
+     *
      * @param kw keyword which is searched for in the keyword list
-     * @param matchcase whether the keyword-search is case-sensitive ({@code true}) or not ({@code false})
+     * @param matchcase whether the keyword-search is case-sensitive ({@code true}) or not
+     * ({@code false})
      * @return the position of the author string or -1 if no match was found
      */
     public int getKeywordPosition(String kw, boolean matchcase) {
         // check for valid value
-        if (null==kw || kw.trim().isEmpty()) return -1;
+        if (null == kw || kw.trim().isEmpty()) {
+            return -1;
+        }
         // create a list of all keyword elements from the keyword xml file
         try {
             List<?> keywordList = keywordFile.getRootElement().getContent();
@@ -1291,10 +1285,9 @@ public class Daten {
                 // retrieve each single element
                 Element keyword = (Element) iterator.next();
                 // if keyword matches the parameter string, return the position
-                if (matchcase&&kw.equals(keyword.getText())) {
+                if (matchcase && kw.equals(keyword.getText())) {
                     return cnt;
-                }
-                else if (!matchcase&&kw.equalsIgnoreCase(keyword.getText())) {
+                } else if (!matchcase && kw.equalsIgnoreCase(keyword.getText())) {
                     return cnt;
                 }
                 // else increase counter
@@ -1302,26 +1295,26 @@ public class Daten {
             }
             // if no keyword was found, return -1
             return -1;
-        }
-        catch (IllegalStateException e) {
-            Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+        } catch (IllegalStateException e) {
+            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
             return -1;
         }
     }
 
-
     /**
-     * This method returns the author-index-number of that author-value, that contains the
-     * bibkey (i.e. the "bibkey"-attribute) given in {@code bibkey}.
-     * 
+     * This method returns the author-index-number of that author-value, that contains the bibkey
+     * (i.e. the "bibkey"-attribute) given in {@code bibkey}.
+     *
      * @param bibkey the bibkey which position has to be found
      * @return the author-index-number (i.e. author-position in the authorFile.xml) of that author
-     * which bibkey-attribute matches (case-sensitive!) the parameter {@code bibkey}, or {@code -1} if
-     * no author with that bibkey-value was found.
+     * which bibkey-attribute matches (case-sensitive!) the parameter {@code bibkey}, or {@code -1}
+     * if no author with that bibkey-value was found.
      */
     public int getBibkeyPosition(String bibkey) {
         // check for valid value
-        if (null==bibkey || bibkey.trim().isEmpty()) return -1;
+        if (null == bibkey || bibkey.trim().isEmpty()) {
+            return -1;
+        }
         // create a list of all author elements from the author xml file
         try {
             List<?> authorList = authorFile.getRootElement().getContent();
@@ -1336,7 +1329,7 @@ public class Daten {
                 // "bk" also might be null!
                 String bk = author.getAttributeValue(ATTRIBUTE_AUTHOR_BIBKEY);
                 // if bibkey-attribute matches the parameter string, return the position
-                if (bk!=null && bk.equals(bibkey)) {
+                if (bk != null && bk.equals(bibkey)) {
                     return cnt;
                 }
                 // else increase counter
@@ -1344,27 +1337,25 @@ public class Daten {
             }
             // if no bibkey was found, return -1
             return -1;
-        }
-        catch (IllegalStateException e) {
-            Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+        } catch (IllegalStateException e) {
+            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
             return -1;
         }
     }
 
-
     /**
      * This method adds a new keyword item to the keyword xml datafile
-     * 
+     *
      * @param kw the keyword which should be added
-     * @param freq the new frequency of the keyword, or - if keyword already exists, e.g. in case
-     * of merging entries or adding existing keywords to an entry - the increasement-step of the
-     * frequency-occurences of existing keywords. use "1" if a keyword is simply added to an entry, so
-     * in case the keyword already exists, its frequency is increased by 1.
+     * @param freq the new frequency of the keyword, or - if keyword already exists, e.g. in case of
+     * merging entries or adding existing keywords to an entry - the increasement-step of the
+     * frequency-occurences of existing keywords. use "1" if a keyword is simply added to an entry,
+     * so in case the keyword already exists, its frequency is increased by 1.
      * @return position of the recently added keyword, or -1 if keyword could not be added
      */
     public int addKeyword(String kw, int freq) {
         // check for valid value
-        if (null==kw || kw.isEmpty()) {
+        if (null == kw || kw.isEmpty()) {
             return -1;
         }
         // trim leading and trailing spaces
@@ -1374,9 +1365,9 @@ public class Daten {
             return -1;
         }
         // check whether author already exists
-        int pos = getKeywordPosition(kw,false);
+        int pos = getKeywordPosition(kw, false);
         // if keyword already exists, just increase counter
-        if (pos!=-1) {
+        if (pos != -1) {
             try {
                 // retrieve existing author
                 Element keyw = retrieveElement(keywordFile, pos);
@@ -1385,21 +1376,20 @@ public class Daten {
                 int f = Integer.parseInt(keyw.getAttributeValue(ATTRIBUTE_FREQUENCIES));
                 // increase frequency by 1
                 // change timestamp attribute
-                updateKeywordTimestampAndID(keyw, f+freq, Tools.getTimeStampWithMilliseconds(), null);
+                updateKeywordTimestampAndID(keyw, f + freq, Tools.getTimeStampWithMilliseconds(), null);
                 // change modified state
                 setModified(true);
                 // and return keyword index-number
                 return pos;
-            }
-            catch (IllegalNameException | IllegalDataException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
+            } catch (IllegalNameException | IllegalDataException ex) {
+                Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
                 return -1;
             }
         }
         // check whether we have any empty elements in between where we can insert the keyword
         int emptypos = retrieveFirstEmptyElement(keywordFile);
         // if we have any empty elements, go on here
-        if (emptypos!=-1) {
+        if (emptypos != -1) {
             try {
                 // retrieve empty element
                 Element k = retrieveElement(keywordFile, emptypos);
@@ -1412,25 +1402,22 @@ public class Daten {
                 // in keyword id
                 String kwid;
                 try {
-                     kwid = kw.substring(0, 5);
-                }
-                catch (IndexOutOfBoundsException ex) {
+                    kwid = kw.substring(0, 5);
+                } catch (IndexOutOfBoundsException ex) {
                     kwid = kw;
                 }
-                updateKeywordTimestampAndID(k, freq, Tools.getTimeStampWithMilliseconds(), String.valueOf(emptypos)+kwid+Tools.getTimeStampWithMilliseconds());
+                updateKeywordTimestampAndID(k, freq, Tools.getTimeStampWithMilliseconds(), String.valueOf(emptypos) + kwid + Tools.getTimeStampWithMilliseconds());
                 // change list-up-to-date-state
                 setKeywordlistUpToDate(false);
                 // change modified state
                 setModified(true);
                 // return the empty-position, which is now filled with the new keyword-value
                 return emptypos;
-            }
-            catch (IllegalNameException | IllegalDataException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
+            } catch (IllegalNameException | IllegalDataException ex) {
+                Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
                 return -1;
             }
-        }
-        // get the root element of the keyword xml datafile
+        } // get the root element of the keyword xml datafile
         else {
             try {
                 Element kwFile = keywordFile.getRootElement();
@@ -1449,23 +1436,20 @@ public class Daten {
                     // in keyword id
                     String kwid;
                     try {
-                         kwid = kw.substring(0, 5);
-                    }
-                    catch (IndexOutOfBoundsException ex) {
+                        kwid = kw.substring(0, 5);
+                    } catch (IndexOutOfBoundsException ex) {
                         kwid = kw;
                     }
-                    updateKeywordTimestampAndID(newKeyword, freq, Tools.getTimeStampWithMilliseconds(), String.valueOf(keywordFile.getRootElement().getContent().size())+kwid+Tools.getTimeStampWithMilliseconds());
+                    updateKeywordTimestampAndID(newKeyword, freq, Tools.getTimeStampWithMilliseconds(), String.valueOf(keywordFile.getRootElement().getContent().size()) + kwid + Tools.getTimeStampWithMilliseconds());
                     // change list-up-to-date-state
                     setKeywordlistUpToDate(false);
                     // change modified state
                     setModified(true);
-                }
-                catch (IllegalAddException e) {
+                } catch (IllegalAddException e) {
                     // do nothing here
-                    Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
-                }
-                catch (IllegalNameException | IllegalDataException ex) {
-                    Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
+                    Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
+                } catch (IllegalNameException | IllegalDataException ex) {
+                    Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
                 }
                 // return the new size of the keyword file, i.e. the keyword position of 
                 // the recently added keyword entry
@@ -1474,89 +1458,100 @@ public class Daten {
                 List<?> keywordList = keywordFile.getRootElement().getContent();
                 // and return the size of this list
                 return keywordList.size();
-            }
-            catch (IllegalStateException e) {
-                Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+            } catch (IllegalStateException e) {
+                Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
                 return -1;
             }
         }
     }
-    
-    
+
     /**
-     * This method sets or changes the frequency-attribute, the timestamp-attribute and the ID-attribute of
-     * either author- or keyword-elements.
-     * 
-     * @param e The element, either an author-element (see {@link #authorFile}) or keyword-element (see {@link #keywordFile})
-     * @param attr_f the string value of the frequencies attribute name, usually use {@link #ATTRIBUTE_FREQUENCIES} here.
-     * @param attr_ts the string value of the timestamp attribute name, use either {@link #ATTRIBUTE_AUTHOR_TIMESTAMP} or {@link #ATTRIBUTE_KEYWORD_TIMESTAMP}
-     * @param attr_id the string value of the ID attribute name, use either {@link #ATTRIBUTE_AUTHOR_ID} or {@link #ATTRIBUTE_KEYWORD_ID}
-     * @param freq the new frequency-value of the frequency-attribute. Use {@code -1} if you don't want to change this attribute value.
-     * @param ts the new timestamp as string. use {@code null} as parameter if you don't want to change the timestamp attribute.
-     * @param id the new ID as string. use {@code null} as parameter if you don't want to change the ID attribute.
+     * This method sets or changes the frequency-attribute, the timestamp-attribute and the
+     * ID-attribute of either author- or keyword-elements.
+     *
+     * @param e The element, either an author-element (see {@link #authorFile}) or keyword-element
+     * (see {@link #keywordFile})
+     * @param attr_f the string value of the frequencies attribute name, usually use
+     * {@link #ATTRIBUTE_FREQUENCIES} here.
+     * @param attr_ts the string value of the timestamp attribute name, use either
+     * {@link #ATTRIBUTE_AUTHOR_TIMESTAMP} or {@link #ATTRIBUTE_KEYWORD_TIMESTAMP}
+     * @param attr_id the string value of the ID attribute name, use either
+     * {@link #ATTRIBUTE_AUTHOR_ID} or {@link #ATTRIBUTE_KEYWORD_ID}
+     * @param freq the new frequency-value of the frequency-attribute. Use {@code -1} if you don't
+     * want to change this attribute value.
+     * @param ts the new timestamp as string. use {@code null} as parameter if you don't want to
+     * change the timestamp attribute.
+     * @param id the new ID as string. use {@code null} as parameter if you don't want to change the
+     * ID attribute.
      */
     private void updateTimestampAndID(Element e, String attr_f, String attr_ts, String attr_id, int freq, String ts, String id) {
         // set frequency of occurences to 1
-        if (freq!=-1) {
+        if (freq != -1) {
             e.setAttribute(attr_f, String.valueOf(freq));
         }
         // set timestamp attribute
-        if (attr_ts!=null & !attr_ts.isEmpty() && ts!=null) {
+        if (attr_ts != null & !attr_ts.isEmpty() && ts != null) {
             e.setAttribute(attr_ts, ts);
         }
         // set ID attribute
-        if (attr_id!=null & !attr_id.isEmpty() && id!=null) {
+        if (attr_id != null & !attr_id.isEmpty() && id != null) {
             e.setAttribute(attr_id, id);
         }
     }
+
     /**
-     * This method sets or changes the frequency-attribute, the timestamp-attribute and the ID-attribute of
-     * author-elements.
-     * 
+     * This method sets or changes the frequency-attribute, the timestamp-attribute and the
+     * ID-attribute of author-elements.
+     *
      * @param e The author-element (see {@link #authorFile})
-     * @param freq the new frequency-value of the frequency-attribute. Use {@code -1} if you don't want to change this attribute value.
-     * @param ts the new timestamp as string. use {@code null} as parameter if you don't want to change the timestamp attribute.
-     * @param id the new ID as string. use {@code null} as parameter if you don't want to change the ID attribute.
+     * @param freq the new frequency-value of the frequency-attribute. Use {@code -1} if you don't
+     * want to change this attribute value.
+     * @param ts the new timestamp as string. use {@code null} as parameter if you don't want to
+     * change the timestamp attribute.
+     * @param id the new ID as string. use {@code null} as parameter if you don't want to change the
+     * ID attribute.
      */
     private void updateAuthorTimestampAndID(Element e, int freq, String ts, String id) {
         updateTimestampAndID(e, ATTRIBUTE_FREQUENCIES, ATTRIBUTE_AUTHOR_TIMESTAMP, ATTRIBUTE_AUTHOR_ID, freq, ts, id);
     }
+
     /**
-     * This method sets or changes the frequency-attribute, the timestamp-attribute and the ID-attribute of
-     * keyword-elements.
-     * 
+     * This method sets or changes the frequency-attribute, the timestamp-attribute and the
+     * ID-attribute of keyword-elements.
+     *
      * @param e The keyword-element (see {@link #keywordFile})
-     * @param freq the new frequency-value of the frequency-attribute. Use {@code -1} if you don't want to change this attribute value.
-     * @param ts the new timestamp as string. use {@code null} as parameter if you don't want to change the timestamp attribute.
-     * @param id the new ID as string. use {@code null} as parameter if you don't want to change the ID attribute.
+     * @param freq the new frequency-value of the frequency-attribute. Use {@code -1} if you don't
+     * want to change this attribute value.
+     * @param ts the new timestamp as string. use {@code null} as parameter if you don't want to
+     * change the timestamp attribute.
+     * @param id the new ID as string. use {@code null} as parameter if you don't want to change the
+     * ID attribute.
      */
     private void updateKeywordTimestampAndID(Element e, int freq, String ts, String id) {
         updateTimestampAndID(e, ATTRIBUTE_FREQUENCIES, ATTRIBUTE_KEYWORD_TIMESTAMP, ATTRIBUTE_KEYWORD_ID, freq, ts, id);
     }
 
-
-    
     /**
-     * This method adds several keywords to the keyword xml datafile, without assigning them
-     * to a certain entry
-     * 
+     * This method adds several keywords to the keyword xml datafile, without assigning them to a
+     * certain entry
+     *
      * @param kws the keywords which should be added
      */
     public void addKeywordsToDatabase(String[] kws) {
         // if keyeord is empty, return
-        if (null==kws || 0==kws.length) {
+        if (null == kws || 0 == kws.length) {
             return;
         }
         // iterate all keywords
         for (String kw : kws) {
             // check whether keyword already exists
-            int pos = getKeywordPosition(kw,false);
+            int pos = getKeywordPosition(kw, false);
             // no, we have a new keyword. so add it...
-            if (-1==pos) {
+            if (-1 == pos) {
                 // check whether we have any empty elements in between where we can insert the keyword
                 int emptypos = retrieveFirstEmptyElement(keywordFile);
                 // if we have any empty elements, go on here
-                if (emptypos!=-1) {
+                if (emptypos != -1) {
                     try {
                         // retrieve empty element
                         Element k = retrieveElement(keywordFile, emptypos);
@@ -1569,22 +1564,19 @@ public class Daten {
                         // in keyword id
                         String kwid;
                         try {
-                             kwid = kw.substring(0, 5);
-                        }
-                        catch (IndexOutOfBoundsException ex) {
+                            kwid = kw.substring(0, 5);
+                        } catch (IndexOutOfBoundsException ex) {
                             kwid = kw;
                         }
-                        updateKeywordTimestampAndID(k, 0, Tools.getTimeStampWithMilliseconds(), String.valueOf(emptypos)+kwid+Tools.getTimeStampWithMilliseconds());
+                        updateKeywordTimestampAndID(k, 0, Tools.getTimeStampWithMilliseconds(), String.valueOf(emptypos) + kwid + Tools.getTimeStampWithMilliseconds());
                         // change list-up-to-date-state
                         setKeywordlistUpToDate(false);
                         // change modified state
                         setModified(true);
+                    } catch (IllegalNameException | IllegalDataException ex) {
+                        Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
                     }
-                    catch (IllegalNameException | IllegalDataException ex) {
-                        Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                    }
-                }
-                // get the root element of the keyword xml datafile
+                } // get the root element of the keyword xml datafile
                 else {
                     Element kwFile = keywordFile.getRootElement();
                     // create a new keyword element
@@ -1602,37 +1594,34 @@ public class Daten {
                         // in keyword id
                         String kwid;
                         try {
-                             kwid = kw.substring(0, 5);
-                        }
-                        catch (IndexOutOfBoundsException ex) {
+                            kwid = kw.substring(0, 5);
+                        } catch (IndexOutOfBoundsException ex) {
                             kwid = kw;
                         }
-                        updateKeywordTimestampAndID(newKeyword, 0, Tools.getTimeStampWithMilliseconds(), String.valueOf(keywordFile.getRootElement().getContent().size())+kwid+Tools.getTimeStampWithMilliseconds());
+                        updateKeywordTimestampAndID(newKeyword, 0, Tools.getTimeStampWithMilliseconds(), String.valueOf(keywordFile.getRootElement().getContent().size()) + kwid + Tools.getTimeStampWithMilliseconds());
                         // change list-up-to-date-state
                         setKeywordlistUpToDate(false);
                         // change modified state
                         setModified(true);
-                    }
-                    catch (IllegalAddException e) {
+                    } catch (IllegalAddException e) {
                         // do nothing here
-                        Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
-                    }
-                    catch (IllegalNameException | IllegalDataException ex) {
-                        Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
+                        Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
+                    } catch (IllegalNameException | IllegalDataException ex) {
+                        Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
                     }
                 }
             }
         }
     }
-    
-    
+
     /**
      * This methods returns the keyword of a given position in the <b>keyword-datafile</b>.<br><br>
      * <b>Caution!</b> The position {@code pos} is a value from <b>1</b> to
-     * {@link #getCount(int) getCount(KWCOUNT)} - in contrary
-     * to usual array handling where the range is from 0 to (size-1).
-     * 
-     * @param pos a valid position of an element, ranged from 1 to {@link #getCount(int) getCount(KWCOUNT)}
+     * {@link #getCount(int) getCount(KWCOUNT)} - in contrary to usual array handling where the
+     * range is from 0 to (size-1).
+     *
+     * @param pos a valid position of an element, ranged from 1 to
+     * {@link #getCount(int) getCount(KWCOUNT)}
      * @return the keyword string, or an empty string, if no such keyword exists
      */
     public String getKeyword(int pos) {
@@ -1641,21 +1630,19 @@ public class Daten {
         // return the matching string value of the keyword element
         String retval;
         // check whether element is null
-        if (null==keyword) {
+        if (null == keyword) {
             retval = "";
-        }
-        else {
+        } else {
             retval = keyword.getText();
         }
-        
+
         return retval;
     }
-    
-    
+
     /**
-     * This method sets a keyword to a given position in the keyword datafile
-     * could be used for overwriting/changing existing keywords
-     * 
+     * This method sets a keyword to a given position in the keyword datafile could be used for
+     * overwriting/changing existing keywords
+     *
      * @param pos the position of the keyword
      * @param kw the keyword string itself
      */
@@ -1666,30 +1653,30 @@ public class Daten {
         // create a list of all keyword elements from the keyword xml file
         try {
             // retrieve keyword
-            Element keyword = retrieveElement(keywordFile,pos);
+            Element keyword = retrieveElement(keywordFile, pos);
             // if a valid element was found...
-            if (keyword!=null) {
+            if (keyword != null) {
                 // ...set the new text
                 keyword.setText(kw);
                 // find the oldkeyword in the synonymsfile...
                 int synpos = synonymsObj.findSynonym(oldkeyword, true);
                 // if we found a synonym, ask the user whether it also should be replaced
-                if (synpos!=-1) {
+                if (synpos != -1) {
                     // create a JOptionPane with yes/no/cancel options
-                    int option = JOptionPane.showConfirmDialog(zknframe.getFrame(), zknframe.getResourceMap().getString("replaceKeywordsInSynonymsMsg",oldkeyword,kw), zknframe.getResourceMap().getString("replaceKeywordsInSynonymsTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    int option = JOptionPane.showConfirmDialog(zknframe.getFrame(), zknframe.getResourceMap().getString("replaceKeywordsInSynonymsMsg", oldkeyword, kw), zknframe.getResourceMap().getString("replaceKeywordsInSynonymsTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
                     // when the user applied to yes, we also change the synonym
                     if (JOptionPane.YES_OPTION == option) {
                         // get the synonymline
                         String[] synline = synonymsObj.getSynonymLine(synpos, true);
                         // go through all synonyms...
-                        if (synline!=null && synline.length>1) {
-                            for (int cnt=0; cnt<synline.length; cnt++) {
+                        if (synline != null && synline.length > 1) {
+                            for (int cnt = 0; cnt < synline.length; cnt++) {
                                 // ...and check whether the synonym-word equals the old keyword. if yes, replace
                                 // the synonym at that position with the new keyword
                                 if (synline[cnt].equals(oldkeyword)) {
                                     synline[cnt] = kw;
                                 }
-                            }                       
+                            }
                         }
                         // finally, set back the synonyms.
                         synonymsObj.setSynonymLine(synpos, synline);
@@ -1698,20 +1685,18 @@ public class Daten {
                 // and change the modified state of the file
                 setModified(true);
             }
-        }
-        catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {
             // do nothing here
-            Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
         }
     }
-    
-    
+
     /**
-     * This method sets a keyword to a given position in the keyword datafile
-     * could be used for overwriting/changing existing keywords.
+     * This method sets a keyword to a given position in the keyword datafile could be used for
+     * overwriting/changing existing keywords.
      * <br><br>
-     * This method is only used to update a data file from an older data
-     * version, see CUpdateVersion for more details...
+     * This method is only used to update a data file from an older data version, see CUpdateVersion
+     * for more details...
      *
      * @param pos the position of the keyword
      * @param kw the keyword string itself
@@ -1721,9 +1706,9 @@ public class Daten {
         // create a list of all keyword elements from the keyword xml file
         try {
             // retrieve keyword
-            Element keyword = retrieveElement(keywordFile,pos);
+            Element keyword = retrieveElement(keywordFile, pos);
             // if a valid element was found...
-            if (keyword!=null) {
+            if (keyword != null) {
                 try {
                     // ...set the new text
                     keyword.setText(kw);
@@ -1731,15 +1716,13 @@ public class Daten {
                     keyword.setAttribute(ATTRIBUTE_FREQUENCIES, String.valueOf(freq));
                     // and change the modified state of the file
                     setModified(true);
-                }
-                catch (IllegalNameException | IllegalDataException ex) {
-                    Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
+                } catch (IllegalNameException | IllegalDataException ex) {
+                    Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
                 }
             }
-        }
-        catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {
             // do nothing here
-            Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
         }
     }
 
@@ -3630,11 +3613,11 @@ public class Daten {
      */
     public void deleteLuhmannNumber(int entry, int removevalue) {
         // check whether entry and removevalue are identical
-        if (entry==removevalue) return;
+        if (entry == removevalue) return;
         // get the entry where the luhmann-number should be added to
-        Element zettel = retrieveElement(zknFile,entry);
+        Element zettel = retrieveElement(zknFile, entry);
         // if entry does not exist, leave
-        if (null==zettel || null==zettel.getChild(ELEMENT_TRAILS)) return;
+        if (null == zettel || null == zettel.getChild(ELEMENT_TRAILS)) return;
         // get the luhmann-numbers  of that entry
         String lnr = zettel.getChild(ELEMENT_TRAILS).getText();
         // check whether the addvalue already exists in that entry
@@ -3655,7 +3638,9 @@ public class Daten {
                 }
             }
             // finally, remove trailing comma
-            if (sb.length()>1) sb.setLength(sb.length()-1);
+            if (sb.length() > 1) {
+                sb.setLength(sb.length() - 1);
+            }
             // and set the new string to the luhmann-tag
             zettel.getChild(ELEMENT_TRAILS).setText(sb.toString());
             // addvalue was successfully added
@@ -6220,7 +6205,7 @@ public class Daten {
                 String inhalt = zettel.getChild(ELEMENT_CONTENT).getText();
                 // find code-tags
                 int start = 0;
-                int end = 0;
+                int end;
                 while (start != -1) {
                     // find open-tag of code
                     start = inhalt.indexOf(Constants.FORMAT_CODE_OPEN, start);

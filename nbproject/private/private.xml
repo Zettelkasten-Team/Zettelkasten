@@ -125,6 +125,11 @@
             <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/util/Constants.java</file>
             <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/database/Daten.java</file>
             <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/ZettelkastenView.java</file>
+            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/tasks/TaskProgressDialog.java</file>
+            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/util/HtmlUbbUtil.java</file>
+            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/util/ZettelkastenViewUtil.java</file>
+            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/tasks/export/ExportToCsvTask.java</file>
+            <file>file:/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/src/de/danielluedecke/zettelkasten/tasks/DeleteEntryTask.java</file>
         </group>
     </open-files>
 </project-private>

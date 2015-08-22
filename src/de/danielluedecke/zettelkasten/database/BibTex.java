@@ -1053,34 +1053,39 @@ public class BibTex {
      */
     private String[] getKewords(BibtexEntry be) {
         // if we have no valid entry, return null
-        if (null==be) {
+        if (null == be) {
             return null;
         }
         // init variable
         String[] keywords = null;
         // retrieve keywods
         BibtexAbstractValue bav = be.getFieldValue("keywords");
-        if (bav!=null) {
+        if (bav != null) {
             // remove braces
             String keywordline = bav.toString().replace("{", "").replace("}", "");
             // check whether keywords contain ; or , as separator-char
-            String sep = (-1==keywordline.indexOf(";"))?",":";";
+            String sep = (-1 == keywordline.indexOf(";")) ? "," : ";";
             // split keywords
             keywords = keywordline.split(sep);
-        }
+        } 
         // in some cases, the field "keywords" is named "tags" instead. look for this
         // field if "keywords" does not exist
         else {
             // retrieve keywods
             bav = be.getFieldValue("tags");
-            if (bav!=null) {
+            if (bav != null) {
                 // remove braces
                 String keywordline = bav.toString().replace("{", "").replace("}", "");
                 // check whether keywords contain ; or , as separator-char
-                String sep = (-1==keywordline.indexOf(";"))?",":";";
+                String sep = (-1 == keywordline.indexOf(";")) ? "," : ";";
                 // split keywords
                 keywords = keywordline.split(sep);
             }
+        }
+        // trim spaces
+        if (keywords != null) {
+            for (int i = 0; i < keywords.length; i++)
+                keywords[i] = keywords[i].trim();
         }
         return keywords;
     }

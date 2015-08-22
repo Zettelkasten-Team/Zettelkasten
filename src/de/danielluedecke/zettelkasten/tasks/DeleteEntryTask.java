@@ -46,35 +46,40 @@ public class DeleteEntryTask extends org.jdesktop.application.Task<Object, Void>
     /**
      * CDaten object, which contains the XML data of the Zettelkasten
      */
-    private Daten dataObj;
+    private final Daten dataObj;
     /**
      * 
      */
-    private SearchRequests searchrequestsObj;
+    private final SearchRequests searchrequestsObj;
     /**
-     *
+     * Array of entry-index-numbers. These entries 
+     * will be deleted.
      */
-    private int[] entries;
+    private final int[] entries;
     
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
     
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(DeleteEntryTask.class);
     
     
     /**
+     * This progress dialog does the final step when deleting entries. While removal of
+     * entry in the data base is quite fast, the removal of links like trailing
+     * entries or search results may be time consuming. hence, this task is performed
+     * in this separate backgroud task.
      * 
-     * @param app
-     * @param parent
-     * @param label
-     * @param d
-     * @param sr
-     * @param nrs 
+     * @param app reference to Zettelkasten.app
+     * @param parent reference to parent dialog, usually "this"
+     * @param label message label for progress dialog
+     * @param d reference to Daten class
+     * @param sr reference to SearchRequests class
+     * @param nrs Array of entry-index-numbers. These entries will be deleted.
      */
     DeleteEntryTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, SearchRequests sr, int[] nrs) {
         // Runs on the EDT.  Copy GUI state that
@@ -98,16 +103,16 @@ public class DeleteEntryTask extends org.jdesktop.application.Task<Object, Void>
 
         int len = dataObj.getCount(Daten.ZKNCOUNT);
         // remove deleted entry-numbers from all luhmann-numbers of other entries...
-        for (int cnt=0; cnt<len; cnt++) {
+        for (int cnt = 0; cnt < len; cnt++) {
             for (int e : entries) {
-                dataObj.deleteLuhmannNumber(cnt+1, e);
+                dataObj.deleteLuhmannNumber(cnt + 1, e);
             }
-            setProgress(cnt,0,len);
+            setProgress(cnt, 0, len);
         }
         // remove deleted entries from search requests...
         for (int e : entries) {
-            for (int cnt=0; cnt<searchrequestsObj.getCount(); cnt++) {
-                if (searchrequestsObj.getZettelPositionInResult(cnt, e)!=-1) {
+            for (int cnt = 0; cnt < searchrequestsObj.getCount(); cnt++) {
+                if (searchrequestsObj.getZettelPositionInResult(cnt, e) != -1) {
                     searchrequestsObj.deleteResultEntry(cnt, e);
                 }
             }
