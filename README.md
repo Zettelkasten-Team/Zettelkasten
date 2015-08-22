@@ -11,16 +11,10 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 ### Changelog der aktuellen Entwicklerversion
 
 #### Neue Funktionen und Änderungen
-* Mehrfachformatierungen während der Neueingabe wurden vereinfacht durch Beibehalten der Textauswahl. Damit lässt sich ein Wort oder Absatz schneller mit mehreren Formatierungen hintereinander auszeichnen ([#39](https://github.com/sjPlot/Zettelkasten/issues/39)).
-* `[code]` formatiert Code-Blocks mit eingerückten Leerzeichen (d.h. wandelt `[code]` in `<pre>` um). Inline-Code wird jetzt durch \` ausgezeichnet (\`code\`) ([#48](https://github.com/sjPlot/Zettelkasten/issues/48)).
-* Aktualisierung der [JDOM](http://www.jdom.org)- und [OpenCSV](http://opencsv.sourceforge.net)-Bibliotheken.
 
 #### Behobene Fehler
-* Mehrere Suchbegriffe im Suchfenster, durch Kommata getrennt, werden jetzt von Leerzeichen bereinigt ([#27](https://github.com/sjPlot/Zettelkasten/issues/27)).
-* Markdown-Zitat werden jetzt korrekt nach LaTeX exportiert ([#31](https://github.com/sjPlot/Zettelkasten/issues/31)).
-* Doppelte Zeilenumbrüche entfernen bei Neueingabe wird jetzt nur auf Auswahl angewendet ([#16](https://github.com/sjPlot/Zettelkasten/issues/16)).
-* Literaturangaben waren nicht bearbeitbar, wenn lediglich Groß- in Kleinbuchstaben oder umgekehrt geändert wurden. Fehler behoben, ändern von Groß-/Kleinschreibung in Literaturangaben jetzt über die Registerkarte _Literatur_ möglich ([#47](https://github.com/sjPlot/Zettelkasten/issues/47)).
-* Querverweise auf einen gelöschten Zettel ließen sich nicht entfernen ([#38](https://github.com/sjPlot/Zettelkasten/issues/38)).
+* Schlagwörter importieren von BibTex-Einträgen (ohne neuen Eintrag zu erstellen) funktionierte nicht. Fehler behoben ([#33](https://github.com/sjPlot/Zettelkasten/issues/33)).
+
 
 ### Screenshots
 Aktuelle Screenshots [gibt es hier](http://zettelkasten.danielluedecke.de/gallery.php).
