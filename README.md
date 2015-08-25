@@ -14,6 +14,7 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 
 #### Behobene Fehler
 * Schlagwörter importieren von BibTex-Einträgen (ohne neuen Eintrag zu erstellen) funktionierte nicht. Fehler behoben ([#33](https://github.com/sjPlot/Zettelkasten/issues/33)).
+* Querverweisen mit Tooltips mit Anführungszeichen funktionierten nicht. Fehler behoben ([#53](https://github.com/sjPlot/Zettelkasten/issues/53)).
 
 
 ### Screenshots
