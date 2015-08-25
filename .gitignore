@@ -11,7 +11,8 @@
 /target/
 
 # IDE Settings #
-nbproject/
+/nbproject/
+/nbproject/private/
 .classpath
 .settings/
 .project

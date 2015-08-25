@@ -886,7 +886,10 @@ public class HtmlUbbUtil {
                     String title = dataObj.getZettelTitle(znr);
                     // if we have title, add it
                     if (!title.isEmpty()) {
+                        // check if title has quotes, and if so, remove them
+                        title = title.replace("\"", "").replace("'", "");
                         title = title.trim();
+                        // insert alt text
                         dummy = dummy.substring(0, end+1) + " alt=\"" + title + "\"" + " title=\"" + title + "\"" + dummy.substring(end+1);
                     }
                     // increase pos counter
@@ -2095,6 +2098,8 @@ public class HtmlUbbUtil {
                 try {
                     int entrynr = Integer.parseInt(entry);
                     String title = dataObj.getZettelTitle(entrynr).trim();
+                    // check if title has quotes, and if so, escape them
+                    title = title.replace("\"", "").replace("'", "");
                     entrysb.append("<a href=\"#cr_").append(entry).append("\" alt=\"").append(title).append("\" title=\"").append(title).append("\">").append(entry).append("</a>").append(" &middot; ");
                 }
                 catch (NumberFormatException ex) {
