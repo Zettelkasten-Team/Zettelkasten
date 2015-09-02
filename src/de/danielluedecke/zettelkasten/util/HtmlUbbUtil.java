@@ -1923,6 +1923,8 @@ public class HtmlUbbUtil {
         // but the source-information only stores the file name, not the path information.
         // see CNewEntry.java, method "insertImage" for more details
         String imgpath = settings.getImagePath(dataObj.getUserImagePath(),true);
+        // for latex, we need / instead of \ as separator char
+        imgpath = imgpath.replace("\\", "/");
         // if we have a windows operating system, we have to add an additonal
         // separator char, so the link to the image starts with "file:///" instead of only "file://"
         // if (IS_WINDOWS) imgpath = File.separatorChar+imgpath;
