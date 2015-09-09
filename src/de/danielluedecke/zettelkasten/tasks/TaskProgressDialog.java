@@ -48,6 +48,7 @@ import de.danielluedecke.zettelkasten.tasks.export.ExportToTexTask;
 import de.danielluedecke.zettelkasten.tasks.export.ExportToTxtTask;
 import de.danielluedecke.zettelkasten.tasks.export.ExportToXmlTask;
 import de.danielluedecke.zettelkasten.tasks.export.ExportToZknTask;
+import de.danielluedecke.zettelkasten.tasks.importtasks.ImportFromCSV;
 import de.danielluedecke.zettelkasten.tasks.importtasks.ImportFromWeb;
 import de.danielluedecke.zettelkasten.tasks.importtasks.ImportFromZkn;
 import de.danielluedecke.zettelkasten.tasks.importtasks.ImportFromZkx;
@@ -671,7 +672,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
     }
     public TaskProgressDialog(java.awt.Frame parent, int task_id, TasksData td,
                               Daten d, Bookmarks bm, DesktopData dt, SearchRequests sr, Settings s,
-                              int type, File fp, boolean atou, boolean appendit, String dts, URL url) {
+                              int type, File fp, String sepchar, boolean atou, boolean appendit, String dts, URL url) {
         super(parent);
         // store parameters
         dataObj = d;
@@ -702,6 +703,9 @@ public class TaskProgressDialog extends javax.swing.JDialog {
                         break;
                     case Constants.TYPE_URL:
                         foregroundTask = importFromWeb(url);
+                        break;
+                    case Constants.TYPE_CSV:
+                        foregroundTask = importFromCSV(fp, sepchar, atou, appendit, dts);
                         break;
                     default:
                         break;
@@ -836,6 +840,11 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         return new ImportFromZkn(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
                                        this, msgLabel, taskinfo, dataObj, bookmarkObj, desktopObj, searchrequestsObj,
                                        settingsObj, fp, asciiToUnicode, appendit, defaulttimestamp);
+    }
+    private Task importFromCSV(File fp, String sepchar, boolean asciiToUnicode, boolean appendit, String defaulttimestamp) {
+        return new ImportFromCSV(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
+                                       this, msgLabel, taskinfo, dataObj, bookmarkObj, desktopObj, searchrequestsObj,
+                                       settingsObj, fp, sepchar, asciiToUnicode, appendit, defaulttimestamp);
     }
     private Task importFromWeb(URL url) {
         return new ImportFromWeb(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),

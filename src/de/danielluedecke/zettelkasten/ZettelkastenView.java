@@ -5962,7 +5962,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // get parent und init window
             taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_IMPORTDATA, taskinfo,
                                               data, bookmarks, desktop, searchrequests, settings,
-                                              Constants.TYPE_URL, null, 
+                                              Constants.TYPE_URL, null, "",
                                               false, false,
                                               "", url);
             // center window
@@ -7425,10 +7425,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 if (null == taskDlg) {
                     // get parent und init window
                     taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_IMPORTDATA, taskinfo,
-                                                      data, bookmarks, desktop, searchrequests, settings,
-                                                      importWindow.getImportType(), importWindow.getFilePath(), 
-                                                      importWindow.getAsciiToUnicode(), importWindow.getAppend(),
-                                                      defaulttimestamp, null);
+                            data, bookmarks, desktop, searchrequests, settings,
+                            importWindow.getImportType(), importWindow.getFilePath(), 
+                            importWindow.getSeparatorChar(), importWindow.getAsciiToUnicode(), 
+                            importWindow.getAppend(), defaulttimestamp, null);
                     // center window
                     taskDlg.setLocationRelativeTo(getFrame());
                 }

@@ -243,6 +243,11 @@
                 <Property name="name" type="java.lang.String" value="insertNewEntryMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator31">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="jSeparator31" noResource="true"/>
+              </Properties>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="addEntryMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
@@ -257,6 +262,14 @@
                   <action class="de.danielluedecke.zettelkasten.DesktopFrame" id="addLuhmann" methodName="addLuhmann"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="addLuhmannMenuItem" noResource="true"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="addLuhmannCompleteMenuItem">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="de.danielluedecke.zettelkasten.DesktopFrame" id="addLuhmannComplete" methodName="addLuhmannComplete"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="addLuhmannCompleteMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JSeparator" name="jSeparator5">

@@ -61,10 +61,6 @@ import org.jdesktop.application.Action;
  * the modal state of the dialog
  * and the data objetct "CDaten" which adds new entry to the "Zettelkasten"
  * 
- * @param java.awt.Frame parent
- * @param boolean modal
- * @param CDaten d
- * 
  * @author  danielludecke
  */
 public class CImport extends javax.swing.JDialog {
@@ -72,15 +68,15 @@ public class CImport extends javax.swing.JDialog {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap = 
+    private final org.jdesktop.application.ResourceMap resourceMap = 
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CImport.class);
     /**
      * file path to import file
      */
     private File filepath;
-    private Settings settingsObj;
-    private BibTex bibtexObj;
+    private final Settings settingsObj;
+    private final BibTex bibtexObj;
     /**
      * indicates which type of data format should be imported.
      * refer to the Zettelkasten.view properties file (resources) to see
@@ -103,11 +99,13 @@ public class CImport extends javax.swing.JDialog {
      * possible or not. if we have no data, we disable the radiobuttons and simply
      * create a new data file.
      */
-    private boolean appendingpossible, appendingrestore;
+    private final boolean appendingrestore;
+    private boolean appendingpossible;
     /**
      * Indicates whether we have a currently opened dataset or not...
      */
-    private boolean dataavailable;
+    private final boolean dataavailable;
+    private String separatorchar;
     /**
      * return value which indicates whether the dialog was closed correcty or
      * if a the action was cancelled
@@ -118,7 +116,13 @@ public class CImport extends javax.swing.JDialog {
     private int retval;
     
     
-    /** Creates new form CImport */
+    /**
+     * 
+     * @param parent
+     * @param st
+     * @param bt
+     * @param ap 
+     */
     public CImport(java.awt.Frame parent,Settings st, BibTex bt, boolean ap) {
         super(parent);
         initComponents();
@@ -186,6 +190,8 @@ public class CImport extends javax.swing.JDialog {
         asciitounicode = jCheckBox1.isSelected();
         // check whether the data should be appended to the opened data-file
         append = jRadioButton2.isSelected();
+        // separator char?
+        separatorchar = jTextFieldCsvSeparator.getText();
         // Close Window
         retval = 1;
         setVisible(false);
@@ -405,6 +411,10 @@ public class CImport extends javax.swing.JDialog {
                             jButton1.requestFocusInWindow();
                             break;
                     case Constants.TYPE_CSV:
+                            jCheckBox1.setEnabled(false);
+                            jCheckBox1.setSelected(false);
+                            // set focus on the file choose button...
+                            jTextFieldCsvSeparator.requestFocusInWindow();
                     case Constants.TYPE_XML:
                             jCheckBox1.setEnabled(true);
                             // set focus on the checkbox
@@ -450,7 +460,8 @@ public class CImport extends javax.swing.JDialog {
      * refer to the Zettelkasten.view properties file (resources) to see
      * which number is which file type.
      * 
-     * @return <ul>
+     * @return
+     * <ul>
      * <li>TYPE_ZKN3 (new zettelkasten-files)</li>
      * <li>TYPE_ZKN (older zettelkasten-file)(</li>
      * <li>TYPE_META (foreign-words-list from the old zettelkasten)</li>
@@ -463,6 +474,7 @@ public class CImport extends javax.swing.JDialog {
      * <li>TYPE_ZKD (desktop-file from the old zettelkasten(</li>
      * <li>TYPE_ZKF (foreign-words-list from the old zettelkasten)</li>
      * <li>TYPE_ZKT (steno-list from the old zettelkasten)</li>
+     * </ul>
      */
     public int getImportType() {
         return importType;
@@ -485,6 +497,14 @@ public class CImport extends javax.swing.JDialog {
      */
     public boolean getAppend() {
         return append;
+    }
+    /**
+     * Returns the separator char for CSV files.
+     * 
+     * @return The separator char for CSV files
+     */
+    public String getSeparatorChar() {
+        return separatorchar;
     }
     /**
      * indicates whether the we have any data at all, and thus appending is
@@ -546,6 +566,8 @@ public class CImport extends javax.swing.JDialog {
         jRadioButton2 = new javax.swing.JRadioButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        jTextFieldCsvSeparator = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CImport.class);
@@ -602,32 +624,45 @@ public class CImport extends javax.swing.JDialog {
         jButton3.setAction(actionMap.get("cancelImport")); // NOI18N
         jButton3.setName("jButton3"); // NOI18N
 
+        jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
+        jLabel4.setName("jLabel4"); // NOI18N
+
+        jTextFieldCsvSeparator.setColumns(4);
+        jTextFieldCsvSeparator.setText(resourceMap.getString("jTextFieldCsvSeparator.text")); // NOI18N
+        jTextFieldCsvSeparator.setToolTipText(resourceMap.getString("jTextFieldCsvSeparator.toolTipText")); // NOI18N
+        jTextFieldCsvSeparator.setName("jTextFieldCsvSeparator"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField1))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldCsvSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jRadioButton2)
+                            .addComponent(jRadioButton1)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jComboBox_importType, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(jCheckBox1)
                             .addComponent(jLabel2)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE))
-                            .addComponent(jLabel3)))
-                    .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton2)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(211, Short.MAX_VALUE)
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)))
+                            .addComponent(jLabel3))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -639,6 +674,10 @@ public class CImport extends javax.swing.JDialog {
                 .addComponent(jComboBox_importType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBox1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jTextFieldCsvSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -651,7 +690,7 @@ public class CImport extends javax.swing.JDialog {
                 .addComponent(jRadioButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jRadioButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton3)
                     .addComponent(jButton2)))
@@ -696,10 +735,12 @@ private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextFieldCsvSeparator;
     // End of variables declaration//GEN-END:variables
 
 }

@@ -1171,7 +1171,9 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         }
         else {
             // set cell renderer, for desktop icons
-            jTreeDesktop.setCellRenderer(new MyCommentRenderer(Constants.iconDesktopComment, settingsObj.getUseMacBackgroundColor()));
+            jTreeDesktop.setCellRenderer(new MyCommentRenderer(Constants.iconDesktopComment, 
+                    Constants.iconDesktopLuhmann,
+                    settingsObj.getUseMacBackgroundColor()));
             if (settingsObj.getUseMacBackgroundColor()) {
                 jTreeDesktop.setBackground(ColorUtil.colorJTreeLighterBackground);
                 jTreeDesktop.setForeground(ColorUtil.colorJTreeDarkText);
@@ -1412,11 +1414,12 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      *
      */
     private class MyCommentRenderer extends DefaultTreeCellRenderer {
-        Icon commentIcon;
+        Icon commentIcon, luhmannIcon;
         boolean useMacBackgound;
 
-        public MyCommentRenderer(Icon icon, boolean bg) {
+        public MyCommentRenderer(Icon icon, Icon iconLuhmann, boolean bg) {
             commentIcon = icon;
+            luhmannIcon = iconLuhmann;
             useMacBackgound = bg;
         }
 
@@ -1439,6 +1442,8 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             setFont(getFont().deriveFont((leaf) ? Font.PLAIN : Font.BOLD));
             if (isCommentNode(value)) {
                 setIcon(commentIcon);
+            } else if (isLuhmannNode(value)) {
+                setIcon(luhmannIcon);
             }
             return this;
         }
@@ -1456,6 +1461,28 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             // when root, return
             if (node.isRoot()) return false;
             return (!desktopObj.getComment(TreeUtil.getNodeTimestamp(node),"<br>").isEmpty());
+        }
+        /**
+         * This method checks whether an entry of a selected node 
+         * has follower numbers or not.
+         *
+         * @param value the selected node
+         * @return {@code true} if the entry of the selected node has 
+         * followers, {@code false} otherwise.
+         */
+        protected boolean isLuhmannNode(Object value) {
+            // if no value return
+            if (null==value) return false;
+            // retrieve node
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
+            // when root, return
+            if (node.isRoot()) return false;
+            // else, get entry number of selected node
+            int entry = TreeUtil.extractEntryNumberFromNode(node);
+            // no entry selected? then return false
+            if (-1 == entry) return false;
+            // return, whether entry has followers
+            return (dataObj.hasLuhmannNumbers(entry));
         }
     }
     
@@ -2459,10 +2486,10 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // else we have selected a parent (bullet/header). the entry should be inserted at
         // first posiion after the bullet.
         if (!insert.getAllowsChildren()) {
-            DefaultMutableTreeNode parent =(DefaultMutableTreeNode) insert.getParent();
+            DefaultMutableTreeNode parent = (DefaultMutableTreeNode) insert.getParent();
             // get the index of the selected child (i.e. the selected entry)
             // and add one, so the entry is inserted *after* the current selected entry
-            childcount = parent.getIndex(insert)+1;
+            childcount = parent.getIndex(insert) + 1;
             // and set the insert-value to the parent
             insert = parent;
         }
@@ -2480,20 +2507,30 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // init multiple message flag
         showMultipleEntryMsg = true;
         // check for valid user-input
-        if (entries!=null) for (int cnt : entries) {
-            // check whether entry already exists
-            if (noDoubleEntries(insert,cnt)) {
+        if (entries != null) {
+            for (int cnt : entries) {
+                // check whether entry already exists
+                if (noDoubleEntries(insert, cnt)) {
                 // go through all desktops and check whether the current entry already exists.
-                // if yes, add added entry to our linked list.
-                for (int me=0; me<desktopObj.getCount(); me++) if (desktopObj.checkForDoubleEntry(me, cnt)) multipleEntries.add(cnt);
-                // add entry to desktop (xml-file)
-                lastadded = desktopObj.addEntry(TreeUtil.getNodeTimestamp(insert), String.valueOf(cnt), childcount);
-                // check whether we also have modifications to add
-                if (modifications!=null && !modifications.isEmpty()) desktopObj.addModifiedEntry(lastadded, modifications);
-                // remember that we have changes
-                modified = true;
-                // increase counter to indicate next entry
-                childcount++;
+                    // if yes, add added entry to our linked list.
+                    for (int me = 0; me < desktopObj.getCount(); me++) {
+                        if (desktopObj.checkForDoubleEntry(me, cnt)) {
+                            multipleEntries.add(cnt);
+                        }
+                    }
+                    // add entry to desktop (xml-file)
+                    lastadded = desktopObj.addEntry(TreeUtil.getNodeTimestamp(insert),
+                            String.valueOf(cnt),
+                            childcount);
+                    // check whether we also have modifications to add
+                    if (modifications != null && !modifications.isEmpty()) {
+                        desktopObj.addModifiedEntry(lastadded, modifications);
+                    }
+                    // remember that we have changes
+                    modified = true;
+                    // increase counter to indicate next entry
+                    childcount++;
+                }
             }
         }
         // update treeview if we have changes
@@ -2507,28 +2544,28 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         }
     }
 
-
     private void showMultipleOccurencesMessage(List<Object[]> list) {
         // if we have any multiple occurences, the stringbuilder must be longer than 0
         multipleOccurencesMessage = Tools.prepareDoubleEntriesMessage(list);
         // check whether we have any multiple occurences...
-        if(multipleOccurencesMessage!=null) {
+        if (multipleOccurencesMessage != null) {
             // check whether this dialog should be displayed at all...
             if (!settingsObj.getHideMultipleDesktopOccurencesDlg()) {
                 multipleOccurencesMessage = resourceMap.getString("showMultipleEntriesOnDesktop")
-                                          + lineseparator+lineseparator
-                                          + multipleOccurencesMessage;
-                if (null==multipleOccurencesDlg) {
+                        + lineseparator + lineseparator
+                        + multipleOccurencesMessage;
+                if (null == multipleOccurencesDlg) {
                     // create a new dialog with the desktop-dialog, passing some initial values
-                    multipleOccurencesDlg = new CShowMultipleDesktopOccurences(this,settingsObj,false,multipleOccurencesMessage);
+                    multipleOccurencesDlg = new CShowMultipleDesktopOccurences(this, 
+                            settingsObj, false, multipleOccurencesMessage);
                     // center window
                     multipleOccurencesDlg.setLocationRelativeTo(null);
+                } else {
+                    multipleOccurencesDlg.setInfoMsg(multipleOccurencesMessage);
                 }
-                else multipleOccurencesDlg.setInfoMsg(multipleOccurencesMessage);
                 // show window
                 ZettelkastenApp.getApplication().show(multipleOccurencesDlg);
-            }
-            // if not, just display icon
+            } // if not, just display icon
             else {
                 jButtonShowMultipleOccurencesDlg.setVisible(true);
             }
@@ -2624,6 +2661,17 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      */
     @Action(enabledProperty = "luhmannNodeSelected")
     public void addLuhmann() {
+        addEntries(dataObj.getLuhmannNumbers(getSelectedEntryNumber()));
+    }
+    
+    
+    /**
+     * This action is enabled, when an entry has follower-entries (Luhmann-Numbers). If a user
+     * performs this action, all entry's follower-entries (Luhmann-Numbers) are added behind this
+     * entry.
+     */
+    @Action(enabledProperty = "luhmannNodeSelected")
+    public void addLuhmannComplete() {
         // init string builder
         luhmannnumbers = new StringBuilder("");
         // get recursive Luhmann-Numbers
@@ -2663,6 +2711,38 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             }
         }
     }
+
+    
+//    /**
+//     * This method recursively retrieves all follower- and sub-follower-numbers
+//     * (Luhmann-Numbers) of an entry and adds them to a stringbuilder. This method
+//     * is needed for the {@link #addLuhmann addLuhmann}-Action that adds these
+//     * follower-numbers to the treeview, directly behind the selected entry.
+//     * 
+//     * @param zettelpos the number of the selected entry
+//     */
+//    private String fillLuhmannNumbersWithBullets(int zettelpos, String timestamp) {
+//        String lastadded = timestamp;
+//        // get the text from the luhmann-numbers
+//        String lnr = dataObj.getLuhmannNumbers(zettelpos);
+//        // if we have any luhmann-numbers, go on...
+//        if (!lnr.isEmpty()) {
+//            String[] lnrs = lnr.split(",");
+//            // go throughh array of current luhmann-numbers
+//            for (String exist : lnrs) {
+//                // add entry to desktop (xml-file)
+//                lastadded = desktopObj.addEntry(timestamp, exist, 0);
+//                
+//                if (dataObj.hasLuhmannNumbers(Integer.parseInt(exist))) {
+//                    lastadded = desktopObj.addBullet(lastadded, "Ebene " + exist);
+//                    // check whether luhmann-value exists, by re-calling this method
+//                    // again and go through a recusrive loop
+//                    fillLuhmannNumbersWithBullets(Integer.parseInt(exist), lastadded);
+//                }
+//            }
+//        }
+//        return (lastadded);
+//    }
 
     
     /**
@@ -3977,8 +4057,10 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         jSeparator1 = new javax.swing.JSeparator();
         addBulletMenuItem = new javax.swing.JMenuItem();
         insertNewEntryMenuItem = new javax.swing.JMenuItem();
+        jSeparator31 = new javax.swing.JPopupMenu.Separator();
         addEntryMenuItem = new javax.swing.JMenuItem();
         addLuhmannMenuItem = new javax.swing.JMenuItem();
+        addLuhmannCompleteMenuItem = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JSeparator();
         exportSubMenu = new javax.swing.JMenu();
         exportMenuItem = new javax.swing.JMenuItem();
@@ -4576,6 +4658,9 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         insertNewEntryMenuItem.setName("insertNewEntryMenuItem"); // NOI18N
         desktopMenuFile.add(insertNewEntryMenuItem);
 
+        jSeparator31.setName("jSeparator31"); // NOI18N
+        desktopMenuFile.add(jSeparator31);
+
         addEntryMenuItem.setAction(actionMap.get("addEntry")); // NOI18N
         addEntryMenuItem.setName("addEntryMenuItem"); // NOI18N
         desktopMenuFile.add(addEntryMenuItem);
@@ -4583,6 +4668,10 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         addLuhmannMenuItem.setAction(actionMap.get("addLuhmann")); // NOI18N
         addLuhmannMenuItem.setName("addLuhmannMenuItem"); // NOI18N
         desktopMenuFile.add(addLuhmannMenuItem);
+
+        addLuhmannCompleteMenuItem.setAction(actionMap.get("addLuhmannComplete")); // NOI18N
+        addLuhmannCompleteMenuItem.setName("addLuhmannCompleteMenuItem"); // NOI18N
+        desktopMenuFile.add(addLuhmannCompleteMenuItem);
 
         jSeparator5.setName("jSeparator5"); // NOI18N
         desktopMenuFile.add(jSeparator5);
@@ -5088,6 +5177,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addBulletMenuItem;
     private javax.swing.JMenuItem addEntryMenuItem;
+    private javax.swing.JMenuItem addLuhmannCompleteMenuItem;
     private javax.swing.JMenuItem addLuhmannMenuItem;
     private javax.swing.JMenuItem applyAllModificationsMenuItem;
     private javax.swing.JMenuItem applyModificationsToOriginalMenuItem;
@@ -5170,6 +5260,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     private javax.swing.JToolBar.Separator jSeparator29;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator30;
+    private javax.swing.JPopupMenu.Separator jSeparator31;
     private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
