@@ -44,6 +44,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -290,7 +291,8 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                 searchEntries[cnt] = intlist.get(cnt);
             }
         }
-
+        // save search time
+        long nt = System.nanoTime();
         switch (typeOfSearch) {
             //
             // here starts a usual search request
@@ -304,11 +306,6 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                 // this may differ. a search request from the main-window usually searches through
                 // all entries, while a filter of search results only is applied to certain entries.
                 // therefor, we store all relevant entry-numbers for the search in an integer-array
-                
-                
-                // TODO remove
-                long nt = System.nanoTime();
-                
                 for (int counter = 0; counter < len; counter++) {
                     // get the number of the entry which we want to search through...
                     int searchnr = searchEntries[counter];
@@ -453,9 +450,8 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     // update progressbar
                     setProgress(counter, 0, len);
                 }
-                
-                System.out.println(String.valueOf((System.nanoTime() - nt) / 1000));
-                
+                // stop time
+                double searchseconds = (double)(System.nanoTime() - nt) / 1000000000.0;
                 // finally, check whether we have any searchresults at all...
                 if (finalresults.size() > 0) {
                     // init the final results-array with the index-numbers of the found entries
@@ -539,6 +535,8 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         }
                         ldesc.append(System.lineSeparator()).append("- ").append(st);
                     }
+                    // for search log
+                    StringBuilder anonymsearchtext = new StringBuilder(String.valueOf(searchTerms.length) + " search terms; ");
                     // search-options will be displayed in new line
                     ldesc.append(System.lineSeparator()).append("(");
                     // add the logical combination to the search description
@@ -547,29 +545,35 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         case Constants.LOG_AND:
                             desc.append(resourceMap.getString("logAndText"));
                             ldesc.append(resourceMap.getString("logAndText"));
+                            anonymsearchtext.append(resourceMap.getString("logAndText"));
                             break;
                         // add short and long desctiption for the logical-or-search
                         case Constants.LOG_OR:
                             desc.append(resourceMap.getString("logOrText"));
                             ldesc.append(resourceMap.getString("logOrText"));
+                            anonymsearchtext.append(resourceMap.getString("logOrText"));
                             break;
                         // add short and long desctiption for the logical-not-search
                         case Constants.LOG_NOT:
                             desc.append(resourceMap.getString("logNotText"));
                             ldesc.append(resourceMap.getString("logNotText"));
+                            anonymsearchtext.append(resourceMap.getString("logNotText"));
                             break;
                     }
                     desc.append(", ");
+                    anonymsearchtext.append("; ");
                     // add new line for further search options
                     ldesc.append(")").append(System.lineSeparator()).append(System.lineSeparator());
                     // append where the user searched for the searchterms
                     desc.append(resourceMap.getString("searchWhere")).append(" ");
+                    anonymsearchtext.append("searched in ");
                     ldesc.append(resourceMap.getString("searchWhere")).append(":").append(System.lineSeparator());
                     int wherecnt = 0;
                     // when we searched keywords, add to description that keywords where one of the
                     // entries fields that have been searched for the find term...
                     if ((where & Constants.SEARCH_KEYWORDS) != 0) {
                         desc.append(resourceMap.getString("searchInKeywords")).append(", ");
+                        anonymsearchtext.append(resourceMap.getString("searchInKeywords")).append(", ");
                         ldesc.append("- ").append(resourceMap.getString("searchInKeywords")).append(System.lineSeparator());
                         wherecnt++;
                     }
@@ -577,6 +581,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     // entries fields that have been searched for the find term...
                     if ((where & Constants.SEARCH_AUTHOR) != 0) {
                         desc.append(resourceMap.getString("searchInAuthors")).append(", ");
+                        anonymsearchtext.append(resourceMap.getString("searchInAuthors")).append(", ");
                         ldesc.append("- ").append(resourceMap.getString("searchInAuthors")).append(System.lineSeparator());
                         wherecnt++;
                     }
@@ -584,6 +589,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     // entries fields that have been searched for the find term...
                     if ((where & Constants.SEARCH_CONTENT) != 0) {
                         desc.append(resourceMap.getString("searchInContent")).append(", ");
+                        anonymsearchtext.append(resourceMap.getString("searchInContent")).append(", ");
                         ldesc.append("- ").append(resourceMap.getString("searchInContent")).append(System.lineSeparator());
                         wherecnt++;
                     }
@@ -595,6 +601,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         // short description only 3 parts
                         if (wherecnt < 3) {
                             desc.append(resourceMap.getString("searchInTitle")).append(", ");
+                            anonymsearchtext.append(resourceMap.getString("searchInTitle")).append(", ");
                         }
                         wherecnt++;
                     }
@@ -606,6 +613,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         // short description only 3 parts
                         if (wherecnt < 3) {
                             desc.append(resourceMap.getString("searchInLinks")).append(", ");
+                            anonymsearchtext.append(resourceMap.getString("searchInLinks")).append(", ");
                         }
                         wherecnt++;
                     }
@@ -617,6 +625,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         // short description only 3 parts
                         if (wherecnt < 3) {
                             desc.append(resourceMap.getString("searchInLinksContent")).append(", ");
+                            anonymsearchtext.append(resourceMap.getString("searchInLinksContent")).append(", ");
                         }
                         wherecnt++;
                     }
@@ -627,6 +636,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         ldesc.append("- ").append(resourceMap.getString("searchInRemarks")).append(System.lineSeparator());
                         if (wherecnt < 3) {
                             desc.append(resourceMap.getString("searchInRemarks")).append(", ");
+                            anonymsearchtext.append(resourceMap.getString("searchInRemarks")).append(", ");
                         }
                         wherecnt++;
                     }
@@ -634,11 +644,16 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     if (desc.length() > 2) {
                         desc.setLength(desc.length() - 2);
                     }
+                    if (anonymsearchtext.length() > 2) {
+                        anonymsearchtext.setLength(anonymsearchtext.length() - 2);
+                    }
                     // when we have more than 3 search areas, add this to description
                     if (wherecnt > 3) {
                         // add text, that there are even more search-areas, that have been let out here
                         desc.append(" ");
                         desc.append(resourceMap.getString("andMoreSearchwhere"));
+                        anonymsearchtext.append(" ");
+                        anonymsearchtext.append(resourceMap.getString("andMoreSearchwhere"));
                     }
                     // append a time-string, so we always have a unique search-description,
                     // even if the user searches twice for the same searchterms
@@ -649,17 +664,22 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         ldesc.append(System.lineSeparator()).append(resourceMap.getString("longDescSearchOptions"));
                         if (wholeword) {
                             ldesc.append(System.lineSeparator()).append("- ").append(resourceMap.getString("longDescWholeWord"));
+                            anonymsearchtext.append("; whole word");
                         }
                         if (matchcase) {
                             ldesc.append(System.lineSeparator()).append("- ").append(resourceMap.getString("longDescMatchCase"));
+                            anonymsearchtext.append("; match case");
                         }
                         if (synonyms) {
                             ldesc.append(System.lineSeparator()).append("- ").append(resourceMap.getString("longDescSynonyms"));
+                            anonymsearchtext.append("; synonym search");
                         }
                     }
                     // copy description to string
                     searchLabel = desc.toString();
                     longdesc = ldesc.toString();
+                    // log search time
+                    Constants.zknlogger.log(Level.INFO, "Search Request: {0}; Duration: {1} seconds.", new Object[]{anonymsearchtext.toString(), String.format("%.03f", searchseconds)});
                     // add all search request data and search results to our search-request-class
                     // but only, if we don't want to add the data to the desktop instead of having
                     // a searchrequest
@@ -671,7 +691,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                 }
                 break;
 
-        //
+            //
             // here starts a search for entries without authors
             //
             case Constants.SEARCH_NO_AUTHORS:
