@@ -205,14 +205,16 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
         // prevent task from processing when the file path is incorrect
         //
         // when the searchEntries-array is not null, we usually have a filtered search request
-        boolean filteredSearch = (searchEntries!=null);
+        boolean filteredSearch = (searchEntries != null);
         // when we pass "null" as parameter for the entry-numbers of those entries
         // where the search should be applied to, we assume that we want to search
         // through the whole data. thus, we fill the arrays with all entrynumbers now...
-        if (null==searchEntries) {
+        if (null == searchEntries) {
             searchEntries = new int[dataObj.getCount(Daten.ZKNCOUNT)];
             // go through all entries
-            for (int cnt=1; cnt<=dataObj.getCount(Daten.ZKNCOUNT);cnt++) searchEntries[cnt-1] = cnt;
+            for (int cnt = 1; cnt <= dataObj.getCount(Daten.ZKNCOUNT); cnt++) {
+                searchEntries[cnt - 1] = cnt;
+            }
         }
         // when we have a search for entries within a certain period,
         // filter these entries
@@ -220,13 +222,13 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
             // create new list for integer values
             List<Integer> intlist = new ArrayList<>();
             // go through all entries
-            for (int cnt=0; cnt<searchEntries.length;cnt++ ) {
+            for (int cnt = 0; cnt < searchEntries.length; cnt++) {
                 // get entrynumber
                 int entrynumber = searchEntries[cnt];
                 // get entries timestamp
                 String[] timestamp = dataObj.getTimestamp(entrynumber);
                 // if we have a timestamp, go on.
-                if (timestamp!=null) {
+                if (timestamp != null) {
                     // create string that hold the created and edited date
                     String created = "";
                     String edited = "";
@@ -236,8 +238,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     try {
                         created = timestamp[0].substring(0, 6);
                         edited = timestamp[1].substring(0, 6);
-                    }
-                    catch (IndexOutOfBoundsException e) {
+                    } catch (IndexOutOfBoundsException e) {
                         // nothing here
                     }
                     // check which part of the timestamp is relevant, i.e. whether the entry's
@@ -246,22 +247,30 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         case Constants.TIMESTAMP_CREATED:
                             // if we have no creation timestamp or the period-start is bigger
                             // than or the period-end is below our creaion date, then leave
-                            if (created.isEmpty() || datefrom.compareTo(created)>0 || dateto.compareTo(created)<0) break;
+                            if (created.isEmpty() || datefrom.compareTo(created) > 0 || dateto.compareTo(created) < 0) {
+                                break;
+                            }
                             // else add entry to searchlist
                             intlist.add(entrynumber);
                             break;
                         case Constants.TIMESTAMP_EDITED:
                             // if we have no edited timestamp or the period-start is bigger
                             // than or the period-end is below our edited date, then leave
-                            if (edited.isEmpty() || datefrom.compareTo(edited)>0 || dateto.compareTo(edited)<0) break;
+                            if (edited.isEmpty() || datefrom.compareTo(edited) > 0 || dateto.compareTo(edited) < 0) {
+                                break;
+                            }
                             // else add entry to searchlist
                             intlist.add(entrynumber);
                             break;
                         case Constants.TIMESTAMP_BOTH:
                             // if we have no edited or creation timestamp or the period-start is bigger
                             // than or the period-end is below our edited or creation date, then leave
-                            if (created.isEmpty()&&edited.isEmpty()) break;
-                            if ((datefrom.compareTo(created)>0 || dateto.compareTo(created)<0) && (datefrom.compareTo(edited)>0 || dateto.compareTo(edited)<0)) break;
+                            if (created.isEmpty() && edited.isEmpty()) {
+                                break;
+                            }
+                            if ((datefrom.compareTo(created) > 0 || dateto.compareTo(created) < 0) && (datefrom.compareTo(edited) > 0 || dateto.compareTo(edited) < 0)) {
+                                break;
+                            }
                             // else add entry to searchlist
                             intlist.add(entrynumber);
                             break;
@@ -270,22 +279,22 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
             }
             // if we have no entries within this time period,
             // clear result-array and return null (leave task)
-            if (intlist.size()<1) {
+            if (intlist.size() < 1) {
                 results = null;
                 return null;
             }
             // create new array with entries that should be searched
             searchEntries = new int[intlist.size()];
             // copy all elements of the list to our searchEntries-array
-            for (int cnt=0; cnt<intlist.size();cnt++) {
+            for (int cnt = 0; cnt < intlist.size(); cnt++) {
                 searchEntries[cnt] = intlist.get(cnt);
             }
         }
 
         switch (typeOfSearch) {
-        //
-        // here starts a usual search request
-        //
+            //
+            // here starts a usual search request
+            //
             case Constants.SEARCH_USUAL:
                 // get the amount of entries
                 int len = searchEntries.length;
@@ -295,7 +304,12 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                 // this may differ. a search request from the main-window usually searches through
                 // all entries, while a filter of search results only is applied to certain entries.
                 // therefor, we store all relevant entry-numbers for the search in an integer-array
-                for (int counter=0; counter<len; counter++) {
+                
+                
+                // TODO remove
+                long nt = System.nanoTime();
+                
+                for (int counter = 0; counter < len; counter++) {
                     // get the number of the entry which we want to search through...
                     int searchnr = searchEntries[counter];
                     // this variable counts the amount of matching search-results
@@ -314,62 +328,80 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         // as second match.
                         dummysearchterms = new String[searchTerms.length];
                         // copy the values to the array...
-                        for (int z=0; z<searchTerms.length;z++) {
+                        for (int z = 0; z < searchTerms.length; z++) {
                             // check for case-sensitive search
-                            if (matchcase) dummysearchterms[z] = searchTerms[z];
-                            // if not case-sensitive, transform to lower case
-                            else dummysearchterms[z] = searchTerms[z].toLowerCase();
+                            if (matchcase) {
+                                dummysearchterms[z] = searchTerms[z];
+                            } // if not case-sensitive, transform to lower case
+                            else {
+                                dummysearchterms[z] = searchTerms[z].toLowerCase();
+                            }
                         }
                         //
                         // here we want to search in keywords...
                         //
-                        if ((where&Constants.SEARCH_KEYWORDS)!=0) findTerm(searchnr,Constants.SEARCH_KEYWORDS);
+                        if ((where & Constants.SEARCH_KEYWORDS) != 0) {
+                            findTerm(searchnr, Constants.SEARCH_KEYWORDS);
+                        }
                         //
                         // here we want to search in authors...
                         //
-                        if ((where&Constants.SEARCH_AUTHOR)!=0) findTerm(searchnr,Constants.SEARCH_AUTHOR);
+                        if ((where & Constants.SEARCH_AUTHOR) != 0) {
+                            findTerm(searchnr, Constants.SEARCH_AUTHOR);
+                        }
                         //
                         // here we want to search in the content...
                         //
-                        if ((where&Constants.SEARCH_CONTENT)!=0) findTerm(searchnr,Constants.SEARCH_CONTENT);
+                        if ((where & Constants.SEARCH_CONTENT) != 0) {
+                            findTerm(searchnr, Constants.SEARCH_CONTENT);
+                        }
                         //
                         // here we want to search in the remarks...
                         //
-                        if ((where&Constants.SEARCH_REMARKS)!=0) findTerm(searchnr,Constants.SEARCH_REMARKS);
+                        if ((where & Constants.SEARCH_REMARKS) != 0) {
+                            findTerm(searchnr, Constants.SEARCH_REMARKS);
+                        }
                         //
                         // here we want to search in the titles...
                         //
-                        if ((where&Constants.SEARCH_TITLE)!=0) findTerm(searchnr,Constants.SEARCH_TITLE);
+                        if ((where & Constants.SEARCH_TITLE) != 0) {
+                            findTerm(searchnr, Constants.SEARCH_TITLE);
+                        }
                         //
                         // here we want to search the attachments' names
                         //
-                        if ((where&Constants.SEARCH_LINKS)!=0) findTerm(searchnr,Constants.SEARCH_LINKS);
+                        if ((where & Constants.SEARCH_LINKS) != 0) {
+                            findTerm(searchnr, Constants.SEARCH_LINKS);
+                        }
                         //
                         // now we have searched through all parts and can see whether this entry
                         // is a search-result or not...
                         //
                         // if we have logica-and-search, go on here...
-                        if (Constants.LOG_AND==logical) {
+                        if (Constants.LOG_AND == logical) {
                             // we then need to have at least the same amount of matches as
                             // the length of the searchterm-array
                             // if this is true, append entry-number to stringbuffer
-                            if (foundCounter>=searchTerms.length) finalresults.add(searchnr);
-                        }
-                        // in case we have logical-or-search...
-                        else if (Constants.LOG_OR==logical) {
+                            if (foundCounter >= searchTerms.length) {
+                                finalresults.add(searchnr);
+                            }
+                        } // in case we have logical-or-search...
+                        else if (Constants.LOG_OR == logical) {
                             // ...we just need at least one found search term
                             // append entry-number to stringbuffer
-                            if (foundCounter>0) finalresults.add(searchnr);
-                        }
-                        // in case we have logical-not-search...
+                            if (foundCounter > 0) {
+                                finalresults.add(searchnr);
+                            }
+                        } // in case we have logical-not-search...
                         else {
                             // if the user wants to exclude the search terms, we have a valid search
                             // result when no search term was found in that entry...
                             // append entry-number to stringbuffer
-                            if (0==foundCounter) finalresults.add(searchnr);
+                            if (0 == foundCounter) {
+                                finalresults.add(searchnr);
+                            }
                         }
-                    }
-                    // here we have the procedure when we search for regular expressions...
+                    } // here we have the procedure when we search for regular expressions...
                     else {
                         // if we have a regular expression, we do not split the search term after each comma,
                         // but keep the whole expression as one search term... Thus, we only need the
@@ -379,41 +411,59 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         //
                         // here we want to search in keywords...
                         //
-                        if ((where&Constants.SEARCH_KEYWORDS)!=0) findRegExTerm(searchnr,Constants.SEARCH_KEYWORDS);
+                        if ((where & Constants.SEARCH_KEYWORDS) != 0) {
+                            findRegExTerm(searchnr, Constants.SEARCH_KEYWORDS);
+                        }
                         //
                         // here we want to search in authors...
                         //
-                        if ((where&Constants.SEARCH_AUTHOR)!=0) findRegExTerm(searchnr,Constants.SEARCH_AUTHOR);
+                        if ((where & Constants.SEARCH_AUTHOR) != 0) {
+                            findRegExTerm(searchnr, Constants.SEARCH_AUTHOR);
+                        }
                         //
                         // here we want to search in the content...
                         //
-                        if ((where&Constants.SEARCH_CONTENT)!=0) findRegExTerm(searchnr,Constants.SEARCH_CONTENT);
+                        if ((where & Constants.SEARCH_CONTENT) != 0) {
+                            findRegExTerm(searchnr, Constants.SEARCH_CONTENT);
+                        }
                         //
                         // here we want to search in the remarks...
                         //
-                        if ((where&Constants.SEARCH_REMARKS)!=0) findRegExTerm(searchnr,Constants.SEARCH_REMARKS);
+                        if ((where & Constants.SEARCH_REMARKS) != 0) {
+                            findRegExTerm(searchnr, Constants.SEARCH_REMARKS);
+                        }
                         //
                         // here we want to search in the titles...
                         //
-                        if ((where&Constants.SEARCH_TITLE)!=0) findRegExTerm(searchnr,Constants.SEARCH_TITLE);
+                        if ((where & Constants.SEARCH_TITLE) != 0) {
+                            findRegExTerm(searchnr, Constants.SEARCH_TITLE);
+                        }
                         //
                         // here we want to search the attachments' names
                         //
-                        if ((where&Constants.SEARCH_LINKS)!=0) findRegExTerm(searchnr,Constants.SEARCH_LINKS);
+                        if ((where & Constants.SEARCH_LINKS) != 0) {
+                            findRegExTerm(searchnr, Constants.SEARCH_LINKS);
+                        }
                         // ...we just need at least one found search term
                         // append entry-number to stringbuffer
-                        if (foundCounter>0) finalresults.add(searchnr);
+                        if (foundCounter > 0) {
+                            finalresults.add(searchnr);
+                        }
                     }
                     // update progressbar
-                    setProgress(counter,0,len);
+                    setProgress(counter, 0, len);
                 }
-
+                
+                System.out.println(String.valueOf((System.nanoTime() - nt) / 1000));
+                
                 // finally, check whether we have any searchresults at all...
-                if (finalresults.size()>0) {
+                if (finalresults.size() > 0) {
                     // init the final results-array with the index-numbers of the found entries
                     results = new int[finalresults.size()];
                     // copy all string values to the final array
-                    for (int cnt=0; cnt<results.length; cnt++) results[cnt] = finalresults.get(cnt);
+                    for (int cnt = 0; cnt < results.length; cnt++) {
+                        results[cnt] = finalresults.get(cnt);
+                    }
                     //
                     // Here we start preparing the description of the search-request. it is a
                     // combination of searchterms, where the user looked for and the logical combination
@@ -434,7 +484,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         // find timestamp in that search
                         int pos = d.lastIndexOf("(");
                         // if we found it, set this as first text to the description
-                        if (pos!=-1) {
+                        if (pos != -1) {
                             desc.append(resourceMap.getString("filteredSearchText")).append(" ").append(d.substring(pos)).append(", ");
                             ldesc.append(resourceMap.getString("filteredSearchText")).append(" ").append(d.substring(pos)).append(System.lineSeparator()).append(System.lineSeparator());
                         }
@@ -452,27 +502,30 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         searchTerms = newsearchterms.toArray(new String[newsearchterms.size()]);
                     }
                     // when we have more than 3 search terms, truncate to three...
-                    if (searchTerms.length>3) {
+                    if (searchTerms.length > 3) {
                         // only copy first three searchterms
-                        for (int cnt=0; cnt<3; cnt++) {
+                        for (int cnt = 0; cnt < 3; cnt++) {
                             // retrieve each searchterm, so we can check for the length if it
                             String shortendterm = searchTerms[cnt];
                             // if search term is longer than 50 chars, truncate it...
-                            if (shortendterm.length()>50) shortendterm = shortendterm.substring(0, 50)+"...";
+                            if (shortendterm.length() > 50) {
+                                shortendterm = shortendterm.substring(0, 50) + "...";
+                            }
                             // and append search term to description
                             desc.append("\"").append(shortendterm).append("\", ");
                         }
                         // cut off last space and comma
-                        desc.setLength(desc.length()-2);
+                        desc.setLength(desc.length() - 2);
                         // add text, that there are even more searchterms, that have been let out here
                         desc.append(" ").append(resourceMap.getString("andMoreSearchterms")).append(", ");
-                    }
-                    // else append all searchterms to the description
+                    } // else append all searchterms to the description
                     else {
                         // iterate searchterm-array
                         for (String st : searchTerms) {
                             // if search term is longer than 50 chars, truncate it...
-                            if (st.length()>50) st = st.substring(0, 50)+"...";
+                            if (st.length() > 50) {
+                                st = st.substring(0, 50) + "...";
+                            }
                             // and append it to description
                             desc.append("\"").append(st).append("\", ");
                         }
@@ -481,7 +534,9 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     ldesc.append(resourceMap.getString("longdescLabelSearchTerms"));
                     for (String st : searchTerms) {
                         // if search term is longer than 90 chars, truncate it...
-                        if (st.length()>90) st = st.substring(0, 90)+"...";
+                        if (st.length() > 90) {
+                            st = st.substring(0, 90) + "...";
+                        }
                         ldesc.append(System.lineSeparator()).append("- ").append(st);
                     }
                     // search-options will be displayed in new line
@@ -490,19 +545,19 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     switch (logical) {
                         // add short and long desctiption for the logical-and-search
                         case Constants.LOG_AND:
-                                desc.append(resourceMap.getString("logAndText"));
-                                ldesc.append(resourceMap.getString("logAndText"));
-                                break;
+                            desc.append(resourceMap.getString("logAndText"));
+                            ldesc.append(resourceMap.getString("logAndText"));
+                            break;
                         // add short and long desctiption for the logical-or-search
                         case Constants.LOG_OR:
-                                desc.append(resourceMap.getString("logOrText"));
-                                ldesc.append(resourceMap.getString("logOrText"));
-                                break;
+                            desc.append(resourceMap.getString("logOrText"));
+                            ldesc.append(resourceMap.getString("logOrText"));
+                            break;
                         // add short and long desctiption for the logical-not-search
                         case Constants.LOG_NOT:
-                                desc.append(resourceMap.getString("logNotText"));
-                                ldesc.append(resourceMap.getString("logNotText"));
-                                break;
+                            desc.append(resourceMap.getString("logNotText"));
+                            ldesc.append(resourceMap.getString("logNotText"));
+                            break;
                     }
                     desc.append(", ");
                     // add new line for further search options
@@ -513,64 +568,74 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     int wherecnt = 0;
                     // when we searched keywords, add to description that keywords where one of the
                     // entries fields that have been searched for the find term...
-                    if ((where&Constants.SEARCH_KEYWORDS)!=0) {
+                    if ((where & Constants.SEARCH_KEYWORDS) != 0) {
                         desc.append(resourceMap.getString("searchInKeywords")).append(", ");
                         ldesc.append("- ").append(resourceMap.getString("searchInKeywords")).append(System.lineSeparator());
                         wherecnt++;
                     }
                     // when we searched authors, add to description that authors where one of the
                     // entries fields that have been searched for the find term...
-                    if ((where&Constants.SEARCH_AUTHOR)!=0) {
+                    if ((where & Constants.SEARCH_AUTHOR) != 0) {
                         desc.append(resourceMap.getString("searchInAuthors")).append(", ");
                         ldesc.append("- ").append(resourceMap.getString("searchInAuthors")).append(System.lineSeparator());
                         wherecnt++;
                     }
                     // when we searched content, add to description that content where one of the
                     // entries fields that have been searched for the find term...
-                    if ((where&Constants.SEARCH_CONTENT)!=0) {
+                    if ((where & Constants.SEARCH_CONTENT) != 0) {
                         desc.append(resourceMap.getString("searchInContent")).append(", ");
                         ldesc.append("- ").append(resourceMap.getString("searchInContent")).append(System.lineSeparator());
                         wherecnt++;
                     }
                     // when we searched titles, add to description that titles where one of the
                     // entries fields that have been searched for the find term...
-                    if ((where&Constants.SEARCH_TITLE)!=0) {
+                    if ((where & Constants.SEARCH_TITLE) != 0) {
                         // long description contains all search-areas
                         ldesc.append("- ").append(resourceMap.getString("searchInTitle")).append(System.lineSeparator());
                         // short description only 3 parts
-                        if (wherecnt<3) desc.append(resourceMap.getString("searchInTitle")).append(", ");
+                        if (wherecnt < 3) {
+                            desc.append(resourceMap.getString("searchInTitle")).append(", ");
+                        }
                         wherecnt++;
                     }
                     // when we searched attachments, add to description that attachments where one of the
                     // entries fields that have been searched for the find term...
-                    if ((where&Constants.SEARCH_LINKS)!=0) {
+                    if ((where & Constants.SEARCH_LINKS) != 0) {
                         // long description contains all search-areas
                         ldesc.append("- ").append(resourceMap.getString("searchInLinks")).append(System.lineSeparator());
                         // short description only 3 parts
-                        if (wherecnt<3) desc.append(resourceMap.getString("searchInLinks")).append(", ");
+                        if (wherecnt < 3) {
+                            desc.append(resourceMap.getString("searchInLinks")).append(", ");
+                        }
                         wherecnt++;
                     }
                     // when we searched attachments' contents, add to description that attachments' contents where one of the
                     // entries fields that have been searched for the find term...
-                    if ((where&Constants.SEARCH_LINKCONTENT)!=0) {
+                    if ((where & Constants.SEARCH_LINKCONTENT) != 0) {
                         // long description contains all search-areas
                         ldesc.append("- ").append(resourceMap.getString("searchInLinksContent")).append(System.lineSeparator());
                         // short description only 3 parts
-                        if (wherecnt<3) desc.append(resourceMap.getString("searchInLinksContent")).append(", ");
+                        if (wherecnt < 3) {
+                            desc.append(resourceMap.getString("searchInLinksContent")).append(", ");
+                        }
                         wherecnt++;
                     }
                     // when we searched remarks, add to description that remarks where one of the
                     // entries fields that have been searched for the find term...
-                    if ((where&Constants.SEARCH_REMARKS)!=0) {
+                    if ((where & Constants.SEARCH_REMARKS) != 0) {
                         // long description contains all search-areas
                         ldesc.append("- ").append(resourceMap.getString("searchInRemarks")).append(System.lineSeparator());
-                        if (wherecnt<3) desc.append(resourceMap.getString("searchInRemarks")).append(", ");
+                        if (wherecnt < 3) {
+                            desc.append(resourceMap.getString("searchInRemarks")).append(", ");
+                        }
                         wherecnt++;
                     }
                     // cut off last space and comma
-                    if (desc.length()>2) desc.setLength(desc.length()-2);
+                    if (desc.length() > 2) {
+                        desc.setLength(desc.length() - 2);
+                    }
                     // when we have more than 3 search areas, add this to description
-                    if (wherecnt>3) {
+                    if (wherecnt > 3) {
                         // add text, that there are even more search-areas, that have been let out here
                         desc.append(" ");
                         desc.append(resourceMap.getString("andMoreSearchwhere"));
@@ -580,11 +645,17 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     DateFormat df = new SimpleDateFormat("kkmmss");
                     desc.append(" (").append(df.format(new Date())).append(")");
                     // append matchcase/wholeword
-                    if (wholeword||matchcase||synonyms) {
+                    if (wholeword || matchcase || synonyms) {
                         ldesc.append(System.lineSeparator()).append(resourceMap.getString("longDescSearchOptions"));
-                        if (wholeword) ldesc.append(System.lineSeparator()).append("- ").append(resourceMap.getString("longDescWholeWord"));
-                        if (matchcase) ldesc.append(System.lineSeparator()).append("- ").append(resourceMap.getString("longDescMatchCase"));
-                        if (synonyms) ldesc.append(System.lineSeparator()).append("- ").append(resourceMap.getString("longDescSynonyms"));
+                        if (wholeword) {
+                            ldesc.append(System.lineSeparator()).append("- ").append(resourceMap.getString("longDescWholeWord"));
+                        }
+                        if (matchcase) {
+                            ldesc.append(System.lineSeparator()).append("- ").append(resourceMap.getString("longDescMatchCase"));
+                        }
+                        if (synonyms) {
+                            ldesc.append(System.lineSeparator()).append("- ").append(resourceMap.getString("longDescSynonyms"));
+                        }
                     }
                     // copy description to string
                     searchLabel = desc.toString();
@@ -592,158 +663,164 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     // add all search request data and search results to our search-request-class
                     // but only, if we don't want to add the data to the desktop instead of having
                     // a searchrequest
-                    if (!desktoponly) searchrequest.addSearch(searchTerms,where,logical,wholeword,matchcase,synonyms,regex,results,searchLabel,longdesc);
-                }
-                else {
+                    if (!desktoponly) {
+                        searchrequest.addSearch(searchTerms, where, logical, wholeword, matchcase, synonyms, regex, results, searchLabel, longdesc);
+                    }
+                } else {
                     results = null;
                 }
                 break;
 
         //
-        // here starts a search for entries without authors
-        //
+            // here starts a search for entries without authors
+            //
             case Constants.SEARCH_NO_AUTHORS:
                 // get the amount of entries
                 len = searchEntries.length;
                 // init a stringbuffer that temporarily stores the found entry-numbers
-                 finalresults = new ArrayList<>();
+                finalresults = new ArrayList<>();
                 // iterate all entries where the search should be applied to...
                 // this may differ. a search request from the main-window usually searches through
                 // all entries, while a filter of search results only is applied to certain entries.
                 // therefor, we store all relevant entry-numbers for the search in an integer-array
-                for (int counter=0; counter<len; counter++) {
+                for (int counter = 0; counter < len; counter++) {
                     // get the number of the entry which we want to search through...
                     int searchnr = searchEntries[counter];
                     // when no author found, we have a match
-                    if (null==dataObj.getAuthors(searchnr)) finalresults.add(searchnr);
+                    if (null == dataObj.getAuthors(searchnr)) {
+                        finalresults.add(searchnr);
+                    }
                     // update progressbar
-                    setProgress(counter,0,len);
+                    setProgress(counter, 0, len);
                 }
                 // finally, check whether we have any searchresults at all...
-                if (finalresults.size()>0) {
+                if (finalresults.size() > 0) {
                     // create search results array, create search description and
                     // add search results to the search-data-class.
-                    prepareExtraSearchResults(finalresults,resourceMap.getString("searchNoAuthors"),Constants.SEARCH_AUTHOR);
-                }
-                else {
+                    prepareExtraSearchResults(finalresults, resourceMap.getString("searchNoAuthors"), Constants.SEARCH_AUTHOR);
+                } else {
                     results = null;
                 }
 
                 break;
 
         //
-        // here starts a search for entries without keywords
-        //
+            // here starts a search for entries without keywords
+            //
             case Constants.SEARCH_NO_KEYWORDS:
                 // get the amount of entries
                 len = searchEntries.length;
                 // init a stringbuffer that temporarily stores the found entry-numbers
-                 finalresults = new ArrayList<>();
+                finalresults = new ArrayList<>();
                 // iterate all entries where the search should be applied to...
                 // this may differ. a search request from the main-window usually searches through
                 // all entries, while a filter of search results only is applied to certain entries.
                 // therefor, we store all relevant entry-numbers for the search in an integer-array
-                for (int counter=0; counter<len; counter++) {
+                for (int counter = 0; counter < len; counter++) {
                     // get the number of the entry which we want to search through...
                     int searchnr = searchEntries[counter];
                     // when no author found, we have a match
-                    if (null==dataObj.getKeywords(searchnr)) finalresults.add(searchnr);
+                    if (null == dataObj.getKeywords(searchnr)) {
+                        finalresults.add(searchnr);
+                    }
                     // update progressbar
-                    setProgress(counter,0,len);
+                    setProgress(counter, 0, len);
                 }
                 // finally, check whether we have any searchresults at all...
-                if (finalresults.size()>0) {
+                if (finalresults.size() > 0) {
                     // create search results array, create search description and
                     // add search results to the search-data-class.
-                    prepareExtraSearchResults(finalresults,resourceMap.getString("searchNoKeywords"),Constants.SEARCH_KEYWORDS);
-                }
-                else {
+                    prepareExtraSearchResults(finalresults, resourceMap.getString("searchNoKeywords"), Constants.SEARCH_KEYWORDS);
+                } else {
                     results = null;
                 }
 
                 break;
 
         //
-        // here starts a search for first-level follower (luhmann) entries
-        //
+            // here starts a search for first-level follower (luhmann) entries
+            //
             case Constants.SEARCH_TOP_LEVEL_LUHMANN:
                 // get the amount of entries
                 len = searchEntries.length;
                 // init a stringbuffer that temporarily stores the found entry-numbers
-                 finalresults = new ArrayList<>();
+                finalresults = new ArrayList<>();
                 // iterate all entries where the search should be applied to...
                 // this may differ. a search request from the main-window usually searches through
                 // all entries, while a filter of search results only is applied to certain entries.
                 // therefor, we store all relevant entry-numbers for the search in an integer-array
-                for (int counter=0; counter<len; counter++) {
+                for (int counter = 0; counter < len; counter++) {
                     // get the number of the entry which we want to search through...
                     int searchnr = searchEntries[counter];
                     // check whether entry is a follower and has a first-level parent
                     int flp = dataObj.findParentlLuhmann(searchnr);
                     // entry has not top-level-parent
-                    if (-1==flp) {
+                    if (-1 == flp) {
                         // check whether entries has followers, so the entry itself
                         // is a first/top level parent
                         if (!dataObj.getLuhmannNumbers(searchnr).isEmpty()) {
                             // check if entry is not already in searchresults
                             // if not, add search result
-                            if (!finalresults.contains(searchnr)) finalresults.add(searchnr);
+                            if (!finalresults.contains(searchnr)) {
+                                finalresults.add(searchnr);
+                            }
+                        }
+                    } else {
+                        // we found the top level parent and add it to search results
+                        if (!finalresults.contains(flp)) {
+                            finalresults.add(flp);
                         }
                     }
-                    else {
-                        // we found the top level parent and add it to search results
-                        if (!finalresults.contains(flp)) finalresults.add(flp);
-                    }
                     // update progressbar
-                    setProgress(counter,0,len);
+                    setProgress(counter, 0, len);
                 }
                 // finally, check whether we have any searchresults at all...
-                if (finalresults.size()>0) {
+                if (finalresults.size() > 0) {
                     // create search results array, create search description and
                     // add search results to the search-data-class.
-                    prepareExtraSearchResults(finalresults,resourceMap.getString("searchInLuhmannParents"),Constants.SEARCH_LUHMANN);
-                }
-                else {
+                    prepareExtraSearchResults(finalresults, resourceMap.getString("searchInLuhmannParents"), Constants.SEARCH_LUHMANN);
+                } else {
                     results = null;
                 }
 
                 break;
 
         //
-        // here starts a search for entries without remarks
-        //
+            // here starts a search for entries without remarks
+            //
             case Constants.SEARCH_NO_REMARKS:
                 // get the amount of entries
                 len = searchEntries.length;
                 // init a stringbuffer that temporarily stores the found entry-numbers
-                 finalresults = new ArrayList<>();
+                finalresults = new ArrayList<>();
                 // iterate all entries where the search should be applied to...
                 // this may differ. a search request from the main-window usually searches through
                 // all entries, while a filter of search results only is applied to certain entries.
                 // therefor, we store all relevant entry-numbers for the search in an integer-array
-                for (int counter=0; counter<len; counter++) {
+                for (int counter = 0; counter < len; counter++) {
                     // get the number of the entry which we want to search through...
                     int searchnr = searchEntries[counter];
                     // when no author found, we have a match
-                    if (dataObj.getRemarks(searchnr).isEmpty()) finalresults.add(searchnr);
+                    if (dataObj.getRemarks(searchnr).isEmpty()) {
+                        finalresults.add(searchnr);
+                    }
                     // update progressbar
-                    setProgress(counter,0,len);
+                    setProgress(counter, 0, len);
                 }
                 // finally, check whether we have any searchresults at all...
-                if (finalresults.size()>0) {
+                if (finalresults.size() > 0) {
                     // create search results array, create search description and
                     // add search results to the search-data-class.
-                    prepareExtraSearchResults(finalresults,resourceMap.getString("searchNoRemarks"),Constants.SEARCH_REMARKS);
-                }
-                else {
+                    prepareExtraSearchResults(finalresults, resourceMap.getString("searchNoRemarks"), Constants.SEARCH_REMARKS);
+                } else {
                     results = null;
                 }
 
                 break;
 
         //
-        // here starts a search for entries *with* remarks
-        //
+            // here starts a search for entries *with* remarks
+            //
             case Constants.SEARCH_WITH_REMARKS:
                 // get the amount of entries
                 len = searchEntries.length;
@@ -754,116 +831,124 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                 // this may differ. a search request from the main-window usually searches through
                 // all entries, while a filter of search results only is applied to certain entries.
                 // therefor, we store all relevant entry-numbers for the search in an integer-array
-                for (int counter=0; counter<len; counter++) {
+                for (int counter = 0; counter < len; counter++) {
                     // get the number of the entry which we want to search through...
                     int searchnr = searchEntries[counter];
                     // when no author found, we have a match
-                    if (!dataObj.getRemarks(searchnr).isEmpty()) finalresults.add(searchnr);
+                    if (!dataObj.getRemarks(searchnr).isEmpty()) {
+                        finalresults.add(searchnr);
+                    }
                     // update progressbar
-                    setProgress(counter,0,len);
+                    setProgress(counter, 0, len);
                 }
 
                 // finally, check whether we have any searchresults at all...
-                if (finalresults.size()>0) {
+                if (finalresults.size() > 0) {
                     // create search results array, create search description and
                     // add search results to the search-data-class.
-                    prepareExtraSearchResults(finalresults,resourceMap.getString("searchWithRemarks"),Constants.SEARCH_REMARKS);
-                }
-                else {
+                    prepareExtraSearchResults(finalresults, resourceMap.getString("searchWithRemarks"), Constants.SEARCH_REMARKS);
+                } else {
                     results = null;
                 }
 
                 break;
 
         //
-        // here starts a search for entries with attachments
-        //
+            // here starts a search for entries with attachments
+            //
             case Constants.SEARCH_WITH_ATTACHMENTS:
                 // get the amount of entries
                 len = searchEntries.length;
                 // init a stringbuffer that temporarily stores the found entry-numbers
-                 finalresults = new ArrayList<>();
+                finalresults = new ArrayList<>();
                 // iterate all entries where the search should be applied to...
                 // this may differ. a search request from the main-window usually searches through
                 // all entries, while a filter of search results only is applied to certain entries.
                 // therefor, we store all relevant entry-numbers for the search in an integer-array
-                for (int counter=0; counter<len; counter++) {
+                for (int counter = 0; counter < len; counter++) {
                     // get the number of the entry which we want to search through...
                     int searchnr = searchEntries[counter];
                     // when no author found, we have a match
-                    if (!dataObj.getAttachments(searchnr).isEmpty()) finalresults.add(searchnr);
+                    if (!dataObj.getAttachments(searchnr).isEmpty()) {
+                        finalresults.add(searchnr);
+                    }
                     // update progressbar
-                    setProgress(counter,0,len);
+                    setProgress(counter, 0, len);
                 }
                 // finally, check whether we have any searchresults at all...
-                if (finalresults.size()>0) {
+                if (finalresults.size() > 0) {
                     // create search results array, create search description and
                     // add search results to the search-data-class.
-                    prepareExtraSearchResults(finalresults,resourceMap.getString("searchWithAttachments"),Constants.SEARCH_LINKS);
-                }
-                else {
+                    prepareExtraSearchResults(finalresults, resourceMap.getString("searchWithAttachments"), Constants.SEARCH_LINKS);
+                } else {
                     results = null;
                 }
 
                 break;
 
         //
-        // here starts a search for entries with/out ratings
-        //
+            // here starts a search for entries with/out ratings
+            //
             case Constants.SEARCH_WITH_RATINGS:
             case Constants.SEARCH_WITHOUT_RATINGS:
                 // get description
                 String descr = "";
                 // set description for a search for entries that have been rated
-                if (Constants.SEARCH_WITH_RATINGS==typeOfSearch) descr = resourceMap.getString("searchRatings");
+                if (Constants.SEARCH_WITH_RATINGS == typeOfSearch) {
+                    descr = resourceMap.getString("searchRatings");
+                }
                 // set description for a search for entries that have *not* been rated
-                if (Constants.SEARCH_WITHOUT_RATINGS==typeOfSearch) descr = resourceMap.getString("searchNoRatings");
+                if (Constants.SEARCH_WITHOUT_RATINGS == typeOfSearch) {
+                    descr = resourceMap.getString("searchNoRatings");
+                }
                 // get the amount of entries
                 len = searchEntries.length;
                 // init a stringbuffer that temporarily stores the found entry-numbers
-                 finalresults = new ArrayList<>();
+                finalresults = new ArrayList<>();
                 // iterate all entries where the search should be applied to...
                 // this may differ. a search request from the main-window usually searches through
                 // all entries, while a filter of search results only is applied to certain entries.
                 // therefor, we store all relevant entry-numbers for the search in an integer-array
-                for (int counter=0; counter<len; counter++) {
+                for (int counter = 0; counter < len; counter++) {
                     // get the number of the entry which we want to search through...
                     int searchnr = searchEntries[counter];
                     // check whether we want to look for entries that have been rated
-                    if (Constants.SEARCH_WITH_RATINGS==typeOfSearch) {
+                    if (Constants.SEARCH_WITH_RATINGS == typeOfSearch) {
                         // if we have a rating-count higher than 0, entry has been rated, so found
-                        if (dataObj.getZettelRatingCount(searchnr)>0) finalresults.add(searchnr);
-                    }
-                    // check whether we want to look for entries that have *not* been rated
-                    else if (Constants.SEARCH_WITHOUT_RATINGS==typeOfSearch) {
+                        if (dataObj.getZettelRatingCount(searchnr) > 0) {
+                            finalresults.add(searchnr);
+                        }
+                    } // check whether we want to look for entries that have *not* been rated
+                    else if (Constants.SEARCH_WITHOUT_RATINGS == typeOfSearch) {
                         // if we have a rating-count that equals 0, entry has been *not* rated, so found
-                        if (dataObj.getZettelRatingCount(searchnr)==0) finalresults.add(searchnr);
+                        if (dataObj.getZettelRatingCount(searchnr) == 0) {
+                            finalresults.add(searchnr);
+                        }
                     }
                     // update progressbar
-                    setProgress(counter,0,len);
+                    setProgress(counter, 0, len);
                 }
                 // finally, check whether we have any searchresults at all...
-                if (finalresults.size()>0) {
+                if (finalresults.size() > 0) {
                     // create search results array, create search description and
                     // add search results to the search-data-class.
-                    prepareExtraSearchResults(finalresults,descr,Constants.SEARCH_RATINGS);
-                }
-                else {
+                    prepareExtraSearchResults(finalresults, descr, Constants.SEARCH_RATINGS);
+                } else {
                     results = null;
                 }
 
                 break;
 
         //
-        // here starts a search for entries with attachments
-        //
+            // here starts a search for entries with attachments
+            //
             case Constants.SEARCH_WITH_CREATED_TIME:
             case Constants.SEARCH_WITH_EDITED_TIME:
                 // since the filtering for timestamp was already made in the beginning of the method,
                 // we already have our final results in the search entries
                 results = searchEntries;
                 // finally, check whether we have any searchresults at all...
-                if (results!=null) {
+                if (results != null) {
                     // prepare search description
                     StringBuilder desc = new StringBuilder("");
                     int ts;
@@ -873,12 +958,11 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     desc.append(resourceMap.getString("searchWithTimeTo"));
                     desc.append(" ").append(searchTerms[1]).append(" ");
 
-                    if (Constants.SEARCH_WITH_CREATED_TIME==typeOfSearch) {
+                    if (Constants.SEARCH_WITH_CREATED_TIME == typeOfSearch) {
                         // append text for no authors
                         desc.append(resourceMap.getString("searchWithTimeCreated"));
                         ts = Constants.SEARCH_TIMESTAMP_CREATED;
-                    }
-                    else {
+                    } else {
                         // append text for no authors
                         desc.append(resourceMap.getString("searchWithTimeEdited"));
                         ts = Constants.SEARCH_TIMESTAMP_EDITED;
@@ -894,18 +978,22 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     // add all search request data and search results to our search-request-class
                     // but only, if we don't want to add the data to the desktop instead of having
                     // a searchrequest
-                    if (!desktoponly) searchrequest.addSearch(searchTerms,ts,Constants.LOG_OR,false,false,false,false,results,searchLabel,longdesc);
+                    if (!desktoponly) {
+                        searchrequest.addSearch(searchTerms, ts, Constants.LOG_OR, false, false, false, false, results, searchLabel, longdesc);
+                    }
                 }
                 break;
         }
 
         return null;  // return your result
     }
+
     @Override
     protected void succeeded(Object result) {
         // Runs on the EDT.  Update the GUI based on
         // the result computed by doInBackground().
     }
+
     @Override
     protected void finished() {
         super.finished();
@@ -916,19 +1004,20 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
         parentDialog.setVisible(false);
     }
 
-
-   /**
-     * This method searches through all entries and tries to find the regular expression that
-     * is stored in the first field of the search term array {@link #dummysearchterms dummysearchterms}.
+    /**
+     * This method searches through all entries and tries to find the regular
+     * expression that is stored in the first field of the search term array
+     * {@link #dummysearchterms dummysearchterms}.
      * <br><br>
-     * If a regular expression (i.e. the find term) was found, the {@link #foundCounter foundCounter}
-     * is increased, indicating that the entry with the index-number {@code searchnr} belongs to the
-     * search results. {@code searchnr} is added to the search results in the {@link #startSearch() startSearch()}
-     * task.
+     * If a regular expression (i.e. the find term) was found, the
+     * {@link #foundCounter foundCounter} is increased, indicating that the
+     * entry with the index-number {@code searchnr} belongs to the search
+     * results. {@code searchnr} is added to the search results in the
+     * {@link #startSearch() startSearch()} task.
      *
      * @param searchnr the entry-number of that entry that is currently searched
-     * @param type the type in which fields of an entry the findterm is searched for. An ORed value
-     * of following constants:<br>
+     * @param type the type in which fields of an entry the findterm is searched
+     * for. An ORed value of following constants:<br>
      * - CConstant.SEARCH_KEYWORDS<br>
      * - CConstant.SEARCH_AUTHOR<br>
      * - CConstant.SEARCH_TITLE<br>
@@ -944,33 +1033,45 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
             // prepare searchterms.
             String[] sterms = null;
             // here we retrieve the searchterms when we look for authors
-            if (Constants.SEARCH_AUTHOR==type) sterms = dataObj.getAuthors(searchnr);
+            if (Constants.SEARCH_AUTHOR == type) {
+                sterms = dataObj.getAuthors(searchnr);
+            }
             // here we retrieve the searchterms when we look for keywords
-            if (Constants.SEARCH_KEYWORDS==type) sterms = dataObj.getKeywords(searchnr);
-            if (Constants.SEARCH_TITLE==type) sterms = new String[] {dataObj.getZettelTitle(searchnr)};
-            if (Constants.SEARCH_CONTENT==type) sterms = new String[] {dataObj.getCleanZettelContent(searchnr)};
-            if (Constants.SEARCH_REMARKS==type) sterms = new String[] {dataObj.getRemarks(searchnr)};
-            if (Constants.SEARCH_LINKS==type) {
+            if (Constants.SEARCH_KEYWORDS == type) {
+                sterms = dataObj.getKeywords(searchnr);
+            }
+            if (Constants.SEARCH_TITLE == type) {
+                sterms = new String[]{dataObj.getZettelTitle(searchnr)};
+            }
+            if (Constants.SEARCH_CONTENT == type) {
+                sterms = new String[]{dataObj.getCleanZettelContent(searchnr)};
+            }
+            if (Constants.SEARCH_REMARKS == type) {
+                sterms = new String[]{dataObj.getRemarks(searchnr)};
+            }
+            if (Constants.SEARCH_LINKS == type) {
                 // get the content of an entry
                 List<Element> attachments = dataObj.getAttachments(searchnr);
                 List<String> content = new ArrayList<>();
                 // check whether we have any attachments at all
-                if (attachments!=null) {
+                if (attachments != null) {
                     // create iterator
                     Iterator<Element> i = attachments.iterator();
                     // iterate all attachments
-                    while (i.hasNext()) content.add(i.next().getText());
+                    while (i.hasNext()) {
+                        content.add(i.next().getText());
+                    }
                 }
                 sterms = content.toArray(new String[content.size()]);
             }
             // check whether we have any search terms
-            if (sterms!=null) {
-                // iterate the array of all found search terms...
-                for (String loop : sterms) {
-                    try {
-                        // create a pattern from the first search term. if it fails, go on
-                        // to the catch-block, else contiue here.
-                        Pattern p = Pattern.compile(dummysearchterms[0]);
+            if (sterms != null) {
+                try {
+                    // create a pattern from the first search term. if it fails, go on
+                    // to the catch-block, else contiue here.
+                    Pattern p = Pattern.compile(dummysearchterms[0]);
+                    // iterate the array of all found search terms...
+                    for (String loop : sterms) {
                         // now we know we have a valid regular expression. we now want to
                         // retrieve all matching groups
                         Matcher m = p.matcher(loop);
@@ -981,9 +1082,8 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                             return;
                         }
                     }
-                    catch (PatternSyntaxException e) {
-                        System.out.println(e.getLocalizedMessage());
-                    }
+                } catch (PatternSyntaxException e) {
+                    System.out.println(e.getLocalizedMessage());
                 }
             }
         }
@@ -1009,79 +1109,102 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
      */
     private void findTerm(int searchnr, int type) {
         // go through all search terms
-        for (int count=0; count<dummysearchterms.length; count++) {
+        for (int count = 0; count < dummysearchterms.length; count++) {
             // first check, whether the searchterm is not empty
             if (!dummysearchterms[count].isEmpty()) {
                 // init variable
-                String[] synline;
+                String[] synline = null;
                 // when we have synonyms included in the search, prepare the searchterm
                 // therefor, retrieve the synonyms for the current search term
                 if (synonyms) {
                     // retrieve the synonymline, where the current searchterm might be an
                     // index-word or any related synonym
-                    synline = synonymsObj.getSynonymLineFromAny(dummysearchterms[count],matchcase);
-                    // if there are synonyms for the current searchterm...
-                    if (null==synline) synline = new String[] {dummysearchterms[count]};
+                    synline = synonymsObj.getSynonymLineFromAny(dummysearchterms[count], matchcase);
                 }
-                // else, if we have no searchterms, just set the current searchterm
-                else synline = new String[] {dummysearchterms[count]};
+                // if there are synonyms for the current searchterm...
+                if (null == synline) {
+                    synline = new String[]{dummysearchterms[count]};
+                }
                 // go through all searchterms, including synonyms for the search term
                 for (String synline1 : synline) {
                     // if we have whole-word-search, identify search results by
                     // comparing the keyword-index-numbers
                     if (wholeword) {
-                        String[] sterms = null;
                         // prepare found-indicator
                         boolean somethingfound = false;
                         // when we have a whole-word-search, we can use an already existing
                         // method to check whether this keyword exists in an entry or not
-                        if (Constants.SEARCH_KEYWORDS==type) {
+                        if (Constants.SEARCH_KEYWORDS == type) {
                             somethingfound = dataObj.existsInKeywords(synline1, searchnr, matchcase);
-                        }
-                        if (Constants.SEARCH_AUTHOR==type) {
+                        } else if (Constants.SEARCH_AUTHOR == type) {
                             somethingfound = dataObj.existsInAuthors(synline1, searchnr);
-                        }
-                        // in all other cases, retrieve the whole text/content
-                        if (Constants.SEARCH_CONTENT==type ||
-                                Constants.SEARCH_REMARKS==type ||
-                                Constants.SEARCH_LINKS==type ||
-                                Constants.SEARCH_TITLE==type) {
+                        } else {
                             // create emptry string
                             String content = "";
                             // now, depending on the part of entry we want to look, retrieve the related content
-                            if (Constants.SEARCH_TITLE==type) content = dataObj.getZettelTitle(searchnr);
-                            if (Constants.SEARCH_CONTENT==type) content = dataObj.getCleanZettelContent(searchnr);
-                            if (Constants.SEARCH_REMARKS==type) content = dataObj.getRemarks(searchnr);
-                            if (Constants.SEARCH_LINKS==type) {
+                            if (Constants.SEARCH_TITLE == type) {
+                                content = dataObj.getZettelTitle(searchnr);
+                            }
+                            if (Constants.SEARCH_CONTENT == type) {
+                                content = dataObj.getCleanZettelContent(searchnr);
+                            }
+                            if (Constants.SEARCH_REMARKS == type) {
+                                content = dataObj.getRemarks(searchnr);
+                            }
+                            if (Constants.SEARCH_LINKS == type) {
                                 // get the content of an entry
                                 List<Element> attachments = dataObj.getAttachments(searchnr);
                                 // check whether we have any attachments at all
-                                if (attachments!=null) {
+                                if (attachments != null) {
                                     // create iterator
                                     Iterator<Element> i = attachments.iterator();
                                     // iterate all attachments
-                                    while (i.hasNext()) content = content+" "+i.next().getText();
+                                    while (i.hasNext()) {
+                                        content = content + " " + i.next().getText();
+                                    }
                                 }
                             }
+
+    //                        synline1 = "\\b"+synline1+"\\b";
+    //                        // when the find & replace is *not* case-sensitive, set regular expression
+    //                        // to ignore the case...
+    //                        if (!matchcase) synline1 = "(?i)"+synline1;
+    //                        // the final findterm now might look like this:
+    //                        // "(?i)\\b<findterm>\\b", in case we ignore case and have whole word search
+    //                        try {
+    //                            // create a pattern from the first search term. if it fails, go on
+    //                            // to the catch-block, else contiue here.
+    //                            Pattern p = Pattern.compile(synline1);
+    //                            // now we know we have a valid regular expression. we now want to
+    //                            // retrieve all matching groups
+    //                            Matcher m = p.matcher(content);
+    //                            somethingfound = m.find();
+    //                        }
+    //                        catch (PatternSyntaxException ex) {
+    //                            
+    //                        }
+
                             // split the content at each new word-boundary - i.e. we have a whole-word-search here
-                            sterms = content.split("\\b");
-                        }
-                        // when we are looking for title, content or remarks, the variable "sterms" is not null
-                        // if we were looking for keywords or authors, sterms is null, so this part
-                        // is ignored...
-                        if (sterms!=null) {
-                            // iterate the array of keyword- or author-strings of that entry
-                            for (String loop : sterms) {
+                            String[] sterms = content.split("\\b");
+                            // when we are looking for title, content or remarks, the variable "sterms" is not null
+                            // if we were looking for keywords or authors, sterms is null, so this part
+                            // is ignored...
+                            if (sterms != null) {
                                 // get search term
                                 String stsearch = synline1;
-                                // if the search is not case-sensitive, convert to lowercase
-                                if (!matchcase) loop = loop.toLowerCase();
-                                // when we found something, tell that our found indicator
-                                if (loop.equals(stsearch)) {
-                                    // set found-indicator to true
-                                    somethingfound = true;
-                                    // and leave loop
-                                    break;
+                                // iterate the array of keyword- or author-strings of that entry
+                                for (String loop : sterms) {
+                                    // if the search is not case-sensitive, convert to lowercase
+                                    if (!matchcase) {
+                                        loop = loop.toLowerCase();
+                                    }
+                                    // when we found something, tell that our found indicator
+                                    if (loop.equals(stsearch)) {
+                                        // set found-indicator to true
+                                        somethingfound = true;
+                                        // and leave loop
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -1093,81 +1216,76 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                             foundCounter++;
                             // clear found search term
                             dummysearchterms[count] = "";
+                            // do we have logical OR or NOT? if yes, we
+                            // can leave now
+                            if (Constants.LOG_OR == logical || Constants.LOG_NOT == logical) {
+                                return;
+                            }
                             // leave synonym-loop, we don't need to look for further synomyns
                             break;
                         }
                     } else {
                         // prepare searchterms.
-                        String[] sterms = null;
-                        // prepare found-indicator
-                        boolean somethingfound = false;
+                        String content = null;
                         // here we retrieve the searchterms when we look for authors
-                        if (Constants.SEARCH_AUTHOR==type) sterms = dataObj.getAuthors(searchnr);
+                        if (Constants.SEARCH_AUTHOR == type) {
+                            content = Arrays.toString(dataObj.getAuthors(searchnr));
+                        }
                         // here we retrieve the searchterms when we look for keywords
-                        if (Constants.SEARCH_KEYWORDS==type) sterms = dataObj.getKeywords(searchnr);
-                        // in all other cases, retrieve the whole text/content
-                        if (Constants.SEARCH_CONTENT==type ||
-                                Constants.SEARCH_REMARKS==type ||
-                                Constants.SEARCH_LINKS==type ||
-                                Constants.SEARCH_TITLE==type) {
-                            // create emptry string
-                            String content = "";
-                            // now, depending on the part of entry we want to look, retrieve the related content
-                            if (Constants.SEARCH_TITLE==type) content = dataObj.getZettelTitle(searchnr);
-                            if (Constants.SEARCH_CONTENT==type) content = dataObj.getCleanZettelContent(searchnr);
-                            if (Constants.SEARCH_REMARKS==type) content = dataObj.getRemarks(searchnr);
-                            if (Constants.SEARCH_LINKS==type) {
-                                // get the content of an entry
-                                List<Element> attachments = dataObj.getAttachments(searchnr);
-                                // check whether we have any attachments at all
-                                if (attachments!=null) {
-                                    // create iterator
-                                    Iterator<Element> i = attachments.iterator();
-                                    // iterate all attachments
-                                    while (i.hasNext()) content = content+" "+i.next().getText();
+                        if (Constants.SEARCH_KEYWORDS == type) {
+                            content = Arrays.toString(dataObj.getKeywords(searchnr));
+                        }
+                        // now, depending on the part of entry we want to look, retrieve the related content
+                        if (Constants.SEARCH_TITLE == type) {
+                            content = dataObj.getZettelTitle(searchnr);
+                        }
+                        if (Constants.SEARCH_CONTENT == type) {
+                            content = dataObj.getCleanZettelContent(searchnr);
+                        }
+                        if (Constants.SEARCH_REMARKS == type) {
+                            content = dataObj.getRemarks(searchnr);
+                        }
+                        if (Constants.SEARCH_LINKS == type) {
+                            // get the content of an entry
+                            List<Element> attachments = dataObj.getAttachments(searchnr);
+                            // check whether we have any attachments at all
+                            if (attachments != null) {
+                                // create iterator
+                                Iterator<Element> i = attachments.iterator();
+                                // iterate all attachments
+                                while (i.hasNext()) {
+                                    content = content + " " + i.next().getText();
                                 }
-                            }
-                            // if the search is not case-sensitive, convert to lowercase
-                            if (!matchcase) content = content.toLowerCase();
-                            // if the content contains the searchterm, set foundindicator to true
-                            if (content.contains(synline1)) {
-                                somethingfound = true;
                             }
                         }
                         // when we are looking for keywords or authors, the variable "sterms" is not null
                         // if we were looking for content, title or remarks, sterms is null, so this part
                         // is ignored...
-                        if (sterms!=null) {
-                            // iterate the array of keyword- or author-strings of that entry
-                            for (String loop : sterms) {
-                                // get search term
-                                String stsearch = synline1;
-                                // if the search is not case-sensitive, convert to lowercase
-                                if (!matchcase) loop = loop.toLowerCase();
-                                // when we found something, tell that our found indicator
-                                if (loop.contains(stsearch)) {
-                                    // set found-indicator to true
-                                    somethingfound = true;
-                                    // and leave loop
-                                    break;
-                                }
+                        if (content != null) {
+                            // if the search is not case-sensitive, convert to lowercase
+                            if (!matchcase) {
+                                content = content.toLowerCase();
                             }
-                        }
-                        // check whether we have found anything at all...
-                        if (somethingfound) {
-                            // increase found counter
-                            foundCounter++;
-                            // clear found search term
-                            dummysearchterms[count] = "";
-                            // leave loop, we don't need to look for further synomyns
-                            break;
+                            // if the content contains the searchterm, set foundindicator to true
+                            if (content.contains(synline1)) {
+                                // increase found counter
+                                foundCounter++;
+                                // clear found search term
+                                dummysearchterms[count] = "";
+                                // do we have logical OR or NOT? if yes, we
+                                // can leave now
+                                if (Constants.LOG_OR == logical || Constants.LOG_NOT == logical) {
+                                    return;
+                                }
+                                // leave loop, we don't need to look for further synomyns
+                                break;
+                            }
                         }
                     }
                 }
             }
         }
     }
-
 
     /**
      *
@@ -1179,7 +1297,9 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
         // init the final results-array with the index-numbers of the found entries
         results = new int[finalresults.size()];
         // copy all string values to the final array
-        for (int cnt=0; cnt<results.length; cnt++) results[cnt] = finalresults.get(cnt);
+        for (int cnt = 0; cnt < results.length; cnt++) {
+            results[cnt] = finalresults.get(cnt);
+        }
         // prepare search description
         StringBuilder desc = new StringBuilder("");
         // append text for no authors
@@ -1195,7 +1315,9 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
         // add all search request data and search results to our search-request-class
         // but only, if we don't want to add the data to the desktop instead of having
         // a searchrequest
-        if (!desktoponly) searchrequest.addSearch(new String[] {""},searchwhat,Constants.LOG_NOT,true,true,false,false,results,searchLabel,longdesc);
+        if (!desktoponly) {
+            searchrequest.addSearch(new String[]{""}, searchwhat, Constants.LOG_NOT, true, true, false, false, results, searchLabel, longdesc);
+        }
     }
 }
 

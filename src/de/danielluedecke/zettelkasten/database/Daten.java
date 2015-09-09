@@ -2221,17 +2221,17 @@ public class Daten {
         // get the keyword-index-nunbers from the related entry
         int[] kwnr = getKeywordIndexNumbers(nr);
         // if we don't have any keywords, return false
-        if ((null==kwnr)||(kwnr.length<1)) {
+        if ((null == kwnr) || (kwnr.length < 1)) {
             return false;
         }
         // get the keyword position (i.e. the index-number) of the passed parameter-string
-        int pos = getKeywordPosition(kw,matchcase);
+        int pos = getKeywordPosition(kw, matchcase);
         // prepare return value
         boolean retval = false;
         // iterate the array of keyword-index-numbers of the target-entry
         // if the keyword we are looking for already exists, set return value to true
         for (int loop : kwnr) {
-            if (loop==pos) {
+            if (loop == pos) {
                 retval = true;
             }
         }
