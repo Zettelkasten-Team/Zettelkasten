@@ -45,6 +45,7 @@ import java.awt.event.KeyEvent;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -62,12 +63,12 @@ public class CFilterSearch extends javax.swing.JDialog {
      * create a variable for a list model. this list model is used for
      * the JList-component which displays the search terms which should be filtered
      */
-    private DefaultListModel filterListModel = new DefaultListModel();
+    private final DefaultListModel filterListModel = new DefaultListModel();
     /**
      * The list of available keywords or authors from the current search results that
      * should be filtered
      */
-    private LinkedList<String> terms = new LinkedList<String>();
+    private LinkedList<String> terms = new LinkedList<>();
     /**
      * This variable stores the data of the terms-list when this list is filtered.
      * All changes to a fitered table-list are also applied to this linked list. When
@@ -93,12 +94,11 @@ public class CFilterSearch extends javax.swing.JDialog {
     /**
      *
      * @param parent the parent window
+     * @param se
      * @param t a linked list containing the items that should be display in the jList
      * @param title the dialog's title. use {@code null} for standard-title
      * @param showoptions if true, the search-options for logical-filtering will be shown, if false, this
-     * panel will be hidden.
-     * @param ismacaqua pass true if the system is mac os x with aqua-look&feel
-     */
+     * panel will be hidden.     */
     public CFilterSearch(java.awt.Frame parent, Settings se, LinkedList<String> t, String title, boolean showoptions) {
         super(parent);
         initComponents();
@@ -218,11 +218,9 @@ public class CFilterSearch extends javax.swing.JDialog {
         else if (jRadioButtonLogOr.isSelected()) logical = Constants.LOG_OR;
         if (jRadioButtonLogNot.isSelected()) logical = Constants.LOG_NOT;
         // retrieve selected values
-        Object[] sel = jList1.getSelectedValues();
+        List<String> sel = jList1.getSelectedValuesList();
         // create return value
-        filterterms = new String[sel.length];
-        // copy selected values to an string array
-        for (int cnt=0; cnt<sel.length; cnt++) filterterms[cnt] = sel[cnt].toString();
+        filterterms = sel.toArray(new String[sel.size()]);
         // close window
         dispose();
         setVisible(false);
@@ -252,7 +250,7 @@ public class CFilterSearch extends javax.swing.JDialog {
         // if we haven't already stored the current complete table data, do this now
         if (null==linkedtermslist) {
             // create new instance of list
-            linkedtermslist = new LinkedList<String>();
+            linkedtermslist = new LinkedList<>();
             // go through all table-data
             for (int cnt=0; cnt<filterListModel.getSize(); cnt++) linkedtermslist.add(filterListModel.get(cnt).toString());
         }

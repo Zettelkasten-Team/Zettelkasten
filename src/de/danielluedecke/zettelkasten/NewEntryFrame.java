@@ -515,13 +515,13 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jListKeywords.setTransferHandler(new EntryStringTransferHandler() {
             @Override protected String exportString(JComponent c) {
                 // retrieve selections
-                Object[] kws = jListKeywords.getSelectedValues();
+                List<String> kws = jListKeywords.getSelectedValuesList();
                 // when we have no selection, return null
-                if (kws.length<1) return null;
+                if (kws.isEmpty()) return null;
                 StringBuilder keywords = new StringBuilder("");
                 // iterate array and copy all selected keywords to clipboard
-                for (Object o : kws) {
-                    keywords.append(o.toString());
+                for (String o : kws) {
+                    keywords.append(o);
                     keywords.append(System.lineSeparator());
                 }
                 return keywords.toString();
@@ -558,14 +558,14 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jListQuickInputKeywords.setTransferHandler(new EntryStringTransferHandler() {
             @Override protected String exportString(JComponent c) {
                 // retrieve selected keyword-values
-                Object[] kws = jListQuickInputKeywords.getSelectedValues();
+                List<String> kws = jListQuickInputKeywords.getSelectedValuesList();
                 // if no selection made, return null
-                if (null==kws || kws.length<1) return null;
+                if (kws.isEmpty()) return null;
                 // create string builder
                 StringBuilder keywords = new StringBuilder("");
                 // create a comma-separated string from string array
-                for (Object k : kws) {
-                    keywords.append(k.toString()).append("\n");
+                for (String k : kws) {
+                    keywords.append(k).append("\n");
                 }
                 // delete last newline-char
                 if (keywords.length()>1) keywords.setLength(keywords.length()-1);
@@ -581,14 +581,14 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jListQuickInputAuthor.setTransferHandler(new EntryStringTransferHandler() {
             @Override protected String exportString(JComponent c) {
                 // retrieve selected keyword-values
-                Object[] aus = jListQuickInputAuthor.getSelectedValues();
+                List<String> aus = jListQuickInputAuthor.getSelectedValuesList();
                 // if no selection made, return null
-                if (null==aus || aus.length<1) return null;
+                if (aus.isEmpty()) return null;
                 // create string builder
                 StringBuilder authors = new StringBuilder("");
                 // create a comma-separated string from string array
-                for (Object a : aus) {
-                    authors.append(a.toString()).append("\n");
+                for (String a : aus) {
+                    authors.append(a).append("\n");
                 }
                 // delete last newline-char
                 if (authors.length()>1) authors.setLength(authors.length()-1);
@@ -2693,16 +2693,16 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     @Action(enabledProperty = "authorSelected")
     public void insertFootnote() {
         // retrieve all selected authors
-        List<Object> o = jListQuickInputAuthor.getSelectedValuesList();
+        List<String> o = jListQuickInputAuthor.getSelectedValuesList();
         // if we have selections, go on
         if (!o.isEmpty()) {
             // create stringbuilder for footnote-tags
             StringBuilder fn = new StringBuilder("");
             // create list iterator
-            Iterator<Object> oink = o.iterator();
+            Iterator<String> oink = o.iterator();
             while (oink.hasNext()) {
                 // get each author string
-                String au = oink.next().toString();
+                String au = oink.next();
                 // check whether author already exisrs in textfield
                 if (!checkForDoubleAuthors(au)) {
                     // if not, append author string
@@ -4064,13 +4064,13 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             selectedKeywords = new LinkedList<>();
         }
         // retrieve all selected keywords
-        List<Object> o = jListQuickInputKeywords.getSelectedValuesList();
+        List<String> o = jListQuickInputKeywords.getSelectedValuesList();
         // if we have selections, go on
         if (!o.isEmpty()) {
             // go through all selected values
             for (int cnt = o.size() - 1; cnt >= 0; cnt--) {
                 // get each keyword string
-                String kw = o.get(cnt).toString();
+                String kw = o.get(cnt);
                 // check whether keyword already exisrs in the jlist
                 if (!isDoubleKeywords(kw)) {
                     // if not, add keyword to listmodel
@@ -4123,12 +4123,10 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     @Action(enabledProperty = "authorSelected")
     public void addQuickAuthorToList() {
         // retrieve all selected authors
-        List<Object> o = jListQuickInputAuthor.getSelectedValuesList();
+        List<String> o = jListQuickInputAuthor.getSelectedValuesList();
         // if we have selections, go on
         if (!o.isEmpty()) {
-            for (Object o1 : o) {
-                // get each author string
-                String au = o1.toString();
+            for (String au : o) {
                 // check whether author already exisrs in textfield
                 if (!checkForDoubleAuthors(au)) {
                     // if not, append author string

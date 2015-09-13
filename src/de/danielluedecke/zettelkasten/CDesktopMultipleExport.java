@@ -42,6 +42,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JComponent;
@@ -141,13 +142,9 @@ public class CDesktopMultipleExport extends javax.swing.JDialog {
     @Action
     public void apply() {
         // retrieve selected values
-        Object[] sel = jList1.getSelectedValues();
+        List<String> sel = jList1.getSelectedValuesList();
         // create return value
-        chosenDesktops = new String[sel.length];
-        // copy selected values to an string array
-        for (int cnt=0; cnt<sel.length; cnt++) {
-            chosenDesktops[cnt] = sel[cnt].toString();
-        }
+        if (!sel.isEmpty()) chosenDesktops = sel.toArray(new String[sel.size()]);
         // close window
         dispose();
         setVisible(false);

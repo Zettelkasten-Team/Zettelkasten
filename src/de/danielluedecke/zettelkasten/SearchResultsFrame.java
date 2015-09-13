@@ -75,6 +75,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
@@ -1443,15 +1444,12 @@ public class SearchResultsFrame extends javax.swing.JFrame {
      */
     private String[] getSelectedKeywordsFromList() {
         // get selected values
-        Object[] values = jListKeywords.getSelectedValues();
+        List<String> values = jListKeywords.getSelectedValuesList();
         // if we have any selections, go on
-        if (values!=null && values.length>0) {
+        if (!values.isEmpty()) {
             // create string array for selected values
-            String[] keywords = new String[values.length];
-            // iterate array and copy value from list to array
-            for (int cnt=0; cnt<values.length; cnt++) keywords[cnt] = values[cnt].toString();
             // return complete array
-            return keywords;
+            return values.toArray(new String[values.size()]);
         }
         // ...or null, if error occured.
         return null;
