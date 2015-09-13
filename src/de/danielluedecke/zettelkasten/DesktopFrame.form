@@ -622,6 +622,15 @@
                 <Property name="name" type="java.lang.String" value="entryNumberVisibleMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
+            <MenuItem class="javax.swing.JCheckBoxMenuItem" name="luhmannIconVisible">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="de.danielluedecke.zettelkasten.DesktopFrame" id="switchLuhmannVisibility" methodName="switchLuhmannVisibility"/>
+                </Property>
+                <Property name="selected" type="boolean" value="true"/>
+                <Property name="name" type="java.lang.String" value="luhmannIconVisible" noResource="true"/>
+              </Properties>
+            </MenuItem>
             <MenuItem class="javax.swing.JSeparator" name="jSeparator27">
               <Properties>
                 <Property name="name" type="java.lang.String" value="jSeparator27" noResource="true"/>

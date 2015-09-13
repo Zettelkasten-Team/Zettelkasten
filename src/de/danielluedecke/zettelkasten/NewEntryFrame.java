@@ -462,18 +462,10 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             jListLinks.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jListLinks.border.title"), settingsObj));
         }
         if (settingsObj.isMacAqua()) {
-//            Component r = jSplitPaneNewEntry2.getRightComponent();
-//            Component l = jSplitPaneNewEntry2.getLeftComponent();
-//            // remove the components
-//            jSplitPaneNewEntry2.setLeftComponent(null);
-//            jSplitPaneNewEntry2.setRightComponent(null);
-//            // add them swapped
-//            jSplitPaneNewEntry2.setLeftComponent(r);
-//            jSplitPaneNewEntry2.setRightComponent(l);
             ZknMacWidgetFactory.updateSplitPane(jSplitPaneNewEntry1);
             ZknMacWidgetFactory.updateSplitPane(jSplitPaneNewEntry2);
             ZknMacWidgetFactory.updateSplitPane(jSplitPaneNewEntry3);
-            ZknMacWidgetFactory.updateSplitPane(jSplitPaneNewEntry4, ColorUtil.colorJTreeBackground);
+            ZknMacWidgetFactory.updateSplitPane(jSplitPaneNewEntry4);
             jScrollPane3.setBorder(null);
             jScrollPane4.setBorder(null);
             jScrollPane5.setBorder(null);

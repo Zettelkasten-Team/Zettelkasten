@@ -6253,8 +6253,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // check whether all followers should be shown, including top-level parent
         int parentLuhmann = data.getCurrentZettelPos();
         if (settings.getShowAllLuhmann()) {
+            // if parent should be shown as well, find parent
             parentLuhmann = data.findParentlLuhmann(data.getCurrentZettelPos(), true);
             if (-1 == parentLuhmann) {
+                // no parent found? use current entry as root
                 parentLuhmann = data.getCurrentZettelPos();
             }
         }
@@ -6264,7 +6266,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // completely expand the jTree
         TreeUtil.expandAllTrees(jTreeLuhmann);
         // select current entry
-        jTreeLuhmann.setSelectionPath(new TreePath(selectedLuhmannNode.getPath()));
+        TreePath tp = new TreePath(selectedLuhmannNode.getPath());
+        jTreeLuhmann.setSelectionPath(tp);
+        // and scroll to visible
+        jTreeLuhmann.scrollPathToVisible(tp);
         // now that we have created all luhmann-numbers, we want to retrieve all
         // entries, where the current entry itself is a follower-number. thus, we
         // both know which followers and sub-followers this entry has, and which entries

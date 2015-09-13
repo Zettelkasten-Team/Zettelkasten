@@ -23,6 +23,8 @@ import com.explodingpixels.widgets.WindowUtils;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import de.danielluedecke.zettelkasten.database.Daten;
+import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.TreeUtil;
 import java.awt.Color;
 import java.awt.Component;
@@ -76,9 +78,13 @@ public class MacSourceDesktopTree extends BasicTreeUI {
     private final CustomTreeModelListener fTreeModelListener = new CustomTreeModelListener();
 
     private final DesktopData desktopObj;
+    private final Daten dataObj;
+    private final Settings settingsObj;
 
-    public MacSourceDesktopTree(DesktopData desk) {
+    public MacSourceDesktopTree(DesktopData desk, Daten dat, Settings set) {
         desktopObj = desk;
+        dataObj = dat;
+        settingsObj = set;
     }
 
     @Override
@@ -363,6 +369,29 @@ public class MacSourceDesktopTree extends BasicTreeUI {
         return (!desktopObj.getComment(TreeUtil.getNodeTimestamp(node),"<br>").isEmpty());
     }
 
+    /**
+     * This method checks whether an entry of a selected node 
+     * has follower numbers or not.
+     *
+     * @param value the selected node
+     * @return {@code true} if the entry of the selected node has 
+     * followers, {@code false} otherwise.
+     */
+    protected boolean isLuhmannNode(Object value) {
+        // if no value return
+        if (null == value || !settingsObj.getShowLuhmannIconInDesktop()) return false;
+        // retrieve node
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
+        // when root, return
+        if (node.isRoot()) return false;
+        // else, get entry number of selected node
+        int entry = TreeUtil.extractEntryNumberFromNode(node);
+        // no entry selected? then return false
+        if (-1 == entry) return false;
+        // return, whether entry has followers
+        return (dataObj.hasLuhmannNumbers(entry));
+    }
+    
     // Custom TreeModelListener. //////////////////////////////////////////////////////////////////
 
     private class CustomTreeModelListener implements TreeModelListener {
@@ -449,8 +478,9 @@ public class MacSourceDesktopTree extends BasicTreeUI {
             label.setText(getTextForNode(node, selected, expanded, leaf, row, hasFocus));
             if (isCommentNode(value)) {
                 label.setIcon(Constants.iconDesktopComment);
-            }
-            else {
+            } else if (isLuhmannNode(value)) {
+                label.setIcon(Constants.iconDesktopLuhmann);
+            } else {
                 label.setIcon(null);
             }
             return label;
@@ -496,6 +526,8 @@ public class MacSourceDesktopTree extends BasicTreeUI {
             label.setIcon(getIconForNode(node));
             if (isCommentNode(value)) {
                 label.setIcon(Constants.iconDesktopComment);
+            } else if (isLuhmannNode(value)) {
+                label.setIcon(Constants.iconDesktopLuhmann);
             }
 
             fBuilder.getPanel().removeAll();

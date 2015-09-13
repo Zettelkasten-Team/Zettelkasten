@@ -322,6 +322,7 @@ public class Settings {
     private static final String SETTING_LASTUSEDSETBIBKEYTYPE = "lastusedbibkeytype";
     private static final String SETTING_LASTUSEDSETBIBIMPORTSOURCE = "lastusedbibimportsource";
     private static final String SETTING_SHOWALLLUHMANN = "showallluhmann";
+    private static final String SETTING_SHOWLUHMANNICONINDESK = "showaluhmanniconindesk";
 
     public static final String SETTING_LOGKEYWORDLIST_OR = "OR";
     public static final String SETTING_LOGKEYWORDLIST_AND = "AND";
@@ -743,6 +744,13 @@ public class Settings {
             Element el = new Element(SETTING_SHOWALLLUHMANN);
             settingsFile.getRootElement().addContent(el);
             el.setText("0");
+        }
+
+        if (null == settingsFile.getRootElement().getChild(SETTING_SHOWLUHMANNICONINDESK)) {
+            // create an element
+            Element el = new Element(SETTING_SHOWLUHMANNICONINDESK);
+            settingsFile.getRootElement().addContent(el);
+            el.setText("1");
         }
 
         if (null == settingsFile.getRootElement().getChild(SETTING_EXTRABACKUP)) {
@@ -3001,6 +3009,37 @@ public class Settings {
         Element el = settingsFile.getRootElement().getChild(SETTING_SHOWALLLUHMANN);
         if (null == el) {
             el = new Element(SETTING_SHOWALLLUHMANN);
+            settingsFile.getRootElement().addContent(el);
+        }
+        el.setText((val) ? "1" : "0");
+    }
+
+    /**
+     * Whether all follower entries, including top-level parent follower, should be shown in
+     * trailing entries or not.
+     *
+     * @return val {@code true} if all trailing entries, including top-level parent follower, should
+     * be shown in trailing entries; {@code false} otherwise.
+     */
+    public boolean getShowLuhmannIconInDesktop() {
+        Element el = settingsFile.getRootElement().getChild(SETTING_SHOWLUHMANNICONINDESK);
+        if (el != null) {
+            return el.getText().equals("1");
+        }
+        return false;
+    }
+
+    /**
+     * Whether all follower entries, including top-level parent follower, should be shown in
+     * trailing entries or not.
+     *
+     * @param val {@code true} if all trailing entries, including top-level parent follower, should
+     * be shown in trailing entries; {@code false} otherwise.
+     */
+    public void setShowLuhmannIconInDesktop(boolean val) {
+        Element el = settingsFile.getRootElement().getChild(SETTING_SHOWLUHMANNICONINDESK);
+        if (null == el) {
+            el = new Element(SETTING_SHOWLUHMANNICONINDESK);
             settingsFile.getRootElement().addContent(el);
         }
         el.setText((val) ? "1" : "0");

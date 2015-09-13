@@ -933,7 +933,6 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatCode" methodName="formatCode"/>
                 </Property>
-                <Property name="toolTipText" type="java.lang.String" resourceKey="jMenuItemCode.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="jMenuItemCode" noResource="true"/>
               </Properties>
             </MenuItem>

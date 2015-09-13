@@ -178,6 +178,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * Indicates whether the main entries' headings are visible or not.
      */
     private boolean isHeadingVisible = true;
+    private boolean isLuhmannIconVisible;
     /**
      *
      */
@@ -308,6 +309,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         spellObj = auk;
         stenoObj = st;
         bookmarksObj = bm;
+        isLuhmannIconVisible = settingsObj.getShowLuhmannIconInDesktop();
         // check whether memory usage is logged. if so, tell logger that new entry windows was opened
         if (settingsObj.isMemoryUsageLogged) {
             // log info
@@ -325,6 +327,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         initBorders(settingsObj);
         headingsVisibleMenuItem.setSelected(isHeadingVisible);
         entryNumberVisibleMenuItem.setSelected(isEntryNumberVisible);
+        luhmannIconVisible.setSelected(isLuhmannIconVisible);
         // set application icon
         setIconImage(Constants.zknicon.getImage());
         // if we have mac os x with aqua, make the window look like typical cocoa-applications
@@ -1167,7 +1170,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         dtm.setRoot(null);
         // macstyle beim jTree setzen
         if (settingsObj.isMacAqua()) {
-            jTreeDesktop.setUI(new MacSourceDesktopTree(desktopObj));
+            jTreeDesktop.setUI(new MacSourceDesktopTree(desktopObj, dataObj, settingsObj));
         }
         else {
             // set cell renderer, for desktop icons
@@ -1472,7 +1475,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
          */
         protected boolean isLuhmannNode(Object value) {
             // if no value return
-            if (null==value) return false;
+            if (null == value || !settingsObj.getShowLuhmannIconInDesktop()) return false;
             // retrieve node
             DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
             // when root, return
@@ -1849,6 +1852,15 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         isHeadingVisible = !isHeadingVisible;
         headingsVisibleMenuItem.setSelected(isHeadingVisible);
         setNeedsUpdate(true);
+    }
+
+
+    @Action
+    public void switchLuhmannVisibility() {
+        isLuhmannIconVisible = !isLuhmannIconVisible;
+        luhmannIconVisible.setSelected(isLuhmannIconVisible);
+        settingsObj.setShowLuhmannIconInDesktop(isLuhmannIconVisible);
+        updateTreeView();
     }
 
 
@@ -4109,6 +4121,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         jSeparator8 = new javax.swing.JPopupMenu.Separator();
         headingsVisibleMenuItem = new javax.swing.JCheckBoxMenuItem();
         entryNumberVisibleMenuItem = new javax.swing.JCheckBoxMenuItem();
+        luhmannIconVisible = new javax.swing.JCheckBoxMenuItem();
         jSeparator27 = new javax.swing.JSeparator();
         displayItemsMenuItem = new javax.swing.JMenuItem();
         jSeparator10 = new javax.swing.JSeparator();
@@ -4859,6 +4872,11 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         entryNumberVisibleMenuItem.setName("entryNumberVisibleMenuItem"); // NOI18N
         desktopMenuView.add(entryNumberVisibleMenuItem);
 
+        luhmannIconVisible.setAction(actionMap.get("switchLuhmannVisibility")); // NOI18N
+        luhmannIconVisible.setSelected(true);
+        luhmannIconVisible.setName("luhmannIconVisible"); // NOI18N
+        desktopMenuView.add(luhmannIconVisible);
+
         jSeparator27.setName("jSeparator27"); // NOI18N
         desktopMenuView.add(jSeparator27);
 
@@ -5275,6 +5293,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     private javax.swing.JTextField jTextFieldLiveSearch;
     private javax.swing.JToolBar jToolBarDesktop;
     private javax.swing.JTree jTreeDesktop;
+    private javax.swing.JCheckBoxMenuItem luhmannIconVisible;
     private javax.swing.JMenuItem modifyEntryItem;
     private javax.swing.JMenuItem moveDownMenuItem;
     private javax.swing.JMenuItem moveUpMenuItem;

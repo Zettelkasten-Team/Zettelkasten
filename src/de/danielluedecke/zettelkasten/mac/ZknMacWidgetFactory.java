@@ -49,13 +49,14 @@ import javax.swing.plaf.basic.BasicSplitPaneUI;
 public class ZknMacWidgetFactory {
     public static void updateSplitPane(JSplitPane splitPane, Color dividerColor) {
          splitPane.setContinuousLayout(true);
-         splitPane.setDividerSize(1);
          switch (splitPane.getOrientation()) {
              case JSplitPane.HORIZONTAL_SPLIT:
+                 splitPane.setDividerSize(1);
                  ((BasicSplitPaneUI) splitPane.getUI()).getDivider().setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, dividerColor));
                  break;
              case JSplitPane.VERTICAL_SPLIT:
-                 ((BasicSplitPaneUI) splitPane.getUI()).getDivider().setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, dividerColor));
+                 splitPane.setDividerSize(6);
+                 ((BasicSplitPaneUI) splitPane.getUI()).getDivider().setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, dividerColor));
                  break;
          }
          splitPane.setBorder(BorderFactory.createEmptyBorder());
