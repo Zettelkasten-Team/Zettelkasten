@@ -450,11 +450,21 @@
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jSplitPane2" alignment="0" max="32767" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jCheckBoxShowAllLuhmann" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                              </Group>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jSplitPane2" alignment="0" pref="486" max="32767" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="jSplitPane2" max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jCheckBoxShowAllLuhmann" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                         </DimensionLayout>
                       </Layout>
@@ -464,7 +474,7 @@
                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                               <Border info="null"/>
                             </Property>
-                            <Property name="dividerLocation" type="int" value="420"/>
+                            <Property name="dividerLocation" type="int" value="380"/>
                             <Property name="orientation" type="int" value="0"/>
                             <Property name="name" type="java.lang.String" value="jSplitPane2" noResource="true"/>
                           </Properties>
@@ -529,6 +539,13 @@
                             </Container>
                           </SubComponents>
                         </Container>
+                        <Component class="javax.swing.JCheckBox" name="jCheckBoxShowAllLuhmann">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" resourceKey="jCheckBoxShowAllLuhmann.text"/>
+                            <Property name="toolTipText" type="java.lang.String" resourceKey="jCheckBoxShowAllLuhmann.toolTipText"/>
+                            <Property name="name" type="java.lang.String" value="jCheckBoxShowAllLuhmann" noResource="true"/>
+                          </Properties>
+                        </Component>
                       </SubComponents>
                     </Container>
                     <Container class="javax.swing.JPanel" name="jPanel2">

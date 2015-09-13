@@ -242,11 +242,15 @@ public class TreeUtil {
         // clear collapsed nodes
         collapsedNodes.clear();
         // if we have no tree, do nothing
-        if (null==tree) return null;
+        if (null == tree) {
+            return null;
+        }
         // get root
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot();
         // if we have no root, return
-        if (null==root) return null;
+        if (null == root) {
+            return null;
+        }
         // else retrieve all collapsed nodes and save their ID's in a list
         retrieveCollapsedNodes(new TreePath(root), tree);
         return collapsedNodes;

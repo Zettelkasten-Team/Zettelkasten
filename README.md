@@ -11,6 +11,7 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 ### Changelog der aktuellen Entwicklerversion
 
 #### Neue Funktionen und Änderungen
+* In der Registerkarte _Folgezettel_ kann jetzt die gesamte Zettelfolge inklusive übergeordneter Ausgangszettel angezeigt werden.
 * Über das Suchen-Menü bzw. das Menü _Folgezettel_ können jetzt Ausgangszettel (_Stammzettel_) von Folgezetteln gesucht werden ([#61](https://github.com/sjPlot/Zettelkasten/issues/61)).
 * Im Schreibtischfenster können jetzt nur die direkten Folgezettel eines Zettels, oder aber alle Folgezettel inkl. Unterfolgezettel eingefügt werden.
 * Zettel im Schreibtischfenster, die einen Folgezettel enthalten, werden durch ein eigenes Symbol in der Baumansicht hervorgehoben.
