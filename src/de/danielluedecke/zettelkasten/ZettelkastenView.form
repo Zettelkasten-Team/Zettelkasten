@@ -2414,6 +2414,20 @@
                 <Property name="name" type="java.lang.String" value="viewMenuLuhmannDesktop" noResource="true"/>
               </Properties>
             </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator73">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="jSeparator73" noResource="true"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="viewMenuLuhmannShowTopLevel">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="findLuhmannParent" methodName="findLuhmannParent"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="viewMenuLuhmannShowTopLevel.text"/>
+                <Property name="name" type="java.lang.String" value="viewMenuLuhmannShowTopLevel" noResource="true"/>
+              </Properties>
+            </MenuItem>
             <MenuItem class="javax.swing.JSeparator" name="jSeparator102">
               <Properties>
                 <Property name="name" type="java.lang.String" value="jSeparator102" noResource="true"/>

@@ -11146,6 +11146,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             viewMenuLuhmannBookmarks = new javax.swing.JMenuItem();
             jSeparator62 = new javax.swing.JSeparator();
             viewMenuLuhmannDesktop = new javax.swing.JMenuItem();
+            jSeparator73 = new javax.swing.JPopupMenu.Separator();
+            viewMenuLuhmannShowTopLevel = new javax.swing.JMenuItem();
             jSeparator102 = new javax.swing.JSeparator();
             viewMenuLuhmannExport = new javax.swing.JMenuItem();
             viewMenuLuhmannExportSearch = new javax.swing.JMenuItem();
@@ -12764,6 +12766,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             viewMenuLuhmannDesktop.setName("viewMenuLuhmannDesktop"); // NOI18N
             viewMenuLuhmann.add(viewMenuLuhmannDesktop);
 
+            jSeparator73.setName("jSeparator73"); // NOI18N
+            viewMenuLuhmann.add(jSeparator73);
+
+            viewMenuLuhmannShowTopLevel.setAction(actionMap.get("findLuhmannParent")); // NOI18N
+            viewMenuLuhmannShowTopLevel.setText(resourceMap.getString("viewMenuLuhmannShowTopLevel.text")); // NOI18N
+            viewMenuLuhmannShowTopLevel.setName("viewMenuLuhmannShowTopLevel"); // NOI18N
+            viewMenuLuhmann.add(viewMenuLuhmannShowTopLevel);
+
             jSeparator102.setName("jSeparator102"); // NOI18N
             viewMenuLuhmann.add(jSeparator102);
 
@@ -14188,6 +14198,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JSeparator jSeparator70;
     private javax.swing.JSeparator jSeparator71;
     private javax.swing.JPopupMenu.Separator jSeparator72;
+    private javax.swing.JPopupMenu.Separator jSeparator73;
     private javax.swing.JSeparator jSeparator75;
     private javax.swing.JSeparator jSeparator76;
     private javax.swing.JSeparator jSeparator77;
@@ -14471,6 +14482,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JMenuItem viewMenuLuhmannExportSearch;
     private javax.swing.JMenuItem viewMenuLuhmannManLinks;
     private javax.swing.JCheckBoxMenuItem viewMenuLuhmannShowNumbers;
+    private javax.swing.JMenuItem viewMenuLuhmannShowTopLevel;
     private javax.swing.JMenu viewMenuTitles;
     private javax.swing.JMenuItem viewTitlesAutomaticFirstLine;
     private javax.swing.JMenuItem viewTitlesBookmarks;
