@@ -9466,6 +9466,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void findWithoutRating() {
         findEntryWithout(Constants.SEARCH_WITHOUT_RATINGS);
     }
+    /**
+     * Starts a search request and finds entries that are top-level
+     * trailing entries (follower).
+     */
+    @Action(enabledProperty = "moreEntriesAvailable")
+    public void findLuhmannParent() {
+        findEntryWithout(Constants.SEARCH_TOP_LEVEL_LUHMANN);
+    }
     
 
     /**
@@ -11069,6 +11077,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jSeparator75 = new javax.swing.JSeparator();
             findEntriesWithoutRemarks = new javax.swing.JMenuItem();
             findEntriesWithRemarks = new javax.swing.JMenuItem();
+            jSeparator65 = new javax.swing.JPopupMenu.Separator();
+            findEntriesTopLevelLuhmann = new javax.swing.JMenuItem();
             jSeparator110 = new javax.swing.JSeparator();
             findEntriesWithRatings = new javax.swing.JMenuItem();
             findEntriesWithoutRatings = new javax.swing.JMenuItem();
@@ -12488,6 +12498,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             findEntriesWithRemarks.setAction(actionMap.get("findWithRemarks")); // NOI18N
             findEntriesWithRemarks.setName("findEntriesWithRemarks"); // NOI18N
             findEntryWithout.add(findEntriesWithRemarks);
+
+            jSeparator65.setName("jSeparator65"); // NOI18N
+            findEntryWithout.add(jSeparator65);
+
+            findEntriesTopLevelLuhmann.setAction(actionMap.get("findLuhmannParent")); // NOI18N
+            findEntriesTopLevelLuhmann.setName("findEntriesTopLevelLuhmann"); // NOI18N
+            findEntryWithout.add(findEntriesTopLevelLuhmann);
 
             jSeparator110.setName("jSeparator110"); // NOI18N
             findEntryWithout.add(jSeparator110);
@@ -14003,6 +14020,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JMenuItem findDoubleEntriesItem;
     private javax.swing.JMenuItem findEntriesFromCreatedTimestamp;
     private javax.swing.JMenuItem findEntriesFromEditedTimestamp;
+    private javax.swing.JMenuItem findEntriesTopLevelLuhmann;
     private javax.swing.JMenuItem findEntriesWithAttachments;
     private javax.swing.JMenuItem findEntriesWithRatings;
     private javax.swing.JMenuItem findEntriesWithRemarks;
@@ -14161,6 +14179,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JSeparator jSeparator62;
     private javax.swing.JSeparator jSeparator63;
     private javax.swing.JSeparator jSeparator64;
+    private javax.swing.JPopupMenu.Separator jSeparator65;
     private javax.swing.JSeparator jSeparator66;
     private javax.swing.JSeparator jSeparator67;
     private javax.swing.JSeparator jSeparator68;

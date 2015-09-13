@@ -461,9 +461,17 @@ public class Constants {
      */
     public static final int SEARCH_WITHOUT_RATINGS = 10;
     /**
-     *
+     * indicates that user wants to search entries
+     * that are top-level-entries in a note sequence
+     * (trailing entries, Folgezettel)
      */
     public static final int SEARCH_TOP_LEVEL_LUHMANN = 11;
+    /**
+     * indicates that user wants to search entries
+     * that are in a note sequence
+     * (trailing entries, Folgezettel)
+     */
+    public static final int SEARCH_IS_LUHMANN_PARENT = 12;
     /**
      * Indicates a logical-and-combined search
      */

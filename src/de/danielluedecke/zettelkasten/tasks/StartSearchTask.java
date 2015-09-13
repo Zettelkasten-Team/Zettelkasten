@@ -757,7 +757,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
 
                 break;
 
-        //
+            //
             // here starts a search for first-level follower (luhmann) entries
             //
             case Constants.SEARCH_TOP_LEVEL_LUHMANN:
@@ -773,7 +773,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     // get the number of the entry which we want to search through...
                     int searchnr = searchEntries[counter];
                     // check whether entry is a follower and has a first-level parent
-                    int flp = dataObj.findParentlLuhmann(searchnr);
+                    int flp = dataObj.findParentlLuhmann(searchnr, false);
                     // entry has not top-level-parent
                     if (-1 == flp) {
                         // check whether entries has followers, so the entry itself
@@ -805,7 +805,47 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
 
                 break;
 
-        //
+            //
+            // here starts a search for follower (luhmann) entries, i.e.
+            // entries that do have a parent-trail entry
+            //
+            case Constants.SEARCH_IS_LUHMANN_PARENT:
+                // get the amount of entries
+                len = searchEntries.length;
+                // init a stringbuffer that temporarily stores the found entry-numbers
+                finalresults = new ArrayList<>();
+                // iterate all entries where the search should be applied to...
+                // this may differ. a search request from the main-window usually searches through
+                // all entries, while a filter of search results only is applied to certain entries.
+                // therefor, we store all relevant entry-numbers for the search in an integer-array
+                for (int counter = 0; counter < len; counter++) {
+                    // get the number of the entry which we want to search through...
+                    int searchnr = searchEntries[counter];
+                    // find first parent
+                    int lp = dataObj.findParentlLuhmann(searchnr, true);
+                    // check whether entry is a follower and has a first-level parent
+                    if (lp != -1) {
+                        // check if entry is not already in searchresults
+                        // if not, add search result
+                        if (!finalresults.contains(searchnr)) {
+                            finalresults.add(searchnr);
+                        }
+                    }
+                    // update progressbar
+                    setProgress(counter, 0, len);
+                }
+                // finally, check whether we have any searchresults at all...
+                if (finalresults.size() > 0) {
+                    // create search results array, create search description and
+                    // add search results to the search-data-class.
+                    prepareExtraSearchResults(finalresults, resourceMap.getString("searchInLuhmann"), Constants.SEARCH_LUHMANN);
+                } else {
+                    results = null;
+                }
+
+                break;
+                
+            //
             // here starts a search for entries without remarks
             //
             case Constants.SEARCH_NO_REMARKS:

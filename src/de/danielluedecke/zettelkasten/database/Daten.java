@@ -6840,10 +6840,18 @@ public class Daten {
      * to usual array handling where the range is from 0 to (size-1).
      * 
      * @param nr the index number of the entry
+     * @param firstParent logical, if {@code true}, searching for top-level follower entries
+     * stops when first parent was found. Else, the most top-level entry is found.
      * @return the number of the "luhmann"-parent of the entry {@code nr}, or {@code -1} if
-     * the entry {@code nr} has no luhmann (follower) parent
+     * the entry {@code nr} has no luhmann (follower) parent, resp. if the entry {@code nr}
+     * also has no follower entries.
      */
-    public int findParentlLuhmann(int nr) {
+    public int findParentlLuhmann(int nr, boolean firstParent) {
+        // check whether entry has any follower. if not
+        // it is no parent entry
+        if (!hasLuhmannNumbers(nr)) {
+            return -1;
+        }
         // init find value
         boolean found = true;
         //
@@ -6857,7 +6865,7 @@ public class Daten {
             // get current entry number as string
             String currentEntry = String.valueOf(nr);
             // go through complete data set
-            while(!innerLoopFound && cnt<=getCount(Daten.ZKNCOUNT)) {
+            while (!innerLoopFound && cnt <= getCount(Daten.ZKNCOUNT)) {
                 // get the luhmann-numbers of each entry
                 String[] lnrs = getLuhmannNumbers(cnt).split(",");
                 // now check each number for the occurence of the current entry number
@@ -6866,6 +6874,10 @@ public class Daten {
                     if (l.equals(currentEntry)) {
                         // we found a parent
                         nr = retval = cnt;
+                        // find only first parent?
+                        if (firstParent) {
+                            return retval;
+                        }
                         // indicate that parent was found
                         innerLoopFound = true;
                         break;

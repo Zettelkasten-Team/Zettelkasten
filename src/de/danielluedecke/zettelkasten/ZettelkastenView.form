@@ -1921,6 +1921,19 @@
                     <Property name="name" type="java.lang.String" value="findEntriesWithRemarks" noResource="true"/>
                   </Properties>
                 </MenuItem>
+                <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator65">
+                  <Properties>
+                    <Property name="name" type="java.lang.String" value="jSeparator65" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="findEntriesTopLevelLuhmann">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="findLuhmannParent" methodName="findLuhmannParent"/>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="findEntriesTopLevelLuhmann" noResource="true"/>
+                  </Properties>
+                </MenuItem>
                 <MenuItem class="javax.swing.JSeparator" name="jSeparator110">
                   <Properties>
                     <Property name="name" type="java.lang.String" value="jSeparator110" noResource="true"/>
