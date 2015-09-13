@@ -386,7 +386,7 @@ public class ExportTools {
      * using the bibkeys of the referenced author-values (if they have any bibkeys).
      * <br><br>
      * Each footnote that refers to an author-value with bibkey is converted like this:
-     * <b>{@code \footnote{\cite{<bibkey>}}}</b>
+     * <b>{@code \footcite{<bibkey>}}</b>
      * 
      * @param dataObj
      * @param content the entry's content, so the footnote-tags can be extracted and possible bibkey-values retrieved.
@@ -398,8 +398,8 @@ public class ExportTools {
         // position index for finding the footnotes
         int pos = 0;
         // if the reference should be in a footenote, create this string now
-        String footRefOpen = (referenceAsFootnote) ? "\\footnote{\\cite{":"\\cite{";
-        String footRefClose = (referenceAsFootnote) ? "}}":"}";
+        String footRefOpen = (referenceAsFootnote) ? "\\footcite{":"\\cite{";
+        String footRefClose = "}";
         // save find-position
         List<Integer> start = new ArrayList<>();
         List<Integer> end = new ArrayList<>();

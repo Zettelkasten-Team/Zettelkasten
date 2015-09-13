@@ -16,6 +16,7 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 * Im Schreibtischfenster können jetzt nur die direkten Folgezettel eines Zettels, oder aber alle Folgezettel inkl. Unterfolgezettel eingefügt werden.
 * Zettel im Schreibtischfenster, die einen Folgezettel enthalten, werden durch ein eigenes Symbol in der Baumansicht hervorgehoben.
 * Die manuelle Sortierung von Zetteln (z.B. das Verschieben in der Registerkarte _Überschriften_) wurde entfernt, da diese Funktion den Im- und Export zu fehleranfällig machte.
+* Fußnoten-Zitierstil beim LaTex-Export verwendet nun `\footcite` statt `footnote{\cite}` ([#63](https://github.com/sjPlot/Zettelkasten/issues/63)).
 
 #### Behobene Fehler
 * Schlagwörter importieren von BibTex-Einträgen (ohne neuen Eintrag zu erstellen) funktionierte nicht ([#33](https://github.com/sjPlot/Zettelkasten/issues/33)).
