@@ -75,120 +75,88 @@ public class ShowTitleListTask extends org.jdesktop.application.Task<Object, Voi
         // init status text
         msgLabel.setText(resourceMap.getString("msg1"));
     }
-        @Override protected Object doInBackground() {
+    @Override
+    protected Object doInBackground() {
             // Your Task's code here.  This method runs
-            // on a background thread, so don't reference
-            // the Swing GUI from here.
+        // on a background thread, so don't reference
+        // the Swing GUI from here.
 
-            // check whether we have any keywords at all
-            if (dataObj.getCount(Daten.ZKNCOUNT) <1) {
-                // reset list
-                list = null;
-                // leave thread
-                return null;
-            }
-            // create new instance of that variable
-            list = new LinkedList<>();
-            // start with first entry in order
-            int cnt = dataObj.getFirstZettel();
-            // reset progress counter
-            int progcnt = 0;
-            int total_count = dataObj.getCount(Daten.ZKNCOUNT);
-            // start loop
-            do {
-                // get zettel-title
-                String title = dataObj.getZettelTitle(cnt);
-                // get timestamp
-                String[] timestamp = dataObj.getTimestamp(cnt);
-                // init timestamp variables.
-                String created = "";
-                String edited = "";
-                // check whether we have any timestamp at all.
-                if (timestamp!=null && !timestamp[0].isEmpty() && timestamp[0].length()>=6) {
-                    created = timestamp[0].substring(4,6)+"."+timestamp[0].substring(2,4)+".20"+timestamp[0].substring(0,2);
-                }
-                // check whether we have any timestamp at all.
-                if (timestamp!=null && !timestamp[1].isEmpty() && timestamp[1].length()>=6) {
-                    edited = timestamp[1].substring(4,6)+"."+timestamp[1].substring(2,4)+".20"+timestamp[1].substring(0,2);
-                }
-                // create a new object with these data
-                Object[] ob = new Object[5];
-                ob[0] = cnt; // ob[0] = String.valueOf(cnt);
-                ob[1] = title;
-                ob[2] = created;
-                ob[3] = edited;
-                ob[4] = dataObj.getZettelRating(cnt);
-                // and add it to the table
-                list.add(ob);
-                // update progressbar
-                if (progcnt<total_count) {
-                    setProgress(progcnt,0,total_count);
-                }
-                progcnt++;
-                // reference to next entry
-                cnt = dataObj.getNextZettel(cnt);
-            }
-            // go to loop until we reach the first entry again
-            while (cnt!=dataObj.getFirstZettel());
-/*            
-            // go through all Authors of the Author datafile
-            for (int cnt=1; cnt<=dataObj.getCount(Daten.ZKNCOUNT); cnt++) {
-                // get zettel-title
-                String title = dataObj.getZettelTitle(cnt);
-                // get timestamp
-                String[] timestamp = dataObj.getTimestamp(cnt);
-                // init timestamp variables.
-                String created = "";
-                String edited = "";
-                // check whether we have any timestamp at all.
-                if (timestamp!=null && !timestamp[0].isEmpty() && timestamp[0].length()>=6) created = timestamp[0].substring(4,6)+"."+timestamp[0].substring(2,4)+".20"+timestamp[0].substring(0,2);
-                // check whether we have any timestamp at all.
-                if (timestamp!=null && !timestamp[1].isEmpty() && timestamp[1].length()>=6) edited = timestamp[1].substring(4,6)+"."+timestamp[1].substring(2,4)+".20"+timestamp[1].substring(0,2);
-                // create a new object with these data
-                Object[] ob = new Object[5];
-                ob[0] = cnt; // ob[0] = String.valueOf(cnt);
-                ob[1] = title;
-                ob[2] = created;
-                ob[3] = edited;
-                ob[4] = dataObj.getZettelRating(cnt);
-                // and add it to the table
-                list.add(ob);
-                // update progressbar
-                setProgress(cnt,0,dataObj.getCount(Daten.ZKNCOUNT));
-            }
-*/            
+        // check whether we have any keywords at all
+        if (dataObj.getCount(Daten.ZKNCOUNT) < 1) {
+            // reset list
+            list = null;
+            // leave thread
             return null;
         }
-
-        @Override protected void succeeded(Object result) {
-            // Runs on the EDT.  Update the GUI based on
-            // the result computed by doInBackground().
-            // reset the table
-            tableModel.setRowCount(0);
-            // check whether we have any entries at all...
-            if (list!=null) {
-                // create iterator for linked list
-                Iterator<Object[]> i = list.iterator();
-                // go through linked list and add all objects to the table model
-                try {
-                    while (i.hasNext()) {
-                        tableModel.addRow(i.next());
-                    }
-                }
-                catch (ConcurrentModificationException e) {
-                    // reset the table when we have overlappings threads
-                    tableModel.setRowCount(0);
-                }
+        // create new instance of that variable
+        list = new LinkedList<>();
+        // reset progress counter
+        int total_count = dataObj.getCount(Daten.ZKNCOUNT);
+        // start loop
+        for (int cnt = 1; cnt <= dataObj.getCount(Daten.ZKNCOUNT); cnt++) {
+            // is entry deleted?
+            if (dataObj.isDeleted(cnt)) {
+                // skip entry
+                continue;
             }
-            dataObj.setTitlelistUpToDate(true);
+            // get zettel-title
+            String title = dataObj.getZettelTitle(cnt);
+            // get timestamp
+            String[] timestamp = dataObj.getTimestamp(cnt);
+            // init timestamp variables.
+            String created = "";
+            String edited = "";
+            // check whether we have any timestamp at all.
+            if (timestamp != null && !timestamp[0].isEmpty() && timestamp[0].length() >= 6) {
+                created = timestamp[0].substring(4, 6) + "." + timestamp[0].substring(2, 4) + ".20" + timestamp[0].substring(0, 2);
+            }
+            // check whether we have any timestamp at all.
+            if (timestamp != null && !timestamp[1].isEmpty() && timestamp[1].length() >= 6) {
+                edited = timestamp[1].substring(4, 6) + "." + timestamp[1].substring(2, 4) + ".20" + timestamp[1].substring(0, 2);
+            }
+            // create a new object with these data
+            Object[] ob = new Object[5];
+            ob[0] = cnt; // ob[0] = String.valueOf(cnt);
+            ob[1] = title;
+            ob[2] = created;
+            ob[3] = edited;
+            ob[4] = dataObj.getZettelRating(cnt);
+            // and add it to the table
+            list.add(ob);
+            // update progressbar
+            setProgress(cnt, 0, total_count);
         }
+        return null;
+    }
 
-        @Override
-        protected void finished() {
-            super.finished();
-            // and close window
-            parentDialog.dispose();
-            parentDialog.setVisible(false);
+    @Override
+    protected void succeeded(Object result) {
+            // Runs on the EDT.  Update the GUI based on
+        // the result computed by doInBackground().
+        // reset the table
+        tableModel.setRowCount(0);
+        // check whether we have any entries at all...
+        if (list != null) {
+            // create iterator for linked list
+            Iterator<Object[]> i = list.iterator();
+            // go through linked list and add all objects to the table model
+            try {
+                while (i.hasNext()) {
+                    tableModel.addRow(i.next());
+                }
+            } catch (ConcurrentModificationException e) {
+                // reset the table when we have overlappings threads
+                tableModel.setRowCount(0);
+            }
         }
+        dataObj.setTitlelistUpToDate(true);
+    }
 
+    @Override
+    protected void finished() {
+        super.finished();
+        // and close window
+        parentDialog.dispose();
+        parentDialog.setVisible(false);
+    }
 }

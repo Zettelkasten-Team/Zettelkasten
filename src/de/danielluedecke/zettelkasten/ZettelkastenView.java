@@ -1847,7 +1847,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             t.setShowVerticalLines(settings.getShowGridVertical());
             t.setIntercellSpacing(settings.getCellSpacing());
             // make extra table-sorter for itunes-tables
-            if (settings.isMacStyle()) {
+            if (settings.isMacAqua()) {
                 TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
                     @Override
                     public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
@@ -1897,33 +1897,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 return false;
             }
             @Override protected void cleanup(JComponent c, boolean remove) {
-            }
-        });
-        jTableTitles.setTransferHandler(new EntryStringTransferHandler() {
-            @Override protected String exportString(JComponent c) {
-                return de.danielluedecke.zettelkasten.util.TableUtils.prepareStringForTransferHandler(jTableTitles);
-            }
-            @Override protected boolean importString(JComponent c, String str) {
-                // check whether a user drag'n'dropped entries within this table
-                // if yes, sort them
-                if (c.getName().equalsIgnoreCase("jTableTitles")) {
-                    // retrieve dropped entries
-                    int[] entries = Tools.retrieveEntryNumbersFromTransferHandler(str,data.getCount(Daten.ZKNCOUNT));
-                    // retrieve drop index
-                    int droplocation = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableTitles, 0);
-                    // check for valid values
-                    if (droplocation!=-1 && entries!=null && entries.length>0) {
-                        // sort entries
-                        data.moveEntries(entries, droplocation);
-                        // update display
-                        showTitles();
-                    }
-                }
-                return false;
-            }
-            @Override protected void cleanup(JComponent c, boolean remove) {
-                // clear selection
-                jTableTitles.clearSelection();
             }
         });
         jTableBookmarks.setTransferHandler(new EntryStringTransferHandler() {
@@ -5594,26 +5567,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTreeCluster.requestFocusInWindow();
     }
     
-    
-    /**
-     * This action sorts follower entries in the jTreeLuhmann in the visible entry order.
-     */
-    @Action(enabledProperty = "moreLuhmann")
-    public void sortLuhmann() {
-        // get current zettel
-        int nr = data.getCurrentZettelPos();
-        // check whether it has followers
-        if (data.hasLuhmannNumbers(nr)) {
-            // get all follower entries
-            int[] luhmanns = data.getAllLuhmannNumbers(nr);
-            // and sort them
-            data.moveEntries(luhmanns, nr);
-            // update display
-            updateDisplay();
-        }
-    }
-    
-    
     /**
      * This method displays the all entries' titles using
      * a background task. after the task finishes, all titles and ther related entry number
@@ -7304,39 +7257,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         updateDisplay();
     }
 
-    
-    /**
-     * This action is triggered from the title view tabbed pane / menu. This method moves selected
-     * entries behind another entry, which entry number is requested via option dialog. With this
-     * method, entries can be reordered.
-     */
-    @Action(enabledProperty = "tableEntriesSelected")
-    public void moveEntry() {
-        // retrieve selected entry numbers
-        int[] moveentries = ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableTitles, 0);
-        // check whether we have any entriews at all
-        if (moveentries!=null && moveentries.length>0) {
-            // ask user after which entry the selected entries should be inserted
-            // open an input-dialog
-            String insertAfter = (String)JOptionPane.showInputDialog(getFrame(),
-                                                     getResourceMap().getString("moveEntryMsg"),
-                                                     getResourceMap().getString("moveEntryTitle"),
-                                                     JOptionPane.PLAIN_MESSAGE);
-            // if we have a valid return-value...
-            if ((insertAfter!=null) && (insertAfter.length()>0)) {
-                // convert the string-input into an int-array
-                int[] selectedValues = Tools.retrieveEntryNumbersFromInput(insertAfter, data.getCount(Daten.ZKNCOUNT));
-                // and move selected entries behind the entered entry number
-                if (selectedValues!=null) {
-                    // move entries
-                    data.moveEntries(moveentries, selectedValues[0]);
-                    // update title list
-                    showTitles();
-                }
-            }
-        }
-    }
-    
     
     // TODO wenn import abbricht, werden nicht alle listen resettet, bspw. table enthalten noch alte daten
 
@@ -11219,8 +11139,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jSeparator102 = new javax.swing.JSeparator();
             viewMenuLuhmannExport = new javax.swing.JMenuItem();
             viewMenuLuhmannExportSearch = new javax.swing.JMenuItem();
-            jSeparator117 = new javax.swing.JPopupMenu.Separator();
-            viewMenuLuhmannSortEntries = new javax.swing.JMenuItem();
             jSeparator118 = new javax.swing.JPopupMenu.Separator();
             viewMenuLuhmannShowNumbers = new javax.swing.JCheckBoxMenuItem();
             viewMenuKeywords = new javax.swing.JMenu();
@@ -11283,8 +11201,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jSeparator43 = new javax.swing.JSeparator();
             viewTitlesEdit = new javax.swing.JMenuItem();
             viewTitlesDelete = new javax.swing.JMenuItem();
-            jSeparator65 = new javax.swing.JSeparator();
-            viewTitlesMoveEntry = new javax.swing.JMenuItem();
             jSeparator105 = new javax.swing.JSeparator();
             viewTitlesAutomaticFirstLine = new javax.swing.JMenuItem();
             jSeparator42 = new javax.swing.JSeparator();
@@ -12842,13 +12758,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             viewMenuLuhmannExportSearch.setName("viewMenuLuhmannExportSearch"); // NOI18N
             viewMenuLuhmann.add(viewMenuLuhmannExportSearch);
 
-            jSeparator117.setName("jSeparator117"); // NOI18N
-            viewMenuLuhmann.add(jSeparator117);
-
-            viewMenuLuhmannSortEntries.setAction(actionMap.get("sortLuhmann")); // NOI18N
-            viewMenuLuhmannSortEntries.setName("viewMenuLuhmannSortEntries"); // NOI18N
-            viewMenuLuhmann.add(viewMenuLuhmannSortEntries);
-
             jSeparator118.setName("jSeparator118"); // NOI18N
             viewMenuLuhmann.add(jSeparator118);
 
@@ -13085,13 +12994,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             viewTitlesDelete.setAction(actionMap.get("deleteEntry")); // NOI18N
             viewTitlesDelete.setName("viewTitlesDelete"); // NOI18N
             viewMenuTitles.add(viewTitlesDelete);
-
-            jSeparator65.setName("jSeparator65"); // NOI18N
-            viewMenuTitles.add(jSeparator65);
-
-            viewTitlesMoveEntry.setAction(actionMap.get("moveEntry")); // NOI18N
-            viewTitlesMoveEntry.setName("viewTitlesMoveEntry"); // NOI18N
-            viewMenuTitles.add(viewTitlesMoveEntry);
 
             jSeparator105.setName("jSeparator105"); // NOI18N
             viewMenuTitles.add(jSeparator105);
@@ -14200,7 +14102,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JPopupMenu.Separator jSeparator114;
     private javax.swing.JPopupMenu.Separator jSeparator115;
     private javax.swing.JPopupMenu.Separator jSeparator116;
-    private javax.swing.JPopupMenu.Separator jSeparator117;
     private javax.swing.JPopupMenu.Separator jSeparator118;
     private javax.swing.JSeparator jSeparator12;
     private javax.swing.JSeparator jSeparator13;
@@ -14260,7 +14161,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JSeparator jSeparator62;
     private javax.swing.JSeparator jSeparator63;
     private javax.swing.JSeparator jSeparator64;
-    private javax.swing.JSeparator jSeparator65;
     private javax.swing.JSeparator jSeparator66;
     private javax.swing.JSeparator jSeparator67;
     private javax.swing.JSeparator jSeparator68;
@@ -14552,7 +14452,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JMenuItem viewMenuLuhmannExportSearch;
     private javax.swing.JMenuItem viewMenuLuhmannManLinks;
     private javax.swing.JCheckBoxMenuItem viewMenuLuhmannShowNumbers;
-    private javax.swing.JMenuItem viewMenuLuhmannSortEntries;
     private javax.swing.JMenu viewMenuTitles;
     private javax.swing.JMenuItem viewTitlesAutomaticFirstLine;
     private javax.swing.JMenuItem viewTitlesBookmarks;
@@ -14563,7 +14462,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JMenuItem viewTitlesExport;
     private javax.swing.JMenuItem viewTitlesLuhmann;
     private javax.swing.JMenuItem viewTitlesManLinks;
-    private javax.swing.JMenuItem viewTitlesMoveEntry;
     private javax.swing.JMenu windowsMenu;
     // End of variables declaration//GEN-END:variables
 

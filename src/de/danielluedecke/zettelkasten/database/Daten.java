@@ -74,7 +74,7 @@ public class Daten {
     /**
      * Constant for the current file version
      */
-    private static final String currentVersion = "3.7";
+    private static final String currentVersion = "3.8";
     public static final String backwardCompatibleVersion = "3.4";
     /**
      * A refrence to the settings class
@@ -280,11 +280,6 @@ public class Daten {
     public static final String ATTRIBUTE_TIMESTAMP_CREATED = "ts_created";
     public static final String ATTRIBUTE_TIMESTAMP_EDITED = "ts_edited";
     public static final String ATTRIBUTE_ZETTEL_ID = "zknid";
-    public static final String ATTRIBUTE_NEXT_ZETTEL = "nextzettel";
-    public static final String ATTRIBUTE_PREV_ZETTEL = "prevzettel";
-
-    public static final String ATTRIBUTE_FIRST_ZETTEL = "firstzettel";
-    public static final String ATTRIBUTE_LAST_ZETTEL = "lastzettel";
     
     // attributes of keyword and author elements
     public static final String ATTRIBUTE_AUTHOR_ID = "authid";
@@ -435,9 +430,6 @@ public class Daten {
         metainfFile.getRootElement().addContent(imgpath);
         // init zettel-position-index
         zettelPos = 1;
-        // reset references to first and last entry
-        setFirstZettel(-1);
-        setLastZettel(-1);
         // here we add all files which are stored in the zipped data-file in a list-array
         filesToLoad.clear();
         filesToLoad.add(Constants.metainfFileName);
@@ -754,16 +746,6 @@ public class Daten {
             for (int cnt = currentpos + 1; cnt <= getCount(ZKNCOUNT); cnt++) {
                 // retrieve each new added entry
                 zettel = retrieveZettel(cnt);
-                // set back reference to current last entry
-                setPrevZettel(cnt, getLastZettel());
-                // set pointer from current last entry to this new imported/added entry
-                setNextZettel(getLastZettel(), cnt);
-                // set pointer from first entry to this entry
-                setPrevZettel(getFirstZettel(), cnt);
-                // set next pointer from this entry to first entry
-                setNextZettel(cnt, getFirstZettel());
-                // set this entry as new last entry
-                setLastZettel(cnt);
                 //
                 // here we change the entry's luhmann-numbers (trailing entries) and the
                 // entry's manual links with the unique IDs
@@ -1176,9 +1158,6 @@ public class Daten {
                 // set the zettel-position to the new entry
                 zettelPos = getCount(ZKNCOUNT);
             }
-            // duplicate this entry into the correct entry order
-            // by changing the prev/nex references (or pointers) of the entries.
-            changeZettelPointer(zettelPos, nr);
             // titles have to be updated.
             setTitlelistUpToDate(false);
             // set modified state
@@ -1888,21 +1867,6 @@ public class Daten {
         Element zettel = retrieveElement(zknFile, pos);
         // if the entry-element exists...
         if (zettel != null) {
-            // remove this entry from the visible order
-            // therefore, the previous entry of this entry should point
-            // to the next entry of this entry
-            setNextZettel(getPrevZettel(pos), getNextZettel(pos));
-            // and the the next entry of this entry should point
-            // to the previous entry of this entry
-            setPrevZettel(getNextZettel(pos), getPrevZettel(pos));
-            // check whether deleted entry was first entry
-            if (pos == getFirstZettel()) {
-                setFirstZettel(getNextZettel(pos));
-            }
-            // check whether deleted entry was last entry
-            if (pos == getLastZettel()) {
-                setLastZettel(getPrevZettel(pos));
-            }
             // retrieve manual links, so we can delete the backlinks from other entries.
             // each manual link from this entry to other entries creates a "backlink" from
             // other entries to this one. if we delete the manual links from this entry,
@@ -1911,19 +1875,13 @@ public class Daten {
             // delete manual links
             deleteManualLinks(manlinks, pos);
             // change zettelcounter
-            zettelPos = getNextZettel(pos);
-            // check whether it's out of bounds
-            if (zettelPos > getCount(ZKNCOUNT) || zettelPos == -1) {
-                zettelPos = getFirstZettel();
-            }
+            nextEntry();
             // change author-and keyword-frequencies
             changeFrequencies(pos, -1);
             // ...delete entry's attributes
             zettel.setAttribute(ATTRIBUTE_ZETTEL_ID, "");
             zettel.setAttribute(ATTRIBUTE_RATINGCOUNT, "");
             zettel.setAttribute(ATTRIBUTE_RATING, "");
-            zettel.setAttribute(ATTRIBUTE_NEXT_ZETTEL, "");
-            zettel.setAttribute(ATTRIBUTE_PREV_ZETTEL, "");
             // ...delete entry's content
             zettel.getChild(ELEMENT_TITLE).setText("");
             zettel.getChild(ELEMENT_CONTENT).setText("");
@@ -2960,14 +2918,6 @@ public class Daten {
                 retval = ADD_LUHMANNENTRY_ERR;
             }
         }
-        // check whether inserted entry position is already the last position in
-        // the entry order
-        // in this case, we can set the variable to -1, so it will automatically be
-        // added to the end
-        changeZettelPointer(zettelPos, insertAfterEntry);
-        // set this entry as first entry if we do not have any
-        // first entry yet...
-        if (-1==getFirstZettel()) setFirstZettel(zettelPos);
         // save ID of last added entry
         setLastAddedZettelID(zettel);
         // create back-references for manual links
@@ -2978,70 +2928,6 @@ public class Daten {
         return retval;
     }
 
-    
-    /**
-     * This method updates the "pointer" references from entries when a new
-     * entry is added to the data base. In this case, the former last entry
-     * now refers to this entry as last entry, while the first entry back-references
-     * to the new added entry (and no longer to the former last entry). The same
-     * applies when an entry is inserted in between two entries.
-     * <br><br>
-     * This method is used for instance in the
-     * {@link #addEntry(java.lang.String, java.lang.String, java.lang.String[], java.lang.String[], java.lang.String, java.lang.String[], java.lang.String, int, int) addEntry}
-     * or {@link #duplicateEntry(int) duplicateEntry} methods.
-     * 
-     * @param zettelPos the index-number of the entry that was added to the data base.
-     * @param insertAfterEntry the position of the existing entry after which the new
-     * entry should be added. use {@code -1} to add an entry to the end of the entry
-     * order.
-     */
-    private void changeZettelPointer(int zettelPos, int insertAfterEntry) {
-        // check whether entry should be inserted at the end of the database
-        if (insertAfterEntry==getLastZettel()) insertAfterEntry = -1;
-        // check whether new entry should be added to end of entry order
-        if (-1==insertAfterEntry) {
-            // get current last entry
-            int cur_last = getLastZettel();
-            // if we have no last entry, this one seems to be the last entry
-            if (-1==cur_last) {
-                // so fix cur_first value
-                cur_last = zettelPos;
-            }
-            // change reference of last entry's next-link
-            setNextZettel(cur_last, zettelPos);
-            // get current first entry
-            int cur_first = getFirstZettel();
-            // if we have no first entry, this one seems to be the first entry
-            if (-1==cur_first) {
-                // so fix cur_first value
-                cur_first = zettelPos;
-            }
-            // change reference of first entry's prev-link
-            setPrevZettel(cur_first, zettelPos);
-            // sort in entry into entry-order
-            setNextZettel(zettelPos, cur_first);
-            setPrevZettel(zettelPos, cur_last);
-            // set new last entry
-            setLastZettel(zettelPos);
-        }
-        // in this case, we add an entry "in between".
-        else {
-            // get next-link of insert-entry
-            int next_entry = getNextZettel(insertAfterEntry);
-            // change next-link to new added entry
-            setNextZettel(insertAfterEntry, zettelPos);
-            // set pre-link of new added entry to the entry after which
-            // this new one has been added
-            setPrevZettel(zettelPos, insertAfterEntry);
-            // set former insertAfterEntry's next entry's prev-link
-            // to this new added entry
-            setPrevZettel(next_entry, zettelPos);
-            // set next-link of added entry
-            setNextZettel(zettelPos, next_entry);
-        }
-    }
-    
-    
     /**
      * This method adds a new entry to the datafile. The needed parameters come from the JDialog
      * "CNewEntry.java". This dialog opens an edit-mask so the user can input the necessary information.
@@ -5155,9 +5041,9 @@ public class Daten {
      */
     public void nextEntry() {
         // increase counter for currently display entry
-        zettelPos = getNextZettel(zettelPos);
+        zettelPos++;
         // check whether it's out of bounds
-        if (!zettelExists(zettelPos)) zettelPos = getFirstZettel();
+        if (zettelPos > getCount(ZKNCOUNT) || -1 == zettelPos) zettelPos = 1;
         // update History
         addToHistory();
     }
@@ -5166,9 +5052,9 @@ public class Daten {
      */
     public void prevEntry() {
         // decrease counter for currently display entry
-        zettelPos = getPrevZettel(zettelPos);
+        zettelPos--;
         // check whether it's out of bounds
-        if (!zettelExists(zettelPos)) zettelPos = getLastZettel();
+        if (zettelPos < 1) zettelPos = getCount(ZKNCOUNT);
         // update History
         addToHistory();
     }
@@ -5177,7 +5063,7 @@ public class Daten {
      */
     public void firstEntry() {
         // set counter for currently display entry to 1
-        zettelPos=getFirstZettel();
+        zettelPos = 1;
         // update History
         addToHistory();
     }
@@ -5187,7 +5073,7 @@ public class Daten {
      */
     public void lastEntry() {
         // set counter for currently display entry to last element
-        zettelPos=getLastZettel();
+        zettelPos = getCount(ZKNCOUNT);
         // update History
         addToHistory();
     }
@@ -5574,9 +5460,6 @@ public class Daten {
      * @return number of the currently <i>activated</i> entry
      */
     public int getCurrentZettelPos() {
-        // in case, the position-index for the displayed to be displayed is out
-        // of the valid boundaries, simply reset the position-index to 1
-        if (!zettelExists(zettelPos)) zettelPos=getFirstZettel();
         // and return the value
         return zettelPos;
     }
@@ -6016,9 +5899,6 @@ public class Daten {
                 // add each entry-element to the export-document
                 zknFileExport.getRootElement().addContent(zettel);
             }
-            // set first and last zettel
-            zknFileExport.getRootElement().setAttribute(ATTRIBUTE_FIRST_ZETTEL, "");
-            zknFileExport.getRootElement().setAttribute(ATTRIBUTE_LAST_ZETTEL, "");
             return true;
         }
         return false;
@@ -6191,6 +6071,29 @@ public class Daten {
             }
         }
     }
+    
+    /**
+     * This method updates the inline-code-format-tags in the data base.
+     */
+    public void db_updateRemoveZettelPosElements() {
+        String ATTRIBUTE_NEXT_ZETTEL = "nextzettel";
+        String ATTRIBUTE_PREV_ZETTEL = "prevzettel";
+        String ATTRIBUTE_FIRST_ZETTEL = "firstzettel";
+        String ATTRIBUTE_LAST_ZETTEL = "lastzettel";
+        // iterate all elements
+        for (int cnt=1; cnt<=getCount(ZKNCOUNT); cnt++) {
+            // retrieve element
+            Element zettel = retrieveZettel(cnt);
+            // check for valid value
+            if (zettel != null) {
+                if (zettel.getAttribute(ATTRIBUTE_NEXT_ZETTEL) != null) zettel.removeAttribute(ATTRIBUTE_NEXT_ZETTEL);
+                if (zettel.getAttribute(ATTRIBUTE_PREV_ZETTEL) != null) zettel.removeAttribute(ATTRIBUTE_PREV_ZETTEL);
+                if (zettel.getAttribute(ATTRIBUTE_FIRST_ZETTEL) != null) zettel.removeAttribute(ATTRIBUTE_FIRST_ZETTEL);
+                if (zettel.getAttribute(ATTRIBUTE_LAST_ZETTEL) != null) zettel.removeAttribute(ATTRIBUTE_LAST_ZETTEL);
+            }
+        }
+    }
+    
     /**
      * This method updates the inline-code-format-tags in the data base.
      */
@@ -6234,105 +6137,7 @@ public class Daten {
             }
         }
     }
-    /**
-     * This method updates the data structure from version 3.3 to version 3.4. With
-     * this change, each Zettel-element gets two new child-elements which refer to the
-     * previous and next entry. With this references, we can reorder entries without
-     * changing their place in the data structure, i.e. the user can re-order entries
-     * in their visible order as they appear in the application, while their "id", i.e.
-     * their place in the data structure does not change.
-     * <br><br>
-     * Futhermore, the root-element gets references to the first and the last entry in that order.
-     */
-    public void db_updateEntryOrderReferences() {
-        int first = -1;
-        int last = -1;
-        // iterate all elements
-        for (int cnt=1; cnt<=getCount(ZKNCOUNT); cnt++) {
-            // find first entry in the database that is not deleted
-            if (!isDeleted(cnt)) {
-                // if we found it, store that entry as first element
-                first = cnt;
-                break;
-            }
-        }
-        // iterate all elements
-        for (int cnt=getCount(ZKNCOUNT); cnt>0; cnt--) {
-            // find last entry in the database that is not deleted
-            if (!isDeleted(cnt)) {
-                // if we found it, store that entry as last element
-                last = cnt;
-                break;
-            }
-        }
-        // set first and last entry, store
-        // them in database
-        setFirstZettel(first);
-        setLastZettel(last);
-//        // iterate all elements
-//        for (int cnt=1; cnt<=getCount(ZKNCOUNT); cnt++) {
-//            // retrieve element
-//            Element zettel = retrieveZettel(cnt);
-//            // here we change the entry's luhmann-numbers (trailing entries) and the
-//            // entry's manual links with the unique IDs
-//            replaceAttributeNrWithID(zettel);
-//        }
-        // this variable stores the number of the last entry
-        // where a reference to a previous entry has been set.
-        // needed for later reference, see below
-        int lastPrevZettel = first;
-        // iterate all elements
-        for (int cnt=1; cnt<=getCount(ZKNCOUNT); cnt++) {
-            // retrieve element
-            Element zettel = retrieveZettel(cnt);
-            // check for valid value
-            if (zettel!=null) {
-                // check whether entry is not deleted
-                if (!isDeleted(cnt)) {
-                    // check whether entry is first entry
-                    if (cnt==first) {
-                        // the last's next entry is this entry
-                        setNextZettel(last, cnt);
-                        // the previous entry is the last entry
-                        setPrevZettel(cnt, last);
-                    }
-                    // check whether entry is last entry
-                    if (cnt==last) {
-                        // the last's next entry is the first entry
-                        setNextZettel(cnt, first);
-                        // the first's previous entry is this (last) entry
-                        setPrevZettel(first, cnt);
-                        // set this entry's previous zettel
-                        setPrevZettel(cnt, lastPrevZettel);
-                        // set previous entry's next zettel to this zettel
-                        setNextZettel(lastPrevZettel, cnt);
-                    }
-                    // if entry is neither first nor last entry, but
-                    // "in between", set reference from previous entry to this entry
-                    if (cnt!=first && cnt!=last) {
-                        // set the last previous entry number as previous entry
-                        // of the current entry
-                        setPrevZettel(cnt, lastPrevZettel);
-                        // the previous entry poins to this entry
-                        setNextZettel(lastPrevZettel, cnt);
-                    }
-                    // and make the current entry as reference for the last
-                    // previous-set entry
-                    lastPrevZettel = cnt;
-                }
-            }
-        }
-//        // iterate all elements
-//        for (int cnt=1; cnt<=getCount(ZKNCOUNT); cnt++) {
-//            // retrieve element
-//            Element zettel = retrieveZettel(cnt);
-//            // here we change the entry's luhmann-numbers (trailing entries) and the
-//            // entry's manual links with the unique IDs
-//            replaceAttributeIDWithNr(zettel);
-//        }
-        // change modified state
-        setModified(true);
-    }
+    
     /**
      * This method replaces all numeral references to other entries
      * from manual links and trailing entry references with the referenced
@@ -6442,266 +6247,7 @@ public class Daten {
             zettel.getChild(attr).setText(final_values.toString());
         }
     }
-    /**
-     * This method returns the number of the next Zettel which is positioned
-     * after the Zettel with the number {@code pos}. This method is needed
-     * for reordering the entries without changing their original number,
-     * i.e. position in the database.<br><br>
-     * This method retrieves the entry-number of the next entry in the
-     * user-defined order, which is stored in the attribute
-     * {@link #ATTRIBUTE_NEXT_ZETTEL} of each {@code zettel} element.
-     * 
-     * @param pos The number or position of the current entry.
-     * @return The number of the next entry in the entry-order, or {@code -1}
-     * if no such entry or element exists.
-     */
-    public int getNextZettel(int pos) {
-        // retrieve current zettel-element
-        Element zettel = retrieveZettel(pos);
-        // check for valid value
-        if (zettel!=null) {
-            // retrieve attribute
-            String next = zettel.getAttributeValue(ATTRIBUTE_NEXT_ZETTEL);
-            // check whether we have a valid attribute that refers to the
-            // next entry
-            if (next!=null && !next.isEmpty()) {
-                try {
-                    // retrieve number
-                    int nr = Integer.parseInt(next);
-                    // check whether number is within bounds
-                    if (nr<1 || nr >getCount(ZKNCOUNT)) {
-                        nr = getFirstZettel();
-                    }
-                    // return result
-                    return nr;
-                }
-                catch (NumberFormatException ex) {
-                }
-            }
-        }
-        return -1;
-    }
-    /**
-     * This method sets the number of the next Zettel which is positioned
-     * after the Zettel with the number {@code pos}. This method is needed
-     * for reordering the entries without changing their original number,
-     * i.e. position in the database.<br><br>
-     * Sample:
-     * {@code setNextZettel(5,9)} sets the reference to the next entry of
-     * entry 5 to number 9, i.e. entry 5 points to entry 9 as next entry.
-     * 
-     * @param pos The number or position of the current entry, where the reference
-     * to the next entry should be set
-     * @param nr the number of the next entry, where the entry {@code pos} should
-     * refer to.
-     */
-    public void setNextZettel(int pos, int nr) {
-        // retrieve current zettel-element
-        Element zettel = retrieveZettel(pos);
-        // check for valid value
-        if (zettel!=null) {
-            // check whether number is within bounds
-            if (nr>=1 && nr <=getCount(ZKNCOUNT) || -1==nr /* We need -1 here for restting the value */) {
-                // set attribute
-                zettel.setAttribute(ATTRIBUTE_NEXT_ZETTEL, String.valueOf(nr));
-            }
-        }
-    }
-    /**
-     * This method returns the number of the first Zettel in the
-     * user-defined order, which is stored in the attribute
-     * {@link #ATTRIBUTE_FIRST_ZETTEL} of the root element {@link #zknFile}.
-     * 
-     * @return The number of the first entry in the entry-order, or {@code -1}
-     * if no such entry or element exists.
-     */
-    public int getFirstZettel() {
-        // check for valid value
-        if (zknFile!=null) {
-            // retrieve attribute
-            String first = zknFile.getRootElement().getAttributeValue(ATTRIBUTE_FIRST_ZETTEL);
-            // check whether we have a valid attribute that refers to the
-            // first entry
-            // next entry
-            if (first!=null && !first.isEmpty()) {
-                try {
-                    // retrieve number
-                    int nr = Integer.parseInt(first);
-                    
-                    // Seit Version 3.1.7: auskommentiert, da Wert auch -1
-                    // sein kann
-                    
-                    // check whether number is within bounds
-                    if (/* nr<1 || */ nr >getCount(ZKNCOUNT)) {
-                        nr = 1;
-                    }
-                    // return result
-                    return nr;
-                }
-                catch (NumberFormatException ex) {
-                }
-            }
-        }
-        return -1;
-    }
-    /**
-     * This method checks whether the given entry with the number {@code nr} is the first
-     * entry in the entry order.
-     * 
-     * @param nr the number of an entry that should be checked whether it's the first entry in
-     * the order or not.
-     * @return {@code true} if the entry {@code nr} is the first entry in the order,
-     * {@code false otherwise}
-     */
-    public boolean isFirstZettel(int nr) {
-        return (getFirstZettel()==nr);
-    }
-    /**
-     * This method checks whether the given entry with the number {@code nr} is the last
-     * entry in the entry order.
-     * 
-     * @param nr the number of an entry that should be checked whether it's the lasz entry in
-     * the order or not.
-     * @return {@code true} if the entry {@code nr} is the last entry in the order,
-     * {@code false otherwise}
-     */
-    public boolean isLastZettel(int nr) {
-        return (getLastZettel()==nr);
-    }
-    /**
-     * This method sets the number of the first Zettel in the
-     * user-defined order, which is stored in the attribute
-     * {@link #ATTRIBUTE_FIRST_ZETTEL} of the root element {@link #zknFile}.
-     * 
-     * @param nr the number of the first entry in the user-defined entry-order
-     */
-    public void setFirstZettel(int nr) {
-        // check for valid value
-        if (zknFile!=null) {
-            // check whether number is within bounds
-            if ((nr>=1 && nr <=getCount(ZKNCOUNT)) || -1==nr /* We need this to reset this value */) {
-                // set attribute
-                zknFile.getRootElement().setAttribute(ATTRIBUTE_FIRST_ZETTEL, String.valueOf(nr));
-            }
-        }
-    }
-    /**
-     * This method returns the number of the previous Zettel which is positioned
-     * before the Zettel with the number {@code pos}. This method is needed
-     * for reordering the entries without changing their original number,
-     * i.e. position in the database.<br><br>
-     * This method retrieves the entry-number of the previous entry in the
-     * user-defined order, which is stored in the attribute
-     * {@link #ATTRIBUTE_PREV_ZETTEL} of each {@code zettel} element.
-     * 
-     * @param pos The number or position of the current entry.
-     * @return The number of the previous entry in the entry-order, or {@code -1}
-     * if no such entry or element exists.
-     */
-    public int getPrevZettel(int pos) {
-        // retrieve current zettel-element
-        Element zettel = retrieveZettel(pos);
-        // check for valid value
-        if (zettel!=null) {
-            // retrieve attribute
-            String next = zettel.getAttributeValue(ATTRIBUTE_PREV_ZETTEL);
-            // check whether we have a valid attribute that refers to the
-            // next entry
-            if (next!=null && !next.isEmpty()) {
-                try {
-                    // retrieve number
-                    int nr = Integer.parseInt(next);
-                    // check whether number is within bounds
-                    if (nr<1 || nr >getCount(ZKNCOUNT)) {
-                        nr = getLastZettel();
-                    }
-                    // return result
-                    return nr;
-                }
-                catch (NumberFormatException ex) {
-                }
-            }
-        }
-        return -1;
-    }
-    /**
-     * This method sets the number of the previous Zettel which is positioned
-     * before the Zettel with the number {@code pos}. This method is needed
-     * for reordering the entries without changing their original number,
-     * i.e. position in the database.<br><br>
-     * Sample:
-     * {@code setPrevZettel(5,9)} sets the reference to the previous entry of
-     * entry 5 to number 9, i.e. entry 5 points to entry 9 as previous entry.
-     * 
-     * @param pos The number or position of the current entry, where the reference
-     * to the previous entry should be set
-     * @param nr the number of the previous entry, where the entry {@code pos} should
-     * refer to.
-     */
-    public void setPrevZettel(int pos, int nr) {
-        // retrieve current zettel-element
-        Element zettel = retrieveZettel(pos);
-        // check for valid value
-        if (zettel!=null) {
-            // check whether number is within bounds
-            if (nr>=1 && nr <=getCount(ZKNCOUNT) || -1==nr /* We need -1 here for restting the value */) {
-                // set attribute
-                zettel.setAttribute(ATTRIBUTE_PREV_ZETTEL, String.valueOf(nr));
-            }
-        }
-    }
-    /**
-     * This method returns the number of the last Zettel in the
-     * user-defined order, which is stored in the attribute
-     * {@link #ATTRIBUTE_LAST_ZETTEL} of the root element {@link #zknFile}.
-     * 
-     * @return The number of the last entry in the entry-order, or {@code -1}
-     * if no such entry or element exists.
-     */
-    public int getLastZettel() {
-        // check for valid value
-        if (zknFile!=null) {
-            // retrieve attribute
-            String last = zknFile.getRootElement().getAttributeValue(ATTRIBUTE_LAST_ZETTEL);
-            // check whether we have a valid attribute that refers to the
-            // first entry
-            // next entry
-            if (last!=null && !last.isEmpty()) {
-                try {
-                    // retrieve number
-                    int nr = Integer.parseInt(last);
-                    // Seit Version 3.1.7: auskommentiert, da Wert auch -1
-                    // sein kann
-                    // check whether number is within bounds
-                    if (/* nr<1 || */ nr >getCount(ZKNCOUNT)) {
-                        nr = 1;
-                    }
-                    // return result
-                    return nr;
-                }
-                catch (NumberFormatException ex) {
-                }
-            }
-        }
-        return -1;
-    }
-    /**
-     * This method sets the number of the last Zettel in the
-     * user-defined order, which is stored in the attribute
-     * {@link #ATTRIBUTE_LAST_ZETTEL} of the root element {@link #zknFile}.
-     * 
-     * @param nr the number of the last entry in the user-defined entry-order
-     */
-    public void setLastZettel(int nr) {
-        // check for valid value
-        if (zknFile!=null) {
-            // check whether number is within bounds
-            if ((nr>=1 && nr <=getCount(ZKNCOUNT)) || -1==nr /* We need this to reset this value */) {
-                // set attribute
-                zknFile.getRootElement().setAttribute(ATTRIBUTE_LAST_ZETTEL, String.valueOf(nr));
-            }
-        }
-    }
+
     /**
      * This method changes the timestamp attributes of an entry.
      * 
@@ -7281,116 +6827,6 @@ public class Daten {
             }
         }
     }
-    /**
-     * This method moves an entry in the displayed entry order. The entry keeps its number
-     * and will not be moved within the XML data file. only the pointer referenced (see
-     * {@link #ATTRIBUTE_NEXT_ZETTEL} and {@link #ATTRIBUTE_PREV_ZETTEL}) are changed.
-     * 
-     * @param entryToMove The number of that entry that should be moved to another position (source).
-     * @param insertAfter The number of that entry after which the {@code entryToMove} should
-     * be inserted (destination).
-     */
-    public void moveEntry(int entryToMove, int insertAfter) {
-        // check if equal
-        if (entryToMove==insertAfter) {
-            return;
-        }
-        // check whether insertAfter is a valid destination
-        if (isDeleted(insertAfter) || !zettelExists(insertAfter)) {
-            return;
-        }
-        // first, check whether the entry is inserted after that entry
-        // where it already is sorted in. if yes, don't move anything
-        if (getPrevZettel(entryToMove)==insertAfter) {
-            return;
-        }
-        // now, connect those entries which originally refered
-        // to the move entry
-        // therefor we need the refrenced to the previous
-        // and next entry of the move entry
-        int moveprev = getPrevZettel(entryToMove);
-        int movenext = getNextZettel(entryToMove);
-        // now connect these entries, so the move entry
-        // is "cut out" of the entry order
-        setNextZettel(moveprev, movenext);
-        setPrevZettel(movenext, moveprev);
-        // check, whether moved entry was the first entry
-        // if so, the entry following the move entry is now the new first entry
-        if (isFirstZettel(entryToMove)) {
-            setFirstZettel(movenext);
-        }
-        // check, whether moved entry was the last entry
-        // if so, the entry before the move entry is now the new last entry
-        if (isLastZettel(entryToMove)) {
-            setLastZettel(moveprev);
-        }
-        // now, insert entry at new position
-        // therefore we need to "disconnect" those entries where the move entry should be inserted
-        // therefor we need the refrence to the next entry of the insertAfter entry
-        int nextBehindEntryToMove = getNextZettel(insertAfter);
-        setPrevZettel(nextBehindEntryToMove, entryToMove);
-        setNextZettel(insertAfter, entryToMove);
-        // and insert  the new entry
-        setPrevZettel(entryToMove, insertAfter);
-        setNextZettel(entryToMove, nextBehindEntryToMove);
-        // check whether insertAfter was the last entry in the order
-        if (isLastZettel(insertAfter)) {
-            setLastZettel(entryToMove);
-        }
-        // set modified flag
-        setModified(true);
-        // title list is out of date
-        setTitlelistUpToDate(false);
-    }
-    /**
-     * This method moves several entries in their displayed entry order. The entries keeps their number
-     * and will not be moved within the XML data file. only the pointer referenced (see
-     * {@link #ATTRIBUTE_NEXT_ZETTEL} and {@link #ATTRIBUTE_PREV_ZETTEL}) are changed.
-     * 
-     * @param entriesToMove An array with numbers of those entries that should be moved to another position (source).
-     * @param insertAfter The number of that entry after which the {@code entriesToMove} should
-     * be inserted (destination).
-     */
-    public void moveEntries(int[] entriesToMove, int insertAfter) {
-        // check for valid values
-        if (entriesToMove!=null && entriesToMove.length>0) {
-            // go through the array, but from last to first element.
-            // since each entry is inserted after "insertAfter", we keep
-            // the order of the moved entries by inserting them from last
-            // to first entry
-            for (int cnt=entriesToMove.length-1; cnt>=0; cnt--) {
-                // move each entry
-                moveEntry(entriesToMove[cnt], insertAfter);
-            }
-        }
-    }
-    /**
-     * This method moves several entries in their displayed entry order. The entries keeps their number
-     * and will not be moved within the XML data file. only the pointer referenced (see
-     * {@link #ATTRIBUTE_NEXT_ZETTEL} and {@link #ATTRIBUTE_PREV_ZETTEL}) are changed.
-     * 
-     * @param entriesToMove An array with numbers in String format of those entries that should be moved to another position (source).
-     * @param insertAfter The number of that entry after which the {@code entriesToMove} should
-     * be inserted (destination).
-     */
-    public void moveEntries(String[] entriesToMove, int insertAfter) {
-        // check for valid values
-        if (entriesToMove!=null && entriesToMove.length>0) {
-            // go through the array, but from last to first element.
-            // since each entry is inserted after "insertAfter", we keep
-            // the order of the moved entries by inserting them from last
-            // to first entry
-            for (int cnt=entriesToMove.length-1; cnt>=0; cnt--) {
-                // move each entry
-                try {
-                    moveEntry(Integer.parseInt(entriesToMove[cnt]), insertAfter);
-                }
-                catch (NumberFormatException ex) {
-                }
-            }
-        }
-    }
-    
     
     /**
      * This method tries to find a parent-level follower of the entry 

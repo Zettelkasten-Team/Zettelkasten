@@ -435,25 +435,6 @@ public class ZettelkastenViewUtil {
                 }
                 jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
                 break;
-            case "reo":
-                // open a confirm dialog
-                option = JOptionPane.showConfirmDialog(mainframe.getFrame(),
-                        mainframe.getResourceMap().getString("confirmResetOrderMsg"),
-                        mainframe.getResourceMap().getString("confirmResetOrderTitle"),
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.PLAIN_MESSAGE);
-                // if action should be performed, do so
-                if (JOptionPane.YES_OPTION == option) {
-                    // reset entry order
-                    data.db_updateEntryOrderReferences();
-                    // set current zettel to first zettel
-                    data.setCurrentZettelPos(data.getFirstZettel());
-                    // title-list is no longer up to date
-                    data.setTitlelistUpToDate(false);
-                    // update display
-                    mainframe.updateDisplay();
-                }
-                break;
             case "m2u":
                 // open a confirm dialog
                 option = JOptionPane.showConfirmDialog(mainframe.getFrame(),

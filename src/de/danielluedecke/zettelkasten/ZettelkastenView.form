@@ -2422,19 +2422,6 @@
                 <Property name="name" type="java.lang.String" value="viewMenuLuhmannExportSearch" noResource="true"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator117">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="jSeparator117" noResource="true"/>
-              </Properties>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="viewMenuLuhmannSortEntries">
-              <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="sortLuhmann" methodName="sortLuhmann"/>
-                </Property>
-                <Property name="name" type="java.lang.String" value="viewMenuLuhmannSortEntries" noResource="true"/>
-              </Properties>
-            </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator118">
               <Properties>
                 <Property name="name" type="java.lang.String" value="jSeparator118" noResource="true"/>
@@ -2876,19 +2863,6 @@
                   <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="deleteEntry" methodName="deleteEntry"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="viewTitlesDelete" noResource="true"/>
-              </Properties>
-            </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator65">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="jSeparator65" noResource="true"/>
-              </Properties>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="viewTitlesMoveEntry">
-              <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="moveEntry" methodName="moveEntry"/>
-                </Property>
-                <Property name="name" type="java.lang.String" value="viewTitlesMoveEntry" noResource="true"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JSeparator" name="jSeparator105">

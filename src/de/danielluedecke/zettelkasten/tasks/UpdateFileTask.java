@@ -155,8 +155,6 @@ public class UpdateFileTask extends org.jdesktop.application.Task<Object, Void> 
         if (verinfo!=null && (verinfo.equals("3.0") || verinfo.equals("3.1") || verinfo.equals("3.2") || verinfo.equals("3.3"))) {
             // change status message
             msgLabel.setText(resourceMap.getString("msg3"));
-            // update entry-references
-            dataObj.db_updateEntryOrderReferences();
             // update unique author and keyword-id's
             dataObj.db_updateAuthorAndKeywordIDs();
             // update timestamp attributes
@@ -185,6 +183,18 @@ public class UpdateFileTask extends org.jdesktop.application.Task<Object, Void> 
             msgLabel.setText(resourceMap.getString("msg4"));
             // update inline-code format tags
             dataObj.db_updateInlineCodeFormatting();
+            updateType = updateType | UPDATE_TYPE_DATABASE;
+        }
+        
+        // Update to 3.8
+        // here we have to update from version 3.0 till 3.7 to 3.8
+        if (verinfo!=null && (verinfo.equals("3.0") || verinfo.equals("3.1") || verinfo.equals("3.2") || 
+                              verinfo.equals("3.3") || verinfo.equals("3.4") || verinfo.equals("3.5") || 
+                              verinfo.equals("3.6") || verinfo.equals("3.7"))) {
+            // change status message
+            msgLabel.setText(resourceMap.getString("msg4"));
+            // update inline-code format tags
+            dataObj.db_updateRemoveZettelPosElements();
             updateType = updateType | UPDATE_TYPE_DATABASE;
         }
         
