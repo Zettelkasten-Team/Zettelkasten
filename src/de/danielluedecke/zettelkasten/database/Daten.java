@@ -6847,11 +6847,6 @@ public class Daten {
      * also has no follower entries.
      */
     public int findParentlLuhmann(int nr, boolean firstParent) {
-        // check whether entry has any follower. if not
-        // it is no parent entry
-        if (!hasLuhmannNumbers(nr)) {
-            return -1;
-        }
         // init find value
         boolean found = true;
         //

@@ -398,7 +398,7 @@ public class ExportTools {
         // position index for finding the footnotes
         int pos = 0;
         // if the reference should be in a footenote, create this string now
-        String footRefOpen = (referenceAsFootnote) ? "\\footcite{":"\\cite{";
+        String footRefOpen = (referenceAsFootnote) ? "\\footcite":"\\cite";
         String footRefClose = "}";
         // save find-position
         List<Integer> start = new ArrayList<>();
@@ -418,12 +418,26 @@ public class ExportTools {
             for (int i=start.size()-1; i>=0; i--) {
                 // get footnote
                 String fn = content.substring(start.get(i)+Constants.FORMAT_FOOTNOTE_OPEN.length(), end.get(i)-1);
+                // do we have a colon? this indicates a page separator
+                String[] fnpagenr = fn.split(Pattern.quote(":"));
+                String pagenr = null;
+                // more than 1 value means, we have a page numner after colon
+                if (fnpagenr.length > 1) {
+                    // we assume reference index number at first position
+                    fn = fnpagenr[0];
+                    pagenr = fnpagenr[1];
+                }
+                if (null == pagenr || pagenr.isEmpty()) {
+                    pagenr = "{";
+                } else {
+                    pagenr = "[" + resourceMap.getString("footnotePage") + pagenr + "]{";
+                }
                 // retrieve author value's bibkey
                 String bibkey = dataObj.getAuthorBibKey(Integer.parseInt(fn));
                 // check whether we have any bibkey-value
                 if (bibkey!=null && !bibkey.isEmpty()) {
                     // now that we have the bibkey, replace footnote with cite-tag
-                    content = content.substring(0,start.get(i))+footRefOpen+bibkey+footRefClose+content.substring(end.get(i));
+                    content = content.substring(0,start.get(i))+footRefOpen+pagenr+bibkey+footRefClose+content.substring(end.get(i));
                 }
             }
         }

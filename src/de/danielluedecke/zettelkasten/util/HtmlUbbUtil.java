@@ -988,6 +988,15 @@ public class HtmlUbbUtil {
                 for (int i=start.size()-1; i>=0; i--) {
                     // get footnote
                     String fn = dummy.substring(start.get(i)+Constants.FORMAT_FOOTNOTE_OPEN.length(), end.get(i)-1);
+                    // do we have a colon? this indicates a page separator
+                    String[] fnpagenr = fn.split(Pattern.quote(":"));
+                    String pagenr = null;
+                    // more than 1 value means, we have a page numner after colon
+                    if (fnpagenr.length > 1) {
+                        // we assume reference index number at first position
+                        fn = fnpagenr[0];
+                        pagenr = fnpagenr[1];
+                    }
                     // retrieve author value's bibkey
                     String bibkey = data.getAuthorBibKey(Integer.parseInt(fn));
                     // check whether we have any bibkey-value
@@ -1000,6 +1009,10 @@ public class HtmlUbbUtil {
                         if (formattedAuthor!=null && !formattedAuthor.isEmpty()) {
                             ref.append(Constants.footnoteHtmlTag).append(fn).append("\">");
                             ref.append(formattedAuthor);
+                            // add page number, if we have any
+                            if (pagenr != null && !pagenr.isEmpty()) {
+                                ref.append(", ").append(resourceMap.getString("footnotePage")).append(pagenr);
+                            }
                             ref.append("</a>");
                         }
                         // else use footnote number
@@ -1249,36 +1262,6 @@ public class HtmlUbbUtil {
         // check whether markdown is activated
         // if yes, replace markdown here
         if (isMarkdownActivated) {
-//            // quotes
-//            dummy = dummy.replaceAll("(?<=\\[br\\])(\\> )(.*?)\\[br\\]", "[q]$2[/q][br]");
-//            // after quotes have been replaced, replace < and > signs
-//            if (!isExport) dummy = dummy.replace(">", "&gt;").replace("<", "&lt;");
-//            // bullets
-//            dummy = dummy.replaceAll("(?<=\\[br\\])(\\d\\. )(.*?)\\[br\\]", "<ol><li>$2</li></ol>");
-//            dummy = dummy.replace("</ol><ol>", "");
-//            dummy = dummy.replaceAll("(?<=\\[br\\])(\\* )(.*?)(?!\\*)\\[br\\]", "<ul><li>$2</li></ul>");
-//            dummy = dummy.replace("</ul><ul>", "");
-//            // bold and italic formatting in markdown
-//            dummy = dummy.replaceAll("\\*\\*\\*(.*?)\\*\\*\\*", "<b><i>$1</i></b>");
-//            dummy = dummy.replaceAll("___(.*?)___", "<b><i>$1</i></b>");
-//            // bold formatting
-//            dummy = dummy.replaceAll("__(.*?)__", "<b>$1</b>");
-//            dummy = dummy.replaceAll("\\*\\*(.*?)\\*\\*", "<b>$1</b>");
-//            // italic formatting
-//            dummy = dummy.replaceAll("_(.*?)_", "<i>$1</i>");
-//
-//            dummy = dummy.replaceAll("\\*(.*?)\\*", "<i>$1</i>");
-//            // code blocks formatting
-//            dummy = dummy.replaceAll("\\`(.*?)\\`", "<code>$1</code>");
-//            // headlines
-//            dummy = dummy.replaceAll("#{4} (.*?)\\[br\\]", head4);
-//            dummy = dummy.replaceAll("#{3} (.*?)\\[br\\]", head3);
-//            dummy = dummy.replaceAll("#{2} (.*?)\\[br\\]", head2);
-//            dummy = dummy.replaceAll("#{1} (.*?)\\[br\\]", head1);
-//            // strike
-//            dummy = dummy.replaceAll("---(.*?)---", "<strike>$1</strike>");
-//            // images
-//            dummy = dummy.replaceAll("[!]{1}\\[([^\\[]+)\\]\\(([^\\)]+)\\)", "[img]$2[/img]");
             dummy = dummy.replace("[br]", "\n");
             // quotes
             dummy = dummy.replaceAll("(^|\\n)(\\> )(.*)", "[q]$3[/q]");
