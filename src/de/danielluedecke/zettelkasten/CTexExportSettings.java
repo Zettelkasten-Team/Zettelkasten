@@ -90,6 +90,10 @@ public class CTexExportSettings extends javax.swing.JDialog {
         jCheckBoxRemoveTag.setSelected(settingsObj.getLatexExportRemoveNonStandardTags());
         jTextFieldAuthor.setText(settingsObj.getLatexExportAuthorValue());
         jTextFieldMail.setText(settingsObj.getLatexExportMailValue());
+        jCheckBoxNoUmlautConvert.setSelected(!settingsObj.getLatexExportConvertUmlaut());
+        jCheckBoxPreamble.setSelected(settingsObj.getLatexExportNoPreamble());
+        // show preamble?
+        enablePreamble();
     }
     private void initListeners() {
         // these codelines add an escape-listener to the dialog. so, when the user
@@ -115,7 +119,24 @@ public class CTexExportSettings extends javax.swing.JDialog {
                 if (jCheckBoxShowMail.isSelected()) jTextFieldMail.requestFocusInWindow();
             }
         });
+        jCheckBoxPreamble.addActionListener(new java.awt.event.ActionListener() {
+            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+                settingsObj.setLatexExportNoPreamble(jCheckBoxPreamble.isSelected());
+                enablePreamble();
+            }
+        });
     }
+    
+    private void enablePreamble() {
+        boolean isPreambleVisible = !settingsObj.getLatexExportNoPreamble();
+        jTextFieldAuthor.setEnabled(isPreambleVisible);
+        jComboBoxDocClass.setEnabled(isPreambleVisible);
+        jTextFieldMail.setEnabled(isPreambleVisible);
+        jCheckBoxShowMail.setEnabled(isPreambleVisible);
+        jComboBoxCiteStyle.setEnabled(isPreambleVisible);
+        jCheckBoxShowAuthor.setEnabled(isPreambleVisible);
+    }
+    
     /**
      * Here we set all available character-encodings for the bibtex-file. each reference-manager
      * (jabref, refworks, citavi) has its own character-encoding, so we have to take this
@@ -187,6 +208,10 @@ public class CTexExportSettings extends javax.swing.JDialog {
         settingsObj.setLastUsedLatexBibStyle(jComboBoxCiteStyle.getSelectedIndex());
         // set doc-class
         settingsObj.setLastUsedLatexDocClass(jComboBoxDocClass.getSelectedIndex());
+        // set preamble
+        settingsObj.setLatexExportNoPreamble(jCheckBoxPreamble.isSelected());
+        // set umlaut convert
+        settingsObj.setLatexExportConvertUmlaut(!jCheckBoxNoUmlautConvert.isSelected());
         cancelled = false;
         setVisible(false);
         dispose();
@@ -205,19 +230,22 @@ public class CTexExportSettings extends javax.swing.JDialog {
         jCheckBoxUseFootnote = new javax.swing.JCheckBox();
         jCheckBoxCreateFormTags = new javax.swing.JCheckBox();
         jCheckBoxCenterForm = new javax.swing.JCheckBox();
-        jLabel1 = new javax.swing.JLabel();
-        jComboBoxCiteStyle = new javax.swing.JComboBox();
         jButtonCancel = new javax.swing.JButton();
         jButtonApply = new javax.swing.JButton();
-        jComboBoxDocClass = new javax.swing.JComboBox();
-        jLabel2 = new javax.swing.JLabel();
-        jCheckBoxShowAuthor = new javax.swing.JCheckBox();
-        jTextFieldAuthor = new javax.swing.JTextField();
-        jCheckBoxShowMail = new javax.swing.JCheckBox();
-        jTextFieldMail = new javax.swing.JTextField();
         jCheckBoxConvertQuotes = new javax.swing.JCheckBox();
         jCheckBoxRemoveTag = new javax.swing.JCheckBox();
         jCheckBoxStatisticsTablesStyle = new javax.swing.JCheckBox();
+        jCheckBoxPreamble = new javax.swing.JCheckBox();
+        jCheckBoxNoUmlautConvert = new javax.swing.JCheckBox();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jTextFieldAuthor = new javax.swing.JTextField();
+        jComboBoxDocClass = new javax.swing.JComboBox();
+        jTextFieldMail = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jCheckBoxShowMail = new javax.swing.JCheckBox();
+        jComboBoxCiteStyle = new javax.swing.JComboBox();
+        jCheckBoxShowAuthor = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CTexExportSettings.class);
@@ -238,32 +266,12 @@ public class CTexExportSettings extends javax.swing.JDialog {
         jCheckBoxCenterForm.setText(resourceMap.getString("jCheckBoxCenterForm.text")); // NOI18N
         jCheckBoxCenterForm.setName("jCheckBoxCenterForm"); // NOI18N
 
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
-
-        jComboBoxCiteStyle.setName("jComboBoxCiteStyle"); // NOI18N
-
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CTexExportSettings.class, this);
         jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
         jButtonCancel.setName("jButtonCancel"); // NOI18N
 
         jButtonApply.setAction(actionMap.get("startExport")); // NOI18N
         jButtonApply.setName("jButtonApply"); // NOI18N
-
-        jComboBoxDocClass.setName("jComboBoxDocClass"); // NOI18N
-
-        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
-        jLabel2.setName("jLabel2"); // NOI18N
-
-        jCheckBoxShowAuthor.setText(resourceMap.getString("jCheckBoxShowAuthor.text")); // NOI18N
-        jCheckBoxShowAuthor.setName("jCheckBoxShowAuthor"); // NOI18N
-
-        jTextFieldAuthor.setName("jTextFieldAuthor"); // NOI18N
-
-        jCheckBoxShowMail.setText(resourceMap.getString("jCheckBoxShowMail.text")); // NOI18N
-        jCheckBoxShowMail.setName("jCheckBoxShowMail"); // NOI18N
-
-        jTextFieldMail.setName("jTextFieldMail"); // NOI18N
 
         jCheckBoxConvertQuotes.setText(resourceMap.getString("jCheckBoxConvertQuotes.text")); // NOI18N
         jCheckBoxConvertQuotes.setToolTipText(resourceMap.getString("jCheckBoxConvertQuotes.toolTipText")); // NOI18N
@@ -275,6 +283,82 @@ public class CTexExportSettings extends javax.swing.JDialog {
         jCheckBoxStatisticsTablesStyle.setText(resourceMap.getString("jCheckBoxStatisticsTablesStyle.text")); // NOI18N
         jCheckBoxStatisticsTablesStyle.setName("jCheckBoxStatisticsTablesStyle"); // NOI18N
 
+        jCheckBoxPreamble.setText(resourceMap.getString("jCheckBoxPreamble.text")); // NOI18N
+        jCheckBoxPreamble.setName("jCheckBoxPreamble"); // NOI18N
+
+        jCheckBoxNoUmlautConvert.setText(resourceMap.getString("jCheckBoxNoUmlautConvert.text")); // NOI18N
+        jCheckBoxNoUmlautConvert.setName("jCheckBoxNoUmlautConvert"); // NOI18N
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel2.border.title"))); // NOI18N
+        jPanel2.setName("jPanel2"); // NOI18N
+
+        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
+        jLabel2.setName("jLabel2"); // NOI18N
+
+        jTextFieldAuthor.setName("jTextFieldAuthor"); // NOI18N
+
+        jComboBoxDocClass.setName("jComboBoxDocClass"); // NOI18N
+
+        jTextFieldMail.setName("jTextFieldMail"); // NOI18N
+
+        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setName("jLabel1"); // NOI18N
+
+        jCheckBoxShowMail.setText(resourceMap.getString("jCheckBoxShowMail.text")); // NOI18N
+        jCheckBoxShowMail.setName("jCheckBoxShowMail"); // NOI18N
+
+        jComboBoxCiteStyle.setName("jComboBoxCiteStyle"); // NOI18N
+
+        jCheckBoxShowAuthor.setText(resourceMap.getString("jCheckBoxShowAuthor.text")); // NOI18N
+        jCheckBoxShowAuthor.setName("jCheckBoxShowAuthor"); // NOI18N
+
+        org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(jCheckBoxShowMail)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jTextFieldMail))
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(jCheckBoxShowAuthor)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jTextFieldAuthor))
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(jLabel2)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jComboBoxDocClass, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(jLabel1)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jComboBoxCiteStyle, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel2)
+                    .add(jComboBoxDocClass, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jCheckBoxShowAuthor)
+                    .add(jTextFieldAuthor, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jCheckBoxShowMail)
+                    .add(jTextFieldMail, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel1)
+                    .add(jComboBoxCiteStyle, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -283,53 +367,32 @@ public class CTexExportSettings extends javax.swing.JDialog {
                 .addContainerGap()
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel1Layout.createSequentialGroup()
-                        .add(jLabel2)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jComboBoxDocClass, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(jPanel1Layout.createSequentialGroup()
-                        .add(jLabel1)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jComboBoxCiteStyle, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(jCheckBoxUseFootnote)
-                    .add(jPanel1Layout.createSequentialGroup()
-                        .add(jCheckBoxShowMail)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jTextFieldMail))
-                    .add(jPanel1Layout.createSequentialGroup()
-                        .add(jCheckBoxShowAuthor)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jTextFieldAuthor))
-                    .add(jCheckBoxRemoveTag)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .add(jButtonCancel)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jButtonApply))
-                    .add(jCheckBoxCreateFormTags)
-                    .add(jCheckBoxConvertQuotes)
-                    .add(jCheckBoxCenterForm)
-                    .add(jCheckBoxStatisticsTablesStyle))
+                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jCheckBoxNoUmlautConvert)
+                            .add(jCheckBoxPreamble)
+                            .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                .add(jCheckBoxUseFootnote)
+                                .add(jCheckBoxRemoveTag)
+                                .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
+                                    .add(jButtonCancel)
+                                    .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                    .add(jButtonApply))
+                                .add(jCheckBoxCreateFormTags)
+                                .add(jCheckBoxConvertQuotes)
+                                .add(jCheckBoxCenterForm)
+                                .add(jCheckBoxStatisticsTablesStyle)))
+                        .add(0, 0, 0))
+                    .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel2)
-                    .add(jComboBoxDocClass, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jCheckBoxShowAuthor)
-                    .add(jTextFieldAuthor, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jCheckBoxShowMail)
-                    .add(jTextFieldMail, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(jCheckBoxPreamble)
                 .add(18, 18, 18)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel1)
-                    .add(jComboBoxCiteStyle, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jCheckBoxUseFootnote)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jCheckBoxCreateFormTags)
@@ -340,12 +403,14 @@ public class CTexExportSettings extends javax.swing.JDialog {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jCheckBoxConvertQuotes)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jCheckBoxNoUmlautConvert)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jCheckBoxRemoveTag)
                 .add(18, 18, 18)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jButtonCancel)
                     .add(jButtonApply))
-                .add(3, 3, 3))
+                .addContainerGap())
         );
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
@@ -373,6 +438,8 @@ public class CTexExportSettings extends javax.swing.JDialog {
     private javax.swing.JCheckBox jCheckBoxCenterForm;
     private javax.swing.JCheckBox jCheckBoxConvertQuotes;
     private javax.swing.JCheckBox jCheckBoxCreateFormTags;
+    private javax.swing.JCheckBox jCheckBoxNoUmlautConvert;
+    private javax.swing.JCheckBox jCheckBoxPreamble;
     private javax.swing.JCheckBox jCheckBoxRemoveTag;
     private javax.swing.JCheckBox jCheckBoxShowAuthor;
     private javax.swing.JCheckBox jCheckBoxShowMail;
@@ -383,6 +450,7 @@ public class CTexExportSettings extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField jTextFieldAuthor;
     private javax.swing.JTextField jTextFieldMail;
     // End of variables declaration//GEN-END:variables

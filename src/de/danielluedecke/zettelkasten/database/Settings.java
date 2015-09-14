@@ -293,6 +293,8 @@ public class Settings {
     private static final String SETTING_LATEXEXPORTMAILVALUE = "latexexportmailvalue";
     private static final String SETTING_LATEXEXPORTREMOVENONSTANDARDTAGS = "latexexportremovenonstandardtags";
     private static final String SETTING_LATEXEXPORTTABLESTATSTYLE = "latexexporttablestatstyle";
+    private static final String SETTING_LATEXEXPORTNOPREAMBLE = "latexexportnopreamble";
+    private static final String SETTING_LATEXEXPORTCONVERTUMLAUT = "latexexportconvertumlaut";
     private static final String SETTING_ICONTHEME = "icontheme";
     private static final String SETTING_SHOWUPDATEHINTVERSION = "showUpdateHintVersion";
     private static final String SETTING_USEXDGOPEN = "usexdgopen";
@@ -1275,6 +1277,20 @@ public class Settings {
         if (null == settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTREMOVENONSTANDARDTAGS)) {
             // create an element
             Element el = new Element(SETTING_LATEXEXPORTREMOVENONSTANDARDTAGS);
+            settingsFile.getRootElement().addContent(el);
+            el.setText("1");
+        }
+
+        if (null == settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTNOPREAMBLE)) {
+            // create an element
+            Element el = new Element(SETTING_LATEXEXPORTNOPREAMBLE);
+            settingsFile.getRootElement().addContent(el);
+            el.setText("0");
+        }
+
+        if (null == settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTCONVERTUMLAUT)) {
+            // create an element
+            Element el = new Element(SETTING_LATEXEXPORTCONVERTUMLAUT);
             settingsFile.getRootElement().addContent(el);
             el.setText("1");
         }
@@ -6678,11 +6694,7 @@ public class Settings {
      * @return
      */
     public boolean getLatexExportShowAuthor() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTSHOWAUTHOR);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_LATEXEXPORTSHOWAUTHOR);
     }
 
     /**
@@ -6690,12 +6702,7 @@ public class Settings {
      * @param val
      */
     public void setLatexExportShowAuthor(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTSHOWAUTHOR);
-        if (null == el) {
-            el = new Element(SETTING_LATEXEXPORTSHOWAUTHOR);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_LATEXEXPORTSHOWAUTHOR, val);
     }
 
     /**
@@ -6703,11 +6710,7 @@ public class Settings {
      * @return
      */
     public boolean getLatexExportShowMail() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTSHOWMAIL);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_LATEXEXPORTSHOWMAIL);
     }
 
     /**
@@ -6715,12 +6718,7 @@ public class Settings {
      * @param val
      */
     public void setLatexExportShowMail(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTSHOWMAIL);
-        if (null == el) {
-            el = new Element(SETTING_LATEXEXPORTSHOWMAIL);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_LATEXEXPORTSHOWMAIL, val);
     }
 
     /**
@@ -6728,11 +6726,7 @@ public class Settings {
      * @return
      */
     public boolean getLatexExportConvertQuotes() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTCONVERTQUOTES);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_LATEXEXPORTCONVERTQUOTES);
     }
 
     /**
@@ -6740,12 +6734,7 @@ public class Settings {
      * @param val
      */
     public void setLatexExportConvertQuotes(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTCONVERTQUOTES);
-        if (null == el) {
-            el = new Element(SETTING_LATEXEXPORTCONVERTQUOTES);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_LATEXEXPORTCONVERTQUOTES, val);
     }
 
     /**
@@ -6753,11 +6742,7 @@ public class Settings {
      * @return
      */
     public boolean getLatexExportCenterForm() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTCENTERFORM);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_LATEXEXPORTCENTERFORM);
     }
 
     /**
@@ -6765,12 +6750,7 @@ public class Settings {
      * @param val
      */
     public void setLatexExportCenterForm(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTCENTERFORM);
-        if (null == el) {
-            el = new Element(SETTING_LATEXEXPORTCENTERFORM);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_LATEXEXPORTCENTERFORM, val);
     }
 
     /**
@@ -6778,11 +6758,7 @@ public class Settings {
      * @return
      */
     public boolean getLatexExportRemoveNonStandardTags() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTREMOVENONSTANDARDTAGS);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_LATEXEXPORTREMOVENONSTANDARDTAGS);
     }
 
     /**
@@ -6790,24 +6766,47 @@ public class Settings {
      * @param val
      */
     public void setLatexExportRemoveNonStandardTags(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTREMOVENONSTANDARDTAGS);
-        if (null == el) {
-            el = new Element(SETTING_LATEXEXPORTREMOVENONSTANDARDTAGS);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_LATEXEXPORTREMOVENONSTANDARDTAGS, val);
     }
 
     /**
      *
      * @return
      */
+    public boolean getLatexExportNoPreamble() {
+        return genericBooleanGetter(SETTING_LATEXEXPORTNOPREAMBLE);
+    }
+
+    /**
+     *
+     * @param val
+     */
+    public void setLatexExportNoPreamble(boolean val) {
+        genericBooleanSetter(SETTING_LATEXEXPORTNOPREAMBLE, val);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean getLatexExportConvertUmlaut() {
+        return genericBooleanGetter(SETTING_LATEXEXPORTCONVERTUMLAUT);
+    }
+
+    /**
+     *
+     * @param val
+     */
+    public void setLatexExportConvertUmlaut(boolean val) {
+        genericBooleanSetter(SETTING_LATEXEXPORTCONVERTUMLAUT, val);
+    }
+    
+    /**
+     *
+     * @return
+     */
     public boolean getLatexExportStatisticTableStyle() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTTABLESTATSTYLE);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_LATEXEXPORTTABLESTATSTYLE);
     }
 
     /**
@@ -6815,12 +6814,7 @@ public class Settings {
      * @param val
      */
     public void setLatexExportStatisticTableStyle(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTTABLESTATSTYLE);
-        if (null == el) {
-            el = new Element(SETTING_LATEXEXPORTTABLESTATSTYLE);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_LATEXEXPORTTABLESTATSTYLE, val);
     }
 
     /**
@@ -6879,5 +6873,21 @@ public class Settings {
         } else {
             el.setText("");
         }
+    }
+    
+    private boolean genericBooleanGetter(String key) {
+        Element el = settingsFile.getRootElement().getChild(key);
+        if (el != null) {
+            return el.getText().equals("1");
+        }
+        return false;
+    }
+    private void genericBooleanSetter(String key, boolean val) {
+        Element el = settingsFile.getRootElement().getChild(key);
+        if (null == el) {
+            el = new Element(key);
+            settingsFile.getRootElement().addContent(el);
+        }
+        el.setText((val) ? "1" : "0");
     }
 }

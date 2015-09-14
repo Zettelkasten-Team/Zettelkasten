@@ -245,7 +245,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                         // retrieve zettelnumber
                         int zettelnummer = Integer.parseInt(exportentries.get(counter).toString());
                         // add each beginning entry-tag
-                        exportPage.append(latexBeginTag(zettelnummer,null));
+                        exportPage.append(latexBeginTag(null));
                         // check whether the user wants to export titles.
                         if ((exportparts & Constants.EXPORT_TITLE)!=0) {
                             // first check whether we have a title or not
@@ -407,6 +407,8 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
      * 
      */
     private void createLatexHeader() {
+        // check if preamble is requested
+        if (!settingsObj.getLatexExportNoPreamble()) return;
         // init default document class
         String defaultdocclass = "[12pt,oneside,a4paper]{scrartcl}";
         // check for user defined document class
@@ -501,6 +503,8 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
      * 
      */
     private void createLatexFooter() {
+        // check if preamble is requested
+        if (!settingsObj.getLatexExportNoPreamble()) return;
         // retrieve filename of data file and bibtex file
         String filename = FileOperationsUtil.getFileName(filepath);
         String bibname = bibtexObj.getFileName();
@@ -646,84 +650,13 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
      * @param comment
      * @return
      */
-    private String latexBeginTag(int zettelnummer, String comment) {
+    private String latexBeginTag(String comment) {
         StringBuilder sb = new StringBuilder("");
         // check whether a comment should be added
         if (comment!=null && !comment.isEmpty()) {
             // insert line-wrapped comment first...
             sb.append(Tools.lineWrapText(comment, 40, "%"));
         }
-        // uncomment this, if the "begin{zettel}" command should be enabled. As this leads to errors when comiling the latex file,
-        // the begin{zettel} and end{zettel} tags are not used.
-/*        
-        // start zettel-tags. here we prepare each entry by adding optional
-        // commands to the begin-tag, which contains title, keywords etc. this
-        // information is always added!
-        sb.append("\\begin{zettel}[");
-        // append title information
-        String latextitle = dataObj.getZettelTitle(zettelnummer);
-        if (!latextitle.isEmpty()) sb.append("title={").append(latextitle).append("},");
-        // append keyword-information
-        String latexkeywords[] = dataObj.getKeywords(zettelnummer,true);
-        // check whether we have any keywords at all
-        if (latexkeywords!=null && latexkeywords.length>0) {
-            // append keyword-tag
-            sb.append("keywords={");
-            // and iterate all keywords
-            for (String lk : latexkeywords) {
-                // append keyword
-                sb.append(lk).append(",");
-            }
-            // truncate last comma
-            sb.setLength(sb.length()-1);
-            sb.append("},");
-        }
-        // append manual-links-information
-        String latexmanlinks[] = dataObj.getManualLinksAsString(zettelnummer);
-        // check whether we have any manual links at all
-        if (latexmanlinks!=null && latexmanlinks.length>0) {
-            // append manlinks-tag
-            sb.append("referrers={");
-            // and iterate all manual links
-            for (String ml : latexmanlinks) {
-                // append link
-                sb.append(ml).append(",");
-            }
-            // truncate last comma
-            sb.setLength(sb.length()-1);
-            sb.append("},");
-        }
-        // append luhmann-numbers-information
-        String latexscents[] = dataObj.getLuhmannNumbersAsString(zettelnummer);
-        // check whether we have any luhmanns at all
-        if (latexscents!=null && latexscents.length>0) {
-            // append luhmann-tag
-            sb.append("trails={");
-            // and iterate all luhmann-numbers
-            for (String lm : latexscents) {
-                // append link
-                sb.append(lm).append(",");
-            }
-            // truncate last comma
-            sb.setLength(sb.length()-1);
-            sb.append("},");
-        }
-        String[] timestamp = dataObj.getTimestamp(zettelnummer);
-        // check whether we have a timestamp at all
-        if (timestamp!=null && !timestamp[0].isEmpty()) {
-            // and add the created-timestamp
-            sb.append("dateadded={20").append(timestamp[0].substring(0, 2)).append("-").append(timestamp[0].substring(2, 4)).append("-").append(timestamp[0].substring(4, 6)).append("},");
-            // check whether we have a modified-timestamp
-            // if we have a modified-stamp, add it...
-            if (timestamp.length>1 && !timestamp[1].isEmpty()) {
-                sb.append("datemodified={20").append(timestamp[1].substring(0, 2)).append("-").append(timestamp[1].substring(2, 4)).append("-").append(timestamp[1].substring(4, 6)).append("},");
-            }
-        }
-        // truncate last comma
-        sb.setLength(sb.length()-1);
-        // add line-separator
-        sb.append("]}").append(System.lineSeparator()).append(System.lineSeparator());
-*/
         // return result
         return sb.toString();
     }
@@ -840,7 +773,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         // retrieve comment
         String com = (exportcomments) ? desktopObj.getComment(TreeUtil.getNodeTimestamp(node),System.lineSeparator()) : "";
         // add each beginning entry-tag
-        sb.append(latexBeginTag(nr,com));
+        sb.append(latexBeginTag(com));
         // check whether the user wants to export titles.
         // check whether the user wants to export titles.
         if (isHeadingVisible) {
@@ -1041,11 +974,9 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         return dummy;
     }
     private String convertSpecialChars2(String dummy) {
-        if (null==dummy) {
-            return null;
-        }
-        if (dummy.isEmpty()) {
-            return "";
+        // need to convert umlauts?
+        if (null == dummy || dummy.isEmpty() || !settingsObj.getLatexExportConvertUmlaut()) {
+            return dummy;
         }
         // convert signs and special chars
         dummy = dummy.replaceAll(Pattern.quote("ä"), Matcher.quoteReplacement("{\\\"a}"));
