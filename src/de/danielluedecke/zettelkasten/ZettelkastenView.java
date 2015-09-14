@@ -10109,11 +10109,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // check whether we have any valid filepath at all
         if (fn!=null) {
             // set file-name and app-name in title-bar
-            getFrame().setTitle("["+fn+"] - "+getResourceMap().getString("Application.title") + " - #refugeeswelcome");
+            getFrame().setTitle("["+fn+"] - "+getResourceMap().getString("Application.title"));
         }
         // if we don't have any title from the file name, simply set the applications title
         else {
-            getFrame().setTitle(getResourceMap().getString("Application.title") + " - #refugeeswelcome");
+            getFrame().setTitle(getResourceMap().getString("Application.title"));
         }
     }
 
