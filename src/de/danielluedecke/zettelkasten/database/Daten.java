@@ -6827,6 +6827,31 @@ public class Daten {
             }
         }
     }
+
+    /**
+     * This method tries to find a top-level entry of a trailing entries
+     * sequence, i.e. this methoc checks whether the entry with the number {@code nr}
+     * has follwers, but is itself no follower.
+     * 
+     * <br/><br/>
+     * <b>Caution!</b> This method might be time consuming. Consider using it only
+     * in a background thread.
+     * 
+     * <br/><br/><b>Caution!</b> The position {@code nr} is a value from <b>1</b> to
+     * {@link #getCount(int) getCount()} - in contrary
+     * to usual array handling where the range is from 0 to (size-1).
+     * 
+     * @param nr the index number of the entry
+     * @return {@code true} if the entry with number {@code nr} is
+     * a top-level-"luhmann"-entry, {@code false} if entry {@code nr} has no
+     * follower or is itself a follower (hence, no top-level-follower).
+     */
+    public boolean isTopLevelLuhmann(int nr) {
+        if (!hasLuhmannNumbers(nr)) {
+            return false;
+        }
+        return (-1 == findParentlLuhmann(nr, true));
+    }
     
     /**
      * This method tries to find a parent-level follower of the entry 

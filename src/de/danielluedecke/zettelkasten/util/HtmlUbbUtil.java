@@ -247,12 +247,12 @@ public class HtmlUbbUtil {
         htmlrating.append("<td colspan=\"2\" class=\"leftcellentryrating\">");
         // when the displayed entry differs from the current activated, show this to the user
         if (entrynr!=dataObj.getCurrentZettelPos() && sourceframe != Constants.FRAME_SEARCH) {
-            htmlrating.append("<a class=\"elink\" href=\"#activatedEntry\">");
             htmlrating.append(resourceMap.getString("zettelDesc"));
-            htmlrating.append(" ").append(String.valueOf(dataObj.getCurrentZettelPos())).append("&nbsp;&raquo;&nbsp;");
-            htmlrating.append(String.valueOf(entrynr));
-            htmlrating.append(" (").append(String.valueOf(wordcount)).append(" ").append(resourceMap.getString("activatedZettelWordCount")).append(")");
-            htmlrating.append("</a>");
+            htmlrating.append("<a class=\"elink\" href=\"#activatedEntry\">");
+            htmlrating.append(" ").append(String.valueOf(dataObj.getCurrentZettelPos())).append("&nbsp;</a>&raquo;");
+            htmlrating.append("&nbsp;<a class=\"elink\" href=\"#cr_");
+            htmlrating.append(String.valueOf(entrynr)).append("\">").append(String.valueOf(entrynr));
+            htmlrating.append("&nbsp;</a>(").append(String.valueOf(wordcount)).append(" ").append(resourceMap.getString("activatedZettelWordCount")).append(")");
         }
         // else show usual entry nr
         else {

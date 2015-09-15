@@ -773,22 +773,11 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     // get the number of the entry which we want to search through...
                     int searchnr = searchEntries[counter];
                     // check whether entry is a follower and has a first-level parent
-                    int flp = dataObj.findParentlLuhmann(searchnr, false);
-                    // entry has not top-level-parent
-                    if (-1 == flp) {
-                        // check whether entries has followers, so the entry itself
-                        // is a first/top level parent
-                        if (!dataObj.getLuhmannNumbers(searchnr).isEmpty()) {
-                            // check if entry is not already in searchresults
-                            // if not, add search result
-                            if (!finalresults.contains(searchnr)) {
-                                finalresults.add(searchnr);
-                            }
-                        }
-                    } else {
-                        // we found the top level parent and add it to search results
-                        if (!finalresults.contains(flp)) {
-                            finalresults.add(flp);
+                    if (dataObj.isTopLevelLuhmann(searchnr)) {
+                        // check if entry is not already in searchresults
+                        // if not, add search result
+                        if (!finalresults.contains(searchnr)) {
+                            finalresults.add(searchnr);
                         }
                     }
                     // update progressbar

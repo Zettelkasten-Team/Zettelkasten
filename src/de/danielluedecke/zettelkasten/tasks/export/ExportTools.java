@@ -395,8 +395,6 @@ public class ExportTools {
      * to the LaTex-cite-command
      */
     public static String createLatexFootnotes(Daten dataObj, String content, boolean referenceAsFootnote) {
-        // position index for finding the footnotes
-        int pos = 0;
         // if the reference should be in a footenote, create this string now
         String footRefOpen = (referenceAsFootnote) ? "\\footcite":"\\cite";
         String footRefClose = "}";

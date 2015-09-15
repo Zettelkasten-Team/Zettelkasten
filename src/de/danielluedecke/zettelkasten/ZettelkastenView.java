@@ -3010,11 +3010,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             TreeUserObject userObject = (TreeUserObject) node.getUserObject();
             // retrieve the node's id (i.e. entrynumber
             String text = userObject.getId();
-            // check for root
-            if (text.equals(Constants.ROOT_ID_NAME)) {
-                // if root is selected, return current acticated entry number
-                return data.getCurrentZettelPos();
-            }
             try {
                 int nr = Integer.parseInt(text);
                 return nr;
@@ -6243,23 +6238,23 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         DefaultTreeModel dtm = (DefaultTreeModel) jTreeLuhmann.getModel();
         // and first of all, clear the jTree
         dtm.setRoot(null);
-        // get current entry number
-        int curzettel = data.getCurrentZettelPos();
-        // retrieve node title
-        String title = TreeUtil.retrieveNodeTitle(data, settings.getShowLuhmannEntryNumber(), String.valueOf(curzettel));
-        // set this as root node
-        MutableTreeNode root = new DefaultMutableTreeNode(new TreeUserObject(title, Constants.ROOT_ID_NAME, false));
-        dtm.setRoot(root);
         // check whether all followers should be shown, including top-level parent
         int parentLuhmann = data.getCurrentZettelPos();
         if (settings.getShowAllLuhmann()) {
             // if parent should be shown as well, find parent
-            parentLuhmann = data.findParentlLuhmann(data.getCurrentZettelPos(), true);
+            parentLuhmann = data.findParentlLuhmann(data.getCurrentZettelPos(), false);
             if (-1 == parentLuhmann) {
                 // no parent found? use current entry as root
                 parentLuhmann = data.getCurrentZettelPos();
             }
         }
+        // retrieve node title
+        String title = TreeUtil.retrieveNodeTitle(data, 
+                settings.getShowLuhmannEntryNumber(), 
+                String.valueOf(parentLuhmann));
+        // set this as root node
+        MutableTreeNode root = new DefaultMutableTreeNode(new TreeUserObject(title, String.valueOf(parentLuhmann), false));
+        dtm.setRoot(root);
         // now call a recursive method that fills the jTree with the luhmann-numbers,
         // i.e. with the follower- or sub-entries
         fillLuhmannNumbers(root, parentLuhmann, data.getCurrentZettelPos());

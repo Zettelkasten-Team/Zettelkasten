@@ -598,19 +598,11 @@ public class Settings {
         }
 
         if (null == settingsFile.getRootElement().getChild(SETTING_LOCALE)) {
-            // create a filepath-element
-            Element el = new Element(SETTING_LOCALE);
-            el.setText(Locale.getDefault().getLanguage());
-            // and add it to the document
-            settingsFile.getRootElement().addContent(el);
+            genericElementInit(SETTING_LOCALE, Locale.getDefault().getLanguage());
         }
 
         if (null == settingsFile.getRootElement().getChild(SETTING_FILEPATH)) {
-            // create a filepath-element
-            Element el = new Element(SETTING_FILEPATH);
-            el.setText("");
-            // and add it to the document
-            settingsFile.getRootElement().addContent(el);
+            genericElementInit(SETTING_FILEPATH, "");
         }
 
         if (null == settingsFile.getRootElement().getChild(SETTING_PANDOCPATH)) {
@@ -627,51 +619,27 @@ public class Settings {
         }
 
         if (null == settingsFile.getRootElement().getChild(SETTING_SEARCHFRAMESPLITLAYOUT)) {
-            // create a filepath-element
-            Element el = new Element(SETTING_SEARCHFRAMESPLITLAYOUT);
-            el.setText(String.valueOf(JSplitPane.VERTICAL_SPLIT));
-            // and add it to the document
-            settingsFile.getRootElement().addContent(el);
+            genericElementInit(SETTING_SEARCHFRAMESPLITLAYOUT, String.valueOf(JSplitPane.VERTICAL_SPLIT));
         }
 
         if (null == settingsFile.getRootElement().getChild(SETTING_CUSTOMCSSENTRY)) {
-            // create a filepath-element
-            Element el = new Element(SETTING_CUSTOMCSSENTRY);
-            el.setText("");
-            // and add it to the document
-            settingsFile.getRootElement().addContent(el);
+            genericElementInit(SETTING_CUSTOMCSSENTRY, "");
         }
 
         if (null == settingsFile.getRootElement().getChild(SETTING_CUSTOMCSSDESKTOP)) {
-            // create a filepath-element
-            Element el = new Element(SETTING_CUSTOMCSSDESKTOP);
-            el.setText("");
-            // and add it to the document
-            settingsFile.getRootElement().addContent(el);
+            genericElementInit(SETTING_CUSTOMCSSDESKTOP, "");
         }
 
         if (null == settingsFile.getRootElement().getChild(SETTING_GETLASTUSEDDESKTOPNUMBER)) {
-            // create a filepath-element
-            Element el = new Element(SETTING_GETLASTUSEDDESKTOPNUMBER);
-            el.setText("0");
-            // and add it to the document
-            settingsFile.getRootElement().addContent(el);
+            genericElementInit(SETTING_GETLASTUSEDDESKTOPNUMBER, "0");
         }
 
         if (null == settingsFile.getRootElement().getChild(SETTING_AUTOCOMPLETETAGS)) {
-            // create a filepath-element
-            Element el = new Element(SETTING_AUTOCOMPLETETAGS);
-            el.setText("1");
-            // and add it to the document
-            settingsFile.getRootElement().addContent(el);
+            genericElementInit(SETTING_AUTOCOMPLETETAGS, "1");
         }
 
         if (null == settingsFile.getRootElement().getChild(SETTING_MARKDOWNACTIVATED)) {
-            // create element
-            Element el = new Element(SETTING_MARKDOWNACTIVATED);
-            el.setText("0");
-            // and add it to the document
-            settingsFile.getRootElement().addContent(el);
+            genericElementInit(SETTING_MARKDOWNACTIVATED, "0");
         }
 
         if (null == settingsFile.getRootElement().getChild(SETTING_DISPLAYEDTOOLBARICONS)) {
@@ -687,11 +655,7 @@ public class Settings {
         }
 
         if (null == settingsFile.getRootElement().getChild(SETTING_LASTOPENEDIMPORTDIR)) {
-            // create a filepath-element
-            Element el = new Element(SETTING_LASTOPENEDIMPORTDIR);
-            el.setText("");
-            // and add it to the document
-            settingsFile.getRootElement().addContent(el);
+            genericElementInit(SETTING_LASTOPENEDIMPORTDIR, "");
         }
 
         if (null == settingsFile.getRootElement().getChild(SETTING_LASTOPENEDEXPORTDIR)) {
@@ -1709,6 +1673,15 @@ public class Settings {
         }
     }
 
+    private void genericElementInit(String attr, String value) {
+        // create a filepath-element
+        Element el = new Element(attr);
+        el.setText(value);
+        // and add it to the document
+        settingsFile.getRootElement().addContent(el);
+    }
+    
+    
     /**
      * Loads the settings file
      */
@@ -6300,12 +6273,7 @@ public class Settings {
      * @return
      */
     public boolean getShowIcons() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SHOWICONS);
-        boolean retval = true;
-        if (el != null) {
-            retval = el.getText().equals("1");
-        }
-        return retval;
+        return genericBooleanGetter(SETTING_SHOWICONS);
     }
 
     /**
@@ -6313,12 +6281,7 @@ public class Settings {
      * @param value
      */
     public void setShowIcons(boolean value) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SHOWICONS);
-        if (null == el) {
-            el = new Element(SETTING_SHOWICONS);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(value ? "1" : "0");
+        genericBooleanSetter(SETTING_SHOWICONS, value);
     }
 
     /**
@@ -6326,12 +6289,7 @@ public class Settings {
      * @return
      */
     public boolean getShowAllIcons() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SHOWALLICONS);
-        boolean retval = true;
-        if (el != null) {
-            retval = el.getText().equals("1");
-        }
-        return retval;
+        return genericBooleanGetter(SETTING_SHOWALLICONS);
     }
 
     /**
@@ -6339,12 +6297,7 @@ public class Settings {
      * @param value
      */
     public void setShowAllIcons(boolean value) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SHOWALLICONS);
-        if (null == el) {
-            el = new Element(SETTING_SHOWALLICONS);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(value ? "1" : "0");
+        genericBooleanSetter(SETTING_SHOWALLICONS, value);
     }
 
     /**
@@ -6457,12 +6410,7 @@ public class Settings {
     }
 
     public boolean getUseXDGOpen() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_USEXDGOPEN);
-        boolean retval = true;
-        if (el != null) {
-            retval = el.getText().equals("1");
-        }
-        return retval;
+        return genericBooleanGetter(SETTING_USEXDGOPEN);
     }
 
     /**
@@ -6470,12 +6418,7 @@ public class Settings {
      * @param value
      */
     public void setUseXDGOpen(boolean value) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_USEXDGOPEN);
-        if (null == el) {
-            el = new Element(SETTING_USEXDGOPEN);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(value ? "1" : "0");
+        genericBooleanSetter(SETTING_USEXDGOPEN, value);
     }
 
     public boolean getUseCustomCSS(int what) {
@@ -6582,11 +6525,7 @@ public class Settings {
      * @return
      */
     public boolean getLatexExportCreateFormTags() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTFORMTAG);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_LATEXEXPORTFORMTAG);
     }
 
     /**
@@ -6594,12 +6533,7 @@ public class Settings {
      * @param val
      */
     public void setLatexExportCreateFormTags(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTFORMTAG);
-        if (null == el) {
-            el = new Element(SETTING_LATEXEXPORTFORMTAG);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_LATEXEXPORTFORMTAG, val);
     }
 
     /**
@@ -6609,11 +6543,7 @@ public class Settings {
      * @return
      */
     public boolean getLatexExportFootnoteRef() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTFOOTNOTE);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_LATEXEXPORTFOOTNOTE);
     }
 
     /**
@@ -6621,12 +6551,7 @@ public class Settings {
      * @param val
      */
     public void setLatexExportFootnoteRef(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTFOOTNOTE);
-        if (null == el) {
-            el = new Element(SETTING_LATEXEXPORTFOOTNOTE);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_LATEXEXPORTFOOTNOTE, val);
     }
 
     /**

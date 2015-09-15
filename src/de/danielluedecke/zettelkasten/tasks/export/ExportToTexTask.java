@@ -408,7 +408,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
      */
     private void createLatexHeader() {
         // check if preamble is requested
-        if (!settingsObj.getLatexExportNoPreamble()) return;
+        if (settingsObj.getLatexExportNoPreamble()) return;
         // init default document class
         String defaultdocclass = "[12pt,oneside,a4paper]{scrartcl}";
         // check for user defined document class
@@ -504,7 +504,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
      */
     private void createLatexFooter() {
         // check if preamble is requested
-        if (!settingsObj.getLatexExportNoPreamble()) return;
+        if (settingsObj.getLatexExportNoPreamble()) return;
         // retrieve filename of data file and bibtex file
         String filename = FileOperationsUtil.getFileName(filepath);
         String bibname = bibtexObj.getFileName();
