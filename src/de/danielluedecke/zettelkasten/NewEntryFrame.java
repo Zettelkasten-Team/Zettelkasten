@@ -2708,7 +2708,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                     // if not, append author string
                     // therefore, add a new line, but only if the textfield is not empty
                     // (i.e. we already have an author)
-                    if (!jTextAreaAuthor.getText().isEmpty()) jTextAreaAuthor.append(System.lineSeparator());
+                    if (!jTextAreaAuthor.getText().isEmpty()) {
+                        jTextAreaAuthor.append(System.lineSeparator());
+                    }
                     jTextAreaAuthor.append(au);
                     // set the modified state
                     setModified(true);
@@ -2716,16 +2718,20 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                 // find the authorposition for the footnote
                 int aunr = dataObj.getAuthorPosition(au);
                 // when we have a valid author, go on...
-                if (aunr!=-1) {
+                if (aunr != -1) {
                     // if the stringbuilder already contains values, we have more than one footnote.
                     // thus, add a space between the footnotes...
-                    if (fn.length()>0) fn.append(" ");
+                    if (fn.length() > 0) {
+                        fn.append("; ");
+                    }
                     // add the ubb-tag for the footnote
                     fn.append(Constants.FORMAT_FOOTNOTE_OPEN).append(String.valueOf(aunr)).append("]");
                 }
             }
             // insert the string into the textfield
-            if (fn.length()>0) jTextAreaEntry.replaceSelection(fn.toString());
+            if (fn.length() > 0) {
+                jTextAreaEntry.replaceSelection("(" + fn.toString() + ")");
+            }
         }
     }
 

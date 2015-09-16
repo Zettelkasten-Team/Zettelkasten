@@ -396,7 +396,7 @@ public class ExportTools {
      */
     public static String createLatexFootnotes(Daten dataObj, String content, boolean referenceAsFootnote) {
         // if the reference should be in a footenote, create this string now
-        String footRefOpen = (referenceAsFootnote) ? "\\footcite":"\\cite";
+        String footRefOpen = (referenceAsFootnote) ? "\\footcite" : "\\cite";
         String footRefClose = "}";
         // save find-position
         List<Integer> start = new ArrayList<>();
@@ -413,9 +413,9 @@ public class ExportTools {
                 end.add(m.end());
             }
             // iterate found positions
-            for (int i=start.size()-1; i>=0; i--) {
+            for (int i = start.size() - 1; i >= 0; i--) {
                 // get footnote
-                String fn = content.substring(start.get(i)+Constants.FORMAT_FOOTNOTE_OPEN.length(), end.get(i)-1);
+                String fn = content.substring(start.get(i) + Constants.FORMAT_FOOTNOTE_OPEN.length(), end.get(i) - 1);
                 // do we have a colon? this indicates a page separator
                 String[] fnpagenr = fn.split(Pattern.quote(":"));
                 String pagenr = null;
@@ -433,17 +433,32 @@ public class ExportTools {
                 // retrieve author value's bibkey
                 String bibkey = dataObj.getAuthorBibKey(Integer.parseInt(fn));
                 // check whether we have any bibkey-value
-                if (bibkey!=null && !bibkey.isEmpty()) {
+                if (bibkey != null && !bibkey.isEmpty()) {
+                    // if we have footnote cite and braces around footnote,
+                    // remove them
+                    if (referenceAsFootnote) {
+                        try {
+                            // footnote starts with (, remove
+                            if (content.charAt(start.get(i) - 1) == '(') {
+                                start.set(i, start.get(i) - 1);
+                            }
+                            // footnote ends with (, remove
+                            if (content.charAt(end.get(i)) == ')') {
+                                end.set(i, end.get(i) + 1);
+                            }
+                        } catch (IndexOutOfBoundsException e) {
+                        }
+                    }
                     // now that we have the bibkey, replace footnote with cite-tag
-                    content = content.substring(0,start.get(i))+footRefOpen+pagenr+bibkey+footRefClose+content.substring(end.get(i));
+                    content = content.substring(0, start.get(i)) + footRefOpen + 
+                            pagenr + bibkey + footRefClose + 
+                            content.substring(end.get(i));
                 }
             }
-        }
-        catch (PatternSyntaxException | IndexOutOfBoundsException ex) {
-        }
-        catch (NumberFormatException ex) {
-            Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-            Constants.zknlogger.log(Level.WARNING,"Could not convert author ID into author number!");
+        } catch (PatternSyntaxException | IndexOutOfBoundsException ex) {
+        } catch (NumberFormatException ex) {
+            Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
+            Constants.zknlogger.log(Level.WARNING, "Could not convert author ID into author number!");
         }
         // return content. this string now has converted footnotes, where the referenced
         // author value contains a bibkey.
