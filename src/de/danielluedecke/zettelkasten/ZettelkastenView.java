@@ -5919,36 +5919,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
     
     /**
-     * 
-     * @param url 
-     */
-    private void importWebPage(URL url) {
-        // if dialog window isn't already created, do this now
-        if (null == taskDlg) {
-            // get parent und init window
-            taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_IMPORTDATA, taskinfo,
-                                              data, bookmarks, desktop, searchrequests, settings,
-                                              Constants.TYPE_URL, null, "",
-                                              false, false,
-                                              "", url);
-            // center window
-            taskDlg.setLocationRelativeTo(getFrame());
-        }
-        ZettelkastenApp.getApplication().show(taskDlg);
-        // dispose the window and clear the object
-        taskDlg.dispose();
-        taskDlg = null;
-        // when an error occured, show errorlog
-        if (!taskinfo.isImportOk()) {
-            showErrorLog();
-        }
-        else {
-            openEditWindow(false, -1, false, false, -1, taskinfo.getWebContent());
-        }
-    }
-    
-    
-    /**
      * This Action creates the links between of the currently displayed entry with all other enries,
      * based on matching keywords. These hyperlinks are stored in the JTable of the JTabbedPane
      * 

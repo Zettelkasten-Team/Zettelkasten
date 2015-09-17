@@ -665,12 +665,6 @@ public class Constants {
      * TYPE_XML are xml files
      */
     public static final int TYPE_XML = 5;  // xml-files
-    /**
-     * Constants that indicate which type of data format the user wants to
-     * import/export.<br>
-     * TYPE_URL are webpages
-     */
-    public static final int TYPE_URL = 6;  // website-url
 
     public static final int PAGE_TYPE_UNKOWN = 0;
     public static final int PAGE_TYPE_WORDPRESS = 1;

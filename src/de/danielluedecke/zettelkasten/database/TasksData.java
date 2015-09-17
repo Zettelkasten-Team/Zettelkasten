@@ -115,20 +115,6 @@ public class TasksData {
     }
     /**
      * 
-     * @param w 
-     */
-    public void setWebContent(String w) {
-        webcontent = w;
-    }
-    /**
-     * 
-     * @return 
-     */
-    public String getWebContent() {
-        return webcontent;
-    }
-    /**
-     * 
      * @return 
      */
     public LinkedList<Object[]> getLinkedValues() {

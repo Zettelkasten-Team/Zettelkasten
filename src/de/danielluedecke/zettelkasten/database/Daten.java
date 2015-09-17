@@ -3703,10 +3703,12 @@ public class Daten {
      */
     public String getLuhmannNumbers(int pos) {
         // get the entry
-        Element zettel = retrieveElement(zknFile,pos);
+        Element zettel = retrieveElement(zknFile, pos);
         // if it exists...
         // return the content of the luhmann-child-element
-        if (zettel!=null&&zettel.getChild(ELEMENT_TRAILS)!=null) return zettel.getChild(ELEMENT_TRAILS).getText();
+        if (zettel != null && zettel.getChild(ELEMENT_TRAILS) != null) {
+            return zettel.getChild(ELEMENT_TRAILS).getText();
+        }
         // return result
         return "";
     }
@@ -3770,11 +3772,15 @@ public class Daten {
         // get Manual Links as String Array
         String[] manlinks = getManualLinksAsString(pos);
         // if we have no manual links, return null...
-        if ((null==manlinks)||manlinks.length<1) return null;
+        if ((null == manlinks) || manlinks.length < 1) {
+            return null;
+        }
         // create return value
         int[] retval = new int[manlinks.length];
         // copy all string-numbers to int-array
-        for (int cnt=0; cnt<manlinks.length; cnt++) retval[cnt] = Integer.parseInt(manlinks[cnt]);
+        for (int cnt = 0; cnt < manlinks.length; cnt++) {
+            retval[cnt] = Integer.parseInt(manlinks[cnt]);
+        }
         // return the content of the luhmann-child-element
         return retval;
     }
@@ -3787,11 +3793,13 @@ public class Daten {
      */
     public void setManualLinks(int pos, int[] manlinks) {
         // get the entry
-        Element zettel = retrieveElement(zknFile,pos);
+        Element zettel = retrieveElement(zknFile, pos);
         // if we found an entry-element, go on
-        if (zettel!=null) {
+        if (zettel != null) {
             // if no child-element ELEMENT_MANLINKS exists, create it...
-            if (null==zettel.getChild(ELEMENT_MANLINKS)) zettel.addContent(new Element(ELEMENT_MANLINKS));
+            if (null == zettel.getChild(ELEMENT_MANLINKS)) {
+                zettel.addContent(new Element(ELEMENT_MANLINKS));
+            }
             // create stringbuilder
             StringBuilder sb = new StringBuilder("");
             // iterate int-array
@@ -3801,7 +3809,9 @@ public class Daten {
                 sb.append(",");
             }
             // delete last comma
-            if (sb.length()>1) sb.setLength(sb.length()-1);
+            if (sb.length() > 1) {
+                sb.setLength(sb.length() - 1);
+            }
             // and set value to element...
             zettel.getChild(ELEMENT_MANLINKS).setText(sb.toString());
             setModified(true);
@@ -4400,9 +4410,13 @@ public class Daten {
      * {@code false} if the XML-file contains no or only deleted entries.
      */
     public boolean hasEntriesExcludingDeleted() {
-        if (getCount(ZKNCOUNT)<1) return false;
-        for (int cnt=1; cnt<=getCount(ZKNCOUNT); cnt++) {
-            if (!isDeleted(cnt)) return true;
+        if (getCount(ZKNCOUNT) < 1) {
+            return false;
+        }
+        for (int cnt = 1; cnt <= getCount(ZKNCOUNT); cnt++) {
+            if (!isDeleted(cnt)) {
+                return true;
+            }
         }
         return false;
     }
@@ -4524,10 +4538,12 @@ public class Daten {
         // retrieve the entry
         Element entry = retrieveElement(zknFile, pos);
         // if no element exists, return empty array
-        if (null==entry) return false;
+        if (null == entry) {
+            return false;
+        }
         // retrieve list of attachments
         List<Element> dummy = entry.getChild(ELEMENT_ATTACHMENTS).getChildren();
-        return (dummy!=null && dummy.size()>0);
+        return (dummy != null && dummy.size() > 0);
     }
     /**
      * 
@@ -4545,7 +4561,7 @@ public class Daten {
      */
     public boolean hasKeywords(int pos) {
         String[] kws = getKeywords(pos);
-        return (kws!=null && kws.length>0);
+        return (kws != null && kws.length > 0);
     }
     /**
      * 
@@ -5969,23 +5985,22 @@ public class Daten {
      */
     public void db_updateZettelIDs() {
         // iterate all elements
-        for (int cnt=1; cnt<=getCount(ZKNCOUNT); cnt++) {
+        for (int cnt = 1; cnt <= getCount(ZKNCOUNT); cnt++) {
             // retrieve element
             Element zettel = retrieveZettel(cnt);
             // check for valid value
             // and check whether entry already has an ID
-            if (zettel!=null && !hasZettelID(cnt)) {
+            if (zettel != null && !hasZettelID(cnt)) {
                 // if not, set unique ID-attribute to entry
                 // init variable
                 StringBuilder id = new StringBuilder("");
                 // retrieve timestamp
                 String[] ts = getTimestamp(cnt);
                 // check for valid entry
-                if (ts!=null && ts[0]!=null && !ts[0].isEmpty()) {
+                if (ts != null && ts[0] != null && !ts[0].isEmpty()) {
                     // append timestamp
                     id.append(ts[0]);
-                }
-                else {
+                } else {
                     // else, if entry has no create-timestamp, add manual timestamp
                     id.append(Tools.getTimeStampWithMilliseconds());
                 }
@@ -6706,15 +6721,15 @@ public class Daten {
      * the position of the element, ranged from 1 to {@link #getCount(int) getCount(ZKNCOUNT)}
      * @return {@code true} if an ID was found, {@code false} otherwise.
      */
-    public boolean hasZettelID(int nr) {
+    private boolean hasZettelID(int nr) {
         // retrieve element
         Element zettel = retrieveZettel(nr);
         // check for valid value
-        if (zettel!=null) {
+        if (zettel != null) {
             // now add id to zettel-element
             String id = zettel.getAttributeValue(ATTRIBUTE_ZETTEL_ID);
             // check for valid value
-            if (id!=null && !id.isEmpty()) {
+            if (id != null && !id.isEmpty()) {
                 return true;
             }
         }
@@ -6736,11 +6751,11 @@ public class Daten {
         // retrieve element
         Element author = retrieveElement(authorFile, nr);
         // check for valid value
-        if (author!=null) {
+        if (author != null) {
             // now add id to author-element
             String id = author.getAttributeValue(ATTRIBUTE_AUTHOR_ID);
             // check for valid value
-            if (id!=null && !id.isEmpty()) {
+            if (id != null && !id.isEmpty()) {
                 return true;
             }
         }
@@ -6762,11 +6777,11 @@ public class Daten {
         // retrieve element
         Element keyword = retrieveElement(keywordFile, nr);
         // check for valid value
-        if (keyword!=null) {
+        if (keyword != null) {
             // now add id to keyword-element
             String id = keyword.getAttributeValue(ATTRIBUTE_KEYWORD_ID);
             // check for valid value
-            if (id!=null && !id.isEmpty()) {
+            if (id != null && !id.isEmpty()) {
                 return true;
             }
         }
@@ -6987,9 +7002,9 @@ public class Daten {
      * numbers, {@code false} if not.
      */
     public boolean hasLuhmannNumbers(int zettelpos) {
-       // retrieve luhmann numbers
+        // retrieve luhmann numbers
         String lnr = getLuhmannNumbers(zettelpos);
-        return (lnr!=null && !lnr.isEmpty());
+        return (lnr != null && !lnr.isEmpty());
     }
     /**
      * This method checks whether the entry {@code zettelpos} has manual links / references
@@ -7005,7 +7020,7 @@ public class Daten {
     public boolean hasManLinks(int zettelpos) {
        // retrieve manual links
         int[] ml = getManualLinks(zettelpos);
-        return (ml!=null && ml.length>0);
+        return (ml != null && ml.length > 0);
     }
     /**
      * This method extracts manual links from an entry's content that have been added via

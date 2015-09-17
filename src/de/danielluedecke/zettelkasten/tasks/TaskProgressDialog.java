@@ -49,7 +49,6 @@ import de.danielluedecke.zettelkasten.tasks.export.ExportToTxtTask;
 import de.danielluedecke.zettelkasten.tasks.export.ExportToXmlTask;
 import de.danielluedecke.zettelkasten.tasks.export.ExportToZknTask;
 import de.danielluedecke.zettelkasten.tasks.importtasks.ImportFromCSV;
-import de.danielluedecke.zettelkasten.tasks.importtasks.ImportFromWeb;
 import de.danielluedecke.zettelkasten.tasks.importtasks.ImportFromZkn;
 import de.danielluedecke.zettelkasten.tasks.importtasks.ImportFromZkx;
 import de.danielluedecke.zettelkasten.util.Constants;
@@ -701,9 +700,6 @@ public class TaskProgressDialog extends javax.swing.JDialog {
                     case Constants.TYPE_ZKN:
                         foregroundTask = importFromZkn(fp, atou, appendit, dts);
                         break;
-                    case Constants.TYPE_URL:
-                        foregroundTask = importFromWeb(url);
-                        break;
                     case Constants.TYPE_CSV:
                         foregroundTask = importFromCSV(fp, sepchar, atou, appendit, dts);
                         break;
@@ -845,10 +841,6 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         return new ImportFromCSV(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
                                        this, msgLabel, taskinfo, dataObj, bookmarkObj, desktopObj, searchrequestsObj,
                                        settingsObj, fp, sepchar, asciiToUnicode, appendit, defaulttimestamp);
-    }
-    private Task importFromWeb(URL url) {
-        return new ImportFromWeb(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, taskinfo, dataObj, url);
     }
     /**
      * 
