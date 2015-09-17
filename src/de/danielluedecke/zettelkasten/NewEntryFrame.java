@@ -30,7 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 package de.danielluedecke.zettelkasten;
 
 import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
@@ -133,30 +132,28 @@ import org.jdom2.Element;
 
 /**
  *
- * @author  danielludecke
+ * @author danielludecke
  */
 public class NewEntryFrame extends javax.swing.JFrame implements WindowListener, DropTargetListener {
-    
+
     /**
-     * create a variable for a list model. this list model is used for
-     * the JList-component which displays the keywords of the current
-     * entry.
+     * create a variable for a list model. this list model is used for the
+     * JList-component which displays the keywords of the current entry.
      */
     private final DefaultListModel keywordListModel = new DefaultListModel();
     /**
-     * create a variable for a list model. this list model is used for
-     * the JList-component which displays the links of the current
-     * entry.
+     * create a variable for a list model. this list model is used for the
+     * JList-component which displays the links of the current entry.
      */
     private DefaultListModel linkListModel = new DefaultListModel();
     /**
-     * create a variable for a list model. this list model is used for
-     * the JList-component which displays the quickinput-elements.
+     * create a variable for a list model. this list model is used for the
+     * JList-component which displays the quickinput-elements.
      */
     private final DefaultListModel quickInputKeywordsListModel = new DefaultListModel();
     /**
-     * create a variable for a list model. this list model is used for
-     * the JList-component which displays the quickinput-elements.
+     * create a variable for a list model. this list model is used for the
+     * JList-component which displays the quickinput-elements.
      */
     private final DefaultListModel quickInputAuthorListModel = new DefaultListModel();
     /**
@@ -172,15 +169,16 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      */
     private final Synonyms synonymsObj;
     /**
-     * CAccelerator object, which contains the XML data of the accelerator table for the menus
+     * CAccelerator object, which contains the XML data of the accelerator table
+     * for the menus
      */
     private final AcceleratorKeys accKeys;
     /**
-     * 
+     *
      */
     private final Settings settingsObj;
     /**
-     * 
+     *
      */
     private final AutoKorrektur spellObj;
     /**
@@ -189,24 +187,32 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     private final StenoData stenoObj;
     /**
      * We need this List-Array to iterate the hyperlinks of an entry. Is needed
-     * when an entry should be edited, and the JList with all the links should be filled
+     * when an entry should be edited, and the JList with all the links should
+     * be filled
      */
     private List<Element> hyperlinks;
     /**
-     * state variable that indicated whether we have a new entry (false), or an edit-action (true)
+     * state variable that indicated whether we have a new entry (false), or an
+     * edit-action (true)
      */
     private static boolean editmode;
+
     /**
-     * Determines whether the NewEntryFrame is used for a new entry or
-     * for editing an existing entry.
-     * @param val {@code true} if we want to edit an existing entry, {@code false} if a new entry is to be created
+     * Determines whether the NewEntryFrame is used for a new entry or for
+     * editing an existing entry.
+     *
+     * @param val {@code true} if we want to edit an existing entry,
+     * {@code false} if a new entry is to be created
      */
     public void setEditMode(boolean val) {
         editmode = val;
     }
+
     /**
      * Determines whether a new entry is created or an existing entry is edited.
-     * @return {@code true} if an existing entry is currently edited, {@code false} if a new entry is currently edited
+     *
+     * @return {@code true} if an existing entry is currently edited,
+     * {@code false} if a new entry is currently edited
      */
     public boolean isEditMode() {
         return editmode;
@@ -219,14 +225,16 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      *
      */
     public boolean isDeleted;
-    private Font lastSelectefFont; 
+    private Font lastSelectefFont;
     /**
-     * This variable stores the entry number, if we have an entry which should be edited
+     * This variable stores the entry number, if we have an entry which should
+     * be edited
      */
     public int entryNumber;
     /**
-     * This variable stores the number of that entry after which the new entry should
-     * be inserted. does only affect the prev/next attributes of an entry.
+     * This variable stores the number of that entry after which the new entry
+     * should be inserted. does only affect the prev/next attributes of an
+     * entry.
      */
     public int insertAfterEntry;
     /**
@@ -242,20 +250,23 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      */
     private boolean keywordsListUpToDate = false;
     /**
-     * This variable indicates whether the task that creates the keyword-list is already running
+     * This variable indicates whether the task that creates the keyword-list is
+     * already running
      */
     private boolean qiKeywordTaskIsRunning = false;
     /**
-     * This variable indicates whether the task that creates the author-list is already running
+     * This variable indicates whether the task that creates the author-list is
+     * already running
      */
     private boolean qiAuthorTaskIsRunning = false;
     /**
-     * 
+     *
      */
     private String[] selectedAuthors = null;
     /**
-     * Indicated whether a list's content is changed, e.g. filtered. if so, we have to tell this
-     * the selection listener which - otherwise - would be called several times...
+     * Indicated whether a list's content is changed, e.g. filtered. if so, we
+     * have to tell this the selection listener which - otherwise - would be
+     * called several times...
      */
     private boolean listUpdateActive = false;
     /**
@@ -263,15 +274,16 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      */
     private final UndoManager undomanager = new UndoManager();
     /**
-     * These lists hold the keywords from the quick-input-action. if the quick-input-settings
-     * is activated (see CSettings), we do not show the whole keyword-list at once, but filter
-     * the list according to the relevance of the keywords, divided into four steps.
+     * These lists hold the keywords from the quick-input-action. if the
+     * quick-input-settings is activated (see CSettings), we do not show the
+     * whole keyword-list at once, but filter the list according to the
+     * relevance of the keywords, divided into four steps.
      */
     private LinkedList<String> keywordStep1, displayedKeywordList;
     /**
-     * This linked list holds the current selected keywords. we need this especially
-     * for the first step, where the keywords of the second step base on the selected
-     * keywords of the first step.
+     * This linked list holds the current selected keywords. we need this
+     * especially for the first step, where the keywords of the second step base
+     * on the selected keywords of the first step.
      */
     private LinkedList<String> selectedKeywords, remainingKeywords;
     /**
@@ -283,33 +295,34 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     private final int DROP_LOCATION_LISTATTACHMENTS = 2;
     private final ZettelkastenView mainframe;
     static DataFlavor urlFlavor;
+
     static {
         try {
-            urlFlavor =
-                new DataFlavor ("application/x-java-url; class=java.net.URL");
+            urlFlavor
+                    = new DataFlavor("application/x-java-url; class=java.net.URL");
         } catch (ClassNotFoundException cnfe) {
-            Constants.zknlogger.log(Level.WARNING,"Could not create URL Data Flavor!");
+            Constants.zknlogger.log(Level.WARNING, "Could not create URL Data Flavor!");
         }
-    }    
+    }
     /**
      * get the strings for file descriptions from the resource map
      */
-    private final org.jdesktop.application.ResourceMap resourceMap = 
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(NewEntryFrame.class);
+    private final org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(NewEntryFrame.class);
     /**
      * get the strings for file descriptions from the resource map
      */
-    private final org.jdesktop.application.ResourceMap toolbarResourceMap = 
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(ToolbarIcons.class);
-    
-    
+    private final org.jdesktop.application.ResourceMap toolbarResourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(ToolbarIcons.class);
+
     /**
-     * Creates new form CNewEntry. This Dialog is an edit-mask for creating new entries
-     * or editing existing entries. Therefor, we pass the data-class as parameter, so we 
-     * can either retrieve information to fill automatically the textfields (when editing
-     * an existing entry) or save the information and add a new entry to the data-class.
+     * Creates new form CNewEntry. This Dialog is an edit-mask for creating new
+     * entries or editing existing entries. Therefor, we pass the data-class as
+     * parameter, so we can either retrieve information to fill automatically
+     * the textfields (when editing an existing entry) or save the information
+     * and add a new entry to the data-class.
      *
      * @param zkn
      * @param d
@@ -324,9 +337,10 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      * @param en
      * @param l
      * @param isdel
-     * @param insaftent This variable stores the number of that entry after which the new entry should
-     * be inserted. does only affect the prev/next attributes of an entry. Use {code -1} to add entry
-     * to the end of entry order.
+     * @param insaftent This variable stores the number of that entry after
+     * which the new entry should be inserted. does only affect the prev/next
+     * attributes of an entry. Use {code -1} to add entry to the end of entry
+     * order.
      */
     @SuppressWarnings("LeakingThisInConstructor")
     public NewEntryFrame(ZettelkastenView zkn, Daten d, TasksData td, AcceleratorKeys ak, Settings s, AutoKorrektur ac, Synonyms syn, StenoData stn, String content, boolean em, int en, boolean l, boolean isdel, int insaftent) {
@@ -335,7 +349,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // init the variables from the parameters
         dataObj = d;
         taskinfo = td;
-        stenoObj=stn;
+        stenoObj = stn;
         accKeys = ak;
         settingsObj = s;
         synonymsObj = syn;
@@ -347,7 +361,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // check whether memory usage is logged. if so, tell logger that new entry windows was opened
         if (settingsObj.isMemoryUsageLogged) {
             // log info
-            Constants.zknlogger.log(Level.INFO,"Memory usage logged. New Entry Window opened.");
+            Constants.zknlogger.log(Level.INFO, "Memory usage logged. New Entry Window opened.");
         }
         // create brushed look for window, so toolbar and window-bar become a unit
         if (settingsObj.isMacAqua()) {
@@ -356,7 +370,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             WindowUtils.installJComponentRepainterOnWindowFocusChanged(this.getRootPane());
         }
         entryNumber = en;
-        luhmann=l;
+        luhmann = l;
         keywordStep1 = selectedKeywords = displayedKeywordList = remainingKeywords = null;
         stepcounter = 1;
         // init locale for the default-actions cut/copy/paste
@@ -406,7 +420,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // else set probable selected text from entry as "pre-content"
         // the content of "content" is retrieved from text-selection from the main window.
         if (!editmode) {
-            if (content!=null) {
+            if (content != null) {
                 jTextAreaEntry.setText(content);
                 // if we have editmode, enable apply-button
                 setTextfieldFilled(!content.isEmpty());
@@ -430,7 +444,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // and display authors.
         showAuthors();
     }
-
 
     private void initBorders(Settings settingsObj) {
         /*
@@ -480,12 +493,12 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             jTextFieldAddLink.setText(resourceMap.getString("textFieldDefaultText"));
         }
     }
-    
-    
+
     /**
-     * This method inits the combobox. First it clears all existing items, then it
-     * adds all available desktop-data  and finally an actionlistener is added to
-     * the jcombobox, that updates the display each time another desktop is chosen.
+     * This method inits the combobox. First it clears all existing items, then
+     * it adds all available desktop-data and finally an actionlistener is added
+     * to the jcombobox, that updates the display each time another desktop is
+     * chosen.
      */
     private void initComboBox() {
         // clear combobox
@@ -499,7 +512,8 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jComboBoxQuickInput.setSelectedIndex(settingsObj.getQuickInputExtended());
         // add action listener to combo box
         jComboBoxQuickInput.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 // update selected quickinput-type
                 settingsObj.setQuickInputExtended(jComboBoxQuickInput.getSelectedIndex());
                 // indicate that keywordlist needs update
@@ -510,14 +524,16 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         });
     }
 
-
     private void initDragDropTransferHandler() {
         jListKeywords.setTransferHandler(new EntryStringTransferHandler() {
-            @Override protected String exportString(JComponent c) {
+            @Override
+            protected String exportString(JComponent c) {
                 // retrieve selections
                 List<String> kws = jListKeywords.getSelectedValuesList();
                 // when we have no selection, return null
-                if (kws.isEmpty()) return null;
+                if (kws.isEmpty()) {
+                    return null;
+                }
                 StringBuilder keywords = new StringBuilder("");
                 // iterate array and copy all selected keywords to clipboard
                 for (String o : kws) {
@@ -526,21 +542,25 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                 }
                 return keywords.toString();
             }
-            @Override protected boolean importString(JComponent c, String str) {
+
+            @Override
+            protected boolean importString(JComponent c, String str) {
                 // check for valid drop-string
-                if (str!=null) {
+                if (str != null) {
                     // retrieve keywords
                     String[] kws = str.split("\n");
                     // if no keywords were dropped, leave
-                    if (kws.length<1) return false;
+                    if (kws.length < 1) {
+                        return false;
+                    }
                     // iterate all dropped keywords
                     for (String kw : kws) {
                         // now check for double entries. returns false if keyword does not exist.
                         if (!kw.isEmpty() && !isDoubleKeywords(kw)) {
                             // add the text to the keyword-list (JList)
-                            keywordListModel.addElement((String)kw);
+                            keywordListModel.addElement((String) kw);
                             // scroll jList down, so the new added keywords become visible
-                            jListKeywords.scrollRectToVisible(jListKeywords.getCellBounds(keywordListModel.size()-1, keywordListModel.size()));
+                            jListKeywords.scrollRectToVisible(jListKeywords.getCellBounds(keywordListModel.size() - 1, keywordListModel.size()));
                             // set the modified state
                             setModified(true);
                             // and clear the input-fields for further entries
@@ -552,15 +572,20 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                 }
                 return false;
             }
-            @Override protected void cleanup(JComponent c, boolean remove) {
+
+            @Override
+            protected void cleanup(JComponent c, boolean remove) {
             }
         });
         jListQuickInputKeywords.setTransferHandler(new EntryStringTransferHandler() {
-            @Override protected String exportString(JComponent c) {
+            @Override
+            protected String exportString(JComponent c) {
                 // retrieve selected keyword-values
                 List<String> kws = jListQuickInputKeywords.getSelectedValuesList();
                 // if no selection made, return null
-                if (kws.isEmpty()) return null;
+                if (kws.isEmpty()) {
+                    return null;
+                }
                 // create string builder
                 StringBuilder keywords = new StringBuilder("");
                 // create a comma-separated string from string array
@@ -568,22 +593,31 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                     keywords.append(k).append("\n");
                 }
                 // delete last newline-char
-                if (keywords.length()>1) keywords.setLength(keywords.length()-1);
+                if (keywords.length() > 1) {
+                    keywords.setLength(keywords.length() - 1);
+                }
                 // return results
                 return keywords.toString();
             }
-            @Override protected boolean importString(JComponent c, String str) {
+
+            @Override
+            protected boolean importString(JComponent c, String str) {
                 return false;
             }
-            @Override protected void cleanup(JComponent c, boolean remove) {
+
+            @Override
+            protected void cleanup(JComponent c, boolean remove) {
             }
         });
         jListQuickInputAuthor.setTransferHandler(new EntryStringTransferHandler() {
-            @Override protected String exportString(JComponent c) {
+            @Override
+            protected String exportString(JComponent c) {
                 // retrieve selected keyword-values
                 List<String> aus = jListQuickInputAuthor.getSelectedValuesList();
                 // if no selection made, return null
-                if (aus.isEmpty()) return null;
+                if (aus.isEmpty()) {
+                    return null;
+                }
                 // create string builder
                 StringBuilder authors = new StringBuilder("");
                 // create a comma-separated string from string array
@@ -591,63 +625,68 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                     authors.append(a).append("\n");
                 }
                 // delete last newline-char
-                if (authors.length()>1) authors.setLength(authors.length()-1);
+                if (authors.length() > 1) {
+                    authors.setLength(authors.length() - 1);
+                }
                 // return results
                 return authors.toString();
             }
-            @Override protected boolean importString(JComponent c, String str) {
+
+            @Override
+            protected boolean importString(JComponent c, String str) {
                 return false;
             }
-            @Override protected void cleanup(JComponent c, boolean remove) {
+
+            @Override
+            protected void cleanup(JComponent c, boolean remove) {
             }
         });
         jTextAreaEntry.setDragEnabled(true);
         jListLinks.setDragEnabled(true);
-        DropTarget dropTarget = new DropTarget(jTextAreaEntry, this);   
-        DropTarget listDropTarget = new DropTarget(jListLinks, this);   
-/*
-        jTextAreaAuthor.setTransferHandler(new MoveStringTransferHandler() {
-            @Override protected String exportString(JComponent c) {
-                String selectedText = jTextAreaAuthor.getSelectedText();
-                // if no text selected, quit
-                if (null==selectedText) return null;
-                // return results
-                return selectedText.toString().trim();
-            }
-            @Override protected boolean importString(JComponent c, String str) {
-                // check for valid drop-string
-                if (str!=null) {
-                    // each received string consists of two lines. the first one with information
-                    // about the drag-source and the drag-operation, the second one with the data
-                    // by this we can see whether we have received entries (i.e. a valid drop)
-                    String[] aus = str.split("\n");
-                    // iterate all dropped authors
-                    for (String au : aus) {
-                        // check whether author already exisrs in textfield
-                        if (!au.isEmpty() && !checkForDoubleAuthors(au)) {
-                            // if not, append author string
-                            // therefore, add a new line, but only if the textfield is not empty
-                            // (i.e. we already have an author)
-                            if (!jTextAreaAuthor.getText().isEmpty()) jTextAreaAuthor.append(System.lineSeparator());
-                            jTextAreaAuthor.append(au);
-                            // jTextAreaAuthor.insert(au, jTextAreaAuthor.getCaretPosition());
-                            // set the modified state
-                            setModified(true);
-                        }
-                    }
-                    return true;
-                }
-                return false;
-            }
-            @Override protected void cleanup(JComponent c, boolean remove) {
-                if (remove) {
-                    jTextAreaAuthor.replaceSelection("");
-                }
-            }
-        });
- */
+        DropTarget dropTarget = new DropTarget(jTextAreaEntry, this);
+        DropTarget listDropTarget = new DropTarget(jListLinks, this);
+        /*
+         jTextAreaAuthor.setTransferHandler(new MoveStringTransferHandler() {
+         @Override protected String exportString(JComponent c) {
+         String selectedText = jTextAreaAuthor.getSelectedText();
+         // if no text selected, quit
+         if (null==selectedText) return null;
+         // return results
+         return selectedText.toString().trim();
+         }
+         @Override protected boolean importString(JComponent c, String str) {
+         // check for valid drop-string
+         if (str!=null) {
+         // each received string consists of two lines. the first one with information
+         // about the drag-source and the drag-operation, the second one with the data
+         // by this we can see whether we have received entries (i.e. a valid drop)
+         String[] aus = str.split("\n");
+         // iterate all dropped authors
+         for (String au : aus) {
+         // check whether author already exisrs in textfield
+         if (!au.isEmpty() && !checkForDoubleAuthors(au)) {
+         // if not, append author string
+         // therefore, add a new line, but only if the textfield is not empty
+         // (i.e. we already have an author)
+         if (!jTextAreaAuthor.getText().isEmpty()) jTextAreaAuthor.append(System.lineSeparator());
+         jTextAreaAuthor.append(au);
+         // jTextAreaAuthor.insert(au, jTextAreaAuthor.getCaretPosition());
+         // set the modified state
+         setModified(true);
+         }
+         }
+         return true;
+         }
+         return false;
+         }
+         @Override protected void cleanup(JComponent c, boolean remove) {
+         if (remove) {
+         jTextAreaAuthor.replaceSelection("");
+         }
+         }
+         });
+         */
     }
-
 
     private void initListeners() {
         // these codelines add an escape-listener to the dialog. so, when the user
@@ -655,7 +694,8 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // presses the cancel button...
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
         ActionListener cancelAction = new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 cancel();
             }
         };
@@ -665,7 +705,8 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // presses the cancel button...
         stroke = KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0);
         ActionListener showMainFrameAction = new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 mainframe.bringToFront();
             }
         };
@@ -675,7 +716,8 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // presses the cancel button...
         stroke = KeyStroke.getKeyStroke(accKeys.getAcceleratorKey(AcceleratorKeys.MAINKEYS, "showSearchResultWindow"));
         ActionListener showSearchResultsAction = new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 mainframe.showSearchResultWindow();
             }
         };
@@ -685,7 +727,8 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // presses the cancel button...
         stroke = KeyStroke.getKeyStroke(accKeys.getAcceleratorKey(AcceleratorKeys.MAINKEYS, "showDesktopWindow"));
         ActionListener showDesktopAction = new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 mainframe.showDesktopWindow();
             }
         };
@@ -705,24 +748,77 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // if the document is ever edited, assume that it needs to be saved
         // so we add some document listeners here
         jTextFieldTitle.getDocument().addDocumentListener(new DocumentListener() {
-            @Override public void changedUpdate(DocumentEvent e) { setModified(true); setRefreshKeywords(); }
-            @Override public void insertUpdate(DocumentEvent e) { setModified(true); setRefreshKeywords(); }
-            @Override public void removeUpdate(DocumentEvent e) { setModified(true); setRefreshKeywords(); }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                setModified(true);
+                setRefreshKeywords();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                setModified(true);
+                setRefreshKeywords();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                setModified(true);
+                setRefreshKeywords();
+            }
         });
         jTextAreaEntry.getDocument().addDocumentListener(new DocumentListener() {
-            @Override public void changedUpdate(DocumentEvent e) { setModified(true); updateUndoRedoButtons(true); setRefreshKeywords(); }
-            @Override public void insertUpdate(DocumentEvent e) { setModified(true); updateUndoRedoButtons(true); setRefreshKeywords(); }
-            @Override public void removeUpdate(DocumentEvent e) { setModified(true); updateUndoRedoButtons(true); setRefreshKeywords(); }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                setModified(true);
+                updateUndoRedoButtons(true);
+                setRefreshKeywords();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                setModified(true);
+                updateUndoRedoButtons(true);
+                setRefreshKeywords();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                setModified(true);
+                updateUndoRedoButtons(true);
+                setRefreshKeywords();
+            }
         });
         jTextAreaAuthor.getDocument().addDocumentListener(new DocumentListener() {
-            @Override public void changedUpdate(DocumentEvent e) { setModified(true); }
-            @Override public void insertUpdate(DocumentEvent e) { setModified(true); }
-            @Override public void removeUpdate(DocumentEvent e) { setModified(true); }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                setModified(true);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                setModified(true);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                setModified(true);
+            }
         });
         jTextAreaRemarks.getDocument().addDocumentListener(new DocumentListener() {
-            @Override public void changedUpdate(DocumentEvent e) { setModified(true); }
-            @Override public void insertUpdate(DocumentEvent e) { setModified(true); }
-            @Override public void removeUpdate(DocumentEvent e) { setModified(true); }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                setModified(true);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                setModified(true);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                setModified(true);
+            }
         });
         // add window listener, so we can open a confirm-exit-dialog if necessary
         addWindowListener(this);
@@ -734,11 +830,18 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // here we start with our component-listeners...
         //
         jTabbedPaneNewEntry1.addChangeListener(new javax.swing.event.ChangeListener() {
-            @Override public void stateChanged(javax.swing.event.ChangeEvent evt) {
+            @Override
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 switch (jTabbedPaneNewEntry1.getSelectedIndex()) {
-                    case 0: showAuthors(); break;
-                    case 1: showKeywords(); break;
-                    default: showAuthors(); break;
+                    case 0:
+                        showAuthors();
+                        break;
+                    case 1:
+                        showKeywords();
+                        break;
+                    default:
+                        showAuthors();
+                        break;
                 }
             }
         });
@@ -746,107 +849,130 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // here start the focus listener
         //
         jTextAreaEntry.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override public void focusGained(java.awt.event.FocusEvent evt) {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
                 focusowner = Constants.FOCUS_FIELD_TEXT;
                 updateToolbar(true);
             }
-            @Override public void focusLost(java.awt.event.FocusEvent evt) {
-                if(!evt.isTemporary()) updateToolbar(false);
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                if (!evt.isTemporary()) {
+                    updateToolbar(false);
+                }
             }
         });
         if (settingsObj.isMacAqua()) {
             jTextFieldAddKeyword.addFocusListener(new java.awt.event.FocusAdapter() {
-                @Override public void focusGained(java.awt.event.FocusEvent evt) {
+                @Override
+                public void focusGained(java.awt.event.FocusEvent evt) {
                     ZknMacWidgetFactory.setTextFieldBorder(jTextFieldAddKeyword);
                     updateTextFieldText(jTextFieldAddKeyword);
                 }
-                @Override public void focusLost(java.awt.event.FocusEvent evt) {
+
+                @Override
+                public void focusLost(java.awt.event.FocusEvent evt) {
                     ZknMacWidgetFactory.setTextFieldBorder(jTextFieldAddKeyword);
                     updateTextFieldText(jTextFieldAddKeyword);
                 }
             });
             jTextFieldAddLink.addFocusListener(new java.awt.event.FocusAdapter() {
-                @Override public void focusGained(java.awt.event.FocusEvent evt) {
+                @Override
+                public void focusGained(java.awt.event.FocusEvent evt) {
                     ZknMacWidgetFactory.setTextFieldBorder(jTextFieldAddLink);
                     updateTextFieldText(jTextFieldAddLink);
                 }
-                @Override public void focusLost(java.awt.event.FocusEvent evt) {
+
+                @Override
+                public void focusLost(java.awt.event.FocusEvent evt) {
                     ZknMacWidgetFactory.setTextFieldBorder(jTextFieldAddLink);
                     updateTextFieldText(jTextFieldAddLink);
                 }
             });
         }
-/*        
-        jListQuickInputKeywords.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override public void focusLost(java.awt.event.FocusEvent evt) {
-                // retrieve opposite component
-                Component oppComp = evt.getOppositeComponent();
-                // check for valid valie
-                if (oppComp!=null) {
-                    // retrieve component's name. in case we have the root (when popup is triggered)
-                    // the name is null
-                    String oppName = oppComp.getName();
-                    // check whether the focus went to the keyword-textfield
-                    if (oppName!=null && !oppName.equals("jTextFieldFilterKeywordlist")) {
-                        removeHighlights();
-                    }
-                }
-            }
-        });
-        jTextFieldFilterKeywordlist.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override public void focusLost(java.awt.event.FocusEvent evt) {
-                // retrieve opposite component
-                Component oppComp = evt.getOppositeComponent();
-                // check for valid valie
-                if (oppComp!=null) {
-                    // retrieve component's name. in case we have the root (when popup is triggered)
-                    // the name is null
-                    String oppName = oppComp.getName();
-                    // check whether the focus went to the keyword-textfield
-                    if (oppName!=null && !oppName.equals("jListQuickInputKeywords")) {
-                        removeHighlights();
-                    }
-                }
-            }
-        });
-*/        
+        /*        
+         jListQuickInputKeywords.addFocusListener(new java.awt.event.FocusAdapter() {
+         @Override public void focusLost(java.awt.event.FocusEvent evt) {
+         // retrieve opposite component
+         Component oppComp = evt.getOppositeComponent();
+         // check for valid valie
+         if (oppComp!=null) {
+         // retrieve component's name. in case we have the root (when popup is triggered)
+         // the name is null
+         String oppName = oppComp.getName();
+         // check whether the focus went to the keyword-textfield
+         if (oppName!=null && !oppName.equals("jTextFieldFilterKeywordlist")) {
+         removeHighlights();
+         }
+         }
+         }
+         });
+         jTextFieldFilterKeywordlist.addFocusListener(new java.awt.event.FocusAdapter() {
+         @Override public void focusLost(java.awt.event.FocusEvent evt) {
+         // retrieve opposite component
+         Component oppComp = evt.getOppositeComponent();
+         // check for valid valie
+         if (oppComp!=null) {
+         // retrieve component's name. in case we have the root (when popup is triggered)
+         // the name is null
+         String oppName = oppComp.getName();
+         // check whether the focus went to the keyword-textfield
+         if (oppName!=null && !oppName.equals("jListQuickInputKeywords")) {
+         removeHighlights();
+         }
+         }
+         }
+         });
+         */
         jTextAreaAuthor.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override public void focusGained(java.awt.event.FocusEvent evt) {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
                 focusowner = Constants.FOCUS_FIELD_AUTHOR;
             }
         });
         jTextAreaRemarks.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override public void focusGained(java.awt.event.FocusEvent evt) {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
                 focusowner = Constants.FOCUS_FIELD_REMARKS;
             }
         });
         jTextFieldTitle.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override public void focusGained(java.awt.event.FocusEvent evt) {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
                 focusowner = Constants.FOCUS_FIELD_TITLE;
             }
         });
         jListQuickInputAuthor.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override public void focusGained(java.awt.event.FocusEvent evt) {
-                setAuthorSelected(jListQuickInputAuthor.getSelectedIndex()!=-1);
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                setAuthorSelected(jListQuickInputAuthor.getSelectedIndex() != -1);
             }
         });
         jListQuickInputAuthor.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mouseClicked(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 // this listener should only react on left-mouse-button-clicks...
                 // if other button then left-button clicked, don't count it.
-                if(evt.getButton()!=MouseEvent.BUTTON1) return;
+                if (evt.getButton() != MouseEvent.BUTTON1) {
+                    return;
+                }
 
-                if (2==evt.getClickCount()) addQuickAuthorToList();
+                if (2 == evt.getClickCount()) {
+                    addQuickAuthorToList();
+                }
             }
         });
         jTextFieldTitle.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 if (evt.isPopupTrigger() && !jPopupMenuCCP.isVisible()) {
                     focusowner = Constants.FOCUS_FIELD_TITLE;
                     jPopupMenuCCP.show(jTextFieldTitle, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 if (evt.isPopupTrigger() && !jPopupMenuCCP.isVisible()) {
                     focusowner = Constants.FOCUS_FIELD_TITLE;
                     jPopupMenuCCP.show(jTextFieldTitle, evt.getPoint().x, evt.getPoint().y);
@@ -854,13 +980,16 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             }
         });
         jTextFieldAddKeyword.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 if (evt.isPopupTrigger() && !jPopupMenuCCP.isVisible()) {
                     focusowner = Constants.FOCUS_FIELD_ADDKEYWORDS;
                     jPopupMenuCCP.show(jTextFieldAddKeyword, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 if (evt.isPopupTrigger() && !jPopupMenuCCP.isVisible()) {
                     focusowner = Constants.FOCUS_FIELD_ADDKEYWORDS;
                     jPopupMenuCCP.show(jTextFieldAddKeyword, evt.getPoint().x, evt.getPoint().y);
@@ -868,13 +997,16 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             }
         });
         jTextFieldAddLink.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 if (evt.isPopupTrigger() && !jPopupMenuCCP.isVisible()) {
                     focusowner = Constants.FOCUS_FIELD_ADDLINK;
                     jPopupMenuCCP.show(jTextFieldAddLink, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 if (evt.isPopupTrigger() && !jPopupMenuCCP.isVisible()) {
                     focusowner = Constants.FOCUS_FIELD_ADDLINK;
                     jPopupMenuCCP.show(jTextFieldAddLink, evt.getPoint().x, evt.getPoint().y);
@@ -882,35 +1014,47 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             }
         });
         jListQuickInputKeywords.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 if (evt.isPopupTrigger() && !jPopupMenuQuickKeywords.isVisible()) {
-                    setSegmentPossible((jTextAreaEntry.getSelectedText()!=null)&&(jListQuickInputKeywords.getSelectedValue()!=null));
+                    setSegmentPossible((jTextAreaEntry.getSelectedText() != null) && (jListQuickInputKeywords.getSelectedValue() != null));
                     focusowner = Constants.FOCUS_UNKNOWN;
                     jPopupMenuQuickKeywords.show(jListQuickInputKeywords, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 if (evt.isPopupTrigger() && !jPopupMenuKeywords.isVisible()) {
-                    setSegmentPossible((jTextAreaEntry.getSelectedText()!=null)&&(jListQuickInputKeywords.getSelectedValue()!=null));
+                    setSegmentPossible((jTextAreaEntry.getSelectedText() != null) && (jListQuickInputKeywords.getSelectedValue() != null));
                     focusowner = Constants.FOCUS_FIELD_ADDKEYWORDS;
                     jPopupMenuKeywords.show(jListKeywords, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseClicked(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 // this listener should only react on left-mouse-button-clicks...
                 // if other button then left-button clicked, don't count it.
-                if(evt.getButton()!=MouseEvent.BUTTON1) return;
-                if (2==evt.getClickCount()) addQuickKeywordToList();
+                if (evt.getButton() != MouseEvent.BUTTON1) {
+                    return;
+                }
+                if (2 == evt.getClickCount()) {
+                    addQuickKeywordToList();
+                }
             }
         });
         jTextAreaEntry.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 if (evt.isPopupTrigger() && !jPopupMenuMain.isVisible()) {
                     focusowner = Constants.FOCUS_FIELD_TEXT;
                     jPopupMenuMain.show(jTextAreaEntry, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 if (evt.isPopupTrigger() && !jPopupMenuMain.isVisible()) {
                     focusowner = Constants.FOCUS_FIELD_TEXT;
                     jPopupMenuMain.show(jTextAreaEntry, evt.getPoint().x, evt.getPoint().y);
@@ -919,8 +1063,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             }
         });
         jTextAreaEntry.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override public void keyReleased(java.awt.event.KeyEvent evt) {
-                NewEntryFrameUtil.checkSpelling(evt.getKeyCode(),jTextAreaEntry,settingsObj,spellObj);
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                NewEntryFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaEntry, settingsObj, spellObj);
                 if (settingsObj.getAutoCompleteTags()) {
                     NewEntryFrameUtil.autoCompleteTags(jTextAreaEntry, evt.getKeyChar());
                 }
@@ -928,13 +1073,16 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             }
         });
         jTextAreaAuthor.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 if (evt.isPopupTrigger() && !jPopupMenuMain.isVisible()) {
                     focusowner = Constants.FOCUS_FIELD_AUTHOR;
                     jPopupMenuMain.show(jTextAreaAuthor, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 if (evt.isPopupTrigger() && !jPopupMenuMain.isVisible()) {
                     focusowner = Constants.FOCUS_FIELD_AUTHOR;
                     jPopupMenuMain.show(jTextAreaAuthor, evt.getPoint().x, evt.getPoint().y);
@@ -942,18 +1090,22 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             }
         });
         jTextAreaAuthor.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override public void keyReleased(java.awt.event.KeyEvent evt) {
-                NewEntryFrameUtil.checkSpelling(evt.getKeyCode(),jTextAreaAuthor,settingsObj,spellObj);
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                NewEntryFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaAuthor, settingsObj, spellObj);
             }
         });
         jTextAreaRemarks.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 if (evt.isPopupTrigger() && !jPopupMenuMain.isVisible()) {
                     focusowner = Constants.FOCUS_FIELD_REMARKS;
                     jPopupMenuMain.show(jTextAreaRemarks, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 if (evt.isPopupTrigger() && !jPopupMenuMain.isVisible()) {
                     focusowner = Constants.FOCUS_FIELD_REMARKS;
                     jPopupMenuMain.show(jTextAreaRemarks, evt.getPoint().x, evt.getPoint().y);
@@ -961,71 +1113,89 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             }
         });
         jTextAreaRemarks.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override public void keyReleased(java.awt.event.KeyEvent evt) {
-                NewEntryFrameUtil.checkSpelling(evt.getKeyCode(),jTextAreaRemarks,settingsObj,spellObj);
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                NewEntryFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaRemarks, settingsObj, spellObj);
             }
         });
         jTextFieldFilterAuthorlist.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override public void keyReleased(java.awt.event.KeyEvent evt) {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
                 if (Tools.isNavigationKey(evt.getKeyCode())) {
                     // if user pressed navigation key, select next table entry
                     ListUtil.navigateThroughList(jListQuickInputAuthor, evt.getKeyCode());
-                }
-                else {
+                } else {
                     // select table-entry live, while the user is typing...
-                    ListUtil.selectByTyping(jListQuickInputAuthor,jTextFieldFilterAuthorlist);
+                    ListUtil.selectByTyping(jListQuickInputAuthor, jTextFieldFilterAuthorlist);
                 }
             }
         });
         jTextFieldFilterKeywordlist.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override public void keyReleased(java.awt.event.KeyEvent evt) {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
                 if (Tools.isNavigationKey(evt.getKeyCode())) {
                     // if user pressed navigation key, select next table entry
                     ListUtil.navigateThroughList(jListQuickInputKeywords, evt.getKeyCode());
-                }
-                else {
+                } else {
                     // select table-entry live, while the user is typing...
-                    ListUtil.selectByTyping(jListQuickInputKeywords,jTextFieldFilterKeywordlist);
+                    ListUtil.selectByTyping(jListQuickInputKeywords, jTextFieldFilterKeywordlist);
                 }
             }
         });
         jListKeywords.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 if (evt.isPopupTrigger() && !jPopupMenuKeywords.isVisible()) {
-                    setSegmentPossible((jTextAreaEntry.getSelectedText()!=null)&&(jListKeywords.getSelectedValue()!=null));
+                    setSegmentPossible((jTextAreaEntry.getSelectedText() != null) && (jListKeywords.getSelectedValue() != null));
                     focusowner = Constants.FOCUS_FIELD_ADDKEYWORDS;
                     jPopupMenuKeywords.show(jListKeywords, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 if (evt.isPopupTrigger() && !jPopupMenuKeywords.isVisible()) {
-                    setSegmentPossible((jTextAreaEntry.getSelectedText()!=null)&&(jListKeywords.getSelectedValue()!=null));
+                    setSegmentPossible((jTextAreaEntry.getSelectedText() != null) && (jListKeywords.getSelectedValue() != null));
                     focusowner = Constants.FOCUS_FIELD_ADDKEYWORDS;
                     jPopupMenuKeywords.show(jListKeywords, evt.getPoint().x, evt.getPoint().y);
                 }
             }
         });
         newEntryEditMenu.addMenuListener(new javax.swing.event.MenuListener() {
-            @Override public void menuSelected(javax.swing.event.MenuEvent evt) {
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
                 enableBySelection();
             }
-            @Override public void menuDeselected(javax.swing.event.MenuEvent evt) {}
-            @Override public void menuCanceled(javax.swing.event.MenuEvent evt) {}
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
         });
         jPopupMenuMain.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            @Override public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            @Override
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
                 enableBySelection();
             }
-            @Override public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {}
-            @Override public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {}
+
+            @Override
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+
+            @Override
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
         });
 
     }
 
-
     /**
-     * This method initialises the toolbar buttons. depending on the user-setting, we either
-     * display small, medium or large icons as toolbar-icons.
+     * This method initialises the toolbar buttons. depending on the
+     * user-setting, we either display small, medium or large icons as
+     * toolbar-icons.
      */
     public final void initToolbarIcons() {
         // check whether the toolbar should be displayed at all...
@@ -1034,7 +1204,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             jToolBarNewEntry.setVisible(false);
             // and set a border to the main panel, because the toolbar's dark border is hidden
             // and remove border from the main panel
-            newEntryMainPanel.setBorder(new MatteBorder(1,0,0,0,ColorUtil.colorDarkLineGray));
+            newEntryMainPanel.setBorder(new MatteBorder(1, 0, 0, 0, ColorUtil.colorDarkLineGray));
             return;
         }
         // set toolbar visible
@@ -1042,34 +1212,33 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // and remove border from the main panel
         newEntryMainPanel.setBorder(null);
         // init toolbar button array
-        javax.swing.JButton toolbarButtons[] = new javax.swing.JButton[] {
+        javax.swing.JButton toolbarButtons[] = new javax.swing.JButton[]{
             tb_cut, tb_copy, tb_paste, tb_selectall, tb_undo, tb_redo, tb_newauthor,
             tb_manlink, tb_footnote, tb_insertimage, tb_inserttable, tb_insertattachment,
             tb_bold, tb_italic, tb_underline, tb_strike, tb_textcolor, tb_highlight
         };
-        String[] buttonNames = new String[] { "tb_cutText", "tb_copyText", "tb_pasteText",
-                                              "tb_selectallText", "tb_undoText", "tb_redoText",
-                                              "tb_newAuthorText", "tb_manlinkText", "tb_footnoteText", "tb_insertimageText",
-                                              "tb_inserttableText", "tb_insertattachmentText", "tb_boldText",
-                                              "tb_italicText", "tb_underlineText", "tb_strikeText",
-                                              "tb_textcolorText", "tb_highlightText"
+        String[] buttonNames = new String[]{"tb_cutText", "tb_copyText", "tb_pasteText",
+            "tb_selectallText", "tb_undoText", "tb_redoText",
+            "tb_newAuthorText", "tb_manlinkText", "tb_footnoteText", "tb_insertimageText",
+            "tb_inserttableText", "tb_insertattachmentText", "tb_boldText",
+            "tb_italicText", "tb_underlineText", "tb_strikeText",
+            "tb_textcolorText", "tb_highlightText"
         };
- 
-        String[] iconNames = new String[] { "cutIcon", "copyIcon", "pasteIcon",
-                                            "selectAllIcon", "undoIcon", "redoIcon",
-                                            "newAuthorIcon", "insertManlinkIcon", "insertFootnoteIcon", "insertImageIcon",
-                                            "insertTableIcon", "insertAttachmentIcon", "formatBoldIcon",
-                                            "formatItalicIcon", "formatUnderlineIcon", "formatStrikeThroughIcon",
-                                            "formatColorIcon", "highlightKeywordsIcon"
+
+        String[] iconNames = new String[]{"cutIcon", "copyIcon", "pasteIcon",
+            "selectAllIcon", "undoIcon", "redoIcon",
+            "newAuthorIcon", "insertManlinkIcon", "insertFootnoteIcon", "insertImageIcon",
+            "insertTableIcon", "insertAttachmentIcon", "formatBoldIcon",
+            "formatItalicIcon", "formatUnderlineIcon", "formatStrikeThroughIcon",
+            "formatColorIcon", "highlightKeywordsIcon"
         };
-        
+
         // set toolbar-icons' text
         if (settingsObj.getShowIconText()) {
-            for (int cnt=0; cnt< toolbarButtons.length; cnt++) {
+            for (int cnt = 0; cnt < toolbarButtons.length; cnt++) {
                 toolbarButtons[cnt].setText(toolbarResourceMap.getString(buttonNames[cnt]));
             }
-        }
-        else {
+        } else {
             for (javax.swing.JButton tbb : toolbarButtons) {
                 tbb.setText("");
             }
@@ -1078,19 +1247,18 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         if (settingsObj.getShowIcons()) {
             // retrieve icon theme path
             String icontheme = settingsObj.getIconThemePath();
-            for (int cnt=0; cnt< toolbarButtons.length; cnt++) {
-                toolbarButtons[cnt].setIcon(new ImageIcon(ZettelkastenView.class.getResource(icontheme+toolbarResourceMap.getString(iconNames[cnt]))));
+            for (int cnt = 0; cnt < toolbarButtons.length; cnt++) {
+                toolbarButtons[cnt].setIcon(new ImageIcon(ZettelkastenView.class.getResource(icontheme + toolbarResourceMap.getString(iconNames[cnt]))));
             }
-        }
-        else {
+        } else {
             for (javax.swing.JButton tbb : toolbarButtons) {
                 tbb.setIcon(null);
             }
         }
         // get the action map
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.
-            getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().
-            getActionMap(NewEntryFrame.class, this);
+                getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().
+                getActionMap(NewEntryFrame.class, this);
         // finally, we have to manuall init the actions for the popup-menu, since the gui-builder always
         // puts the menu-items before the line where the action-map is initialised. we cannot change
         // this because it is in the protected area, and when changing it from outside, it will
@@ -1104,8 +1272,12 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             tb_highlight.setVisible(settingsObj.getShowAllIcons());
             tb_strike.setVisible(settingsObj.getShowAllIcons());
         }
-        if (settingsObj.isMacAqua()) makeMacToolbar();
-        if (settingsObj.isSeaGlass()) makeSeaGlassToolbar();
+        if (settingsObj.isMacAqua()) {
+            makeMacToolbar();
+        }
+        if (settingsObj.isSeaGlass()) {
+            makeSeaGlassToolbar();
+        }
     }
 
     private void setupSeaGlassStyle() {
@@ -1114,8 +1286,8 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     }
 
     /**
-     * This method applies some graphical stuff so the appearance of the program is even more
-     * mac-like...
+     * This method applies some graphical stuff so the appearance of the program
+     * is even more mac-like...
      */
     private void setupMacOSXLeopardStyle() {
         // now we have to change back the background-color of all components in the mainpart of the
@@ -1150,65 +1322,62 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         componentVariants();
     }
 
-    private void componentVariants () {
+    private void componentVariants() {
         // some of the buttons will be designed specifically here...
-        jButtonAddKeywords.putClientProperty("JButton.buttonType","segmentedRoundRect");
-        jButtonQuickKeyword.putClientProperty("JButton.buttonType","segmentedRoundRect");
-        jButtonAddKeywords.putClientProperty("JButton.segmentPosition",(settingsObj.getQuickInput())?"first":"only");
-        jButtonQuickKeyword.putClientProperty("JButton.segmentPosition","last");
+        jButtonAddKeywords.putClientProperty("JButton.buttonType", "segmentedRoundRect");
+        jButtonQuickKeyword.putClientProperty("JButton.buttonType", "segmentedRoundRect");
+        jButtonAddKeywords.putClientProperty("JButton.segmentPosition", (settingsObj.getQuickInput()) ? "first" : "only");
+        jButtonQuickKeyword.putClientProperty("JButton.segmentPosition", "last");
         // also change design of author-button
-        jButtonAddAuthors.putClientProperty("JButton.buttonType","roundRect");
+        jButtonAddAuthors.putClientProperty("JButton.buttonType", "roundRect");
         jTextFieldFilterKeywordlist.putClientProperty("JTextField.variant", "search");
         jTextFieldFilterAuthorlist.putClientProperty("JTextField.variant", "search");
         // change button size
         if (settingsObj.isSeaGlass()) {
-            jButtonAddKeywords.putClientProperty("JComponent.sizeVariant","small");
-            jButtonQuickKeyword.putClientProperty("JComponent.sizeVariant","small");
-            jButtonAddAuthors.putClientProperty("JComponent.sizeVariant","small");
-            jButtonOK.putClientProperty("JComponent.sizeVariant","small");
-            jButtonCancel.putClientProperty("JComponent.sizeVariant","small");
+            jButtonAddKeywords.putClientProperty("JComponent.sizeVariant", "small");
+            jButtonQuickKeyword.putClientProperty("JComponent.sizeVariant", "small");
+            jButtonAddAuthors.putClientProperty("JComponent.sizeVariant", "small");
+            jButtonOK.putClientProperty("JComponent.sizeVariant", "small");
+            jButtonCancel.putClientProperty("JComponent.sizeVariant", "small");
         }
     }
-    
+
     private void makeSeaGlassToolbar() {
-        Tools.makeTexturedToolBarButton(tb_cut,Tools.SEGMENT_POSITION_FIRST);
-        Tools.makeTexturedToolBarButton(tb_copy,Tools.SEGMENT_POSITION_MIDDLE);
-        Tools.makeTexturedToolBarButton(tb_paste,Tools.SEGMENT_POSITION_LAST);
+        Tools.makeTexturedToolBarButton(tb_cut, Tools.SEGMENT_POSITION_FIRST);
+        Tools.makeTexturedToolBarButton(tb_copy, Tools.SEGMENT_POSITION_MIDDLE);
+        Tools.makeTexturedToolBarButton(tb_paste, Tools.SEGMENT_POSITION_LAST);
         if (settingsObj.getShowAllIcons()) {
-            Tools.makeTexturedToolBarButton(tb_selectall,Tools.SEGMENT_POSITION_ONLY);
+            Tools.makeTexturedToolBarButton(tb_selectall, Tools.SEGMENT_POSITION_ONLY);
         }
-        Tools.makeTexturedToolBarButton(tb_undo,Tools.SEGMENT_POSITION_FIRST);
-        Tools.makeTexturedToolBarButton(tb_redo,Tools.SEGMENT_POSITION_LAST);
+        Tools.makeTexturedToolBarButton(tb_undo, Tools.SEGMENT_POSITION_FIRST);
+        Tools.makeTexturedToolBarButton(tb_redo, Tools.SEGMENT_POSITION_LAST);
         if (settingsObj.getShowAllIcons()) {
-            Tools.makeTexturedToolBarButton(tb_newauthor,Tools.SEGMENT_POSITION_ONLY);
+            Tools.makeTexturedToolBarButton(tb_newauthor, Tools.SEGMENT_POSITION_ONLY);
         }
-        Tools.makeTexturedToolBarButton(tb_footnote,Tools.SEGMENT_POSITION_FIRST);
-        Tools.makeTexturedToolBarButton(tb_manlink,Tools.SEGMENT_POSITION_MIDDLE);
-        Tools.makeTexturedToolBarButton(tb_insertimage,Tools.SEGMENT_POSITION_MIDDLE);
-        Tools.makeTexturedToolBarButton(tb_inserttable,Tools.SEGMENT_POSITION_MIDDLE);
-        Tools.makeTexturedToolBarButton(tb_insertattachment,Tools.SEGMENT_POSITION_LAST);
-        
-        Tools.makeTexturedToolBarButton(tb_bold,Tools.SEGMENT_POSITION_FIRST);
-        Tools.makeTexturedToolBarButton(tb_italic,Tools.SEGMENT_POSITION_MIDDLE);
+        Tools.makeTexturedToolBarButton(tb_footnote, Tools.SEGMENT_POSITION_FIRST);
+        Tools.makeTexturedToolBarButton(tb_manlink, Tools.SEGMENT_POSITION_MIDDLE);
+        Tools.makeTexturedToolBarButton(tb_insertimage, Tools.SEGMENT_POSITION_MIDDLE);
+        Tools.makeTexturedToolBarButton(tb_inserttable, Tools.SEGMENT_POSITION_MIDDLE);
+        Tools.makeTexturedToolBarButton(tb_insertattachment, Tools.SEGMENT_POSITION_LAST);
+
+        Tools.makeTexturedToolBarButton(tb_bold, Tools.SEGMENT_POSITION_FIRST);
+        Tools.makeTexturedToolBarButton(tb_italic, Tools.SEGMENT_POSITION_MIDDLE);
         if (settingsObj.getShowAllIcons()) {
-            Tools.makeTexturedToolBarButton(tb_underline,Tools.SEGMENT_POSITION_MIDDLE);
-            Tools.makeTexturedToolBarButton(tb_strike,Tools.SEGMENT_POSITION_LAST);
-        }
-        else {
-            Tools.makeTexturedToolBarButton(tb_underline,Tools.SEGMENT_POSITION_LAST);
+            Tools.makeTexturedToolBarButton(tb_underline, Tools.SEGMENT_POSITION_MIDDLE);
+            Tools.makeTexturedToolBarButton(tb_strike, Tools.SEGMENT_POSITION_LAST);
+        } else {
+            Tools.makeTexturedToolBarButton(tb_underline, Tools.SEGMENT_POSITION_LAST);
         }
         if (settingsObj.getShowAllIcons()) {
-            Tools.makeTexturedToolBarButton(tb_textcolor,Tools.SEGMENT_POSITION_FIRST);
-            Tools.makeTexturedToolBarButton(tb_highlight,Tools.SEGMENT_POSITION_LAST);
+            Tools.makeTexturedToolBarButton(tb_textcolor, Tools.SEGMENT_POSITION_FIRST);
+            Tools.makeTexturedToolBarButton(tb_highlight, Tools.SEGMENT_POSITION_LAST);
+        } else {
+            Tools.makeTexturedToolBarButton(tb_textcolor, Tools.SEGMENT_POSITION_ONLY);
         }
-        else {
-            Tools.makeTexturedToolBarButton(tb_textcolor,Tools.SEGMENT_POSITION_ONLY);
-        }
-        jToolBarNewEntry.setPreferredSize(new java.awt.Dimension(jToolBarNewEntry.getSize().width,Constants.seaGlassToolbarHeight));
+        jToolBarNewEntry.setPreferredSize(new java.awt.Dimension(jToolBarNewEntry.getSize().width, Constants.seaGlassToolbarHeight));
         jToolBarNewEntry.add(new javax.swing.JToolBar.Separator(), 0);
     }
-    
-    
+
     private void makeMacToolbar() {
         // hide default toolbr
         jToolBarNewEntry.setVisible(false);
@@ -1218,46 +1387,44 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
 
             UnifiedToolBar mactoolbar = new UnifiedToolBar();
 
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_cut,MacToolbarButton.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_copy,MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_paste,MacToolbarButton.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_cut, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_copy, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_paste, MacToolbarButton.SEGMENT_POSITION_LAST));
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
             if (settingsObj.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_selectall,MacToolbarButton.SEGMENT_POSITION_ONLY));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_selectall, MacToolbarButton.SEGMENT_POSITION_ONLY));
                 mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
             }
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_undo,MacToolbarButton.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_redo,MacToolbarButton.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_undo, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_redo, MacToolbarButton.SEGMENT_POSITION_LAST));
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
             if (settingsObj.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_newauthor,MacToolbarButton.SEGMENT_POSITION_ONLY));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_newauthor, MacToolbarButton.SEGMENT_POSITION_ONLY));
                 mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
             }
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_manlink,MacToolbarButton.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_footnote,MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_insertimage,MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_inserttable,MacToolbarButton.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_manlink, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_footnote, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_insertimage, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_inserttable, MacToolbarButton.SEGMENT_POSITION_LAST));
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_bold,MacToolbarButton.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_italic,MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_bold, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_italic, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
             if (settingsObj.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_underline,MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_strike,MacToolbarButton.SEGMENT_POSITION_LAST));
-            }
-            else {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_underline,MacToolbarButton.SEGMENT_POSITION_LAST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_underline, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_strike, MacToolbarButton.SEGMENT_POSITION_LAST));
+            } else {
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_underline, MacToolbarButton.SEGMENT_POSITION_LAST));
             }
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
             if (settingsObj.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_textcolor,MacToolbarButton.SEGMENT_POSITION_FIRST));
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_highlight,MacToolbarButton.SEGMENT_POSITION_LAST));
-            }
-            else {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_textcolor,MacToolbarButton.SEGMENT_POSITION_ONLY));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_textcolor, MacToolbarButton.SEGMENT_POSITION_FIRST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_highlight, MacToolbarButton.SEGMENT_POSITION_LAST));
+            } else {
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_textcolor, MacToolbarButton.SEGMENT_POSITION_ONLY));
             }
 
             mactoolbar.installWindowDraggerOnWindow(this);
-            newEntryMainPanel.add(mactoolbar.getComponent(),BorderLayout.PAGE_START);
+            newEntryMainPanel.add(mactoolbar.getComponent(), BorderLayout.PAGE_START);
         }
         makeMacBottomBar();
     }
@@ -1266,35 +1433,35 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jPanel1.setVisible(false);
         BottomBar macbottombar = new BottomBar(BottomBarSize.LARGE);
         macbottombar.addComponentToRight(jButtonCancel);
-        macbottombar.addComponentToRight(jButtonOK,4);
-        macbottombar.addComponentToRight(statusAnimationLabel,4);
+        macbottombar.addComponentToRight(jButtonOK, 4);
+        macbottombar.addComponentToRight(statusAnimationLabel, 4);
 
-        jButtonCancel.putClientProperty("JButton.buttonType","textured");
-        jButtonOK.putClientProperty("JButton.buttonType","textured");
-        jButtonCancel.putClientProperty("JComponent.sizeVariant","small");
-        jButtonOK.putClientProperty("JComponent.sizeVariant","small");
-        
+        jButtonCancel.putClientProperty("JButton.buttonType", "textured");
+        jButtonOK.putClientProperty("JButton.buttonType", "textured");
+        jButtonCancel.putClientProperty("JComponent.sizeVariant", "small");
+        jButtonOK.putClientProperty("JComponent.sizeVariant", "small");
+
         statusPanel.remove(jPanel1);
         statusPanel.setBorder(null);
         statusPanel.setLayout(new BorderLayout());
-        statusPanel.add(macbottombar.getComponent(),BorderLayout.PAGE_START);
+        statusPanel.add(macbottombar.getComponent(), BorderLayout.PAGE_START);
     }
 
     /**
-     * This method sets the default font-size for tables, lists and treeviews. If the
-     * user wants to have bigger font-sizes for better viewing, the new font-size will
-     * be applied to the components here.
+     * This method sets the default font-size for tables, lists and treeviews.
+     * If the user wants to have bigger font-sizes for better viewing, the new
+     * font-size will be applied to the components here.
      */
     private void initDefaultFontSize() {
         // set default fonts
         Font f = settingsObj.getMainFont();
-        f = new Font(f.getName(), f.getStyle(), f.getSize()+4);
+        f = new Font(f.getName(), f.getStyle(), f.getSize() + 4);
         jTextAreaEntry.setFont(f);
         f = settingsObj.getAuthorFont();
-        f = new Font(f.getName(), f.getStyle(), f.getSize()+4);
+        f = new Font(f.getName(), f.getStyle(), f.getSize() + 4);
         jTextAreaAuthor.setFont(f);
         f = settingsObj.getRemarksFont();
-        f = new Font(f.getName(), f.getStyle(), f.getSize()+4);
+        f = new Font(f.getName(), f.getStyle(), f.getSize() + 4);
         jTextAreaRemarks.setFont(f);
         // get the default fontsize for tables and lists
         int defaultsize = settingsObj.getTableFontSize();
@@ -1303,7 +1470,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // retrieve default listvewfont
         Font defaultfont = settingsObj.getTableFont();
         // create new font, add fontsize-value
-        f = new Font(defaultfont.getName(), defaultfont.getStyle(), fsize+defaultsize);
+        f = new Font(defaultfont.getName(), defaultfont.getStyle(), fsize + defaultsize);
         // set new font
         jListQuickInputAuthor.setFont(f);
         jListQuickInputKeywords.setFont(f);
@@ -1313,24 +1480,24 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // get the default fontsize for textfields
         defaultsize = settingsObj.getTextfieldFontSize();
         // only set new fonts, when fontsize differs from the initial value
-        if (defaultsize>0) {
+        if (defaultsize > 0) {
             // get current font
             f = jTextAreaEntry.getFont();
             // create new font, add fontsize-value
-            f = new Font(f.getName(), f.getStyle(), f.getSize()+defaultsize);
+            f = new Font(f.getName(), f.getStyle(), f.getSize() + defaultsize);
             // set new font
             jTextAreaEntry.setFont(f);
             jTextAreaRemarks.setFont(f);
             jTextAreaAuthor.setFont(f);
         }
     }
-    
-    
+
     /**
-     * This method sets the accelerator table for all relevant actions which should have
-     * accelerator keys. We don't use the GUI designer to set the values, because the user
-     * should have the possibility to define own accelerator keys, which are managed
-     * within the CAcceleratorKeys-class and loaed/saved via the CSettings-class
+     * This method sets the accelerator table for all relevant actions which
+     * should have accelerator keys. We don't use the GUI designer to set the
+     * values, because the user should have the possibility to define own
+     * accelerator keys, which are managed within the CAcceleratorKeys-class and
+     * loaed/saved via the CSettings-class
      */
     private void initAcceleratorTable() {
         // setting up the accelerator table. we have two possibilities: either assigning
@@ -1349,21 +1516,21 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // and retrieve action names as well as accelerator keys. this saves a lot of typing work here
         //
         // get the action map
-        javax.swing.ActionMap actionMap = 
-            org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-            getContext().getActionMap(NewEntryFrame.class, this);
+        javax.swing.ActionMap actionMap
+                = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+                getContext().getActionMap(NewEntryFrame.class, this);
         // iterate the xml file with the accelerator keys for the main window
-        for (int cnt=1; cnt<=accKeys.getCount(AcceleratorKeys.NEWENTRYKEYS); cnt++) {
+        for (int cnt = 1; cnt <= accKeys.getCount(AcceleratorKeys.NEWENTRYKEYS); cnt++) {
             // get the action's name
             String actionname = accKeys.getAcceleratorAction(AcceleratorKeys.NEWENTRYKEYS, cnt);
             // check whether we have found any valid action name
-            if (actionname!=null && !actionname.isEmpty()) {
+            if (actionname != null && !actionname.isEmpty()) {
                 // retrieve action
                 AbstractAction ac = (AbstractAction) actionMap.get(actionname);
                 // get the action's accelerator key
                 String actionkey = accKeys.getAcceleratorKey(AcceleratorKeys.NEWENTRYKEYS, cnt);
                 // check whether we have any valid actionkey
-                if (actionkey!=null && !actionkey.isEmpty()) {
+                if (actionkey != null && !actionkey.isEmpty()) {
                     // retrieve keystroke setting
                     KeyStroke ks = KeyStroke.getKeyStroke(actionkey);
                     // and put them together :-)
@@ -1406,45 +1573,58 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // on Mac OS, at least for the German locale, the File menu is called different
         // compared to windows or linux. Furthermore, we don't need the about and preferences
         // menu items, since these are locates on the program's menu item in the apple-menu-bar
-        if (PlatformUtil.isMacOS()) newEntryFileMenu.setText(resourceMap.getString("macFileMenuText"));
-    }    
-    
+        if (PlatformUtil.isMacOS()) {
+            newEntryFileMenu.setText(resourceMap.getString("macFileMenuText"));
+        }
+    }
 
     /**
-     * This method inits the action map for several components like the tables, the treeviews
-     * or the lists. here we can associate certain keystrokes with related methods. e.g. hitting
-     * the enter-key in a table shows (activates) the related entry.
+     * This method inits the action map for several components like the tables,
+     * the treeviews or the lists. here we can associate certain keystrokes with
+     * related methods. e.g. hitting the enter-key in a table shows (activates)
+     * the related entry.
      * <br><br>
-     * Setting up action maps gives a better overview and is shorter than adding key-release-events
-     * to all components, although key-events would fulfill the same purpose.
+     * Setting up action maps gives a better overview and is shorter than adding
+     * key-release-events to all components, although key-events would fulfill
+     * the same purpose.
      * <br><br>
-     * The advantage of action maps is, that dependent from the operating system we need only
-     * to associte a single action. with key-events, for each component we have to check
-     * whether the operating system is mac os or windows, and then checking for different keys,
-     * thus doubling each command: checking for F2 to edit, or checking for command+enter and also
-     * call the edit-method. using action maps, we simply as for the os once, storing the related
-     * keystroke-value as string, and than assign this string-value to the components.
+     * The advantage of action maps is, that dependent from the operating system
+     * we need only to associte a single action. with key-events, for each
+     * component we have to check whether the operating system is mac os or
+     * windows, and then checking for different keys, thus doubling each
+     * command: checking for F2 to edit, or checking for command+enter and also
+     * call the edit-method. using action maps, we simply as for the os once,
+     * storing the related keystroke-value as string, and than assign this
+     * string-value to the components.
      */
     private void initActionMaps() {
         // create action which should be executed when the user presses
         // the enter-key
-        AbstractAction a_enter = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
-                if (jListQuickInputAuthor==e.getSource()) addQuickAuthorToList();
-                else if (jListQuickInputKeywords==e.getSource()) addQuickKeywordToList();
-                else if (jTextFieldFilterAuthorlist==e.getSource()) filterAuthors();
-                else if (jTextFieldFilterKeywordlist==e.getSource()) filterKeywords();
-                else if (jTextFieldAddKeyword==e.getSource()) addKeyword();
-                else if (jTextFieldAddLink==e.getSource()) addLink();
+        AbstractAction a_enter = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jListQuickInputAuthor == e.getSource()) {
+                    addQuickAuthorToList();
+                } else if (jListQuickInputKeywords == e.getSource()) {
+                    addQuickKeywordToList();
+                } else if (jTextFieldFilterAuthorlist == e.getSource()) {
+                    filterAuthors();
+                } else if (jTextFieldFilterKeywordlist == e.getSource()) {
+                    filterKeywords();
+                } else if (jTextFieldAddKeyword == e.getSource()) {
+                    addKeyword();
+                } else if (jTextFieldAddLink == e.getSource()) {
+                    addLink();
+                }
             }
         };
         // put action to the tables' actionmaps
-        jListQuickInputAuthor.getActionMap().put("EnterKeyPressed",a_enter);
-        jListQuickInputKeywords.getActionMap().put("EnterKeyPressed",a_enter);
-        jTextFieldFilterAuthorlist.getActionMap().put("EnterKeyPressed",a_enter);
-        jTextFieldFilterKeywordlist.getActionMap().put("EnterKeyPressed",a_enter);
-        jTextFieldAddKeyword.getActionMap().put("EnterKeyPressed",a_enter);
-        jTextFieldAddLink.getActionMap().put("EnterKeyPressed",a_enter);
+        jListQuickInputAuthor.getActionMap().put("EnterKeyPressed", a_enter);
+        jListQuickInputKeywords.getActionMap().put("EnterKeyPressed", a_enter);
+        jTextFieldFilterAuthorlist.getActionMap().put("EnterKeyPressed", a_enter);
+        jTextFieldFilterKeywordlist.getActionMap().put("EnterKeyPressed", a_enter);
+        jTextFieldAddKeyword.getActionMap().put("EnterKeyPressed", a_enter);
+        jTextFieldAddLink.getActionMap().put("EnterKeyPressed", a_enter);
         // associate enter-keystroke with that action
         KeyStroke ks = KeyStroke.getKeyStroke("ENTER");
         jListQuickInputAuthor.getInputMap().put(ks, "EnterKeyPressed");
@@ -1455,30 +1635,41 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jTextFieldAddLink.getInputMap().put(ks, "EnterKeyPressed");
         // create action which should be executed when the user presses
         // the delete/backspace-key
-        AbstractAction a_delete = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
-                if (jListKeywords==e.getSource()) removeKeywordFromList();
-                else if (jListLinks==e.getSource())removeLinkFromList();
+        AbstractAction a_delete = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jListKeywords == e.getSource()) {
+                    removeKeywordFromList();
+                } else if (jListLinks == e.getSource()) {
+                    removeLinkFromList();
+                }
             }
         };
-        jListKeywords.getActionMap().put("DeleteKeyPressed",a_delete);
-        jListLinks.getActionMap().put("DeleteKeyPressed",a_delete);
+        jListKeywords.getActionMap().put("DeleteKeyPressed", a_delete);
+        jListLinks.getActionMap().put("DeleteKeyPressed", a_delete);
         // check for os, and use appropriate controlKey
-        ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS())?"BACK_SPACE":"DELETE");
+        ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS()) ? "BACK_SPACE" : "DELETE");
         jListKeywords.getInputMap().put(ks, "DeleteKeyPressed");
         jListLinks.getInputMap().put(ks, "DeleteKeyPressed");
         // create action which should be executed when the user presses
         // the delete/backspace-key
-        AbstractAction a_tab = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
-                if (jTextAreaEntry==e.getSource()) NewEntryFrameUtil.checkSteno(settingsObj,stenoObj,jTextAreaEntry);
-                if (jTextAreaAuthor==e.getSource()) NewEntryFrameUtil.checkSteno(settingsObj,stenoObj,jTextAreaAuthor);
-                if (jTextAreaRemarks==e.getSource()) NewEntryFrameUtil.checkSteno(settingsObj,stenoObj,jTextAreaRemarks);
+        AbstractAction a_tab = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jTextAreaEntry == e.getSource()) {
+                    NewEntryFrameUtil.checkSteno(settingsObj, stenoObj, jTextAreaEntry);
+                }
+                if (jTextAreaAuthor == e.getSource()) {
+                    NewEntryFrameUtil.checkSteno(settingsObj, stenoObj, jTextAreaAuthor);
+                }
+                if (jTextAreaRemarks == e.getSource()) {
+                    NewEntryFrameUtil.checkSteno(settingsObj, stenoObj, jTextAreaRemarks);
+                }
             }
         };
-        jTextAreaEntry.getActionMap().put("TabKeyPressed",a_tab);
-        jTextAreaAuthor.getActionMap().put("TabKeyPressed",a_tab);
-        jTextAreaRemarks.getActionMap().put("TabKeyPressed",a_tab);
+        jTextAreaEntry.getActionMap().put("TabKeyPressed", a_tab);
+        jTextAreaAuthor.getActionMap().put("TabKeyPressed", a_tab);
+        jTextAreaRemarks.getActionMap().put("TabKeyPressed", a_tab);
         // check for os, and use appropriate controlKey
         ks = KeyStroke.getKeyStroke("TAB");
         jTextAreaEntry.getInputMap().put(ks, "TabKeyPressed");
@@ -1486,67 +1677,86 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jTextAreaRemarks.getInputMap().put(ks, "TabKeyPressed");
         // create action which should be executed when the user presses
         // the ctrl-space-key. this should insert a protected space sign
-        AbstractAction a_space = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
-                if (jTextAreaEntry==e.getSource()) jTextAreaEntry.replaceSelection("&#160;");
-                if (jTextAreaRemarks==e.getSource()) jTextAreaRemarks.replaceSelection("&#160;");
+        AbstractAction a_space = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jTextAreaEntry == e.getSource()) {
+                    jTextAreaEntry.replaceSelection("&#160;");
+                }
+                if (jTextAreaRemarks == e.getSource()) {
+                    jTextAreaRemarks.replaceSelection("&#160;");
+                }
             }
         };
-        jTextAreaEntry.getActionMap().put("SpaceKeyPressed",a_space);
-        jTextAreaRemarks.getActionMap().put("SpaceKeyPressed",a_space);
+        jTextAreaEntry.getActionMap().put("SpaceKeyPressed", a_space);
+        jTextAreaRemarks.getActionMap().put("SpaceKeyPressed", a_space);
         // check for os, and use appropriate controlKey
         ks = KeyStroke.getKeyStroke("control SPACE");
         jTextAreaEntry.getInputMap().put(ks, "SpaceKeyPressed");
         jTextAreaRemarks.getInputMap().put(ks, "SpaceKeyPressed");
         // create action which should be executed when the user presses
         // the ctrl-asterisk-key. this should insert a bullet sign
-        AbstractAction a_bullet = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
-                if (jTextAreaEntry==e.getSource()) jTextAreaEntry.replaceSelection(String.valueOf((char)8226));
-                if (jTextAreaRemarks==e.getSource()) jTextAreaRemarks.replaceSelection(String.valueOf((char)8226));
+        AbstractAction a_bullet = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jTextAreaEntry == e.getSource()) {
+                    jTextAreaEntry.replaceSelection(String.valueOf((char) 8226));
+                }
+                if (jTextAreaRemarks == e.getSource()) {
+                    jTextAreaRemarks.replaceSelection(String.valueOf((char) 8226));
+                }
             }
         };
-        jTextAreaEntry.getActionMap().put("BulletKeyPressed",a_bullet);
-        jTextAreaRemarks.getActionMap().put("BulletKeyPressed",a_bullet);
+        jTextAreaEntry.getActionMap().put("BulletKeyPressed", a_bullet);
+        jTextAreaRemarks.getActionMap().put("BulletKeyPressed", a_bullet);
         // check for os, and use appropriate controlKey
-        ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS())?"meta shift CLOSE_BRACKET":"control shift PLUS");
+        ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS()) ? "meta shift CLOSE_BRACKET" : "control shift PLUS");
         jTextAreaEntry.getInputMap().put(ks, "BulletKeyPressed");
         jTextAreaRemarks.getInputMap().put(ks, "BulletKeyPressed");
         // create action which should be executed when the user presses
         // the ctrl-space-key. this should insert a protected large space sign
-        AbstractAction a_largespace = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
-                if (jTextAreaEntry==e.getSource()) jTextAreaEntry.replaceSelection("&#8195;");
-                if (jTextAreaRemarks==e.getSource()) jTextAreaRemarks.replaceSelection("&#8195;");
+        AbstractAction a_largespace = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jTextAreaEntry == e.getSource()) {
+                    jTextAreaEntry.replaceSelection("&#8195;");
+                }
+                if (jTextAreaRemarks == e.getSource()) {
+                    jTextAreaRemarks.replaceSelection("&#8195;");
+                }
             }
         };
-        jTextAreaEntry.getActionMap().put("LargeSpaceKeyPressed",a_largespace);
-        jTextAreaRemarks.getActionMap().put("LargeSpaceKeyPressed",a_largespace);
+        jTextAreaEntry.getActionMap().put("LargeSpaceKeyPressed", a_largespace);
+        jTextAreaRemarks.getActionMap().put("LargeSpaceKeyPressed", a_largespace);
         // check for os, and use appropriate controlKey
         ks = KeyStroke.getKeyStroke("control shift SPACE");
         jTextAreaEntry.getInputMap().put(ks, "LargeSpaceKeyPressed");
         jTextAreaRemarks.getInputMap().put(ks, "LargeSpaceKeyPressed");
         // create action which should be executed when the user presses
         // the ctrl-F10/meta-F10-key
-        AbstractAction a_add = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
-                if (jTextFieldFilterKeywordlist==e.getSource()) addQuickKeywordToList();
-                else if (jTextFieldFilterAuthorlist==e.getSource()) addQuickAuthorToList();
+        AbstractAction a_add = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jTextFieldFilterKeywordlist == e.getSource()) {
+                    addQuickKeywordToList();
+                } else if (jTextFieldFilterAuthorlist == e.getSource()) {
+                    addQuickAuthorToList();
+                }
             }
         };
         // put action to the tables' actionmaps
-        jTextFieldFilterKeywordlist.getActionMap().put("AddKeyPressed",a_add);
-        jTextFieldFilterAuthorlist.getActionMap().put("AddKeyPressed",a_add);
+        jTextFieldFilterKeywordlist.getActionMap().put("AddKeyPressed", a_add);
+        jTextFieldFilterAuthorlist.getActionMap().put("AddKeyPressed", a_add);
         // check for os, and use appropriate controlKey
-        ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS())?"meta F10":"ctrl F10");
+        ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS()) ? "meta F10" : "ctrl F10");
         jTextFieldFilterKeywordlist.getInputMap().put(ks, "AddKeyPressed");
         jTextFieldFilterAuthorlist.getInputMap().put(ks, "AddKeyPressed");
     }
 
-
     /**
-     * This method is called when the user wants to edit an entry. Here we fill all the
-     * components (textareas, litviews) with the related texts/list-items.
+     * This method is called when the user wants to edit an entry. Here we fill
+     * all the components (textareas, litviews) with the related
+     * texts/list-items.
      */
     private void initFields() {
         // get the title and fill textfield
@@ -1557,11 +1767,11 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // usually, to avoid <br>-tags within <ul> and <li>-tags when the entry is converted
         // to html, an entered list will be converted to a single line, removing all new lines.
         // but for editing and display, it is better to have them in single lines each.
-        text = text.replace(Constants.FORMAT_LIST_OPEN, Constants.FORMAT_LIST_OPEN+System.lineSeparator());
-        text = text.replace(Constants.FORMAT_LIST_CLOSE, Constants.FORMAT_LIST_CLOSE+System.lineSeparator());
-        text = text.replace(Constants.FORMAT_NUMBEREDLIST_OPEN, Constants.FORMAT_NUMBEREDLIST_OPEN+System.lineSeparator());
-        text = text.replace(Constants.FORMAT_NUMBEREDLIST_CLOSE, Constants.FORMAT_NUMBEREDLIST_CLOSE+System.lineSeparator());
-        text = text.replace(Constants.FORMAT_LISTITEM_CLOSE, Constants.FORMAT_LISTITEM_CLOSE+System.lineSeparator());
+        text = text.replace(Constants.FORMAT_LIST_OPEN, Constants.FORMAT_LIST_OPEN + System.lineSeparator());
+        text = text.replace(Constants.FORMAT_LIST_CLOSE, Constants.FORMAT_LIST_CLOSE + System.lineSeparator());
+        text = text.replace(Constants.FORMAT_NUMBEREDLIST_OPEN, Constants.FORMAT_NUMBEREDLIST_OPEN + System.lineSeparator());
+        text = text.replace(Constants.FORMAT_NUMBEREDLIST_CLOSE, Constants.FORMAT_NUMBEREDLIST_CLOSE + System.lineSeparator());
+        text = text.replace(Constants.FORMAT_LISTITEM_CLOSE, Constants.FORMAT_LISTITEM_CLOSE + System.lineSeparator());
         // and set the text to the textarea
         jTextAreaEntry.setText(Tools.replaceUbbToUnicode(text));
         // get the authors and set them to the textarea
@@ -1569,7 +1779,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // stringbuffer for temporatily saving the authors
         StringBuilder sb = new StringBuilder("");
         // if we have any authors, go on and build author list
-        if (authors!=null) {
+        if (authors != null) {
             // iterate array and add each author to the buffer, and append a new line
             // after each author. we use a temporary stringbuffer here, so we can 
             // delete the last newline ("\n") which is not needed...
@@ -1579,7 +1789,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             }
         }
         // delete last newline-symbol
-        if (sb.length()>0) sb.setLength(sb.length()-(System.lineSeparator().length()));
+        if (sb.length() > 0) {
+            sb.setLength(sb.length() - (System.lineSeparator().length()));
+        }
         // and set the string to the textarea
         jTextAreaAuthor.setText(sb.toString());
         // retrieve the current keywords
@@ -1587,11 +1799,15 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // prepare the JList which will display the keywords
         keywordListModel.clear();
         // check whether any keywords have been found
-        if (kws!=null) {
+        if (kws != null) {
             // sort keywords
-            if (kws.length>0) Arrays.sort(kws);
+            if (kws.length > 0) {
+                Arrays.sort(kws);
+            }
             // iterate the string array and add its content to the list model
-            for (String kw : kws ) keywordListModel.addElement(kw);
+            for (String kw : kws) {
+                keywordListModel.addElement(kw);
+            }
         }
         // get the remarks of that entry
         text = dataObj.getRemarks(entryNumber);
@@ -1602,36 +1818,39 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // now retrieve the (hyper-)links of an entry
         hyperlinks = dataObj.getAttachments(entryNumber);
         // if we have (hyper-)links, continue
-        if (hyperlinks!=null && hyperlinks.size()>0) {
+        if (hyperlinks != null && hyperlinks.size() > 0) {
             // iterare the child elements of the hyperlinks. these were
             // passed as parameter as a List-type
             Iterator<?> iterator = hyperlinks.iterator();
-            
+
             while (iterator.hasNext()) {
                 // first, copy the element of the list to an own variable
                 Element link = (Element) iterator.next();
                 // if it's not an empty element, add it to the JListView
-                if (!link.getText().isEmpty()) linkListModel.addElement(link.getText());
+                if (!link.getText().isEmpty()) {
+                    linkListModel.addElement(link.getText());
+                }
             }
         }
         // finally, change title
-        setTitle(resourceMap.getString("frametitleEdit")+" ("+String.valueOf(entryNumber)+")");
+        setTitle(resourceMap.getString("frametitleEdit") + " (" + String.valueOf(entryNumber) + ")");
         // if we have editmode, enable apply-button
         setTextfieldFilled(!jTextAreaEntry.getText().isEmpty());
     }
 
-
     /**
-     * This method changed the modified state. We need to do this in a method, because
-     * when the user edits an entry, the apply-button will not become enabled on changes that
-     * are made outside the main jTextAreaEntry. The property "textfieldFilled", which enables
-     * or disables the apply-button, is only changed when the document of the jTextAreaEntry is
-     * changed. This should prevent applying empty content to a new entry.<br><br>
-     * But: when editing an entry, the text-content in the jTextAreaEntry could be filled, while
-     * the user changes the author-values - these changes are recognized in the modified-value,
-     * but do usually not enable the apply-button. thus, when we have editmode (true), we also
-     * enable the apply-button here...
-     * 
+     * This method changed the modified state. We need to do this in a method,
+     * because when the user edits an entry, the apply-button will not become
+     * enabled on changes that are made outside the main jTextAreaEntry. The
+     * property "textfieldFilled", which enables or disables the apply-button,
+     * is only changed when the document of the jTextAreaEntry is changed. This
+     * should prevent applying empty content to a new entry.<br><br>
+     * But: when editing an entry, the text-content in the jTextAreaEntry could
+     * be filled, while the user changes the author-values - these changes are
+     * recognized in the modified-value, but do usually not enable the
+     * apply-button. thus, when we have editmode (true), we also enable the
+     * apply-button here...
+     *
      * @param m whether the modified state is true or false
      */
     private void setModified(boolean m) {
@@ -1640,19 +1859,18 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // if we have editmode, enable apply-button
         setTextfieldFilled(!jTextAreaEntry.getText().isEmpty());
     }
+
     public boolean isModified() {
         return modified;
     }
-    
-    
+
     private void updateTextFieldText(JTextField tf) {
         if (tf.isFocusOwner()) {
             String text = tf.getText();
             if (text.equals(resourceMap.getString("textFieldDefaultText"))) {
                 tf.setText("");
             }
-        }
-        else {
+        } else {
             String text = tf.getText();
             if (text.isEmpty()) {
                 tf.setText(resourceMap.getString("textFieldDefaultText"));
@@ -1660,16 +1878,16 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         }
     }
 
-
     /**
-     * This method updates the toolbar and en-/disables the menu- and toolbar-items
-     * depending on whether the main textfield (jTextAreaEntry) has the focus or not.
-     * Formatting action only apply to the maintextfield, so disable then when other fields
-     * have the input focus.
-     * 
-     * @param focus indicates whether the <b>main textfield</b> has the focus or nor. if this
-     * parameter is false, the undo/redo buttons are always disabled. if the value is
-     * true, the buttons are enabled when undo/redo is possible (canUndo() and canRedo()).
+     * This method updates the toolbar and en-/disables the menu- and
+     * toolbar-items depending on whether the main textfield (jTextAreaEntry)
+     * has the focus or not. Formatting action only apply to the maintextfield,
+     * so disable then when other fields have the input focus.
+     *
+     * @param focus indicates whether the <b>main textfield</b> has the focus or
+     * nor. if this parameter is false, the undo/redo buttons are always
+     * disabled. if the value is true, the buttons are enabled when undo/redo is
+     * possible (canUndo() and canRedo()).
      */
     private void updateToolbar(boolean foc) {
         // we've outsourced the update of the undo/redo buttons to an
@@ -1679,44 +1897,43 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         updateUndoRedoButtons(foc);
         setFocus(foc);
     }
-    
-    
+
     /**
      * En-/disables the undo and redo buttons.<br>
-     * Usually this method belongs to "updateToolbar()", but we've outsourced this
-     * part so we can call this method in the documents change listener. The undo/redo
-     * buttons are then also immediately being updated when the user types text.
-     * 
-     * @param focus indicates whether the main textfield has the focus or nor. if this
-     * parameter is false, the undo/redo buttons are always disabled. if the value is
-     * true, the buttons are enabled when undo/redo is possible (canUndo() and canRedo()).
+     * Usually this method belongs to "updateToolbar()", but we've outsourced
+     * this part so we can call this method in the documents change listener.
+     * The undo/redo buttons are then also immediately being updated when the
+     * user types text.
+     *
+     * @param focus indicates whether the main textfield has the focus or nor.
+     * if this parameter is false, the undo/redo buttons are always disabled. if
+     * the value is true, the buttons are enabled when undo/redo is possible
+     * (canUndo() and canRedo()).
      */
     private void updateUndoRedoButtons(boolean foc) {
         // set undo/redo
         setUndoPossible(foc && undomanager.canUndo());
         setRedoPossible(foc && undomanager.canRedo());
     }
-    
-    
+
     private void setRefreshKeywords() {
-        if (settingsObj.getQuickInput()&&(dataObj.getCount(Daten.KWCOUNT)>0)) {
+        if (settingsObj.getQuickInput() && (dataObj.getCount(Daten.KWCOUNT) > 0)) {
             // only the first and the third step are using the text-content to retrieve
             // the keywords, so we only need to enable the refresh-button for the keyword-quickinput
             // when text is changed during the 1st or 3rd step.
-            if ((1==stepcounter)||(3==stepcounter)) {
+            if ((1 == stepcounter) || (3 == stepcounter)) {
                 // disable the refresh and filter buttons
                 jButtonRefreshKeywordlist.setEnabled(true);
                 // set upto-date state to false
-                keywordsListUpToDate=false;
+                keywordsListUpToDate = false;
             }
         }
     }
-    
-    
+
     @Action
     public void editSynonyms() {
         if (null == synonymsDlg) {
-            synonymsDlg = new CSynonymsEdit(null,synonymsObj,settingsObj,dataObj);
+            synonymsDlg = new CSynonymsEdit(null, synonymsObj, settingsObj, dataObj);
             synonymsDlg.setLocationRelativeTo(null);
         }
         ZettelkastenApp.getApplication().show(synonymsDlg);
@@ -1725,10 +1942,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             mainframe.setBackupNecessary();
         }
         synonymsDlg.dispose();
-        synonymsDlg=null;
+        synonymsDlg = null;
     }
-    
-    
+
     @Action
     public void refreshAuthorList() {
         authorListUpToDate = false;
@@ -1739,11 +1955,13 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     public void setFocusToEditPane() {
         jTextAreaEntry.requestFocusInWindow();
     }
+
     @Action
     public void setFocusToKeywordList() {
         jTabbedPaneNewEntry1.setSelectedIndex(1);
         jTextFieldFilterKeywordlist.requestFocusInWindow();
     }
+
     @Action
     public void setFocusToAuthorList() {
         jTabbedPaneNewEntry1.setSelectedIndex(0);
@@ -1751,8 +1969,8 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     }
 
     /**
-     * This method creates the quickinput-list for authors by calling a background
-     * task which does this work...
+     * This method creates the quickinput-list for authors by calling a
+     * background task which does this work...
      */
     @Action
     public final synchronized void showAuthors() {
@@ -1764,19 +1982,23 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         }
         // en/disable keyword quick-input function depending on the amount of keywords
         int aucount = dataObj.getCount(Daten.AUCOUNT);
-        jTextFieldFilterAuthorlist.setEnabled(aucount>0);
+        jTextFieldFilterAuthorlist.setEnabled(aucount > 0);
         // disbale button, will only be enabled on selection
         // jButtonAddAuthors.setEnabled(false);
         // when we have no authors at all, quit
-        if (aucount<1) return;
+        if (aucount < 1) {
+            return;
+        }
         // leave method when task is already running...
-        if (qiAuthorTaskIsRunning) return;
+        if (qiAuthorTaskIsRunning) {
+            return;
+        }
         // set upto-date-indicator to false, otherwise the thread will not be executed
-        authorListUpToDate=false;
+        authorListUpToDate = false;
         // when opening this dialog, automatically create the author list
         Task qiauT = quickInputAuthor();
         // get the application's context...
-    	ApplicationContext appC = Application.getInstance().getContext();
+        ApplicationContext appC = Application.getInstance().getContext();
         // ...to get the TaskMonitor and TaskService
         TaskMonitor tM = appC.getTaskMonitor();
         TaskService tS = appC.getTaskService();
@@ -1785,11 +2007,10 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         tS.execute(qiauT);
         tM.setForegroundTask(qiauT);
     }
-    
-    
+
     /**
-     * This method creates the quickinput-list for keywords by calling a background
-     * task which does this work...
+     * This method creates the quickinput-list for keywords by calling a
+     * background task which does this work...
      */
     @Action
     public synchronized void showKeywords() {
@@ -1798,13 +2019,15 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // no author selected
         setAuthorSelected(false);
         // enable textfield for filtering
-        jTextFieldFilterKeywordlist.setEnabled(kwcount>0);
+        jTextFieldFilterKeywordlist.setEnabled(kwcount > 0);
         // disable buttons. will only be enabled on table selection
         // jButtonAddKeywords.setEnabled(false);
         // show special button if we have quickinput
-        jButtonQuickKeyword.setVisible((stepcounter<4)&&settingsObj.getQuickInput());
+        jButtonQuickKeyword.setVisible((stepcounter < 4) && settingsObj.getQuickInput());
         // when we have no keywords, quit
-        if (kwcount<1) return;
+        if (kwcount < 1) {
+            return;
+        }
         // if we don't have quick-input settings, show whole keywords.
         if (!settingsObj.getQuickInput()) {
             // enable combobox
@@ -1813,7 +2036,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             keywordStep1 = selectedKeywords = remainingKeywords = null;
             stepcounter = 1;
             // when the task is already running, leave...
-            if (qiKeywordTaskIsRunning) return;
+            if (qiKeywordTaskIsRunning) {
+                return;
+            }
             // when opening this dialog, automatically create the author list
             Task qikwT = quickInputKeywords();
             // get the application's context...
@@ -1825,44 +2050,43 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // i.e. making the animated progressbar and busy icon visible
             tS.execute(qikwT);
             tM.setForegroundTask(qikwT);
-        }
-        else {
+        } else {
             // enable combobox
-            jComboBoxQuickInput.setEnabled(stepcounter<2);
+            jComboBoxQuickInput.setEnabled(stepcounter < 2);
             // only process the task if keywordlist is not uptodate. else we can
             // reset the list by setting the linkedlists
             if (!keywordsListUpToDate) {
                 // only create list when we have a text length of more that 3 chars
-                if (jTextAreaEntry.getText().length()>3 || jTextFieldTitle.getText().length()>2) {
+                if (jTextAreaEntry.getText().length() > 3 || jTextFieldTitle.getText().length() > 2) {
                     // the background task is only needed for the first three steps. within the
                     // third step, the remaining keywords are equal to the keywordStep4-list, since
                     // the fourth step only contains the remaining keywords...
-                    if (stepcounter<4) createQuickKeywordList();
+                    if (stepcounter < 4) {
+                        createQuickKeywordList();
+                    }
                     // here we start with step one
-                    if (1==stepcounter) {
+                    if (1 == stepcounter) {
                         // when the task is over, receive the remaining keywords...
                         remainingKeywords = taskinfo.getKeywordSuggesionList(TasksData.REMAINING_KW);
                         // and the current keywordlist
                         displayedKeywordList = keywordStep1 = taskinfo.getKeywordSuggesionList(TasksData.NEW_KW);
-                    }
-                    else if (2==stepcounter || 3==stepcounter) {
+                    } else if (2 == stepcounter || 3 == stepcounter) {
                         // when the task is over, receive the remaining keywords...
                         remainingKeywords = taskinfo.getKeywordSuggesionList(TasksData.REMAINING_KW);
                         // and the current keywordlist
                         displayedKeywordList = taskinfo.getKeywordSuggesionList(TasksData.NEW_KW);
-                    }
-                    else if (4==stepcounter) {
+                    } else if (4 == stepcounter) {
                         // when the task is over, receive the remaining keywords...
                         displayedKeywordList = remainingKeywords;
                         // update button-appearance
-                        jButtonAddKeywords.putClientProperty("JButton.segmentPosition","only");
+                        jButtonAddKeywords.putClientProperty("JButton.segmentPosition", "only");
                     }
                     // and set the new keywords to the list
                     jListQuickInputKeywords.setListData(displayedKeywordList.toArray());
                     // scroll to first entry in the list
                     jListQuickInputKeywords.ensureIndexIsVisible(0);
                     // dispose the window and clear the object
-                    if (taskDlg!=null) {
+                    if (taskDlg != null) {
                         taskDlg.dispose();
                         taskDlg = null;
                     }
@@ -1872,16 +2096,14 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                     jButtonRefreshKeywordlist.setEnabled(false);
                     // set upto-date state to true, so we don't have to start the task more often
                     // than needed
-                    keywordsListUpToDate=true;
-                }
-                else {
-                    jListQuickInputKeywords.setListData(new String[] {});
+                    keywordsListUpToDate = true;
+                } else {
+                    jListQuickInputKeywords.setListData(new String[]{});
                 }
                 // enable textfield, if necessary
                 int listsize = jListQuickInputKeywords.getModel().getSize();
-                jTextFieldFilterKeywordlist.setEnabled(listsize>0);
-            }
-            else {
+                jTextFieldFilterKeywordlist.setEnabled(listsize > 0);
+            } else {
                 jListQuickInputKeywords.setListData(displayedKeywordList.toArray());
                 // scroll to first entry in the list
                 jListQuickInputKeywords.ensureIndexIsVisible(0);
@@ -1890,8 +2112,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             }
         }
     }
-    
-    
+
     private void createQuickKeywordList() {
         // if dialog window isn't already created, do this now
         if (null == taskDlg) {
@@ -1900,13 +2121,13 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // check whether text-selection is at least 3 chars long. in this case,
             // the keywords are selected according to the text-selection. in all other
             // cases, we use the complete entry-text as base for the keyword-selection
-            if (null==text || text.length()<3) {
+            if (null == text || text.length() < 3) {
                 // get the entry-text, consisting of title and text content
-                text = jTextFieldTitle.getText()+" "+jTextAreaEntry.getText();
+                text = jTextFieldTitle.getText() + " " + jTextAreaEntry.getText();
             }
             // get parent und init window
             taskDlg = new TaskProgressDialog(this, TaskProgressDialog.TASK_KEYWORDSUGGESTIONS, taskinfo, dataObj, synonymsObj, settingsObj,
-                settingsObj.getQuickInputExtended(), stepcounter, selectedKeywords, remainingKeywords, keywordStep1, text);
+                    settingsObj.getQuickInputExtended(), stepcounter, selectedKeywords, remainingKeywords, keywordStep1, text);
             // center window
             taskDlg.setLocationRelativeTo(this);
         }
@@ -1916,61 +2137,78 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         taskDlg = null;
     }
 
-
     private void enableBySelection() {
         String selection = null;
-        switch(focusowner) {
-            case Constants.FOCUS_FIELD_TEXT: selection = jTextAreaEntry.getSelectedText(); break;
-            case Constants.FOCUS_FIELD_AUTHOR: selection = jTextAreaAuthor.getSelectedText(); break;
-            case Constants.FOCUS_FIELD_REMARKS: selection = jTextAreaRemarks.getSelectedText(); break;
+        switch (focusowner) {
+            case Constants.FOCUS_FIELD_TEXT:
+                selection = jTextAreaEntry.getSelectedText();
+                break;
+            case Constants.FOCUS_FIELD_AUTHOR:
+                selection = jTextAreaAuthor.getSelectedText();
+                break;
+            case Constants.FOCUS_FIELD_REMARKS:
+                selection = jTextAreaRemarks.getSelectedText();
+                break;
         }
-        setTextSelected(selection!=null);
-        setSegmentPossible((selection!=null)&&(jListQuickInputKeywords.getSelectedValue()!=null));
+        setTextSelected(selection != null);
+        setSegmentPossible((selection != null) && (jListQuickInputKeywords.getSelectedValue() != null));
     }
 
-
     /**
-     * This method checks which textfield has the focus and then selects
-     * the whole text in that component.
+     * This method checks which textfield has the focus and then selects the
+     * whole text in that component.
      */
     @Action
     public void selecteAllText() {
-        if (jTextFieldTitle.isFocusOwner()) jTextFieldTitle.selectAll();
-        if (jTextAreaEntry.isFocusOwner()) jTextAreaEntry.selectAll();
-        if (jTextAreaAuthor.isFocusOwner()) jTextAreaAuthor.selectAll();
-        if (jTextAreaRemarks.isFocusOwner()) jTextAreaRemarks.selectAll();
-        if (jTextFieldAddKeyword.isFocusOwner()) jTextFieldAddKeyword.selectAll();
-        if (jTextFieldAddLink.isFocusOwner()) jTextFieldAddLink.selectAll();
+        if (jTextFieldTitle.isFocusOwner()) {
+            jTextFieldTitle.selectAll();
+        }
+        if (jTextAreaEntry.isFocusOwner()) {
+            jTextAreaEntry.selectAll();
+        }
+        if (jTextAreaAuthor.isFocusOwner()) {
+            jTextAreaAuthor.selectAll();
+        }
+        if (jTextAreaRemarks.isFocusOwner()) {
+            jTextAreaRemarks.selectAll();
+        }
+        if (jTextFieldAddKeyword.isFocusOwner()) {
+            jTextFieldAddKeyword.selectAll();
+        }
+        if (jTextFieldAddLink.isFocusOwner()) {
+            jTextFieldAddLink.selectAll();
+        }
         setTextSelected(true);
     }
-    
-    
+
     /**
      * Undo function for the main text field
      */
     @Action(enabledProperty = "undoPossible")
     public void undoAction() {
-        if (undomanager.canUndo()) undomanager.undo(); 
-        jTextAreaEntry.requestFocus();         
+        if (undomanager.canUndo()) {
+            undomanager.undo();
+        }
+        jTextAreaEntry.requestFocus();
     }
-    
-    
+
     /**
      * Redo function for the main text field
      */
     @Action(enabledProperty = "redoPossible")
     public void redoAction() {
-        if (undomanager.canRedo()) undomanager.redo(); 
-        jTextAreaEntry.requestFocus();         
+        if (undomanager.canRedo()) {
+            undomanager.redo();
+        }
+        jTextAreaEntry.requestFocus();
     }
-    
-    
+
     @Action
     public void addAuthorFromMenu() {
         // open an input-dialog, setting the selected value as default-value
         if (null == biggerEditDlg) {
             // create a new dialog with the bigger edit-field, passing some initial values
-            biggerEditDlg = new CBiggerEditField(this,settingsObj,resourceMap.getString("newAuthorTitle"),"", "", Constants.EDIT_AUTHOR);
+            biggerEditDlg = new CBiggerEditField(this, settingsObj, resourceMap.getString("newAuthorTitle"), "", "", Constants.EDIT_AUTHOR);
             // center window
             biggerEditDlg.setLocationRelativeTo(this);
         }
@@ -1981,9 +2219,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         String newBibKey = biggerEditDlg.getNewBibKey();
         // delete the input-dialog
         biggerEditDlg.dispose();
-        biggerEditDlg=null;
+        biggerEditDlg = null;
         // if we have a valid return-value...
-        if ((newAu!=null) && (newAu.length()>0)) {
+        if ((newAu != null) && (newAu.length() > 0)) {
             // get system line separator
             String linesep = System.lineSeparator();
             // but first, we habe to remove all carriage-returns (\r), which are part of the
@@ -1991,7 +2229,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // we replace "System.lineSeparator()" with "[br]", but only when
             // a "\n" is replaced by [br]. So, in case the system's line-separator also contains a
             // "\r", it is replaced by nothing, to clean the content.
-            if (linesep.contains("\r")) newAu = newAu.replace("\r", "");
+            if (linesep.contains("\r")) {
+                newAu = newAu.replace("\r", "");
+            }
             // ...parse them to an array
             String[] authors = newAu.split("\n");
             // list for new authors. needed to avoid empty entries
@@ -2004,24 +2244,26 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                     // add author. used below for the array "selectedAuthors"
                     newaus.add(a);
                     // check whether the value already exists
-                    if(-1==dataObj.getAuthorPosition(a)) {
+                    if (-1 == dataObj.getAuthorPosition(a)) {
                         // check whether author already exisrs in textfield
                         if (!checkForDoubleAuthors(a)) {
                             // if not, append author string
                             // therefore, add a new line, but only if the textfield is not empty
                             // (i.e. we already have an author)
                             // add author to data file
-                            dataObj.addAuthor(a,0);
+                            dataObj.addAuthor(a, 0);
                             // change bibkey
-                            if (newBibKey!=null) {
+                            if (newBibKey != null) {
                                 dataObj.setAuthorBibKey(a, newBibKey);
                                 // reset bibkey, so we only use it once in case we have multiple authors
-                                newBibKey=null;
+                                newBibKey = null;
                             }
                             // if not, append author string
                             // therefore, add a new line, but only if the textfield is not empty
                             // (i.e. we already have an author)
-                            if (!jTextAreaAuthor.getText().isEmpty()) jTextAreaAuthor.append(System.lineSeparator());
+                            if (!jTextAreaAuthor.getText().isEmpty()) {
+                                jTextAreaAuthor.append(System.lineSeparator());
+                            }
                             jTextAreaAuthor.append(a);
                             // set the modified state
                             setModified(true);
@@ -2031,32 +2273,36 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                             // have new authors and the authorlist is out of date.
                             dataObj.setAuthorlistUpToDate(false);
                         }
-                    }
-                    else {
+                    } else {
                         // display error message box
-                        JOptionPane.showMessageDialog(this,resourceMap.getString("errValueExistsMsg"),resourceMap.getString("errValueExistsTitle"),JOptionPane.PLAIN_MESSAGE);
+                        JOptionPane.showMessageDialog(this, resourceMap.getString("errValueExistsMsg"), resourceMap.getString("errValueExistsTitle"), JOptionPane.PLAIN_MESSAGE);
                     }
                 }
             }
             // copy new added authors into a global array, so we can select the new addes authors
             // after they have been added to the list via the background-task
-            if (newaus.size()>0) selectedAuthors = newaus.toArray(new String[newaus.size()]);
+            if (newaus.size() > 0) {
+                selectedAuthors = newaus.toArray(new String[newaus.size()]);
+            }
             // refresh authorlist
             showAuthors();
         }
     }
 
-
     private void selectNewAddedAuthors() {
-        if (selectedAuthors!=null) {
+        if (selectedAuthors != null) {
             // create an integer array for the index-numbers of the new author values
             int[] selectedIndices = new int[selectedAuthors.length];
             // go through all new author values and retrieve their index-numbers.
             // save these numbers to the array
-            for (int cnt=0; cnt<selectedAuthors.length;cnt++) selectedIndices[cnt] = quickInputAuthorListModel.indexOf(selectedAuthors[cnt]);
+            for (int cnt = 0; cnt < selectedAuthors.length; cnt++) {
+                selectedIndices[cnt] = quickInputAuthorListModel.indexOf(selectedAuthors[cnt]);
+            }
             // sort the array, so when making the first entry in the *array* visible, this should also be the
             // first visible entry in the jList
-            if (selectedIndices!=null && selectedIndices.length>0) Arrays.sort(selectedIndices);
+            if (selectedIndices != null && selectedIndices.length > 0) {
+                Arrays.sort(selectedIndices);
+            }
             // select new values
             jListQuickInputAuthor.setSelectedIndices(selectedIndices);
             // make first value visible
@@ -2067,7 +2313,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             setAuthorSelected(true);
         }
     }
-    
+
     /**
      * This method removes the currently selected item(s) from the keywordlist
      */
@@ -2075,7 +2321,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     public void removeKeyword() {
         removeKeywordFromList();
     }
-    
 
     /**
      * This method removes the currently selected item(s) from the linklist
@@ -2084,7 +2329,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     public void removeLink() {
         removeLinkFromList();
     }
-    
 
     @Action(enabledProperty = "textSelected")
     public void addSelectionToSteno() {
@@ -2092,18 +2336,24 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // into our variable - so we avoid code-duplication, and not using for each textarea
         // its own spell-checking...
         JTextArea ta = null;
-        switch(focusowner) {
-            case Constants.FOCUS_FIELD_TEXT: ta = jTextAreaEntry; break;
-            case Constants.FOCUS_FIELD_AUTHOR: ta = jTextAreaAuthor; break;
-            case Constants.FOCUS_FIELD_REMARKS: ta = jTextAreaRemarks; break;
+        switch (focusowner) {
+            case Constants.FOCUS_FIELD_TEXT:
+                ta = jTextAreaEntry;
+                break;
+            case Constants.FOCUS_FIELD_AUTHOR:
+                ta = jTextAreaAuthor;
+                break;
+            case Constants.FOCUS_FIELD_REMARKS:
+                ta = jTextAreaRemarks;
+                break;
         }
         // if any textarea has the focus (and no text*field*) go on...
-        if (ta!=null) {
+        if (ta != null) {
             // the button for editing the spellchecking-words was pressed,
             // so open the window for edting them...
             if (null == stenoEdit) {
                 // get parent und init window
-                stenoEdit = new CStenoEdit(this,stenoObj,settingsObj,ta.getSelectedText());
+                stenoEdit = new CStenoEdit(this, stenoObj, settingsObj, ta.getSelectedText());
                 // center window
                 stenoEdit.setLocationRelativeTo(this);
             }
@@ -2120,18 +2370,24 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // into our variable - so we avoid code-duplication, and not using for each textarea
         // its own spell-checking...
         JTextArea ta = null;
-        switch(focusowner) {
-            case Constants.FOCUS_FIELD_TEXT: ta = jTextAreaEntry; break;
-            case Constants.FOCUS_FIELD_AUTHOR: ta = jTextAreaAuthor; break;
-            case Constants.FOCUS_FIELD_REMARKS: ta = jTextAreaRemarks; break;
+        switch (focusowner) {
+            case Constants.FOCUS_FIELD_TEXT:
+                ta = jTextAreaEntry;
+                break;
+            case Constants.FOCUS_FIELD_AUTHOR:
+                ta = jTextAreaAuthor;
+                break;
+            case Constants.FOCUS_FIELD_REMARKS:
+                ta = jTextAreaRemarks;
+                break;
         }
         // if any textarea has the focus (and no text*field*) go on...
-        if (ta!=null) {
+        if (ta != null) {
             // the button for editing the spellchecking-words was pressed,
             // so open the window for edting them...
             if (null == autoKorrektEdit) {
                 // get parent und init window
-                autoKorrektEdit = new CAutoKorrekturEdit(this,spellObj,settingsObj,ta.getSelectedText().toLowerCase());
+                autoKorrektEdit = new CAutoKorrekturEdit(this, spellObj, settingsObj, ta.getSelectedText().toLowerCase());
                 // center window
                 autoKorrektEdit.setLocationRelativeTo(this);
             }
@@ -2142,15 +2398,16 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // get the correct spelling, if word was mispelled
             String correct = spellObj.getCorrectSpelling(ta.getSelectedText());
             // if we found a correct spellig, i.e. the typed word was false, go on
-            if (correct!=null) ta.replaceSelection(correct);
+            if (correct != null) {
+                ta.replaceSelection(correct);
+            }
         }
     }
 
-
     /**
-     * This is a small method which surrounds the currently selected text
-     * with tags which are supplied as parameters
-     * 
+     * This is a small method which surrounds the currently selected text with
+     * tags which are supplied as parameters
+     *
      * @param opentag (the tag which is placed before the selection)
      * @param closetag (the tag which is placed after the selection)
      */
@@ -2160,11 +2417,10 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // get caret position
             int caret = jTextAreaEntry.getCaretPosition();
             // if we don't have any selection, just insert tags
-            jTextAreaEntry.replaceSelection(opentag+closetag);
+            jTextAreaEntry.replaceSelection(opentag + closetag);
             // set caret position in between the tags
-            jTextAreaEntry.setCaretPosition(caret+opentag.length());
-        }
-        else {
+            jTextAreaEntry.setCaretPosition(caret + opentag.length());
+        } else {
             // get selection offset
             int sel_start = jTextAreaEntry.getSelectionStart();
             int sel_end = jTextAreaEntry.getSelectionEnd();
@@ -2175,14 +2431,17 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             jTextAreaEntry.setSelectionEnd(sel_end + opentag.length());
         }
     }
+
     /**
-     * 
+     *
      */
     private void removeAlignment() {
         // retrieve text selection
         String selection = jTextAreaEntry.getSelectedText();
         // check whether tag is selected or not
-        if (null==selection) return;
+        if (null == selection) {
+            return;
+        }
         // remember caret start
         int caret = jTextAreaEntry.getSelectionStart();
         // replace alignments
@@ -2194,11 +2453,12 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jTextAreaEntry.replaceSelection(selection);
         // set new selection
         jTextAreaEntry.setSelectionStart(caret);
-        jTextAreaEntry.setSelectionEnd(caret+selection.length());
+        jTextAreaEntry.setSelectionEnd(caret + selection.length());
     }
+
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we have bold-formatting.
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we have bold-formatting.
      */
     @Action(enabledProperty = "focus")
     public void formatBold() {
@@ -2206,16 +2466,14 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // put it in an own method
         if (settingsObj.getMarkdownActivated()) {
             surroundSelection(Constants.FORMAT_MD_BOLD_OPEN, Constants.FORMAT_MD_BOLD_CLOSE);
-        }
-        else {
+        } else {
             surroundSelection(Constants.FORMAT_BOLD_OPEN, Constants.FORMAT_BOLD_CLOSE);
         }
     }
-    
-    
+
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we have italic-formatting.
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we have italic-formatting.
      */
     @Action(enabledProperty = "focus")
     public void formatItalic() {
@@ -2223,16 +2481,14 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // put it in an own method
         if (settingsObj.getMarkdownActivated()) {
             surroundSelection(Constants.FORMAT_MD_ITALIC_OPEN, Constants.FORMAT_MD_ITALIC_CLOSE);
-        }
-        else {
+        } else {
             surroundSelection(Constants.FORMAT_ITALIC_OPEN, Constants.FORMAT_ITALIC_CLOSE);
         }
     }
-    
-    
+
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we have underline-formatting.
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we have underline-formatting.
      */
     @Action(enabledProperty = "focus")
     public void formatUnderline() {
@@ -2240,11 +2496,11 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // put it in an own method
         surroundSelection(Constants.FORMAT_UNDERLINE_OPEN, Constants.FORMAT_UNDERLINE_CLOSE);
     }
-    
-    
+
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we have strike-through-formatting.
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we have
+     * strike-through-formatting.
      */
     @Action(enabledProperty = "focus")
     public void formatStrikeThrough() {
@@ -2252,16 +2508,14 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // put it in an own method
         if (settingsObj.getMarkdownActivated()) {
             surroundSelection(Constants.FORMAT_MD_STRIKE_OPEN, Constants.FORMAT_MD_STRIKE_CLOSE);
-        }
-        else {
+        } else {
             surroundSelection(Constants.FORMAT_STRIKE_OPEN, Constants.FORMAT_STRIKE_CLOSE);
         }
     }
-    
-    
+
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we have a header 1st grade
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we have a header 1st grade
      */
     @Action(enabledProperty = "focus")
     public void formatHeading1() {
@@ -2269,16 +2523,14 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // put it in an own method
         if (settingsObj.getMarkdownActivated()) {
             surroundSelection(Constants.FORMAT_MD_H1_OPEN, Constants.FORMAT_MD_H1_CLOSE);
-        }
-        else {
+        } else {
             surroundSelection(Constants.FORMAT_H1_OPEN, Constants.FORMAT_H1_CLOSE);
         }
     }
-    
-    
+
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we a header 2nd grade
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we a header 2nd grade
      */
     @Action(enabledProperty = "focus")
     public void formatHeading2() {
@@ -2286,16 +2538,14 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // put it in an own method
         if (settingsObj.getMarkdownActivated()) {
             surroundSelection(Constants.FORMAT_MD_H2_OPEN, Constants.FORMAT_MD_H2_CLOSE);
-        }
-        else {
+        } else {
             surroundSelection(Constants.FORMAT_H2_OPEN, Constants.FORMAT_H2_CLOSE);
         }
     }
-    
-    
+
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case the text is aligned centered.
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case the text is aligned centered.
      */
     @Action(enabledProperty = "focus")
     public void alignCenter() {
@@ -2304,6 +2554,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         removeAlignment();
         surroundSelection(Constants.FORMAT_ALIGNCENTER_OPEN, Constants.FORMAT_ALIGNCENTER_CLOSE);
     }
+
     /**
      */
     @Action(enabledProperty = "focus")
@@ -2313,6 +2564,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         removeAlignment();
         surroundSelection(Constants.FORMAT_ALIGNRIGHT_OPEN, Constants.FORMAT_ALIGNRIGHT_CLOSE);
     }
+
     /**
      */
     @Action(enabledProperty = "focus")
@@ -2322,6 +2574,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         removeAlignment();
         surroundSelection(Constants.FORMAT_ALIGNLEFT_OPEN, Constants.FORMAT_ALIGNLEFT_CLOSE);
     }
+
     /**
      */
     @Action(enabledProperty = "focus")
@@ -2331,31 +2584,33 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         removeAlignment();
         surroundSelection(Constants.FORMAT_ALIGNJUSTIFY_OPEN, Constants.FORMAT_ALIGNJUSTIFY_CLOSE);
     }
-    
-    
+
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we have left and right border margins.
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we have left and right border
+     * margins.
      */
     @Action(enabledProperty = "focus")
     public void alignMargin() {
         // since we have multiple usage of the folliwing code, we simply
         // put it in an own method
-        
+
         // first, show an input dialog and let the user input the margin
         String margin = JOptionPane.showInputDialog(resourceMap.getString("msgInputMargin"));
         // if the user cancelled the dialog, quit method
-        if (null==margin) return;
+        if (null == margin) {
+            return;
+        }
         // replace commas with periods.
-        margin = margin.replace(",",".");
+        margin = margin.replace(",", ".");
         // else prepare tags
-        surroundSelection("[m "+margin+"]","[/m]");
+        surroundSelection("[m " + margin + "]", "[/m]");
     }
-    
-    
+
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we have a quotation or citation.
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we have a quotation or
+     * citation.
      */
     @Action(enabledProperty = "focus")
     public void formatCite() {
@@ -2363,16 +2618,15 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // put it in an own method
         if (settingsObj.getMarkdownActivated()) {
             surroundSelection(Constants.FORMAT_MD_QUOTE_OPEN, Constants.FORMAT_MD_QUOTE_CLOSE);
-        }
-        else {
+        } else {
             surroundSelection(Constants.FORMAT_QUOTE_OPEN, Constants.FORMAT_QUOTE_CLOSE);
         }
     }
 
-
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we have a inline quotation marks.
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we have a inline quotation
+     * marks.
      */
     @Action(enabledProperty = "focus")
     public void formatQuote() {
@@ -2381,11 +2635,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         surroundSelection(Constants.FORMAT_QUOTEMARK_OPEN, Constants.FORMAT_QUOTEMARK_CLOSE);
     }
 
-
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we have a 
-     * code blocks
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we have a code blocks
      */
     @Action(enabledProperty = "focus")
     public void formatCode() {
@@ -2393,17 +2645,14 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // put it in an own method
         if (settingsObj.getMarkdownActivated()) {
             surroundSelection(Constants.FORMAT_MD_CODE_OPEN, Constants.FORMAT_MD_CODE_CLOSE);
-        }
-        else {
+        } else {
             surroundSelection(Constants.FORMAT_CODE_OPEN, Constants.FORMAT_CODE_CLOSE);
         }
     }
 
-
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we have a 
-     * inline-code blocks
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we have a inline-code blocks
      */
     @Action(enabledProperty = "focus")
     public void formatInlineCode() {
@@ -2412,10 +2661,10 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         surroundSelection(Constants.FORMAT_MD_CODE_OPEN, Constants.FORMAT_MD_CODE_CLOSE);
     }
 
-
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we have a quotation or citation.
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we have a quotation or
+     * citation.
      */
     @Action(enabledProperty = "segmentPossible")
     public void addSegment() {
@@ -2428,10 +2677,10 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         }
     }
 
-
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we have a quotation or citation.
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we have a quotation or
+     * citation.
      */
     @Action(enabledProperty = "segmentPossible")
     public void addSegmentFromQuickList() {
@@ -2439,26 +2688,26 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // put it in an own method
         // get index of first selected item
         Object o = jListQuickInputKeywords.getSelectedValue();
-        if (o!=null) {
-            surroundSelection("[s "+o.toString()+"]","[/s]");
+        if (o != null) {
+            surroundSelection("[s " + o.toString() + "]", "[/s]");
             addQuickKeywordToList();
         }
     }
 
-
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we have changed the text-color.
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we have changed the
+     * text-color.
      */
     @Action(enabledProperty = "focus")
     public void formatColor() {
         // since we have multiple usage of the folliwing code, we simply
         // put it in an own method
-        
+
         // first, show an color-chooser-dialog and let the user choose the color
         Color color = JColorChooser.showDialog(this, resourceMap.getString("msgInputColor"), null);
         // if the user chose a color, proceed
-        if (color!=null) {
+        if (color != null) {
             // convert the color-rgb-values into a hexa-decimal-string
             StringBuilder output = new StringBuilder("");
             // we need the format option to keep the leeding zero of hex-values
@@ -2467,24 +2716,24 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             output.append(String.format("%02x", color.getGreen()));
             output.append(String.format("%02x", color.getBlue()));
             // and insert the tags
-            surroundSelection("[color #"+output.toString()+"]","[/color]");
+            surroundSelection("[color #" + output.toString() + "]", "[/color]");
         }
     }
-    
-    
+
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we have another text-background-color
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we have another
+     * text-background-color
      */
     @Action(enabledProperty = "focus")
     public void formatHighlight() {
         // since we have multiple usage of the folliwing code, we simply
         // put it in an own method
-        
+
         // first, show an color-chooser-dialog and let the user choose the color
         Color color = JColorChooser.showDialog(this, resourceMap.getString("msgInputColor"), null);
         // if the user chose a color, proceed
-        if (color!=null) {
+        if (color != null) {
             // convert the color-rgb-values into a hexa-decimal-string
             StringBuilder output = new StringBuilder("");
             // we need the format option to keep the leeding zero of hex-values
@@ -2493,35 +2742,34 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             output.append(String.format("%02x", color.getGreen()));
             output.append(String.format("%02x", color.getBlue()));
             // and insert the tags
-            surroundSelection("[h #"+output.toString()+"]","[/h]");
+            surroundSelection("[h #" + output.toString() + "]", "[/h]");
         }
     }
-    
-    
+
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we have a list with bullet points
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we have a list with bullet
+     * points
      */
     @Action(enabledProperty = "focus")
     public void formatList() {
         insertList(Constants.FORMAT_LIST_OPEN, Constants.FORMAT_LIST_CLOSE);
     }
 
-
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we have a list with bullet points
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we have a list with bullet
+     * points
      */
     @Action(enabledProperty = "focus")
     public void formatOrderedList() {
         insertList(Constants.FORMAT_NUMBEREDLIST_OPEN, Constants.FORMAT_NUMBEREDLIST_CLOSE);
     }
 
-
     /**
-     * 
+     *
      * @param listTypeOpenTag
-     * @param listTypeCloseTag 
+     * @param listTypeCloseTag
      */
     private void insertList(String listTypeOpenTag, String listTypeCloseTag) {
         // retrieve the selection
@@ -2529,17 +2777,18 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // get system line separator
         String linesep = System.lineSeparator();
         // check whether tag is selected or not
-        if (null==selection) {
+        if (null == selection) {
             // if we don't have any selection, just insert tags
-            jTextAreaEntry.replaceSelection(listTypeOpenTag+linesep+Constants.FORMAT_LISTITEM_OPEN+Constants.FORMAT_LISTITEM_CLOSE+linesep+listTypeCloseTag);
-        }
-        else {
+            jTextAreaEntry.replaceSelection(listTypeOpenTag + linesep + Constants.FORMAT_LISTITEM_OPEN + Constants.FORMAT_LISTITEM_CLOSE + linesep + listTypeCloseTag);
+        } else {
             // first, we habe to remove all carriage-returns (\r), which are part of the
             // line-seperator in windows. somehow, the replace-command does *not* work, when
             // we replace "System.lineSeparator()" with "[br]", but only when
             // a "\n" is replaced by [br]. So, in case the system's line-separator also contains a
             // "\r", it is replaced by nothing, to clean the content.
-            if (linesep.contains("\r")) selection = selection.replace("\r", "");
+            if (linesep.contains("\r")) {
+                selection = selection.replace("\r", "");
+            }
             // first of, split the selected text at each new line
             String[] lines = selection.split("\n");
             // create a new stringbuffer for the output-string
@@ -2559,13 +2808,13 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // and paste the text
             jTextAreaEntry.replaceSelection(output.toString());
         }
-        
+
     }
 
-    
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we have text-superscript-formatting.
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we have
+     * text-superscript-formatting.
      */
     @Action(enabledProperty = "focus")
     public void formatSup() {
@@ -2574,30 +2823,29 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         surroundSelection(Constants.FORMAT_SUP_OPEN, Constants.FORMAT_SUP_CLOSE);
     }
 
-
     @Action(enabledProperty = "focus")
     public void formatFont() {
         // create font-chooser dialog
         if (null == fontDlg) {
-            fontDlg = new CFontChooser(null,lastSelectefFont);
+            fontDlg = new CFontChooser(null, lastSelectefFont);
             fontDlg.setLocationRelativeTo(this);
         }
         ZettelkastenApp.getApplication().show(fontDlg);
-    
+
         // if the user has chosen a font, set it
-        if (fontDlg.selectedFont!=null) {
+        if (fontDlg.selectedFont != null) {
             lastSelectefFont = fontDlg.selectedFont;
-            surroundSelection(Constants.FORMAT_FONT_OPEN+" "+lastSelectefFont.getFontName()+"]", Constants.FORMAT_FONT_CLOSE);
+            surroundSelection(Constants.FORMAT_FONT_OPEN + " " + lastSelectefFont.getFontName() + "]", Constants.FORMAT_FONT_CLOSE);
         }
         // close and dispose the font-dialog
         fontDlg.dispose();
-        fontDlg=null;
+        fontDlg = null;
     }
-    
-    
+
     /**
-     * Retrieves the text selection from the maintextfield and sourrounds
-     * it with the related format-tags. In this case we have text-subscript-formatting.
+     * Retrieves the text selection from the maintextfield and sourrounds it
+     * with the related format-tags. In this case we have
+     * text-subscript-formatting.
      */
     @Action(enabledProperty = "focus")
     public void formatSub() {
@@ -2606,7 +2854,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         surroundSelection(Constants.FORMAT_SUB_OPEN, Constants.FORMAT_SUB_CLOSE);
     }
 
-    
     @Action(enabledProperty = "focus")
     public void insertTable() {
         // in case the caret is inside an existing table, we assume the user wants to edit
@@ -2620,19 +2867,18 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // now we check, whether the caret is inside a table. if yes, we copy the
         // table content and fill the insertTableDialog with the content of the available
         // table. Therefore, the caret has to be inside the table
-        if (tablestartpos!=-1 && tablestartpos<caret) {
+        if (tablestartpos != -1 && tablestartpos < caret) {
             // retrieve end of table-tag
             int tableendpos = jTextAreaEntry.getText().indexOf("[/table]", tablestartpos);
             // check whether caret is still inside the table
-            if (tableendpos!=-1 && tableendpos>caret) {
+            if (tableendpos != -1 && tableendpos > caret) {
                 // copy table content
-                edittable = jTextAreaEntry.getText().substring(tablestartpos+7, tableendpos);
+                edittable = jTextAreaEntry.getText().substring(tablestartpos + 7, tableendpos);
                 // select current table, so it will be replaced
                 try {
                     jTextAreaEntry.setCaretPosition(tablestartpos);
-                    jTextAreaEntry.moveCaretPosition(tableendpos+8);
-                }
-                catch (IllegalArgumentException ex) {
+                    jTextAreaEntry.moveCaretPosition(tableendpos + 8);
+                } catch (IllegalArgumentException ex) {
                 }
             }
         }
@@ -2640,7 +2886,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // so open the window for edting them...
         if (null == insertTableDlg) {
             // get parent und init window
-            insertTableDlg = new CInsertTable(this,settingsObj,edittable);
+            insertTableDlg = new CInsertTable(this, settingsObj, edittable);
             // center window
             insertTableDlg.setLocationRelativeTo(this);
         }
@@ -2648,8 +2894,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // if we have any changes, insert table
         if (insertTableDlg.isModified()) {
             jTextAreaEntry.replaceSelection(insertTableDlg.getTableTag());
-        }
-        // else set caret to old position and "de-select" the text
+        } // else set caret to old position and "de-select" the text
         else {
             jTextAreaEntry.setCaretPosition(caret);
         }
@@ -2674,10 +2919,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // retrieve return value
         String manlink = manualLinkEditDlg.getManlink();
         // if we have any changes, insert table
-        if (manlink!=null && !manlink.isEmpty()) {
+        if (manlink != null && !manlink.isEmpty()) {
             jTextAreaEntry.replaceSelection(manlink);
-        }
-        // else set caret to old position and "de-select" the text
+        } // else set caret to old position and "de-select" the text
         else {
             jTextAreaEntry.setCaretPosition(caret);
         }
@@ -2685,10 +2929,11 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         manualLinkEditDlg.dispose();
         manualLinkEditDlg = null;
     }
-    
+
     /**
-     * This method inserts a footnote-tag, which inserts references to authors. the footnote-tags
-     * can only be inserted if at least one author is selected.
+     * This method inserts a footnote-tag, which inserts references to authors.
+     * the footnote-tags can only be inserted if at least one author is
+     * selected.
      */
     @Action(enabledProperty = "authorSelected")
     public void insertFootnote() {
@@ -2765,18 +3010,17 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                 // retrieve drop component
                 Component c = dtde.getDropTargetContext().getDropTarget().getComponent();
                 // check for valid value
-                if (c!=null) {
+                if (c != null) {
                     // retrieve component's name
                     String name = c.getName();
                     // check for valid value
-                    if (name!=null && !name.isEmpty()) {
+                    if (name != null && !name.isEmpty()) {
                         // check if files were dropped in entry field
                         // in this case, image files will we inserted into
                         // the entry, not attached as attachments
                         if (name.equalsIgnoreCase("jTextAreaEntry")) {
                             droplocation = DROP_LOCATION_TEXTAREAENTRY;
-                        }
-                        // check whether files have been dropped into attachment list
+                        } // check whether files have been dropped into attachment list
                         // in this case, we add the images as attachments, not inside
                         // the entry
                         else if (name.equalsIgnoreCase("jListLinks")) {
@@ -2791,15 +3035,14 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                     // else add the text to the keyword-list (JList)
                     linkListModel.addElement(url.toString());
                     // scroll jList down, so the new added links become visible
-                    jListLinks.scrollRectToVisible(jListLinks.getCellBounds(linkListModel.size()-1, linkListModel.size()));
+                    jListLinks.scrollRectToVisible(jListLinks.getCellBounds(linkListModel.size() - 1, linkListModel.size()));
                     // set the modified state
                     setModified(true);
-                }
-                else {
+                } else {
                     // retrieve list of dropped files
-                    java.util.List files = (java.util.List)tr.getTransferData(DataFlavor.javaFileListFlavor);
+                    java.util.List files = (java.util.List) tr.getTransferData(DataFlavor.javaFileListFlavor);
                     // check for valid values
-                    if (files!=null && files.size()>0) {
+                    if (files != null && files.size() > 0) {
                         // create list with final image files
                         List<File> imgfiles = new ArrayList<>();
                         // create list with final image files
@@ -2812,10 +3055,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                             // check whether it is a file
                             if (file.isFile()) {
                                 // if it's an image, add it to image file list
-                                if (FileOperationsUtil.isSupportedImageFile(file) && DROP_LOCATION_TEXTAREAENTRY==droplocation) {
+                                if (FileOperationsUtil.isSupportedImageFile(file) && DROP_LOCATION_TEXTAREAENTRY == droplocation) {
                                     imgfiles.add(file);
-                                }
-                                else {
+                                } else {
                                     // if so, add it to list
                                     anyfiles.add(file);
                                 }
@@ -2824,11 +3066,15 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                         // check if we have any valid values,
                         // i.e. image files have been dragged and dropped
                         // if so, insert img-tags
-                        if (imgfiles.size()>0) insertImages(imgfiles.toArray(new File[imgfiles.size()]));
+                        if (imgfiles.size() > 0) {
+                            insertImages(imgfiles.toArray(new File[imgfiles.size()]));
+                        }
                         // check if we have any valid values,
                         // i.e. any files have been dragged and dropped
                         // if so, insert attachments
-                        if (anyfiles.size()>0) insertAttachments(anyfiles.toArray(new File[anyfiles.size()]));
+                        if (anyfiles.size() > 0) {
+                            insertAttachments(anyfiles.toArray(new File[anyfiles.size()]));
+                        }
                     }
                 }
                 dtde.getDropTargetContext().dropComplete(true);
@@ -2836,32 +3082,48 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                 Constants.zknlogger.log(Level.WARNING, "DataFlavor.javaFileListFlavor or Data.Flavor.URL is not supported, rejected");
                 dtde.rejectDrop();
             }
-        }
-        catch (IOException | UnsupportedFlavorException ex) {
+        } catch (IOException | UnsupportedFlavorException ex) {
             Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
             dtde.rejectDrop();
         }
     }
 
-
     public class TableContentPane extends JPanel {
+
         public TableContentPane() {
-            super (new GridLayout(1,0));
+            super(new GridLayout(1, 0));
             // create empty table header
             String[] headers = new String[16];
-            for (int cnt=0; cnt<16; cnt++) headers[cnt] = "";
+            for (int cnt = 0; cnt < 16; cnt++) {
+                headers[cnt] = "";
+            }
             // create tablemodel for the table data, which is not editable
             final DefaultTableModel model = new DefaultTableModel(headers, 0) {
-                @Override public boolean isCellEditable(int row, int column) { return false; }
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
             };
             // prepare int-array that holds the utf-8-values for the signs and symbols
             int[] values = new int[736];
             // create advancing counter
             int counter = 0;
             // now fill the int-array with certain selected unicode-chars
-            for (int cnt=161; cnt<=255; cnt++) if (counter<values.length) values[counter++] = cnt;
-            for (int cnt=913; cnt<=969; cnt++) if (counter<values.length) values[counter++] = cnt;
-            for (int cnt=8592; cnt<=8601; cnt++) if (counter<values.length) values[counter++] = cnt;
+            for (int cnt = 161; cnt <= 255; cnt++) {
+                if (counter < values.length) {
+                    values[counter++] = cnt;
+                }
+            }
+            for (int cnt = 913; cnt <= 969; cnt++) {
+                if (counter < values.length) {
+                    values[counter++] = cnt;
+                }
+            }
+            for (int cnt = 8592; cnt <= 8601; cnt++) {
+                if (counter < values.length) {
+                    values[counter++] = cnt;
+                }
+            }
 
             values[counter++] = 8704;
             values[counter++] = 8706;
@@ -2936,28 +3198,63 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             values[counter++] = 9003;
             values[counter++] = 9099;
 
-            for (int cnt=8624; cnt<=8629; cnt++) if (counter<values.length) values[counter++] = cnt;
-            for (int cnt=8644; cnt<=8667; cnt++) if (counter<values.length) values[counter++] = cnt;
-            for (int cnt=9312; cnt<=9351; cnt++) if (counter<values.length) values[counter++] = cnt;
-            for (int cnt=9728; cnt<=9900; cnt++) if (counter<values.length) values[counter++] = cnt;
-            for (int cnt=10136; cnt<=10174; cnt++) if (counter<values.length) values[counter++] = cnt;
-            for (int cnt=8531; cnt<=8542; cnt++) if (counter<values.length) values[counter++] = cnt;
-            for (int cnt=8853; cnt<=8865; cnt++) if (counter<values.length) values[counter++] = cnt;
-            for (int cnt=256; cnt<=448; cnt++) if (counter<values.length) values[counter++] = cnt;
+            for (int cnt = 8624; cnt <= 8629; cnt++) {
+                if (counter < values.length) {
+                    values[counter++] = cnt;
+                }
+            }
+            for (int cnt = 8644; cnt <= 8667; cnt++) {
+                if (counter < values.length) {
+                    values[counter++] = cnt;
+                }
+            }
+            for (int cnt = 9312; cnt <= 9351; cnt++) {
+                if (counter < values.length) {
+                    values[counter++] = cnt;
+                }
+            }
+            for (int cnt = 9728; cnt <= 9900; cnt++) {
+                if (counter < values.length) {
+                    values[counter++] = cnt;
+                }
+            }
+            for (int cnt = 10136; cnt <= 10174; cnt++) {
+                if (counter < values.length) {
+                    values[counter++] = cnt;
+                }
+            }
+            for (int cnt = 8531; cnt <= 8542; cnt++) {
+                if (counter < values.length) {
+                    values[counter++] = cnt;
+                }
+            }
+            for (int cnt = 8853; cnt <= 8865; cnt++) {
+                if (counter < values.length) {
+                    values[counter++] = cnt;
+                }
+            }
+            for (int cnt = 256; cnt <= 448; cnt++) {
+                if (counter < values.length) {
+                    values[counter++] = cnt;
+                }
+            }
 
             // now add all the values row by row to the table model
-            counter=0;
-            for (int row=0; row<46; row++) {
+            counter = 0;
+            for (int row = 0; row < 46; row++) {
                 Object[] tablerow = new Object[16];
-                for (int col=0; col<16; col++) tablerow[col] = String.valueOf((char)values[counter++]);
+                for (int col = 0; col < 16; col++) {
+                    tablerow[col] = String.valueOf((char) values[counter++]);
+                }
                 model.addRow(tablerow);
             }
             // create a table out of that model
             final JTable table = new JTable(model);
             // add mouse-listener, so a doubleclick inserts the sign
             table.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override public void mouseClicked(java.awt.event.MouseEvent evt) {
-                    if (2==evt.getClickCount()) {
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    if (2 == evt.getClickCount()) {
                         String sign = table.getValueAt(table.getSelectedRow(), table.getSelectedColumn()).toString();
                         // look for the component which has the focus and paste clipboard into it
                         replaceSelectionInFocus(sign);
@@ -2968,14 +3265,15 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // create action for enter-key. by doing this instead of using a key-event, hitting
             // the enter-key does not select a new cell, so another symbol than the intended one
             // is inserted
-            AbstractAction a_enter = new AbstractAction(){
-                @Override public void actionPerformed(ActionEvent e) {
+            AbstractAction a_enter = new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
                     String sign = table.getValueAt(table.getSelectedRow(), table.getSelectedColumn()).toString();
                     // look for the component which has the focus and paste clipboard into it
                     replaceSelectionInFocus(sign);
                 }
             };
-            table.getActionMap().put("EnterKeyPressed",a_enter);
+            table.getActionMap().put("EnterKeyPressed", a_enter);
             // associate enter-keystroke with that action
             KeyStroke ks = KeyStroke.getKeyStroke("ENTER");
             table.getInputMap().put(ks, "EnterKeyPressed");
@@ -2987,10 +3285,10 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             table.setCellSelectionEnabled(true);
             table.setFillsViewportHeight(true);
             // increase row height
-            table.setRowHeight(table.getRowHeight()+15);
+            table.setRowHeight(table.getRowHeight() + 15);
             // increase font
             Font f = table.getFont();
-            f = new Font(settingsObj.getMainfont(Settings.FONTNAME), f.getStyle(), f.getSize()+10);
+            f = new Font(settingsObj.getMainfont(Settings.FONTNAME), f.getStyle(), f.getSize() + 10);
             table.setFont(f);
             // add a scrollpane
             JScrollPane scrollPane = new JScrollPane(table);
@@ -2999,13 +3297,20 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         }
     }
 
-
     private void replaceSelectionInFocus(String replacestring) {
         switch (focusowner) {
-            case Constants.FOCUS_FIELD_TITLE: jTextFieldTitle.replaceSelection(replacestring); break;
-            case Constants.FOCUS_FIELD_TEXT: jTextAreaEntry.replaceSelection(replacestring); break;
-            case Constants.FOCUS_FIELD_AUTHOR: jTextAreaAuthor.replaceSelection(replacestring); break;
-            case Constants.FOCUS_FIELD_REMARKS: jTextAreaRemarks.replaceSelection(replacestring); break;
+            case Constants.FOCUS_FIELD_TITLE:
+                jTextFieldTitle.replaceSelection(replacestring);
+                break;
+            case Constants.FOCUS_FIELD_TEXT:
+                jTextAreaEntry.replaceSelection(replacestring);
+                break;
+            case Constants.FOCUS_FIELD_AUTHOR:
+                jTextAreaAuthor.replaceSelection(replacestring);
+                break;
+            case Constants.FOCUS_FIELD_REMARKS:
+                jTextAreaRemarks.replaceSelection(replacestring);
+                break;
         }
     }
 
@@ -3019,24 +3324,22 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         replaceSelectionInFocus(timestamp);
     }
 
-    
     @Action
     public void insertSymbol() {
         // check whether dialog is still open
-        if (symbolsDlg!=null) {
+        if (symbolsDlg != null) {
             // check whether dialog is visible
             if (symbolsDlg.isVisible()) {
                 // if yes, bring it to front
                 symbolsDlg.toFront();
-            }
-            else {
+            } else {
                 // else dispose it.
                 symbolsDlg.dispose();
                 symbolsDlg = null;
             }
         }
         // if necesarry, create new diaolog
-        if (null==symbolsDlg) {
+        if (null == symbolsDlg) {
             // create new dialog
             symbolsDlg = new JDialog(this);
             // dipose it on close action
@@ -3056,23 +3359,22 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             symbolsDlg.setVisible(true);
         }
     }
-    
 
     /**
-     * This method removes double line separators from the selection of the text field that currently has the
-     * input focus, and replaces them by single line-separators
+     * This method removes double line separators from the selection of the text
+     * field that currently has the input focus, and replaces them by single
+     * line-separators
      */
     @Action(enabledProperty = "textSelected")
     public void removeDoubleLineSeparators() {
         // get separator char
         String sep = System.lineSeparator();
         // replace double line separators
-        removeReplacement(sep+sep," ");
+        removeReplacement(sep + sep, " ");
         // in case someone copied a text with only a newline-char,
         // also try to remove these chars
-        removeReplacement("\n\n"," ");
+        removeReplacement("\n\n", " ");
     }
-
 
     private void removeReplacement(String old, String replacewith) {
         // get the text from that textfield that has the focus
@@ -3080,20 +3382,26 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // into our variable - so we avoid code-duplication, and not using for each textarea
         // its own spell-checking...
         JTextArea ta = null;
-        switch(focusowner) {
-            case Constants.FOCUS_FIELD_TEXT: ta = jTextAreaEntry; break;
-            case Constants.FOCUS_FIELD_AUTHOR: ta = jTextAreaAuthor; break;
-            case Constants.FOCUS_FIELD_REMARKS: ta = jTextAreaRemarks; break;
+        switch (focusowner) {
+            case Constants.FOCUS_FIELD_TEXT:
+                ta = jTextAreaEntry;
+                break;
+            case Constants.FOCUS_FIELD_AUTHOR:
+                ta = jTextAreaAuthor;
+                break;
+            case Constants.FOCUS_FIELD_REMARKS:
+                ta = jTextAreaRemarks;
+                break;
         }
         // if one of the supposed textareas had the input-focus (that means "ta" is not
         // null), replace text now
-        if (ta!=null) {
+        if (ta != null) {
             // get selected text of component
             String text = ta.getSelectedText();
             // if we have no selection, retrieve whole text and 
             // and select all text, so we can use "replaceSelection" to
             // insert the new text
-            if (null==text) {
+            if (null == text) {
                 // get content from textarea
                 text = ta.getText();
                 // select all content
@@ -3105,7 +3413,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // get textlength befor replacement
             int length_before = text.length();
             // replace chars
-            text = text.replace(old,replacewith);
+            text = text.replace(old, replacewith);
             // get textlength afterreplacement
             int length_after = text.length();
             // set text back to field with focus
@@ -3114,55 +3422,53 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             setModified(true);
             // set back selection
             ta.setSelectionStart(selstart);
-            ta.setSelectionEnd(selend-(length_before-length_after));
+            ta.setSelectionEnd(selend - (length_before - length_after));
         }
     }
 
     /**
-     * This method removes single line separators from the selection of the text field that currently has the
-     * input focus
+     * This method removes single line separators from the selection of the text
+     * field that currently has the input focus
      */
     @Action(enabledProperty = "textSelected")
     public void removeSingleLineSeparators() {
         // get separator char
         String sep = System.lineSeparator();
         // repalce double line separators
-        removeReplacement(sep," ");
+        removeReplacement(sep, " ");
         // in case someone copied a text with only a newline-char,
         // also try to remove these chars
-        removeReplacement("\n"," ");
+        removeReplacement("\n", " ");
     }
 
-
     /**
-     * This method removes double space chars from the selection of the text field that currently has the
-     * input focus, and replaces them by single space chars
+     * This method removes double space chars from the selection of the text
+     * field that currently has the input focus, and replaces them by single
+     * space chars
      */
     @Action(enabledProperty = "textSelected")
     public void removeDoubleSpaceChars() {
         // repalce double spaces
-        removeReplacement("  "," ");
+        removeReplacement("  ", " ");
     }
 
-
     /**
-     * This method removes tabulator chars from the selection of the text field that currently has the
-     * input focus
+     * This method removes tabulator chars from the selection of the text field
+     * that currently has the input focus
      */
     @Action(enabledProperty = "textSelected")
     public void removeTabChars() {
         // repalce tabs
-        removeReplacement("\t","");
+        removeReplacement("\t", "");
     }
-
 
     @Action(enabledProperty = "textfieldFilled")
     public void replace() {
-        if (null==findReplaceDlg || !findReplaceDlg.isVisible()) {
+        if (null == findReplaceDlg || !findReplaceDlg.isVisible()) {
             // set input focus to main textfield
             jTextAreaEntry.requestFocusInWindow();
             // create a new dialog with the bigger edit-field, passing some initial values
-            findReplaceDlg = new CFindReplaceDialog(this,jTextAreaEntry,settingsObj);
+            findReplaceDlg = new CFindReplaceDialog(this, jTextAreaEntry, settingsObj);
             // center window
             findReplaceDlg.setLocationRelativeTo(this);
         }
@@ -3170,24 +3476,24 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         ZettelkastenApp.getApplication().show(findReplaceDlg);
     }
 
-
     /**
-     * This method open a file-chooser dialog and lets the user choose image-files, which
-     * will be inserted in the textfield. the image-file-chooser gives the user a preview
-     * of the image. when an image-file is chosen, the image-file is copied to an own
-     * image-directory ("/img/") which is a subdirectory of the main-data-file's directory.
-     * if the directory doesn't already exist, it will be created.
+     * This method open a file-chooser dialog and lets the user choose
+     * image-files, which will be inserted in the textfield. the
+     * image-file-chooser gives the user a preview of the image. when an
+     * image-file is chosen, the image-file is copied to an own image-directory
+     * ("/img/") which is a subdirectory of the main-data-file's directory. if
+     * the directory doesn't already exist, it will be created.
      */
     @Action(enabledProperty = "focus")
     public void insertImage() {
         // get the title for the file dialog and use it as function parameter
         JFileChooser fc = FileOperationsUtil.createFileChooser(resourceMap.getString("insertImageDialogTitle"),
-                                                           JFileChooser.FILES_ONLY,
-                                                           settingsObj.getLastOpenedImageDir(),
-                                                           // TODO andere Grafikformate später, wenn unterstützt
-                                                           // new String[] {".jpg",".jpeg",".bmp",".png",".gif",".tif",".tiff"},
-                                                           new String[] {".jpg",".jpeg",".png",".gif"},
-                                                           resourceMap.getString("imageFileText"));
+                JFileChooser.FILES_ONLY,
+                settingsObj.getLastOpenedImageDir(),
+                // TODO andere Grafikformate später, wenn unterstützt
+                // new String[] {".jpg",".jpeg",".bmp",".png",".gif",".tif",".tiff"},
+                new String[]{".jpg", ".jpeg", ".png", ".gif"},
+                resourceMap.getString("imageFileText"));
         //Add the preview pane.
         fc.setAccessory(new ImagePreview(fc));
         // enable multiple selection
@@ -3200,7 +3506,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         }
     }
 
-    
     private void insertImages(File[] sources) {
         // store open and close tags for images
         String imgopen, imgclose;
@@ -3208,8 +3513,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         if (settingsObj.getMarkdownActivated()) {
             imgopen = Constants.FORMAT_MD_IMG_OPEN;
             imgclose = Constants.FORMAT_MD_IMG_CLOSE;
-        }
-        else {
+        } else {
             imgopen = Constants.FORMAT_IMG_OPEN;
             imgclose = Constants.FORMAT_IMG_CLOSE;
         }
@@ -3220,14 +3524,14 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         final int ATT_REMAIN = 2;
         // check whether we already have a saved data file or not. if not, we have no related
         // path for the subdirectory "img", thus we cannot copy the images
-        if (null==settingsObj.getFilePath() || !settingsObj.getFilePath().exists()) {
+        if (null == settingsObj.getFilePath() || !settingsObj.getFilePath().exists()) {
             // display error message box
-            JOptionPane.showMessageDialog(this,resourceMap.getString("noDataFileSavedMsg"),resourceMap.getString("noDataFileSavedTitle"),JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(this, resourceMap.getString("noDataFileSavedMsg"), resourceMap.getString("noDataFileSavedTitle"), JOptionPane.PLAIN_MESSAGE);
             return;
         }
         // store the imagepath, needed now and for later use, see below
         // the image path always equals the filepath of the 
-        String simagedir = settingsObj.getImagePath(dataObj.getUserImagePath(),false);
+        String simagedir = settingsObj.getImagePath(dataObj.getUserImagePath(), false);
         // create new linked list that will contain a "cleaned" list of files, i.e. only contains
         // those selected files that haven't been copied to the attachment directory yet.
         LinkedList<File> newfiles = new LinkedList<>();
@@ -3239,18 +3543,17 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // but already *include* it to the jList with attach,ents...
             // if the source file does not start with the same string part as the application's
             // applications directory, we assume that the attachment has not been copied to that directory yet.
-            if(!cf.toString().startsWith(simagedir)) {
+            if (!cf.toString().startsWith(simagedir)) {
                 newfiles.add(cf);
-            }
-            else {
+            } else {
                 // create a string buffer, which can be manipulated
                 StringBuilder sb = new StringBuilder(cf.toString());
                 // now delete everything of that filepath from the beginning to the image directory.
                 // we add +1 one here, because the image directory string does not have the trailing
                 // separator char, so this must also be deleted from the source-path
-                sb.delete(0,simagedir.length()+1);
+                sb.delete(0, simagedir.length() + 1);
                 // now insert the open tag at the beginning of the file name
-                sb.insert(0,imgopen);
+                sb.insert(0, imgopen);
                 // and append the close tag at the end
                 sb.append(imgclose);
                 // and insert the string into the textfield
@@ -3259,7 +3562,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         }
         // if we don't have any new files that haven't been copied to the attachment-directory before,
         // we can leave the method now...
-        if (newfiles.size()<1) return;
+        if (newfiles.size() < 1) {
+            return;
+        }
         // else create new array with files to be copied.
         sources = newfiles.toArray(new File[newfiles.size()]);
         // now the program copies the image to an own sub-directory of the
@@ -3267,18 +3572,17 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // create a JOptionPane with yes/no/cancel options
         // create a JOptionPane with moce/copy/cancel options
         int msgOption = JOptionPane.showOptionDialog(this,
-                                     resourceMap.getString("msgConfirmImageCopyMsg",simagedir),
-                                     resourceMap.getString("msgConfirmImageCopyTitle"),
-                                     JOptionPane.YES_NO_CANCEL_OPTION,
-                                     JOptionPane.PLAIN_MESSAGE,
-                                     null,
-                                     new Object[] {
-                                        resourceMap.getString("optionFileCopy"),
-                                        resourceMap.getString("optionFileMove"),
-                                        resourceMap.getString("optionFileRemain"),
-                                        resourceMap.getString("optionFileCancel"),
-                                     },
-                                     resourceMap.getString("optioneFileCopy"));
+                resourceMap.getString("msgConfirmImageCopyMsg", simagedir),
+                resourceMap.getString("msgConfirmImageCopyTitle"),
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                new Object[]{
+                    resourceMap.getString("optionFileCopy"),
+                    resourceMap.getString("optionFileMove"),
+                    resourceMap.getString("optionFileRemain"),
+                    resourceMap.getString("optionFileCancel"),},
+                resourceMap.getString("optioneFileCopy"));
         // if the user wants to proceed, copy the image now
         if (ATT_COPY == msgOption || ATT_MOVE == msgOption) {
             // first, check whether we already have an image directory
@@ -3292,41 +3596,44 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                         // if it fails, show warning message and leave method
                         // create a message string including the filepath of the directory
                         // which could not be created
-                        JOptionPane.showMessageDialog(this,resourceMap.getString("errMsgCreateImgDirMsg",imagedir),resourceMap.getString("errMsgCreateDirTitle"),JOptionPane.PLAIN_MESSAGE);
+                        JOptionPane.showMessageDialog(this, resourceMap.getString("errMsgCreateImgDirMsg", imagedir), resourceMap.getString("errMsgCreateDirTitle"), JOptionPane.PLAIN_MESSAGE);
                         return;
                     }
-                }
-                catch (SecurityException e) {
-                    Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+                } catch (SecurityException e) {
+                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                     // if it fails, show warning message and leave method
                     // create a message string including the filepath of the directory
                     // which could not be created
-                    JOptionPane.showMessageDialog(this,resourceMap.getString("errMsgCreateImgDirMsg",imagedir),resourceMap.getString("errMsgCreateDirTitle"),JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(this, resourceMap.getString("errMsgCreateImgDirMsg", imagedir), resourceMap.getString("errMsgCreateDirTitle"), JOptionPane.PLAIN_MESSAGE);
                     return;
                 }
             }
             // go through all selected files
-            for (File f: sources) {
+            for (File f : sources) {
                 // store the fileextension for later use, see below
                 String fileextension = FileOperationsUtil.getFileExtension(f);
                 // create a new file variable from the destination string
                 // retrieve the application's directory and add an "/img/" as subfolder for images
                 // and append the file name of the image file. we need this string already now for the
                 // message box to tell the user where the file will be copied to.
-                File dest = new File(settingsObj.getImagePath(dataObj.getUserImagePath(),true)+f.getName());
+                File dest = new File(settingsObj.getImagePath(dataObj.getUserImagePath(), true) + f.getName());
                 // check whether the file exists. if yes, the user should enter another name
                 while (dest.exists()) {
                     // open an option dialog and let the user prompt a new filename
-                    Object fnobject = JOptionPane.showInputDialog(this,resourceMap.getString("msgFileExists"),resourceMap.getString("msgFileExistsTitle"),JOptionPane.PLAIN_MESSAGE, null, null, dest.getName());
+                    Object fnobject = JOptionPane.showInputDialog(this, resourceMap.getString("msgFileExists"), resourceMap.getString("msgFileExistsTitle"), JOptionPane.PLAIN_MESSAGE, null, null, dest.getName());
                     // if the user cancelled the dialog, quit method
-                    if (null==fnobject) return;
+                    if (null == fnobject) {
+                        return;
+                    }
                     // convert object to string
                     String newfilename = fnobject.toString();
                     // check whether the user just typed in a name without extension
                     // if so, add extension here
-                    if (!newfilename.endsWith("."+fileextension)) newfilename = newfilename.concat("."+fileextension);
+                    if (!newfilename.endsWith("." + fileextension)) {
+                        newfilename = newfilename.concat("." + fileextension);
+                    }
                     // and create a new file
-                    dest = new File(settingsObj.getImagePath(dataObj.getUserImagePath(),true)+newfilename);
+                    dest = new File(settingsObj.getImagePath(dataObj.getUserImagePath(), true) + newfilename);
                 }
 
                 try {
@@ -3336,13 +3643,12 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                         dest.createNewFile();
                         // if we have a file which does not already exist, copy the source to the dest
                         FileOperationsUtil.copyFile(f, dest, 1024);
-                    }
-                    // here we go when the user wants to *move* the files
+                    } // here we go when the user wants to *move* the files
                     else if (ATT_MOVE == msgOption) {
                         // if moving the file failed...
                         if (!f.renameTo(dest)) {
                             // ... show error msg
-                            JOptionPane.showMessageDialog(this,resourceMap.getString("errMsgFileMove"),resourceMap.getString("errMsgFileMoveTitle"),JOptionPane.PLAIN_MESSAGE);
+                            JOptionPane.showMessageDialog(this, resourceMap.getString("errMsgFileMove"), resourceMap.getString("errMsgFileMoveTitle"), JOptionPane.PLAIN_MESSAGE);
                         }
                     }
                     // create a new string buffer
@@ -3360,14 +3666,13 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                     // set new default directory
                     settingsObj.setLastOpenedImageDir(f);
                 } catch (IOException ex) {
-                    Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                    JOptionPane.showMessageDialog(this,resourceMap.getString("errMsgFileCopy"),resourceMap.getString("errMsgFileCopyTitle"),JOptionPane.PLAIN_MESSAGE);
+                    Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
+                    JOptionPane.showMessageDialog(this, resourceMap.getString("errMsgFileCopy"), resourceMap.getString("errMsgFileCopyTitle"), JOptionPane.PLAIN_MESSAGE);
                 }
             }
-        }
-        else if (ATT_REMAIN==msgOption) {
+        } else if (ATT_REMAIN == msgOption) {
             // go through all selected files
-            for (File f: sources) {
+            for (File f : sources) {
                 // create a new string buffer
                 StringBuilder imagetag = new StringBuilder("");
                 // open the tag
@@ -3385,8 +3690,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             }
         }
     }
-    
-    
 
     @Action(enabledProperty = "focus")
     public void insertForm() {
@@ -3396,7 +3699,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // so open the window for edting them...
         if (null == formEditDlg) {
             // get parent und init window
-            formEditDlg = new CFormEditor(this,settingsObj);
+            formEditDlg = new CFormEditor(this, settingsObj);
             // center window
             formEditDlg.setLocationRelativeTo(this);
         }
@@ -3404,8 +3707,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // if we have any changes, insert table
         if (formEditDlg.isModified()) {
             jTextAreaEntry.replaceSelection(formEditDlg.getFormTag());
-        }
-        // else set caret to old position and "de-select" the text
+        } // else set caret to old position and "de-select" the text
         else {
             jTextAreaEntry.setCaretPosition(caret);
         }
@@ -3414,7 +3716,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         formEditDlg = null;
     }
 
-    
     @Action(enabledProperty = "focus")
     public void insertHyperlink() {
         // retrieve caret position
@@ -3431,10 +3732,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // retrieve return value
         String hyperlink = hyperlinkEditDlg.getHyperlink();
         // if we have any changes, insert table
-        if (hyperlink!=null && !hyperlink.isEmpty()) {
+        if (hyperlink != null && !hyperlink.isEmpty()) {
             jTextAreaEntry.replaceSelection(hyperlink);
-        }
-        // else set caret to old position and "de-select" the text
+        } // else set caret to old position and "de-select" the text
         else {
             jTextAreaEntry.setCaretPosition(caret);
         }
@@ -3443,21 +3743,20 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         hyperlinkEditDlg = null;
     }
 
-
     /**
-     * Opens a file chooser to insert attachments from harddisk to the 
-     * currently edited entry. Attachments' filepaths will be used and
-     * relative path will be calculated if necessary, and the filepaths
-     * will be added to the attachment list.
+     * Opens a file chooser to insert attachments from harddisk to the currently
+     * edited entry. Attachments' filepaths will be used and relative path will
+     * be calculated if necessary, and the filepaths will be added to the
+     * attachment list.
      */
     @Action
     public void insertAttachment() {
         // get the title for the file dialog and use it as function parameter
         JFileChooser fc = FileOperationsUtil.createFileChooser(resourceMap.getString("insertAttachmentDialogTitle"),
-                                                           JFileChooser.FILES_ONLY,
-                                                           settingsObj.getLastOpenedAttachmentDir(),
-                                                           null,
-                                                           null);
+                JFileChooser.FILES_ONLY,
+                settingsObj.getLastOpenedAttachmentDir(),
+                null,
+                null);
         // enable multiple selection
         fc.setMultiSelectionEnabled(true);
         // open dialog
@@ -3468,13 +3767,13 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
 
         }
     }
-    
-    
+
     /**
-     * Inserts all attachments that have been chosen by the {@link #insertAttachment()} method
-     * to the {@link #linkListModel}.
-     * 
-     * @param sources A list of files chosen via the {@link #insertAttachment()} method.
+     * Inserts all attachments that have been chosen by the
+     * {@link #insertAttachment()} method to the {@link #linkListModel}.
+     *
+     * @param sources A list of files chosen via the {@link #insertAttachment()}
+     * method.
      */
     private void insertAttachments(File[] sources) {
         // insert attachments
@@ -3486,24 +3785,26 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // get updated model
             linkListModel = FileOperationsUtil.getListModel();
             // check whether we have any entries in the list
-            if (linkListModel.size()>0) {
+            if (linkListModel.size() > 0) {
                 // scroll jList down, so the new added links become visible
-                jListLinks.scrollRectToVisible(jListLinks.getCellBounds(linkListModel.size()-1, linkListModel.size()));
+                jListLinks.scrollRectToVisible(jListLinks.getCellBounds(linkListModel.size() - 1, linkListModel.size()));
             }
         }
     }
-    
-    
+
     /**
-     * filters the keywords list. retrieves the textinpur from the textfield and removes
-     * all entries that don't have the entered text as part of their string.
+     * filters the keywords list. retrieves the textinpur from the textfield and
+     * removes all entries that don't have the entered text as part of their
+     * string.
      */
     @Action
     public void filterKeywords() {
         // retrieve the filtertext
         String filter = jTextFieldFilterKeywordlist.getText();
         // when empty or null, leave
-        if (null==filter || filter.isEmpty()) return;
+        if (null == filter || filter.isEmpty()) {
+            return;
+        }
         // tell selection listener we are working and selection listener should not react on changes now
         listUpdateActive = true;
         // we don't want case sensitive search here
@@ -3513,12 +3814,14 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // create new linked list that will contain the filtered elements
         LinkedList<String> list = new LinkedList<>();
         // iterate the listmodel
-        for (int cnt=0; cnt<lm.getSize(); cnt++) {
+        for (int cnt = 0; cnt < lm.getSize(); cnt++) {
             // retrieve the listitem and make it lowercase
             String item = lm.getElementAt(cnt).toString().toLowerCase();
             // if it matches the filter term, keep it
             // put item to the array
-            if (item.contains(filter)) list.add(lm.getElementAt(cnt).toString());
+            if (item.contains(filter)) {
+                list.add(lm.getElementAt(cnt).toString());
+            }
         }
         // set new listdata
         jListQuickInputKeywords.setListData(list.toArray());
@@ -3528,22 +3831,26 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jButtonRefreshKeywordlist.setEnabled(true);
         // when we don't have quickinput, we need to set this value to false
         // otherwise the task to create/refresh the list won't start
-        if (!settingsObj.getQuickInput()) keywordsListUpToDate=false;
+        if (!settingsObj.getQuickInput()) {
+            keywordsListUpToDate = false;
+        }
         // work done...
         listUpdateActive = false;
     }
-    
-    
+
     /**
-     * filters the author list. retrieves the textinpur from the textfield and removes
-     * all entries that don't have the entered text as part of their string.
+     * filters the author list. retrieves the textinpur from the textfield and
+     * removes all entries that don't have the entered text as part of their
+     * string.
      */
     @Action
     public void filterAuthors() {
         // retrieve the filtertext
         String filter = jTextFieldFilterAuthorlist.getText();
         // when empty or null, leave
-        if (null==filter || filter.isEmpty()) return;
+        if (null == filter || filter.isEmpty()) {
+            return;
+        }
         // tell selection listener we are working and selection listener should not react on changes now
         listUpdateActive = true;
         // we don't want case sensitive search here
@@ -3553,12 +3860,14 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // the index number from "lower" entries, so we avoid counting up to a
         // size which elements in fact no longer exist, because some elements have already
         // been removed (which decreases the model's size).
-        for (int cnt=quickInputAuthorListModel.getSize()-1; cnt>=0; cnt--) {
+        for (int cnt = quickInputAuthorListModel.getSize() - 1; cnt >= 0; cnt--) {
             // retrieve the listitem and make it lowercase
             String item = quickInputAuthorListModel.getElementAt(cnt).toString().toLowerCase();
             // if it matches the filter term, keep it
             // put item to the array
-            if (!item.contains(filter)) quickInputAuthorListModel.remove(cnt);
+            if (!item.contains(filter)) {
+                quickInputAuthorListModel.remove(cnt);
+            }
         }
         // and enable the refresh button
         jTextFieldFilterAuthorlist.setText("");
@@ -3566,8 +3875,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // work done
         listUpdateActive = false;
     }
-    
-    
+
     /**
      * Closes the dialog.
      */
@@ -3583,7 +3891,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // and create a JOptionPane with yes/no/cancel options
             int option = JOptionPane.showConfirmDialog(this, confirmExitText, confirmExitTitle, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
             // if action is cancelled, return to the program
-            if (JOptionPane.CANCEL_OPTION == option || JOptionPane.CLOSED_OPTION == option /*User pressed cancel key*/) return;
+            if (JOptionPane.CANCEL_OPTION == option || JOptionPane.CLOSED_OPTION == option /*User pressed cancel key*/) {
+                return;
+            }
             // if save is requested, save changes
             if (JOptionPane.YES_OPTION == option) {
                 // check whether we hav text in the maintextfield
@@ -3591,62 +3901,67 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                 // if no text/content entered, tell user that entry needs to have content
                 // and return...
                 if (cont.isEmpty()) {
-                    JOptionPane.showMessageDialog(this,resourceMap.getString("errMsgNoContentMsg"),resourceMap.getString("errMsgNoContentTitle"),JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(this, resourceMap.getString("errMsgNoContentMsg"), resourceMap.getString("errMsgNoContentTitle"), JOptionPane.PLAIN_MESSAGE);
                     return;
                 }
                 // save the data
-                if (!saveEntry()) return;
+                if (!saveEntry()) {
+                    return;
+                }
             }
             // reset modified value, so we can check in our mainframe
             // whether we have changes or not which should be updated to the display
-            if (JOptionPane.NO_OPTION == option) modified=false;
+            if (JOptionPane.NO_OPTION == option) {
+                modified = false;
+            }
         }
         // tell mainframe that it has to update the content
         mainframe.finishedEditing();
         // check whether memory usage is logged. if so, tell logger that new entry windows was opened
         if (settingsObj.isMemoryUsageLogged) {
             // log info
-            Constants.zknlogger.log(Level.INFO,"Memory usage logged. New Entry Window closed.");
+            Constants.zknlogger.log(Level.INFO, "Memory usage logged. New Entry Window closed.");
         }
         // and close the window
         dispose();
         setVisible(false);
     }
-    
 
     @Action
     public void cancel() {
         closeWindow();
     }
-    
-    
+
     /**
-     * This method is called when the user presses the "Apply" button to save the changes.
-     * We have an extra method for this to enable/disable the apply-button depending on
-     * whether we have text inside the main textfield. An entry must always have content-text,
-     * otherwise it is considered as "deleted".
+     * This method is called when the user presses the "Apply" button to save
+     * the changes. We have an extra method for this to enable/disable the
+     * apply-button depending on whether we have text inside the main textfield.
+     * An entry must always have content-text, otherwise it is considered as
+     * "deleted".
      */
     @Action(enabledProperty = "textfieldFilled")
     public void applyChanges() {
         // when the user wants to apply the changes, save the entry
-        if (!saveEntry()) return;
+        if (!saveEntry()) {
+            return;
+        }
         // tell mainframe that it has to update the content
         mainframe.finishedEditing();
         // check whether memory usage is logged. if so, tell logger that new entry windows was opened
         if (settingsObj.isMemoryUsageLogged) {
             // log info
-            Constants.zknlogger.log(Level.INFO,"Memory usage logged. New Entry Window closed.");
+            Constants.zknlogger.log(Level.INFO, "Memory usage logged. New Entry Window closed.");
         }
         // and close the window    
         dispose();
         setVisible(false);
     }
-    
-    
+
     /**
-     * This method retrieves the data from the textfields and adds a new entry respectively
-     * changes an entry which was edited. This method is called when the user presses the ok-button
-     * to finish the data-entry, closing the dialog and savign the entry to the data-file.
+     * This method retrieves the data from the textfields and adds a new entry
+     * respectively changes an entry which was edited. This method is called
+     * when the user presses the ok-button to finish the data-entry, closing the
+     * dialog and savign the entry to the data-file.
      */
     private boolean saveEntry() {
         // counter for loops
@@ -3655,7 +3970,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // init keyword-stringarray
         String[] keywords = new String[keywordListModel.getSize()];
         // iterate keywordarray
-        for (cnt = 0; cnt < keywords.length; cnt++) keywords[cnt] = keywordListModel.get(cnt).toString();
+        for (cnt = 0; cnt < keywords.length; cnt++) {
+            keywords[cnt] = keywordListModel.get(cnt).toString();
+        }
         // ask the user if he wants to replace possible keywords, which appear as synonyms, but *not*
         // as index-word, with the related index-words...
         keywords = Tools.replaceSynonymsWithKeywords(synonymsObj, keywords);
@@ -3697,7 +4014,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // if we have any authors...
         if (!authordummy.isEmpty()) {
             // see comment above for this line...
-            if (linesep.contains("\r")) authordummy = authordummy.replace("\r", "");
+            if (linesep.contains("\r")) {
+                authordummy = authordummy.replace("\r", "");
+            }
             // ...parse them to an array
             authors = authordummy.split("\n");
         }
@@ -3717,22 +4036,22 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // init links-stringarray
         String[] links = new String[linkListModel.getSize()];
         // iterate linkarray
-        for (cnt = 0; cnt < links.length; cnt++) links[cnt] = linkListModel.get(cnt).toString();
-        
+        for (cnt = 0; cnt < links.length; cnt++) {
+            links[cnt] = linkListModel.get(cnt).toString();
+        }
+
         if (isEditMode()) {
             // change entry and fetch result
             if (!dataObj.changeEntry(title, content, authors, keywords, remarks, links, Tools.getTimeStamp(), entryNumber)) {
                 JOptionPane.showMessageDialog(this,
-                                              resourceMap.getString("errMsgChangeEntry"), 
-                                              resourceMap.getString("errMsgChangeEntryTitle"),
-                                              JOptionPane.PLAIN_MESSAGE);
-            }
-            else {
+                        resourceMap.getString("errMsgChangeEntry"),
+                        resourceMap.getString("errMsgChangeEntryTitle"),
+                        JOptionPane.PLAIN_MESSAGE);
+            } else {
                 // tell about success
                 Constants.zknlogger.log(Level.INFO, "Entry's changes applied.");
             }
-        }
-        else {
+        } else {
             // here we have the user editing an "deleted" entry (empty place in the XML-document),
             // so the variable "entryNumber" indicates where in the *database* the entry should be stored.
             // the variable "insertAfterEntry" however, affects the order of entries. That means, an entry's
@@ -3742,36 +4061,33 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             if (isDeleted) {
                 // add entry, and fetch result
                 int result = dataObj.addEntry(title,
-                                              content,
-                                              authors,
-                                              keywords,
-                                              remarks,
-                                              links,
-                                              Tools.getTimeStamp(),
-                                              -1,
-                                              true,
-                                              entryNumber,
-                                              insertAfterEntry);
+                        content,
+                        authors,
+                        keywords,
+                        remarks,
+                        links,
+                        Tools.getTimeStamp(),
+                        -1,
+                        true,
+                        entryNumber,
+                        insertAfterEntry);
                 // check whether result was an error when adding a follower-entry (trailing entry(
-                if (result==Daten.ADD_LUHMANNENTRY_ERR) {
+                if (result == Daten.ADD_LUHMANNENTRY_ERR) {
                     JOptionPane.showMessageDialog(this,
-                                                  resourceMap.getString("errMsgInsertEntry"),
-                                                  resourceMap.getString("errMsgInsertEntryTitle"),
-                                                  JOptionPane.PLAIN_MESSAGE);
-                }
-                // else check whether an error occured when adding a new entry
-                else if (result==Daten.ADD_ENTRY_ERR) {
+                            resourceMap.getString("errMsgInsertEntry"),
+                            resourceMap.getString("errMsgInsertEntryTitle"),
+                            JOptionPane.PLAIN_MESSAGE);
+                } // else check whether an error occured when adding a new entry
+                else if (result == Daten.ADD_ENTRY_ERR) {
                     JOptionPane.showMessageDialog(this,
-                                                  resourceMap.getString("errMsgAddEntry"),
-                                                  resourceMap.getString("errMsgAddEntryTitle"),
-                                                  JOptionPane.PLAIN_MESSAGE);
-                }
-                else {
+                            resourceMap.getString("errMsgAddEntry"),
+                            resourceMap.getString("errMsgAddEntryTitle"),
+                            JOptionPane.PLAIN_MESSAGE);
+                } else {
                     // tell about success
                     Constants.zknlogger.log(Level.INFO, "New entry saved.");
                 }
-            }
-            // here we have the user adding a new entry at the end of the XML-document.
+            } // here we have the user adding a new entry at the end of the XML-document.
             // In this case, the variable "entryNumber" indicates whether we have a trailing entry or not.
             // The variable "insertAfterEntry" however, affects the order of entries. That means, the entry's
             // will be added to the end of the XML-document, while the entry itself visually 
@@ -3780,34 +4096,34 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             else {
                 // if we don't have to insert an entry here, indicate that by setting the
                 // entryNumber of the current entry to -1;
-                if (!luhmann) entryNumber = -1;
+                if (!luhmann) {
+                    entryNumber = -1;
+                }
                 // else, we pass the number of the current entry just before the user clicked "insertEntry"
                 // to the addEntry-method, indicating that the index-number of the added entry should be
                 // included in the entry "entryNumber" luhmann-tag (that indicates follower- and sub-entrties).
                 int result = dataObj.addEntry(title,
-                                              content,
-                                              authors,
-                                              keywords,
-                                              remarks,
-                                              links,
-                                              Tools.getTimeStamp(),
-                                              entryNumber,
-                                              insertAfterEntry);
+                        content,
+                        authors,
+                        keywords,
+                        remarks,
+                        links,
+                        Tools.getTimeStamp(),
+                        entryNumber,
+                        insertAfterEntry);
                 // check whether result was an error when adding a follower-entry (trailing entry(
-                if (result==Daten.ADD_LUHMANNENTRY_ERR) {
+                if (result == Daten.ADD_LUHMANNENTRY_ERR) {
                     JOptionPane.showMessageDialog(this,
-                                                  resourceMap.getString("errMsgInsertEntry"),
-                                                  resourceMap.getString("errMsgInsertEntryTitle"),
-                                                  JOptionPane.PLAIN_MESSAGE);
-                }
-                // else check whether an error occured when adding a new entry
-                else if (result==Daten.ADD_ENTRY_ERR) {
+                            resourceMap.getString("errMsgInsertEntry"),
+                            resourceMap.getString("errMsgInsertEntryTitle"),
+                            JOptionPane.PLAIN_MESSAGE);
+                } // else check whether an error occured when adding a new entry
+                else if (result == Daten.ADD_ENTRY_ERR) {
                     JOptionPane.showMessageDialog(this,
-                                                  resourceMap.getString("errMsgAddEntry"),
-                                                  resourceMap.getString("errMsgAddEntryTitle"),
-                                                  JOptionPane.PLAIN_MESSAGE);
-                }
-                else {
+                            resourceMap.getString("errMsgAddEntry"),
+                            resourceMap.getString("errMsgAddEntryTitle"),
+                            JOptionPane.PLAIN_MESSAGE);
+                } else {
                     // tell about success
                     Constants.zknlogger.log(Level.INFO, "New entry saved.");
                 }
@@ -3816,78 +4132,81 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         return true;
     }
 
-
     @Action(enabledProperty = "focus")
     public void addKeywordFromSelection() {
         // retrieve selected text
         String selection = jTextAreaEntry.getSelectedText();
         // check whether we have any selection at all
-        if (selection!=null && !selection.isEmpty()) {
-            addKeywords(selection.trim().split("\n"),true);
+        if (selection != null && !selection.isEmpty()) {
+            addKeywords(selection.trim().split("\n"), true);
         }
     }
-
 
     @Action(enabledProperty = "focus")
     public void addTitleFromSelection() {
         // retrieve selected text
         String selection = jTextAreaEntry.getSelectedText();
         // check whether we have any selection at all
-        if (selection!=null && !selection.isEmpty()) {
+        if (selection != null && !selection.isEmpty()) {
             jTextFieldTitle.setText(selection.trim());
         }
     }
-
 
     @Action(enabledProperty = "textfieldFilled")
     public void addTitleFromFirstLine() {
         // retrieve selected text
         String text = jTextAreaEntry.getText();
         // check whether we have any selection at all
-        if (text!=null && text.length()>0) {
+        if (text != null && text.length() > 0) {
             jTextFieldTitle.setText(text.split("\n")[0].trim());
         }
     }
 
-
     /**
-     * This method retrieves the text from the keyword input field ({@link #jTextFieldAddKeyword jTextFieldAddKeyword})
-     * and adds it to the keyword-list {@link #jListKeywords jListKeywords}.
+     * This method retrieves the text from the keyword input field
+     * ({@link #jTextFieldAddKeyword jTextFieldAddKeyword}) and adds it to the
+     * keyword-list {@link #jListKeywords jListKeywords}.
      */
     @Action
     public void addKeyword() {
         // get the text from the input field
         String kw = jTextFieldAddKeyword.getText();
         // if no text entered, leave method and do nothing
-        if (kw.isEmpty()) return;
+        if (kw.isEmpty()) {
+            return;
+        }
         // and add keywords
-        addKeywords(new String[]{kw},false);
+        addKeywords(new String[]{kw}, false);
     }
 
-
     /**
-     * This action retrieves the keywords of the currently displayed entry from the main frame
-     * and adds them as keywords to the currently edited entry, i.e. these values are added
-     * to the {@link #jListKeywords jListKeywords}.
+     * This action retrieves the keywords of the currently displayed entry from
+     * the main frame and adds them as keywords to the currently edited entry,
+     * i.e. these values are added to the {@link #jListKeywords jListKeywords}.
      */
     @Action
     public void retrieveKeywordsFromDisplayedEntry() {
-        addKeywords(dataObj.getKeywords(mainframe.displayedZettel, true),false);
+        addKeywords(dataObj.getKeywords(mainframe.displayedZettel, true), false);
     }
 
-
     /**
-     * This method adds keywords that are passed as string-array to the keyword-list
-     * of the edited entry, i.e. these values are addes to the {@link #jListKeywords jListKeywords}.
+     * This method adds keywords that are passed as string-array to the
+     * keyword-list of the edited entry, i.e. these values are addes to the
+     * {@link #jListKeywords jListKeywords}.
      *
-     * @param kws the keyword-values that should be added to the {@link #jListKeywords jListKeywords}.
-     * @param focusToMainfield {@code true} if the {@link #jTextAreaEntry jTextAreaEntry} should retrieve the input
-     * focus after adding the keywords, {@code false} if the {@link #jTextFieldAddKeyword jTextFieldAddKeyword} should
-     * become the focus-owner after adding the keywords.
+     * @param kws the keyword-values that should be added to the
+     * {@link #jListKeywords jListKeywords}.
+     * @param focusToMainfield {@code true} if the
+     * {@link #jTextAreaEntry jTextAreaEntry} should retrieve the input focus
+     * after adding the keywords, {@code false} if the
+     * {@link #jTextFieldAddKeyword jTextFieldAddKeyword} should become the
+     * focus-owner after adding the keywords.
      */
     private void addKeywords(String[] kws, boolean focusToMainfield) {
         // check for valid values
-        if (null==kws || kws.length<1) return;
+        if (null == kws || kws.length < 1) {
+            return;
+        }
         // track changes
         boolean kwadded = false;
         // iterare all keywords
@@ -3897,14 +4216,14 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // now check for double entries. returns false if keyword does not exist.
             if (!kw.isEmpty() && !isDoubleKeywords(kw)) {
                 // add the text to the keyword-list (JList)
-                keywordListModel.addElement((String)kw);
+                keywordListModel.addElement((String) kw);
                 kwadded = true;
             }
         }
         // only make changes when something was added
         if (kwadded) {
             // scroll jList down, so the new added keywords become visible
-            jListKeywords.scrollRectToVisible(jListKeywords.getCellBounds(keywordListModel.size()-1, keywordListModel.size()));
+            jListKeywords.scrollRectToVisible(jListKeywords.getCellBounds(keywordListModel.size() - 1, keywordListModel.size()));
             // set the modified state
             setModified(true);
             // and clear the input-fields for further entries
@@ -3912,19 +4231,18 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // set input-focus to requested textfield
             if (focusToMainfield) {
                 jTextAreaEntry.requestFocusInWindow();
-            }
-            else {
+            } else {
                 jTextFieldAddKeyword.requestFocusInWindow();
             }
         }
     }
 
-    
     /**
-     * This method checks a given string if it is already in the author textfield, i.e.
-     * it checks whether an author was already assigned to that entry. If the given string
-     * is found within the author-textfield, this method returns true, false otherwise.
-     * 
+     * This method checks a given string if it is already in the author
+     * textfield, i.e. it checks whether an author was already assigned to that
+     * entry. If the given string is found within the author-textfield, this
+     * method returns true, false otherwise.
+     *
      * @param kw (the author which should be looked for)
      * @return {@code true} when the author already exists, false otherwise
      */
@@ -3932,51 +4250,61 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // retrieve the text from the author textfield
         String text = jTextAreaAuthor.getText();
         // remove all carriage-returns
-        if (System.lineSeparator().contains("\r")) text = text.replace("\r", "");
+        if (System.lineSeparator().contains("\r")) {
+            text = text.replace("\r", "");
+        }
         // split into single authors
         String[] aus = text.split("\n");
         // check whether we have any authors at all
-        if ((aus!=null)&&(aus.length>0)) {
+        if ((aus != null) && (aus.length > 0)) {
             // iterate the author array
             for (String eachauthor : aus) {
                 // if we found the author-parameter, return true
-                if (eachauthor.equalsIgnoreCase(au)) return true;
+                if (eachauthor.equalsIgnoreCase(au)) {
+                    return true;
+                }
             }
         }
         // no matching author found
         return false;
     }
-    
-    
+
     /**
-     * This method checks a given string if it is already in the keywordlist, i.e.
-     * it checks whether a keyword was already assigned to that entry. If the given string
-     * is found within the keywordlist, this method returns true, false otherwise.
-     * 
+     * This method checks a given string if it is already in the keywordlist,
+     * i.e. it checks whether a keyword was already assigned to that entry. If
+     * the given string is found within the keywordlist, this method returns
+     * true, false otherwise.
+     *
      * @param kw (the keyword which should be looked for)
      * @return {@code true} when the keyword already exists, false otherwise
      */
     private boolean isDoubleKeywords(String kw) {
         // when the list is empty, no double keyword can be found
-        if (keywordListModel.size()<1) return false;
+        if (keywordListModel.size() < 1) {
+            return false;
+        }
         // iterate the array
-        for (int cnt=0; cnt<keywordListModel.size(); cnt++) {
+        for (int cnt = 0; cnt < keywordListModel.size(); cnt++) {
             // if keyword already exists, return true
-            if (kw.equalsIgnoreCase(keywordListModel.get(cnt).toString())) return true;
+            if (kw.equalsIgnoreCase(keywordListModel.get(cnt).toString())) {
+                return true;
+            }
         }
         // if keyword doesn't exist, return false
         return false;
     }
-    
-    
+
     /**
-     * This methods looks for selected entries in the keywordlist and removes them from it
+     * This methods looks for selected entries in the keywordlist and removes
+     * them from it
      */
     private void removeKeywordFromList() {
         // get index of first selected item
         int[] indices = jListKeywords.getSelectedIndices();
         // if no item is selected, do nothing
-        if (indices.length<1) return;
+        if (indices.length < 1) {
+            return;
+        }
         /**
          * Neu ab hier ab Version 3.1.2
          */
@@ -3986,9 +4314,11 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // get selected value
             String kw = keywordListModel.get(in).toString();
             // if selected keyword is in selected list, remove it from there
-            if (settingsObj.getQuickInput() && selectedKeywords!=null && selectedKeywords.size()>0 && selectedKeywords.contains(kw)) selectedKeywords.remove(kw);
+            if (settingsObj.getQuickInput() && selectedKeywords != null && selectedKeywords.size() > 0 && selectedKeywords.contains(kw)) {
+                selectedKeywords.remove(kw);
+            }
             // if applied keyword from keyword-display-list
-            if (displayedKeywordList!=null && !displayedKeywordList.contains(kw)) {
+            if (displayedKeywordList != null && !displayedKeywordList.contains(kw)) {
                 // add keyword back to display list
                 displayedKeywordList.add(kw);
                 // indicate changes
@@ -4010,63 +4340,67 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // than remove all selected items. since the index numbers of higher
         // items change, when a lower item in the listorder is removed, we have
         // to iterate the array backwards.
-        for (int cnt=indices.length-1; cnt>=0; cnt--) {
+        for (int cnt = indices.length - 1; cnt >= 0; cnt--) {
             keywordListModel.remove(indices[cnt]);
         }
         // set the modified state
         setModified(true);
     }
 
-    
     /**
-     * This method retrieves the text from the input field and adds it to the JList
+     * This method retrieves the text from the input field and adds it to the
+     * JList
      */
     @Action
     public void addLink() {
         // get the text from the input field
         String kw = jTextFieldAddLink.getText();
         // if no text entered, leave method and do nothing
-        if (kw.isEmpty()) return;
+        if (kw.isEmpty()) {
+            return;
+        }
         // else add the text to the keyword-list (JList)
-        linkListModel.addElement((String)kw);
+        linkListModel.addElement((String) kw);
         // scroll jList down, so the new added links become visible
-        jListLinks.scrollRectToVisible(jListLinks.getCellBounds(linkListModel.size()-1, linkListModel.size()));
+        jListLinks.scrollRectToVisible(jListLinks.getCellBounds(linkListModel.size() - 1, linkListModel.size()));
         // set the modified state
         setModified(true);
         // and clear the input-fields for further entries
         jTextFieldAddLink.setText("");
         jTextFieldAddLink.requestFocusInWindow();
     }
-    
-    
+
     /**
-     * This methods looks for selected entries in the linklist and removes them from it
+     * This methods looks for selected entries in the linklist and removes them
+     * from it
      */
     private void removeLinkFromList() {
         // get index of first selected item
         int[] indices = jListLinks.getSelectedIndices();
         // if no item is selected, do nothing
-        if (indices.length<1) return;
+        if (indices.length < 1) {
+            return;
+        }
         // than remove all selected items. since the index numbers of higher
         // items change, when a lower item in the listorder is removed, we have
         // to iterate the array backwards.
-        for (int cnt=indices.length-1; cnt>=0; cnt--) {
+        for (int cnt = indices.length - 1; cnt >= 0; cnt--) {
             linkListModel.remove(indices[cnt]);
         }
-            // set the modified state
+        // set the modified state
         setModified(true);
     }
-    
-    
+
     /**
      * This method retrieves the selected item from the quickinput-author list
-     * and sets it to the textarea with the author information. This method is e.g.
-     * called from the mouseclick- or keypressed-event from the quickinput-jlist-component
+     * and sets it to the textarea with the author information. This method is
+     * e.g. called from the mouseclick- or keypressed-event from the
+     * quickinput-jlist-component
      */
     @Action(enabledProperty = "quickKeywordSelected")
     public void addQuickKeywordToList() {
         // when we have no selected keywords yet, create list now...
-        if (settingsObj.getQuickInput()&&(null==selectedKeywords)) {
+        if (settingsObj.getQuickInput() && (null == selectedKeywords)) {
             selectedKeywords = new LinkedList<>();
         }
         // retrieve all selected keywords
@@ -4080,16 +4414,20 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                 // check whether keyword already exisrs in the jlist
                 if (!isDoubleKeywords(kw)) {
                     // if not, add keyword to listmodel
-                    keywordListModel.addElement((String)kw);
+                    keywordListModel.addElement((String) kw);
                     // add selections to our linked list
-                    if (settingsObj.getQuickInput()) selectedKeywords.add(kw);
+                    if (settingsObj.getQuickInput()) {
+                        selectedKeywords.add(kw);
+                    }
                     // remove applied keyword from keyword-display-list
-                    if (displayedKeywordList.contains(kw)) displayedKeywordList.remove(kw);
+                    if (displayedKeywordList.contains(kw)) {
+                        displayedKeywordList.remove(kw);
+                    }
                     // set the modified state
                     setModified(true);
                 }
                 // scroll jList down, so the new added keywords become visible
-                jListKeywords.scrollRectToVisible(jListKeywords.getCellBounds(keywordListModel.size()-1, keywordListModel.size()));
+                jListKeywords.scrollRectToVisible(jListKeywords.getCellBounds(keywordListModel.size() - 1, keywordListModel.size()));
                 // clear selection
                 jListQuickInputKeywords.clearSelection();
                 // set new listdata without applied keywords
@@ -4113,18 +4451,18 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jButtonQuickKeyword.setVisible(settingsObj.getQuickInput());
         jCheckBoxQuickInput.setSelected(settingsObj.getQuickInput());
         // update the segment-button-appearance
-        jButtonAddKeywords.putClientProperty("JButton.segmentPosition",(settingsObj.getQuickInput())?"first":"only");
+        jButtonAddKeywords.putClientProperty("JButton.segmentPosition", (settingsObj.getQuickInput()) ? "first" : "only");
         stepcounter = 1;
         keywordsListUpToDate = false;
         // if the keyword-tab is visible, refresh the view
         showKeywords();
     }
 
-    
     /**
      * This method retrieves the selected item from the quickinput-author list
-     * and sets it to the textarea with the author information. This method is e.g.
-     * called from the mouseclick- or keypressed-event from the quickinput-jlist-component
+     * and sets it to the textarea with the author information. This method is
+     * e.g. called from the mouseclick- or keypressed-event from the
+     * quickinput-jlist-component
      */
     @Action(enabledProperty = "authorSelected")
     public void addQuickAuthorToList() {
@@ -4138,7 +4476,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                     // if not, append author string
                     // therefore, add a new line, but only if the textfield is not empty
                     // (i.e. we already have an author)
-                    if (!jTextAreaAuthor.getText().isEmpty()) jTextAreaAuthor.append(System.lineSeparator());
+                    if (!jTextAreaAuthor.getText().isEmpty()) {
+                        jTextAreaAuthor.append(System.lineSeparator());
+                    }
                     jTextAreaAuthor.append(au);
                     // set the modified state
                     setModified(true);
@@ -4146,17 +4486,17 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             }
         }
     }
-    
-    
+
     /**
      * A background task which creates the author list
+     *
      * @return
      */
     @Action
     public Task quickInputAuthor() {
         // disable tabpane during background task operations
         jTabbedPaneNewEntry1.setEnabled(false);
-        
+
         return new QuickInputAuthorTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
     }
 
@@ -4169,9 +4509,10 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // doInBackground() depends on from parameters
             // to createLinksTask fields, here.
             super(app);
-        }        
-        
-        @Override protected Object doInBackground() {
+        }
+
+        @Override
+        protected Object doInBackground() {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
@@ -4190,32 +4531,36 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // now we copy the array to a linked list, leaving out empty elements
             taskauthorlist = new LinkedList<>();
             // go through all keywords of the keyword datafile
-            for (cnt=0; cnt<count; cnt++) {
+            for (cnt = 0; cnt < count; cnt++) {
                 // get the author as string and add it to list
-                String au = dataObj.getAuthor(cnt+1);
+                String au = dataObj.getAuthor(cnt + 1);
                 // if author is not empty, add it.
-                if (!au.isEmpty()) taskauthorlist.add(au);
+                if (!au.isEmpty()) {
+                    taskauthorlist.add(au);
+                }
             }
             // sort array
             Collections.sort(taskauthorlist, new Comparer());
             return null;
         }
-        
-        @Override protected void succeeded(Object result) {
+
+        @Override
+        protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
             //
             // check whether we have any entries at all...
-            if (taskauthorlist!=null) {
+            if (taskauthorlist != null) {
                 // clear listmodel
                 quickInputAuthorListModel.clear();
                 // create iterator for the found authors
                 Iterator<String> i = taskauthorlist.iterator();
                 // go through linked list and add all authors to the listmodel
                 try {
-                    while (i.hasNext()) quickInputAuthorListModel.addElement(i.next());
-                }
-                catch (ConcurrentModificationException e) {
+                    while (i.hasNext()) {
+                        quickInputAuthorListModel.addElement(i.next());
+                    }
+                } catch (ConcurrentModificationException e) {
                     // reset the table when we have overlappings threads
                     quickInputAuthorListModel.clear();
                 }
@@ -4228,14 +4573,14 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             jButtonRefreshAuthorlist.setEnabled(false);
             // set upto-date state to true, so we don't have to start the task more often
             // than needed
-            authorListUpToDate=true;
+            authorListUpToDate = true;
         }
 
         @Override
         protected void finished() {
             super.finished();
             // enabled input fields if necessary...
-            jTextFieldFilterAuthorlist.setEnabled(quickInputAuthorListModel.getSize()>0);
+            jTextFieldFilterAuthorlist.setEnabled(quickInputAuthorListModel.getSize() > 0);
             // in case we have added new authors via the menu to the author list
             // the new values should be automatically selected.
             selectNewAddedAuthors();
@@ -4245,11 +4590,11 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             listUpdateActive = false;
         }
     }
-    
-    
+
     /**
      * Starts the background task which creates the keywordlist
-     * @return 
+     *
+     * @return
      */
     @Action
     public Task quickInputKeywords() {
@@ -4257,16 +4602,18 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jTabbedPaneNewEntry1.setEnabled(false);
         return new QuickInputKeywordsTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
     }
- 
+
     private class QuickInputKeywordsTask extends org.jdesktop.application.Task<Object, Void> {
+
         QuickInputKeywordsTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters
             // to createLinksTask fields, here.
             super(app);
-        }        
-        
-        @Override protected Object doInBackground() {
+        }
+
+        @Override
+        protected Object doInBackground() {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
@@ -4291,19 +4638,22 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // now we copy the array to a linked list, leaving out empty elements
             displayedKeywordList = new LinkedList<>();
             // go through all keywords of the keyword datafile
-            for (cnt=0; cnt<count; cnt++) {
+            for (cnt = 0; cnt < count; cnt++) {
                 // get the keyword as string and add them to the array
-                String kw = dataObj.getKeyword(cnt+1);
+                String kw = dataObj.getKeyword(cnt + 1);
                 // if keyword is not empry, add it to liszt
-                if (!kw.isEmpty()) displayedKeywordList.add(kw);
+                if (!kw.isEmpty()) {
+                    displayedKeywordList.add(kw);
+                }
             }
             // sort list
             Collections.sort(displayedKeywordList, new Comparer());
-            
+
             return null;
         }
-        
-        @Override protected void succeeded(Object result) {
+
+        @Override
+        protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
             //
@@ -4319,7 +4669,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             jTabbedPaneNewEntry1.setEnabled(true);
             // set upto-date state to true, so we don't have to start the task more often
             // than needed
-            keywordsListUpToDate=true;
+            keywordsListUpToDate = true;
         }
 
         @Override
@@ -4327,7 +4677,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             super.finished();
             // enable textfield
             int listsize = jListQuickInputKeywords.getModel().getSize();
-            jTextFieldFilterKeywordlist.setEnabled(listsize>0);
+            jTextFieldFilterKeywordlist.setEnabled(listsize > 0);
             // disable "add"-button
             setQuickKeywordSelected(false);
             // tell programm that task is over
@@ -4336,28 +4686,30 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             listUpdateActive = false;
         }
     }
-    
-    
+
     /**
-     * This variable indicates whether the main textfield has the focus or not. dependent
-     * on that, most toolbar/menu-actions are being enabled or disabled.
+     * This variable indicates whether the main textfield has the focus or not.
+     * dependent on that, most toolbar/menu-actions are being enabled or
+     * disabled.
      */
     private boolean focus = false;
+
     public boolean isFocus() {
         return focus;
     }
+
     public void setFocus(boolean b) {
         boolean old = isFocus();
         this.focus = b;
         firePropertyChange("focus", old, isFocus());
     }
 
-    
     /**
-     * This variable indicates whether we have seleced text, so we can en- or disable
-     * the cut and copy actions.
+     * This variable indicates whether we have seleced text, so we can en- or
+     * disable the cut and copy actions.
      */
     private boolean textSelected = false;
+
     public boolean isTextSelected() {
         return textSelected;
     }
@@ -4367,13 +4719,13 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         this.textSelected = b;
         firePropertyChange("textSelected", old, isTextSelected());
     }
-    
-    
+
     /**
-     * This variable indicates whether we have seleced text, so we can en- or disable
-     * the cut and copy actions.
+     * This variable indicates whether we have seleced text, so we can en- or
+     * disable the cut and copy actions.
      */
     private boolean segmentPossible = false;
+
     public boolean isSegmentPossible() {
         return segmentPossible;
     }
@@ -4384,12 +4736,12 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         firePropertyChange("segmentPossible", old, isSegmentPossible());
     }
 
-
     /**
-     * This variable indicates whether we have seleced text, so we can en- or disable
-     * the cut and copy actions.
+     * This variable indicates whether we have seleced text, so we can en- or
+     * disable the cut and copy actions.
      */
     private boolean authorSelected = false;
+
     public boolean isAuthorSelected() {
         return authorSelected;
     }
@@ -4399,13 +4751,13 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         this.authorSelected = b;
         firePropertyChange("authorSelected", old, isAuthorSelected());
     }
-    
-    
+
     /**
-     * This variable indicates whether we have seleced text, so we can en- or disable
-     * the cut and copy actions.
+     * This variable indicates whether we have seleced text, so we can en- or
+     * disable the cut and copy actions.
      */
     private boolean keywordSelected = false;
+
     public boolean isKeywordSelected() {
         return keywordSelected;
     }
@@ -4416,12 +4768,12 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         firePropertyChange("keywordSelected", old, isKeywordSelected());
     }
 
-
     /**
-     * This variable indicates whether we have seleced text, so we can en- or disable
-     * the cut and copy actions.
+     * This variable indicates whether we have seleced text, so we can en- or
+     * disable the cut and copy actions.
      */
     private boolean quickKeywordSelected = false;
+
     public boolean isQuickKeywordSelected() {
         return quickKeywordSelected;
     }
@@ -4432,12 +4784,12 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         firePropertyChange("quickKeywordSelected", old, isQuickKeywordSelected());
     }
 
-
     /**
-     * This variable indicates whether we have seleced text, so we can en- or disable
-     * the cut and copy actions.
+     * This variable indicates whether we have seleced text, so we can en- or
+     * disable the cut and copy actions.
      */
     private boolean attachmentSelected = false;
+
     public boolean isAttachmentSelected() {
         return attachmentSelected;
     }
@@ -4448,58 +4800,65 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         firePropertyChange("attachmentSelected", old, isAttachmentSelected());
     }
 
-
     /**
      * This variable indicates whether the we have text in the main textfield.
-     * This is necessary to enable/disable the apply-button, which should only be enabled
-     * when we have text in the main textfield. an entry must have content, otherwise it will
-     * be considered as deleted.
+     * This is necessary to enable/disable the apply-button, which should only
+     * be enabled when we have text in the main textfield. an entry must have
+     * content, otherwise it will be considered as deleted.
      */
     private boolean textfieldFilled = false;
+
     public boolean isTextfieldFilled() {
         return textfieldFilled;
     }
+
     private void setTextfieldFilled(boolean b) {
         boolean old = isTextfieldFilled();
         this.textfieldFilled = b;
         firePropertyChange("textfieldFilled", old, isTextfieldFilled());
     }
-    
-    
+
     /**
-     * This variable indicates whether undo/redo is possible. This is the case when the main
-     * text fiel (jTextAreaEntry) has the focus and changes have been made.
+     * This variable indicates whether undo/redo is possible. This is the case
+     * when the main text fiel (jTextAreaEntry) has the focus and changes have
+     * been made.
      */
     private boolean undoPossible = false;
+
     public boolean isUndoPossible() {
         return undoPossible;
     }
+
     public void setUndoPossible(boolean b) {
         boolean old = isUndoPossible();
         this.undoPossible = b;
         firePropertyChange("undoPossible", old, isUndoPossible());
     }
     /**
-     * This variable indicates whether undo/redo is possible. This is the case when the main
-     * text fiel (jTextAreaEntry) has the focus and changes have been made.
+     * This variable indicates whether undo/redo is possible. This is the case
+     * when the main text fiel (jTextAreaEntry) has the focus and changes have
+     * been made.
      */
     private boolean redoPossible = false;
+
     public boolean isRedoPossible() {
         return redoPossible;
     }
+
     public void setRedoPossible(boolean b) {
         boolean old = isRedoPossible();
         this.redoPossible = b;
         firePropertyChange("redoPossible", old, isRedoPossible());
     }
 
-
     /**
-     * This class sets up a selection listener for the tables. each table which shall react
-     * on selections, e.g. by showing an entry, gets this selectionlistener in the method
+     * This class sets up a selection listener for the tables. each table which
+     * shall react on selections, e.g. by showing an entry, gets this
+     * selectionlistener in the method
      * {@link #initSelectionListeners() initSelectionListeners()}.
      */
     public class SelectionListener implements ListSelectionListener {
+
         JList list;
 
         // It is necessary to keep the table since it is not possible
@@ -4507,34 +4866,34 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         SelectionListener(JList list) {
             this.list = list;
         }
+
         @Override
         public void valueChanged(ListSelectionEvent e) {
             // when we filter or refresh JLists, don't call value-changed event
-            if (listUpdateActive) return;
+            if (listUpdateActive) {
+                return;
+            }
             // get list selection model
-            ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+            ListSelectionModel lsm = (ListSelectionModel) e.getSource();
             // set value-adjusting to true, so we don't fire multiple value-changed events...
             lsm.setValueIsAdjusting(true);
-            if (jListQuickInputAuthor==list) {
-                setAuthorSelected(jListQuickInputAuthor.getSelectedIndex()!=-1);
-            }
-            else if (jListKeywords==list) {
-                setKeywordSelected(jListKeywords.getSelectedIndex()!=-1);
-            }
-            else if (jListLinks==list) {
-                setAttachmentSelected(jListLinks.getSelectedIndex()!=-1);
-            }
-            // check whether we have changes to the values...
-            else if (jListQuickInputKeywords==list) {
+            if (jListQuickInputAuthor == list) {
+                setAuthorSelected(jListQuickInputAuthor.getSelectedIndex() != -1);
+            } else if (jListKeywords == list) {
+                setKeywordSelected(jListKeywords.getSelectedIndex() != -1);
+            } else if (jListLinks == list) {
+                setAttachmentSelected(jListLinks.getSelectedIndex() != -1);
+            } // check whether we have changes to the values...
+            else if (jListQuickInputKeywords == list) {
                 // first of all, remove all old highlights
                 removeHighlights();
                 // if yes, get selected index to check whether we have a valid selection
                 int index = jListQuickInputKeywords.getSelectedIndex();
-                setQuickKeywordSelected(index!=-1);
+                setQuickKeywordSelected(index != -1);
                 // en-/disable button dependent from a valid selection
                 // jButtonAddKeywords.setEnabled(index!=-1);
                 // if we have any valid selection, go on here...
-                if (index!=-1) {
+                if (index != -1) {
                     // retrieve selected value
                     String text = jListQuickInputKeywords.getSelectedValue().toString().toLowerCase();
                     // first, get the separated parts from the selected value
@@ -4550,8 +4909,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                         while ((pos = doctext.indexOf(ft.toLowerCase(), pos)) >= 0) {
                             try {
                                 // Create highlighter using private painter and apply around pattern
-                                hilite.addHighlight(pos, pos + ft.length(), new MyHighlightPainter(new Color(255,255,102)));
-                            } catch (BadLocationException ex) {}
+                                hilite.addHighlight(pos, pos + ft.length(), new MyHighlightPainter(new Color(255, 255, 102)));
+                            } catch (BadLocationException ex) {
+                            }
                             // set pos to new index
                             pos += ft.length();
                         }
@@ -4561,11 +4921,11 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         }
     }
 
-    
     /**
      * A private subclass of the default highlight painter
      */
     class MyHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter {
+
         public MyHighlightPainter(Color color) {
             super(color);
         }
@@ -4597,8 +4957,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             keywordsListUpToDate = false;
             // if the keyword-tab is visible, refresh the view
             showKeywords();
-        }
-        else {
+        } else {
             toggleQuickInput();
         }
     }

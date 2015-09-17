@@ -27,6 +27,7 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 * Querverweise mit Tooltips mit Anführungszeichen funktionierten nicht ([#53](https://github.com/sjPlot/Zettelkasten/issues/53)).
 * Bildpfade beim LaTex-Export wurden nicht korrekt übersetzt ([#51](https://github.com/sjPlot/Zettelkasten/issues/51)).
 * Schwierigkeiten bei vertikaler Größenveränderung von Feldern unter OS X wurden behoben, der mit der Maus ziehbare Bereich vergrößert ([#49](https://github.com/sjPlot/Zettelkasten/issues/49)).
+* Dateipfade für das Einfügen von Bildern, Anhängen etc. wurden vergessen ([#20](https://github.com/sjPlot/Zettelkasten/issues/20)).
 
 ### Screenshots
 Aktuelle Screenshots [gibt es hier](http://zettelkasten.danielluedecke.de/gallery.php).

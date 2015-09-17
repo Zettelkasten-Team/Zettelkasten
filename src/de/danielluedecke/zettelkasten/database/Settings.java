@@ -1652,23 +1652,7 @@ public class Settings {
      * specified.
      */
     public File getLastOpenedImageDir() {
-        // we do this step by step rather that appending a ".getText()" to the line below, because
-        // by doing so we can check whether the child element exists or not, and avoiding null pointer
-        // exceptions
-        // first, get the filepath, which is in relation to the zkn-path
-        Element el = settingsFile.getRootElement().getChild(SETTING_LASTOPENEDIMAGEDIR);
-        // create an empty string as return value
-        String value = "";
-        // is the element exists, copy the text to the return value
-        if (el != null) {
-            value = el.getText();
-        }
-        // when we have no filename, return null
-        if (value.isEmpty()) {
-            return null;
-        }
-        // else return filepath
-        return new File(value);
+        return genericDirGetter(SETTING_LASTOPENEDIMAGEDIR);
     }
 
     /**
@@ -1677,14 +1661,7 @@ public class Settings {
      * @param fp the filepath of the last opened image directory
      */
     public void setLastOpenedImageDir(File fp) {
-        // try to find filepath-element
-        Element el = settingsFile.getRootElement().getChild(SETTING_LASTOPENEDIMAGEDIR);
-        if (null == el) {
-            el = new Element(SETTING_LASTOPENEDIMAGEDIR);
-            settingsFile.getRootElement().addContent(el);
-        }
-        // set new file path which should be now relative to the zkn-path
-        el.setText((null == fp) ? "" : fp.toString());
+        genericDirSetter(SETTING_LASTOPENEDIMAGEDIR, fp);
     }
 
     /**
@@ -1694,23 +1671,7 @@ public class Settings {
      * specified.
      */
     public File getLastOpenedImportDir() {
-        // we do this step by step rather that appending a ".getText()" to the line below, because
-        // by doing so we can check whether the child element exists or not, and avoiding null pointer
-        // exceptions
-        // first, get the filepath, which is in relation to the zkn-path
-        Element el = settingsFile.getRootElement().getChild(SETTING_LASTOPENEDIMPORTDIR);
-        // create an empty string as return value
-        String value = "";
-        // is the element exists, copy the text to the return value
-        if (el != null) {
-            value = el.getText();
-        }
-        // when we have no filename, return null
-        if (value.isEmpty()) {
-            return null;
-        }
-        // else return filepath
-        return new File(value);
+        return genericDirGetter(SETTING_LASTOPENEDIMPORTDIR);
     }
 
     /**
@@ -1719,14 +1680,7 @@ public class Settings {
      * @param fp the filepath of the last opened import directory
      */
     public void setLastOpenedImportDir(File fp) {
-        // try to find filepath-element
-        Element el = settingsFile.getRootElement().getChild(SETTING_LASTOPENEDIMPORTDIR);
-        if (null == el) {
-            el = new Element(SETTING_LASTOPENEDIMPORTDIR);
-            settingsFile.getRootElement().addContent(el);
-        }
-        // set new file path which should be now relative to the zkn-path
-        el.setText((null == fp) ? "" : fp.toString());
+        genericDirSetter(SETTING_LASTOPENEDIMPORTDIR, fp);
     }
 
     /**
@@ -1736,23 +1690,7 @@ public class Settings {
      * specified.
      */
     public File getLastOpenedExportDir() {
-        // we do this step by step rather that appending a ".getText()" to the line below, because
-        // by doing so we can check whether the child element exists or not, and avoiding null pointer
-        // exceptions
-        // first, get the filepath, which is in relation to the zkn-path
-        Element el = settingsFile.getRootElement().getChild(SETTING_LASTOPENEDEXPORTDIR);
-        // create an empty string as return value
-        String value = "";
-        // is the element exists, copy the text to the return value
-        if (el != null) {
-            value = el.getText();
-        }
-        // when we have no filename, return null
-        if (value.isEmpty()) {
-            return null;
-        }
-        // else return filepath
-        return new File(value);
+        return genericDirGetter(SETTING_LASTOPENEDEXPORTDIR);
     }
 
     /**
@@ -1761,14 +1699,7 @@ public class Settings {
      * @param fp the filepath of the last opened import directory
      */
     public void setLastOpenedExportDir(File fp) {
-        // try to find filepath-element
-        Element el = settingsFile.getRootElement().getChild(SETTING_LASTOPENEDEXPORTDIR);
-        if (null == el) {
-            el = new Element(SETTING_LASTOPENEDEXPORTDIR);
-            settingsFile.getRootElement().addContent(el);
-        }
-        // set new file path which should be now relative to the zkn-path
-        el.setText((null == fp) ? "" : fp.toString());
+        genericDirSetter(SETTING_LASTOPENEDEXPORTDIR, fp);
     }
 
     /**
@@ -1778,23 +1709,7 @@ public class Settings {
      * specified.
      */
     public File getLastOpenedAttachmentDir() {
-        // we do this step by step rather that appending a ".getText()" to the line below, because
-        // by doing so we can check whether the child element exists or not, and avoiding null pointer
-        // exceptions
-        // first, get the filepath, which is in relation to the zkn-path
-        Element el = settingsFile.getRootElement().getChild(SETTING_LASTOPENEDATTACHMENTDIR);
-        // create an empty string as return value
-        String value = "";
-        // is the element exists, copy the text to the return value
-        if (el != null) {
-            value = el.getText();
-        }
-        // when we have no filename, return null
-        if (value.isEmpty()) {
-            return null;
-        }
-        // else return filepath
-        return new File(value);
+        return genericDirGetter(SETTING_LASTOPENEDATTACHMENTDIR);
     }
 
     /**
@@ -1803,14 +1718,7 @@ public class Settings {
      * @param fp the filepath of the last opened image directory
      */
     public void setLastOpenedAttachmentDir(File fp) {
-        // try to find filepath-element
-        Element el = settingsFile.getRootElement().getChild(SETTING_LASTOPENEDATTACHMENTDIR);
-        if (null == el) {
-            el = new Element(SETTING_LASTOPENEDATTACHMENTDIR);
-            settingsFile.getRootElement().addContent(el);
-        }
-        // set new file path which should be now relative to the zkn-path
-        el.setText((null == fp) ? "" : fp.toString());
+        genericDirSetter(SETTING_LASTOPENEDATTACHMENTDIR, fp);
     }
 
     /**
@@ -1819,20 +1727,7 @@ public class Settings {
      * @return the filepath of the external backup, or null if no path was specified
      */
     public File getExtraBackupPath() {
-        // first, get the filepath, which is in relation to the zkn-path
-        Element el = settingsFile.getRootElement().getChild(SETTING_EXTRABACKUPPATH);
-        // create an empty string as return value
-        String value = "";
-        // is the element exists, copy the text to the return value
-        if (el != null) {
-            value = el.getText();
-        }
-        // when we have no filename, return null
-        if (value.isEmpty()) {
-            return null;
-        }
-        // else return filepath
-        return new File(value);
+        return genericDirGetter(SETTING_EXTRABACKUPPATH);
     }
 
     /**
@@ -1897,20 +1792,7 @@ public class Settings {
      * @return the filepath of the last used bixb text file, or null if no path is saved
      */
     public File getLastUsedBibTexFile() {
-        // first, get the filepath, which is in relation to the zkn-path
-        Element el = settingsFile.getRootElement().getChild(SETTING_LASTUSEDBIBTEXFILE);
-        // create an empty string as return value
-        String value = "";
-        // is the element exists, copy the text to the return value
-        if (el != null) {
-            value = el.getText();
-        }
-        // when we have no filename, return null
-        if (value.isEmpty()) {
-            return null;
-        }
-        // else return filepath
-        return new File(value);
+        return genericDirGetter(SETTING_LASTUSEDBIBTEXFILE);
     }
 
     /**
@@ -6484,6 +6366,35 @@ public class Settings {
         }
     }
     
+    private File genericDirGetter(String key) {
+        // we do this step by step rather that appending a ".getText()" to the line below, because
+        // by doing so we can check whether the child element exists or not, and avoiding null pointer
+        // exceptions
+        // first, get the filepath, which is in relation to the zkn-path
+        Element el = settingsFile.getRootElement().getChild(key);
+        // create an empty string as return value
+        String value = "";
+        // is the element exists, copy the text to the return value
+        if (el != null) {
+            value = el.getText();
+        }
+        // when we have no filename, return null
+        if (value.isEmpty()) {
+            return null;
+        }
+        // else return filepath
+        return new File(value);
+    }
+    private void genericDirSetter(String key, File fp) {
+        // try to find filepath-element
+        Element el = settingsFile.getRootElement().getChild(key);
+        if (null == el) {
+            el = new Element(key);
+            settingsFile.getRootElement().addContent(el);
+        }
+        // set new file path which should be now relative to the zkn-path
+        el.setText((null == fp) ? "" : FileOperationsUtil.getFilePath(fp));
+    }
     private boolean genericBooleanGetter(String key) {
         Element el = settingsFile.getRootElement().getChild(key);
         if (el != null) {
