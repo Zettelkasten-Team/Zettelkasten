@@ -1327,6 +1327,17 @@ public class Tools {
                            .replaceAll("\\[/code\\]", "")
                            .replaceAll("\\[/sup\\]", "")
                            .replaceAll("\\[/sub\\]", "");
+            dummy = dummy.replaceAll("\\[img\\](.*?)\\[/img\\]", "");
+            dummy = dummy.replaceAll("\\[fn ([^\\[]*)\\]", "[FN $1]");
+            dummy = dummy.replaceAll("\\[form ([^\\[]*)\\]", "$1");
+            dummy = dummy.replaceAll("\\[color ([^\\[]*)\\](.*?)\\[/color\\]", "$2");
+            dummy = dummy.replaceAll("\\[font ([^\\[]*)\\](.*?)\\[/font\\]", "$2");
+            dummy = dummy.replaceAll("\\[h ([^\\[]*)\\](.*?)\\[/h\\]", "$2");
+            dummy = dummy.replaceAll("\\[m ([^\\[]*)\\](.*?)\\[/m\\]", "$2");
+            dummy = dummy.replaceAll("\\[n\\](.*?)\\[/n\\]", "$1");
+            dummy = dummy.replaceAll("\\[l\\](.*?)\\[/l\\]", "$1");
+            dummy = dummy.replaceAll("\\[\\*\\](.*?)\\[/\\*\\]", "- $1\n");
+            dummy = dummy.replaceAll("\\[tc\\](.*?)\\[/tc\\]", "$1");
             // check whether only ubb or also markdown tags should be removed
             if (includeMarkdown) {
                 // quotes
@@ -1353,16 +1364,10 @@ public class Tools {
                 dummy = dummy.replaceAll("[!]{1}\\[([^\\[]+)\\]\\(([^\\)]+)\\)", "");
                 // hyperlinks
                 dummy = dummy.replaceAll("\\[([^\\[]+)\\]\\(([^\\)]+)\\)","$1 ($2)");
+                // bullets
+                dummy = dummy.replaceAll("(^|\\n)(\\d\\. )(.*)", "- $3");
+                dummy = dummy.replaceAll("(^|\\n)(\\* )(.*)", "- $3");
             }
-            dummy = dummy.replaceAll("\\[img\\](.*?)\\[/img\\]", "");
-            dummy = dummy.replaceAll("\\[fn ([^\\[]*)\\]", "[FN $1]");
-            dummy = dummy.replaceAll("\\[form ([^\\[]*)\\]", "$1");
-            dummy = dummy.replaceAll("\\[color ([^\\[]*)\\](.*?)\\[/color\\]", "$2");
-            dummy = dummy.replaceAll("\\[font ([^\\[]*)\\](.*?)\\[/font\\]", "$2");
-            dummy = dummy.replaceAll("\\[h ([^\\[]*)\\](.*?)\\[/h\\]", "$2");
-            dummy = dummy.replaceAll("\\[m ([^\\[]*)\\](.*?)\\[/m\\]", "$2");
-            dummy = dummy.replaceAll("\\[l\\](.*?)\\[/l\\]", "$1");
-            dummy = dummy.replaceAll("\\[\\*\\](.*?)\\[/\\*\\]", "- $1\n");
             dummy = dummy.replace("[br]", System.lineSeparator());
             // convert tables. we don't do this with regular expressions
             // first, init the index-variable
