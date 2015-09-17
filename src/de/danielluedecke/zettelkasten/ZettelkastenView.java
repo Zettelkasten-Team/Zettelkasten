@@ -7689,6 +7689,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             if (Constants.TYPE_BIB == importWindow.getImportType()) {
                 importAuthors();
             } else {
+                
+                // TODO wieder entfernen, wenn CSV implementiert
+                if (Constants.TYPE_CSV == importWindow.getImportType()) {
+                    JOptionPane.showMessageDialog(getFrame(), "CSV-import not implemented yet!", "Import", JOptionPane.PLAIN_MESSAGE);
+                    return;
+                }
+                
                 // first check whether we have unsaved changes, when the user wants
                 // to create a new data-file - but only the import-type is a data-file!
                 if (((Constants.TYPE_ZKN3 == importWindow.getImportType())
