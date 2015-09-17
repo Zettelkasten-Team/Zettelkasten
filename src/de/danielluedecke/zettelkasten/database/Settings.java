@@ -597,6 +597,41 @@ public class Settings {
             }
         }
 
+        if (null == settingsFile.getRootElement().getChild(SETTING_LAF)) {
+            // create element for look and feel
+            Element el = new Element(SETTING_LAF);
+            settingsFile.getRootElement().addContent(el);
+            // retrieve all installed Look and Feels
+            UIManager.LookAndFeelInfo[] installed_laf = UIManager.getInstalledLookAndFeels();
+            // init found-variables
+            boolean laf_aqua_found = false;
+            boolean laf_nimbus_found = false;
+            String aquaclassname = "";
+            String nimbusclassname = "";
+            // in case we find "nimbus" LAF, set this as default on non-mac-os
+            // because it simply looks the best.
+            for (UIManager.LookAndFeelInfo laf : installed_laf) {
+                // check whether laf is mac os x
+                if (laf.getName().equalsIgnoreCase("mac os x") || laf.getClassName().contains("Aqua")) {
+                    laf_aqua_found = true;
+                    aquaclassname = laf.getClassName();
+                }
+                // check whether laf is nimbus
+                if (laf.getName().equalsIgnoreCase("nimbus") || laf.getClassName().contains("Nimbus")) {
+                    laf_nimbus_found = true;
+                    nimbusclassname = laf.getClassName();
+                }
+            }
+            // check which laf was found and set appropriate default value
+            if (laf_aqua_found) {
+                el.setText(aquaclassname);
+            } else if (laf_nimbus_found) {
+                el.setText(nimbusclassname);
+            } else {
+                el.setText(UIManager.getSystemLookAndFeelClassName());
+            }
+        }
+        
         String pandoc = "pandoc";
         if (PlatformUtil.isMacOS()) {
             pandoc = "/usr/local/bin/pandoc";
@@ -663,415 +698,58 @@ public class Settings {
         genericElementInit(SETTING_SHOWHIGHLIGHTKEYWORDBACKGROUND, "1");
         genericElementInit(SETTING_SHOWHIGHLIGHTLIVESEARCHBACKGROUND, "1");
         genericElementInit(SETTING_SEARCHCOMBOTIME, "0");
-
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_SEARCHDATETIME)) {
-            // create an element
-            Element el = new Element(SETTING_SEARCHDATETIME);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_SEARCHLOG)) {
-            // create an element
-            Element el = new Element(SETTING_SEARCHLOG);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTSEARCHRESULTS)) {
-            // create an element
-            Element el = new Element(SETTING_HIGHLIGHTSEARCHRESULTS);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTKEYWORDS)) {
-            // create an element
-            Element el = new Element(SETTING_HIGHLIGHTKEYWORDS);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_SHOWSEARCHENTRY)) {
-            // create an element
-            Element el = new Element(SETTING_SHOWSEARCHENTRY);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_SUPFOOTNOTE)) {
-            // create an element
-            Element el = new Element(SETTING_SUPFOOTNOTE);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("1");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_JUMPFOOTNOTE)) {
-            // create an element
-            Element el = new Element(SETTING_JUMPFOOTNOTE);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_STARTUPENTRY)) {
-            // now create an element which stores the last shown entry before closing the program
-            // so we can show this last viewed entry at startup again
-            Element el = new Element(SETTING_STARTUPENTRY);
-            el.addContent("1");
-            settingsFile.getRootElement().addContent(el);
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_SHOWATSTARTUP)) {
-            // now create an element which stores the value for what we want to
-            // show directly after startup: either the first entry, a random entry
-            // or the startup entry
-            Element el = new Element(SETTING_SHOWATSTARTUP);
-            el.addContent("0");
-            settingsFile.getRootElement().addContent(el);
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LOGKEYWORDLIST)) {
-            // create an element
-            Element el = new Element(SETTING_LOGKEYWORDLIST);
-            settingsFile.getRootElement().addContent(el);
-            el.setText(SETTING_LOGKEYWORDLIST_OR);
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_SHOWGRID_HORIZONTAL)) {
-            // create an element
-            Element el = new Element(SETTING_SHOWGRID_HORIZONTAL);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_SHOWGRID_VERTICAL)) {
-            // create an element
-            Element el = new Element(SETTING_SHOWGRID_VERTICAL);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_CELLSPACING)) {
-            // create an element
-            Element el = new Element(SETTING_CELLSPACING);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("1,1");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_SPELLCORRECT)) {
-            // create an element
-            Element el = new Element(SETTING_SPELLCORRECT);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_STENOACTIVATED)) {
-            // create an element
-            Element el = new Element(SETTING_STENOACTIVATED);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTWHOLEWORD)) {
-            // create an element
-            Element el = new Element(SETTING_HIGHLIGHTWHOLEWORD);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTWHOLEWORDSEARCH)) {
-            // create an element
-            Element el = new Element(SETTING_HIGHLIGHTWHOLEWORDSEARCH);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_QUICKINPUT)) {
-            // create an element
-            Element el = new Element(SETTING_QUICKINPUT);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_AUTOUPDATE)) {
-            // create an element
-            Element el = new Element(SETTING_AUTOUPDATE);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("1");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_TOCFORDESKTOPEXPORT)) {
-            // create an element
-            Element el = new Element(SETTING_TOCFORDESKTOPEXPORT);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_REMOVELINESFORDESKTOPEXPORT)) {
-            // create an element
-            Element el = new Element(SETTING_REMOVELINESFORDESKTOPEXPORT);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("1");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_HIDEMULTIPLEDESKTOPOCCURENCESDLG)) {
-            // create an element
-            Element el = new Element(SETTING_HIDEMULTIPLEDESKTOPOCCURENCESDLG);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_AUTONIGHTLYUPDATE)) {
-            // create an element
-            Element el = new Element(SETTING_AUTONIGHTLYUPDATE);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_QUICKINPUTEXTENDED)) {
-            // create an element
-            Element el = new Element(SETTING_QUICKINPUTEXTENDED);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_IMGRESIZE)) {
-            // create an element
-            Element el = new Element(SETTING_IMGRESIZE);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("1");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_IMGRESIZEWIDTH)) {
-            // create an element
-            Element el = new Element(SETTING_IMGRESIZEWIDTH);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("300");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_IMGRESIZEHEIGHT)) {
-            // create an element
-            Element el = new Element(SETTING_IMGRESIZEHEIGHT);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("300");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_TABLEFONTSIZE)) {
-            // create an element
-            Element el = new Element(SETTING_TABLEFONTSIZE);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_DESKTOPOUTLINEFONTSIZE)) {
-            // create an element
-            Element el = new Element(SETTING_DESKTOPOUTLINEFONTSIZE);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_TEXTFIELDFONTSIZE)) {
-            // create an element
-            Element el = new Element(SETTING_TEXTFIELDFONTSIZE);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LASTUSEDSETBIBKEYCHOICE)) {
-            // create an element
-            Element el = new Element(SETTING_LASTUSEDSETBIBKEYCHOICE);
-            settingsFile.getRootElement().addContent(el);
-            el.setText(String.valueOf(CSetBibKey.CHOOSE_BIBKEY_MANUAL));
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LASTUSEDSETBIBKEYTYPE)) {
-            // create an element
-            Element el = new Element(SETTING_LASTUSEDSETBIBKEYTYPE);
-            settingsFile.getRootElement().addContent(el);
-            el.setText(String.valueOf(CSetBibKey.CHOOSE_BIBKEY_MANUAL));
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LASTUSEDSETBIBIMPORTSOURCE)) {
-            // create an element
-            Element el = new Element(SETTING_LASTUSEDSETBIBIMPORTSOURCE);
-            settingsFile.getRootElement().addContent(el);
-            el.setText(String.valueOf(CImportBibTex.BIBTEX_SOURCE_DB));
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTFOOTNOTE)) {
-            // create an element
-            Element el = new Element(SETTING_LATEXEXPORTFOOTNOTE);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTFORMTAG)) {
-            // create an element
-            Element el = new Element(SETTING_LATEXEXPORTFORMTAG);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTSHOWAUTHOR)) {
-            // create an element
-            Element el = new Element(SETTING_LATEXEXPORTSHOWAUTHOR);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTREMOVENONSTANDARDTAGS)) {
-            // create an element
-            Element el = new Element(SETTING_LATEXEXPORTREMOVENONSTANDARDTAGS);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("1");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTNOPREAMBLE)) {
-            // create an element
-            Element el = new Element(SETTING_LATEXEXPORTNOPREAMBLE);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTCONVERTUMLAUT)) {
-            // create an element
-            Element el = new Element(SETTING_LATEXEXPORTCONVERTUMLAUT);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("1");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTTABLESTATSTYLE)) {
-            // create an element
-            Element el = new Element(SETTING_LATEXEXPORTTABLESTATSTYLE);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTSHOWMAIL)) {
-            // create an element
-            Element el = new Element(SETTING_LATEXEXPORTSHOWMAIL);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTCONVERTQUOTES)) {
-            // create an element
-            Element el = new Element(SETTING_LATEXEXPORTCONVERTQUOTES);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("1");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTCENTERFORM)) {
-            // create an element
-            Element el = new Element(SETTING_LATEXEXPORTCENTERFORM);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("1");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTLASTUSEDBIBSTYLE)) {
-            // create an element
-            Element el = new Element(SETTING_LATEXEXPORTLASTUSEDBIBSTYLE);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTDOCUMENTCLASS)) {
-            // create an element
-            Element el = new Element(SETTING_LATEXEXPORTDOCUMENTCLASS);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTAUTHORVALUE)) {
-            // create an element
-            Element el = new Element(SETTING_LATEXEXPORTAUTHORVALUE);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTMAILVALUE)) {
-            // create an element
-            Element el = new Element(SETTING_LATEXEXPORTMAILVALUE);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LAF)) {
-            // create element for look and feel
-            Element el = new Element(SETTING_LAF);
-            settingsFile.getRootElement().addContent(el);
-            // retrieve all installed Look and Feels
-            UIManager.LookAndFeelInfo[] installed_laf = UIManager.getInstalledLookAndFeels();
-            // init found-variables
-            boolean laf_aqua_found = false;
-            boolean laf_nimbus_found = false;
-            String aquaclassname = "";
-            String nimbusclassname = "";
-            // in case we find "nimbus" LAF, set this as default on non-mac-os
-            // because it simply looks the best.
-            for (UIManager.LookAndFeelInfo laf : installed_laf) {
-                // check whether laf is mac os x
-                if (laf.getName().equalsIgnoreCase("mac os x") || laf.getClassName().contains("Aqua")) {
-                    laf_aqua_found = true;
-                    aquaclassname = laf.getClassName();
-                }
-                // check whether laf is nimbus
-                if (laf.getName().equalsIgnoreCase("nimbus") || laf.getClassName().contains("Nimbus")) {
-                    laf_nimbus_found = true;
-                    nimbusclassname = laf.getClassName();
-                }
-            }
-            // check which laf was found and set appropriate default value
-            if (laf_aqua_found) {
-                el.setText(aquaclassname);
-            } else if (laf_nimbus_found) {
-                el.setText(nimbusclassname);
-            } else {
-                el.setText(UIManager.getSystemLookAndFeelClassName());
-            }
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_SEARCHWHERE)) {
-            // create element
-            Element el = new Element(SETTING_SEARCHWHERE);
-            settingsFile.getRootElement().addContent(el);
-            // combine fields which should be initiated when opening the search dialog
-            int where = Constants.SEARCH_CONTENT | Constants.SEARCH_TITLE | Constants.SEARCH_KEYWORDS | Constants.SEARCH_REMARKS;
-            el.setText(String.valueOf(where));
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_REPLACEWHERE)) {
-            // create element
-            Element el = new Element(SETTING_REPLACEWHERE);
-            settingsFile.getRootElement().addContent(el);
-            // combine fields which should be initiated when opening the search dialog
-            int where = Constants.SEARCH_CONTENT | Constants.SEARCH_TITLE | Constants.SEARCH_KEYWORDS | Constants.SEARCH_REMARKS;
-            el.setText(String.valueOf(where));
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_EXPORTPARTS)) {
-            // create element
-            Element el = new Element(SETTING_EXPORTPARTS);
-            settingsFile.getRootElement().addContent(el);
-            // combine fields which should be initiated when opening the search dialog
-            int where = Constants.EXPORT_TITLE | Constants.EXPORT_CONTENT | Constants.EXPORT_AUTHOR | Constants.EXPORT_REMARKS;
-            el.setText(String.valueOf(where));
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_EXPORTFORMAT)) {
-            // create element
-            Element el = new Element(SETTING_EXPORTFORMAT);
-            settingsFile.getRootElement().addContent(el);
-            el.setText(String.valueOf(Constants.EXP_TYPE_DESKTOP_DOCX));
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_DESKTOPEXPORTFORMAT)) {
-            // create element
-            Element el = new Element(SETTING_DESKTOPEXPORTFORMAT);
-            settingsFile.getRootElement().addContent(el);
-            el.setText(String.valueOf(Constants.EXP_TYPE_DESKTOP_DOCX));
-        }
+        genericElementInit(SETTING_SEARCHDATETIME, "");
+        genericElementInit(SETTING_SEARCHLOG, "0");
+        genericElementInit(SETTING_HIGHLIGHTSEARCHRESULTS, "0");
+        genericElementInit(SETTING_HIGHLIGHTKEYWORDS, "0");
+        genericElementInit(SETTING_SHOWSEARCHENTRY, "0");
+        genericElementInit(SETTING_SUPFOOTNOTE, "1");
+        genericElementInit(SETTING_JUMPFOOTNOTE, "0");
+        genericElementInit(SETTING_STARTUPENTRY, "1");
+        genericElementInit(SETTING_SHOWATSTARTUP, "0");
+        genericElementInit(SETTING_LOGKEYWORDLIST, SETTING_LOGKEYWORDLIST_OR);
+        genericElementInit(SETTING_SHOWGRID_HORIZONTAL, "0");
+        genericElementInit(SETTING_SHOWGRID_VERTICAL, "0");
+        genericElementInit(SETTING_CELLSPACING, "1,1");
+        genericElementInit(SETTING_SPELLCORRECT, "0");
+        genericElementInit(SETTING_STENOACTIVATED, "0");
+        genericElementInit(SETTING_HIGHLIGHTWHOLEWORD, "0");
+        genericElementInit(SETTING_HIGHLIGHTWHOLEWORDSEARCH, "0");
+        genericElementInit(SETTING_QUICKINPUT, "0");
+        genericElementInit(SETTING_AUTOUPDATE, "1");
+        genericElementInit(SETTING_TOCFORDESKTOPEXPORT, "0");
+        genericElementInit(SETTING_REMOVELINESFORDESKTOPEXPORT, "1");
+        genericElementInit(SETTING_HIDEMULTIPLEDESKTOPOCCURENCESDLG, "0");
+        genericElementInit(SETTING_AUTONIGHTLYUPDATE, "0");
+        genericElementInit(SETTING_QUICKINPUTEXTENDED, "0");
+        genericElementInit(SETTING_IMGRESIZE, "1");
+        genericElementInit(SETTING_IMGRESIZEWIDTH, "400");
+        genericElementInit(SETTING_IMGRESIZEHEIGHT, "400");
+        genericElementInit(SETTING_TABLEFONTSIZE, "0");
+        genericElementInit(SETTING_DESKTOPOUTLINEFONTSIZE, "0");
+        genericElementInit(SETTING_TEXTFIELDFONTSIZE, "0");
+        genericElementInit(SETTING_LASTUSEDSETBIBKEYCHOICE, String.valueOf(CSetBibKey.CHOOSE_BIBKEY_MANUAL));
+        genericElementInit(SETTING_LASTUSEDSETBIBKEYTYPE, String.valueOf(CSetBibKey.CHOOSE_BIBKEY_MANUAL));
+        genericElementInit(SETTING_LASTUSEDSETBIBIMPORTSOURCE, String.valueOf(CImportBibTex.BIBTEX_SOURCE_DB));
+        genericElementInit(SETTING_LATEXEXPORTFOOTNOTE, "0");
+        genericElementInit(SETTING_LATEXEXPORTFORMTAG, "0");
+        genericElementInit(SETTING_LATEXEXPORTSHOWAUTHOR, "0");
+        genericElementInit(SETTING_LATEXEXPORTREMOVENONSTANDARDTAGS, "1");
+        genericElementInit(SETTING_LATEXEXPORTNOPREAMBLE, "0");
+        genericElementInit(SETTING_LATEXEXPORTCONVERTUMLAUT, "1");
+        genericElementInit(SETTING_LATEXEXPORTTABLESTATSTYLE, "0");
+        genericElementInit(SETTING_LATEXEXPORTSHOWMAIL, "0");
+        genericElementInit(SETTING_LATEXEXPORTCONVERTQUOTES, "1");
+        genericElementInit(SETTING_LATEXEXPORTCENTERFORM, "1");
+        genericElementInit(SETTING_LATEXEXPORTLASTUSEDBIBSTYLE, "0");
+        genericElementInit(SETTING_LATEXEXPORTDOCUMENTCLASS, "0");
+        genericElementInit(SETTING_LATEXEXPORTAUTHORVALUE, "");
+        genericElementInit(SETTING_LATEXEXPORTMAILVALUE, "");
+        genericElementInit(SETTING_SEARCHWHERE, String.valueOf(Constants.SEARCH_CONTENT | Constants.SEARCH_TITLE | Constants.SEARCH_KEYWORDS | Constants.SEARCH_REMARKS));
+        genericElementInit(SETTING_REPLACEWHERE, String.valueOf(Constants.SEARCH_CONTENT | Constants.SEARCH_TITLE | Constants.SEARCH_KEYWORDS | Constants.SEARCH_REMARKS));
+        genericElementInit(SETTING_EXPORTPARTS, String.valueOf(Constants.EXPORT_TITLE | Constants.EXPORT_CONTENT | Constants.EXPORT_AUTHOR | Constants.EXPORT_REMARKS));
+        genericElementInit(SETTING_EXPORTFORMAT, String.valueOf(Constants.EXP_TYPE_DESKTOP_DOCX));
+        genericElementInit(SETTING_DESKTOPEXPORTFORMAT, String.valueOf(Constants.EXP_TYPE_DESKTOP_DOCX));
 
         if (null == settingsFile.getRootElement().getChild(SETTING_DESKTOPCOMMENTEXPORT)) {
             // create element
