@@ -30,7 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 package de.danielluedecke.zettelkasten.tasks;
 
 import de.danielluedecke.zettelkasten.database.BibTex;
@@ -90,16 +89,18 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private DesktopData desktopObj;
     /**
-     * Settings object, which contains the setting, for instance the file paths etc...
+     * Settings object, which contains the setting, for instance the file paths
+     * etc...
      */
     private Settings settingsObj;
     /**
-     * Settings object, which contains the setting, for instance the file paths etc...
+     * Settings object, which contains the setting, for instance the file paths
+     * etc...
      */
     private Synonyms synonymsObj;
     /**
-     * Searchequests object, which contains the XML data of the searchrequests and -result
-     * that are related with this data file
+     * Searchequests object, which contains the XML data of the searchrequests
+     * and -result that are related with this data file
      */
     private SearchRequests searchrequestsObj;
     private BibTex bibtexObj;
@@ -137,8 +138,9 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * </ul>
      *
      * @param parent a reference to the parent frame that created this dialog
-     * @param task_id the task-id, identifying which task should be started, in case this constructor
-     * is used for more than one task. See above which task-id to use.
+     * @param task_id the task-id, identifying which task should be started, in
+     * case this constructor is used for more than one task. See above which
+     * task-id to use.
      * @param d a reference to the Daten-class.
      * @param bm
      * @param sr
@@ -153,7 +155,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         synonymsObj = sy;
         bibtexObj = bib;
         bookmarkObj = bm;
-        searchrequestsObj=sr;
+        searchrequestsObj = sr;
         desktopObj = dk;
         settingsObj = s;
 
@@ -168,20 +170,27 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
         // check which task was requested and start that task
         switch (task_id) {
-            case TASK_LOAD: foregroundTask = loadFile(); break;
-            case TASK_SAVE: foregroundTask = saveFile(); break;
+            case TASK_LOAD:
+                foregroundTask = loadFile();
+                break;
+            case TASK_SAVE:
+                foregroundTask = saveFile();
+                break;
         }
         startTask();
     }
+
     /**
      * This constructor is called when:
      * <ul>
-     * <li>a data file being updated to a new version (use {@link #TASK_UPDATEFILE} as parameter)</li>
+     * <li>a data file being updated to a new version (use
+     * {@link #TASK_UPDATEFILE} as parameter)</li>
      * </ul>
-     * 
+     *
      * @param parent a reference to the parent frame that created this dialog
-     * @param task_id the task-id, identifying which task should be started, in case this constructor
-     * is used for more than one task. See above which task-id to use.
+     * @param task_id the task-id, identifying which task should be started, in
+     * case this constructor is used for more than one task. See above which
+     * task-id to use.
      * @param s
      * @param d a reference to the Daten-class.
      * @param dk
@@ -206,16 +215,19 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
         // check which task was requested and start that task
         switch (task_id) {
-            case TASK_UPDATEFILE: foregroundTask = updateFile(rf); break;
+            case TASK_UPDATEFILE:
+                foregroundTask = updateFile(rf);
+                break;
         }
         startTask();
     }
+
     /**
-     * 
+     *
      * @param parent
      * @param task_id
      * @param d
-     * @param messageOptions 
+     * @param messageOptions
      */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, int messageOptions) {
         super(parent);
@@ -232,30 +244,41 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
         // check which task was requested and start that task
         switch (task_id) {
-            case TASK_SETFIRSTLINEASTITLE: foregroundTask = setFirstLineAsTitle(messageOptions); break;
-            case TASK_CONVERTFORMATTAGS: foregroundTask = convertFormatTags(messageOptions); break;
+            case TASK_SETFIRSTLINEASTITLE:
+                foregroundTask = setFirstLineAsTitle(messageOptions);
+                break;
+            case TASK_CONVERTFORMATTAGS:
+                foregroundTask = convertFormatTags(messageOptions);
+                break;
         }
         startTask();
     }
+
     /**
      * This constructor is called when:
      * <ul>
-     * <li>words or strings in the data abse are being replaced (use {@link #TASK_REPLACE} as parameter)</li>
+     * <li>words or strings in the data abse are being replaced (use
+     * {@link #TASK_REPLACE} as parameter)</li>
      * </ul>
      *
      * @param parent a reference to the parent frame that created this dialog
-     * @param task_id the task-id, identifying which task should be started, in case this constructor
-     * is used for more than one task. See above which task-id to use.
+     * @param task_id the task-id, identifying which task should be started, in
+     * case this constructor is used for more than one task. See above which
+     * task-id to use.
      * @param td
      * @param d a reference to the Daten-class.
      * @param fs a string containing the find-term that should be replaced
-     * @param rs a string containing the replace-term that replaces the find-term {@code fs}
-     * @param re an integer array containing the entry-numbers of those entries where
-     * the search should be applied to. use {@code null} to search and replace in all entries.
-     * @param w where the search should be applied to, i.e. search within content, keywords, authors etc.
+     * @param rs a string containing the replace-term that replaces the
+     * find-term {@code fs}
+     * @param re an integer array containing the entry-numbers of those entries
+     * where the search should be applied to. use {@code null} to search and
+     * replace in all entries.
+     * @param w where the search should be applied to, i.e. search within
+     * content, keywords, authors etc.
      * @param ww pass true, if the search should find whole words only
      * @param mc whether the search is case sensitive (true) or not (false)
-     * @param rex whether the find-term {@code fs} is a regular expression (true) or not...
+     * @param rex whether the find-term {@code fs} is a regular expression
+     * (true) or not...
      */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, TasksData td, Daten d, String fs, String rs, int[] re, int w, boolean ww, boolean mc, boolean rex) {
         super(parent);
@@ -273,35 +296,47 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
         // check which task was requested and start that task
         switch (task_id) {
-            case TASK_REPLACE: foregroundTask = replace(fs, rs, re, w, ww, mc, rex); break;
+            case TASK_REPLACE:
+                foregroundTask = replace(fs, rs, re, w, ww, mc, rex);
+                break;
         }
         startTask();
     }
+
     /**
      * This constructor is called when:
      * <ul>
-     * <li>The keyword-list in the related tabbed pane is being displayed (use {@link #TASK_SHOWKEYWORDS} as parameter)</li>
-     * <li>The author-list in the related tabbed pane is being displayed (use {@link #TASK_SHOWAUTHORS} as parameter)</li>
-     * <li>The title-list in the related tabbed pane is being displayed (use {@link #TASK_SHOWTITLES} as parameter)</li>
-     * <li>The attachment-list in the related tabbed pane is being displayed (use {@link #TASK_SHOWATTACHMENTS} as parameter)</li>
+     * <li>The keyword-list in the related tabbed pane is being displayed (use
+     * {@link #TASK_SHOWKEYWORDS} as parameter)</li>
+     * <li>The author-list in the related tabbed pane is being displayed (use
+     * {@link #TASK_SHOWAUTHORS} as parameter)</li>
+     * <li>The title-list in the related tabbed pane is being displayed (use
+     * {@link #TASK_SHOWTITLES} as parameter)</li>
+     * <li>The attachment-list in the related tabbed pane is being displayed
+     * (use {@link #TASK_SHOWATTACHMENTS} as parameter)</li>
      * </ul>
-     * 
+     *
      * @param parent a reference to the parent frame that created this dialog
-     * @param task_id the task-id, identifying which task should be started, in case this constructor
-     * is used for more than one task. See above which task-id to use.
+     * @param task_id the task-id, identifying which task should be started, in
+     * case this constructor is used for more than one task. See above which
+     * task-id to use.
      * @param d a reference to the Daten-class.
-     * @param s a reference to the Synonyms-class. Only needed when showing the keywords,
-     * i.e. when the {@code task_id} is {@code TASK_SHOWKEYWORDS}
-     * @param bt a reference to the Bibtex-class. Only needed when showing the authors,
+     * @param s a reference to the Synonyms-class. Only needed when showing the
+     * keywords, i.e. when the {@code task_id} is {@code TASK_SHOWKEYWORDS}
+     * @param bt a reference to the Bibtex-class. Only needed when showing the
+     * authors, i.e. when the {@code task_id} is {@code TASK_SHOWAUTHORS}
+     * @param set a reference to the Settings-class. Only needed when showing
+     * the attachments, i.e. when the {@code task_id} is
+     * {@code TASK_SHOWATTACHMENTS}
+     * @param is indicates whether synonyms should be included when displaying
+     * the keywords. Only needed when showing the keywords, i.e. when the
+     * {@code task_id} is {@code TASK_SHOWKEYWORDS}
+     * @param et indicates which entry-type of authors should be displayed. this
+     * is a filter variable which refers to certain types of publications,
+     * indicates in the bibtex-data file. Only needed when showing the authors,
      * i.e. when the {@code task_id} is {@code TASK_SHOWAUTHORS}
-     * @param set a reference to the Settings-class. Only needed when showing the attachments,
-     * i.e. when the {@code task_id} is {@code TASK_SHOWATTACHMENTS}
-     * @param is indicates whether synonyms should be included when displaying the keywords.
-     * Only needed when showing the keywords, i.e. when the {@code task_id} is {@code TASK_SHOWKEYWORDS}
-     * @param et indicates which entry-type of authors should be displayed. this is a filter variable which refers
-     * to certain types of publications, indicates in the bibtex-data file. Only needed when showing the authors,
-     * i.e. when the {@code task_id} is {@code TASK_SHOWAUTHORS}
-     * @param dtm a reference to the DefaultTableModel of the related tabbed pane.
+     * @param dtm a reference to the DefaultTableModel of the related tabbed
+     * pane.
      */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, Synonyms s, BibTex bt, Settings set, boolean is, int et, DefaultTableModel dtm) {
         super(parent);
@@ -321,23 +356,34 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
         // check which task was requested and start that task
         switch (task_id) {
-            case TASK_SHOWKEYWORDS:    foregroundTask = showKeywords(is, dtm); break;
-            case TASK_SHOWAUTHORS:     foregroundTask = showAuthors(et, dtm); break;
-            case TASK_SHOWTITLES:      foregroundTask = showTitles(dtm); break;
-            case TASK_SHOWATTACHMENTS: foregroundTask = showAttachments(dtm); break;
+            case TASK_SHOWKEYWORDS:
+                foregroundTask = showKeywords(is, dtm);
+                break;
+            case TASK_SHOWAUTHORS:
+                foregroundTask = showAuthors(et, dtm);
+                break;
+            case TASK_SHOWTITLES:
+                foregroundTask = showTitles(dtm);
+                break;
+            case TASK_SHOWATTACHMENTS:
+                foregroundTask = showAttachments(dtm);
+                break;
         }
         startTask();
     }
+
     /**
      * This constructor is called when:
      * <ul>
-     * <li>One or more selected author values in the related tabbed pane are being removed from
-     * the data base (use {@link #TASK_DELETEAUTHORS} as parameter)</li>
+     * <li>One or more selected author values in the related tabbed pane are
+     * being removed from the data base (use {@link #TASK_DELETEAUTHORS} as
+     * parameter)</li>
      * </ul>
-     * 
+     *
      * @param parent a reference to the parent frame that created this dialog
-     * @param task_id the task-id, identifying which task should be started, in case this constructor
-     * is used for more than one task. See above which task-id to use.
+     * @param task_id the task-id, identifying which task should be started, in
+     * case this constructor is used for more than one task. See above which
+     * task-id to use.
      * @param d a reference to the Daten-class.
      * @param values
      */
@@ -356,23 +402,31 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
         // check which task was requested and start that task
         switch (task_id) {
-            case TASK_DELETEAUTHORS:  foregroundTask = deleteAuthors(values); break;
-            case TASK_DELETEKEYWORDS: foregroundTask = deleteKeywords(values); break;
+            case TASK_DELETEAUTHORS:
+                foregroundTask = deleteAuthors(values);
+                break;
+            case TASK_DELETEKEYWORDS:
+                foregroundTask = deleteKeywords(values);
+                break;
         }
         startTask();
     }
+
     /**
      * This constructor is called when:
      * <ul>
-     * <li>An entry should be deleted (removed) from the data base (use {@link #TASK_DELETEENTRY} as parameter)</li>
+     * <li>An entry should be deleted (removed) from the data base (use
+     * {@link #TASK_DELETEENTRY} as parameter)</li>
      * </ul>
-     * 
+     *
      * @param parent a reference to the parent frame that created this dialog
-     * @param task_id the task-id, identifying which task should be started, in case this constructor
-     * is used for more than one task. See above which task-id to use.
+     * @param task_id the task-id, identifying which task should be started, in
+     * case this constructor is used for more than one task. See above which
+     * task-id to use.
      * @param d a reference to the Daten-class.
      * @param s a reference to the SearchRequests-class
-     * @param entries one or more entry-numbers of those entries that should be deleted.
+     * @param entries one or more entry-numbers of those entries that should be
+     * deleted.
      */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, SearchRequests s, int[] entries) {
         super(parent);
@@ -390,17 +444,20 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
         // check which task was requested and start that task
         switch (task_id) {
-            case TASK_DELETEENTRY: foregroundTask = deleteEntry(entries); break;
+            case TASK_DELETEENTRY:
+                foregroundTask = deleteEntry(entries);
+                break;
         }
         startTask();
     }
+
     /**
-     * 
+     *
      * @param parent
      * @param task_id
      * @param d
      * @param entries
-     * @param insertpos 
+     * @param insertpos
      */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, int[] entries, int insertpos) {
         super(parent);
@@ -417,39 +474,51 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
         // check which task was requested and start that task
         switch (task_id) {
-            case TASK_ENTRIESTOLUHMANN: foregroundTask = entriesToLuhmann(entries, insertpos); break;
+            case TASK_ENTRIESTOLUHMANN:
+                foregroundTask = entriesToLuhmann(entries, insertpos);
+                break;
         }
         startTask();
     }
+
     /**
      * This constructor is called when:
      * <ul>
-     * <li>The the keyword suggestions during a new entry or editring entry is used (use {@link #TASK_KEYWORDSUGGESTIONS} as parameter)</li>
+     * <li>The the keyword suggestions during a new entry or editring entry is
+     * used (use {@link #TASK_KEYWORDSUGGESTIONS} as parameter)</li>
      * </ul>
-     * 
+     *
      * @param parent a reference to the parent frame that created this dialog
-     * @param task_id the task-id, identifying which task should be started, in case this constructor
-     * is used for more than one task. See above which task-id to use.
+     * @param task_id the task-id, identifying which task should be started, in
+     * case this constructor is used for more than one task. See above which
+     * task-id to use.
      * @param td
      * @param d a reference to the Daten-class.
      * @param syn
      * @param set
-     * @param extendedQuickInput Indicates whether we have an extended quick input setting. when this setting is activated,
-     * keyword-values consisting of more than one word are splitted, and the occurence of each keyword-part is searched in
-     * the main entries content. if found, the related keyword also counts as match.
-     * @param quickstep Indictaes which of the four steps for the quick input is currently processed.
-     * @param selectedKeywords The keywords the user selected in the first step of the quick input. needed to retrieve
-     * the keywords for the seconde step, since in this 2. step we want to have all related keywords of those keywords
-     * that have been selected in the first step.
-     * @param remainingKeywords A List containing the remaining keywords that haven't been retrieved during the past quick
-     * input steps. having this list, we don't need to look through the whole keyword list on the one hand, on the other
-     * hand we prevent finding double keywords.
-     * @param fromFirstStep Similar to {@code selectedKeywords}. We need the keywords of the first step for the third step.
-     * @param entrytext The entry-text that contains the content of the entry, where we want to find related keywords for.
+     * @param extendedQuickInput Indicates whether we have an extended quick
+     * input setting. when this setting is activated, keyword-values consisting
+     * of more than one word are splitted, and the occurence of each
+     * keyword-part is searched in the main entries content. if found, the
+     * related keyword also counts as match.
+     * @param quickstep Indictaes which of the four steps for the quick input is
+     * currently processed.
+     * @param selectedKeywords The keywords the user selected in the first step
+     * of the quick input. needed to retrieve the keywords for the seconde step,
+     * since in this 2. step we want to have all related keywords of those
+     * keywords that have been selected in the first step.
+     * @param remainingKeywords A List containing the remaining keywords that
+     * haven't been retrieved during the past quick input steps. having this
+     * list, we don't need to look through the whole keyword list on the one
+     * hand, on the other hand we prevent finding double keywords.
+     * @param fromFirstStep Similar to {@code selectedKeywords}. We need the
+     * keywords of the first step for the third step.
+     * @param entrytext The entry-text that contains the content of the entry,
+     * where we want to find related keywords for.
      */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, TasksData td, Daten d, Synonyms syn, Settings set,
-                        int extendedQuickInput, int quickstep, LinkedList<String> selectedKeywords, LinkedList<String> remainingKeywords,
-                        LinkedList<String> fromFirstStep, String entrytext) {
+            int extendedQuickInput, int quickstep, LinkedList<String> selectedKeywords, LinkedList<String> remainingKeywords,
+            LinkedList<String> fromFirstStep, String entrytext) {
         super(parent);
         dataObj = d;
         taskinfo = td;
@@ -467,45 +536,55 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
         // check which task was requested and start that task
         switch (task_id) {
-            case TASK_KEYWORDSUGGESTIONS: foregroundTask = keywordSuggestions(extendedQuickInput, quickstep, selectedKeywords, remainingKeywords, fromFirstStep, entrytext); break;
+            case TASK_KEYWORDSUGGESTIONS:
+                foregroundTask = keywordSuggestions(extendedQuickInput, quickstep, selectedKeywords, remainingKeywords, fromFirstStep, entrytext);
+                break;
         }
         startTask();
     }
+
     /**
      * This constructor is called when:
      * <ul>
-     * <li>A search request is started (use {@link #TASK_SEARCH} as parameter)</li>
+     * <li>A search request is started (use {@link #TASK_SEARCH} as
+     * parameter)</li>
      * </ul>
      *
      *
      * @param parent a reference to the parent frame that created this dialog
-     * @param task_id the task-id, identifying which task should be started, in case this constructor
-     * is used for more than one task. See above which task-id to use.
+     * @param task_id the task-id, identifying which task should be started, in
+     * case this constructor is used for more than one task. See above which
+     * task-id to use.
      * @param d a reference to the Daten-class.
      * @param sr a reference to the SearchRequests class
      * @param sy
      * @param tos
      * @param s a string-array containing search terms
-     * @param se an integer array containing the entry-numbers of those entries where
-     * the search should be applied to
-     * @param w where the search should be applied to, i.e. search within content, keywords, authors etc.
+     * @param se an integer array containing the entry-numbers of those entries
+     * where the search should be applied to
+     * @param w where the search should be applied to, i.e. search within
+     * content, keywords, authors etc.
      * @param l the logical-combination of the search
      * @param ww pass true, if the search should find whole words only
      * @param mc whether the search is case sensitive (true) or not (false)
      * @param syn whether the search should include synonyms or not
      * @param rex whether the search terms contain regular expressions or not
-     * @param ts whether the user requested a time-search, i.e. a search for entries that were created
-     * or changed within a certain period
-     * @param fr the start of the period, when a timesearch is requested. format: "yymmdd".
-     * @param to the end of the period, when a timesearch is requested. format: "yymmdd".
-     * @param tsi the timestampindex, which indicate whether the user wants to search only for entries
-     * within a period of <i>creation</i> date (0), of <i>edited</i> date (1) or both (2).
-     * @param donly whether the search should open the CSearchResults-frame (false), or whether the search-results
-     * are used for other purposes, like e.g. putting the results to the desktop (true)
+     * @param ts whether the user requested a time-search, i.e. a search for
+     * entries that were created or changed within a certain period
+     * @param fr the start of the period, when a timesearch is requested.
+     * format: "yymmdd".
+     * @param to the end of the period, when a timesearch is requested. format:
+     * "yymmdd".
+     * @param tsi the timestampindex, which indicate whether the user wants to
+     * search only for entries within a period of <i>creation</i> date (0), of
+     * <i>edited</i> date (1) or both (2).
+     * @param donly whether the search should open the CSearchResults-frame
+     * (false), or whether the search-results are used for other purposes, like
+     * e.g. putting the results to the desktop (true)
      */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, SearchRequests sr, Synonyms sy, int tos,
-                        String[] s, int[] se, int w, int l, boolean ww, boolean mc, boolean syn, boolean rex, boolean ts,
-                        String fr, String to, int tsi, boolean donly) {
+            String[] s, int[] se, int w, int l, boolean ww, boolean mc, boolean syn, boolean rex, boolean ts,
+            String fr, String to, int tsi, boolean donly) {
         super(parent);
 
         dataObj = d;
@@ -523,12 +602,15 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
         // check which task was requested and start that task
         switch (task_id) {
-            case TASK_SEARCH: foregroundTask = startSearch(tos, s, se, w, l, ww, mc, syn, rex, ts, fr, to, tsi, donly); break;
+            case TASK_SEARCH:
+                foregroundTask = startSearch(tos, s, se, w, l, ww, mc, syn, rex, ts, fr, to, tsi, donly);
+                break;
         }
         startTask();
     }
+
     /**
-     * 
+     *
      * @param parent
      * @param task_id
      * @param d
@@ -538,7 +620,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @param newbibkey
      * @param table
      * @param selectedrow
-     * @param linkedvalues 
+     * @param linkedvalues
      */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, TasksData td, String oldvalue, String newvalue, String newbibkey, JTable table, int selectedrow, LinkedList<Object[]> linkedvalues) {
         super(parent);
@@ -556,13 +638,18 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
         // check which task was requested and start that task
         switch (task_id) {
-            case TASK_MERGEAUTHORS:  foregroundTask = mergeAuthors(oldvalue, newvalue, newbibkey, table, selectedrow, linkedvalues); break;
-            case TASK_MERGEKEYWORDS: foregroundTask = mergeKeywords(oldvalue, newvalue, table, selectedrow, linkedvalues); break;
+            case TASK_MERGEAUTHORS:
+                foregroundTask = mergeAuthors(oldvalue, newvalue, newbibkey, table, selectedrow, linkedvalues);
+                break;
+            case TASK_MERGEKEYWORDS:
+                foregroundTask = mergeKeywords(oldvalue, newvalue, table, selectedrow, linkedvalues);
+                break;
         }
         startTask();
     }
+
     /**
-     * 
+     *
      * @param parent the dialog's parent frame
      * @param task_id
      * @param td a reference to the TaskDatas-class
@@ -573,8 +660,10 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @param bto a refrence to the BibTex-class
      * @param syn
      * @param fp the filepath and -name of the export-file
-     * @param ee an integer-array of those entries that should be exported. use {@null} to export all entries
-     * @param type the exporttype, i.e. whether the entries should be exported to XML, RTF, PDF, TXT etc.<br>
+     * @param ee an integer-array of those entries that should be exported. use {
+     * @null} to export all entries
+     * @param type the exporttype, i.e. whether the entries should be exported
+     * to XML, RTF, PDF, TXT etc.<br>
      * use following constants:<br>
      * - CConstants.EXP_TYPE_PDF<br>
      * - CConstants.EXP_TYPE_RTF<br>
@@ -583,25 +672,34 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * - CConstants.EXP_TYPE_HTML<br>
      * - CConstants.EXP_TYPE_TXT<br>
      * - CConstants.EXP_TYPE_TEX (for LaTex-files)
-     * @param part which parts of an entry (content, authors, keywords, attachments...) should be exported.
-     * @param csep the separator-char when exporting the entries to a comma-separated value-file (.csv)
-     * @param n the treenode of a selected node (entry) within the DesktopFrame. This indicates, which part
-     * of the Desktop-Entries should be exportet, i.e. at which node and related children the export of entries starts.
-     * @param all whether authors, keywords and entries should be exported to a single file {@code true},
-     * or whether the author- and keywordlist should be exported as separated files {@code false}. <b>Does not apply for 
+     * @param part which parts of an entry (content, authors, keywords,
+     * attachments...) should be exported.
+     * @param csep the separator-char when exporting the entries to a
+     * comma-separated value-file (.csv)
+     * @param n the treenode of a selected node (entry) within the DesktopFrame.
+     * This indicates, which part of the Desktop-Entries should be exportet,
+     * i.e. at which node and related children the export of entries starts.
+     * @param all whether authors, keywords and entries should be exported to a
+     * single file {@code true}, or whether the author- and keywordlist should
+     * be exported as separated files {@code false}. <b>Does not apply for
      * exporting Desktop-Entries.</b>
-     * @param notag whether formatting-tags should be removed {@code true} or not {@code false}
-     * @param bibtex whether a separate Bibtex-file containing a bibtex-styles reference list should
-     * be created {@code true} or not {@code false}. This file will be created depending on available
-     * Bibkeys as attributes of the author-values.
-     * @param highlightkws whether an entry's keywords sould be highlighted within the entry-content {@code true} or not {@code false}
-     * @param ct {@code true} if a table of contents should be created at the beginning of the exported
-     * file (so you can create a TOC for PDF or HTML-documents), {@code false} otherwise. <b>Only applies
-     * when entries are exported from the DesktopFrame</b>
-     * @param ihv indicates whether the headings (titles) of exported entries should be visible (use {@code true})
-     * or not ({@code false}). <b>Only applies
-     * when entries are exported from the DesktopFrame</b>
-     * @param numberprefix indicates whether entries' titles should have their entry-number included or not.
+     * @param notag whether formatting-tags should be removed {@code true} or
+     * not {@code false}
+     * @param bibtex whether a separate Bibtex-file containing a bibtex-styles
+     * reference list should be created {@code true} or not {@code false}. This
+     * file will be created depending on available Bibkeys as attributes of the
+     * author-values.
+     * @param highlightkws whether an entry's keywords sould be highlighted
+     * within the entry-content {@code true} or not {@code false}
+     * @param ct {@code true} if a table of contents should be created at the
+     * beginning of the exported file (so you can create a TOC for PDF or
+     * HTML-documents), {@code false} otherwise. <b>Only applies when entries
+     * are exported from the DesktopFrame</b>
+     * @param ihv indicates whether the headings (titles) of exported entries
+     * should be visible (use {@code true}) or not ({@code false}). <b>Only
+     * applies when entries are exported from the DesktopFrame</b>
+     * @param numberprefix indicates whether entries' titles should have their
+     * entry-number included or not.
      */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, TasksData td, Daten d, Bookmarks bm, DesktopData dt, Settings s, BibTex bto, Synonyms syn,
             File fp, ArrayList<Object> ee, int type, int part, char csep, DefaultMutableTreeNode n,
@@ -615,7 +713,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         desktopObj = dt;
         bookmarkObj = bm;
         synonymsObj = syn;
-        
+
         initComponents();
         // set application icon
         setIconImage(Constants.zknicon.getImage());
@@ -627,7 +725,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
         // check which task was requested and start that task
         switch (task_id) {
-            case TASK_EXPORTDATA: 
+            case TASK_EXPORTDATA:
                 switch (type) {
                     case Constants.EXP_TYPE_TXT:
                     case Constants.EXP_TYPE_DESKTOP_TXT:
@@ -669,9 +767,10 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         }
         startTask();
     }
+
     public TaskProgressDialog(java.awt.Frame parent, int task_id, TasksData td,
-                              Daten d, Bookmarks bm, DesktopData dt, SearchRequests sr, Settings s,
-                              int type, File fp, String sepchar, boolean atou, boolean appendit, String dts, URL url) {
+            Daten d, Bookmarks bm, DesktopData dt, SearchRequests sr, Settings s,
+            int type, File fp, String sepchar, boolean atou, boolean appendit, String dts, URL url) {
         super(parent);
         // store parameters
         dataObj = d;
@@ -680,7 +779,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         desktopObj = dt;
         bookmarkObj = bm;
         searchrequestsObj = sr;
-        
+
         initComponents();
         // set application icon
         setIconImage(Constants.zknicon.getImage());
@@ -692,7 +791,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
         // check which task was requested and start that task
         switch (task_id) {
-            case TASK_IMPORTDATA: 
+            case TASK_IMPORTDATA:
                 switch (type) {
                     case Constants.TYPE_ZKN3:
                         foregroundTask = importFromZkx(fp, dts);
@@ -710,10 +809,9 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         }
         startTask();
     }
-    
-    
+
     /**
-     * 
+     *
      */
     private void startTask() {
         // get the application's context...
@@ -726,8 +824,9 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         tS.execute(foregroundTask);
         tM.setForegroundTask(foregroundTask);
     }
+
     /**
-     * 
+     *
      * @param fp
      * @param ee
      * @param type
@@ -736,20 +835,22 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @param bibtex
      * @param ihv
      * @param numberprefix
-     * @return 
+     * @return
      */
     private Task exportDataToTxt(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix) {
         return new ExportToTxtTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, taskinfo, dataObj, desktopObj, settingsObj, bibtexObj,
-                                       fp, ee, type, part, n, bibtex, ihv, numberprefix);
+                this, msgLabel, taskinfo, dataObj, desktopObj, settingsObj, bibtexObj,
+                fp, ee, type, part, n, bibtex, ihv, numberprefix);
     }
+
     private Task exportDataToMd(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix) {
         return new ExportToMdTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, taskinfo, dataObj, desktopObj, settingsObj, bibtexObj,
-                                       fp, ee, type, part, n, bibtex, ihv, numberprefix);
+                this, msgLabel, taskinfo, dataObj, desktopObj, settingsObj, bibtexObj,
+                fp, ee, type, part, n, bibtex, ihv, numberprefix);
     }
+
     /**
-     * 
+     *
      * @param fp
      * @param ee
      * @param type
@@ -758,15 +859,16 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @param bibtex
      * @param ihv
      * @param numberprefix
-     * @return 
+     * @return
      */
     private Task exportDataToTex(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix, boolean contenttable) {
         return new ExportToTexTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, taskinfo, dataObj, desktopObj, settingsObj, bibtexObj,
-                                       fp, ee, type, part, n, bibtex, ihv, numberprefix, contenttable);
+                this, msgLabel, taskinfo, dataObj, desktopObj, settingsObj, bibtexObj,
+                fp, ee, type, part, n, bibtex, ihv, numberprefix, contenttable);
     }
+
     /**
-     * 
+     *
      * @param fp
      * @param ee
      * @param type
@@ -777,97 +879,106 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @param hkws
      * @param numberprefix
      * @param toc
-     * @return 
+     * @return
      */
     private Task exportDataToHtml(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean hkws, boolean numberprefix, boolean toc) {
         return new ExportToHtmlTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, taskinfo, dataObj, desktopObj, settingsObj, bibtexObj,
-                                       fp, ee, type, part, n, bibtex, ihv, hkws, numberprefix, toc);
+                this, msgLabel, taskinfo, dataObj, desktopObj, settingsObj, bibtexObj,
+                fp, ee, type, part, n, bibtex, ihv, hkws, numberprefix, toc);
     }
+
     /**
-     * 
+     *
      * @param fp
      * @param ee
      * @param part
      * @param allinone
      * @param removeformattags
-     * @return 
+     * @return
      */
     private Task exportDataToXml(File fp, ArrayList<Object> ee, int part, boolean bibtex, boolean allinone, boolean removeformattags) {
         return new ExportToXmlTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, taskinfo, dataObj, bibtexObj, fp, ee, part, bibtex, allinone, removeformattags);
+                this, msgLabel, taskinfo, dataObj, bibtexObj, fp, ee, part, bibtex, allinone, removeformattags);
     }
+
     /**
-     * 
+     *
      * @param fp
      * @param ee
      * @param part
      * @param sep
      * @param removeformattags
      * @param bibtex
-     * @return 
+     * @return
      */
     private Task exportDataToCsv(File fp, ArrayList<Object> ee, int part, char sep, boolean removeformattags, boolean bibtex) {
         return new ExportToCsvTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, taskinfo, dataObj, bibtexObj, fp, ee, part, sep, removeformattags, bibtex);
+                this, msgLabel, taskinfo, dataObj, bibtexObj, fp, ee, part, sep, removeformattags, bibtex);
     }
+
     /**
-     * 
+     *
      * @param fp
      * @param ee
-     * @return 
+     * @return
      */
     private Task exportDataToZkn(File fp, ArrayList<Object> ee, boolean bibtex) {
         return new ExportToZknTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, taskinfo, dataObj, bookmarkObj, bibtexObj, bibtex, fp, ee);
+                this, msgLabel, taskinfo, dataObj, bookmarkObj, bibtexObj, bibtex, fp, ee);
     }
+
     /**
-     * 
+     *
      * @param fp
      * @param defaulttimestamp
-     * @return 
+     * @return
      */
     private Task importFromZkx(File fp, String defaulttimestamp) {
         return new ImportFromZkx(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, taskinfo, dataObj, bookmarkObj, desktopObj, searchrequestsObj,
-                                       fp, defaulttimestamp);
+                this, msgLabel, taskinfo, dataObj, bookmarkObj, desktopObj, searchrequestsObj,
+                fp, defaulttimestamp);
     }
+
     private Task importFromZkn(File fp, boolean asciiToUnicode, boolean appendit, String defaulttimestamp) {
         return new ImportFromZkn(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, taskinfo, dataObj, bookmarkObj, desktopObj, searchrequestsObj,
-                                       settingsObj, fp, asciiToUnicode, appendit, defaulttimestamp);
+                this, msgLabel, taskinfo, dataObj, bookmarkObj, desktopObj, searchrequestsObj,
+                settingsObj, fp, asciiToUnicode, appendit, defaulttimestamp);
     }
+
     private Task importFromCSV(File fp, String sepchar, boolean asciiToUnicode, boolean appendit, String defaulttimestamp) {
         return new ImportFromCSV(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, taskinfo, dataObj, bookmarkObj, desktopObj, searchrequestsObj,
-                                       settingsObj, fp, sepchar, asciiToUnicode, appendit, defaulttimestamp);
+                this, msgLabel, taskinfo, dataObj, bookmarkObj, desktopObj, searchrequestsObj,
+                settingsObj, fp, sepchar, asciiToUnicode, appendit, defaulttimestamp);
     }
+
     /**
-     * 
+     *
      * @param oldauthors
      * @param newauthors
      * @param authortable
      * @param selectedrow
      * @param linkedauthors
-     * @return 
+     * @return
      */
     private Task mergeAuthors(String oldauthors, String newauthors, String newbibkey, JTable authortable, int selectedrow, LinkedList<Object[]> linkedauthors) {
         return new MergeAuthorsTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, dataObj, taskinfo, oldauthors, newauthors, newbibkey, authortable, selectedrow, linkedauthors);
+                this, msgLabel, dataObj, taskinfo, oldauthors, newauthors, newbibkey, authortable, selectedrow, linkedauthors);
     }
+
     /**
-     * 
+     *
      * @param oldkeywords
      * @param newkeywords
      * @param kwtable
      * @param selectedrow
      * @param linkedkeywords
-     * @return 
+     * @return
      */
     private Task mergeKeywords(String oldkeywords, String newkeywords, JTable kwtable, int selectedrow, LinkedList<Object[]> linkedkeywords) {
         return new MergeKeywordsTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                     this, msgLabel, dataObj, taskinfo, oldkeywords, newkeywords, kwtable, selectedrow, linkedkeywords);
+                this, msgLabel, dataObj, taskinfo, oldkeywords, newkeywords, kwtable, selectedrow, linkedkeywords);
     }
+
     /**
      *
      * @param et
@@ -876,36 +987,40 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task keywordSuggestions(int eqi, int step, LinkedList<String> sel, LinkedList<String> rest, LinkedList<String> ffs, String t) {
         return new KeywordSuggestionsTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, taskinfo, dataObj, synonymsObj, settingsObj, eqi, step, sel, rest, ffs, t);
+                this, msgLabel, taskinfo, dataObj, synonymsObj, settingsObj, eqi, step, sel, rest, ffs, t);
     }
+
     /**
-     * 
+     *
      * @param mo
-     * @return 
+     * @return
      */
     private Task setFirstLineAsTitle(int mo) {
         return new SetFirstLineAsTitleTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, dataObj, mo);
+                this, msgLabel, dataObj, mo);
     }
+
     /**
-     * 
+     *
      * @param entries
-     * @return 
+     * @return
      */
     private Task deleteEntry(int[] entries) {
         return new DeleteEntryTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, dataObj, searchrequestsObj, entries);
+                this, msgLabel, dataObj, searchrequestsObj, entries);
     }
+
     /**
-     * 
+     *
      * @param entries
      * @param insertpos
-     * @return 
+     * @return
      */
     private Task entriesToLuhmann(int[] entries, int insertpos) {
         return new EntriesToLuhmannTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, dataObj, entries, insertpos);
+                this, msgLabel, dataObj, entries, insertpos);
     }
+
     /**
      *
      * @param authors
@@ -913,8 +1028,9 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task deleteAuthors(String[] authors) {
         return new DeleteAuthorsTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, dataObj, authors);
+                this, msgLabel, dataObj, authors);
     }
+
     /**
      *
      * @param keywords
@@ -922,30 +1038,33 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task deleteKeywords(String[] keywords) {
         return new DeleteKeywordsTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, dataObj, keywords);
+                this, msgLabel, dataObj, keywords);
     }
+
     /**
-     * 
+     *
      * @param et
      * @param dtm
      * @return
      */
     private Task showAuthors(int et, DefaultTableModel dtm) {
         return new ShowAuthorListTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, dataObj, bibtexObj, et, dtm);
+                this, msgLabel, dataObj, bibtexObj, et, dtm);
     }
+
     /**
-     * 
+     *
      * @param et
      * @param dtm
      * @return
      */
     private Task showAttachments(DefaultTableModel dtm) {
         return new ShowAttachmentListTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, dataObj, settingsObj, dtm);
+                this, msgLabel, dataObj, settingsObj, dtm);
     }
+
     /**
-     * 
+     *
      * @param fs
      * @param rs
      * @param re
@@ -957,8 +1076,9 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task replace(String fs, String rs, int[] re, int w, boolean ww, boolean mc, boolean rex) {
         return new ReplaceTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, taskinfo, dataObj, fs, rs, re, w, ww, mc, rex);
+                this, msgLabel, taskinfo, dataObj, fs, rs, re, w, ww, mc, rex);
     }
+
     /**
      *
      * @param includeSynonyms
@@ -966,17 +1086,19 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task showKeywords(boolean includeSynonyms, DefaultTableModel dtm) {
         return new ShowKeywordListTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, dataObj, synonymsObj, includeSynonyms, dtm);
+                this, msgLabel, dataObj, synonymsObj, includeSynonyms, dtm);
     }
+
     /**
-     * 
+     *
      * @param conv
-     * @return 
+     * @return
      */
     private Task convertFormatTags(int conv) {
         return new ConvertFormatTagsTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, dataObj, conv);
+                this, msgLabel, dataObj, conv);
     }
+
     /**
      *
      * @param dtm
@@ -984,8 +1106,9 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task showTitles(DefaultTableModel dtm) {
         return new ShowTitleListTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, dataObj, dtm);
+                this, msgLabel, dataObj, dtm);
     }
+
     /**
      *
      * @param resetFreq
@@ -993,8 +1116,9 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task updateFile(boolean resetFreq) {
         return new UpdateFileTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                       this, msgLabel, dataObj, desktopObj, bibtexObj, resetFreq);
+                this, msgLabel, dataObj, desktopObj, bibtexObj, resetFreq);
     }
+
     /**
      *
      * @return
@@ -1003,16 +1127,18 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         // initiate the "statusbar" (the loading splash screen), giving visiual
         // feedback during open and save operations
         return new LoadFileTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                this, msgLabel, dataObj, bookmarkObj, searchrequestsObj, desktopObj, synonymsObj, settingsObj, bibtexObj);
+                this, msgLabel, dataObj, bookmarkObj, searchrequestsObj, desktopObj, synonymsObj, settingsObj, bibtexObj);
     }
+
     /**
      *
      * @return
      */
     private Task saveFile() {
         return new SaveFileTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-            this, msgLabel, dataObj, bookmarkObj, searchrequestsObj, desktopObj, synonymsObj, settingsObj, bibtexObj);
+                this, msgLabel, dataObj, bookmarkObj, searchrequestsObj, desktopObj, synonymsObj, settingsObj, bibtexObj);
     }
+
     /**
      *
      * @param tos
@@ -1032,14 +1158,15 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @return
      */
     private Task startSearch(int tos, String[] s, int[] se, int w, int l, boolean ww, boolean mc, boolean syn, boolean rex, boolean ts,
-                            String fr, String to, int tsi, boolean donly) {
+            String fr, String to, int tsi, boolean donly) {
         // initiate the "statusbar" (the loading splash screen), giving visiual
         // feedback during open and save operations
         return new StartSearchTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                                   this, msgLabel, dataObj, searchrequestsObj, synonymsObj, tos, s, se, w, l, ww, mc, syn, rex, ts, fr, to, tsi, donly);
+                this, msgLabel, dataObj, searchrequestsObj, synonymsObj, tos, s, se, w, l, ww, mc, syn, rex, ts, fr, to, tsi, donly);
     }
+
     /**
-     * 
+     *
      */
     @Action
     public void cancel() {
