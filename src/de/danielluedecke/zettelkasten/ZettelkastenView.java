@@ -7247,13 +7247,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // if dialog window isn't already created, do this now
         if (null == importWindow) {
             // when we have no data, there is no need for appending the data
-            boolean isAppendPossible = data.getCount(Daten.ZKNCOUNT)>0;
+            boolean isAppendPossible = data.getCount(Daten.ZKNCOUNT) > 0;
             // get parent und init window
-            importWindow = new CImport(getFrame(),settings,bibtex,isAppendPossible);
+            importWindow = new CImport(getFrame(), settings, bibtex, isAppendPossible);
             // center window
             importWindow.setLocationRelativeTo(getFrame());
         }
-        ZettelkastenApp.getApplication().show(importWindow);        
+        ZettelkastenApp.getApplication().show(importWindow);
         // Here the data (filepath, filetype) from the import window
         // will be passed to another dialog window, which starts the
         // background task. these dialogs are separated because it looks
@@ -7264,16 +7264,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // when the previous dialog wasn't cancelled or simply closed
         if (Constants.RETURN_VALUE_CONFIRM == importWindow.getReturnValue()) {
             // check whether we want to import bibtex data
-            if (Constants.TYPE_BIB==importWindow.getImportType()) {
+            if (Constants.TYPE_BIB == importWindow.getImportType()) {
                 importAuthors();
-            }
-            else {
+            } else {
                 // first check whether we have unsaved changes, when the user wants
                 // to create a new data-file - but only the import-type is a data-file!
-                if (((Constants.TYPE_ZKN3==importWindow.getImportType()) ||
-                     (Constants.TYPE_ZKN==importWindow.getImportType()) ||
-                     (Constants.TYPE_CSV==importWindow.getImportType())) &&
-                     (!importWindow.getAppend() && !askForSaveChanges(getResourceMap().getString("msgSaveChangesTitle")))) {
+                if (((Constants.TYPE_ZKN3 == importWindow.getImportType())
+                        || (Constants.TYPE_ZKN == importWindow.getImportType())
+                        || (Constants.TYPE_CSV == importWindow.getImportType()))
+                        && (!importWindow.getAppend() && !askForSaveChanges(getResourceMap().getString("msgSaveChangesTitle")))) {
                     return;
                 }
                 // create default timestamp. this is only relevant for importing old data-files (.zkn), because
@@ -7281,7 +7280,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // we offer the user to input a default date that is set for all entries that do not have any timestamp
                 String defaulttimestamp = null;
                 // if old data should be imported, ask for default timestamp
-                if (Constants.TYPE_ZKN==importWindow.getImportType()) {
+                if (Constants.TYPE_ZKN == importWindow.getImportType()) {
                     // get current date as default or initial value
                     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy");
                     // get mainfile that should be importet
@@ -7289,27 +7288,26 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     // get last modification date from file
                     long l = f.lastModified();
                     // wait for valid input
-                    while (null==defaulttimestamp) {
+                    while (null == defaulttimestamp) {
                         // show input-dialog
-                        defaulttimestamp = (String)JOptionPane.showInputDialog(getFrame(),                          // parent window
-                                                               getResourceMap().getString("defaultTimeStampMsg"),   // message text
-                                                               getResourceMap().getString("defaultTimeStampTitle"), // messagebox title
-                                                               JOptionPane.PLAIN_MESSAGE,                           // type of dialog
-                                                               null,                                                // icon
-                                                               null,                                                // array of selection values.
-                                                               // must be null to get an input-field.
-                                                               // providing an array here would create a dropdown-combobox
-                                                               sdf.format(l));                           // initial value, date of importfile
+                        defaulttimestamp = (String) JOptionPane.showInputDialog(getFrame(), // parent window
+                                getResourceMap().getString("defaultTimeStampMsg"), // message text
+                                getResourceMap().getString("defaultTimeStampTitle"), // messagebox title
+                                JOptionPane.PLAIN_MESSAGE, // type of dialog
+                                null, // icon
+                                null, // array of selection values.
+                                // must be null to get an input-field.
+                                // providing an array here would create a dropdown-combobox
+                                sdf.format(l));                           // initial value, date of importfile
                         // now convert the timestamp into something
                         // therefore, check whether we have any valid input at all, if we have the correct length (8 chars)
                         // and if we have to "." at the right position. A valid input would be e.g. "31.12.08" (dd.mm.yy)
-                        if (defaulttimestamp!=null &&
-                            8==defaulttimestamp.length() &&
-                            defaulttimestamp.charAt(2)=='.' &&
-                            defaulttimestamp.charAt(5)=='.') {
-                            defaulttimestamp = defaulttimestamp.substring(6)+defaulttimestamp.substring(3, 5)+defaulttimestamp.substring(0, 2)+"0001";
-                        }
-                        else {
+                        if (defaulttimestamp != null
+                                && 8 == defaulttimestamp.length()
+                                && defaulttimestamp.charAt(2) == '.'
+                                && defaulttimestamp.charAt(5) == '.') {
+                            defaulttimestamp = defaulttimestamp.substring(6) + defaulttimestamp.substring(3, 5) + defaulttimestamp.substring(0, 2) + "0001";
+                        } else {
                             defaulttimestamp = null;
                         }
                     }
@@ -7319,8 +7317,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     // get parent und init window
                     taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_IMPORTDATA, taskinfo,
                             data, bookmarks, desktop, searchrequests, settings,
-                            importWindow.getImportType(), importWindow.getFilePath(), 
-                            importWindow.getSeparatorChar(), importWindow.getAsciiToUnicode(), 
+                            importWindow.getImportType(), importWindow.getFilePath(),
+                            importWindow.getSeparatorChar(), importWindow.getAsciiToUnicode(),
                             importWindow.getAppend(), defaulttimestamp, null);
                     // center window
                     taskDlg.setLocationRelativeTo(getFrame());
@@ -7339,7 +7337,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     case Constants.TYPE_ZKN3:
                     case Constants.TYPE_ZKN:
                     case Constants.TYPE_CSV:
-                    case Constants.TYPE_XML: updateAfterOpen(); break;
+                    case Constants.TYPE_XML:
+                        updateAfterOpen();
+                        break;
                 }
             }
         }
