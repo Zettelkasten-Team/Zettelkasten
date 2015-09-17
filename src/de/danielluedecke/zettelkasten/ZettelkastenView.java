@@ -30,12 +30,10 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 /**
  * Swing Application Framework PlugIn für NetBeans 7.x
  * http://plugins.netbeans.org/plugin/43836/swing-application-framework-support
  */
-
 package de.danielluedecke.zettelkasten;
 
 import com.explodingpixels.macwidgets.BottomBar;
@@ -195,15 +193,16 @@ import org.jdom2.output.XMLOutputter;
  * 
  */
 // TODO beim majorbackup optional auch attachments/img?
-
 /**
  * The application's main frame.
  */
 public class ZettelkastenView extends FrameView implements WindowListener, DropTargetListener {
+
     // <editor-fold defaultstate="collapsed" desc="Variablendeklaration">
+
     /**
-     * initiate the data class. this class stores and manages the main
-     * data for this program.
+     * initiate the data class. this class stores and manages the main data for
+     * this program.
      */
     private final Daten data;
     /**
@@ -216,8 +215,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private final SearchRequests searchrequests = new SearchRequests(this);
     /**
-     * initiate the bookmarks class. this class stores and manages the 
-     * bookmarks of entrys.
+     * initiate the bookmarks class. this class stores and manages the bookmarks
+     * of entrys.
      */
     private final Bookmarks bookmarks;
     /**
@@ -225,13 +224,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private final BibTex bibtex;
     /**
-     * initiate the desktop class. this class stores and manages the 
-     * desktop data.
+     * initiate the desktop class. this class stores and manages the desktop
+     * data.
      */
     private final DesktopData desktop = new DesktopData(this);
     /**
-     * Initiate the settings-class. this class first of all loads some user settings
-     * and e.g. the filepath of the currently used datafile, so it can be automatically opened
+     * Initiate the settings-class. this class first of all loads some user
+     * settings and e.g. the filepath of the currently used datafile, so it can
+     * be automatically opened
      */
     private final Settings settings;
     /**
@@ -251,41 +251,43 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private final AutoKorrektur autoKorrekt;
     /**
-     * create a variable for a list model. this list model is used for
-     * the JList-component which displays the keywords of the current
-     * entry.
+     * create a variable for a list model. this list model is used for the
+     * JList-component which displays the keywords of the current entry.
      */
     private final DefaultListModel keywordListModel = new DefaultListModel();
     /**
-     * create a variable for a list model. this list model is used for
-     * the JList-component which displays the found entries, which have relations
+     * create a variable for a list model. this list model is used for the
+     * JList-component which displays the found entries, which have relations
      * between certain keywords. see "showCluster()" for more details.
      */
     private final List<String> clusterList = new ArrayList<>();
     /**
-     * create a variable for a list model. this list model is used for
-     * the JList-component which displays the is-follower-numbers.
+     * create a variable for a list model. this list model is used for the
+     * JList-component which displays the is-follower-numbers.
      */
     private final List<String> isFollowerList = new ArrayList<>();
     /**
-     * This variable stores the table data of the keyword-list when this list is filtered.
-     * All changes to a fitered table-list are also applied to this linked list. When 
-     * the table-list is being refreshed, we don't need to run the time-consuming task; instead
-     * we simply iterate this list and set the values to the table
+     * This variable stores the table data of the keyword-list when this list is
+     * filtered. All changes to a fitered table-list are also applied to this
+     * linked list. When the table-list is being refreshed, we don't need to run
+     * the time-consuming task; instead we simply iterate this list and set the
+     * values to the table
      */
     private LinkedList<Object[]> linkedkeywordlist;
     /**
-     * This variable stores the table data of the author-list when this list is filtered.
-     * All changes to a fitered table-list are also applied to this linked list. When 
-     * the table-list is being refreshed, we don't need to run the time-consuming task; instead
-     * we simply iterate this list and set the values to the table
+     * This variable stores the table data of the author-list when this list is
+     * filtered. All changes to a fitered table-list are also applied to this
+     * linked list. When the table-list is being refreshed, we don't need to run
+     * the time-consuming task; instead we simply iterate this list and set the
+     * values to the table
      */
     private LinkedList<Object[]> linkedauthorlist;
     /**
-     * This variable stores the table data of the title-list when this list is filtered.
-     * All changes to a fitered table-list are also applied to this linked list. When 
-     * the table-list is being refreshed, we don't need to run the time-consuming task; instead
-     * we simply iterate this list and set the values to the table
+     * This variable stores the table data of the title-list when this list is
+     * filtered. All changes to a fitered table-list are also applied to this
+     * linked list. When the table-list is being refreshed, we don't need to run
+     * the time-consuming task; instead we simply iterate this list and set the
+     * values to the table
      */
     private LinkedList<Object[]> linkedtitlelist;
     /**
@@ -295,35 +297,39 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     /**
      * This variable stores the state of the tree data of the cluster-list,
      * whether it is filtered (true) or not (false). we don't need to store the
-     * initial elements, since we simply can iterate all keywords to restore that list
+     * initial elements, since we simply can iterate all keywords to restore
+     * that list
      */
     private boolean linkedclusterlist;
     /**
-     * This string builder contains all follower-(trailing)-numbers of an entry, prepared
-     * for exporting these entries.
+     * This string builder contains all follower-(trailing)-numbers of an entry,
+     * prepared for exporting these entries.
      */
     private LinkedList<Integer> luhmannnumbersforexport;
     /**
-     * This variable indicates whether the tabbed pane with the jTableLinks needs updates or not.
-     * When selecting an entry, it is displayed, while the links in the table still belong/refer
-     * to the activated entry. when re-activating the entry, the jTableLinks usually would be updated
-     * (due to the {@link #updateDisplay() updateDisplay()} method). but this is not necessary,
-     * when the list is already uptodate. see {@link #showRelatedKeywords() showRelatedKeywords()} for
-     * and {@link #showLinks() showLinks()} for further details.
+     * This variable indicates whether the tabbed pane with the jTableLinks
+     * needs updates or not. When selecting an entry, it is displayed, while the
+     * links in the table still belong/refer to the activated entry. when
+     * re-activating the entry, the jTableLinks usually would be updated (due to
+     * the {@link #updateDisplay() updateDisplay()} method). but this is not
+     * necessary, when the list is already uptodate. see
+     * {@link #showRelatedKeywords() showRelatedKeywords()} for and
+     * {@link #showLinks() showLinks()} for further details.
      */
     private boolean needsLinkUpdate = true;
     /**
-     * This variable indicates whether the data file is currently being saved. This
-     * should prevent the automatic backup from starting while the data file is
-     * saved.
+     * This variable indicates whether the data file is currently being saved.
+     * This should prevent the automatic backup from starting while the data
+     * file is saved.
      */
     private boolean isSaving = false;
     /**
-     * Indicates whether a system tray icon could be successfully installed or not.
+     * Indicates whether a system tray icon could be successfully installed or
+     * not.
      */
     private boolean trayIconInstalled = false;
     /**
-     * 
+     *
      */
     boolean isLiveSearchActive = false;
     /**
@@ -335,97 +341,103 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private boolean errorIconIsVisible = false;
     /**
-     * 
+     *
      */
     boolean editEntryFromDesktop = false;
     /**
-     * 
+     *
      */
     boolean editEntryFromSearchWindow = false;
     /**
-     * 
+     *
      */
     private String updateURI = Constants.UPDATE_URI;
     /**
-     * This string contains an added keyword that was added to the jTableKeywords, so the
-     * new added value can be selected immediatley after adding in to the table.
+     * This string contains an added keyword that was added to the
+     * jTableKeywords, so the new added value can be selected immediatley after
+     * adding in to the table.
      */
     private String newAddedKeyword = null;
     /**
-     * This string contains an added author that was added to the jTableAuthors, so the
-     * new added value can be selected immediatley after adding in to the table.
+     * This string contains an added author that was added to the jTableAuthors,
+     * so the new added value can be selected immediatley after adding in to the
+     * table.
      */
     private String newAddedAuthor = null;
     /**
-     * 
+     *
      */
     private String lastClusterRelationKeywords = "";
     /**
-     * This variable stores the treepath when a node was dragged&dropped within the jtreeluhmann
+     * This variable stores the treepath when a node was dragged&dropped within
+     * the jtreeluhmann
      */
     private DefaultMutableTreeNode movedNodeToRemove = null;
     /**
-     * This variable stores the treepath of the node that should bes elected within the jtreeluhmann
-     * when all followers, including parents, should be displayed
+     * This variable stores the treepath of the node that should bes elected
+     * within the jtreeluhmann when all followers, including parents, should be
+     * displayed
      */
     private DefaultMutableTreeNode selectedLuhmannNode = null;
     /**
-     * Constant for the selected tab of the tab pane. Since the order of the tabs
-     * might change in the future, we declare constant here, so we just have to make
-     * changes here instead of searching through the source code
+     * Constant for the selected tab of the tab pane. Since the order of the
+     * tabs might change in the future, we declare constant here, so we just
+     * have to make changes here instead of searching through the source code
      */
     private final int TAB_LINKS = 0;
     /**
-     * Constant for the selected tab of the tab pane. Since the order of the tabs
-     * might change in the future, we declare constant here, so we just have to make
-     * changes here instead of searching through the source code
+     * Constant for the selected tab of the tab pane. Since the order of the
+     * tabs might change in the future, we declare constant here, so we just
+     * have to make changes here instead of searching through the source code
      */
     private final int TAB_LUHMANN = 1;
     /**
-     * Constant for the selected tab of the tab pane. Since the order of the tabs
-     * might change in the future, we declare constant here, so we just have to make
-     * changes here instead of searching through the source code
+     * Constant for the selected tab of the tab pane. Since the order of the
+     * tabs might change in the future, we declare constant here, so we just
+     * have to make changes here instead of searching through the source code
      */
     private final int TAB_KEYWORDS = 2;
     /**
-     * Constant for the selected tab of the tab pane. Since the order of the tabs
-     * might change in the future, we declare constant here, so we just have to make
-     * changes here instead of searching through the source code
+     * Constant for the selected tab of the tab pane. Since the order of the
+     * tabs might change in the future, we declare constant here, so we just
+     * have to make changes here instead of searching through the source code
      */
     private final int TAB_AUTHORS = 3;
     /**
-     * Constant for the selected tab of the tab pane. Since the order of the tabs
-     * might change in the future, we declare constant here, so we just have to make
-     * changes here instead of searching through the source code
+     * Constant for the selected tab of the tab pane. Since the order of the
+     * tabs might change in the future, we declare constant here, so we just
+     * have to make changes here instead of searching through the source code
      */
     private final int TAB_TITLES = 4;
     /**
-     * Constant for the selected tab of the tab pane. Since the order of the tabs
-     * might change in the future, we declare constant here, so we just have to make
-     * changes here instead of searching through the source code
+     * Constant for the selected tab of the tab pane. Since the order of the
+     * tabs might change in the future, we declare constant here, so we just
+     * have to make changes here instead of searching through the source code
      */
     private final int TAB_CLUSTER = 5;
     /**
-     * Constant for the selected tab of the tab pane. Since the order of the tabs
-     * might change in the future, we declare constant here, so we just have to make
-     * changes here instead of searching through the source code
+     * Constant for the selected tab of the tab pane. Since the order of the
+     * tabs might change in the future, we declare constant here, so we just
+     * have to make changes here instead of searching through the source code
      */
     private final int TAB_BOOKMARKS = 6;
     /**
-     * Constant for the selected tab of the tab pane. Since the order of the tabs
-     * might change in the future, we declare constant here, so we just have to make
-     * changes here instead of searching through the source code
+     * Constant for the selected tab of the tab pane. Since the order of the
+     * tabs might change in the future, we declare constant here, so we just
+     * have to make changes here instead of searching through the source code
      */
     private final int TAB_ATTACHMENTS = 7;
     /**
-     * indicates the currently selected tab, which will become the previously selected
-     * tab when the tabbedpane state changed.
+     * indicates the currently selected tab, which will become the previously
+     * selected tab when the tabbedpane state changed.
      */
     private int previousSelectedTab = -1;
     /**
-     * This variables stores the currently displayed zettel. the currently <i>displayed</i>
-     * Zettel may differ from the currently <i>active</i> Zettel, if we e.g. select an entry
-     * by single-clicking it from a jTable, but do not activate it by double-clicking it.
+     * This variables stores the currently displayed zettel. the currently
+     * <i>displayed</i>
+     * Zettel may differ from the currently <i>active</i> Zettel, if we e.g.
+     * select an entry by single-clicking it from a jTable, but do not activate
+     * it by double-clicking it.
      */
     public int displayedZettel = -1;
     /**
@@ -445,18 +457,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private boolean createAutoBackupIsRunning = false;
     /**
-     * Since the window for editing new entries is a modeless frame, we need to have an indicator
-     * which tells us whether the an entry is currently being edited or not. if yes, don't
-     * open another window.
+     * Since the window for editing new entries is a modeless frame, we need to
+     * have an indicator which tells us whether the an entry is currently being
+     * edited or not. if yes, don't open another window.
      */
     private boolean isEditModeActive = false;
     /**
-     * Indicated whether a table's content is changed, e.g. filtered. if so, we have to tell this
-     * the selection listener which - otherwise - would be called several times...
+     * Indicated whether a table's content is changed, e.g. filtered. if so, we
+     * have to tell this the selection listener which - otherwise - would be
+     * called several times...
      */
     private boolean tableUpdateActive = false;
     /**
-     * 
+     *
      */
     private Timer memoryDisplayTimer = null;
     /**
@@ -485,28 +498,32 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private createLinksTask cLinksTask;
     /**
-     * String array that contain highlight terms. this is used when creating the html-entry in
-     * the update display method. the {@link #findLive() live-search}-feature uses this to highlight
-     * the terms, or e.g. highlighting the keywords in the text needs this array.
+     * String array that contain highlight terms. this is used when creating the
+     * html-entry in the update display method. the
+     * {@link #findLive() live-search}-feature uses this to highlight the terms,
+     * or e.g. highlighting the keywords in the text needs this array.
      */
     static DataFlavor urlFlavor;
+
     static {
         try {
-            urlFlavor =
-                new DataFlavor ("application/x-java-url; class=java.net.URL");
+            urlFlavor
+                    = new DataFlavor("application/x-java-url; class=java.net.URL");
         } catch (ClassNotFoundException cnfe) {
-            Constants.zknlogger.log(Level.WARNING,"Could not create URL Data Flavor!");
+            Constants.zknlogger.log(Level.WARNING, "Could not create URL Data Flavor!");
         }
-    }    
+    }
     /**
      * get the strings for file descriptions from the resource map
      */
-    private final org.jdesktop.application.ResourceMap toolbarResourceMap = 
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(ToolbarIcons.class);
+    private final org.jdesktop.application.ResourceMap toolbarResourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(ToolbarIcons.class);
+
     // </editor-fold>
+
     /**
-     * 
+     *
      * @param app
      * @param st
      * @param ak
@@ -520,20 +537,20 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         super(app);
         taskinfo = td;
         // store reference to settings-class
-        settings=st;
+        settings = st;
         // store reference to acceleratorKeys-class
-        acceleratorKeys=ak;
+        acceleratorKeys = ak;
         // store reference to auto-correction
         autoKorrekt = ac;
         // store reference to synonyms
         synonyms = sy;
         // store reference to steno data
         steno = stn;
-        bookmarks = new Bookmarks(this,settings);
-        bibtex = new BibTex(this,settings);
+        bookmarks = new Bookmarks(this, settings);
+        bibtex = new BibTex(this, settings);
         // init all those classes that rely on parameters and could not be initialised
         // befor the constructor is called...
-        data = new Daten(this,settings,synonyms,bibtex);
+        data = new Daten(this, settings, synonyms, bibtex);
         // init stream-logger, so we have the logging both to a file and a byte-array
         StreamHandler sHandler = new StreamHandler(baos_log, new SimpleFormatter());
         Constants.zknlogger.addHandler(sHandler);
@@ -543,19 +560,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         FileHandler fh;
         try {
             // set up a new file handler, using the settings-directory as log-file-directory
-            fh = new FileHandler(FileOperationsUtil.getZettelkastenHomeDir()+"zknerror%g.log",
-                                 // file limit of 100 kb
-                                 102400,
-                                 // five log files
-                                 3,
-                                 // and no appending...
-                                 false);
+            fh = new FileHandler(FileOperationsUtil.getZettelkastenHomeDir() + "zknerror%g.log",
+                    // file limit of 100 kb
+                    102400,
+                    // five log files
+                    3,
+                    // and no appending...
+                    false);
             // add filehandler to our global logger
             Constants.zknlogger.addHandler(fh);
             // and use a simple formatting, so the log-file will be readable
             fh.setFormatter(new SimpleFormatter());
-        }
-        catch (IOException | SecurityException ex) {
+        } catch (IOException | SecurityException ex) {
             Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
         }
         // befor components are drawn, set the default look and feel for this application
@@ -588,25 +604,23 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // retrieve bibtex-filepath
         File bibtexfilepath = bibtex.getFilePath();
         // only attach bibtex file, if we have a specified filepath
-        if (bibtexfilepath!=null && bibtexfilepath.exists()) {
+        if (bibtexfilepath != null && bibtexfilepath.exists()) {
             // if we have no currently attached bibtex-file, or the currently attached bibtex-file
             // differs from the new selected file of the user, open the bibtex-file now
-            if ((null==currentlyattachedfile) || (!currentlyattachedfile.toString().equals(bibtexfilepath.toString()))) {
+            if ((null == currentlyattachedfile) || (!currentlyattachedfile.toString().equals(bibtexfilepath.toString()))) {
                 // open selected file, using the character encoding of the related reference-manager (i.e.
                 // the programme that has exported the bib-tex-file).
                 if (bibtex.openAttachedFile(Constants.BIBTEX_ENCODINGS[settings.getLastUsedBibtexFormat()], true)) {
                     // tell about success
-                    Constants.zknlogger.log(Level.INFO,"BibTex-File was successfully attached.");
-                }
-                else {
+                    Constants.zknlogger.log(Level.INFO, "BibTex-File was successfully attached.");
+                } else {
                     // tell about fail
-                    Constants.zknlogger.log(Level.INFO,"BibTex-File could not be found nor attached.");
+                    Constants.zknlogger.log(Level.INFO, "BibTex-File could not be found nor attached.");
                 }
             }
-        }
-        else {
+        } else {
             // tell about fail
-            Constants.zknlogger.log(Level.INFO,"No BibTex-File specified yet.");
+            Constants.zknlogger.log(Level.INFO, "No BibTex-File specified yet.");
         }
         // tick checbox-menuitem
         showHighlightKeywords.setSelected(settings.getHighlightKeywords());
@@ -693,7 +707,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         makeAutoBackupTimer.schedule(new AutoBackupTimer(), Constants.autobackupUpdateStart, Constants.autobackupUpdateInterval);
     }
 
-
     private void initBorders(Settings settingsObj) {
         /*
          * Constructor for Matte Border
@@ -743,25 +756,27 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jEditorPaneBookmarkComment.setBorder(ZknMacWidgetFactory.getTitledBorder(getResourceMap().getString("jEditorPaneBookmarkComment.border.title"), settings));
         }
     }
-    
-    
+
     /**
-     * This method inits several listeners for our components. we do this manually instead of
-     * letting the GUI-Builder create the event-methods, because this gives a better overview
-     * and avoids having too many (event-)methods.<br><br>
-     * Furthermore, selection listeners for the tables, trees and lists are initiated. Whenever a user makes
-     * a selection in the components on the tabbed pane, we want to react to that, either by showing
-     * the related entry or displaying other stuff.
+     * This method inits several listeners for our components. we do this
+     * manually instead of letting the GUI-Builder create the event-methods,
+     * because this gives a better overview and avoids having too many
+     * (event-)methods.<br><br>
+     * Furthermore, selection listeners for the tables, trees and lists are
+     * initiated. Whenever a user makes a selection in the components on the
+     * tabbed pane, we want to react to that, either by showing the related
+     * entry or displaying other stuff.
      */
     private void initListeners() {
-    // <editor-fold defaultstate="collapsed" desc="Here all relevant listeners are initiated.">
+        // <editor-fold defaultstate="collapsed" desc="Here all relevant listeners are initiated.">
         //
         // here we start with action listeners
         //
         // this actionn for the checkbox toggles the setting whether the synonyms
         // should be included in the keywordlist of the jtablekeywords or not
         jCheckBoxShowSynonyms.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // change setting
                 settings.setShowSynonymsInTable(jCheckBoxShowSynonyms.isSelected());
                 // tell that keywordlist is no longer up to date
@@ -774,7 +789,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // entries, including top-level parents, should be shown, or whether
         // current entry is the root of the treeview
         jCheckBoxShowAllLuhmann.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // change setting
                 settings.setShowAllLuhmann(jCheckBoxShowAllLuhmann.isSelected());
                 // refresh follower view
@@ -787,7 +803,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // all entries and retrieve those entries' keywords as well, if these entries'
         // keywords contain at least one keyword of the current entry's keywords.
         jCheckBoxCluster.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // tell that clusterlist is no longer up to date
                 data.setClusterlistUpToDate(false);
                 // refresh cluster list
@@ -814,7 +831,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jComboBoxAuthorType.setSelectedIndex(0);
         // init actionlistener
         jComboBoxAuthorType.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // authorlist needs update
                 data.setAuthorlistUpToDate(false);
                 // show authors
@@ -828,44 +846,51 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // should react on mouse-clicks. a single click filters the jTableLinks, a double-click
         // starts a keyword-search
         jListEntryKeywords.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
                 if (evt.isPopupTrigger() && !jPopupMenuKeywordList.isVisible()) {
                     jPopupMenuKeywordList.show(jListEntryKeywords, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
                 if (evt.isPopupTrigger() && !jPopupMenuKeywordList.isVisible()) {
                     jPopupMenuKeywordList.show(jListEntryKeywords, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseClicked(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 // this listener should only react on left-mouse-button-clicks...
                 // if other button then left-button clicked, leeave...
-                if(evt.getButton()!=MouseEvent.BUTTON1) {
+                if (evt.getButton() != MouseEvent.BUTTON1) {
                     return;
                 }
                 // on single click...
-                if (1==evt.getClickCount() && displayedZettel==data.getCurrentZettelPos()) {
+                if (1 == evt.getClickCount() && displayedZettel == data.getCurrentZettelPos()) {
                     // filter links
                     filterLinks();
                     highlightSegs();
-                }
-                // or search keyword on double click
-                else if (2==evt.getClickCount()) {
+                } // or search keyword on double click
+                else if (2 == evt.getClickCount()) {
                     searchKeywordsFromListLogAnd();
                 }
             }
         });
         jEditorPaneEntry.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
                 if (evt.isPopupTrigger() && !jPopupMenuMain.isVisible()) {
                     jPopupMenuMain.show(jEditorPaneEntry, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
                 if (evt.isPopupTrigger() && !jPopupMenuMain.isVisible()) {
                     jPopupMenuMain.show(jEditorPaneEntry, evt.getPoint().x, evt.getPoint().y);
@@ -873,216 +898,279 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             }
         });
         jTableLinks.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
                 if (evt.isPopupTrigger() && !jPopupMenuLinks.isVisible()) {
                     jPopupMenuLinks.show(jTableLinks, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
                 if (evt.isPopupTrigger() && !jPopupMenuLinks.isVisible()) {
                     jPopupMenuLinks.show(jTableLinks, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseClicked(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 // this listener should only react on left-mouse-button-clicks...
                 // if other button then left-button clicked, don't count it.
-                if(evt.getButton()!=MouseEvent.BUTTON1) {
+                if (evt.getButton() != MouseEvent.BUTTON1) {
                     return;
                 }
                 // on double-click, show cluster relations...
-                if (2==evt.getClickCount()) {
-                    showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableLinks,0));
+                if (2 == evt.getClickCount()) {
+                    showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableLinks, 0));
                 }
             }
         });
         jTableManLinks.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
                 if (evt.isPopupTrigger() && !jPopupMenuLinks.isVisible()) {
                     jPopupMenuLinks.show(jTableManLinks, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
                 if (evt.isPopupTrigger() && !jPopupMenuLinks.isVisible()) {
                     jPopupMenuLinks.show(jTableManLinks, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseClicked(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 // this listener should only react on left-mouse-button-clicks...
                 // if other button then left-button clicked, don't count it.
-                if(evt.getButton()!=MouseEvent.BUTTON1) {
+                if (evt.getButton() != MouseEvent.BUTTON1) {
                     return;
                 }
                 // on double-click, show entry
-                if (2==evt.getClickCount()) {
-                    showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableManLinks,0));
+                if (2 == evt.getClickCount()) {
+                    showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableManLinks, 0));
                 }
             }
         });
         jTableKeywords.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
                 if (evt.isPopupTrigger() && !jPopupMenuKeywords.isVisible()) {
                     jPopupMenuKeywords.show(jTableKeywords, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
                 if (evt.isPopupTrigger() && !jPopupMenuKeywords.isVisible()) {
                     jPopupMenuKeywords.show(jTableKeywords, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseClicked(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 // this listener should only react on left-mouse-button-clicks...
                 // if other button then left-button clicked, don't count it.
-                if(evt.getButton()!=MouseEvent.BUTTON1) {
+                if (evt.getButton() != MouseEvent.BUTTON1) {
                     return;
                 }
                 // on double-click, show entry
-                if (2==evt.getClickCount()) {
+                if (2 == evt.getClickCount()) {
                     searchLogOr();
                 }
             }
         });
         jTableAuthors.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
                 if (evt.isPopupTrigger() && !jPopupMenuAuthors.isVisible()) {
                     jPopupMenuAuthors.show(jTableAuthors, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
                 if (evt.isPopupTrigger() && !jPopupMenuAuthors.isVisible()) {
                     jPopupMenuAuthors.show(jTableAuthors, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseClicked(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 // this listener should only react on left-mouse-button-clicks...
                 // if other button then left-button clicked, don't count it.
-                if(evt.getButton()!=MouseEvent.BUTTON1) {
+                if (evt.getButton() != MouseEvent.BUTTON1) {
                     return;
                 }
                 // on double-click, show entry
-                if (2==evt.getClickCount()) {
+                if (2 == evt.getClickCount()) {
                     searchLogOr();
                 }
             }
         });
         jTableTitles.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
                 if (evt.isPopupTrigger() && !jPopupMenuTitles.isVisible()) {
                     jPopupMenuTitles.show(jTableTitles, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
                 if (evt.isPopupTrigger() && !jPopupMenuTitles.isVisible()) {
                     jPopupMenuTitles.show(jTableTitles, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseClicked(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 // this listener should only react on left-mouse-button-clicks...
                 // if other button then left-button clicked, don't count it.
-                if(evt.getButton()!=MouseEvent.BUTTON1) {
+                if (evt.getButton() != MouseEvent.BUTTON1) {
                     return;
                 }
                 // on double-click, show entry
-                if (2==evt.getClickCount()) {
-                    showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableTitles,0));
+                if (2 == evt.getClickCount()) {
+                    showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableTitles, 0));
                 }
             }
         });
         jTableBookmarks.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
                 if (evt.isPopupTrigger() && !jPopupMenuBookmarks.isVisible()) {
                     jPopupMenuBookmarks.show(jTableBookmarks, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
                 if (evt.isPopupTrigger() && !jPopupMenuBookmarks.isVisible()) {
                     jPopupMenuBookmarks.show(jTableBookmarks, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseClicked(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 // this listener should only react on left-mouse-button-clicks...
                 // if other button then left-button clicked, don't count it.
-                if(evt.getButton()!=MouseEvent.BUTTON1) {
+                if (evt.getButton() != MouseEvent.BUTTON1) {
                     return;
                 }
                 // on double-click, show entry
-                if (2==evt.getClickCount()) {
-                    showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableBookmarks,0));
+                if (2 == evt.getClickCount()) {
+                    showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableBookmarks, 0));
                 }
             }
         });
         jTableAttachments.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
                 if (evt.isPopupTrigger() && !jPopupMenuAttachments.isVisible()) {
                     jPopupMenuAttachments.show(jTableAttachments, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
                 if (evt.isPopupTrigger() && !jPopupMenuAttachments.isVisible()) {
                     jPopupMenuAttachments.show(jTableAttachments, evt.getPoint().x, evt.getPoint().y);
                 }
             }
-            @Override public void mouseClicked(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 // this listener should only react on left-mouse-button-clicks...
                 // if other button then left-button clicked, don't count it.
-                if(evt.getButton()!=MouseEvent.BUTTON1) return;
+                if (evt.getButton() != MouseEvent.BUTTON1) {
+                    return;
+                }
                 // on double-click, open attachment
-                if (2==evt.getClickCount()) openAttachment();
+                if (2 == evt.getClickCount()) {
+                    openAttachment();
+                }
             }
         });
         jTreeLuhmann.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
-                if (evt.isPopupTrigger() && !jPopupMenuLuhmann.isVisible()) jPopupMenuLuhmann.show(jTreeLuhmann, evt.getPoint().x, evt.getPoint().y);
+                if (evt.isPopupTrigger() && !jPopupMenuLuhmann.isVisible()) {
+                    jPopupMenuLuhmann.show(jTreeLuhmann, evt.getPoint().x, evt.getPoint().y);
+                }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 // check whether the popup-trigger-mouse-key was pressed
-                if (evt.isPopupTrigger() && !jPopupMenuLuhmann.isVisible()) jPopupMenuLuhmann.show(jTreeLuhmann, evt.getPoint().x, evt.getPoint().y);
+                if (evt.isPopupTrigger() && !jPopupMenuLuhmann.isVisible()) {
+                    jPopupMenuLuhmann.show(jTreeLuhmann, evt.getPoint().x, evt.getPoint().y);
+                }
             }
-            @Override public void mouseClicked(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 // this listener should only react on left-mouse-button-clicks...
                 // if other button then left-button clicked, don't count it.
-                if(evt.getButton()!=MouseEvent.BUTTON1) return;
+                if (evt.getButton() != MouseEvent.BUTTON1) {
+                    return;
+                }
                 // on single-click, show entry
-                if (2==evt.getClickCount()) showEntry(retrieveEntryNrFromLuhmann());
+                if (2 == evt.getClickCount()) {
+                    showEntry(retrieveEntryNrFromLuhmann());
+                }
             }
         });
         jTreeCluster.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mouseClicked(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 // this listener should only react on left-mouse-button-clicks...
                 // if other button then left-button clicked, don't count it.
-                if(evt.getButton()!=MouseEvent.BUTTON1) return;
+                if (evt.getButton() != MouseEvent.BUTTON1) {
+                    return;
+                }
                 // on single-click, show cluster relations...
-                if (1==evt.getClickCount()) showClusterRelations();
+                if (1 == evt.getClickCount()) {
+                    showClusterRelations();
+                }
             }
         });
         jLabelMemory.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mouseClicked(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 // this listener should only react on left-mouse-button-clicks...
                 // if other button then left-button clicked, don't count it.
-                if(evt.getButton()!=MouseEvent.BUTTON1) return;
+                if (evt.getButton() != MouseEvent.BUTTON1) {
+                    return;
+                }
                 // when the memory label is clicked, call the garbage collector.
-                if (1==evt.getClickCount()) System.gc();
+                if (1 == evt.getClickCount()) {
+                    System.gc();
+                }
             }
         });
         //
         // here we start with key-listeners
         //
         jListEntryKeywords.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override public void keyReleased(java.awt.event.KeyEvent evt) {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
                 // if a navigation-key (arrows, page-down/up, home etc.) is pressed,
                 // we assume a new item-selection, so behave like on a mouse-click and
                 // filter the links
@@ -1094,19 +1182,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             }
         });
         jTextFieldLiveSearch.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override public void keyReleased(java.awt.event.KeyEvent evt) {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
                 // when the user presses the escape-key, hide panel
-                if (KeyEvent.VK_ESCAPE==evt.getKeyCode()) {
+                if (KeyEvent.VK_ESCAPE == evt.getKeyCode()) {
                     findLiveCancel();
-                }
-                else {
+                } else {
                     // get the text from the live-search-textbox
                     String livetext = jTextFieldLiveSearch.getText();
                     // only highlight text, when we have more that two chars
-                    if (livetext.length()>1) {
+                    if (livetext.length() > 1) {
                         // create array with search term
                         // set highlightterms
-                        HtmlUbbUtil.setHighlighTerms(new String[] {livetext},HtmlUbbUtil.HIGHLIGHT_STYLE_LIVESEARCH, false);
+                        HtmlUbbUtil.setHighlighTerms(new String[]{livetext}, HtmlUbbUtil.HIGHLIGHT_STYLE_LIVESEARCH, false);
                         // update display and highlight text.
                         updateDisplayParts(displayedZettel);
                     }
@@ -1114,64 +1202,68 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             }
         });
         jTreeCluster.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override public void keyReleased(java.awt.event.KeyEvent evt) {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
                 // if a navigation-key (arrows, page-down/up, home etc.) is pressed,
                 // we assume a new item-selection, so behave like on a mouse-click and
                 // show the cluster relations.
-                if (Tools.isNavigationKey(evt.getKeyCode())) showClusterRelations();
+                if (Tools.isNavigationKey(evt.getKeyCode())) {
+                    showClusterRelations();
+                }
             }
         });
         jTextFieldFilterKeywords.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override public void keyReleased(java.awt.event.KeyEvent evt) {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
                 if (Tools.isNavigationKey(evt.getKeyCode())) {
                     // if user pressed navigation key, select next table entry
                     de.danielluedecke.zettelkasten.util.TableUtils.navigateThroughList(jTableKeywords, evt.getKeyCode());
-                }
-                else {
+                } else {
                     // select table-entry live, while the user is typing...
-                    de.danielluedecke.zettelkasten.util.TableUtils.selectByTyping(jTableKeywords,jTextFieldFilterKeywords,0);
+                    de.danielluedecke.zettelkasten.util.TableUtils.selectByTyping(jTableKeywords, jTextFieldFilterKeywords, 0);
                 }
             }
         });
         jTextFieldFilterAuthors.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override public void keyReleased(java.awt.event.KeyEvent evt) {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
                 if (Tools.isNavigationKey(evt.getKeyCode())) {
                     // if user pressed navigation key, select next table entry
                     de.danielluedecke.zettelkasten.util.TableUtils.navigateThroughList(jTableAuthors, evt.getKeyCode());
-                }
-                else {
+                } else {
                     // select table-entry live, while the user is typing...
-                    de.danielluedecke.zettelkasten.util.TableUtils.selectByTyping(jTableAuthors,jTextFieldFilterAuthors,0);
+                    de.danielluedecke.zettelkasten.util.TableUtils.selectByTyping(jTableAuthors, jTextFieldFilterAuthors, 0);
                 }
             }
         });
         jTextFieldFilterTitles.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override public void keyReleased(java.awt.event.KeyEvent evt) {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
                 if (Tools.isNavigationKey(evt.getKeyCode())) {
                     // if user pressed navigation key, select next table entry
                     de.danielluedecke.zettelkasten.util.TableUtils.navigateThroughList(jTableTitles, evt.getKeyCode());
-                }
-                else {
+                } else {
                     // select table-entry live, while the user is typing...
-                    de.danielluedecke.zettelkasten.util.TableUtils.selectByTyping(jTableTitles,jTextFieldFilterTitles,1);
+                    de.danielluedecke.zettelkasten.util.TableUtils.selectByTyping(jTableTitles, jTextFieldFilterTitles, 1);
                 }
             }
         });
         jTextFieldFilterCluster.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override public void keyReleased(java.awt.event.KeyEvent evt) {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
                 // select treenode live, while the user is typing...
                 TreeUtil.selectByTyping(jTreeCluster, jTextFieldFilterCluster);
             }
         });
         jTextFieldFilterAttachments.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override public void keyReleased(java.awt.event.KeyEvent evt) {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
                 if (Tools.isNavigationKey(evt.getKeyCode())) {
                     // if user pressed navigation key, select next table entry
                     de.danielluedecke.zettelkasten.util.TableUtils.navigateThroughList(jTableAttachments, evt.getKeyCode());
-                }
-                else {
+                } else {
                     // select table-entry live, while the user is typing...
-                    de.danielluedecke.zettelkasten.util.TableUtils.selectByTyping(jTableAttachments,jTextFieldFilterAttachments,0);
+                    de.danielluedecke.zettelkasten.util.TableUtils.selectByTyping(jTableAttachments, jTextFieldFilterAttachments, 0);
                 }
             }
         });
@@ -1179,9 +1271,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // the hyperlink-listeners
         //
         jEditorPaneEntry.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
-            @Override public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
+            @Override
+            public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
                 // if the link was clicked, proceed
-                if (evt.getEventType()==HyperlinkEvent.EventType.ACTIVATED) {
+                if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                     // get input event with additional modifiers
                     java.awt.event.InputEvent inev = evt.getInputEvent();
                     // check whether shift key was pressed, and if so, remove manual link
@@ -1190,12 +1283,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                             updateZettelContent(displayedZettel);
                             updateTabbedPane();
                         }
-                    }
-                    else {
+                    } else {
                         openHyperlink(evt.getDescription());
                     }
-                }
-                else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {
+                } else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {
                     javax.swing.text.Element elem = evt.getSourceElement();
                     if (elem != null) {
                         AttributeSet attr = elem.getAttributes();
@@ -1204,8 +1295,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                             jEditorPaneEntry.setToolTipText((String) a.getAttribute(HTML.Attribute.TITLE));
                         }
                     }
-                } 
-                else if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) {
+                } else if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) {
                     jEditorPaneEntry.setToolTipText(null);
                 }
             }
@@ -1214,9 +1304,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // the hyperlink-listeners
         //
         jEditorPaneIsFollower.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
-            @Override public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
+            @Override
+            public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
                 // if the link was clicked, proceed
-                if (evt.getEventType()==HyperlinkEvent.EventType.ACTIVATED) {
+                if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                     openHyperlink(evt.getDescription());
                 }
             }
@@ -1225,12 +1316,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // the hyperlink-listeners
         //
         jEditorPaneClusterEntries.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
-            @Override public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
+            @Override
+            public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
                 // if the link was clicked, proceed
-                if (evt.getEventType()==HyperlinkEvent.EventType.ACTIVATED) {
+                if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                     openHyperlink(evt.getDescription());
-                }
-                else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {
+                } else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {
                     javax.swing.text.Element elem = evt.getSourceElement();
                     if (elem != null) {
                         AttributeSet attr = elem.getAttributes();
@@ -1239,8 +1330,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                             jEditorPaneClusterEntries.setToolTipText((String) a.getAttribute(HTML.Attribute.TITLE));
                         }
                     }
-                } 
-                else if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) {
+                } else if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) {
                     jEditorPaneClusterEntries.setToolTipText(null);
                 }
             }
@@ -1248,9 +1338,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         //
         // finally, init the selection listeners...
         //
-        javax.swing.JTable[] tables = new javax.swing.JTable[] {jTableLinks, jTableManLinks, jTableAuthors,
-                                                                jTableTitles, jTableBookmarks, jTableAttachments
-                                                                };
+        javax.swing.JTable[] tables = new javax.swing.JTable[]{jTableLinks, jTableManLinks, jTableAuthors,
+            jTableTitles, jTableBookmarks, jTableAttachments
+        };
 
         for (javax.swing.JTable t : tables) {
             SelectionListener listener = new SelectionListener(t);
@@ -1259,27 +1349,31 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
 
         jTreeLuhmann.addTreeSelectionListener(new TreeSelectionListener() {
-            @Override public void valueChanged(TreeSelectionEvent e) {
+            @Override
+            public void valueChanged(TreeSelectionEvent e) {
                 showEntryFromLuhmann();
             }
         });
         jTreeLuhmann.addTreeExpansionListener(new javax.swing.event.TreeExpansionListener() {
-            @Override public void treeExpanded(javax.swing.event.TreeExpansionEvent evt) {
+            @Override
+            public void treeExpanded(javax.swing.event.TreeExpansionEvent evt) {
                 // retrieve path of value that was expanded
                 TreePath tp = evt.getPath();
                 // check whether root was expanded or not. therefore, retrieve 
                 // last node of the treepath, i.e. the node which was expanded
-                DefaultMutableTreeNode expandednode = (DefaultMutableTreeNode)tp.getLastPathComponent();
+                DefaultMutableTreeNode expandednode = (DefaultMutableTreeNode) tp.getLastPathComponent();
                 // if they equal, do nothing
                 TreeUserObject userObject = (TreeUserObject) expandednode.getUserObject();
                 userObject.setCollapsed(false);
             }
-            @Override public void treeCollapsed(javax.swing.event.TreeExpansionEvent evt) {
+
+            @Override
+            public void treeCollapsed(javax.swing.event.TreeExpansionEvent evt) {
                 // retrieve path of value that was expanded
                 TreePath tp = evt.getPath();
                 // check whether root was expanded or not. therefore, retrieve 
                 // last node of the treepath, i.e. the node which was expanded
-                DefaultMutableTreeNode expandednode = (DefaultMutableTreeNode)tp.getLastPathComponent();
+                DefaultMutableTreeNode expandednode = (DefaultMutableTreeNode) tp.getLastPathComponent();
                 // if they equal, do nothing
                 TreeUserObject userObject = (TreeUserObject) expandednode.getUserObject();
                 userObject.setCollapsed(true);
@@ -1289,270 +1383,448 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // init the menu-listeners...
         //
         recentDocsSubMenu.addMenuListener(new javax.swing.event.MenuListener() {
-            @Override public void menuSelected(javax.swing.event.MenuEvent evt) {
-                updateRecentDocumentMenuIcon(recentDoc1,settings.getRecentDoc(1));
-                updateRecentDocumentMenuIcon(recentDoc2,settings.getRecentDoc(2));
-                updateRecentDocumentMenuIcon(recentDoc3,settings.getRecentDoc(3));
-                updateRecentDocumentMenuIcon(recentDoc4,settings.getRecentDoc(4));
-                updateRecentDocumentMenuIcon(recentDoc5,settings.getRecentDoc(5));
-                updateRecentDocumentMenuIcon(recentDoc6,settings.getRecentDoc(6));
-                updateRecentDocumentMenuIcon(recentDoc7,settings.getRecentDoc(7));
-                updateRecentDocumentMenuIcon(recentDoc8,settings.getRecentDoc(8));
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                updateRecentDocumentMenuIcon(recentDoc1, settings.getRecentDoc(1));
+                updateRecentDocumentMenuIcon(recentDoc2, settings.getRecentDoc(2));
+                updateRecentDocumentMenuIcon(recentDoc3, settings.getRecentDoc(3));
+                updateRecentDocumentMenuIcon(recentDoc4, settings.getRecentDoc(4));
+                updateRecentDocumentMenuIcon(recentDoc5, settings.getRecentDoc(5));
+                updateRecentDocumentMenuIcon(recentDoc6, settings.getRecentDoc(6));
+                updateRecentDocumentMenuIcon(recentDoc7, settings.getRecentDoc(7));
+                updateRecentDocumentMenuIcon(recentDoc8, settings.getRecentDoc(8));
             }
-            @Override public void menuDeselected(javax.swing.event.MenuEvent evt) {}
-            @Override public void menuCanceled(javax.swing.event.MenuEvent evt) {}
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
         });
         recentDoc1.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 String fp = settings.getRecentDoc(1);
-                if (fp!=null) openDocument(fp);
+                if (fp != null) {
+                    openDocument(fp);
+                }
             }
         });
         recentDoc2.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 String fp = settings.getRecentDoc(2);
-                if (fp!=null && !fp.isEmpty()) openDocument(fp);
+                if (fp != null && !fp.isEmpty()) {
+                    openDocument(fp);
+                }
             }
         });
         recentDoc3.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 String fp = settings.getRecentDoc(3);
-                if (fp!=null && !fp.isEmpty()) openDocument(fp);
+                if (fp != null && !fp.isEmpty()) {
+                    openDocument(fp);
+                }
             }
         });
         recentDoc4.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 String fp = settings.getRecentDoc(4);
-                if (fp!=null && !fp.isEmpty()) openDocument(fp);
+                if (fp != null && !fp.isEmpty()) {
+                    openDocument(fp);
+                }
             }
         });
         recentDoc5.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 String fp = settings.getRecentDoc(5);
-                if (fp!=null && !fp.isEmpty()) openDocument(fp);
+                if (fp != null && !fp.isEmpty()) {
+                    openDocument(fp);
+                }
             }
         });
         recentDoc6.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 String fp = settings.getRecentDoc(6);
-                if (fp!=null && !fp.isEmpty()) openDocument(fp);
+                if (fp != null && !fp.isEmpty()) {
+                    openDocument(fp);
+                }
             }
         });
         recentDoc7.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 String fp = settings.getRecentDoc(7);
-                if (fp!=null && !fp.isEmpty()) openDocument(fp);
+                if (fp != null && !fp.isEmpty()) {
+                    openDocument(fp);
+                }
             }
         });
         recentDoc8.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 String fp = settings.getRecentDoc(8);
-                if (fp!=null && !fp.isEmpty()) openDocument(fp);
+                if (fp != null && !fp.isEmpty()) {
+                    openDocument(fp);
+                }
             }
         });
         fileMenu.addMenuListener(new javax.swing.event.MenuListener() {
-            @Override public void menuSelected(javax.swing.event.MenuEvent evt) {
-                menuFileInformation.setEnabled(settings.getFilePath()!=null && settings.getFilePath().exists());
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                menuFileInformation.setEnabled(settings.getFilePath() != null && settings.getFilePath().exists());
             }
-            @Override public void menuDeselected(javax.swing.event.MenuEvent evt) {}
-            @Override public void menuCanceled(javax.swing.event.MenuEvent evt) {}
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
         });
         viewMenu.addMenuListener(new javax.swing.event.MenuListener() {
-            @Override public void menuSelected(javax.swing.event.MenuEvent evt) {
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
                 highlightSegmentsMenuItem.setSelected(settings.getHighlightSegments());
             }
-            @Override public void menuDeselected(javax.swing.event.MenuEvent evt) {}
-            @Override public void menuCanceled(javax.swing.event.MenuEvent evt) {}
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
         });
         editMenu.addMenuListener(new javax.swing.event.MenuListener() {
-            @Override public void menuSelected(javax.swing.event.MenuEvent evt) {
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
                 // set indicator which show whether we have selections or not
                 setListFilledWithEntry(!jListEntryKeywords.getSelectedValuesList().isEmpty());
             }
-            @Override public void menuDeselected(javax.swing.event.MenuEvent evt) {}
-            @Override public void menuCanceled(javax.swing.event.MenuEvent evt) {}
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
         });
         windowsMenu.addMenuListener(new javax.swing.event.MenuListener() {
-            @Override public void menuSelected(javax.swing.event.MenuEvent evt) {
-                showSearchResultsMenuItem.setEnabled(searchrequests.getCount()>0);
-                showDesktopMenuItem.setEnabled(desktop.getCount()>0);
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                showSearchResultsMenuItem.setEnabled(searchrequests.getCount() > 0);
+                showDesktopMenuItem.setEnabled(desktop.getCount() > 0);
             }
-            @Override public void menuDeselected(javax.swing.event.MenuEvent evt) {}
-            @Override public void menuCanceled(javax.swing.event.MenuEvent evt) {}
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
         });
         findEntryKeywordsMenu.addMenuListener(new javax.swing.event.MenuListener() {
-            @Override public void menuSelected(javax.swing.event.MenuEvent evt) {
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
                 // set indicator which show whether we have selections or not
                 setListFilledWithEntry(!jListEntryKeywords.getSelectedValuesList().isEmpty());
             }
-            @Override public void menuDeselected(javax.swing.event.MenuEvent evt) {}
-            @Override public void menuCanceled(javax.swing.event.MenuEvent evt) {}
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
         });
         viewMenuLinks.addMenuListener(new javax.swing.event.MenuListener() {
-            @Override public void menuSelected(javax.swing.event.MenuEvent evt) {
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
                 initViewMenuLinks();
             }
-            @Override public void menuDeselected(javax.swing.event.MenuEvent evt) {}
-            @Override public void menuCanceled(javax.swing.event.MenuEvent evt) {}
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
         });
         viewMenuAuthors.addMenuListener(new javax.swing.event.MenuListener() {
-            @Override public void menuSelected(javax.swing.event.MenuEvent evt) {
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
                 // new keyword is always possible
                 viewAuthorsNew.setEnabled(true);
                 // at least one selection needed
-                setTableEntriesSelected(jTableAuthors.getSelectedRowCount()>0);
-                setExportPossible(data.getCount(Daten.AUCOUNT)>0);
-                setBibtexFileLoaded(bibtex.getCurrentlyAttachedFile()!=null);
+                setTableEntriesSelected(jTableAuthors.getSelectedRowCount() > 0);
+                setExportPossible(data.getCount(Daten.AUCOUNT) > 0);
+                setBibtexFileLoaded(bibtex.getCurrentlyAttachedFile() != null);
             }
-            @Override public void menuDeselected(javax.swing.event.MenuEvent evt) {}
-            @Override public void menuCanceled(javax.swing.event.MenuEvent evt) {}
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
         });
         viewMenuBookmarks.addMenuListener(new javax.swing.event.MenuListener() {
-            @Override public void menuSelected(javax.swing.event.MenuEvent evt) {
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
                 // at least one selection needed
-                setTableEntriesSelected(jTableBookmarks.getSelectedRowCount()>0);
-                setExportPossible(jTableBookmarks.getRowCount()>0);
+                setTableEntriesSelected(jTableBookmarks.getSelectedRowCount() > 0);
+                setExportPossible(jTableBookmarks.getRowCount() > 0);
             }
-            @Override public void menuDeselected(javax.swing.event.MenuEvent evt) {}
-            @Override public void menuCanceled(javax.swing.event.MenuEvent evt) {}
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
         });
         viewMenuKeywords.addMenuListener(new javax.swing.event.MenuListener() {
-            @Override public void menuSelected(javax.swing.event.MenuEvent evt) {
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
                 // new keyword is always possible
                 viewKeywordsNew.setEnabled(true);
                 // at least one selection needed
-                setTableEntriesSelected(jTableKeywords.getSelectedRowCount()>0);
-                setExportPossible(data.getCount(Daten.KWCOUNT)>0);
+                setTableEntriesSelected(jTableKeywords.getSelectedRowCount() > 0);
+                setExportPossible(data.getCount(Daten.KWCOUNT) > 0);
             }
-            @Override public void menuDeselected(javax.swing.event.MenuEvent evt) {}
-            @Override public void menuCanceled(javax.swing.event.MenuEvent evt) {}
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
         });
         viewMenuAttachments.addMenuListener(new javax.swing.event.MenuListener() {
-            @Override public void menuSelected(javax.swing.event.MenuEvent evt) {
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
                 // get the amount of selected rows
                 // at least one selection needed
-                setTableEntriesSelected(jTableAttachments.getSelectedRowCount()>0);
-                setExportPossible(jTableAttachments.getRowCount()>0);
+                setTableEntriesSelected(jTableAttachments.getSelectedRowCount() > 0);
+                setExportPossible(jTableAttachments.getRowCount() > 0);
             }
-            @Override public void menuDeselected(javax.swing.event.MenuEvent evt) {}
-            @Override public void menuCanceled(javax.swing.event.MenuEvent evt) {}
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
         });
         viewMenuTitles.addMenuListener(new javax.swing.event.MenuListener() {
-            @Override public void menuSelected(javax.swing.event.MenuEvent evt) {
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
                 // get the amount of selected rows
                 // at least one selection needed
-                setTableEntriesSelected(jTableTitles.getSelectedRowCount()>0);
-                setExportPossible(data.getCount(Daten.ZKNCOUNT)>0);
+                setTableEntriesSelected(jTableTitles.getSelectedRowCount() > 0);
+                setExportPossible(data.getCount(Daten.ZKNCOUNT) > 0);
             }
-            @Override public void menuDeselected(javax.swing.event.MenuEvent evt) {}
-            @Override public void menuCanceled(javax.swing.event.MenuEvent evt) {}
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
         });
         viewMenuLuhmann.addMenuListener(new javax.swing.event.MenuListener() {
-            @Override public void menuSelected(javax.swing.event.MenuEvent evt) {
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
                 // set selected state
                 viewMenuLuhmannShowNumbers.setSelected(settings.getShowLuhmannEntryNumber());
                 // retrieve selected node
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode)jTreeLuhmann.getLastSelectedPathComponent();
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTreeLuhmann.getLastSelectedPathComponent();
                 // check whether any selection made, that is not the root
-                setLuhmannSelected((node!=null)&&(!node.isRoot()));
-                setTableEntriesSelected((node!=null)&&(!node.isRoot()));
+                setLuhmannSelected((node != null) && (!node.isRoot()));
+                setTableEntriesSelected((node != null) && (!node.isRoot()));
                 setExportPossible(!data.getLuhmannNumbers(displayedZettel).isEmpty());
             }
-            @Override public void menuDeselected(javax.swing.event.MenuEvent evt) {}
-            @Override public void menuCanceled(javax.swing.event.MenuEvent evt) {}
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
         });
         viewMenuCluster.addMenuListener(new javax.swing.event.MenuListener() {
-            @Override public void menuSelected(javax.swing.event.MenuEvent evt) {
-                setExportPossible(clusterList.size()>0);
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                setExportPossible(clusterList.size() > 0);
             }
-            @Override public void menuDeselected(javax.swing.event.MenuEvent evt) {}
-            @Override public void menuCanceled(javax.swing.event.MenuEvent evt) {}
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
         });
         //
         // init the menu-listeners...
         //
         jPopupMenuKeywords.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            @Override public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            @Override
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
                 // new keyword is always possible
                 popupKeywordsNew.setEnabled(true);
                 // at least one selection needed
-                setTableEntriesSelected(jTableKeywords.getSelectedRowCount()>0);
+                setTableEntriesSelected(jTableKeywords.getSelectedRowCount() > 0);
             }
-            @Override public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {}
-            @Override public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {}
+
+            @Override
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+
+            @Override
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
         });
         jPopupMenuKeywordList.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            @Override public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            @Override
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
                 initViewMenuLinks();
                 popupKwListHighlightSegments.setSelected(settings.getHighlightSegments());
             }
-            @Override public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {}
-            @Override public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {}
+
+            @Override
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+
+            @Override
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
         });
         jPopupMenuAuthors.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            @Override public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            @Override
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
                 // new keyword is always possible
                 popupAuthorsNew.setEnabled(true);
                 // at least one selection needed
-                setTableEntriesSelected(jTableAuthors.getSelectedRowCount()>0);
+                setTableEntriesSelected(jTableAuthors.getSelectedRowCount() > 0);
             }
-            @Override public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {}
-            @Override public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {}
+
+            @Override
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+
+            @Override
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
         });
         jPopupMenuLuhmann.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            @Override public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            @Override
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
                 // retrieve selected node
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode)jTreeLuhmann.getLastSelectedPathComponent();
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTreeLuhmann.getLastSelectedPathComponent();
                 // check whether any selection made, that is not the root
-                setLuhmannSelected((node!=null)&&(!node.isRoot()));
-                setTableEntriesSelected((node!=null)&&(!node.isRoot()));
+                setLuhmannSelected((node != null) && (!node.isRoot()));
+                setTableEntriesSelected((node != null) && (!node.isRoot()));
             }
-            @Override public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {}
-            @Override public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {}
+
+            @Override
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+
+            @Override
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
         });
         jPopupMenuTitles.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            @Override public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            @Override
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
                 // at least one selection needed
-                setTableEntriesSelected(jTableTitles.getSelectedRowCount()>0);
+                setTableEntriesSelected(jTableTitles.getSelectedRowCount() > 0);
             }
-            @Override public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {}
-            @Override public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {}
+
+            @Override
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+
+            @Override
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
         });
         jPopupMenuBookmarks.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            @Override public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            @Override
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
                 // at least one selection needed
-                setTableEntriesSelected(jTableBookmarks.getSelectedRowCount()>0);
+                setTableEntriesSelected(jTableBookmarks.getSelectedRowCount() > 0);
             }
-            @Override public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {}
-            @Override public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {}
+
+            @Override
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+
+            @Override
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
         });
         jPopupMenuLinks.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            @Override public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            @Override
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
                 initViewMenuLinks();
             }
-            @Override public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {}
-            @Override public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {}
+
+            @Override
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+
+            @Override
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
         });
         jPopupMenuAttachments.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            @Override public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            @Override
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
                 // at least one selection needed
-                setTableEntriesSelected(jTableAttachments.getSelectedRowCount()>0);
+                setTableEntriesSelected(jTableAttachments.getSelectedRowCount() > 0);
             }
-            @Override public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {}
-            @Override public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {}
+
+            @Override
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+
+            @Override
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
         });
         jPopupMenuMain.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            @Override public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            @Override
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
                 try {
                     // set copy/cut actions en- or disabled, depending on whether we have
                     // selected text or not
                     String selection = jEditorPaneEntry.getSelectedText();
                     // if we have selected text
-                    if (selection!=null) {
+                    if (selection != null) {
                         // enabled property
                         setTextSelected(!selection.isEmpty());
-                    }
-                    else {
+                    } else {
                         // else disable it
                         setTextSelected(false);
                     }
@@ -1562,20 +1834,26 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     setTextSelected(false);
                 }
             }
-            @Override public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {}
-            @Override public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {}
+
+            @Override
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+
+            @Override
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
         });
         //
         // all other listeners that haven't been set up yet...
         //
         jTabbedPaneMain.addChangeListener(new javax.swing.event.ChangeListener() {
-            @Override public void stateChanged(javax.swing.event.ChangeEvent evt) {
+            @Override
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 updateTabbedPane();
             }
         });
-    // </editor-fold>
+        // </editor-fold>
     }
-
 
     private void highlightSegs() {
         // and highlight text segments
@@ -1585,24 +1863,23 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-
     private void createToolbarSearchbox() {
         // init a search textfield that is added to the toolbar
         tb_searchTextfield = new JTextField(15);
         // on mac, make textfield look like a search box
         if (settings.isMacAqua() || settings.isSeaGlass()) {
             tb_searchTextfield.putClientProperty("JTextField.variant", "search");
-        }
-        else {
-            tb_searchTextfield.setPreferredSize(new java.awt.Dimension(150,26));
-            tb_searchTextfield.setMaximumSize(new java.awt.Dimension(200,26));
+        } else {
+            tb_searchTextfield.setPreferredSize(new java.awt.Dimension(150, 26));
+            tb_searchTextfield.setMaximumSize(new java.awt.Dimension(200, 26));
             tb_searchTextfield.setAlignmentY(java.awt.Component.CENTER_ALIGNMENT);
         }
         tb_searchTextfield.setToolTipText(getResourceMap().getString("searchfieldTooltip"));
         // put action to the tables' actionmaps
-        tb_searchTextfield.getActionMap().put("EnterKeyPressed",new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
-                JTextField tf = (JTextField)e.getSource();
+        tb_searchTextfield.getActionMap().put("EnterKeyPressed", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JTextField tf = (JTextField) e.getSource();
                 // create a regular expression, that separates the input at each comma.
                 // furthermore, commas within double-quotes ("") are not treated as separator-char,
                 // so the user can search for sentences that include commas as well. and finally, the
@@ -1610,19 +1887,21 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 Matcher mat = Pattern.compile("(\"(.*?)\"|([^,]+)),?").matcher(tf.getText());
                 // create a new list that will contain each found pattern (i.e. searchterm)
                 List<String> result = new ArrayList<>();
-                while (mat.find()) result.add(mat.group(2) == null ? mat.group(3) : mat.group(2));
+                while (mat.find()) {
+                    result.add(mat.group(2) == null ? mat.group(3) : mat.group(2));
+                }
                 // and copy the list to our array...
                 String[] searchterms = result.toArray(new String[result.size()]);
                 startSearch(searchterms,
-                            Constants.SEARCH_AUTHOR |
-                            Constants.SEARCH_CONTENT |
-                            Constants.SEARCH_TITLE |
-                            Constants.SEARCH_KEYWORDS |
-                            Constants.SEARCH_REMARKS,
-                            Constants.LOG_OR,
-                            false,false,true,false,false,"","",0,false,
-                            Constants.STARTSEARCH_USUAL,
-                            Constants.SEARCH_USUAL);
+                        Constants.SEARCH_AUTHOR
+                        | Constants.SEARCH_CONTENT
+                        | Constants.SEARCH_TITLE
+                        | Constants.SEARCH_KEYWORDS
+                        | Constants.SEARCH_REMARKS,
+                        Constants.LOG_OR,
+                        false, false, true, false, false, "", "", 0, false,
+                        Constants.STARTSEARCH_USUAL,
+                        Constants.SEARCH_USUAL);
             }
         });
         // associate enter-keystroke with that action
@@ -1637,35 +1916,37 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         javax.swing.GroupLayout jPanelSearchBoxLayout = new javax.swing.GroupLayout(jPanelSearchBox);
         jPanelSearchBox.setLayout(jPanelSearchBoxLayout);
         jPanelSearchBoxLayout.setHorizontalGroup(
-            jPanelSearchBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelSearchBoxLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabelLupe)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tb_searchTextfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                jPanelSearchBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelSearchBoxLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabelLupe)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tb_searchTextfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelSearchBoxLayout.setVerticalGroup(
-            jPanelSearchBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(jPanelSearchBoxLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanelSearchBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelLupe)
-                    .addComponent(tb_searchTextfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                jPanelSearchBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanelSearchBoxLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanelSearchBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabelLupe)
+                                .addComponent(tb_searchTextfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(20, Short.MAX_VALUE))
         );
         toolBar.add(settings.isSeaGlass() ? tb_searchTextfield : jPanelSearchBox);
         // hide label on mac
         jLabelLupe.setVisible(!settings.isMacAqua() && !settings.isSeaGlass());
     }
 
-
     /**
-     * This method initialises the toolbar buttons. depending on the user-setting, we either
-     * display small, medium or large icons as toolbar-icons.
-     * @param bottomBarNeedsUdpate if {@code true}, the bottom bar on mac aqua style will also be
-     * re-initialized. Use {@code true} only the first time the bottom bar is initialized. For further
-     * GUI-updates, e.g. from settings window, use {@code false} as parameter.
+     * This method initialises the toolbar buttons. depending on the
+     * user-setting, we either display small, medium or large icons as
+     * toolbar-icons.
+     *
+     * @param bottomBarNeedsUdpate if {@code true}, the bottom bar on mac aqua
+     * style will also be re-initialized. Use {@code true} only the first time
+     * the bottom bar is initialized. For further GUI-updates, e.g. from
+     * settings window, use {@code false} as parameter.
      */
     private void initToolbarIcons(boolean bottomBarNeedsUdpate) {
         statusErrorButton.setVisible(false);
@@ -1676,7 +1957,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             toolBar.setVisible(false);
             // and set a border to the main panel, because the toolbar's dark border is hidden
             // and remove border from the main panel
-            mainPanel.setBorder(new MatteBorder(1,0,0,0,ColorUtil.colorDarkLineGray));
+            mainPanel.setBorder(new MatteBorder(1, 0, 0, 0, ColorUtil.colorDarkLineGray));
             return;
         }
         // set toolbar visible
@@ -1684,33 +1965,32 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // and remove border from the main panel
         mainPanel.setBorder(null);
         // init toolbar button array
-        javax.swing.JButton toolbarButtons[] = new javax.swing.JButton[] {
+        javax.swing.JButton toolbarButtons[] = new javax.swing.JButton[]{
             tb_open, tb_save, tb_first, tb_next, tb_prev, tb_copy, tb_paste, tb_newEntry,
             tb_edit, tb_find, tb_addtodesktop, tb_addbookmark, tb_delete, tb_addluhmann,
             tb_addmanlinks, tb_selectall, tb_last
         };
-        String[] buttonNames = new String[] { "tb_openText", "tb_saveText", "tb_firstText",
-                                              "tb_nextText", "tb_prevText", "tb_copyText",
-                                              "tb_pasteText", "tb_newEntryText", "tb_editText",
-                                              "tb_findText", "tb_addtodesktopText", "tb_addbookmarkText",
-                                              "tb_deleteText", "tb_addluhmannText", "tb_addmanlinksText",
-                                              "tb_selectallText", "tb_lastText"
+        String[] buttonNames = new String[]{"tb_openText", "tb_saveText", "tb_firstText",
+            "tb_nextText", "tb_prevText", "tb_copyText",
+            "tb_pasteText", "tb_newEntryText", "tb_editText",
+            "tb_findText", "tb_addtodesktopText", "tb_addbookmarkText",
+            "tb_deleteText", "tb_addluhmannText", "tb_addmanlinksText",
+            "tb_selectallText", "tb_lastText"
         };
-        String[] iconNames = new String[] { "openIcon", "saveIcon", "showFirstEntryIcon",
-                                            "showNextEntryIcon", "showPrevEntryIcon", "copyIcon",
-                                            "pasteIcon", "newEntryIcon", "editEntryIcon",
-                                            "findIcon", "addDesktopIcon", "addBookmarksIcon",
-                                            "deleteIcon", "addLuhmannIcon", "addManLinksIcon",
-                                            "selectAllIcon", "showLastEntryIcon"
+        String[] iconNames = new String[]{"openIcon", "saveIcon", "showFirstEntryIcon",
+            "showNextEntryIcon", "showPrevEntryIcon", "copyIcon",
+            "pasteIcon", "newEntryIcon", "editEntryIcon",
+            "findIcon", "addDesktopIcon", "addBookmarksIcon",
+            "deleteIcon", "addLuhmannIcon", "addManLinksIcon",
+            "selectAllIcon", "showLastEntryIcon"
         };
-        
+
         // set toolbar-icons' text
         if (settings.getShowIconText()) {
-            for (int cnt=0; cnt< toolbarButtons.length; cnt++) {
+            for (int cnt = 0; cnt < toolbarButtons.length; cnt++) {
                 toolbarButtons[cnt].setText(toolbarResourceMap.getString(buttonNames[cnt]));
             }
-        }
-        else {
+        } else {
             for (javax.swing.JButton tbb : toolbarButtons) {
                 tbb.setText("");
             }
@@ -1719,11 +1999,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         if (settings.getShowIcons()) {
             // retrieve icon theme path
             String icontheme = settings.getIconThemePath();
-            for (int cnt=0; cnt< toolbarButtons.length; cnt++) {
-                toolbarButtons[cnt].setIcon(new ImageIcon(ZettelkastenView.class.getResource(icontheme+toolbarResourceMap.getString(iconNames[cnt]))));
+            for (int cnt = 0; cnt < toolbarButtons.length; cnt++) {
+                toolbarButtons[cnt].setIcon(new ImageIcon(ZettelkastenView.class.getResource(icontheme + toolbarResourceMap.getString(iconNames[cnt]))));
             }
-        }
-        else {
+        } else {
             for (javax.swing.JButton tbb : toolbarButtons) {
                 tbb.setIcon(null);
             }
@@ -1736,16 +2015,20 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             tb_addtodesktop.setVisible(settings.getShowAllIcons());
             tb_find.setVisible(settings.getShowAllIcons());
         }
-        if (settings.isMacAqua() && bottomBarNeedsUdpate) makeMacToolbar();
-        if (settings.isSeaGlass()) makeSeaGlassToolbar();
+        if (settings.isMacAqua() && bottomBarNeedsUdpate) {
+            makeMacToolbar();
+        }
+        if (settings.isSeaGlass()) {
+            makeSeaGlassToolbar();
+        }
     }
 
-    
     /**
-     * This method sets the accelerator table for all relevant actions which should have
-     * accelerator keys. We don't use the GUI designer to set the values, because the user
-     * should have the possibility to define own accelerator keys, which are managed
-     * within the CAcceleratorKeys-class and loaed/saved via the CSettings-class
+     * This method sets the accelerator table for all relevant actions which
+     * should have accelerator keys. We don't use the GUI designer to set the
+     * values, because the user should have the possibility to define own
+     * accelerator keys, which are managed within the CAcceleratorKeys-class and
+     * loaed/saved via the CSettings-class
      */
     private void initAcceleratorTable() {
         // setting up the accelerator table. we have two possibilities: either assigning
@@ -1766,17 +2049,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // get the action map
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(ZettelkastenView.class, this);
         // iterate the xml file with the accelerator keys for the main window
-        for (int cnt=1; cnt<=acceleratorKeys.getCount(AcceleratorKeys.MAINKEYS); cnt++) {
+        for (int cnt = 1; cnt <= acceleratorKeys.getCount(AcceleratorKeys.MAINKEYS); cnt++) {
             // get the action's name
             String actionname = acceleratorKeys.getAcceleratorAction(AcceleratorKeys.MAINKEYS, cnt);
             // check whether we have found any valid action name
-            if (actionname!=null && !actionname.isEmpty()) {
+            if (actionname != null && !actionname.isEmpty()) {
                 // retrieve action
                 AbstractAction ac = (AbstractAction) actionMap.get(actionname);
                 // get the action's accelerator key
                 String actionkey = acceleratorKeys.getAcceleratorKey(AcceleratorKeys.MAINKEYS, cnt);
                 // check whether we have any valid actionkey
-                if (actionkey!=null && !actionkey.isEmpty()) {
+                if (actionkey != null && !actionkey.isEmpty()) {
                     // retrieve keystroke setting
                     KeyStroke ks = KeyStroke.getKeyStroke(actionkey);
                     // and put them together :-)
@@ -1799,8 +2082,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             aboutMenu.setVisible(false);
             exitMenuItem.setVisible(false);
             jSeparatorExit.setVisible(false);
-        }
-        else {
+        } else {
             // init the variables
             String menutext;
             char mkey;
@@ -1828,36 +2110,37 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // on Mac OS, at least for the German locale, the File menu is called different
         // compared to windows or linux. Furthermore, we don't need the about and preferences
         // menu items, since these are locates on the program's menu item in the apple-menu-bar
-        if (PlatformUtil.isMacOS()) fileMenu.setText(getResourceMap().getString("macFileMenuText"));
+        if (PlatformUtil.isMacOS()) {
+            fileMenu.setText(getResourceMap().getString("macFileMenuText"));
+        }
     }
-    
-    
+
     /**
-     * This methods initiates table sorter for the jTables in the main window
-     * we can now order the content of the keyword-lists, author-lists etc. in
-     * the jTabbedPane by clicking on the table header.
+     * This methods initiates table sorter for the jTables in the main window we
+     * can now order the content of the keyword-lists, author-lists etc. in the
+     * jTabbedPane by clicking on the table header.
      * <br><br>
      * Furthermore, visual settings like gridlines are set here.
      * <br><br>
-     * Finally, we setup actionsmaps and associate them with the enter-key. by doing so,
-     * we prevent the enter-key from selecting the next line. instead, a search request 
-     * is startetd.
+     * Finally, we setup actionsmaps and associate them with the enter-key. by
+     * doing so, we prevent the enter-key from selecting the next line. instead,
+     * a search request is startetd.
      */
     private void initTables() {
         // Create custom tablerow-sorter for sorting certain table rows that
         // might contain german umlauts
-        setCustomTableRowSorter(jTableAuthors,0);
-        setCustomTableRowSorter(jTableKeywords,0);
-        setCustomTableRowSorter(jTableTitles,1);
-        setCustomTableRowSorter(jTableLinks,1);
-        setCustomTableRowSorter(jTableManLinks,1);
-        setCustomTableRowSorter(jTableBookmarks,1);
-        setCustomTableRowSorter(jTableAttachments,0);
+        setCustomTableRowSorter(jTableAuthors, 0);
+        setCustomTableRowSorter(jTableKeywords, 0);
+        setCustomTableRowSorter(jTableTitles, 1);
+        setCustomTableRowSorter(jTableLinks, 1);
+        setCustomTableRowSorter(jTableManLinks, 1);
+        setCustomTableRowSorter(jTableBookmarks, 1);
+        setCustomTableRowSorter(jTableAttachments, 0);
 
-        javax.swing.JTable[] tables = new javax.swing.JTable[] {jTableLinks, jTableManLinks, jTableKeywords,
-                                                                jTableAuthors, jTableTitles, jTableBookmarks,
-                                                                jTableAttachments
-                                                                };
+        javax.swing.JTable[] tables = new javax.swing.JTable[]{jTableLinks, jTableManLinks, jTableKeywords,
+            jTableAuthors, jTableTitles, jTableBookmarks,
+            jTableAttachments
+        };
         for (javax.swing.JTable t : tables) {
             t.getTableHeader().setReorderingAllowed(false);
             t.setGridColor(settings.getTableGridColor());
@@ -1882,54 +2165,68 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-    
     /**
      *
      */
     private void initDragDropTransferHandler() {
         jTableLinks.setTransferHandler(new EntryStringTransferHandler() {
-            @Override protected String exportString(JComponent c) {
+            @Override
+            protected String exportString(JComponent c) {
                 return de.danielluedecke.zettelkasten.util.TableUtils.prepareStringForTransferHandler(jTableLinks);
             }
-            @Override protected boolean importString(JComponent c, String str) {
-                int[] entries = Tools.retrieveEntryNumbersFromTransferHandler(str,data.getCount(Daten.ZKNCOUNT));
-                if (entries!=null) {
+
+            @Override
+            protected boolean importString(JComponent c, String str) {
+                int[] entries = Tools.retrieveEntryNumbersFromTransferHandler(str, data.getCount(Daten.ZKNCOUNT));
+                if (entries != null) {
                     addToManLinks(entries);
                     return true;
                 }
                 return false;
             }
-            @Override protected void cleanup(JComponent c, boolean remove) {
+
+            @Override
+            protected void cleanup(JComponent c, boolean remove) {
             }
         });
         jTableManLinks.setTransferHandler(new EntryStringTransferHandler() {
-            @Override protected String exportString(JComponent c) {
+            @Override
+            protected String exportString(JComponent c) {
                 return de.danielluedecke.zettelkasten.util.TableUtils.prepareStringForTransferHandler(jTableManLinks);
             }
-            @Override protected boolean importString(JComponent c, String str) {
-                int[] entries = Tools.retrieveEntryNumbersFromTransferHandler(str,data.getCount(Daten.ZKNCOUNT));
-                if (entries!=null) {
+
+            @Override
+            protected boolean importString(JComponent c, String str) {
+                int[] entries = Tools.retrieveEntryNumbersFromTransferHandler(str, data.getCount(Daten.ZKNCOUNT));
+                if (entries != null) {
                     addToManLinks(entries);
                     return true;
                 }
                 return false;
             }
-            @Override protected void cleanup(JComponent c, boolean remove) {
+
+            @Override
+            protected void cleanup(JComponent c, boolean remove) {
             }
         });
         jTableBookmarks.setTransferHandler(new EntryStringTransferHandler() {
-            @Override protected String exportString(JComponent c) {
+            @Override
+            protected String exportString(JComponent c) {
                 return de.danielluedecke.zettelkasten.util.TableUtils.prepareStringForTransferHandler(jTableBookmarks);
             }
-            @Override protected boolean importString(JComponent c, String str) {
-                int[] entries = Tools.retrieveEntryNumbersFromTransferHandler(str,data.getCount(Daten.ZKNCOUNT));
-                if (entries!=null) {
-                    addToBookmarks(entries,false);
+
+            @Override
+            protected boolean importString(JComponent c, String str) {
+                int[] entries = Tools.retrieveEntryNumbersFromTransferHandler(str, data.getCount(Daten.ZKNCOUNT));
+                if (entries != null) {
+                    addToBookmarks(entries, false);
                     return true;
                 }
                 return false;
             }
-            @Override protected void cleanup(JComponent c, boolean remove) {
+
+            @Override
+            protected void cleanup(JComponent c, boolean remove) {
             }
         });
         // enable drag&drop
@@ -1939,21 +2236,21 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             @Override
             protected String exportString(JComponent c) {
                 // retrieve tree-component
-                javax.swing.JTree t = (javax.swing.JTree)c;
+                javax.swing.JTree t = (javax.swing.JTree) c;
                 // retrieve selected node that was dragged
                 DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) t.getSelectionPath().getLastPathComponent();
                 // prepare export-string, telling that the drag-source is the jTreeDesktop
-                StringBuilder retval = new StringBuilder(Constants.DRAG_SOURCE_JTREELUHMANN+"\n");
+                StringBuilder retval = new StringBuilder(Constants.DRAG_SOURCE_JTREELUHMANN + "\n");
                 // next line contains the entry-number, or -1 if a bullet was selected
                 retval.append(String.valueOf(retrieveEntryNrFromLuhmann())).append("\n");
                 // retrieve treepath of dragged entry/bullet
                 TreePath tp = t.getSelectionPath();
                 // add each single path component to return string, new-line-separated
-                for (int cnt=1; cnt<tp.getPathCount(); cnt++) {
+                for (int cnt = 1; cnt < tp.getPathCount(); cnt++) {
                     retval.append(tp.getPathComponent(cnt).toString()).append("\t");
                 }
                 // delete last, unnecessary new-line
-                retval.setLength((retval.length()-1));
+                retval.setLength((retval.length() - 1));
                 // remember selected node, which should be removed when dropping the node.
                 movedNodeToRemove = selectedNode;
                 // return information
@@ -1963,11 +2260,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             @Override
             protected boolean importString(JComponent c, String str) {
                 // get drop-component, i.e. the jTreeDesktop
-                javax.swing.JTree t = (javax.swing.JTree)c;
+                javax.swing.JTree t = (javax.swing.JTree) c;
                 // retrieve selected node
                 DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) t.getSelectionPath().getLastPathComponent();
                 // check for valid drop-string
-                if (str!=null) {
+                if (str != null) {
                     // each received string consists of two lines. the first one with information
                     // about the drag-source and the drag-operation, the second one with the data
                     // by this we can see whether we have received entries (i.e. a valid drop)
@@ -1976,29 +2273,31 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     String sourceinfo = dropinformation[0];
                     // retrieve destination tree path of dragged node
                     String[] nodepath = null;
-                    if (dropinformation.length>=2) nodepath = dropinformation[2].split("\t");
+                    if (dropinformation.length >= 2) {
+                        nodepath = dropinformation[2].split("\t");
+                    }
                     // check out the source of the drag-operation. if we have a valid source,
                     // retrieve entries.
                     // here we have the jTreeLuhmannas drag-source, i.e. a drag&drop from within
                     // this tree. that means, we have to delete the drag-source, i.e.
                     // the dragged node that was moved to the new location
-                    if (nodepath!=null && sourceinfo.equals(Constants.DRAG_SOURCE_JTREELUHMANN)) {
+                    if (nodepath != null && sourceinfo.equals(Constants.DRAG_SOURCE_JTREELUHMANN)) {
                         // retrieve "depth" of treepathes of nodes
                         int draglevel = nodepath.length;
                         int droplevel = selectedNode.getLevel();
                         // retrieve parent of drop-location
-                        DefaultMutableTreeNode parent = (droplevel>=draglevel) ? (DefaultMutableTreeNode)selectedNode.getParent() : selectedNode;
+                        DefaultMutableTreeNode parent = (droplevel >= draglevel) ? (DefaultMutableTreeNode) selectedNode.getParent() : selectedNode;
                         // check whether an entry was moved within the current entry's follower,
                         // that means the entry was dragged & dropped within the same parent-level
                         // or check whether the node was dropped onto its parent
-                        if ((draglevel==droplevel) || (draglevel==(droplevel+1) && movedNodeToRemove.getParent().equals(parent))) {
+                        if ((draglevel == droplevel) || (draglevel == (droplevel + 1) && movedNodeToRemove.getParent().equals(parent))) {
                             try {
                                 // cut of entry-number
                                 int dropentrynr = retrieveEntryNrFromLuhmann(parent);
                                 // retrieve entry-number of dragged entry.
                                 int draggedentrynr = Integer.parseInt(dropinformation[1]);
                                 // retrieve insert-index
-                                int insertIndex = (selectedNode.isRoot()) ? 0 : parent.getIndex(selectedNode)+1;
+                                int insertIndex = (selectedNode.isRoot()) ? 0 : parent.getIndex(selectedNode) + 1;
                                 // delete moved entry from luhmann-numbers of source-entry
                                 data.deleteLuhmannNumber(dropentrynr, draggedentrynr);
                                 // insert entry at new index-position
@@ -2007,8 +2306,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                                 showLuhmann();
                                 // return success value
                                 return true;
-                            }
-                            catch (NumberFormatException | IndexOutOfBoundsException e) {
+                            } catch (NumberFormatException | IndexOutOfBoundsException e) {
                             }
                         }
                     }
@@ -2021,11 +2319,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             }
         });
         jListEntryKeywords.setTransferHandler(new EntryStringTransferHandler() {
-            @Override protected String exportString(JComponent c) {
+            @Override
+            protected String exportString(JComponent c) {
                 // retrieve selections
                 List<String> kws = jListEntryKeywords.getSelectedValuesList();
                 // when we have no selection, return null
-                if (kws.isEmpty()) return null;
+                if (kws.isEmpty()) {
+                    return null;
+                }
                 StringBuilder keywords = new StringBuilder("");
                 // iterate array and copy all selected keywords to clipboard
                 for (String o : kws) {
@@ -2034,9 +2335,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 }
                 return keywords.toString();
             }
-            @Override protected boolean importString(JComponent c, String str) {
+
+            @Override
+            protected boolean importString(JComponent c, String str) {
                 // check for valid drop-string
-                if (str!=null) {
+                if (str != null) {
                     // remove carriage returns
                     str = str.replace("\r", "");
                     // split at each new line
@@ -2045,15 +2348,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 }
                 return false;
             }
-            @Override protected void cleanup(JComponent c, boolean remove) {
+
+            @Override
+            protected void cleanup(JComponent c, boolean remove) {
             }
         });
         jTableKeywords.setTransferHandler(new EntryStringTransferHandler() {
-            @Override protected String exportString(JComponent c) {
+            @Override
+            protected String exportString(JComponent c) {
                 // create string builder
                 StringBuilder keywords = new StringBuilder("");
                 // retrieve selected valued that are being dragged
-                String[] kws = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords,0);
+                String[] kws = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords, 0);
                 // create a comma-separated string from string array
                 for (String k : kws) {
                     keywords.append(k).append("\n");
@@ -2061,18 +2367,23 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // return results
                 return keywords.toString();
             }
-            @Override protected boolean importString(JComponent c, String str) {
+
+            @Override
+            protected boolean importString(JComponent c, String str) {
                 return false;
             }
-            @Override protected void cleanup(JComponent c, boolean remove) {
+
+            @Override
+            protected void cleanup(JComponent c, boolean remove) {
             }
         });
         jTableAttachments.setTransferHandler(new EntryStringTransferHandler() {
-            @Override protected String exportString(JComponent c) {
+            @Override
+            protected String exportString(JComponent c) {
                 // create string builder
                 StringBuilder attachments = new StringBuilder("");
                 // retrieve selected valued that are being dragged
-                String[] atts = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAttachments,0);
+                String[] atts = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAttachments, 0);
                 // create a comma-separated string from string array
                 for (String a : atts) {
                     attachments.append(a).append("\n");
@@ -2080,19 +2391,24 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // return results
                 return attachments.toString();
             }
-            @Override protected boolean importString(JComponent c, String str) {
+
+            @Override
+            protected boolean importString(JComponent c, String str) {
                 return false;
             }
-            @Override protected void cleanup(JComponent c, boolean remove) {
+
+            @Override
+            protected void cleanup(JComponent c, boolean remove) {
             }
         });
         jTableAuthors.setTransferHandler(new EntryStringTransferHandler() {
-            @Override protected String exportString(JComponent c) {
+            @Override
+            protected String exportString(JComponent c) {
                 // create string builder
                 StringBuilder authors = new StringBuilder("");
                 authors.append(Constants.DRAG_SOURCE_TYPE_AUTHORS).append("\n");
                 // retrieve selected values that are being dragged
-                String[] aus = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors,0);
+                String[] aus = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors, 0);
                 // create a comma-separated string from string array
                 for (String a : aus) {
                     authors.append(a).append("\n");
@@ -2100,20 +2416,25 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // return results
                 return authors.toString();
             }
-            @Override protected boolean importString(JComponent c, String str) {
+
+            @Override
+            protected boolean importString(JComponent c, String str) {
                 return false;
             }
-            @Override protected void cleanup(JComponent c, boolean remove) {
+
+            @Override
+            protected void cleanup(JComponent c, boolean remove) {
             }
         });
         jEditorPaneEntry.setDragEnabled(true);
-        DropTarget dropTarget = new DropTarget(jEditorPaneEntry, this);   
+        DropTarget dropTarget = new DropTarget(jEditorPaneEntry, this);
     }
+
     /**
-     * This method creates an own tablerow-sorter. this is necessary since we can use
-     * own comparators here, so we can insert string with German umlauts at the correct
-     * position - i.e. "ä" is inserted in "a", and not after "z".
-     * 
+     * This method creates an own tablerow-sorter. this is necessary since we
+     * can use own comparators here, so we can insert string with German umlauts
+     * at the correct position - i.e. "ä" is inserted in "a", and not after "z".
+     *
      * @param table the table that should get the custom tablerow-sorter
      * @param column the column where the sorter should be apllied to
      */
@@ -2123,28 +2444,26 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // tell tgis jtable that it has an own sorter
         table.setRowSorter(sorter);
         // and tell the sorter, which table model to sort.
-        sorter.setModel((DefaultTableModel)table.getModel());
+        sorter.setModel((DefaultTableModel) table.getModel());
         // in this table, the first column needs a custom comparator.
         try {
-            sorter.setComparator(column,new Comparer());
+            sorter.setComparator(column, new Comparer());
             // in case we have the table with titles, we make an exception, because
             // this table has two more columns that should be sorted, the columns with
             // the entries timestamps.
-            if (table==jTableTitles) {
-                sorter.setComparator(2,new DateComparer());
-                sorter.setComparator(3,new DateComparer());
+            if (table == jTableTitles) {
+                sorter.setComparator(2, new DateComparer());
+                sorter.setComparator(3, new DateComparer());
             }
-        }
-        catch (IndexOutOfBoundsException e) {
-            Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+        } catch (IndexOutOfBoundsException e) {
+            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
         }
     }
 
-
     /**
-     * This method sets the default font-size for tables, lists and treeviews. If the
-     * user wants to have bigger font-sizes for better viewing, the new font-size will
-     * be applied to the components here.
+     * This method sets the default font-size for tables, lists and treeviews.
+     * If the user wants to have bigger font-sizes for better viewing, the new
+     * font-size will be applied to the components here.
      */
     private void initDefaultFontSize() {
         // get the default fontsize for tables and lists
@@ -2154,7 +2473,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // retrieve default listvewfont
         Font defaultfont = settings.getTableFont();
         // create new font, add fontsize-value
-        Font f = new Font(defaultfont.getName(), defaultfont.getStyle(), fsize+defaultsize);
+        Font f = new Font(defaultfont.getName(), defaultfont.getStyle(), fsize + defaultsize);
         // set new font
         jTableLinks.setFont(f);
         jTableManLinks.setFont(f);
@@ -2168,68 +2487,88 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTreeCluster.setFont(f);
         jTreeKeywords.setFont(f);
     }
-    
-    
+
     /**
-     * This method inits the action map for several components like the tables, the treeviews
-     * or the lists. here we can associate certain keystrokes with related methods. e.g. hitting
-     * the enter-key in a table shows (activates) the related entry.
+     * This method inits the action map for several components like the tables,
+     * the treeviews or the lists. here we can associate certain keystrokes with
+     * related methods. e.g. hitting the enter-key in a table shows (activates)
+     * the related entry.
      * <br><br>
-     * Setting up action maps gives a better overview and is shorter than adding key-release-events
-     * to all components, although key-events would fulfill the same purpose.
+     * Setting up action maps gives a better overview and is shorter than adding
+     * key-release-events to all components, although key-events would fulfill
+     * the same purpose.
      * <br><br>
-     * The advantage of action maps is, that dependent from the operating system we need only
-     * to associte a single action. with key-events, for each component we have to check
-     * whether the operating system is mac os or windows, and then checking for different keys,
-     * thus doubling each command: checking for F2 to edit, or checking for command+enter and also
-     * call the edit-method. using action maps, we simply as for the os once, storing the related
-     * keystroke-value as string, and than assign this string-value to the components.
+     * The advantage of action maps is, that dependent from the operating system
+     * we need only to associte a single action. with key-events, for each
+     * component we have to check whether the operating system is mac os or
+     * windows, and then checking for different keys, thus doubling each
+     * command: checking for F2 to edit, or checking for command+enter and also
+     * call the edit-method. using action maps, we simply as for the os once,
+     * storing the related keystroke-value as string, and than assign this
+     * string-value to the components.
      */
     private void initActionMaps() {
-    // <editor-fold defaultstate="collapsed" desc="Init of action-maps so we have shortcuts for the tables">
+        // <editor-fold defaultstate="collapsed" desc="Init of action-maps so we have shortcuts for the tables">
         // create action which should be executed when the user presses
         // the enter-key
-        AbstractAction a_enter = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
-                if (jTableAuthors==e.getSource()) searchLogOr();                    
-                else if (jTableKeywords==e.getSource()) searchLogOr();                    
-                else if (jTableLinks==e.getSource()) showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableLinks,0));
-                else if (jTableManLinks==e.getSource()) showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableManLinks,0));
-                else if (jTableTitles==e.getSource()) showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableTitles,0));
-                else if (jTextFieldFilterKeywords==e.getSource()) filterKeywordList(false);
-                else if (jTextFieldFilterAttachments==e.getSource()) filterAttachmentList(false);
-                else if (jTextFieldFilterAuthors==e.getSource()) filterAuthorList(false);
-                else if (jTextFieldFilterTitles==e.getSource()) filterTitleList(false);
-                else if (jTextFieldFilterCluster==e.getSource()) filterClusterList();
-                else if (jTreeLuhmann==e.getSource()) showEntry(retrieveEntryNrFromLuhmann());
-                else if (jListEntryKeywords==e.getSource())searchKeywordsFromListLogOr();
-                else if (jTableBookmarks==e.getSource()) showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableBookmarks,0));
-                else if (jTableAttachments==e.getSource()) openAttachment();
-                else if (jTextFieldEntryNumber==e.getSource()) ZettelkastenViewUtil.hiddenFeatures(ZettelkastenView.this, jTextFieldEntryNumber, data, searchrequests, desktop, settings, acceleratorKeys, bibtex, displayedZettel);
+        AbstractAction a_enter = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jTableAuthors == e.getSource()) {
+                    searchLogOr();
+                } else if (jTableKeywords == e.getSource()) {
+                    searchLogOr();
+                } else if (jTableLinks == e.getSource()) {
+                    showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableLinks, 0));
+                } else if (jTableManLinks == e.getSource()) {
+                    showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableManLinks, 0));
+                } else if (jTableTitles == e.getSource()) {
+                    showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableTitles, 0));
+                } else if (jTextFieldFilterKeywords == e.getSource()) {
+                    filterKeywordList(false);
+                } else if (jTextFieldFilterAttachments == e.getSource()) {
+                    filterAttachmentList(false);
+                } else if (jTextFieldFilterAuthors == e.getSource()) {
+                    filterAuthorList(false);
+                } else if (jTextFieldFilterTitles == e.getSource()) {
+                    filterTitleList(false);
+                } else if (jTextFieldFilterCluster == e.getSource()) {
+                    filterClusterList();
+                } else if (jTreeLuhmann == e.getSource()) {
+                    showEntry(retrieveEntryNrFromLuhmann());
+                } else if (jListEntryKeywords == e.getSource()) {
+                    searchKeywordsFromListLogOr();
+                } else if (jTableBookmarks == e.getSource()) {
+                    showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableBookmarks, 0));
+                } else if (jTableAttachments == e.getSource()) {
+                    openAttachment();
+                } else if (jTextFieldEntryNumber == e.getSource()) {
+                    ZettelkastenViewUtil.hiddenFeatures(ZettelkastenView.this, jTextFieldEntryNumber, data, searchrequests, desktop, settings, acceleratorKeys, bibtex, displayedZettel);
+                }
             }
         };
         // put action to the tables' actionmaps
-        jTableAuthors.getActionMap().put("EnterKeyPressed",a_enter);
-        jTableKeywords.getActionMap().put("EnterKeyPressed",a_enter);
-        jTableLinks.getActionMap().put("EnterKeyPressed",a_enter);
-        jTableManLinks.getActionMap().put("EnterKeyPressed",a_enter);
-        jTableTitles.getActionMap().put("EnterKeyPressed",a_enter);
-        jTableBookmarks.getActionMap().put("EnterKeyPressed",a_enter);
-        jTableAttachments.getActionMap().put("EnterKeyPressed",a_enter);
-        jTextFieldFilterKeywords.getActionMap().put("EnterKeyPressed",a_enter);
-        jTextFieldFilterAttachments.getActionMap().put("EnterKeyPressed",a_enter);
-        jTextFieldFilterAuthors.getActionMap().put("EnterKeyPressed",a_enter);
-        jTextFieldFilterTitles.getActionMap().put("EnterKeyPressed",a_enter);
-        jTextFieldFilterCluster.getActionMap().put("EnterKeyPressed",a_enter);
-        jTextFieldEntryNumber.getActionMap().put("EnterKeyPressed",a_enter);
-        jTreeLuhmann.getActionMap().put("EnterKeyPressed",a_enter);
-        jListEntryKeywords.getActionMap().put("EnterKeyPressed",a_enter);
+        jTableAuthors.getActionMap().put("EnterKeyPressed", a_enter);
+        jTableKeywords.getActionMap().put("EnterKeyPressed", a_enter);
+        jTableLinks.getActionMap().put("EnterKeyPressed", a_enter);
+        jTableManLinks.getActionMap().put("EnterKeyPressed", a_enter);
+        jTableTitles.getActionMap().put("EnterKeyPressed", a_enter);
+        jTableBookmarks.getActionMap().put("EnterKeyPressed", a_enter);
+        jTableAttachments.getActionMap().put("EnterKeyPressed", a_enter);
+        jTextFieldFilterKeywords.getActionMap().put("EnterKeyPressed", a_enter);
+        jTextFieldFilterAttachments.getActionMap().put("EnterKeyPressed", a_enter);
+        jTextFieldFilterAuthors.getActionMap().put("EnterKeyPressed", a_enter);
+        jTextFieldFilterTitles.getActionMap().put("EnterKeyPressed", a_enter);
+        jTextFieldFilterCluster.getActionMap().put("EnterKeyPressed", a_enter);
+        jTextFieldEntryNumber.getActionMap().put("EnterKeyPressed", a_enter);
+        jTreeLuhmann.getActionMap().put("EnterKeyPressed", a_enter);
+        jListEntryKeywords.getActionMap().put("EnterKeyPressed", a_enter);
         // associate enter-keystroke with that action
         KeyStroke ks = KeyStroke.getKeyStroke("ENTER");
-        jTableAuthors.getInputMap().put(ks, "EnterKeyPressed");        
-        jTableKeywords.getInputMap().put(ks, "EnterKeyPressed");       
-        jTableLinks.getInputMap().put(ks, "EnterKeyPressed");       
-        jTableManLinks.getInputMap().put(ks, "EnterKeyPressed");       
+        jTableAuthors.getInputMap().put(ks, "EnterKeyPressed");
+        jTableKeywords.getInputMap().put(ks, "EnterKeyPressed");
+        jTableLinks.getInputMap().put(ks, "EnterKeyPressed");
+        jTableManLinks.getInputMap().put(ks, "EnterKeyPressed");
         jTableTitles.getInputMap().put(ks, "EnterKeyPressed");
         jTableBookmarks.getInputMap().put(ks, "EnterKeyPressed");
         jTableAttachments.getInputMap().put(ks, "EnterKeyPressed");
@@ -2243,29 +2582,39 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jListEntryKeywords.getInputMap().put(ks, "EnterKeyPressed");
         // create action which should be executed when the user presses
         // the delete/backspace-key
-        AbstractAction a_delete = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
-                if (jTreeLuhmann==e.getSource()) deleteLuhmannFromEntry();
-                else if (jListEntryKeywords==e.getSource()) deleteKeywordFromEntry();
-                else if (jTableAuthors==e.getSource()) deleteAuthor();
-                else if (jTableKeywords==e.getSource()) deleteKeyword();
-                else if (jTableTitles==e.getSource()) deleteEntry();
-                else if (jTableBookmarks==e.getSource()) deleteBookmark();
-                else if (jTableManLinks==e.getSource()) deleteManualLink();
-                else if (jTableAttachments==e.getSource()) deleteAttachment();
+        AbstractAction a_delete = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jTreeLuhmann == e.getSource()) {
+                    deleteLuhmannFromEntry();
+                } else if (jListEntryKeywords == e.getSource()) {
+                    deleteKeywordFromEntry();
+                } else if (jTableAuthors == e.getSource()) {
+                    deleteAuthor();
+                } else if (jTableKeywords == e.getSource()) {
+                    deleteKeyword();
+                } else if (jTableTitles == e.getSource()) {
+                    deleteEntry();
+                } else if (jTableBookmarks == e.getSource()) {
+                    deleteBookmark();
+                } else if (jTableManLinks == e.getSource()) {
+                    deleteManualLink();
+                } else if (jTableAttachments == e.getSource()) {
+                    deleteAttachment();
+                }
             }
         };
         // put action to the tables' actionmaps
-        jTreeLuhmann.getActionMap().put("DeleteKeyPressed",a_delete);
-        jListEntryKeywords.getActionMap().put("DeleteKeyPressed",a_delete);
-        jTableAuthors.getActionMap().put("DeleteKeyPressed",a_delete);
-        jTableManLinks.getActionMap().put("DeleteKeyPressed",a_delete);
-        jTableKeywords.getActionMap().put("DeleteKeyPressed",a_delete);
-        jTableTitles.getActionMap().put("DeleteKeyPressed",a_delete);
-        jTableBookmarks.getActionMap().put("DeleteKeyPressed",a_delete);
-        jTableAttachments.getActionMap().put("DeleteKeyPressed",a_delete);
+        jTreeLuhmann.getActionMap().put("DeleteKeyPressed", a_delete);
+        jListEntryKeywords.getActionMap().put("DeleteKeyPressed", a_delete);
+        jTableAuthors.getActionMap().put("DeleteKeyPressed", a_delete);
+        jTableManLinks.getActionMap().put("DeleteKeyPressed", a_delete);
+        jTableKeywords.getActionMap().put("DeleteKeyPressed", a_delete);
+        jTableTitles.getActionMap().put("DeleteKeyPressed", a_delete);
+        jTableBookmarks.getActionMap().put("DeleteKeyPressed", a_delete);
+        jTableAttachments.getActionMap().put("DeleteKeyPressed", a_delete);
         // check for os, and use appropriate controlKey
-        ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS())?"BACK_SPACE":"DELETE");
+        ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS()) ? "BACK_SPACE" : "DELETE");
         jTreeLuhmann.getInputMap().put(ks, "DeleteKeyPressed");
         jListEntryKeywords.getInputMap().put(ks, "DeleteKeyPressed");
         jTableAuthors.getInputMap().put(ks, "DeleteKeyPressed");
@@ -2276,21 +2625,26 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTableAttachments.getInputMap().put(ks, "DeleteKeyPressed");
         // create action which should be executed when the user presses
         // the ctrl-F10/meta-F10-key
-        AbstractAction a_add = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
-                if (jTableAuthors==e.getSource()||jTextFieldFilterAuthors==e.getSource()) addAuthorToList();
-                else if (jTableKeywords==e.getSource()||jTextFieldFilterKeywords==e.getSource()) addKeywordToList();
-                else if (jTableManLinks==e.getSource()) manualInsertLinks();
+        AbstractAction a_add = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jTableAuthors == e.getSource() || jTextFieldFilterAuthors == e.getSource()) {
+                    addAuthorToList();
+                } else if (jTableKeywords == e.getSource() || jTextFieldFilterKeywords == e.getSource()) {
+                    addKeywordToList();
+                } else if (jTableManLinks == e.getSource()) {
+                    manualInsertLinks();
+                }
             }
         };
         // put action to the tables' actionmaps
-        jTableAuthors.getActionMap().put("AddKeyPressed",a_add);
-        jTableManLinks.getActionMap().put("AddKeyPressed",a_add);
-        jTableKeywords.getActionMap().put("AddKeyPressed",a_add);
-        jTextFieldFilterAuthors.getActionMap().put("AddKeyPressed",a_add);
-        jTextFieldFilterKeywords.getActionMap().put("AddKeyPressed",a_add);
+        jTableAuthors.getActionMap().put("AddKeyPressed", a_add);
+        jTableManLinks.getActionMap().put("AddKeyPressed", a_add);
+        jTableKeywords.getActionMap().put("AddKeyPressed", a_add);
+        jTextFieldFilterAuthors.getActionMap().put("AddKeyPressed", a_add);
+        jTextFieldFilterKeywords.getActionMap().put("AddKeyPressed", a_add);
         // check for os, and use appropriate controlKey
-        ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS())?"meta F10":"ctrl F10");
+        ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS()) ? "meta F10" : "ctrl F10");
         jTableAuthors.getInputMap().put(ks, "AddKeyPressed");
         jTableManLinks.getInputMap().put(ks, "AddKeyPressed");
         jTableKeywords.getInputMap().put(ks, "AddKeyPressed");
@@ -2298,27 +2652,34 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTextFieldFilterKeywords.getInputMap().put(ks, "AddKeyPressed");
         // create action which should be executed when the user presses
         // the F2/meta-enter-key
-        AbstractAction a_edit = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
-                if (jTableAuthors==e.getSource()||jTextFieldFilterAuthors==e.getSource()) editAuthor();
-                else if (jTableKeywords==e.getSource()||jTextFieldFilterKeywords==e.getSource()) editKeyword();
-                else if (jTableTitles==e.getSource()||jTextFieldFilterTitles==e.getSource()) editTitle();
-                else if (jTableBookmarks==e.getSource()) editBookmark();
-                else if (jTableAttachments==e.getSource()||jTextFieldFilterAttachments==e.getSource()) editAttachment();
+        AbstractAction a_edit = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jTableAuthors == e.getSource() || jTextFieldFilterAuthors == e.getSource()) {
+                    editAuthor();
+                } else if (jTableKeywords == e.getSource() || jTextFieldFilterKeywords == e.getSource()) {
+                    editKeyword();
+                } else if (jTableTitles == e.getSource() || jTextFieldFilterTitles == e.getSource()) {
+                    editTitle();
+                } else if (jTableBookmarks == e.getSource()) {
+                    editBookmark();
+                } else if (jTableAttachments == e.getSource() || jTextFieldFilterAttachments == e.getSource()) {
+                    editAttachment();
+                }
             }
         };
         // put action to the tables' actionmaps
-        jTableAuthors.getActionMap().put("EditKeyPressed",a_edit);
-        jTableKeywords.getActionMap().put("EditKeyPressed",a_edit);
-        jTableTitles.getActionMap().put("EditKeyPressed",a_edit);
-        jTableBookmarks.getActionMap().put("EditKeyPressed",a_edit);
-        jTableAttachments.getActionMap().put("EditKeyPressed",a_edit);
-        jTextFieldFilterAuthors.getActionMap().put("EditKeyPressed",a_edit);
-        jTextFieldFilterKeywords.getActionMap().put("EditKeyPressed",a_edit);
-        jTextFieldFilterTitles.getActionMap().put("EditKeyPressed",a_edit);
-        jTextFieldFilterAttachments.getActionMap().put("EditKeyPressed",a_edit);
+        jTableAuthors.getActionMap().put("EditKeyPressed", a_edit);
+        jTableKeywords.getActionMap().put("EditKeyPressed", a_edit);
+        jTableTitles.getActionMap().put("EditKeyPressed", a_edit);
+        jTableBookmarks.getActionMap().put("EditKeyPressed", a_edit);
+        jTableAttachments.getActionMap().put("EditKeyPressed", a_edit);
+        jTextFieldFilterAuthors.getActionMap().put("EditKeyPressed", a_edit);
+        jTextFieldFilterKeywords.getActionMap().put("EditKeyPressed", a_edit);
+        jTextFieldFilterTitles.getActionMap().put("EditKeyPressed", a_edit);
+        jTextFieldFilterAttachments.getActionMap().put("EditKeyPressed", a_edit);
         // check for os, and use appropriate controlKey
-        ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS())?"meta ENTER":"F2");
+        ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS()) ? "meta ENTER" : "F2");
         jTableAuthors.getInputMap().put(ks, "EditKeyPressed");
         jTableKeywords.getInputMap().put(ks, "EditKeyPressed");
         jTableTitles.getInputMap().put(ks, "EditKeyPressed");
@@ -2330,60 +2691,71 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTextFieldFilterAttachments.getInputMap().put(ks, "EditKeyPressed");
         // create action which should be executed when the user presses
         // the insert/Meta-Backspace-key
-        AbstractAction a_new = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
-                if (jTableAuthors==e.getSource()) newAuthor();
-                else if (jTableKeywords==e.getSource()) newKeyword();
+        AbstractAction a_new = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jTableAuthors == e.getSource()) {
+                    newAuthor();
+                } else if (jTableKeywords == e.getSource()) {
+                    newKeyword();
+                }
             }
         };
         // put action to the tables' actionmaps
-        jTableAuthors.getActionMap().put("NewKeyPressed",a_new);
-        jTableKeywords.getActionMap().put("NewKeyPressed",a_new);
+        jTableAuthors.getActionMap().put("NewKeyPressed", a_new);
+        jTableKeywords.getActionMap().put("NewKeyPressed", a_new);
         // check for os, and use appropriate controlKey
-        ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS())?"meta BACK_SPACE":"INSERT");
+        ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS()) ? "meta BACK_SPACE" : "INSERT");
         jTableAuthors.getInputMap().put(ks, "NewKeyPressed");
         jTableKeywords.getInputMap().put(ks, "NewKeyPressed");
         // create action which should be executed when the user presses
         // the insert/Meta-Backspace-key
-        AbstractAction a_find = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
+        AbstractAction a_find = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 searchLogOr();
             }
         };
         // put action to the tables' actionmaps
-        jTextFieldFilterKeywords.getActionMap().put("FindKeyPressed",a_find);
-        jTextFieldFilterAuthors.getActionMap().put("FindKeyPressed",a_find);
+        jTextFieldFilterKeywords.getActionMap().put("FindKeyPressed", a_find);
+        jTextFieldFilterAuthors.getActionMap().put("FindKeyPressed", a_find);
         // check for os, and use appropriate controlKey
         ks = KeyStroke.getKeyStroke("shift ENTER");
         jTextFieldFilterKeywords.getInputMap().put(ks, "FindKeyPressed");
         jTextFieldFilterAuthors.getInputMap().put(ks, "FindKeyPressed");
         // create action which should be executed when the user presses
         // the insert/Meta-Backspace-key
-        AbstractAction a_findregex = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
-                if (jTextFieldFilterKeywords==e.getSource()) filterKeywordList(true);
-                else if (jTextFieldFilterAttachments==e.getSource()) filterAttachmentList(true);
-                else if (jTextFieldFilterAuthors==e.getSource()) filterAuthorList(true);
-                else if (jTextFieldFilterTitles==e.getSource()) filterTitleList(true);
+        AbstractAction a_findregex = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jTextFieldFilterKeywords == e.getSource()) {
+                    filterKeywordList(true);
+                } else if (jTextFieldFilterAttachments == e.getSource()) {
+                    filterAttachmentList(true);
+                } else if (jTextFieldFilterAuthors == e.getSource()) {
+                    filterAuthorList(true);
+                } else if (jTextFieldFilterTitles == e.getSource()) {
+                    filterTitleList(true);
+                }
             }
         };
         // put action to the tables' actionmaps
-        jTextFieldFilterKeywords.getActionMap().put("FindRegExKeyPressed",a_findregex);
-        jTextFieldFilterAuthors.getActionMap().put("FindRegExKeyPressed",a_findregex);
-        jTextFieldFilterTitles.getActionMap().put("FindRegExKeyPressed",a_findregex);
-        jTextFieldFilterAttachments.getActionMap().put("FindRegExKeyPressed",a_findregex);
+        jTextFieldFilterKeywords.getActionMap().put("FindRegExKeyPressed", a_findregex);
+        jTextFieldFilterAuthors.getActionMap().put("FindRegExKeyPressed", a_findregex);
+        jTextFieldFilterTitles.getActionMap().put("FindRegExKeyPressed", a_findregex);
+        jTextFieldFilterAttachments.getActionMap().put("FindRegExKeyPressed", a_findregex);
         // check for os, and use appropriate controlKey
         ks = KeyStroke.getKeyStroke("alt ENTER");
         jTextFieldFilterKeywords.getInputMap().put(ks, "FindRegExKeyPressed");
         jTextFieldFilterAuthors.getInputMap().put(ks, "FindRegExKeyPressed");
         jTextFieldFilterTitles.getInputMap().put(ks, "FindRegExKeyPressed");
         jTextFieldFilterAttachments.getInputMap().put(ks, "FindRegExKeyPressed");
-    // </editor-fold>
+        // </editor-fold>
     }
-    
+
     /**
-     * Method to init the jTrees components. Removes all elements, sets the root and
-     * th selection-mode
+     * Method to init the jTrees components. Removes all elements, sets the root
+     * and th selection-mode
      */
     private void initTrees() {
         // in case we have mac os x with aqua look&feel, make JTrees look
@@ -2395,15 +2767,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jTreeCluster.setUI(new MacSourceTree(false));
             // this tree has no root, so use "false" as parameter
             jTreeKeywords.setUI(new MacSourceTree(false));
-        }
-        // on all other os / look&feels JTrees remain normal.
+        } // on all other os / look&feels JTrees remain normal.
         else {
             // create array with all jTrees of mainframe
-            javax.swing.JTree[] trees = new javax.swing.JTree[] {jTreeLuhmann, jTreeCluster, jTreeKeywords};
+            javax.swing.JTree[] trees = new javax.swing.JTree[]{jTreeLuhmann, jTreeCluster, jTreeKeywords};
             // and iterate that arrea
             for (javax.swing.JTree tree : trees) {
                 // remove icons from jTree
-                DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer)tree.getCellRenderer();
+                DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer) tree.getCellRenderer();
                 // Remove the icons
                 renderer.setLeafIcon(null);
                 renderer.setClosedIcon(null);
@@ -2414,22 +2785,21 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-
     /**
-     * Clears the trees and the related jlist on the tab with the tree. needed several times,
-     * so we put these codelines into an own method.
+     * Clears the trees and the related jlist on the tab with the tree. needed
+     * several times, so we put these codelines into an own method.
      */
     private void clearTreesAndTables() {
         // get the treemodel
-        DefaultTreeModel dtrm = (DefaultTreeModel)jTreeLuhmann.getModel();
+        DefaultTreeModel dtrm = (DefaultTreeModel) jTreeLuhmann.getModel();
         // and first of all, clear the jTree
         dtrm.setRoot(null);
         // get the treemodel
-        dtrm = (DefaultTreeModel)jTreeCluster.getModel();
+        dtrm = (DefaultTreeModel) jTreeCluster.getModel();
         // and first of all, clear the jTree
         dtrm.setRoot(null);
         // get the treemodel
-        dtrm = (DefaultTreeModel)jTreeKeywords.getModel();
+        dtrm = (DefaultTreeModel) jTreeKeywords.getModel();
         // and first of all, clear the jTree
         dtrm.setRoot(null);
         // also clear the jListCluster on that tab
@@ -2452,11 +2822,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         dtm.setRowCount(0);
     }
 
-    
     /**
-     * This method is called at startup, or when a new data file is loaded
-     * or created. used to reset all variable states that need to be resettet
-     * at the beginning.
+     * This method is called at startup, or when a new data file is loaded or
+     * created. used to reset all variable states that need to be resettet at
+     * the beginning.
      */
     private void initVariables() {
         // init the linked lists
@@ -2472,18 +2841,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jPanelLiveSearch.setVisible(false);
         /* jPanelManLinks.setVisible(false); */
     }
-    
-    
+
     /**
-     * This method sets the default look and feel before the components are drawn. This is needed
-     * in case the user has changed the default look and feel and we need to set something different
-     * than the usual default.
+     * This method sets the default look and feel before the components are
+     * drawn. This is needed in case the user has changed the default look and
+     * feel and we need to set something different than the usual default.
      */
     private void setDefaultLookAndFeel() {
         try {
             // UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
             String laf = settings.getLookAndFeel();
-            if (laf.equals(Constants.seaGlassLookAndFeelClassName)) laf = "com.seaglasslookandfeel.SeaGlassLookAndFeel";
+            if (laf.equals(Constants.seaGlassLookAndFeelClassName)) {
+                laf = "com.seaglasslookandfeel.SeaGlassLookAndFeel";
+            }
             UIManager.setLookAndFeel(laf);
             // log info
             Constants.zknlogger.log(Level.INFO, "Using following LaF: {0}", settings.getLookAndFeel());
@@ -2500,18 +2870,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 ZettelkastenView.super.getFrame().getRootPane().setBackground(ColorUtil.colorSeaGlassGray);
             }
         } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
+            Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
         }
     }
 
-    
     /**
-     * This methods updates the display, i.e. the content of the textfields, the availability
-     * of toolbar icons and menu item
+     * This methods updates the display, i.e. the content of the textfields, the
+     * availability of toolbar icons and menu item
      */
     @Action(enabledProperty = "currentEntryShown")
     public final void updateDisplay() {
-        if (data.getCount(Daten.ZKNCOUNT)<1) {
+        if (data.getCount(Daten.ZKNCOUNT) < 1) {
             // clear textfields
             jEditorPaneEntry.setText("");
             // clear keyword-list
@@ -2523,11 +2892,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jListEntryKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(getResourceMap().getString("jListEntryKeywords.border.title"), bcol, settings));
             // clear all table contents
             clearTreesAndTables();
-        }
-        else {
+        } else {
             // Here we set up alle the textfields and lists
             updateDisplayParts(data.getCurrentZettelPos());
-            statusOfEntryLabel.setText(getResourceMap().getString("entryOfText")+" "+String.valueOf(data.getCount(Daten.ZKNCOUNT)));
+            statusOfEntryLabel.setText(getResourceMap().getString("entryOfText") + " " + String.valueOf(data.getCount(Daten.ZKNCOUNT)));
         }
         // then update menu items and toolbar icons.
         updateToolbarAndMenu();
@@ -2538,11 +2906,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         updateTabbedPane();
     }
 
-
     /**
-     * Switches the logical filtering of the entry's keyword-list (jListEntryKeywords).
-     * If the user selected keywords from the jListEntryKeywords, the link-list (jTableLinks)
-     * is filtered. Here we switch whether the link-list is filtered in logical-or or logical-and
+     * Switches the logical filtering of the entry's keyword-list
+     * (jListEntryKeywords). If the user selected keywords from the
+     * jListEntryKeywords, the link-list (jTableLinks) is filtered. Here we
+     * switch whether the link-list is filtered in logical-or or logical-and
      * behaviour. after that, the link-list is being "re-filtered".
      */
     @Action
@@ -2557,10 +2925,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // and filter the list again
         filterLinks();
     }
+
     /**
-     * Switches the logical filtering of the entry's keyword-list (jListEntryKeywords).
-     * If the user selected keywords from the jListEntryKeywords, the link-list (jTableLinks)
-     * is filtered. Here we switch whether the link-list is filtered in logical-or or logical-and
+     * Switches the logical filtering of the entry's keyword-list
+     * (jListEntryKeywords). If the user selected keywords from the
+     * jListEntryKeywords, the link-list (jTableLinks) is filtered. Here we
+     * switch whether the link-list is filtered in logical-or or logical-and
      * behaviour. after that, the link-list is being "re-filtered".
      */
     @Action
@@ -2576,41 +2946,46 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         filterLinks();
     }
 
-
     /**
-     * This method checks whether a certain menu has already been added to the menu bar.
-     * We need this to avoid multiple occurences of same menus that are related to the
-     * JTabbedPane.
+     * This method checks whether a certain menu has already been added to the
+     * menu bar. We need this to avoid multiple occurences of same menus that
+     * are related to the JTabbedPane.
      *
      * @param menu the menu that should be checked for existence
-     * @return {@code true} if menu is already visible in the menu bar, {@code false} othwerwise.
+     * @return {@code true} if menu is already visible in the menu bar,
+     * {@code false} othwerwise.
      */
     private boolean menuBarHasMenu(javax.swing.JMenu menu) {
         // iterate all menu items
-        for (int cnt=0; cnt<menuBar.getMenuCount(); cnt++) {
+        for (int cnt = 0; cnt < menuBar.getMenuCount(); cnt++) {
             // check whether requested menu is already added
             // if yes, return true
-            if (menuBar.getMenu(cnt)==menu) return true;
+            if (menuBar.getMenu(cnt) == menu) {
+                return true;
+            }
         }
         // else return false
         return false;
     }
 
-
     /**
      * This method displays the menu that is related to the currently displayed
      * tab of the JTabbedPane.<br><br>
-     * To avoid UI-bugs (which may occur in Snow Leopard 10.6), but
-     * also to avoid multiple menu-handling for different operating systems, we now
-     * <b>remove</b> <i>all</i> menus that are related to tabs of the JTabbedPane (formerly,
-     * they were only set visible(true/false)). Thus, we have to check whether the to be
-     * displayed menu is already "visible" (i.e. it already has been added to
-     * the menu bar), so we don't have the same menu multiple times displayed in the menu bar.
-     * This check is achived with the method {@link #menuBarHasMenu(javax.swing.JMenu) menuBarHasMenu(javax.swing.JMenu)}.
+     * To avoid UI-bugs (which may occur in Snow Leopard 10.6), but also to
+     * avoid multiple menu-handling for different operating systems, we now
+     * <b>remove</b> <i>all</i> menus that are related to tabs of the
+     * JTabbedPane (formerly, they were only set visible(true/false)). Thus, we
+     * have to check whether the to be displayed menu is already "visible" (i.e.
+     * it already has been added to the menu bar), so we don't have the same
+     * menu multiple times displayed in the menu bar. This check is achived with
+     * the method
+     * {@link #menuBarHasMenu(javax.swing.JMenu) menuBarHasMenu(javax.swing.JMenu)}.
      * <br><br>
-     * If the menu has not been added yet, it will be added then. And the menu bar is being validated and repainted.
+     * If the menu has not been added yet, it will be added then. And the menu
+     * bar is being validated and repainted.
      *
-     * @param menu the menu that is related to the currently displayed tab in the JTabbedPane.
+     * @param menu the menu that is related to the currently displayed tab in
+     * the JTabbedPane.
      */
     private void showTabMenu(javax.swing.JMenu menu) {
         // check whether the menu already is visible (added)
@@ -2625,21 +3000,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-
     /**
      * This method updates the menu-items with the recent documents
      */
     private void setRecentDocuments() {
-        setRecentDocumentMenuItem(recentDoc1,1);
-        setRecentDocumentMenuItem(recentDoc2,2);
-        setRecentDocumentMenuItem(recentDoc3,3);
-        setRecentDocumentMenuItem(recentDoc4,4);
-        setRecentDocumentMenuItem(recentDoc5,5);
-        setRecentDocumentMenuItem(recentDoc6,6);
-        setRecentDocumentMenuItem(recentDoc7,7);
-        setRecentDocumentMenuItem(recentDoc8,8);
+        setRecentDocumentMenuItem(recentDoc1, 1);
+        setRecentDocumentMenuItem(recentDoc2, 2);
+        setRecentDocumentMenuItem(recentDoc3, 3);
+        setRecentDocumentMenuItem(recentDoc4, 4);
+        setRecentDocumentMenuItem(recentDoc5, 5);
+        setRecentDocumentMenuItem(recentDoc6, 6);
+        setRecentDocumentMenuItem(recentDoc7, 7);
+        setRecentDocumentMenuItem(recentDoc8, 8);
     }
-
 
     private void setRecentDocumentMenuItem(javax.swing.JMenuItem menuItem, int recentDocNr) {
         // first, hide all menu-items
@@ -2647,7 +3020,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // retrieve recent document
         String recDoc = settings.getRecentDoc(recentDocNr);
         // check whether we have any valid value
-        if (recDoc!=null && !recDoc.isEmpty()) {
+        if (recDoc != null && !recDoc.isEmpty()) {
             // make menu visible, if recent document is valid
             menuItem.setVisible(true);
             // set filename as text
@@ -2656,9 +3029,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             updateRecentDocumentMenuIcon(menuItem, recDoc);
         }
     }
+
     private void updateRecentDocumentMenuIcon(javax.swing.JMenuItem menuItem, String recDoc) {
         // check whether we have any valid value
-        if (recDoc!=null && !recDoc.isEmpty()) {
+        if (recDoc != null && !recDoc.isEmpty()) {
             // create icon for file-not-found
             ImageIcon fileNotFoundIcon = Constants.errorIcon;
             // create zkn-icon for valid files
@@ -2668,17 +3042,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // check whether file exists
             File dummyfile = new File(recDoc);
             // set either filepath or file-not-found-text as tooltip
-            menuItem.setToolTipText((dummyfile.exists()?recDoc:fileNotFountText));
+            menuItem.setToolTipText((dummyfile.exists() ? recDoc : fileNotFountText));
             // set either file-not-found-icon or no icon
-            menuItem.setIcon((dummyfile.exists())?zkn3Icon:fileNotFoundIcon);
+            menuItem.setIcon((dummyfile.exists()) ? zkn3Icon : fileNotFoundIcon);
         }
     }
 
-
     /**
-     * This method removes all menus that are related to the JTabbedPane. After this method is
-     * called, typically the method {@link #showTabMenu(javax.swing.JMenu) showTabMenu(javax.swing.JMenu)}
-     * has to be called, to display the related menu of the currently displayed tab of the JTabbedPane.
+     * This method removes all menus that are related to the JTabbedPane. After
+     * this method is called, typically the method
+     * {@link #showTabMenu(javax.swing.JMenu) showTabMenu(javax.swing.JMenu)}
+     * has to be called, to display the related menu of the currently displayed
+     * tab of the JTabbedPane.
      */
     private void removeTabMenus() {
         // hide special menus. these will only be visible according to their
@@ -2694,63 +3069,79 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         menuBar.validate();
     }
 
-
     /**
-     * Here we set up the jTabbedPane according to the page to be displayed
-     * the keyword list e.g. is only to be displayed when selected - this is done
-     * within the changelistener of the jTabbedPane. The connections of each entry to
-     * other entries e.g. has to be updated each time
+     * Here we set up the jTabbedPane according to the page to be displayed the
+     * keyword list e.g. is only to be displayed when selected - this is done
+     * within the changelistener of the jTabbedPane. The connections of each
+     * entry to other entries e.g. has to be updated each time
      */
     private void updateTabbedPane() {
         // enable refresh-button if we have a linked list
-        jButtonRefreshKeywords.setEnabled(linkedkeywordlist!=null);
-        jButtonRefreshTitles.setEnabled(linkedtitlelist!=null);
-        jButtonRefreshAuthors.setEnabled(linkedauthorlist!=null);
+        jButtonRefreshKeywords.setEnabled(linkedkeywordlist != null);
+        jButtonRefreshTitles.setEnabled(linkedtitlelist != null);
+        jButtonRefreshAuthors.setEnabled(linkedauthorlist != null);
         jButtonRefreshCluster.setEnabled(linkedclusterlist);
-        jButtonRefreshAttachments.setEnabled(linkedattachmentlist!=null);
+        jButtonRefreshAttachments.setEnabled(linkedattachmentlist != null);
         // enable textfield only if we have more than 1 element in the jtable
-        jTextFieldFilterKeywords.setEnabled(jTableKeywords.getRowCount()>0);
-        jTextFieldFilterAuthors.setEnabled(jTableAuthors.getRowCount()>0);
-        jTextFieldFilterTitles.setEnabled(jTableTitles.getRowCount()>0);
-        jTextFieldFilterCluster.setEnabled(jTreeCluster.getRowCount()>0);
-        jTextFieldFilterAttachments.setEnabled(jTableAttachments.getRowCount()>0);
+        jTextFieldFilterKeywords.setEnabled(jTableKeywords.getRowCount() > 0);
+        jTextFieldFilterAuthors.setEnabled(jTableAuthors.getRowCount() > 0);
+        jTextFieldFilterTitles.setEnabled(jTableTitles.getRowCount() > 0);
+        jTextFieldFilterCluster.setEnabled(jTreeCluster.getRowCount() > 0);
+        jTextFieldFilterAttachments.setEnabled(jTableAttachments.getRowCount() > 0);
         // hide special menus. these will only be visible according to their
         // related displayed tab
         removeTabMenus();
         // reset status text
         statusMsgLabel.setText("");
         // do nothing when we have no data
-        if (data.getCount(Daten.ZKNCOUNT)<1) {
+        if (data.getCount(Daten.ZKNCOUNT) < 1) {
             return;
         }
         // Get current tab
         int sel = jTabbedPaneMain.getSelectedIndex();
         // if selected tab was different from the previous selection, update display
-        if (sel!=previousSelectedTab) {
+        if (sel != previousSelectedTab) {
             updateDisplayParts(data.getCurrentZettelPos());
         }
         // we need always an update of the links
-        needsLinkUpdate=true;
+        needsLinkUpdate = true;
         // when the previous tab was the links-tab, stop the background-task...
-        if ((TAB_LINKS==previousSelectedTab || TAB_LINKS!=sel) && (cLinksTask!=null) && !cLinksTask.isDone()) {
+        if ((TAB_LINKS == previousSelectedTab || TAB_LINKS != sel) && (cLinksTask != null) && !cLinksTask.isDone()) {
             cLinksTask.cancel(true);
         }
         // set new tab as current selection
         previousSelectedTab = sel;
 
         switch (sel) {
-            case TAB_LINKS: showLinks(); break;
-            case TAB_LUHMANN: showLuhmann(); break;
-            case TAB_KEYWORDS: showKeywords(); break;
-            case TAB_AUTHORS: showAuthors(); break;
-            case TAB_TITLES: showTitles(); break;
-            case TAB_CLUSTER: showCluster(); break;
-            case TAB_BOOKMARKS: showBookmarks(); break;
-            case TAB_ATTACHMENTS: showAttachments(); break;
-            default: showLinks(); break;
+            case TAB_LINKS:
+                showLinks();
+                break;
+            case TAB_LUHMANN:
+                showLuhmann();
+                break;
+            case TAB_KEYWORDS:
+                showKeywords();
+                break;
+            case TAB_AUTHORS:
+                showAuthors();
+                break;
+            case TAB_TITLES:
+                showTitles();
+                break;
+            case TAB_CLUSTER:
+                showCluster();
+                break;
+            case TAB_BOOKMARKS:
+                showBookmarks();
+                break;
+            case TAB_ATTACHMENTS:
+                showAttachments();
+                break;
+            default:
+                showLinks();
+                break;
         }
     }
-
 
     /**
      * This method is called from within the "updateDisplay" method. This method
@@ -2760,18 +3151,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     public void updateToolbarAndMenu() {
         // store the amount of entries
-        int count=data.getCount(Daten.ZKNCOUNT);
+        int count = data.getCount(Daten.ZKNCOUNT);
         // at least one entry necessary to enable following functions
-        setEntriesAvailable(count>0);
+        setEntriesAvailable(count > 0);
         // more than one entry necessary to enable following functions
-        setMoreEntriesAvailable(count>1);
+        setMoreEntriesAvailable(count > 1);
         // check each selected entries for followers
         setMoreLuhmann(data.hasLuhmannNumbers(data.getCurrentZettelPos()));
         // check whether the current entry is bookmarked or not...
-        setEntryBookmarked((-1==bookmarks.getBookmarkPosition(displayedZettel))&&(count>0));
+        setEntryBookmarked((-1 == bookmarks.getBookmarkPosition(displayedZettel)) && (count > 0));
         // check whether current entry is on any desktop or not
-        statusDesktopEntryButton.setVisible(desktop.isEntryInAnyDesktop(displayedZettel)&&(count>0));
-        statusDesktopEntryButton.setEnabled(desktop.isEntryInAnyDesktop(displayedZettel)&&(count>0));
+        statusDesktopEntryButton.setVisible(desktop.isEntryInAnyDesktop(displayedZettel) && (count > 0));
+        statusDesktopEntryButton.setEnabled(desktop.isEntryInAnyDesktop(displayedZettel) && (count > 0));
         // retrieve modified data-files
         setSaveEnabled(synonyms.isModified() | data.isMetaModified() | bibtex.isModified() | data.isModified() | bookmarks.isModified() | searchrequests.isModified() | desktop.isModified());
         buttonHistoryBack.setEnabled(data.canHistoryBack());
@@ -2779,45 +3170,51 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         setHistoryBackAvailable(data.canHistoryBack());
         setHistoryForAvailable(data.canHistoryFore());
         // desktop and search results avaiable
-        setDesktopAvailable(desktop.getCount()>0);
-        setSearchResultsAvailable(searchrequests.getCount()>0);
-        showSearchResultsMenuItem.setEnabled(searchrequests.getCount()>0);
-        showDesktopMenuItem.setEnabled(desktop.getCount()>0);
+        setDesktopAvailable(desktop.getCount() > 0);
+        setSearchResultsAvailable(searchrequests.getCount() > 0);
+        showSearchResultsMenuItem.setEnabled(searchrequests.getCount() > 0);
+        showDesktopMenuItem.setEnabled(desktop.getCount() > 0);
     }
-    
-    
+
     /**
-     * This method displays the information of an entry that is selected from the tree jTreeLuhmann,
-     * i.e. displaying a follower- or sub-entry of the current entry. we use an extra display-method
-     * here because we don't want to "lose" the current entry and we don't want updating the tabbed
-     * pane with the jTree when the user selects an entry from that tree.
+     * This method displays the information of an entry that is selected from
+     * the tree jTreeLuhmann, i.e. displaying a follower- or sub-entry of the
+     * current entry. we use an extra display-method here because we don't want
+     * to "lose" the current entry and we don't want updating the tabbed pane
+     * with the jTree when the user selects an entry from that tree.
      */
     private void showEntryFromLuhmann() {
         // if no data available, leave method
-        if (data.getCount(Daten.ZKNCOUNT)<1) return;
+        if (data.getCount(Daten.ZKNCOUNT) < 1) {
+            return;
+        }
         // retrieve number of selected entry
         int nr = retrieveEntryNrFromLuhmann();
         // if we don't have a valid selection, use current entry as reference
-        if (-1==nr) nr = data.getCurrentZettelPos();
+        if (-1 == nr) {
+            nr = data.getCurrentZettelPos();
+        }
         // now display only the relevant parts, no complete update of the display
         updateDisplayParts(nr);
     }
-    
-    
+
     /**
-     * This method is used to update the content of the textfields/lists, but not the whole display
-     * like tabbed pane as well. Usually this method is called when a link to another entry or a follower
-     * entry or any entry in one of the tabbed pane's tables is selected. This selection does just show
-     * the content of the related entry, which means the jEditorPanes and the jListKeywords are filled
-     * with the entry's data. but: the data in the tabbed pane, like the entry's follower-numbers,
-     * links and manual links etc. are <i>not</i> updated. this only occurs, when an entry is <i>activated</i>.
-     * e.g. by double-clicking on an entry in on of the tabbed pane's tables.
+     * This method is used to update the content of the textfields/lists, but
+     * not the whole display like tabbed pane as well. Usually this method is
+     * called when a link to another entry or a follower entry or any entry in
+     * one of the tabbed pane's tables is selected. This selection does just
+     * show the content of the related entry, which means the jEditorPanes and
+     * the jListKeywords are filled with the entry's data. but: the data in the
+     * tabbed pane, like the entry's follower-numbers, links and manual links
+     * etc. are <i>not</i> updated. this only occurs, when an entry is
+     * <i>activated</i>. e.g. by double-clicking on an entry in on of the tabbed
+     * pane's tables.
      *
      * @param nr the number of the entry that should be displayed
      */
     public void updateDisplayParts(int nr) {
         // if we have an invalid number, leave
-        if (nr<1) {
+        if (nr < 1) {
             return;
         }
         // set the number of the displayed zettel...
@@ -2847,7 +3244,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // the related synonyms of the highlight-terms
             LinkedList<String> highlight = new LinkedList<>();
             // check whether we have any keywords to highlight
-            if (highlightterms!=null && highlightterms.length>0) {
+            if (highlightterms != null && highlightterms.length > 0) {
                 highlight.addAll(Arrays.asList(highlightterms));
                 // check whether synonyms should be included as well
                 if (settings.getSearchAlwaysSynonyms()) {
@@ -2855,9 +3252,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     // and add synonyms
                     for (String kw : highlightterms) {
                         // get the synonym-line for each search term
-                        String[] synline = synonyms.getSynonymLineFromAny(kw,false);
+                        String[] synline = synonyms.getSynonymLineFromAny(kw, false);
                         // if we have synonyms...
-                        if (synline!=null) {
+                        if (synline != null) {
                             // iterate synonyms
                             for (String sy : synline) {
                                 // add them to the linked list, if they are new
@@ -2869,12 +3266,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     }
                 }
                 HtmlUbbUtil.setHighlighTerms(highlight.toArray(new String[highlight.size()]), HtmlUbbUtil.HIGHLIGHT_STYLE_KEYWORDS, settings.getHighlightWholeWord());
-            }
-            else {
+            } else {
                 HtmlUbbUtil.setHighlighTerms(null, HtmlUbbUtil.HIGHLIGHT_STYLE_KEYWORDS, settings.getHighlightWholeWord());
             }
-        }
-        else {
+        } else {
             HtmlUbbUtil.setHighlighTerms(null, HtmlUbbUtil.HIGHLIGHT_STYLE_KEYWORDS, settings.getHighlightWholeWord());
         }
         displayZettelContent(nr);
@@ -2884,9 +3279,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // prepare the JList which will display the keywords
         keywordListModel.clear();
         // check whether any keywords have been found
-        if (kws!=null) {
+        if (kws != null) {
             // sort the array
-            if (kws.length>0) {
+            if (kws.length > 0) {
                 Arrays.sort(kws, new Comparer());
             }
             // iterate the string array and add its content to the list model
@@ -2908,8 +3303,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         Color bcol = (settings.isMacAqua()) ? ColorUtil.colorJTreeText : null;
         jListEntryKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(bordertext.toString(), bcol, settings));
         // en- or disable those actions which are related to the displaying of the current entry
-        setCurrentEntryShown(displayedZettel!=data.getCurrentZettelPos());
+        setCurrentEntryShown(displayedZettel != data.getCurrentZettelPos());
     }
+
     /**
      *
      * @param nr
@@ -2917,13 +3313,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private void displayZettelContent(int nr) {
         // retrieve the string array of the first entry
-        String disp = data.getEntryAsHtml(nr,(settings.getHighlightSegments())?retrieveSelectedKeywordsFromList():null,Constants.FRAME_MAIN);
+        String disp = data.getEntryAsHtml(nr, (settings.getHighlightSegments()) ? retrieveSelectedKeywordsFromList() : null, Constants.FRAME_MAIN);
         // in case parsing was ok, display the entry
-        if (Tools.isValidHTML(disp,nr)) {
+        if (Tools.isValidHTML(disp, nr)) {
             // set entry information in the main textfield
             jEditorPaneEntry.setText(disp);
-        }
-        // else show error message box to user and tell him what to do
+        } // else show error message box to user and tell him what to do
         else {
             StringBuilder cleanedContent = new StringBuilder("");
             cleanedContent.append("<body><div style=\"margin:5px;padding:5px;background-color:#dddddd;color:#800000;\">");
@@ -2939,32 +3334,35 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // set entry number tzo textfield
         jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
     }
+
     /**
-     * This method updates an entry's content only, and <i>not</i> all other fields like the tables in 
-     * the tabbed pane.
-     * 
-     * @param zettelnummer the number of the entry which content should be updated.
+     * This method updates an entry's content only, and <i>not</i> all other
+     * fields like the tables in the tabbed pane.
+     *
+     * @param zettelnummer the number of the entry which content should be
+     * updated.
      */
     public void updateZettelContent(int zettelnummer) {
         displayZettelContent(zettelnummer);
     }
-    
+
     /**
-     * Action that deletes a selected Luhmann-number (i.e. a selection in the jTreeLuhmann, that
-     * show follower- and sub-entries of an entry) from the selection's parent. Thus, we can not
-     * only remove an sub-entry of the current entry, but also from other sub-entries.
+     * Action that deletes a selected Luhmann-number (i.e. a selection in the
+     * jTreeLuhmann, that show follower- and sub-entries of an entry) from the
+     * selection's parent. Thus, we can not only remove an sub-entry of the
+     * current entry, but also from other sub-entries.
      */
     @Action(enabledProperty = "luhmannSelected")
     public void deleteLuhmannFromEntry() {
         // retrieve selected node
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)jTreeLuhmann.getLastSelectedPathComponent();        
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTreeLuhmann.getLastSelectedPathComponent();
         // if we have a valid selection, go on...
-        if (node!=null) {
+        if (node != null) {
             // get the parent. the parent is the entry where the selected entry should be deleted
             // from the luhmann-element
-            DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
+            DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
             // if the node has a parent (i.e. is not the root), we can go on
-            if (parent!=null) {
+            if (parent != null) {
                 // ask whether keyword really should be deleted
                 int option = JOptionPane.showConfirmDialog(getFrame(), getResourceMap().getString("askForDeleteLuhmannMsg"), getResourceMap().getString("askForDeleteLuhmannTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
                 // if yes, go on
@@ -2974,9 +3372,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     // retrieve entry number of parent node
                     int parentNr = retrieveEntryNrFromLuhmann(parent);
                     // check vor valid values
-                    if (nodeNr!=-1 && parentNr!=-1) {
+                    if (nodeNr != -1 && parentNr != -1) {
                         // and remove the nodeNr from the entry "parentNr"
-                        data.deleteLuhmannNumber(parentNr,nodeNr);
+                        data.deleteLuhmannNumber(parentNr, nodeNr);
                         // update the display
                         updateDisplay();
                     }
@@ -2984,28 +3382,28 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             }
         }
     }
-    
-    
+
     /**
      * This methods retrieves the number of a selected entry from the
      * jTreeLuhmann
-     * 
+     *
      * @return The number of the selected entry, or -1 if an error occured
      */
     private int retrieveEntryNrFromLuhmann() {
         // retrieve selected node
-        return retrieveEntryNrFromLuhmann((DefaultMutableTreeNode)jTreeLuhmann.getLastSelectedPathComponent());
+        return retrieveEntryNrFromLuhmann((DefaultMutableTreeNode) jTreeLuhmann.getLastSelectedPathComponent());
     }
+
     /**
      * This methods retrieves the number of the node {@code node} from the
      * jTreeLuhmann
-     * 
+     *
      * @param node
      * @return The number of the selected entry, or -1 if an error occured
      */
     private int retrieveEntryNrFromLuhmann(DefaultMutableTreeNode node) {
         // if we have a valid selection, go on...
-        if (node!=null) {
+        if (node != null) {
             // get user data
             TreeUserObject userObject = (TreeUserObject) node.getUserObject();
             // retrieve the node's id (i.e. entrynumber
@@ -3013,28 +3411,25 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             try {
                 int nr = Integer.parseInt(text);
                 return nr;
-            }
-            catch (NumberFormatException e) {
-                Constants.zknlogger.log(Level.WARNING, "Node was: {0}{1}Retrieved Number was: {2}{3}{4}", 
-                                        new Object[]{node.toString(), System.lineSeparator(), text, System.lineSeparator(), e.getLocalizedMessage()});
+            } catch (NumberFormatException e) {
+                Constants.zknlogger.log(Level.WARNING, "Node was: {0}{1}Retrieved Number was: {2}{3}{4}",
+                        new Object[]{node.toString(), System.lineSeparator(), text, System.lineSeparator(), e.getLocalizedMessage()});
                 return -1;
             }
         }
         return -1;
     }
-    
-    
+
     @Action
     public void showLuhmannEntryNumber() {
         boolean val = settings.getShowLuhmannEntryNumber();
         settings.setShowLuhmannEntryNumber(!val);
         showLuhmann();
     }
-    
-    
+
     /**
-     * This action shows the tab with the links to other entries, based on matching
-     * keywords.
+     * This action shows the tab with the links to other entries, based on
+     * matching keywords.
      * <br><br>
      * We need this action just for the menu command, so we can set keybindings
      * and resources to that menu item. it's better doing it like this rather
@@ -3044,6 +3439,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void menuShowLinks() {
         jTabbedPaneMain.setSelectedIndex(TAB_LINKS);
     }
+
     /**
      * This action shows the tab with the attachment of all entries.
      * <br><br>
@@ -3056,60 +3452,59 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTabbedPaneMain.setSelectedIndex(TAB_ATTACHMENTS);
     }
 
-
     /**
-     * This method opens a modal dialog that starts a background-task. this background-task then
-     * again creates the so-called luhmann-numbers.
+     * This method opens a modal dialog that starts a background-task. this
+     * background-task then again creates the so-called luhmann-numbers.
      * <br><br>
-     * The Luhmann-Numbers function is similar to a typical tree: we have one "parent"-entry 
-     * and several child-entries (sub-entries or followers). each of these child-elements can 
-     * have their own child-elements again (whereby the child-element itself is then again 
-     * understood as "parent"-entry).
+     * The Luhmann-Numbers function is similar to a typical tree: we have one
+     * "parent"-entry and several child-entries (sub-entries or followers). each
+     * of these child-elements can have their own child-elements again (whereby
+     * the child-element itself is then again understood as "parent"-entry).
      * <br><br>
-     * So, the Luhmann-numbers of an entry only have one subordinated level of sub-entries. the tree-
-     * structure comes from those sub-entries, that might have their own sub-entries again.
-     */ 
+     * So, the Luhmann-numbers of an entry only have one subordinated level of
+     * sub-entries. the tree- structure comes from those sub-entries, that might
+     * have their own sub-entries again.
+     */
     private synchronized void showLuhmann() {
         // if no data available, leave method
-        if (data.getCount(Daten.ZKNCOUNT)<1) {
+        if (data.getCount(Daten.ZKNCOUNT) < 1) {
             return;
         }
         // if the link-table is not shown, leave
-        if (jTabbedPaneMain.getSelectedIndex()!=TAB_LUHMANN) {
+        if (jTabbedPaneMain.getSelectedIndex() != TAB_LUHMANN) {
             return;
         }
         // show Luhmann numbers
         luhmannTask();
     }
-    
-    
+
     /**
-     * This method restores a filtered link-list. The list jTableLinks is filtered, when
-     * a user selects an item from the jListEntryKeywords. To restore the list, we use
-     * this method.<br><br>
-     * When a filtered link-list (jTableLinks), which is filtered by selected keywords
-     * from the keyword-list (jListEntryKeywords), we can reset the link-list, showing
-     * not just the related keywords from the selected values, but all keywords again.
+     * This method restores a filtered link-list. The list jTableLinks is
+     * filtered, when a user selects an item from the jListEntryKeywords. To
+     * restore the list, we use this method.<br><br>
+     * When a filtered link-list (jTableLinks), which is filtered by selected
+     * keywords from the keyword-list (jListEntryKeywords), we can reset the
+     * link-list, showing not just the related keywords from the selected
+     * values, but all keywords again.
      */
     @Action
     public void refreshFilteredLinks() {
         needsLinkUpdate = true;
         showLinks();
     }
-    
-    
+
     /**
-     * This method displays the links/connection of an entry by starting
-     * a background task. after the task finishes, all links from this entry
-     * to other entries are display in the JTable of the JTabbedPane
+     * This method displays the links/connection of an entry by starting a
+     * background task. after the task finishes, all links from this entry to
+     * other entries are display in the JTable of the JTabbedPane
      */
     private synchronized void showLinks() {
         // if no data available, leave method
-        if (data.getCount(Daten.ZKNCOUNT)<1) {
+        if (data.getCount(Daten.ZKNCOUNT) < 1) {
             return;
         }
         // if the link-table is not shown, leave
-        if (jTabbedPaneMain.getSelectedIndex()!=TAB_LINKS) {
+        if (jTabbedPaneMain.getSelectedIndex() != TAB_LINKS) {
             return;
         }
         // when no update needed, show menu and leave method
@@ -3117,7 +3512,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // update might be needed next time
             needsLinkUpdate = true;
             // show/enable viewmenu, if we have at least one entry...
-            if ((jTableLinks.getRowCount()>0) && (TAB_LINKS==jTabbedPaneMain.getSelectedIndex())) {
+            if ((jTableLinks.getRowCount() > 0) && (TAB_LINKS == jTabbedPaneMain.getSelectedIndex())) {
                 showTabMenu(viewMenuLinks);
             }
             // we might have changes to the manual links, so update this here...
@@ -3130,7 +3525,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             return;
         }
         // clear selections
-        jListEntryKeywords.clearSelection();        
+        jListEntryKeywords.clearSelection();
         // clear table
         DefaultTableModel tm = (DefaultTableModel) jTableLinks.getModel();
         // reset the table
@@ -3164,8 +3559,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         int[] manlinks;
         manlinks = data.getCurrentManualLinks();
         // if we have any manual links, fille the table and display the panel
-        if ((manlinks!=null)&&(manlinks.length>0)) {
-            for (int cnt=0; cnt<manlinks.length; cnt++) {
+        if ((manlinks != null) && (manlinks.length > 0)) {
+            for (int cnt = 0; cnt < manlinks.length; cnt++) {
                 // create a new object
                 Object[] ob = new Object[3];
                 // store the information in that object
@@ -3179,7 +3574,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // display panel
         /* jPanelManLinks.setVisible(jTableManLinks.getRowCount()>0); */
     }
-    
+
     /**
      * This action shows the tab with the keywords of the current data file.
      * <br><br>
@@ -3191,20 +3586,20 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void menuShowKeywords() {
         jTabbedPaneMain.setSelectedIndex(TAB_KEYWORDS);
     }
-    
-    
+
     /**
-     * This method displays the all keywords in the keyword data file using
-     * a background task. after the task finishes, all keywords and their useage frequency
-     * in the main data file (zknfile) are displayed in the JTable of the JTabbedPane
+     * This method displays the all keywords in the keyword data file using a
+     * background task. after the task finishes, all keywords and their useage
+     * frequency in the main data file (zknfile) are displayed in the JTable of
+     * the JTabbedPane
      */
     private void showKeywords() {
         // if no data available, leave method
-        if (data.getCount(Daten.ZKNCOUNT)<1) {
+        if (data.getCount(Daten.ZKNCOUNT) < 1) {
             return;
         }
         // show amount of entries
-        statusMsgLabel.setText("("+String.valueOf(jTableKeywords.getRowCount())+" "+getResourceMap().getString("statusTextKeywords")+")");
+        statusMsgLabel.setText("(" + String.valueOf(jTableKeywords.getRowCount()) + " " + getResourceMap().getString("statusTextKeywords") + ")");
         // show/enabke related menu
         showTabMenu(viewMenuKeywords);
         // if keywordlist is up to date, leave method
@@ -3214,7 +3609,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // if dialog window isn't already created, do this now
         if (null == taskDlg) {
             // get parent und init window
-            taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWKEYWORDS, data, synonyms, null /*only needed for authors*/, null /*only needed for attachments*/, settings.getShowSynonymsInTable(), 0 /*only need for authors*/, (DefaultTableModel)jTableKeywords.getModel());
+            taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWKEYWORDS, data, synonyms, null /*only needed for authors*/, null /*only needed for attachments*/, settings.getShowSynonymsInTable(), 0 /*only need for authors*/, (DefaultTableModel) jTableKeywords.getModel());
             // center window
             taskDlg.setLocationRelativeTo(getFrame());
         }
@@ -3223,20 +3618,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         taskDlg.dispose();
         taskDlg = null;
         // check whether we have a new added keyword, and if so, select it
-        if (newAddedKeyword!=null) {
+        if (newAddedKeyword != null) {
             // select recently added value
             de.danielluedecke.zettelkasten.util.TableUtils.selectValueInTable(jTableKeywords, newAddedKeyword, 0);
             // and clear strimg
             newAddedKeyword = null;
         }
         // enable textfield only if we have more than 1 element in the jtable
-        jTextFieldFilterKeywords.setEnabled(jTableKeywords.getRowCount()>0);
+        jTextFieldFilterKeywords.setEnabled(jTableKeywords.getRowCount() > 0);
         // show amount of entries
-        statusMsgLabel.setText("("+String.valueOf(jTableKeywords.getRowCount())+" "+getResourceMap().getString("statusTextKeywords")+")");
+        statusMsgLabel.setText("(" + String.valueOf(jTableKeywords.getRowCount()) + " " + getResourceMap().getString("statusTextKeywords") + ")");
         // try to motivate garbage collector
         System.gc();
     }
-
 
     private void updateZettelkasten(String updateBuildNr) {
         // if dialog window isn't already created, do this now
@@ -3246,7 +3640,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // center window
             updateInfoDlg.setLocationRelativeTo(getFrame());
         }
-        ZettelkastenApp.getApplication().show(updateInfoDlg);        
+        ZettelkastenApp.getApplication().show(updateInfoDlg);
         // check whether user wants to hide this msg box
         if (updateInfoDlg.getHideUpdateMsg()) {
             // set update build number to settings, so this update msg will not be displayed
@@ -3258,9 +3652,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // open homepage
             try {
                 Desktop.getDesktop().browse(new URI(updateURI));
-            }
-            catch (IOException | URISyntaxException e) {
-                Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+            } catch (IOException | URISyntaxException e) {
+                Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
             }
         }
         // we have to manually dispose the window and release the memory
@@ -3270,11 +3663,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         updateInfoDlg = null;
     }
 
-    
     /**
-     * This methoid toggles the highlight-setting for the keywords. When activated,
-     * the keywords of the current displayed entry are highlighted in the entry's
-     * content-text.
+     * This methoid toggles the highlight-setting for the keywords. When
+     * activated, the keywords of the current displayed entry are highlighted in
+     * the entry's content-text.
      */
     @Action(enabledProperty = "entriesAvailable")
     public void highlightKeywords() {
@@ -3282,28 +3674,25 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         if (!settings.getHighlightKeywords()) {
             // if not, activate it
             settings.setHighlightKeyword(true);
-        }
-        else {
+        } else {
             // nex, if highlighting is activated,
             // check whether whole word highlighting is activated
             if (!settings.getHighlightWholeWord()) {
                 // if not, activate whole-word-highlighting and do not
                 // deactivate general highlighting
                 settings.setHighlightWholeWord(true);
-            }
-            // else if both were activated, deactivate all
+            } // else if both were activated, deactivate all
             else {
                 settings.setHighlightKeyword(false);
                 settings.setHighlightWholeWord(false);
             }
         }
         // no linkupdate needed
-        needsLinkUpdate=false;
+        needsLinkUpdate = false;
         // update the display
         updateDisplay();
     }
-    
-    
+
     @Action(enabledProperty = "entriesAvailable")
     public void highlightSegments() {
         // toggle highlight setting for keywords
@@ -3312,33 +3701,33 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         displayZettelContent(displayedZettel);
     }
 
-
     /**
-     * This method filters the keyword list from a given input of the user. the text entered into the
-     * jTextFieldFilterKeywords is retrieved, and all keywords in the jTableKeywords, that do <b>not</b>
-     * <i>contain</i> the entered text (case insensitive), are removed from the table.<br><br>
-     * Thus, all remaining keywords in the table do start or at least contain the textinput from the
-     * textfield.
+     * This method filters the keyword list from a given input of the user. the
+     * text entered into the jTextFieldFilterKeywords is retrieved, and all
+     * keywords in the jTableKeywords, that do <b>not</b>
+     * <i>contain</i> the entered text (case insensitive), are removed from the
+     * table.<br><br>
+     * Thus, all remaining keywords in the table do start or at least contain
+     * the textinput from the textfield.
      */
     private void filterKeywordList(boolean forceRegEx) {
-        LinkedList<Object[]> l = filterList(jTextFieldFilterKeywords,jTableKeywords,jButtonRefreshKeywords,linkedkeywordlist,"statusTextKeywords",0,forceRegEx);
-        if (l!=null) {
+        LinkedList<Object[]> l = filterList(jTextFieldFilterKeywords, jTableKeywords, jButtonRefreshKeywords, linkedkeywordlist, "statusTextKeywords", 0, forceRegEx);
+        if (l != null) {
             linkedkeywordlist = l;
         }
     }
-    
 
     /**
-     * When a keywordlist is filtered, the original table data is temporarily stored in a linked list.
-     * when the user perfoms the refresh-method, the original table data is restored by clearing the
-     * table's content and setting back all data from the linked list to the table.
+     * When a keywordlist is filtered, the original table data is temporarily
+     * stored in a linked list. when the user perfoms the refresh-method, the
+     * original table data is restored by clearing the table's content and
+     * setting back all data from the linked list to the table.
      */
     @Action
     public void refreshKeywordList() {
-        refreshList(jTableKeywords,jButtonRefreshKeywords,jTextFieldFilterKeywords,linkedkeywordlist,"statusTextKeywords");
-        linkedkeywordlist=null;
+        refreshList(jTableKeywords, jButtonRefreshKeywords, jTextFieldFilterKeywords, linkedkeywordlist, "statusTextKeywords");
+        linkedkeywordlist = null;
     }
-
 
     @Action(enabledProperty = "exportPossible")
     public void exportTitles() {
@@ -3347,83 +3736,85 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // create array for entry-numbers
         int[] entries = new int[rowcount];
         // iterate all table values and copy each enty-number to the array
-        for (int cnt=0; cnt<rowcount; cnt++) {
+        for (int cnt = 0; cnt < rowcount; cnt++) {
             entries[cnt] = Integer.parseInt(jTableTitles.getValueAt(cnt, 0).toString());
         }
         // export entries from the jTableTitles in the according order...
         exportEntries(entries);
     }
-    
 
     @Action(enabledProperty = "exportPossible")
     public void exportLuhmann() {
         // retrieve luhmann numbers
         int[] ent = prepareLuhmannNumbersForExport();
         // check for valid values
-        if (ent!=null) {
+        if (ent != null) {
             exportEntries(ent);
         }
     }
+
     @Action(enabledProperty = "exportPossible")
     public void exportLuhmannToSearch() {
         // retrieve luhmann numbers
         int[] ent = prepareLuhmannNumbersForExport();
         // check for valid values
-        if (ent!=null) {
+        if (ent != null) {
             // append a time-string to description, so we always have a unique search-description,
             // even if the user searches twice for the same searchterms
             DateFormat df = new SimpleDateFormat("kkmmss");
             // add search
-            searchrequests.addSearch(new String[]{getResourceMap().getString("exportLuhmannSearch",String.valueOf(displayedZettel))},
-                                     Constants.SEARCH_LUHMANN,
-                                     Constants.LOG_OR,
-                                     false,
-                                     false,
-                                     false,
-                                     false,
-                                     ent,
-                                     getResourceMap().getString("exportLuhmannSearchDesc",String.valueOf(displayedZettel))+" ("+df.format(new Date())+")",
-                                     getResourceMap().getString("exportLuhmannSearchDesc",String.valueOf(displayedZettel)));
+            searchrequests.addSearch(new String[]{getResourceMap().getString("exportLuhmannSearch", String.valueOf(displayedZettel))},
+                    Constants.SEARCH_LUHMANN,
+                    Constants.LOG_OR,
+                    false,
+                    false,
+                    false,
+                    false,
+                    ent,
+                    getResourceMap().getString("exportLuhmannSearchDesc", String.valueOf(displayedZettel)) + " (" + df.format(new Date()) + ")",
+                    getResourceMap().getString("exportLuhmannSearchDesc", String.valueOf(displayedZettel)));
             // if dialog window isn't already created, do this now
             if (null == searchResultsDlg) {
-                searchResultsDlg = new SearchResultsFrame(this,data,searchrequests,desktop,settings,acceleratorKeys,synonyms,bibtex);
+                searchResultsDlg = new SearchResultsFrame(this, data, searchrequests, desktop, settings, acceleratorKeys, synonyms, bibtex);
             }
             // show search results window
             ZettelkastenApp.getApplication().show(searchResultsDlg);
             // show latest search results by auto-selecting the last item in the combo-box
             searchResultsDlg.showLatestSearchResult();
             // enable window-menu-item, if we have loaded search results
-            setSearchResultsAvailable(searchrequests.getCount()>0);
+            setSearchResultsAvailable(searchrequests.getCount() > 0);
         }
     }
+
     private int[] prepareLuhmannNumbersForExport() {
         // init linked list
         luhmannnumbersforexport = new LinkedList<>();
         // get recursive Luhmann-Numbers of current entry
         fillLuhmannNumbersForExport(displayedZettel);
         // add them...
-        if (luhmannnumbersforexport.size()>0) {
+        if (luhmannnumbersforexport.size() > 0) {
             // add initial entry
             luhmannnumbersforexport.add(0, displayedZettel);
             // convert to int array
             int[] ent = new int[luhmannnumbersforexport.size()];
             try {
                 // than the followers
-                for (int cnt=0; cnt<ent.length; cnt++) {
+                for (int cnt = 0; cnt < ent.length; cnt++) {
                     ent[cnt] = luhmannnumbersforexport.get(cnt);
                 }
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
             }
             return ent;
         }
         return null;
     }
+
     /**
      * This method recursively retrieves all follower- and sub-follower-numbers
-     * (Luhmann-Numbers) of an entry and adds them to a stringbuilder. This method
-     * is needed for the {@link #addLuhmann addLuhmann}-Action that adds these
-     * follower-numbers to the treeview, directly behind the selected entry.
+     * (Luhmann-Numbers) of an entry and adds them to a stringbuilder. This
+     * method is needed for the {@link #addLuhmann addLuhmann}-Action that adds
+     * these follower-numbers to the treeview, directly behind the selected
+     * entry.
      *
      * @param zettelpos the number of the selected entry
      */
@@ -3448,7 +3839,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-
     /**
      * This method exports the automatic links (referrers) of an entry.
      */
@@ -3462,17 +3852,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // get length of links-table
         int len = jTableLinks.getRowCount();
         // copy all attachments to a linked list
-        if (len>0) {
-            for (int cnt=0; cnt<len; cnt++) {
+        if (len > 0) {
+            for (int cnt = 0; cnt < len; cnt++) {
                 explinks.add(jTableLinks.getValueAt(cnt, 0));
             }
         }
         // get length of manual-links-table
         len = jTableManLinks.getRowCount();
         // if we also have manual links, add them
-        if (len>0) {
+        if (len > 0) {
             // copy all attachments to a linked list
-            for (int cnt=0; cnt<len; cnt++) {
+            for (int cnt = 0; cnt < len; cnt++) {
                 explinks.add(jTableManLinks.getValueAt(cnt, 0));
             }
         }
@@ -3480,10 +3870,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         exportEntries(explinks);
     }
 
-    
     /**
-     * This method exports the automatic links (referrers) of an entry, but not to a file
-     * but to the search results window instead.
+     * This method exports the automatic links (referrers) of an entry, but not
+     * to a file but to the search results window instead.
      */
     @Action(enabledProperty = "exportPossible")
     public void exportLinksToSearch() {
@@ -3495,17 +3884,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // get length of links-table
         int len = jTableLinks.getRowCount();
         // copy all attachments to a linked list
-        if (len>0) {
-            for (int cnt=0; cnt<len; cnt++) {
+        if (len > 0) {
+            for (int cnt = 0; cnt < len; cnt++) {
                 explinks.add(jTableLinks.getValueAt(cnt, 0));
             }
         }
         // get length of manual-links-table
         len = jTableManLinks.getRowCount();
         // if we also have manual links, add them
-        if (len>0) {
+        if (len > 0) {
             // copy all attachments to a linked list
-            for (int cnt=0; cnt<len; cnt++) {
+            for (int cnt = 0; cnt < len; cnt++) {
                 explinks.add(jTableManLinks.getValueAt(cnt, 0));
             }
         }
@@ -3513,96 +3902,94 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         int[] expvalues = new int[explinks.size()];
         try {
             // copy all numbers from arraylist to int-array
-            for (int cnt=0; cnt<expvalues.length; cnt++) {
+            for (int cnt = 0; cnt < expvalues.length; cnt++) {
                 expvalues[cnt] = Integer.parseInt(explinks.get(cnt).toString());
             }
             // append a time-string to description, so we always have a unique search-description,
             // even if the user searches twice for the same searchterms
             DateFormat df = new SimpleDateFormat("kkmmss");
             // add search
-            searchrequests.addSearch(new String[]{getResourceMap().getString("exportLinksSearch",String.valueOf(displayedZettel))},
-                                     Constants.SEARCH_REFERRERS,
-                                     Constants.LOG_OR,
-                                     false,
-                                     false,
-                                     false,
-                                     false,
-                                     expvalues,
-                                     getResourceMap().getString("exportLinksSearchDesc",String.valueOf(displayedZettel))+" ("+df.format(new Date())+")",
-                                     getResourceMap().getString("exportLinksSearchDesc",String.valueOf(displayedZettel)));
+            searchrequests.addSearch(new String[]{getResourceMap().getString("exportLinksSearch", String.valueOf(displayedZettel))},
+                    Constants.SEARCH_REFERRERS,
+                    Constants.LOG_OR,
+                    false,
+                    false,
+                    false,
+                    false,
+                    expvalues,
+                    getResourceMap().getString("exportLinksSearchDesc", String.valueOf(displayedZettel)) + " (" + df.format(new Date()) + ")",
+                    getResourceMap().getString("exportLinksSearchDesc", String.valueOf(displayedZettel)));
             // if dialog window isn't already created, do this now
             if (null == searchResultsDlg) {
-                searchResultsDlg = new SearchResultsFrame(this,data,searchrequests,desktop,settings,acceleratorKeys,synonyms,bibtex);
+                searchResultsDlg = new SearchResultsFrame(this, data, searchrequests, desktop, settings, acceleratorKeys, synonyms, bibtex);
             }
             // show search results window
             ZettelkastenApp.getApplication().show(searchResultsDlg);
             // show latest search results by auto-selecting the last item in the combo-box
             searchResultsDlg.showLatestSearchResult();
             // enable window-menu-item, if we have loaded search results
-            setSearchResultsAvailable(searchrequests.getCount()>0);
-        }
-        catch (NumberFormatException e) {
+            setSearchResultsAvailable(searchrequests.getCount() > 0);
+        } catch (NumberFormatException e) {
         }
     }
 
-
     public void exportDesktopToSearch(int[] entries, String desktopname) {
         // check for valid search results
-        if (entries!=null && entries.length>0) {
+        if (entries != null && entries.length > 0) {
             // append a time-string to description, so we always have a unique search-description,
             // even if the user searches twice for the same searchterms
             DateFormat df = new SimpleDateFormat("kkmmss");
             // add search
             searchrequests.addSearch(new String[]{getResourceMap().getString("exportDesktopSearch")},
-                                     Constants.SEARCH_DESKTOP,
-                                     Constants.LOG_OR,
-                                     false,
-                                     false,
-                                     false,
-                                     false,
-                                     entries,
-                                     getResourceMap().getString("exportDesktopSearchDesc", "\""+desktopname+"\""+" ("+df.format(new Date())+")"),
-                                     getResourceMap().getString("exportDesktopSearchDesc", "\""+desktopname+"\""));
+                    Constants.SEARCH_DESKTOP,
+                    Constants.LOG_OR,
+                    false,
+                    false,
+                    false,
+                    false,
+                    entries,
+                    getResourceMap().getString("exportDesktopSearchDesc", "\"" + desktopname + "\"" + " (" + df.format(new Date()) + ")"),
+                    getResourceMap().getString("exportDesktopSearchDesc", "\"" + desktopname + "\""));
             // if dialog window isn't already created, do this now
             if (null == searchResultsDlg) {
-                searchResultsDlg = new SearchResultsFrame(this,data,searchrequests,desktop,settings,acceleratorKeys,synonyms,bibtex);
+                searchResultsDlg = new SearchResultsFrame(this, data, searchrequests, desktop, settings, acceleratorKeys, synonyms, bibtex);
             }
             // show search results window
             ZettelkastenApp.getApplication().show(searchResultsDlg);
             // show latest search results by auto-selecting the last item in the combo-box
             searchResultsDlg.showLatestSearchResult();
             // enable window-menu-item, if we have loaded search results
-            setSearchResultsAvailable(searchrequests.getCount()>0);
+            setSearchResultsAvailable(searchrequests.getCount() > 0);
         }
     }
 
     public void exportDesktopMissingToSearch(int[] entries, String desktopname) {
         // check for valid search results
-        if (entries!=null && entries.length>0) {
+        if (entries != null && entries.length > 0) {
             // append a time-string to description, so we always have a unique search-description,
             // even if the user searches twice for the same searchterms
             DateFormat df = new SimpleDateFormat("kkmmss");
             // add search
             searchrequests.addSearch(new String[]{getResourceMap().getString("exportMissingDesktopSearch")},
-                                     Constants.SEARCH_DESKTOP,
-                                     Constants.LOG_OR,
-                                     false,
-                                     false,
-                                     false,
-                                     false,
-                                     entries,
-                                     getResourceMap().getString("exportMissingDesktopSearchDesc", "\""+desktopname+"\""+" ("+df.format(new Date())+")"),
-                                     getResourceMap().getString("exportMissingDesktopSearchDesc", "\""+desktopname+"\""));
+                    Constants.SEARCH_DESKTOP,
+                    Constants.LOG_OR,
+                    false,
+                    false,
+                    false,
+                    false,
+                    entries,
+                    getResourceMap().getString("exportMissingDesktopSearchDesc", "\"" + desktopname + "\"" + " (" + df.format(new Date()) + ")"),
+                    getResourceMap().getString("exportMissingDesktopSearchDesc", "\"" + desktopname + "\""));
             // if dialog window isn't already created, do this now
             if (null == searchResultsDlg) {
-                searchResultsDlg = new SearchResultsFrame(this,data,searchrequests,desktop,settings,acceleratorKeys,synonyms,bibtex);
+                searchResultsDlg = new SearchResultsFrame(this, data, searchrequests, desktop, settings, acceleratorKeys, synonyms, bibtex);
             }
             // show search results window
             ZettelkastenApp.getApplication().show(searchResultsDlg);
             // show latest search results by auto-selecting the last item in the combo-box
             searchResultsDlg.showLatestSearchResult();
             // enable window-menu-item, if we have loaded search results
-            setSearchResultsAvailable(searchrequests.getCount()>0);
+            setSearchResultsAvailable(searchrequests.getCount() > 0);
         }
     }
 
@@ -3618,10 +4005,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         exportEntries(expcluster);
     }
 
-
     /**
-     * This method exports the automatic links (referrers) of an entry, but not to a file
-     * but to the search results window instead.
+     * This method exports the automatic links (referrers) of an entry, but not
+     * to a file but to the search results window instead.
      */
     @Action(enabledProperty = "exportPossible")
     public void exportClusterToSearch() {
@@ -3629,76 +4015,75 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         int[] expvalues = new int[clusterList.size()];
         try {
             // copy all numbers from arraylist to int-array
-            for (int cnt=0; cnt<expvalues.length; cnt++) {
+            for (int cnt = 0; cnt < expvalues.length; cnt++) {
                 expvalues[cnt] = Integer.parseInt(clusterList.get(cnt));
             }
             // append a time-string to description, so we always have a unique search-description,
             // even if the user searches twice for the same searchterms
             DateFormat df = new SimpleDateFormat("kkmmss");
             // add search
-            searchrequests.addSearch(new String[]{getResourceMap().getString("exportClusterSearch",lastClusterRelationKeywords)},
-                                     Constants.SEARCH_CLUSTER,
-                                     Constants.LOG_OR,
-                                     false,
-                                     false,
-                                     false,
-                                     false,
-                                     expvalues,
-                                     getResourceMap().getString("exportClusterSearchDesc",lastClusterRelationKeywords)+" ("+df.format(new Date())+")",
-                                     getResourceMap().getString("exportClusterSearchDesc",lastClusterRelationKeywords));
+            searchrequests.addSearch(new String[]{getResourceMap().getString("exportClusterSearch", lastClusterRelationKeywords)},
+                    Constants.SEARCH_CLUSTER,
+                    Constants.LOG_OR,
+                    false,
+                    false,
+                    false,
+                    false,
+                    expvalues,
+                    getResourceMap().getString("exportClusterSearchDesc", lastClusterRelationKeywords) + " (" + df.format(new Date()) + ")",
+                    getResourceMap().getString("exportClusterSearchDesc", lastClusterRelationKeywords));
             // if dialog window isn't already created, do this now
             if (null == searchResultsDlg) {
-                searchResultsDlg = new SearchResultsFrame(this,data,searchrequests,desktop,settings,acceleratorKeys,synonyms,bibtex);
+                searchResultsDlg = new SearchResultsFrame(this, data, searchrequests, desktop, settings, acceleratorKeys, synonyms, bibtex);
             }
             // show search results window
             ZettelkastenApp.getApplication().show(searchResultsDlg);
             // show latest search results by auto-selecting the last item in the combo-box
             searchResultsDlg.showLatestSearchResult();
             // enable window-menu-item, if we have loaded search results
-            setSearchResultsAvailable(searchrequests.getCount()>0);
-        }
-        catch (NumberFormatException e) {
+            setSearchResultsAvailable(searchrequests.getCount() > 0);
+        } catch (NumberFormatException e) {
         }
     }
 
-
     /**
-     * This action opens an input dialog and lets the user input a new keyword-value.
-     * The currently selected keyword is then being changed and the modified state set.
-     * In case the user chose a new keyword which already exists, the user is being
-     * offered to "merge" the old keyword with the other existing one.
+     * This action opens an input dialog and lets the user input a new
+     * keyword-value. The currently selected keyword is then being changed and
+     * the modified state set. In case the user chose a new keyword which
+     * already exists, the user is being offered to "merge" the old keyword with
+     * the other existing one.
      */
     @Action(enabledProperty = "tableEntriesSelected")
     public void editKeyword() {
         // get selected keywords
-        String[] selectedkeywords = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords,0);
+        String[] selectedkeywords = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords, 0);
         // if now row is selected, leave...
-        if (null==selectedkeywords) {
+        if (null == selectedkeywords) {
             return;
         }
         // get selected rows. we need this numbers for setting back the new values, see below
         int[] selectedrows = jTableKeywords.getSelectedRows();
         // go through all selected keywords
-        for (int cnt=selectedkeywords.length-1; cnt>=0; cnt--) {
+        for (int cnt = selectedkeywords.length - 1; cnt >= 0; cnt--) {
             // save the old value
             String oldKw = selectedkeywords[cnt];
             // now check whether the selected keyword is a keyword, or only a synonym
             // this may happen, when the user includes the synonyms in the keyword-list,
             // so in fact we have no "real" keyword.
-            if (data.findKeywordInDatabase(oldKw)!=-1) {
+            if (data.findKeywordInDatabase(oldKw) != -1) {
                 // open an input-dialog, setting the selected value as default-value
-                String newKw = (String)JOptionPane.showInputDialog(getFrame(),getResourceMap().getString("editKeywordMsg"), getResourceMap().getString("editKeywordTitle"), JOptionPane.PLAIN_MESSAGE, null, null, oldKw);
+                String newKw = (String) JOptionPane.showInputDialog(getFrame(), getResourceMap().getString("editKeywordMsg"), getResourceMap().getString("editKeywordTitle"), JOptionPane.PLAIN_MESSAGE, null, null, oldKw);
                 // ask the user if he wants to replace the new name of keywords, which appear as synonyms, but *not*
                 // as index-word, with the related index-words...
-                newKw = Tools.replaceSynonymsWithKeywords(synonyms, new String[] {newKw})[0];
+                newKw = Tools.replaceSynonymsWithKeywords(synonyms, new String[]{newKw})[0];
                 // if we have a valid return-value that differs from the old value...
-                if ((newKw!=null) && (newKw.length()>0) && (!oldKw.equalsIgnoreCase(newKw))) {
+                if ((newKw != null) && (newKw.length() > 0) && (!oldKw.equalsIgnoreCase(newKw))) {
                     // check whether the value already exists
-                    if (-1==data.getKeywordPosition(newKw,false)) {
+                    if (-1 == data.getKeywordPosition(newKw, false)) {
                         // change the existing value in the table
                         jTableKeywords.setValueAt(newKw, selectedrows[cnt], 0);
                         // get the index-number of the old keyword-string
-                        int nr = data.getKeywordPosition(oldKw,false);
+                        int nr = data.getKeywordPosition(oldKw, false);
                         // and change the entry to the new value
                         data.setKeyword(nr, newKw);
                         // now we want either to rename synonyms-index-words of the keyword
@@ -3708,13 +4093,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         // if we have a filtered list, remove the element also from
                         // our refresh-list, so we don't show this item again when the list
                         // is being refreshed
-                        if (linkedkeywordlist!=null) {
-                            linkedkeywordlist = updateLinkedList(linkedkeywordlist,oldKw,newKw,0);
+                        if (linkedkeywordlist != null) {
+                            linkedkeywordlist = updateLinkedList(linkedkeywordlist, oldKw, newKw, 0);
                         }
                         // and update display
                         updateDisplay();
-                    }
-                    else {
+                    } else {
                         // the new name for keyword already exists, so we can offer to merge
                         // the keywords here. in fact, this is an easy find/replace-routine, since the
                         // old keyword is replaced by the existing one, when we merge them.
@@ -3744,38 +4128,39 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         // name "newKw" also has associated synonyms, we want to merge them.
                         Tools.mergeSynonyms(synonyms, oldKw, newKw);
                         // show amount of entries
-                        statusMsgLabel.setText("("+String.valueOf(jTableKeywords.getRowCount())+" "+getResourceMap().getString("statusTextKeywords")+")");
+                        statusMsgLabel.setText("(" + String.valueOf(jTableKeywords.getRowCount()) + " " + getResourceMap().getString("statusTextKeywords") + ")");
                         // finally, update display
                         updateDisplay();
                         // try to motivate garbage collector
                         System.gc();
                     }
                 }
-            }
-            else {
+            } else {
                 // display error message box
-                JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("noKeywordSelectedMsg",oldKw,synonyms.getIndexWord(oldKw, true)),getResourceMap().getString("noKeywordSelectedTitle"),JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("noKeywordSelectedMsg", oldKw, synonyms.getIndexWord(oldKw, true)), getResourceMap().getString("noKeywordSelectedTitle"), JOptionPane.PLAIN_MESSAGE);
             }
         }
     }
-    
-    
+
     /**
-     * This action opens an input dialog and lets the user input a new title-value.
-     * The currently selected title is then being changed and the modified state set.
+     * This action opens an input dialog and lets the user input a new
+     * title-value. The currently selected title is then being changed and the
+     * modified state set.
      */
     @Action(enabledProperty = "tableEntriesSelected")
     public void editTitle() {
         // get the selected row
         int row = jTableTitles.getSelectedRow();
         // get entry number
-        int entry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableTitles,0);
+        int entry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableTitles, 0);
         // if now row is selected, leave...
-        if ((-1==row)||(-1==entry)) return;
+        if ((-1 == row) || (-1 == entry)) {
+            return;
+        }
         // open an input-dialog, setting the selected value as default-value
-        String newt = (String)JOptionPane.showInputDialog(getFrame(),getResourceMap().getString("editTitleMsg"), getResourceMap().getString("editTitleTitle"), JOptionPane.PLAIN_MESSAGE, null, null, jTableTitles.getValueAt(row,1));
+        String newt = (String) JOptionPane.showInputDialog(getFrame(), getResourceMap().getString("editTitleMsg"), getResourceMap().getString("editTitleTitle"), JOptionPane.PLAIN_MESSAGE, null, null, jTableTitles.getValueAt(row, 1));
         // if we have a valid return-value...
-        if ((newt!=null) && (newt.length()>0)) {
+        if ((newt != null) && (newt.length() > 0)) {
             // change the existing value in the table
             jTableTitles.setValueAt(newt, row, 1);
             // and change the title to the new value
@@ -3787,46 +4172,47 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-
     /**
-     * This method deletes selected keywords in the jListEntryKeywords from
-     * an entry. Therefore, the selected values are passed as parameter to a method
-     * that identifies the index-numbers and removes them from the entry's keyword-index-numbers.
+     * This method deletes selected keywords in the jListEntryKeywords from an
+     * entry. Therefore, the selected values are passed as parameter to a method
+     * that identifies the index-numbers and removes them from the entry's
+     * keyword-index-numbers.
      * <br><br>
-     * This method is called when the user presses the delete-key in the keywordlist or
-     * activated the related popup-menu-item.
+     * This method is called when the user presses the delete-key in the
+     * keywordlist or activated the related popup-menu-item.
      */
     @Action(enabledProperty = "listFilledWithEntry")
     public void deleteKeywordFromEntry() {
         // get the selected values of the keyword-list
         String[] kws = retrieveSelectedKeywordsFromList();
         // if we have any selections, go on...
-        if ((kws!=null)&&(kws.length>0)) {
+        if ((kws != null) && (kws.length > 0)) {
             // prepare the msg-string
             String msg;
             // if we have just a single selection, use phrasing for that message
-            msg = (1==kws.length) ? getResourceMap().getString("askForDeleteKeywordMsgSingle")
-                                  // else if we have multiple selectios, use phrasing with appropriate wording
-                                  : getResourceMap().getString("askForDeleteKeywordMsgMultiple", String.valueOf(kws.length));
+            msg = (1 == kws.length) ? getResourceMap().getString("askForDeleteKeywordMsgSingle")
+                    // else if we have multiple selectios, use phrasing with appropriate wording
+                    : getResourceMap().getString("askForDeleteKeywordMsgMultiple", String.valueOf(kws.length));
             // ask whether keyword really should be deleted
             int option = JOptionPane.showConfirmDialog(getFrame(), msg, getResourceMap().getString("askForDeleteKeywordTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
             // if yes, go on
-            if (JOptionPane.YES_OPTION == option ) {
+            if (JOptionPane.YES_OPTION == option) {
                 // delete keywords from current entry
                 data.deleteKeywordsFromEntry(kws, displayedZettel);
                 // update the data (frequency of occurences of keywords) from the jTableKeywords and linked filter-list
-                for (String k : kws) linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableKeywords, linkedkeywordlist, k, -1);
+                for (String k : kws) {
+                    linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableKeywords, linkedkeywordlist, k, -1);
+                }
                 // update display
                 updateDisplayParts(displayedZettel);
             }
         }
     }
 
-
     @Action
     public void showInformationBox() {
         if (null == informationDlg) {
-            informationDlg = new CInformation(getFrame(),data,settings);
+            informationDlg = new CInformation(getFrame(), data, settings);
             informationDlg.setLocationRelativeTo(getFrame());
         }
         ZettelkastenApp.getApplication().show(informationDlg);
@@ -3839,31 +4225,33 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         System.gc();
     }
 
-
     /**
-     * This method deletes a keyword which is currently selected in the JTableKeywords.
+     * This method deletes a keyword which is currently selected in the
+     * JTableKeywords.
      */
     @Action(enabledProperty = "tableEntriesSelected")
     public void deleteKeyword() {
         // get the amount of selected keywords.
         int rowcount = jTableKeywords.getSelectedRowCount();
         // if nothing is selected, leave
-        if (rowcount<1) return;
+        if (rowcount < 1) {
+            return;
+        }
         // prepare the msg-string
         String msg;
         // if we have just a single selection, use phrasing for that message
-        msg = (1==rowcount) ? getResourceMap().getString("askForDeleteKeywordMsgSingle")
-                            // else if we have multiple selectios, use phrasing with appropriate wording
-                            : getResourceMap().getString("askForDeleteKeywordMsgMultiple", String.valueOf(rowcount));
+        msg = (1 == rowcount) ? getResourceMap().getString("askForDeleteKeywordMsgSingle")
+                // else if we have multiple selectios, use phrasing with appropriate wording
+                : getResourceMap().getString("askForDeleteKeywordMsgMultiple", String.valueOf(rowcount));
         // ask whether keyword really should be deleted
         int option = JOptionPane.showConfirmDialog(getFrame(), msg, getResourceMap().getString("askForDeleteKeywordTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
         // if yes, go on
-        if (JOptionPane.YES_OPTION == option ) {
+        if (JOptionPane.YES_OPTION == option) {
             // and delete the keywords by opening a dialog with a background task
             // if dialog window isn't already created, do this now
             if (null == taskDlg) {
                 // get parent und init window
-                taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_DELETEKEYWORDS, data, ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords,0));
+                taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_DELETEKEYWORDS, data, ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords, 0));
                 // center window
                 taskDlg.setLocationRelativeTo(getFrame());
             }
@@ -3876,118 +4264,125 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // remove entries also from table and linked list
             linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyRemove(jTableKeywords, linkedkeywordlist, this);
             // show amount of entries
-            statusMsgLabel.setText("("+String.valueOf(jTableKeywords.getRowCount())+" "+getResourceMap().getString("statusTextKeywords")+")");
+            statusMsgLabel.setText("(" + String.valueOf(jTableKeywords.getRowCount()) + " " + getResourceMap().getString("statusTextKeywords") + ")");
             // finally, update display
             updateDisplay();
         }
     }
 
-    
     /**
-     * This action deletes one or more selected bookmarks from the jTabelBookmarks.
+     * This action deletes one or more selected bookmarks from the
+     * jTabelBookmarks.
      */
     @Action(enabledProperty = "tableEntriesSelected")
     public void deleteBookmark() {
         // get the amount of selected bookmarks.
         int rowcount = jTableBookmarks.getSelectedRowCount();
         // if nothing is selected, leave
-        if (rowcount<1) return;
+        if (rowcount < 1) {
+            return;
+        }
         // if we have just a single selection, use phrasing for that message
-        String msg = (1==rowcount) ? getResourceMap().getString("askForDeleteBookmarkMsgSingle")
-                                   // else if we have multiple selectios, use phrasing with appropriate wording
-                                   : getResourceMap().getString("askForDeleteBookmarkMsgMultiple", String.valueOf(rowcount));
+        String msg = (1 == rowcount) ? getResourceMap().getString("askForDeleteBookmarkMsgSingle")
+                // else if we have multiple selectios, use phrasing with appropriate wording
+                : getResourceMap().getString("askForDeleteBookmarkMsgMultiple", String.valueOf(rowcount));
         // ask whether author really should be deleted
         int option = JOptionPane.showConfirmDialog(getFrame(), msg, getResourceMap().getString("askForDeleteBookmarkTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
         // if yes, do so
-        if (JOptionPane.YES_OPTION == option ) {
+        if (JOptionPane.YES_OPTION == option) {
             // delete bookmarks
-            bookmarks.deleteBookmarks(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableBookmarks,0));
+            bookmarks.deleteBookmarks(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableBookmarks, 0));
             // update display
             updateDisplay();
-        }        
+        }
     }
-
 
     @Action(enabledProperty = "tableEntriesSelected")
     public void deleteAttachment() {
         // get the amount of selected keywords.
         int rowcount = jTableAttachments.getSelectedRowCount();
         // if nothing is selected, leave
-        if (rowcount<1) return;
+        if (rowcount < 1) {
+            return;
+        }
         // prepare the msg-string
         String msg;
         // if we have just a single selection, use phrasing for that message
-        msg = (1==rowcount) ? getResourceMap().getString("askForDeleteAttachmentMsgSingle")
-                            // else if we have multiple selectios, use phrasing with appropriate wording
-                            : getResourceMap().getString("askForDeleteAttachmentMsgMultiple", String.valueOf(rowcount));
+        msg = (1 == rowcount) ? getResourceMap().getString("askForDeleteAttachmentMsgSingle")
+                // else if we have multiple selectios, use phrasing with appropriate wording
+                : getResourceMap().getString("askForDeleteAttachmentMsgMultiple", String.valueOf(rowcount));
         // ask whether keyword really should be deleted
         int option = JOptionPane.showConfirmDialog(getFrame(), msg, getResourceMap().getString("askForDeleteAttachmentTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
         // if yes, go on
-        if (JOptionPane.YES_OPTION == option ) {
+        if (JOptionPane.YES_OPTION == option) {
             // get selected keywords
-            String[] selectedattachments = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAttachments,0);
+            String[] selectedattachments = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAttachments, 0);
             // if now row is selected, leave...
-            if (null==selectedattachments) return;
+            if (null == selectedattachments) {
+                return;
+            }
             // retrieve the selected enty-numbers
-            int[] entrynumbers = ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableAttachments,2);
+            int[] entrynumbers = ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableAttachments, 2);
             // check for valid values
-            if (entrynumbers!=null && entrynumbers.length>0) {
+            if (entrynumbers != null && entrynumbers.length > 0) {
                 // go through all selected keywords
-                for (int cnt=0; cnt<selectedattachments.length; cnt++) data.deleteAttachment(selectedattachments[cnt], entrynumbers[cnt]);
+                for (int cnt = 0; cnt < selectedattachments.length; cnt++) {
+                    data.deleteAttachment(selectedattachments[cnt], entrynumbers[cnt]);
+                }
             }
             // update display
             updateDisplay();
         }
     }
 
-
     /**
-     * This action opens an attachment which was double-clicked within the jTableAttachments from the
-     * tabbed pane. 
+     * This action opens an attachment which was double-clicked within the
+     * jTableAttachments from the tabbed pane.
      */
     @Action
     public void openAttachment() {
         // get selected row
         int selectedrow = jTableAttachments.getSelectedRow();
         // if we have no selection, leave...
-        if (-1==selectedrow) return;
+        if (-1 == selectedrow) {
+            return;
+        }
         // get selected value
         String linktype = jTableAttachments.getValueAt(selectedrow, 0).toString();
         // and open hyperlink
         openHyperlink(linktype);
     }
 
-
     /**
-     * This method opens a file or URL either from within a clicked link inside the jEditorPane (see
+     * This method opens a file or URL either from within a clicked link inside
+     * the jEditorPane (see
      * {@link #eventHyperlinkActivated(javax.swing.event.HyperlinkEvent) eventHyperlinkActivated(javax.swing.event.HyperlinkEvent)}
-     * or from the attachment-list (see {@link #openAttachment() openAttachment()}.
+     * or from the attachment-list (see
+     * {@link #openAttachment() openAttachment()}.
      *
      * @param linktype the clicked link as string
      */
     private void openHyperlink(String linktype) {
         // call method that handles the hyperlink-click
-        String returnValue = Tools.openHyperlink(linktype,getFrame(),Constants.FRAME_MAIN,data,bibtex,settings,jEditorPaneEntry,displayedZettel);
+        String returnValue = Tools.openHyperlink(linktype, getFrame(), Constants.FRAME_MAIN, data, bibtex, settings, jEditorPaneEntry, displayedZettel);
         // check whether we have a return value. this might be the case either when the user clicked on
         // a footenote, or on the rating-stars
-        if (returnValue!=null) {
+        if (returnValue != null) {
             // here we have a reference to another entry
             if (returnValue.startsWith("#z_") || returnValue.equals("#activatedEntry") || returnValue.startsWith("#cr_")) {
                 // show entry
                 showEntry(data.getCurrentZettelPos());
-            }
-            // edit cross references
+            } // edit cross references
             else if (returnValue.equalsIgnoreCase("#crt")) {
                 editManualLinks();
-            }
-            // check whether a rating was requested
+            } // check whether a rating was requested
             else if (returnValue.startsWith("#rateentry")) {
                 try {
                     // retrieve entry-number
                     int entrynr = Integer.parseInt(linktype.substring(10));
                     // open rating-dialog
                     if (null == rateEntryDlg) {
-                        rateEntryDlg = new CRateEntry(getFrame(),data,entrynr);
+                        rateEntryDlg = new CRateEntry(getFrame(), data, entrynr);
                         rateEntryDlg.setLocationRelativeTo(getFrame());
                     }
                     ZettelkastenApp.getApplication().show(rateEntryDlg);
@@ -3997,75 +4392,73 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         updateZettelContent(entrynr);
                     }
                     rateEntryDlg.dispose();
-                    rateEntryDlg=null;
+                    rateEntryDlg = null;
                     // try to motivate garbage collector
                     System.gc();
-                }
-                catch (NumberFormatException ex) {
+                } catch (NumberFormatException ex) {
                     // log error
-                    Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
+                    Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
                     Constants.zknlogger.log(Level.WARNING, "Could not rate entry. Link-text was {0}", linktype);
                 }
-            }
-            // the user clicked on the created or edited timestamp and wants to edit this timestamp
+            } // the user clicked on the created or edited timestamp and wants to edit this timestamp
             else if (returnValue.startsWith("#tstampc") || returnValue.startsWith("#tstampe")) {
                 // init value
                 String defaulttimestamp = "";
                 // wait for valid input
-                while (defaulttimestamp!=null && defaulttimestamp.isEmpty()) {
+                while (defaulttimestamp != null && defaulttimestamp.isEmpty()) {
                     // get timestamp, either created or edited, depending on which timestamp was clicked
                     String ts = Tools.getProperShortDate((returnValue.startsWith("#tstampc")) ? data.getTimestampCreated(displayedZettel) : data.getTimestampEdited(displayedZettel));
                     // show input-dialog
-                    defaulttimestamp = (String)JOptionPane.showInputDialog(getFrame(),                          // parent window
-                                                           getResourceMap().getString("editTimeStampMsg"),   // message text
-                                                           getResourceMap().getString("editTimeStampTitle"), // messagebox title
-                                                           JOptionPane.PLAIN_MESSAGE,                           // type of dialog
-                                                           null,                                                // icon
-                                                           null,                                                // array of selection values.
-                                                                                                                // must be null to get an input-field.
-                                                                                                                // providing an array here would create a dropdown-combobox
-                                                           ts); // initial value, date of importfile
+                    defaulttimestamp = (String) JOptionPane.showInputDialog(getFrame(), // parent window
+                            getResourceMap().getString("editTimeStampMsg"), // message text
+                            getResourceMap().getString("editTimeStampTitle"), // messagebox title
+                            JOptionPane.PLAIN_MESSAGE, // type of dialog
+                            null, // icon
+                            null, // array of selection values.
+                            // must be null to get an input-field.
+                            // providing an array here would create a dropdown-combobox
+                            ts); // initial value, date of importfile
                     // now convert the user input into a timestamp
                     // therefore, check whether we have any valid input at all, if we have the correct length (16 chars)
                     // and if we have to "." at the right position. A valid input would be e.g. "31.12.08 05:46" (dd.mm.yy hh:mm)
-                    if (defaulttimestamp!=null &&
-                        16==defaulttimestamp.length() &&
-                        defaulttimestamp.charAt(2)=='.' &&
-                        defaulttimestamp.charAt(5)=='.' &&
-                        defaulttimestamp.charAt(10)==' ' &&
-                        defaulttimestamp.charAt(13)==':') {
+                    if (defaulttimestamp != null
+                            && 16 == defaulttimestamp.length()
+                            && defaulttimestamp.charAt(2) == '.'
+                            && defaulttimestamp.charAt(5) == '.'
+                            && defaulttimestamp.charAt(10) == ' '
+                            && defaulttimestamp.charAt(13) == ':') {
                         // check for number values
                         try {
-                            defaulttimestamp = defaulttimestamp.substring(8,10)+defaulttimestamp.substring(3,5)+defaulttimestamp.substring(0,2)+defaulttimestamp.substring(11,13)+defaulttimestamp.substring(14);
+                            defaulttimestamp = defaulttimestamp.substring(8, 10) + defaulttimestamp.substring(3, 5) + defaulttimestamp.substring(0, 2) + defaulttimestamp.substring(11, 13) + defaulttimestamp.substring(14);
                             // is input valid? (i.e. only numbers)
                             Integer.parseInt(defaulttimestamp);
                             // set new timestamp
-                            if (returnValue.startsWith("#tstampc"))
+                            if (returnValue.startsWith("#tstampc")) {
                                 data.setTimestampCreated(displayedZettel, defaulttimestamp);
-                            else
+                            } else {
                                 data.setTimestampEdited(displayedZettel, defaulttimestamp);
+                            }
                             // update display
                             updateDisplayParts(displayedZettel);
-                        }
-                        // the user did not edit a valid date, and probably used chars instead of numbers
+                        } // the user did not edit a valid date, and probably used chars instead of numbers
                         catch (NumberFormatException | IndexOutOfBoundsException ex) {
                             // reset value, so the input can be done again
                             defaulttimestamp = "";
                         }
-                    }
-                    else {
-                        if (defaulttimestamp!=null) defaulttimestamp = "";
+                    } else {
+                        if (defaulttimestamp != null) {
+                            defaulttimestamp = "";
+                        }
                     }
                 }
-            }
-            // in case a footnote was clicked and the user wishes to display the author in the related
+            } // in case a footnote was clicked and the user wishes to display the author in the related
             // author table, do this now...
             else {
                 // display tabbed pane with authors
                 jTabbedPaneMain.setSelectedIndex(TAB_AUTHORS);
                 // we now want to display the author in the jTable. Therefore,
                 // we go through all entries of the table and search for the related string-vaule
-                for (int cnt=0; cnt<jTableAuthors.getRowCount(); cnt++) {
+                for (int cnt = 0; cnt < jTableAuthors.getRowCount(); cnt++) {
                     // get each table-value
                     String row = jTableAuthors.getValueAt(cnt, 0).toString();
                     // compare to requested author-string
@@ -4081,13 +4474,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-
     @Action(enabledProperty = "tableEntriesSelected")
     public void openAttachmentDirectory() {
         // get selected row
         int selectedrow = jTableAttachments.getSelectedRow();
         // if we have no selection, leave...
-        if (-1==selectedrow) return;
+        if (-1 == selectedrow) {
+            return;
+        }
         // get selected value
         File filepath = FileOperationsUtil.getLinkFile(settings, data, jTableAttachments.getValueAt(selectedrow, 0).toString());
         // check whether selected file exists
@@ -4098,8 +4492,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             ZettelkastenViewUtil.openFilePath(path, settings);
         }
     }
-    
-    
+
     /**
      * This method deletes one or more manual links from the jTableManLinks
      */
@@ -4108,43 +4501,46 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // get the amount of selected bookmarks.
         int rowcount = jTableManLinks.getSelectedRowCount();
         // if nothing is selected, leave
-        if (rowcount<1) return;
+        if (rowcount < 1) {
+            return;
+        }
         // if we have just a single selection, use phrasing for that message
-        String msg = (1==rowcount) ? getResourceMap().getString("askForDeleteManLinksMsgSingle")
-                                   // else if we have multiple selectios, use phrasing with appropriate wording
-                                   : getResourceMap().getString("askForDeleteManLinksMsgMultiple", String.valueOf(rowcount));
+        String msg = (1 == rowcount) ? getResourceMap().getString("askForDeleteManLinksMsgSingle")
+                // else if we have multiple selectios, use phrasing with appropriate wording
+                : getResourceMap().getString("askForDeleteManLinksMsgMultiple", String.valueOf(rowcount));
         // ask whether author really should be deleted
         int option = JOptionPane.showConfirmDialog(getFrame(), msg, getResourceMap().getString("askForDeleteManLinksTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
         // if yes, do so
-        if (JOptionPane.YES_OPTION == option ) {
+        if (JOptionPane.YES_OPTION == option) {
             // delete bookmarks
-            data.deleteManualLinks(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableManLinks,0));
+            data.deleteManualLinks(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableManLinks, 0));
             // update display
             updateDisplay();
-        }        
+        }
     }
-    
-    
+
     @Action(enabledProperty = "tableEntriesSelected")
     public void deleteBookmarkCategory() {
         // get the amount of selected bookmarks.
         int rowcount = jTableBookmarks.getSelectedRowCount();
         // if nothing is selected, leave
-        if (rowcount<1) return;
+        if (rowcount < 1) {
+            return;
+        }
         // retrieve selected category
         Object selcat = jTableBookmarks.getValueAt(jTableBookmarks.getSelectedRow(), 1);
         // if we have just a single selection, use phrasing for that message
-        String msg = (1==rowcount) ? getResourceMap().getString("askForDeleteBookmarkCategoryMsgSingle", (selcat!=null)?selcat.toString():"")
-                                   // else if we have multiple selectios, use phrasing with appropriate wording
-                                   : getResourceMap().getString("askForDeleteBookmarkCategoryMsgMultiple", String.valueOf(rowcount));
+        String msg = (1 == rowcount) ? getResourceMap().getString("askForDeleteBookmarkCategoryMsgSingle", (selcat != null) ? selcat.toString() : "")
+                // else if we have multiple selectios, use phrasing with appropriate wording
+                : getResourceMap().getString("askForDeleteBookmarkCategoryMsgMultiple", String.valueOf(rowcount));
         // ask whether author really should be deleted
         int option = JOptionPane.showConfirmDialog(getFrame(), msg, getResourceMap().getString("askForDeleteBookmarkCategoryTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
         // if yes, do so
-        if (JOptionPane.YES_OPTION == option ) {
+        if (JOptionPane.YES_OPTION == option) {
             // retrieve selected values
-            String[] bmcats = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableBookmarks,1);
+            String[] bmcats = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableBookmarks, 1);
             // if we have any selection, go on
-            if (bmcats!=null && bmcats.length>0) {
+            if (bmcats != null && bmcats.length > 0) {
                 // iterate all selected values
                 for (String bc : bmcats) {
                     // get the table data at the selected row
@@ -4153,35 +4549,36 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // update display
                 updateDisplay();
             }
-        }        
+        }
     }
 
-
     /**
-     * This method deletes the selected author(s), which is/are currently selected 
-     * in the JTableAuthors.
+     * This method deletes the selected author(s), which is/are currently
+     * selected in the JTableAuthors.
      */
     @Action(enabledProperty = "tableEntriesSelected")
     public void deleteAuthor() {
         // get the amount of selected keywords.
         int rowcount = jTableAuthors.getSelectedRowCount();
         // if nothing is selected, leave
-        if (rowcount<1) return;
+        if (rowcount < 1) {
+            return;
+        }
         // prepare the msg-string
         String msg;
         // if we have just a single selection, use phrasing for that message
-        msg = (1==rowcount) ? getResourceMap().getString("askForDeleteAuthorMsgSingle")
-                              // else if we have multiple selectios, use phrasing with appropriate wording
-                            : getResourceMap().getString("askForDeleteAuthorMsgMultiple", String.valueOf(rowcount));
+        msg = (1 == rowcount) ? getResourceMap().getString("askForDeleteAuthorMsgSingle")
+                // else if we have multiple selectios, use phrasing with appropriate wording
+                : getResourceMap().getString("askForDeleteAuthorMsgMultiple", String.valueOf(rowcount));
         // ask whether author really should be deleted
         int option = JOptionPane.showConfirmDialog(getFrame(), msg, getResourceMap().getString("askForDeleteAuthorTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
         // if yes, do so
-        if (JOptionPane.YES_OPTION == option ) {
+        if (JOptionPane.YES_OPTION == option) {
             // and delete the authors by opening a dialog with a background task
             // if dialog window isn't already created, do this now
             if (null == taskDlg) {
                 // get parent und init window
-                taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_DELETEAUTHORS, data, ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors,0));
+                taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_DELETEAUTHORS, data, ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors, 0));
                 // center window
                 taskDlg.setLocationRelativeTo(getFrame());
             }
@@ -4194,49 +4591,47 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // update the tables and the possible linked lists
             linkedauthorlist = ZettelkastenViewUtil.updateTableFrequencyRemove(jTableAuthors, linkedauthorlist, this);
             // show amount of entries
-            statusMsgLabel.setText("("+String.valueOf(jTableAuthors.getRowCount())+" "+getResourceMap().getString("statusTextAuthors")+")");
+            statusMsgLabel.setText("(" + String.valueOf(jTableAuthors.getRowCount()) + " " + getResourceMap().getString("statusTextAuthors") + ")");
             // finally, update display
             updateDisplay();
         }
     }
-    
+
     @Action
     public void newKeyword() {
         // open an input-dialog
-        String newKw = (String)JOptionPane.showInputDialog(getFrame(),getResourceMap().getString("newKeywordMsg"), getResourceMap().getString("newKeywordTitle"), JOptionPane.PLAIN_MESSAGE);
+        String newKw = (String) JOptionPane.showInputDialog(getFrame(), getResourceMap().getString("newKeywordMsg"), getResourceMap().getString("newKeywordTitle"), JOptionPane.PLAIN_MESSAGE);
         // if we have a valid return-value...
-        if ((newKw!=null) && (newKw.length()>0)) {
+        if ((newKw != null) && (newKw.length() > 0)) {
             // ask the user if he wants to replace possible keywords, which appear as synonyms, but *not*
             // as index-word, with the related index-words...
-            newKw = Tools.replaceSynonymsWithKeywords(synonyms, new String[] {newKw})[0];
+            newKw = Tools.replaceSynonymsWithKeywords(synonyms, new String[]{newKw})[0];
             // check whether action was cancelled. if so, null is returned.
-            if (newKw!=null) {
-            // check whether the value already exists
-                if (-1==data.getKeywordPosition(newKw,false)) {
+            if (newKw != null) {
+                // check whether the value already exists
+                if (-1 == data.getKeywordPosition(newKw, false)) {
                     // add keyword to data file
-                    data.addKeyword(newKw,0);
+                    data.addKeyword(newKw, 0);
                     // save new keyword value, so it can be selected in the table
                     newAddedKeyword = newKw;
                     // add keyword to table and linked filter-list
-                    linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyNew(jTableKeywords, linkedkeywordlist, newKw,0);
+                    linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyNew(jTableKeywords, linkedkeywordlist, newKw, 0);
                     // update display
                     updateDisplay();
-                }
-                else {
+                } else {
                     // display error message box
-                    JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("errValueExistsMsg",newKw),getResourceMap().getString("errValueExistsTitle"),JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("errValueExistsMsg", newKw), getResourceMap().getString("errValueExistsTitle"), JOptionPane.PLAIN_MESSAGE);
                 }
             }
         }
     }
 
-    
     @Action
     public void newAuthor() {
         // open an input-dialog, setting the selected value as default-value
         if (null == biggerEditDlg) {
             // create a new dialog with the bigger edit-field, passing some initial values
-            biggerEditDlg = new CBiggerEditField(getFrame(),settings,getResourceMap().getString("newAuthorTitle"), "", "", Constants.EDIT_AUTHOR);
+            biggerEditDlg = new CBiggerEditField(getFrame(), settings, getResourceMap().getString("newAuthorTitle"), "", "", Constants.EDIT_AUTHOR);
             // center window
             biggerEditDlg.setLocationRelativeTo(getFrame());
         }
@@ -4247,9 +4642,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         String newBibKey = biggerEditDlg.getNewBibKey();
         // delete the input-dialog
         biggerEditDlg.dispose();
-        biggerEditDlg=null;
+        biggerEditDlg = null;
         // if we have a valid return-value...
-        if ((newAu!=null) && (newAu.length()>0)) {
+        if ((newAu != null) && (newAu.length() > 0)) {
             // get system line separator
             String linesep = System.lineSeparator();
             // but first, we habe to remove all carriage-returns (\r), which are part of the
@@ -4257,33 +4652,36 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // we replace "System.lineSeparator()" with "[br]", but only when
             // a "\n" is replaced by [br]. So, in case the system's line-separator also contains a
             // "\r", it is replaced by nothing, to clean the content.
-            if (linesep.contains("\r")) newAu = newAu.replace("\r", "");
+            if (linesep.contains("\r")) {
+                newAu = newAu.replace("\r", "");
+            }
             // ...parse them to an array
             String[] authors = newAu.split("\n");
             for (String a : authors) {
                 // if we have an empty string, do nothing...
                 if (!a.isEmpty()) {
                     // check whether the value already exists
-                    if(-1==data.getAuthorPosition(a)) {
+                    if (-1 == data.getAuthorPosition(a)) {
                         // add author to data file
-                        data.addAuthor(a,0);
+                        data.addAuthor(a, 0);
                         // change bibkey
-                        if (newBibKey!=null) {
+                        if (newBibKey != null) {
                             data.setAuthorBibKey(a, newBibKey);
                             // reset bibkey, so we only use it once in case we have multiple authors
-                            newBibKey=null;
+                            newBibKey = null;
                         }
                         // save author-value so it can be selected in the table
                         newAddedAuthor = a;
                         // add author to jTableAuthors and to the linked filtered list
-                        linkedauthorlist = ZettelkastenViewUtil.updateTableFrequencyNew(jTableAuthors, linkedauthorlist, a,0);
-                    }
-                    else {
+                        linkedauthorlist = ZettelkastenViewUtil.updateTableFrequencyNew(jTableAuthors, linkedauthorlist, a, 0);
+                    } else {
                         // when we have a too long author-string, we truncate it so we can
                         // display the complete error message.
-                        if (a.length()>40) a = a.substring(0, 39)+"...";
+                        if (a.length() > 40) {
+                            a = a.substring(0, 39) + "...";
+                        }
                         // display error message box
-                        JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("errValueExistsMsg",a),getResourceMap().getString("errValueExistsTitle"),JOptionPane.PLAIN_MESSAGE);
+                        JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("errValueExistsMsg", a), getResourceMap().getString("errValueExistsTitle"), JOptionPane.PLAIN_MESSAGE);
                     }
                 }
             }
@@ -4292,10 +4690,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-
     /**
-     * This method deletes entries which are selected in the titles-table (jTableTitles). The currently
-     * displayed entry can also be deleted via toolbar or menu. see {@link #deleteCurrentEntry() deleteCurrentEntry()}
+     * This method deletes entries which are selected in the titles-table
+     * (jTableTitles). The currently displayed entry can also be deleted via
+     * toolbar or menu. see {@link #deleteCurrentEntry() deleteCurrentEntry()}
      * for more details.
      */
     @Action(enabledProperty = "tableEntriesSelected")
@@ -4303,21 +4701,22 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // get the amount of selected entries.
         int rowcount = jTableTitles.getSelectedRowCount();
         // if nothing is selected, leave
-        if (rowcount<1) return;
+        if (rowcount < 1) {
+            return;
+        }
         // get the selected rows
         int[] rows = jTableTitles.getSelectedRows();
         // get the entrie-strings
         int[] nrs = new int[rows.length];
         // copy all values into the integer array
-        for (int cnt=0; cnt<rows.length; cnt++) {
+        for (int cnt = 0; cnt < rows.length; cnt++) {
             try {
                 // get the entry's number
-                int nr=Integer.parseInt(jTableTitles.getValueAt(rows[cnt],0).toString());
+                int nr = Integer.parseInt(jTableTitles.getValueAt(rows[cnt], 0).toString());
                 // save it to the array
-                nrs[cnt]=nr;
-            }
-            catch (NumberFormatException ex) {
-                Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
+                nrs[cnt] = nr;
+            } catch (NumberFormatException ex) {
+                Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
             }
         }
         // try to delete entries. this method shows an option pane where the user can
@@ -4329,34 +4728,35 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             showTitles();
         }
     }
-    
-    
-    
+
     public void bringToFront() {
-      super.getFrame().setAlwaysOnTop(true);
-      super.getFrame().toFront();
-      super.getFrame().requestFocus();
-      super.getFrame().setAlwaysOnTop(false);    
+        super.getFrame().setAlwaysOnTop(true);
+        super.getFrame().toFront();
+        super.getFrame().requestFocus();
+        super.getFrame().setAlwaysOnTop(false);
     }
-    
 
     /**
      * Deletes one or more entries which entry-numbers are passed as int-array
+     *
      * @param nrs the index-numbers of the entries that should be deleted
-     * @return {@code true} if entries were deleted, {@code false} is deletion was cancelled
+     * @return {@code true} if entries were deleted, {@code false} is deletion
+     * was cancelled
      */
     public boolean deleteEntries(int[] nrs) {
         // when we have no entries in the array, return
-        if ((null==nrs)||(nrs.length<1)) return false;
+        if ((null == nrs) || (nrs.length < 1)) {
+            return false;
+        }
         // when we are editing an entry, check whether the to be deleted entry is currently edited.
         // if yes, cancel deletion
-        if (isEditModeActive && newEntryDlg!=null) {
+        if (isEditModeActive && newEntryDlg != null) {
             // go through all entries that should be deleted
             for (int n : nrs) {
                 // if one of those to be deleted entries is currently being edited, cancel deletion
-                if (n==newEntryDlg.entryNumber) {
+                if (n == newEntryDlg.entryNumber) {
                     // show error message
-                    JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("deleteNotPossibleMsg"),getResourceMap().getString("deleteNotPossibleTitle"),JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("deleteNotPossibleMsg"), getResourceMap().getString("deleteNotPossibleTitle"), JOptionPane.PLAIN_MESSAGE);
                     // display edit-dialog
                     newEntryDlg.toFront();
                     // leave method
@@ -4367,56 +4767,69 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // create a linked list that contains all entries, so we check whether one or more of
         // the to be deleted entries are also appearing in one or more desktop-files.
         // but first, check, whether we have any desktops at all...
-        if (desktop.getCount()>0) {
+        if (desktop.getCount() > 0) {
             // create linked list
             LinkedList<Integer> checkEntries = new LinkedList<>();
             // copy all to be deleted entries to the linked list
-            for (int n : nrs) checkEntries.add(n);
+            for (int n : nrs) {
+                checkEntries.add(n);
+            }
             // now check whether one or more entries of the to be deleted entries appear in one or
             // more desktop-files and ask the user, whether the entries really should be deleted
             String multipleOccurencesMessage = Tools.prepareDoubleEntriesMessage(Tools.retrieveDoubleEntries(desktop, checkEntries));
             // if we have any return-value, go on...
-            if(multipleOccurencesMessage!=null) {
+            if (multipleOccurencesMessage != null) {
                 // get system line separator
                 String linesep = System.lineSeparator();
                 multipleOccurencesMessage = getResourceMap().getString("askForDeleteEntriesOnDesktop")
-                                          + linesep+linesep
-                                          + multipleOccurencesMessage;
+                        + linesep + linesep
+                        + multipleOccurencesMessage;
                 // create output window
-                if (null==multipleOccurencesDlg) {
+                if (null == multipleOccurencesDlg) {
                     // create a new dialog with the desktop-dialog, passing some initial values
-                    multipleOccurencesDlg = new CShowMultipleDesktopOccurences(getFrame(),settings,true,multipleOccurencesMessage);
+                    multipleOccurencesDlg = new CShowMultipleDesktopOccurences(getFrame(), settings, true, multipleOccurencesMessage);
                     // center window
                     multipleOccurencesDlg.setLocationRelativeTo(null);
+                } else {
+                    multipleOccurencesDlg.setInfoMsg(multipleOccurencesMessage);
                 }
-                else multipleOccurencesDlg.setInfoMsg(multipleOccurencesMessage);
                 // show window
                 ZettelkastenApp.getApplication().show(multipleOccurencesDlg);
             }
         }
         // if we have just a single selection, use phrasing for that message
-        String msg = (1==nrs.length) ? getResourceMap().getString("askForDeleteEntryMsgSingle", String.valueOf(nrs[0]))
-                              // else if we have multiple selectios, use phrasing with appropriate wording
-                              : getResourceMap().getString("askForDeleteEntryMsgMultiple", String.valueOf(nrs.length));
+        String msg = (1 == nrs.length) ? getResourceMap().getString("askForDeleteEntryMsgSingle", String.valueOf(nrs[0]))
+                // else if we have multiple selectios, use phrasing with appropriate wording
+                : getResourceMap().getString("askForDeleteEntryMsgMultiple", String.valueOf(nrs.length));
         // ask whether entry really should be deleted
         int option = JOptionPane.showConfirmDialog(getFrame(), msg, getResourceMap().getString("askForDeleteEntryTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
         // if yes, go on
         if (JOptionPane.YES_OPTION == option) {
             // delete entries
-            for (int cnt=0; cnt<nrs.length; cnt++) {
+            for (int cnt = 0; cnt < nrs.length; cnt++) {
                 // first, retrieve the entry's authors, so we can update the table jTableAuthors,
                 // by decreasing the frequencies...
                 String[] aus = data.getAuthors(nrs[cnt]);
-                if (aus!=null) for (String a : aus) linkedauthorlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableAuthors, linkedauthorlist, a, -1);
+                if (aus != null) {
+                    for (String a : aus) {
+                        linkedauthorlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableAuthors, linkedauthorlist, a, -1);
+                    }
+                }
                 // then, retrieve the entry's keywords, so we can update the table jTableKeywords,
                 // by decreasing the frequencies...
                 String[] kws = data.getKeywords(nrs[cnt]);
-                if (kws!=null) for (String k : kws) linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableKeywords, linkedkeywordlist, k, -1);
+                if (kws != null) {
+                    for (String k : kws) {
+                        linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableKeywords, linkedkeywordlist, k, -1);
+                    }
+                }
                 // finally, we can remove that entry
                 data.deleteZettel(nrs[cnt]);
             }
             // remove entries from desktop...
-            if (desktop.deleteEntries(nrs) && desktopDlg!=null) desktopDlg.updateEntriesAfterEditing();
+            if (desktop.deleteEntries(nrs) && desktopDlg != null) {
+                desktopDlg.updateEntriesAfterEditing();
+            }
             // remove entries from bookmarks...
             bookmarks.deleteBookmarks(nrs);
             // manual links and the entry's content are deleted via the CDaten-class.
@@ -4435,7 +4848,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             taskDlg.dispose();
             taskDlg = null;
             // when the search dialog is opened, remove entry from list...
-            if (searchResultsDlg!=null) searchResultsDlg.updateComboBox(-1,-1);
+            if (searchResultsDlg != null) {
+                searchResultsDlg.updateComboBox(-1, -1);
+            }
             // try to motivate garbage collector
             System.gc();
             // finally, update display
@@ -4445,13 +4860,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
         return false;
     }
-    
-        
-    private void filterTitleList(boolean forceRegEx) {
-        LinkedList<Object[]> l = filterList(jTextFieldFilterTitles,jTableTitles,jButtonRefreshTitles,linkedtitlelist,"statusTextTitles",1,forceRegEx);
-        if (l!=null) linkedtitlelist = l;
-    }
 
+    private void filterTitleList(boolean forceRegEx) {
+        LinkedList<Object[]> l = filterList(jTextFieldFilterTitles, jTableTitles, jButtonRefreshTitles, linkedtitlelist, "statusTextTitles", 1, forceRegEx);
+        if (l != null) {
+            linkedtitlelist = l;
+        }
+    }
 
     private LinkedList<Object[]> filterList(JTextField filterfield, JTable table, JButton refreshbutton, LinkedList<Object[]> list, String resourcestring, int column, boolean forceRegEx) {
         // when we filter the table and want to restore it, we don't need to run the
@@ -4464,36 +4879,36 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // convert to lowercase, we don't want case-sensitive search
         String text = filterfield.getText();
         // when we have no text, do nothing
-        if (text.isEmpty()) return null;
+        if (text.isEmpty()) {
+            return null;
+        }
         // tell table selection listener we are doing something, so don't react on value-changes
         tableUpdateActive = true;
         // get table model
-        DefaultTableModel dtm = (DefaultTableModel)table.getModel();
+        DefaultTableModel dtm = (DefaultTableModel) table.getModel();
         // if we haven't already stored the current complete table data, do this now
-        if (null==list) {
+        if (null == list) {
             // create new instance of list
             list = new LinkedList<>();
             // go through all table-data
-            for (int cnt=0; cnt<dtm.getRowCount(); cnt++) {
+            for (int cnt = 0; cnt < dtm.getRowCount(); cnt++) {
                 // init the object-variable
                 Object[] o;
                 // in case we have the table with titles, we make an exception, because
                 // this table has two more columns that should be filtered, the columns with
                 // the entries timestamps.
-                if (table==jTableTitles) {
+                if (table == jTableTitles) {
                     o = new Object[5];
-                }
-                // in case we have the table with attachments, we make an exception, because
+                } // in case we have the table with attachments, we make an exception, because
                 // this table has one more column that should be filtered
-                else if (table==jTableAttachments) {
+                else if (table == jTableAttachments) {
                     o = new Object[3];
-                }
-                // for each "typical" table, we have two columns
+                } // for each "typical" table, we have two columns
                 else {
                     o = new Object[2];
                 }
                 // fill object with values
-                for (int len=0; len<o.length; len++) {
+                for (int len = 0; len < o.length; len++) {
                     o[len] = dtm.getValueAt(table.convertRowIndexToModel(cnt), len);
                 }
                 // add object to linked list
@@ -4501,76 +4916,76 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             }
         }
         int[] columns;
-        if (table==jTableTitles) {
-            columns = new int[]{column,2,3,4};
-        }
-        else {
+        if (table == jTableTitles) {
+            columns = new int[]{column, 2, 3, 4};
+        } else {
             columns = new int[]{column};
         }
         de.danielluedecke.zettelkasten.util.TableUtils.filterTable(table, dtm, text, columns, forceRegEx);
         // reset textfield
-        if (!forceRegEx) filterfield.setText("");
+        if (!forceRegEx) {
+            filterfield.setText("");
+        }
         filterfield.requestFocusInWindow();
         // enable textfield only if we have more than 1 element in the jtable
-        filterfield.setEnabled(table.getRowCount()>0);
+        filterfield.setEnabled(table.getRowCount() > 0);
         // enable refresh button
         refreshbutton.setEnabled(true);
         // show amount of entries
-        statusMsgLabel.setText("("+String.valueOf(table.getRowCount())+" "+getResourceMap().getString(resourcestring)+")");
+        statusMsgLabel.setText("(" + String.valueOf(table.getRowCount()) + " " + getResourceMap().getString(resourcestring) + ")");
         // all changes have been done...
         tableUpdateActive = false;
         // return list with new entries.
         return list;
     }
 
-    
     @Action
     public void refreshTitleList() {
-        refreshList(jTableTitles,jButtonRefreshTitles,jTextFieldFilterTitles,linkedtitlelist,"statusTextTitles");
-        linkedtitlelist=null;
+        refreshList(jTableTitles, jButtonRefreshTitles, jTextFieldFilterTitles, linkedtitlelist, "statusTextTitles");
+        linkedtitlelist = null;
     }
 
-    
     @Action
     public void filterClusterList() {
         // get the treemodel
-        DefaultTreeModel dtm = (DefaultTreeModel)jTreeCluster.getModel();
+        DefaultTreeModel dtm = (DefaultTreeModel) jTreeCluster.getModel();
         // and receive the root
-        MutableTreeNode root = (MutableTreeNode)dtm.getRoot();
+        MutableTreeNode root = (MutableTreeNode) dtm.getRoot();
         // get the filter text
         String text = jTextFieldFilterCluster.getText().toLowerCase();
         // if we have any root and filter-text, go on
-        if (root!=null && !text.isEmpty()) {
+        if (root != null && !text.isEmpty()) {
             // go through all root's children
-            for (int cnt=dtm.getChildCount(root)-1; cnt>=0; cnt--) {
+            for (int cnt = dtm.getChildCount(root) - 1; cnt >= 0; cnt--) {
                 // get the child-node
-                MutableTreeNode child = (MutableTreeNode)dtm.getChild(root, cnt);
+                MutableTreeNode child = (MutableTreeNode) dtm.getChild(root, cnt);
                 // get the node's text
                 String childtext = child.toString().toLowerCase();
                 // if the child does *not* contains the filtertext, remove it
-                if (!childtext.contains(text)) dtm.removeNodeFromParent(child);
+                if (!childtext.contains(text)) {
+                    dtm.removeNodeFromParent(child);
+                }
             }
-            
+
             // if the filtering removed a selected node, clear the jListCluster
-            if (null==jTreeCluster.getSelectionPath()) {
+            if (null == jTreeCluster.getSelectionPath()) {
                 clusterList.clear();
                 // and show current entry again
                 // TODO aktiuellen Zettel zeigen?
             }
-            
+
             // indicate that we have filtered the list
             linkedclusterlist = true;
             // reset textfield
             jTextFieldFilterCluster.setText("");
             jTextFieldFilterCluster.requestFocusInWindow();
             // enable textfield only if we have more than 1 element in the jtable
-            jTextFieldFilterCluster.setEnabled(jTreeCluster.getRowCount()>0);
+            jTextFieldFilterCluster.setEnabled(jTreeCluster.getRowCount() > 0);
             // enable refresh button
             jButtonRefreshCluster.setEnabled(true);
         }
-    }    
-    
-    
+    }
+
     @Action
     public void refreshClusterList() {
         // first check whether we have filtered the list
@@ -4582,66 +4997,64 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // disable refresh button
             jButtonRefreshCluster.setEnabled(false);
         }
-    }    
-    
-    
-    private void filterAuthorList(boolean forceRegEx) {
-        LinkedList<Object[]> l = filterList(jTextFieldFilterAuthors,jTableAuthors,jButtonRefreshAuthors,linkedauthorlist,"statusTextAuthors",0,forceRegEx);
-        if (l!=null) linkedauthorlist = l;
     }
 
-
+    private void filterAuthorList(boolean forceRegEx) {
+        LinkedList<Object[]> l = filterList(jTextFieldFilterAuthors, jTableAuthors, jButtonRefreshAuthors, linkedauthorlist, "statusTextAuthors", 0, forceRegEx);
+        if (l != null) {
+            linkedauthorlist = l;
+        }
+    }
 
     private void filterAttachmentList(boolean forceRegEx) {
-        LinkedList<Object[]> l = filterList(jTextFieldFilterAttachments,jTableAttachments,jButtonRefreshAttachments,linkedattachmentlist,"statusTextAttachments",0,forceRegEx);
-        if (l!=null) linkedattachmentlist = l;
+        LinkedList<Object[]> l = filterList(jTextFieldFilterAttachments, jTableAttachments, jButtonRefreshAttachments, linkedattachmentlist, "statusTextAttachments", 0, forceRegEx);
+        if (l != null) {
+            linkedattachmentlist = l;
+        }
     }
 
-    
-    
     @Action
     public void refreshAuthorList() {
-        refreshList(jTableAuthors,jButtonRefreshAuthors,jTextFieldFilterAuthors,linkedauthorlist,"statusTextAuthors");
-        linkedauthorlist=null;
+        refreshList(jTableAuthors, jButtonRefreshAuthors, jTextFieldFilterAuthors, linkedauthorlist, "statusTextAuthors");
+        linkedauthorlist = null;
     }
-
 
     private void refreshList(JTable table, JButton refreshbutton, JTextField filterfield, LinkedList<Object[]> list, String resourcestring) {
         // first check whether we have any saved values at all
-        if (list!=null) {
+        if (list != null) {
             // table-values might be changed, so selection listener should not react
             tableUpdateActive = true;
             // get table model
-            DefaultTableModel dtm = (DefaultTableModel)table.getModel();
+            DefaultTableModel dtm = (DefaultTableModel) table.getModel();
             // delete all data from the author-table
             dtm.setRowCount(0);
             // create an iterator for the linked list
             ListIterator<Object[]> iterator = list.listIterator();
             // go through complete linked list and add each element to the table(model)
-            while (iterator.hasNext()) dtm.addRow(iterator.next());
+            while (iterator.hasNext()) {
+                dtm.addRow(iterator.next());
+            }
             // enable filter field
             filterfield.setEnabled(true);
             // disable refresh button
             refreshbutton.setEnabled(false);
             // show amount of entries
-            statusMsgLabel.setText("("+String.valueOf(table.getRowCount())+" "+getResourceMap().getString(resourcestring)+")");
+            statusMsgLabel.setText("(" + String.valueOf(table.getRowCount()) + " " + getResourceMap().getString(resourcestring) + ")");
             // all changes have been made...
             tableUpdateActive = false;
         }
     }
 
-
-
     @Action
     public void refreshAttachmentList() {
-        refreshList(jTableAttachments,jButtonRefreshAttachments,jTextFieldFilterAttachments,linkedattachmentlist,"statusTextAttachments");
-        linkedattachmentlist=null;
+        refreshList(jTableAttachments, jButtonRefreshAttachments, jTextFieldFilterAttachments, linkedattachmentlist, "statusTextAttachments");
+        linkedattachmentlist = null;
     }
 
-
     /**
-     * This method opens a dialog with the data from the currently selected bookmarks. The user
-     * can then make changes like changing the category, editing comments etc.<br><br>
+     * This method opens a dialog with the data from the currently selected
+     * bookmarks. The user can then make changes like changing the category,
+     * editing comments etc.<br><br>
      * Changes are immediatly applied to the jTableBookmarks.
      */
     @Action(enabledProperty = "tableEntriesSelected")
@@ -4649,15 +5062,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // get the selected row
         int row = jTableBookmarks.getSelectedRow();
         // if now row is selected, leave...
-        if (-1==row) return;
+        if (-1 == row) {
+            return;
+        }
         // else change bookmark entry
-        addToBookmarks(new int[] {ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableBookmarks,0)}, true);
+        addToBookmarks(new int[]{ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableBookmarks, 0)}, true);
     }
-    
 
     /**
-     * This method opens an input-dialog where the user can edit a bookmark's category-name.
-     * After that, all bookmarks with the old category-name get this new entered category-name.
+     * This method opens an input-dialog where the user can edit a bookmark's
+     * category-name. After that, all bookmarks with the old category-name get
+     * this new entered category-name.
      * <br><br>
      * If the new name already exists, the categories are merged.
      */
@@ -4666,21 +5081,22 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // get the selected row
         int row = jTableBookmarks.getSelectedRow();
         // if now row is selected, leave...
-        if (-1==row) return;
+        if (-1 == row) {
+            return;
+        }
         // save the old value
-        String oldbm = jTableBookmarks.getValueAt(row,1).toString();
+        String oldbm = jTableBookmarks.getValueAt(row, 1).toString();
         // open an input-dialog, setting the selected value as default-value
-        String newbm = (String)JOptionPane.showInputDialog(getFrame(),getResourceMap().getString("editBookmarkCategoryMsg"), getResourceMap().getString("editBookmarkCategoryTitle"), JOptionPane.PLAIN_MESSAGE, null, null, jTableBookmarks.getValueAt(row,1));
+        String newbm = (String) JOptionPane.showInputDialog(getFrame(), getResourceMap().getString("editBookmarkCategoryMsg"), getResourceMap().getString("editBookmarkCategoryTitle"), JOptionPane.PLAIN_MESSAGE, null, null, jTableBookmarks.getValueAt(row, 1));
         // if we have a valid return-value that does not equal the old value...
-        if ((newbm!=null) && (newbm.length()>0) && (!oldbm.equalsIgnoreCase(newbm))) {
+        if ((newbm != null) && (newbm.length() > 0) && (!oldbm.equalsIgnoreCase(newbm))) {
             // check whether new category name already exists
-            if (-1==bookmarks.getCategoryPosition(newbm)) {
+            if (-1 == bookmarks.getCategoryPosition(newbm)) {
                 // get index-number of old category
                 int pos = bookmarks.getCategoryPosition(oldbm);
                 // change category-name
                 bookmarks.setCategory(pos, newbm);
-            }
-            // we know that the category already exists. here we cann offer merging...
+            } // we know that the category already exists. here we cann offer merging...
             else {
                 // get the position of old, previous category
                 int oldpos = bookmarks.getCategoryPosition(oldbm);
@@ -4694,37 +5110,40 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-
     @Action(enabledProperty = "tableEntriesSelected")
     public void editAttachment() {
         // get selected keywords
-        String[] selectedattachments = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAttachments,0);
+        String[] selectedattachments = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAttachments, 0);
         // if now row is selected, leave...
-        if (null==selectedattachments) return;
+        if (null == selectedattachments) {
+            return;
+        }
         // get selected rows. we need this numbers for setting back the new values, see below
         int[] selectedrows = jTableAttachments.getSelectedRows();
         // retrieve the selected enty-numbers
-        int[] entrynumbers = ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableAttachments,2);
+        int[] entrynumbers = ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableAttachments, 2);
         // check for valid values
-        if (entrynumbers!=null && entrynumbers.length>0) {
+        if (entrynumbers != null && entrynumbers.length > 0) {
             // go through all selected keywords
-            for (int cnt=selectedattachments.length-1; cnt>=0; cnt--) {
+            for (int cnt = selectedattachments.length - 1; cnt >= 0; cnt--) {
                 // save the old value
                 String oldAt = selectedattachments[cnt];
                 // open an input-dialog, setting the selected value as default-value
-                String newAt = (String)JOptionPane.showInputDialog(getFrame(),getResourceMap().getString("editAttachmentMsg"), getResourceMap().getString("editAttachmentTitle"), JOptionPane.PLAIN_MESSAGE, null, null, oldAt);
+                String newAt = (String) JOptionPane.showInputDialog(getFrame(), getResourceMap().getString("editAttachmentMsg"), getResourceMap().getString("editAttachmentTitle"), JOptionPane.PLAIN_MESSAGE, null, null, oldAt);
                 // if we have a valid return-value that differs from the old value...
-                if ((newAt!=null) && (newAt.length()>0) && (!oldAt.equalsIgnoreCase(newAt))) {
+                if ((newAt != null) && (newAt.length() > 0) && (!oldAt.equalsIgnoreCase(newAt))) {
                     // change the existing value in the table
                     jTableAttachments.setValueAt(newAt, selectedrows[cnt], 0);
                     // update the possible file-extension
-                    jTableAttachments.setValueAt(FileOperationsUtil.getFileExtension(settings,data,newAt),selectedrows[cnt],1);
+                    jTableAttachments.setValueAt(FileOperationsUtil.getFileExtension(settings, data, newAt), selectedrows[cnt], 1);
                     // also change the attachment in the data-file
                     data.changeAttachment(oldAt, newAt, entrynumbers[cnt]);
                     // if we have a filtered list, remove the element also from
                     // our refresh-list, so we don't show this item again when the list
                     // is being refreshed
-                    if (linkedattachmentlist!=null) linkedattachmentlist = updateLinkedList(linkedattachmentlist,oldAt,newAt,0);
+                    if (linkedattachmentlist != null) {
+                        linkedattachmentlist = updateLinkedList(linkedattachmentlist, oldAt, newAt, 0);
+                    }
                 }
                 // and update display
                 updateDisplayParts(entrynumbers[0]);
@@ -4732,10 +5151,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-
     private LinkedList<Object[]> updateLinkedList(LinkedList<Object[]> list, String oldvalue, String newvalue, int arrayindex) {
         // iterate list
-        for (int pos=0; pos<list.size(); pos++) {
+        for (int pos = 0; pos < list.size(); pos++) {
             // get each element
             Object[] o = list.get(pos);
             // if element equals requested value, change frequency
@@ -4750,18 +5168,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         return list;
     }
 
-
     @Action
     public void copyPlain() {
-        Tools.copyPlain(data,displayedZettel,jEditorPaneEntry);
+        Tools.copyPlain(data, displayedZettel, jEditorPaneEntry);
     }
 
-
     /**
-     * This method opens a dialog to edit an author. When the edited author already exists,
-     * the programm offers to "merge" the authors, and also all entries will be updated.<br><br>
-     * Furthermore, when an edit-request was made while the author-list was filtered, the filtered
-     * linkedlist is also being updated.
+     * This method opens a dialog to edit an author. When the edited author
+     * already exists, the programm offers to "merge" the authors, and also all
+     * entries will be updated.<br><br>
+     * Furthermore, when an edit-request was made while the author-list was
+     * filtered, the filtered linkedlist is also being updated.
      */
     @Action(enabledProperty = "tableEntriesSelected")
     public void editAuthor() {
@@ -4774,7 +5191,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // get selected rows. we need this numbers for setting back the new values, see below
         int[] selectedrows = jTableAuthors.getSelectedRows();
         // go through all selected keywords
-        for (int cnt=selectedauthors.length - 1; cnt >= 0; cnt--) {
+        for (int cnt = selectedauthors.length - 1; cnt >= 0; cnt--) {
             // save the old value
             String oldAu = selectedauthors[cnt];
             // save old bibkey value
@@ -4815,33 +5232,34 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     if (linkedauthorlist != null) {
                         linkedauthorlist = updateLinkedList(linkedauthorlist, oldAu, newAu, 0);
                     }
-                }
-                else {
+                } else {
                     // the new name for author already exists, so we can offer to merge
                     // the authors here. in fact, this is an easy find/replace-routine, since the
                     // old author is replaced by the existing one, when we merge them.
 
                     // create a JOptionPane with yes/no/cancel options
-                    int option = JOptionPane.showConfirmDialog(getFrame(), 
-                            getResourceMap().getString("mergeAuthorMsg"), 
-                            getResourceMap().getString("mergeAuthorTitle"), 
-                            JOptionPane.YES_NO_OPTION, 
+                    int option = JOptionPane.showConfirmDialog(getFrame(),
+                            getResourceMap().getString("mergeAuthorMsg"),
+                            getResourceMap().getString("mergeAuthorTitle"),
+                            JOptionPane.YES_NO_OPTION,
                             JOptionPane.PLAIN_MESSAGE);
                     // if no merge is requested, leave method
-                    if (JOptionPane.NO_OPTION == option ) return;
+                    if (JOptionPane.NO_OPTION == option) {
+                        return;
+                    }
                     // merge the authors by opening a dialog with a background task
                     // if dialog window isn't already created, do this now
                     if (null == taskDlg) {
                         // get parent und init window
-                        taskDlg = new TaskProgressDialog(getFrame(), 
-                                TaskProgressDialog.TASK_MERGEAUTHORS, 
-                                data, 
-                                taskinfo, 
-                                oldAu, 
-                                newAu, 
-                                newBibKey, 
-                                jTableAuthors, 
-                                selectedrows[cnt], 
+                        taskDlg = new TaskProgressDialog(getFrame(),
+                                TaskProgressDialog.TASK_MERGEAUTHORS,
+                                data,
+                                taskinfo,
+                                oldAu,
+                                newAu,
+                                newBibKey,
+                                jTableAuthors,
+                                selectedrows[cnt],
                                 linkedauthorlist);
                         // center window
                         taskDlg.setLocationRelativeTo(getFrame());
@@ -4864,11 +5282,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             }
         }
     }
-    
 
     @Action(enabledProperty = "tableEntriesSelected")
     public void changeBibkey() {
-        if (setBibKeyDlg!=null) {
+        if (setBibKeyDlg != null) {
             setBibKeyDlg.dispose();
             setBibKeyDlg = null;
             System.gc();
@@ -4876,37 +5293,42 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // open an input-dialog, setting the selected value as default-value
         if (null == setBibKeyDlg) {
             // create a new dialog with the bigger edit-field, passing some initial values
-            setBibKeyDlg = new CSetBibKey(getFrame(),this,data,bibtex,settings);
+            setBibKeyDlg = new CSetBibKey(getFrame(), this, data, bibtex, settings);
             // center window
             setBibKeyDlg.setLocationRelativeTo(getFrame());
         }
         // show window
         ZettelkastenApp.getApplication().show(setBibKeyDlg);
     }
+
     /**
-     * @return The selected values from the jTableAuthors as String-ArrayList, or {@code null}
-     * if no values have been selected
+     * @return The selected values from the jTableAuthors as String-ArrayList,
+     * or {@code null} if no values have been selected
      */
     public LinkedList<String> getSelectedAuthors() {
         String[] arr = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors, 0);
-        if (arr!=null && arr.length>0) {
+        if (arr != null && arr.length > 0) {
             return new LinkedList(Arrays.asList(arr));
         }
         return null;
     }
 
     /**
-     * This method retrieves the selected keyword(s) from the jTableKeywords and adds
-     * them to the keyword-list (jListKeywords).
+     * This method retrieves the selected keyword(s) from the jTableKeywords and
+     * adds them to the keyword-list (jListKeywords).
      */
     @Action(enabledProperty = "tableEntriesSelected")
     public void addKeywordToList() {
         // check for any selections. if nothing selected, leave
-        if (jTableKeywords.getRowCount()<1) return;
+        if (jTableKeywords.getRowCount() < 1) {
+            return;
+        }
         // get selections
-        if (!addKeywords(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords,0),false)) JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("noNewKeywordsFoundMsg"),getResourceMap().getString("noNewKeywordsFoundTitle"),JOptionPane.PLAIN_MESSAGE);
+        if (!addKeywords(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords, 0), false)) {
+            JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("noNewKeywordsFoundMsg"), getResourceMap().getString("noNewKeywordsFoundTitle"), JOptionPane.PLAIN_MESSAGE);
+        }
     }
-    
+
 
     private boolean addKeywords(String[] kws, boolean comesFromTextSelection) {
         // check for valid array

@@ -193,8 +193,7 @@ public class ImportFromCSV extends org.jdesktop.application.Task<Object, Void> {
         if (!append) {
             // set this document as main zkn data...
             dataObj.setZknData(zkndoc);
-        }
-        // resp. append the zkndoc to the maindata
+        } // resp. append the zkndoc to the maindata
         else {
             // append imported entries.
             dataObj.appendZknData(zkndoc);

@@ -65,17 +65,22 @@ import javax.swing.JOptionPane;
  * @author danielludecke
  */
 public class ExportTools {
+
     /**
      * get the strings for file descriptions from the resource map
      */
-    private static final org.jdesktop.application.ResourceMap resourceMap = 
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(de.danielluedecke.zettelkasten.tasks.export.ExportTask.class);
+    private static final org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(de.danielluedecke.zettelkasten.tasks.export.ExportTask.class);
+
     /**
-     * Creates a list of certain entry-values (keywords, authors, attachments) in plain text format
+     * Creates a list of certain entry-values (keywords, authors, attachments)
+     * in plain text format
      *
-     * @param values the list-values (keywords, authors, attachments...) as string-array
-     * @param notfound the title of that list in case no elements have been found
+     * @param values the list-values (keywords, authors, attachments...) as
+     * string-array
+     * @param notfound the title of that list in case no elements have been
+     * found
      * @param header the header of the list (e.g. keywords, authors...)
      * @param textagopen
      * @param textagclose
@@ -84,10 +89,9 @@ public class ExportTools {
     public static String createPlainList(String[] values, String notfound, String header, String textagopen, String textagclose) {
         StringBuilder sb = new StringBuilder("");
         // if there is no keyword information, tell this the user
-        if ((null==values)||(values.length<1)) {
+        if ((null == values) || (values.length < 1)) {
             sb.append(notfound).append(System.lineSeparator());
-        }
-        else {
+        } else {
             // create headline indicating that keyword-part starts here
             sb.append(textagopen).append(header).append(textagclose).append(System.lineSeparator()).append(System.lineSeparator());
             // iterate the keyword array
@@ -99,30 +103,34 @@ public class ExportTools {
         }
         return sb.toString();
     }
+
     /**
-     * This method creates a list of entry-numbers, which are usually referring from one entry to other
-     * entries (e.g. the follower-numbers or manual links to other entries). The list is in plain-text,
-     * i.e. it is used for exporting entries to the TXT or LaTex-format.
+     * This method creates a list of entry-numbers, which are usually referring
+     * from one entry to other entries (e.g. the follower-numbers or manual
+     * links to other entries). The list is in plain-text, i.e. it is used for
+     * exporting entries to the TXT or LaTex-format.
      *
-     * @param values the refrerring entries of which a list should be created (i.e. that should appear
-     * in this list)
-     * @param notfound a String which is displayed if the supposed entry has no referring entry-numbers
-     * (i.e. {@code values} is empty)
+     * @param values the refrerring entries of which a list should be created
+     * (i.e. that should appear in this list)
+     * @param notfound a String which is displayed if the supposed entry has no
+     * referring entry-numbers (i.e. {@code values} is empty)
      * @param header a header which says what kind of list this is
-     * @param textagopen an open-tag of a tag which surrounds this list. typically only used
-     * when creating lists for the {@code LaTex} format, then e.g. <b>\\subsection{</b> is used.
-     * @param textagclose a closing-tag of a tag which surrounds this list. typically only used
-     * when creating lists for the {@code LaTex} format, then e.g. <b>}{</b> is used.
-     * @return the complete list of entries which have been passed through the parameter {@code values},
-     * where this list is "formatted" as paragraph for usage in plain TXT or LaTex-export.
+     * @param textagopen an open-tag of a tag which surrounds this list.
+     * typically only used when creating lists for the {@code LaTex} format,
+     * then e.g. <b>\\subsection{</b> is used.
+     * @param textagclose a closing-tag of a tag which surrounds this list.
+     * typically only used when creating lists for the {@code LaTex} format,
+     * then e.g. <b>}{</b> is used.
+     * @return the complete list of entries which have been passed through the
+     * parameter {@code values}, where this list is "formatted" as paragraph for
+     * usage in plain TXT or LaTex-export.
      */
     public static String createPlainCommaList(String[] values, String notfound, String header, String textagopen, String textagclose) {
         StringBuilder sb = new StringBuilder("");
         // if there is no keyword information, tell this the user
-        if ((null==values)||(values.length<1)) {
+        if ((null == values) || (values.length < 1)) {
             sb.append(notfound).append(System.lineSeparator());
-        }
-        else {
+        } else {
             // create headline indicating that keyword-part starts here
             sb.append(textagopen).append(header).append(textagclose).append(System.lineSeparator()).append(System.lineSeparator());
             // iterate the keyword array
@@ -130,31 +138,36 @@ public class ExportTools {
                 // and append each author
                 sb.append(val).append(", ");
             }
-            sb.setLength(sb.length()-2);
+            sb.setLength(sb.length() - 2);
             sb.append(System.lineSeparator());
         }
         return sb.toString();
     }
+
     /**
-     * This method creates a reference list in the export-format. This method is used when exporting entries
-     * into html-format. The reference-list is created from the used footnotes, i.e. each author-footnote
-     * in an entry is added to the final reference-list. When exporting to HTML, the authors-footnotes
-     * are linked with the author-value in the reference-list.
+     * This method creates a reference list in the export-format. This method is
+     * used when exporting entries into html-format. The reference-list is
+     * created from the used footnotes, i.e. each author-footnote in an entry is
+     * added to the final reference-list. When exporting to HTML, the
+     * authors-footnotes are linked with the author-value in the reference-list.
      *
      * @param dataObj
      * @param settingsObj
-     * @param contentpage the complete html-page that is going to be exported, so the author-footnotes
-     * can be extracted from this content.
+     * @param contentpage the complete html-page that is going to be exported,
+     * so the author-footnotes can be extracted from this content.
      * @param footnotetag the footnote-tag, to identify where a footnote starts
-     * @param footnoteclose the closing-tag of footnotes, so the author-number within the footnote
-     * can be extracted
-     * @param headeropen the header-tag, in case the title "reference list" is surrounded by a header-tag
-     * @param headerclose the header-tag, in case the title "reference list" is surrounded by a header-tag
-     * @param listtype whether the list is formatted in html or plain text. use following constants:<br>
+     * @param footnoteclose the closing-tag of footnotes, so the author-number
+     * within the footnote can be extracted
+     * @param headeropen the header-tag, in case the title "reference list" is
+     * surrounded by a header-tag
+     * @param headerclose the header-tag, in case the title "reference list" is
+     * surrounded by a header-tag
+     * @param listtype whether the list is formatted in html or plain text. use
+     * following constants:<br>
      * - CConstants.REFERENCE_LIST_TXT<br>
      * - CConstants.REFERENCE_LIST_HTML
-     * @return a converted String containing the reference list with all references (authors) that appeared
-     * as author-footnote in the export-file
+     * @return a converted String containing the reference list with all
+     * references (authors) that appeared as author-footnote in the export-file
      */
     public static String createReferenceList(Daten dataObj, Settings settingsObj, String contentpage, String footnotetag, String footnoteclose, String headeropen, String headerclose, int listtype) {
         // now prepare a reference list from possible footnotes
@@ -206,28 +219,29 @@ public class ExportTools {
                     int aunr = Integer.parseInt(au);
                     switch (listtype) {
                         case Constants.REFERENCE_LIST_TXT:
-                                // prepare html-stuff for authors
-                                sb.append("[").append(au).append("] ").append(dataObj.getAuthor(aunr)).append(System.lineSeparator());
-                                break;
+                            // prepare html-stuff for authors
+                            sb.append("[").append(au).append("] ").append(dataObj.getAuthor(aunr)).append(System.lineSeparator());
+                            break;
                         case Constants.REFERENCE_LIST_HTML:
-                                // prepare html-stuff for authors
-                                sb.append("<p class=\"reflist\"><b>[<a name=\"fn_").append(au).append("\">").append(au).append("</a>]</b> ");
-                                sb.append(dataObj.getAuthor(aunr));
-                                sb.append("</p>").append(System.lineSeparator());
-                                break;
+                            // prepare html-stuff for authors
+                            sb.append("<p class=\"reflist\"><b>[<a name=\"fn_").append(au).append("\">").append(au).append("</a>]</b> ");
+                            sb.append(dataObj.getAuthor(aunr));
+                            sb.append("</p>").append(System.lineSeparator());
+                            break;
                     }
                 } catch (NumberFormatException e) {
-                    Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+                    Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
                 }
             }
         }
         return sb.toString();
     }
+
     /**
-     * 
+     *
      * @param exportDataString
      * @param filepath
-     * @return 
+     * @return
      */
     public static boolean writeExportData(String exportDataString, File filepath) {
         // yet everything is ok...
@@ -235,73 +249,70 @@ public class ExportTools {
         // create filewriter
         Writer exportfile = null;
         // check whether we have content at all
-        if (exportDataString!=null && !exportDataString.isEmpty()) {
+        if (exportDataString != null && !exportDataString.isEmpty()) {
             try {
                 // create output-file in UTF8-encoding
-                exportfile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filepath),"UTF8"));                
+                exportfile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filepath), "UTF8"));
                 // and try save content in UTF8-encoding to disk...
                 exportfile.write(exportDataString);
-            }
-            catch (UnsupportedEncodingException ex) {
+            } catch (UnsupportedEncodingException ex) {
                 try {
                     // create output-file in default-system-encoding
                     exportfile = new FileWriter(filepath);
                     // and save content to disk...
                     exportfile.write(exportDataString);
-                }
-                catch (IOException exep) {
+                } catch (IOException exep) {
                     // and change indicator
                     exportOk = false;
-                    Constants.zknlogger.log(Level.SEVERE,exep.getLocalizedMessage());
-                }
-                finally {
+                    Constants.zknlogger.log(Level.SEVERE, exep.getLocalizedMessage());
+                } finally {
                     try {
                         // finally, close filewriter
-                        if (exportfile!=null) exportfile.close();
-                    }
-                    catch (IOException ioex) {
+                        if (exportfile != null) {
+                            exportfile.close();
+                        }
+                    } catch (IOException ioex) {
                         // and change indicator
                         exportOk = false;
-                        Constants.zknlogger.log(Level.SEVERE,ioex.getLocalizedMessage());
+                        Constants.zknlogger.log(Level.SEVERE, ioex.getLocalizedMessage());
                     }
                 }
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 // and change indicator
                 exportOk = false;
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
-                Constants.zknlogger.log(Level.SEVERE,"Using following path: {0}", filepath.getAbsolutePath());
-            }
-            finally {
+                Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
+                Constants.zknlogger.log(Level.SEVERE, "Using following path: {0}", filepath.getAbsolutePath());
+            } finally {
                 try {
                     // finally, close filewriter
-                    if (exportfile!=null) exportfile.close();
-                }
-                catch (IOException ex) {
+                    if (exportfile != null) {
+                        exportfile.close();
+                    }
+                } catch (IOException ex) {
                     // and change indicator
                     exportOk = false;
-                    Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
+                    Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
                 }
             }
-        }
-        else {
+        } else {
             // and change indicator
             exportOk = false;
-            Constants.zknlogger.log(Level.SEVERE,"Error when exporting entries: no content available!");
+            Constants.zknlogger.log(Level.SEVERE, "Error when exporting entries: no content available!");
         }
         return exportOk;
     }
+
     /**
-     * 
+     *
      * @param dataObj
      * @param bibtexObj
      * @param exportentries
      * @param filepath
-     * @param resmap 
+     * @param resmap
      */
     public static void writeBibTexFile(Daten dataObj, BibTex bibtexObj, ArrayList<Object> exportentries, File filepath, org.jdesktop.application.ResourceMap resmap) {
         // check whether we have any bibtex-entries at all...
-        if (bibtexObj.getCount()>0) {
+        if (bibtexObj.getCount() > 0) {
             // this list will contain all found bibkeys within the authors
             // of the to be exported entries
             ArrayList<String> foundbibkeys = new ArrayList<>();
@@ -312,38 +323,38 @@ public class ExportTools {
                     // retrieve the author-index-numbers of each export-entry
                     int[] entryauthors = dataObj.getAuthorIndexNumbers(zettelnummer);
                     // check whether entry has any authors...
-                    if (entryauthors!=null && entryauthors.length>0) {
+                    if (entryauthors != null && entryauthors.length > 0) {
                         // iterate all author-index-numbers
                         for (int au : entryauthors) {
                             // try to retrieve the bibkey from each author
                             String bibkey = dataObj.getAuthorBibKey(au);
                             // if we have a valid bibkey that is not already in our list with the
                             // found bibkeys, add the bibkey to it...
-                            if (bibkey!=null && !bibkey.isEmpty() && !foundbibkeys.contains(bibkey)) {
+                            if (bibkey != null && !bibkey.isEmpty() && !foundbibkeys.contains(bibkey)) {
                                 foundbibkeys.add(bibkey);
                             }
                         }
                     }
-                }catch (NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     // do nothing here...
                 }
             }
             // check whether we have found any bibkeys at all...
-            if (foundbibkeys.size()>0) {
+            if (foundbibkeys.size() > 0) {
                 // get export-filepath as string
                 String orifile = filepath.toString();
                 // and copy whole filepath except file-extension, to a new string,
                 // setting the ".bib" extension instead
-                String exportbibtexfile = orifile.substring(0, orifile.lastIndexOf("."))+".bib";
+                String exportbibtexfile = orifile.substring(0, orifile.lastIndexOf(".")) + ".bib";
                 // set export-file-path and check whether file already exists. if yes, ask for
                 // overwriting
                 File exportbibfilepath = new File(exportbibtexfile);
                 // check whether exported bibtex-file aready exists
                 if (exportbibfilepath.exists()) {
                     // file exists, ask user to overwrite it...
-                    int optionDocExists = JOptionPane.showConfirmDialog(null, resmap.getString("askForOverwriteFileMsg","BibTex-",exportbibfilepath.getName()), resmap.getString("askForOverwriteFileTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    int optionDocExists = JOptionPane.showConfirmDialog(null, resmap.getString("askForOverwriteFileMsg", "BibTex-", exportbibfilepath.getName()), resmap.getString("askForOverwriteFileTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
                     // if the user does *not* choose to overwrite, quit...
-                    if (JOptionPane.NO_OPTION==optionDocExists) {
+                    if (JOptionPane.NO_OPTION == optionDocExists) {
                         return;
                     }
                 }
@@ -362,37 +373,40 @@ public class ExportTools {
                 }
                 // export all bibtex-entries
                 bibtexObj.exportBibtexEntries(exportbibfilepath);
-            }
-            else {
+            } else {
                 // and log info-message
-                Constants.zknlogger.log(Level.INFO,resmap.getString("noBibtexEntriesMsg"));
+                Constants.zknlogger.log(Level.INFO, resmap.getString("noBibtexEntriesMsg"));
             }
-        }
-        else {
+        } else {
             // retrieve filepath of attached file for the message-logging
             File caf = bibtexObj.getCurrentlyAttachedFile();
             // prepare default log-message. in case we have no attached file, use this string
             String cafstring = "<no attached file found>";
-            if (caf!=null) {
+            if (caf != null) {
                 // else use the filepath to the bibtex-file that had no vali entries
                 cafstring = caf.toString();
             }
             // and log info-message
-            Constants.zknlogger.log(Level.INFO,resmap.getString("noBibtexEntriesFoundMsg",cafstring));
+            Constants.zknlogger.log(Level.INFO, resmap.getString("noBibtexEntriesFoundMsg", cafstring));
         }
     }
+
     /**
-     * This method converts all footnote-tags ({@code [fn <number>]}) into the appropriate LaTex-cite-command,
-     * using the bibkeys of the referenced author-values (if they have any bibkeys).
+     * This method converts all footnote-tags ({@code [fn <number>]}) into the
+     * appropriate LaTex-cite-command, using the bibkeys of the referenced
+     * author-values (if they have any bibkeys).
      * <br><br>
-     * Each footnote that refers to an author-value with bibkey is converted like this:
+     * Each footnote that refers to an author-value with bibkey is converted
+     * like this:
      * <b>{@code \footcite{<bibkey>}}</b>
-     * 
+     *
      * @param dataObj
-     * @param content the entry's content, so the footnote-tags can be extracted and possible bibkey-values retrieved.
+     * @param content the entry's content, so the footnote-tags can be extracted
+     * and possible bibkey-values retrieved.
      * @param referenceAsFootnote
-     * @return the content as string value, with all footnote-tags that reference to author-values with bibkeys converted
-     * to the LaTex-cite-command
+     * @return the content as string value, with all footnote-tags that
+     * reference to author-values with bibkeys converted to the
+     * LaTex-cite-command
      */
     public static String createLatexFootnotes(Daten dataObj, String content, boolean referenceAsFootnote) {
         // if the reference should be in a footenote, create this string now
@@ -450,9 +464,9 @@ public class ExportTools {
                         }
                     }
                     // now that we have the bibkey, replace footnote with cite-tag
-                    content = content.substring(0, start.get(i)) + footRefOpen + 
-                            pagenr + bibkey + footRefClose + 
-                            content.substring(end.get(i));
+                    content = content.substring(0, start.get(i)) + footRefOpen
+                            + pagenr + bibkey + footRefClose
+                            + content.substring(end.get(i));
                 }
             }
         } catch (PatternSyntaxException | IndexOutOfBoundsException ex) {
@@ -464,12 +478,12 @@ public class ExportTools {
         // author value contains a bibkey.
         return content;
     }
-    
+
     public static boolean isExportSettingsOk(JFrame frame, Settings settings, int type) {
         // when the user wants to export into PDF, open a new dialog where the user
         // can make page settings and font-sizes.
-        if (Constants.EXP_TYPE_TEX==type || Constants.EXP_TYPE_DESKTOP_TEX==type) {
-            latexExportSettingsDlg = new CTexExportSettings(frame,settings);
+        if (Constants.EXP_TYPE_TEX == type || Constants.EXP_TYPE_DESKTOP_TEX == type) {
+            latexExportSettingsDlg = new CTexExportSettings(frame, settings);
             // center window
             latexExportSettingsDlg.setLocationRelativeTo(frame);
             // show window
