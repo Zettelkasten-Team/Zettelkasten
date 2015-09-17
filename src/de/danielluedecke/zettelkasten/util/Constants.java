@@ -666,9 +666,6 @@ public class Constants {
      */
     public static final int TYPE_XML = 5;  // xml-files
 
-    public static final int PAGE_TYPE_UNKOWN = 0;
-    public static final int PAGE_TYPE_WORDPRESS = 1;
-
     /**
      * Constants that show which parts the user wants to export. we use binary
      * shift options here, so we can OR the values.
