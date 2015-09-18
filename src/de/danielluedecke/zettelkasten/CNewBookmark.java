@@ -30,7 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 package de.danielluedecke.zettelkasten;
 
 import de.danielluedecke.zettelkasten.database.Bookmarks;
@@ -50,7 +49,7 @@ import org.jdesktop.application.Action;
 
 /**
  *
- * @author  danielludecke
+ * @author danielludecke
  */
 public class CNewBookmark extends javax.swing.JDialog {
 
@@ -62,35 +61,35 @@ public class CNewBookmark extends javax.swing.JDialog {
      * Indicates whether the dialog was cancelled or not
      */
     private boolean cancelled = false;
-    
+
     private final int[] entrynumbers;
     private final boolean editbookmark;
-    
+
     /**
      * get the strings for file descriptions from the resource map
      */
-    private final org.jdesktop.application.ResourceMap resourceMap = 
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(CNewBookmark.class);
-    
+    private final org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(CNewBookmark.class);
+
     /**
-     * 
+     *
      * @param parent
      * @param bm
      * @param nrs
      * @param edit
-     * @param settingsObj 
+     * @param settingsObj
      */
     public CNewBookmark(java.awt.Frame parent, Bookmarks bm, int[] nrs, boolean edit, Settings settingsObj) {
         super(parent);
         initComponents();
         // set application icon
         setIconImage(Constants.zknicon.getImage());
-        
+
         bookmarksObj = bm;
         entrynumbers = nrs;
         editbookmark = edit;
-        
+
         // init combobox with all existing categories
         initComboBox();
         initListeners();
@@ -106,7 +105,9 @@ public class CNewBookmark extends javax.swing.JDialog {
             // get category name
             String catname = bookmarksObj.getBookmarkCategoryAsString(pos);
             // and select it, if available
-            if (catname!=null) jComboBoxCats.setSelectedItem(catname);
+            if (catname != null) {
+                jComboBoxCats.setSelectedItem(catname);
+            }
             // get the comment
             String comment = bookmarksObj.getComment(pos);
             // replace br-tags with newlines
@@ -120,12 +121,12 @@ public class CNewBookmark extends javax.swing.JDialog {
         }
     }
 
-    
     private void setupSeaGlassStyle() {
-        jButtonApply.putClientProperty("JComponent.sizeVariant","small");
-        jButtonCancel.putClientProperty("JComponent.sizeVariant","small");
-        jButtonAddCat.putClientProperty("JComponent.sizeVariant","small");
+        jButtonApply.putClientProperty("JComponent.sizeVariant", "small");
+        jButtonCancel.putClientProperty("JComponent.sizeVariant", "small");
+        jButtonAddCat.putClientProperty("JComponent.sizeVariant", "small");
     }
+
     private void initBorders(Settings settingsObj) {
         /*
          * Constructor for Matte Border
@@ -133,8 +134,7 @@ public class CNewBookmark extends javax.swing.JDialog {
          */
         jScrollPane1.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
     }
-    
-    
+
     private void initListeners() {
         // these codelines add an escape-listener to the dialog. so, when the user
         // presses the escape-key, the same action is performed as if the user
@@ -146,53 +146,74 @@ public class CNewBookmark extends javax.swing.JDialog {
                 cancelWindow();
             }
         };
-        getRootPane().registerKeyboardAction(cancelAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);        
+        getRootPane().registerKeyboardAction(cancelAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
         // if the document is ever edited, assume that it needs to be saved
         // so we add some document listeners here
         jTextFieldNewCat.getDocument().addDocumentListener(new DocumentListener() {
-            @Override public void changedUpdate(DocumentEvent e) { changeUpdateState(); }
-            @Override public void insertUpdate(DocumentEvent e) { changeUpdateState(); }
-            @Override public void removeUpdate(DocumentEvent e) { changeUpdateState(); }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                changeUpdateState();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                changeUpdateState();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                changeUpdateState();
+            }
         });
         // if the document is ever edited, assume that it needs to be saved
         // so we add some document listeners here
         jTextAreaComment.getDocument().addDocumentListener(new DocumentListener() {
-            @Override public void changedUpdate(DocumentEvent e) { changeModifiedState(); }
-            @Override public void insertUpdate(DocumentEvent e) { changeModifiedState(); }
-            @Override public void removeUpdate(DocumentEvent e) { changeModifiedState(); }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                changeModifiedState();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                changeModifiedState();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                changeModifiedState();
+            }
         });
         jTextFieldNewCat.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override public void keyReleased(java.awt.event.KeyEvent evt) {
-                if (KeyEvent.VK_ENTER==evt.getKeyCode()) addCat();
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                if (KeyEvent.VK_ENTER == evt.getKeyCode()) {
+                    addCat();
+                }
             }
         });
     }
 
-
     /**
-     * This method checks whether we have changes to the textfield. if so, and we have text
-     * (i.e. textfield is not empty), enable the button (action).
+     * This method checks whether we have changes to the textfield. if so, and
+     * we have text (i.e. textfield is not empty), enable the button (action).
      */
     private void changeUpdateState() {
-        if (jTextFieldNewCat.getText().isEmpty()) setTextUpdated(false);
-        else setTextUpdated(true);
+        setTextUpdated(!jTextFieldNewCat.getText().isEmpty());
     }
-    
-    
+
     /**
-     * This method indicates whether we have changes that the user can apply. when no category
-     * is selected, the apply-button should not be activated/enabled.
+     * This method indicates whether we have changes that the user can apply.
+     * when no category is selected, the apply-button should not be
+     * activated/enabled.
      */
     private void changeModifiedState() {
-        if (-1==jComboBoxCats.getSelectedIndex()) setModified(false);
-        else setModified(true);
+        setModified(jComboBoxCats.getSelectedIndex() != -1);
     }
-    
-    
+
     /**
-     * Inits or updates the combobox with all available bookmark-categories. when a new
-     * category is added, it is selected and the modified state is changed so the apply-button
-     * becomes enabled.
+     * Inits or updates the combobox with all available bookmark-categories.
+     * when a new category is added, it is selected and the modified state is
+     * changed so the apply-button becomes enabled.
      */
     private void initComboBox() {
         // clear combobox
@@ -200,53 +221,52 @@ public class CNewBookmark extends javax.swing.JDialog {
         // get sorted categories
         String[] cats = bookmarksObj.getSortedCategories();
         // if we have any categories, go on...
-        if ((cats!=null)&&(cats.length>0)) {
+        if ((cats != null) && (cats.length > 0)) {
             for (String cat : cats) {
                 jComboBoxCats.addItem(cat);
             }
         }
         // add action listener to combo box
         jComboBoxCats.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 setModified(true);
             }
         });
         // select first item
-        if (jComboBoxCats.getItemCount()>0) jComboBoxCats.setSelectedIndex(0);
+        if (jComboBoxCats.getItemCount() > 0) {
+            jComboBoxCats.setSelectedIndex(0);
+        }
     }
-    
-    
+
     /**
      * When the user presses the cancel button, no update needed, close window
      */
     @Action
     public void cancelWindow() {
-        cancelled=true;
+        cancelled = true;
         closeWindow();
     }
-    
-    
+
     /**
-     * Occurs when the user closes the window or presses the
-     * ok button. the settings-file is then saved and the window
-     * disposed.
+     * Occurs when the user closes the window or presses the ok button. the
+     * settings-file is then saved and the window disposed.
      */
     private void closeWindow() {
         dispose();
         setVisible(false);
     }
 
-    
     /**
-     * This method adds a new category to the bookmark-categories. the category-description
-     * is retrieved from the textfield.
+     * This method adds a new category to the bookmark-categories. the
+     * category-description is retrieved from the textfield.
      */
     @Action(enabledProperty = "textUpdated")
     public void addCat() {
         // get text
         String text = jTextFieldNewCat.getText();
         // check whether category already exists
-        if (-1==bookmarksObj.getCategoryPosition(text)) {
+        if (-1 == bookmarksObj.getCategoryPosition(text)) {
             // if not, add it to bookmark-data
             bookmarksObj.addCategory(text);
             // and update combobox
@@ -255,17 +275,19 @@ public class CNewBookmark extends javax.swing.JDialog {
             jComboBoxCats.setSelectedItem(text);
             // reset textfield
             jTextFieldNewCat.setText("");
-        }
-        else {
+        } else {
             // category-name already existed, so desktop was not added...
-            JOptionPane.showMessageDialog(null,resourceMap.getString("errCatExistsMsg"),resourceMap.getString("errCatExistsTitle"),JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null, 
+                    resourceMap.getString("errCatExistsMsg"), 
+                    resourceMap.getString("errCatExistsTitle"), 
+                    JOptionPane.PLAIN_MESSAGE);
         }
     }
-    
-    
+
     /**
-     * This method applies the changes made from the user. then, if we have edited a bookmark,
-     * its changes are saved. if we have a new bookmark, it is added to the bookmark-data-file.
+     * This method applies the changes made from the user. then, if we have
+     * edited a bookmark, its changes are saved. if we have a new bookmark, it
+     * is added to the bookmark-data-file.
      */
     @Action(enabledProperty = "modified")
     public void applyChanges() {
@@ -280,42 +302,48 @@ public class CNewBookmark extends javax.swing.JDialog {
         // we replace "System.lineSeparator()" with "[br]", but only when
         // a "\n" is replaced by [br]. So, in case the system's line-separator also contains a
         // "\r", it is replaced by nothing, to clean the content.
-        if (System.lineSeparator().contains("\r")) comment = comment.replace("\r", "");
-        comment = comment.replace("\n","[br]");
+        if (System.lineSeparator().contains("\r")) {
+            comment = comment.replace("\r", "");
+        }
+        comment = comment.replace("\n", "[br]");
         // get the category
         String cat = jComboBoxCats.getSelectedItem().toString();
         // add or change bookmark
         if (editbookmark) {
             // when changing a bookmark, we assume that we only have one bookmark
             bookmarksObj.changeBookmark(entrynumbers[0], cat, comment);
-        }
-        else {
+        } else {
             // whenn adding bookmarks, one or more bookmarks might be passed as parameter,
             // e.g. if we get several entries from the search results window...
-            for (int bm : entrynumbers) bookmarksObj.addBookmark(bm, cat, comment);
+            for (int bm : entrynumbers) {
+                bookmarksObj.addBookmark(bm, cat, comment);
+            }
         }
         // finally, close window
         closeWindow();
     }
 
-    
     /**
-     * This variable indicates whether the displayed entry is already bookmarked,
-     * so we can en- or disable the bookmark-action.
+     * This variable indicates whether the displayed entry is already
+     * bookmarked, so we can en- or disable the bookmark-action.
      */
     private boolean textUpdated = false;
+
     public boolean isTextUpdated() {
         return textUpdated;
     }
+
     public void setTextUpdated(boolean b) {
         boolean old = isTextUpdated();
         this.textUpdated = b;
         firePropertyChange("textUpdated", old, isTextUpdated());
     }
     /**
-     * This variable indicates whether changes have been made that should be saved....
+     * This variable indicates whether changes have been made that should be
+     * saved....
      */
     private boolean modified = false;
+
     public boolean isModified() {
         return modified;
     }
@@ -325,9 +353,10 @@ public class CNewBookmark extends javax.swing.JDialog {
         this.modified = b;
         firePropertyChange("modified", old, isModified());
     }
+
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean isCancelled() {
         return cancelled;
