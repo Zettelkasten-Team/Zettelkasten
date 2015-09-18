@@ -632,6 +632,20 @@ public class Settings {
             }
         }
         
+        // init standard font. on mac, it's helvetica
+        String font = "Helvetica";
+        // on older windows arial
+        if (System.getProperty("os.name").startsWith("Windows")) {
+            font = "Arial";
+            // on new windows Calibri
+            if (System.getProperty("os.name").startsWith("Windows 7") || System.getProperty("os.name").startsWith("Windows 8")) {
+                font = "Calibri";
+            }
+        } // and on linux we take Nimbus Sans L Regular
+        else if (System.getProperty("os.name").startsWith("Linux")) {
+            font = "Nimbus Sans L Regular";
+        }
+        
         String pandoc = "pandoc";
         if (PlatformUtil.isMacOS()) {
             pandoc = "/usr/local/bin/pandoc";
@@ -750,58 +764,19 @@ public class Settings {
         genericElementInit(SETTING_EXPORTPARTS, String.valueOf(Constants.EXPORT_TITLE | Constants.EXPORT_CONTENT | Constants.EXPORT_AUTHOR | Constants.EXPORT_REMARKS));
         genericElementInit(SETTING_EXPORTFORMAT, String.valueOf(Constants.EXP_TYPE_DESKTOP_DOCX));
         genericElementInit(SETTING_DESKTOPEXPORTFORMAT, String.valueOf(Constants.EXP_TYPE_DESKTOP_DOCX));
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_DESKTOPCOMMENTEXPORT)) {
-            // create element
-            Element el = new Element(SETTING_DESKTOPCOMMENTEXPORT);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_DESKTOPDISPLAYITEMS)) {
-            // create element
-            Element el = new Element(SETTING_DESKTOPDISPLAYITEMS);
-            settingsFile.getRootElement().addContent(el);
-            // combine fields which should be initiated when opening the desktop dialog
-            int where = Constants.DESKTOP_SHOW_REMARKS | Constants.DESKTOP_SHOW_AUTHORS;
-            el.setText(String.valueOf(where));
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_SEARCHWHAT)) {
-            // create element
-            Element el = new Element(SETTING_SEARCHWHAT);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_REPLACEWHAT)) {
-            // create element
-            Element el = new Element(SETTING_REPLACEWHAT);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_SEARCHOPTION)) {
-            // create element
-            Element el = new Element(SETTING_SEARCHOPTION);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_REPLACEOPTION)) {
-            // create element
-            Element el = new Element(SETTING_REPLACEOPTION);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("0");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_LASTUSEDBIBTEXFILE)) {
-            // create element
-            Element el = new Element(SETTING_LASTUSEDBIBTEXFILE);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("");
-        }
-
+        genericElementInit(SETTING_DESKTOPCOMMENTEXPORT, "0");
+        genericElementInit(SETTING_DESKTOPDISPLAYITEMS, String.valueOf(Constants.DESKTOP_SHOW_REMARKS | Constants.DESKTOP_SHOW_AUTHORS));
+        genericElementInit(SETTING_SEARCHWHAT, "");
+        genericElementInit(SETTING_REPLACEWHAT, "");
+        genericElementInit(SETTING_SEARCHOPTION, "0");
+        genericElementInit(SETTING_REPLACEOPTION, "0");
+        genericElementInit(SETTING_LASTUSEDBIBTEXFILE, "");
+        genericElementInit(SETTING_HIGHLIGHTBACKGROUNDCOLOR, "ffff66");
+        genericElementInit(SETTING_HIGHLIGHTKEYWORDBACKGROUNDCOLOR, "ffff66");
+        genericElementInit(SETTING_HIGHLIGHTLIVESEARCHBACKGROUNDCOLOR, "ffff66");
+        genericElementInit(SETTING_TABLEFONT, font);
+        genericElementInit(SETTING_DESKTOPOUTLINEFONT, font);
+        
         if (null == settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTSEARCHSTYLE)) {
             // create element for font
             Element el = new Element(SETTING_HIGHLIGHTSEARCHSTYLE);
@@ -830,56 +805,6 @@ public class Settings {
             el.setAttribute("style", "normal");
             el.setAttribute("weight", "normal");
             el.setAttribute("color", "0000ff");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTBACKGROUNDCOLOR)) {
-            // create element
-            Element el = new Element(SETTING_HIGHLIGHTBACKGROUNDCOLOR);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("ffff66");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTKEYWORDBACKGROUNDCOLOR)) {
-            // create element
-            Element el = new Element(SETTING_HIGHLIGHTKEYWORDBACKGROUNDCOLOR);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("ffff66");
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTLIVESEARCHBACKGROUNDCOLOR)) {
-            // create element
-            Element el = new Element(SETTING_HIGHLIGHTLIVESEARCHBACKGROUNDCOLOR);
-            settingsFile.getRootElement().addContent(el);
-            el.setText("ffff66");
-        }
-
-        // init standard font. on mac, it's helvetica
-        String font = "Helvetica";
-        // on older windows arial
-        if (System.getProperty("os.name").startsWith("Windows")) {
-            font = "Arial";
-            // on new windows Calibri
-            if (System.getProperty("os.name").startsWith("Windows 7") || System.getProperty("os.name").startsWith("Windows 8")) {
-                font = "Calibri";
-            }
-
-        } // and on linux we take Nimbus Sans L Regular
-        else if (System.getProperty("os.name").startsWith("Linux")) {
-            font = "Nimbus Sans L Regular";
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_TABLEFONT)) {
-            // create element for font
-            Element el = new Element(SETTING_TABLEFONT);
-            settingsFile.getRootElement().addContent(el);
-            el.setText(font);
-        }
-
-        if (null == settingsFile.getRootElement().getChild(SETTING_DESKTOPOUTLINEFONT)) {
-            // create element for font
-            Element el = new Element(SETTING_DESKTOPOUTLINEFONT);
-            settingsFile.getRootElement().addContent(el);
-            el.setText(font);
         }
 
         if (null == settingsFile.getRootElement().getChild(SETTING_MAINFONT)) {
@@ -1681,16 +1606,7 @@ public class Settings {
      * selected or not.
      */
     public int getSearchWhere() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHWHERE);
-        int retval = Constants.SEARCH_CONTENT | Constants.SEARCH_TITLE | Constants.SEARCH_KEYWORDS | Constants.SEARCH_REMARKS;
-        if (el != null) {
-            try {
-                retval = Integer.parseInt(el.getText());
-            } catch (NumberFormatException e) {
-                return Constants.SEARCH_CONTENT | Constants.SEARCH_TITLE | Constants.SEARCH_KEYWORDS | Constants.SEARCH_REMARKS;
-            }
-        }
-        return retval;
+        return genericIntGetter(SETTING_SEARCHWHERE, Constants.SEARCH_CONTENT | Constants.SEARCH_TITLE | Constants.SEARCH_KEYWORDS | Constants.SEARCH_REMARKS);
     }
 
     /**
@@ -1702,12 +1618,7 @@ public class Settings {
      * selected or not.
      */
     public void setSearchWhere(int where) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHWHERE);
-        if (null == el) {
-            el = new Element(SETTING_SEARCHWHERE);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(String.valueOf(where));
+        genericIntSetter(SETTING_SEARCHWHERE, where);
     }
 
     /**
@@ -1719,16 +1630,7 @@ public class Settings {
      * selected or not.
      */
     public int getReplaceWhere() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_REPLACEWHERE);
-        int retval = Constants.SEARCH_CONTENT | Constants.SEARCH_TITLE | Constants.SEARCH_KEYWORDS | Constants.SEARCH_REMARKS;
-        if (el != null) {
-            try {
-                retval = Integer.parseInt(el.getText());
-            } catch (NumberFormatException e) {
-                return Constants.SEARCH_CONTENT | Constants.SEARCH_TITLE | Constants.SEARCH_KEYWORDS | Constants.SEARCH_REMARKS;
-            }
-        }
-        return retval;
+        return genericIntGetter(SETTING_REPLACEWHERE, Constants.SEARCH_CONTENT | Constants.SEARCH_TITLE | Constants.SEARCH_KEYWORDS | Constants.SEARCH_REMARKS);
     }
 
     /**
@@ -1740,12 +1642,7 @@ public class Settings {
      * selected or not.
      */
     public void setReplaceWhere(int where) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_REPLACEWHERE);
-        if (null == el) {
-            el = new Element(SETTING_REPLACEWHERE);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(String.valueOf(where));
+        genericIntSetter(SETTING_REPLACEWHERE, where);
     }
 
     /**
@@ -1757,16 +1654,7 @@ public class Settings {
      * selected or not.
      */
     public int getDesktopDisplayItems() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_DESKTOPDISPLAYITEMS);
-        int retval = Constants.DESKTOP_SHOW_REMARKS | Constants.DESKTOP_SHOW_AUTHORS;
-        if (el != null) {
-            try {
-                retval = Integer.parseInt(el.getText());
-            } catch (NumberFormatException e) {
-                return Constants.DESKTOP_SHOW_REMARKS | Constants.DESKTOP_SHOW_AUTHORS;
-            }
-        }
-        return retval;
+        return genericIntGetter(SETTING_DESKTOPDISPLAYITEMS, Constants.DESKTOP_SHOW_REMARKS | Constants.DESKTOP_SHOW_AUTHORS);
     }
 
     /**
@@ -1778,12 +1666,7 @@ public class Settings {
      * selected or not.
      */
     public void setDesktopDisplayItems(int items) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_DESKTOPDISPLAYITEMS);
-        if (null == el) {
-            el = new Element(SETTING_DESKTOPDISPLAYITEMS);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(String.valueOf(items));
+        genericIntSetter(SETTING_DESKTOPDISPLAYITEMS, items);
     }
 
     /**
@@ -1795,16 +1678,7 @@ public class Settings {
      * selected or not.
      */
     public int getSearchOptions() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHOPTION);
-        int retval = 0;
-        if (el != null) {
-            try {
-                retval = Integer.parseInt(el.getText());
-            } catch (NumberFormatException e) {
-                return 0;
-            }
-        }
-        return retval;
+        return genericIntGetter(SETTING_SEARCHOPTION, 0);
     }
 
     /**
@@ -1816,12 +1690,7 @@ public class Settings {
      * selected or not.
      */
     public void setSearchOptions(int nr) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHOPTION);
-        if (null == el) {
-            el = new Element(SETTING_SEARCHOPTION);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(String.valueOf(nr));
+        genericIntSetter(SETTING_SEARCHOPTION, nr);
     }
 
     /**
@@ -1833,16 +1702,7 @@ public class Settings {
      * selected or not.
      */
     public int getExportParts() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_EXPORTPARTS);
-        int retval = 0;
-        if (el != null) {
-            try {
-                retval = Integer.parseInt(el.getText());
-            } catch (NumberFormatException e) {
-                return 0;
-            }
-        }
-        return retval;
+        return genericIntGetter(SETTING_EXPORTPARTS, 0);
     }
 
     /**
@@ -1854,12 +1714,7 @@ public class Settings {
      * selected or not.
      */
     public void setExportParts(int val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_EXPORTPARTS);
-        if (null == el) {
-            el = new Element(SETTING_EXPORTPARTS);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(String.valueOf(val));
+        genericIntSetter(SETTING_EXPORTPARTS, val);
     }
 
     /**
@@ -1867,16 +1722,7 @@ public class Settings {
      * selected by the user.
      */
     public int getExportFormat() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_EXPORTFORMAT);
-        int retval = 0;
-        if (el != null) {
-            try {
-                retval = Integer.parseInt(el.getText());
-            } catch (NumberFormatException e) {
-                return 0;
-            }
-        }
-        return retval;
+        return genericIntGetter(SETTING_EXPORTFORMAT, 0);
     }
 
     /**
@@ -1884,12 +1730,7 @@ public class Settings {
      * selected by the user.
      */
     public void setExportFormat(int val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_EXPORTFORMAT);
-        if (null == el) {
-            el = new Element(SETTING_EXPORTFORMAT);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(String.valueOf(val));
+        genericIntSetter(SETTING_EXPORTFORMAT, val);
     }
 
     /**
@@ -1897,16 +1738,7 @@ public class Settings {
      * selected by the user.
      */
     public int getDesktopExportFormat() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_DESKTOPEXPORTFORMAT);
-        int retval = 0;
-        if (el != null) {
-            try {
-                retval = Integer.parseInt(el.getText());
-            } catch (NumberFormatException e) {
-                return 0;
-            }
-        }
-        return retval;
+        return genericIntGetter(SETTING_DESKTOPEXPORTFORMAT, 0);
     }
 
     /**
@@ -1914,12 +1746,7 @@ public class Settings {
      * selected by the user.
      */
     public void setDesktopExportFormat(int val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_DESKTOPEXPORTFORMAT);
-        if (null == el) {
-            el = new Element(SETTING_DESKTOPEXPORTFORMAT);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(String.valueOf(val));
+        genericIntSetter(SETTING_DESKTOPEXPORTFORMAT, val);
     }
 
     /**
@@ -1931,16 +1758,7 @@ public class Settings {
      * {@code EXP_COMMENT_NO}<br> - {@code EXP_COMMENT_ONLY}<br>
      */
     public int getDesktopCommentExport() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_DESKTOPCOMMENTEXPORT);
-        int retval = 0;
-        if (el != null) {
-            try {
-                retval = Integer.parseInt(el.getText());
-            } catch (NumberFormatException e) {
-                return 0;
-            }
-        }
-        return retval;
+        return genericIntGetter(SETTING_DESKTOPCOMMENTEXPORT, 0);
     }
 
     /**
@@ -1952,12 +1770,7 @@ public class Settings {
      * {@code EXP_COMMENT_ONLY}<br>
      */
     public void setDesktopCommentExport(int val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_DESKTOPCOMMENTEXPORT);
-        if (null == el) {
-            el = new Element(SETTING_DESKTOPCOMMENTEXPORT);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(String.valueOf(val));
+        genericIntSetter(SETTING_DESKTOPCOMMENTEXPORT, val);
     }
 
     /**
@@ -1969,16 +1782,7 @@ public class Settings {
      * selected or not.
      */
     public int getReplaceOptions() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_REPLACEOPTION);
-        int retval = 0;
-        if (el != null) {
-            try {
-                retval = Integer.parseInt(el.getText());
-            } catch (NumberFormatException e) {
-                return 0;
-            }
-        }
-        return retval;
+        return genericIntGetter(SETTING_REPLACEOPTION, 0);
     }
 
     /**
@@ -1990,12 +1794,7 @@ public class Settings {
      * selected or not.
      */
     public void setReplaceOptions(int nr) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_REPLACEOPTION);
-        if (null == el) {
-            el = new Element(SETTING_REPLACEOPTION);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(String.valueOf(nr));
+        genericIntSetter(SETTING_REPLACEOPTION, nr);
     }
 
     /**
@@ -2005,12 +1804,7 @@ public class Settings {
      * @return the last used search term for the find dialog
      */
     public String getSearchWhat() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHWHAT);
-        String retval = "";
-        if (el != null) {
-            retval = el.getText();
-        }
-        return retval;
+        return genericStringGetter(SETTING_SEARCHWHAT);
     }
 
     /**
@@ -2020,12 +1814,7 @@ public class Settings {
      * @param searchterm the last used search term for the find dialog
      */
     public void setSearchWhat(String searchterm) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHWHAT);
-        if (null == el) {
-            el = new Element(SETTING_SEARCHWHAT);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(searchterm);
+        genericStringSetter(SETTING_SEARCHWHAT, searchterm);
     }
 
     /**
@@ -2035,12 +1824,7 @@ public class Settings {
      * @return the last used replaceterm for the replace dialog
      */
     public String getReplaceWhat() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_REPLACEWHAT);
-        String retval = "";
-        if (el != null) {
-            retval = el.getText();
-        }
-        return retval;
+        return genericStringGetter(SETTING_REPLACEWHAT);
     }
 
     /**
@@ -2050,12 +1834,7 @@ public class Settings {
      * @param replaceterm the last used replace term for the replace dialog
      */
     public void setReplaceWhat(String replaceterm) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_REPLACEWHAT);
-        if (null == el) {
-            el = new Element(SETTING_REPLACEWHAT);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(replaceterm);
+        genericStringSetter(SETTING_REPLACEWHAT, replaceterm);
     }
 
     /**
@@ -2104,12 +1883,7 @@ public class Settings {
      * @return
      */
     public String getLogKeywordlist() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LOGKEYWORDLIST);
-        String retval = "";
-        if (el != null) {
-            retval = el.getText();
-        }
-        return retval;
+        return genericStringGetter(SETTING_LOGKEYWORDLIST);
     }
 
     /**
@@ -2119,12 +1893,7 @@ public class Settings {
      * @param path
      */
     public void setLogKeywordlist(String path) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LOGKEYWORDLIST);
-        if (null == el) {
-            el = new Element(SETTING_LOGKEYWORDLIST);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(path);
+        genericStringSetter(SETTING_LOGKEYWORDLIST, path);
     }
 
     /**
@@ -2133,12 +1902,7 @@ public class Settings {
      * @return the string for the look'n'feel's classname
      */
     public String getLookAndFeel() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LAF);
-        String retval = "";
-        if (el != null) {
-            retval = el.getText();
-        }
-        return retval;
+        return genericStringGetter(SETTING_LAF);
     }
 
     /**
@@ -2148,12 +1912,7 @@ public class Settings {
      * @param laf (the look'n'feel's classname)
      */
     public void setLookAndFeel(String laf) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LAF);
-        if (null == el) {
-            el = new Element(SETTING_LAF);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(laf);
+        genericStringSetter(SETTING_LAF, laf);
     }
 
     /**
@@ -2784,11 +2543,7 @@ public class Settings {
      * {@code false} if only activated entries should be added to it.
      */
     public boolean getAddAllToHistory() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_ADDALLTOHISTORY);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_ADDALLTOHISTORY);
     }
 
     /**
@@ -2799,12 +2554,7 @@ public class Settings {
      * {@code false} if only activated entries should be added to it.
      */
     public void setAddAllToHistory(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_ADDALLTOHISTORY);
-        if (null == el) {
-            el = new Element(SETTING_ADDALLTOHISTORY);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_ADDALLTOHISTORY, val);
     }
 
     /**
@@ -6087,5 +5837,40 @@ public class Settings {
             settingsFile.getRootElement().addContent(el);
         }
         el.setText((val) ? "1" : "0");
+    }
+    private int genericIntGetter(String key, int defaultValue) {
+        Element el = settingsFile.getRootElement().getChild(key);
+        if (el != null) {
+            try {
+                return Integer.parseInt(el.getText());
+            } catch (NumberFormatException e) {
+                return defaultValue;
+            }
+        }
+        return defaultValue;
+    }
+    private void genericIntSetter(String key, int val) {
+        Element el = settingsFile.getRootElement().getChild(key);
+        if (null == el) {
+            el = new Element(key);
+            settingsFile.getRootElement().addContent(el);
+        }
+        el.setText(String.valueOf(val));
+    }
+    private String genericStringGetter(String key) {
+        Element el = settingsFile.getRootElement().getChild(key);
+        String retval = "";
+        if (el != null) {
+            retval = el.getText();
+        }
+        return retval;
+    }
+    private void genericStringSetter(String key, String val) {
+        Element el = settingsFile.getRootElement().getChild(key);
+        if (null == el) {
+            el = new Element(key);
+            settingsFile.getRootElement().addContent(el);
+        }
+        el.setText(val);
     }
 }
