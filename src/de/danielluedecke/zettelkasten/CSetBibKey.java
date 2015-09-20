@@ -383,7 +383,7 @@ public class CSetBibKey extends javax.swing.JDialog {
         // if we haven't already stored the current complete table data, do this now
         if (null==linkedtablelist) {
             // create new instance of list
-            linkedtablelist = new LinkedList<Object[]>();
+            linkedtablelist = new LinkedList<>();
             // go through all table-data
             for (int cnt=0; cnt<dtm.getRowCount(); cnt++) {
                 // init the object-variable
@@ -411,7 +411,7 @@ public class CSetBibKey extends javax.swing.JDialog {
      */
     private void initTable() {
         // create new table sorter
-        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>();
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>();
         // tell tgis jtable that it has an own sorter
         jTablePreview.setRowSorter(sorter);
         // and tell the sorter, which table model to sort.
@@ -523,16 +523,7 @@ public class CSetBibKey extends javax.swing.JDialog {
                             }
                         }
                     }
-                    catch (ClassCastException ex) {
-                        Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-                    }
-                    catch (NullPointerException ex) {
-                        Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-                    }
-                    catch (UnsupportedOperationException ex) {
-                        Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-                    }
-                    catch (IllegalStateException ex) {
+                    catch (ClassCastException | NullPointerException | UnsupportedOperationException | IllegalStateException ex) {
                         Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
                     }
                 }

@@ -30,8 +30,7 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
-package de.danielluedecke.zettelkasten.database; 
+package de.danielluedecke.zettelkasten.database;
 
 import bibtex.dom.BibtexAbstractValue;
 import bibtex.dom.BibtexEntry;
@@ -73,12 +72,14 @@ import javax.swing.JOptionPane;
  * With this class, you can then retrieve single entries, retrieve bibtex entries (i.e. author
  * values) in a certain citation style etc.
  * <br><br>
- * This class is mainly used for importing literatur values from a bibtex file (see <b>CImportBibTex</b>)
- * or changing bibkey values from entry's author values (see <b>CSetBibKey</b>).
+ * This class is mainly used for importing literatur values from a bibtex file (see
+ * <b>CImportBibTex</b>) or changing bibkey values from entry's author values (see
+ * <b>CSetBibKey</b>).
  *
  * @author danielludecke
  */
 public class BibTex {
+
     /**
      * A reference to the settings-class (CSettings)
      */
@@ -107,23 +108,23 @@ public class BibTex {
     private File currentlyattachedfile = null;
     /**
      * Stores the <b>general</b> citation style which is used as Zettelkasten default.<br><br>
-     * Used when the user requests a formatted bibtex entry
-     * via {@link #getFormattedEntryFromAttachedFile(int) getFormattedEntryFromAttachedFile()}.
-     * The bibtex entry (i.e. author value) is formatted according to the selected citation style.
+     * Used when the user requests a formatted bibtex entry via
+     * {@link #getFormattedEntryFromAttachedFile(int) getFormattedEntryFromAttachedFile()}. The
+     * bibtex entry (i.e. author value) is formatted according to the selected citation style.
      */
     private final List<Map<String, String>> importtypes = new ArrayList<>();
     /**
      * Stores the <b>CBE</b> citation style.<br><br>
-     * Used when the user requests a formatted bibtex entry
-     * via {@link #getFormattedEntryFromAttachedFile(int) getFormattedEntryFromAttachedFile()}.
-     * The bibtex entry (i.e. author value) is formatted according to the selected citation style.
+     * Used when the user requests a formatted bibtex entry via
+     * {@link #getFormattedEntryFromAttachedFile(int) getFormattedEntryFromAttachedFile()}. The
+     * bibtex entry (i.e. author value) is formatted according to the selected citation style.
      */
     private final List<Map<String, String>> importtypesCBE = new ArrayList<>();
     /**
      * Stores the <b>APA</b> citation style.<br><br>
-     * Used when the user requests a formatted bibtex entry
-     * via {@link #getFormattedEntryFromAttachedFile(int) getFormattedEntryFromAttachedFile()}.
-     * The bibtex entry (i.e. author value) is formatted according to the selected citation style.
+     * Used when the user requests a formatted bibtex entry via
+     * {@link #getFormattedEntryFromAttachedFile(int) getFormattedEntryFromAttachedFile()}. The
+     * bibtex entry (i.e. author value) is formatted according to the selected citation style.
      */
     private final List<Map<String, String>> importtypesAPA = new ArrayList<>();
     /**
@@ -139,9 +140,9 @@ public class BibTex {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private final static org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(ZettelkastenView.class);
+    private final static org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(ZettelkastenView.class);
 
     public BibTex(ZettelkastenView zkn, Settings s) {
         zknframe = zkn;
@@ -150,10 +151,10 @@ public class BibTex {
         initStyles();
     }
 
-
     /**
      * sets the modified state. should be called whenever changes have been made to the desktopfile
      * (set it to true) or when the data has been saved (set it to false)
+     *
      * @param m true when changes are unsaved, false otherwise
      */
     public void setModified(boolean m) {
@@ -161,15 +162,16 @@ public class BibTex {
         // update indicator for autobackup
         zknframe.setBackupNecessary();
     }
+
     /**
      * Checks whether the datafile is modified
+     *
      * @return {@code true} if it is modified, false otherwise
      */
     public boolean isModified() {
         return modified;
     }
-    
-    
+
     private void initStyles() {
         initStyleGeneral();
         initStyleAPA();
@@ -418,81 +420,80 @@ public class BibTex {
         importtypesAPA.add(importstyles);
     }
 
-
     /**
      * Stores the style which should be used when e.g. importing authors into the database.
      *
-     * @param style the style. use following constants:<br>
-     * {@code BIBTEX_CITE_STYLE_GENERAL}<br>
-     * {@code BIBTEX_CITE_STYLE_CBE}<br>
-     * {@code BIBTEX_CITE_STYLE_APA}
+     * @param style the style. use following constants:<br> {@code BIBTEX_CITE_STYLE_GENERAL}<br>
+     * {@code BIBTEX_CITE_STYLE_CBE}<br> {@code BIBTEX_CITE_STYLE_APA}
      */
     public void setCiteStyle(int style) {
         citestyle = style;
     }
+
     /**
      * Retrieves the style which should be used when e.g. importing authors into the database.
      *
-     * @return one of the following values:<br>
-     * {@code BIBTEX_CITE_STYLE_GENERAL}<br>
-     * {@code BIBTEX_CITE_STYLE_CBE}<br>
-     * {@code BIBTEX_CITE_STYLE_APA}
+     * @return one of the following values:<br> {@code BIBTEX_CITE_STYLE_GENERAL}<br>
+     * {@code BIBTEX_CITE_STYLE_CBE}<br> {@code BIBTEX_CITE_STYLE_APA}
      */
     public int getCiteStyle() {
         return citestyle;
     }
 
-
     /**
      * Sets the filepath to the latest used bibtex-file.
+     *
      * @param fp filepath to the current bibtex-file
      */
     public void setFilePath(File fp) {
         settingsObj.setLastUsedBibTexFile(fp.toString());
     }
+
     /**
-     * 
-     * @param be 
-     * @return  
+     *
+     * @param be
+     * @return
      */
     public int setEntries(ArrayList<BibtexEntry> be) {
         int totalcount = 0;
-        if (be!=null) {
+        if (be != null) {
             bibtexentries.clear();
             totalcount = addEntries(be);
         }
         return totalcount;
     }
+
     /**
-     * 
+     *
      * @param be
-     * @return 
+     * @return
      */
     public int addEntries(ArrayList<BibtexEntry> be) {
-        if (be!=null) {
+        if (be != null) {
             int totalcount = 0;
             // iterate nodes
-            for(BibtexEntry node : be) {
+            for (BibtexEntry node : be) {
                 totalcount += addEntry(node);
             }
             return totalcount;
         }
         return 0;
     }
+
     /**
-     * 
-     * @param be 
-     * @return 
+     *
+     * @param be
+     * @return
      */
     public int addEntry(BibtexEntry be) {
         // check for valid vaöue
-        if (be!=null) {
+        if (be != null) {
             // check whether entry does not already exist and bibkey does not exist
-            if (!bibtexentries.contains(be) && null==getEntry(be.getEntryKey())) {
+            if (!bibtexentries.contains(be) && null == getEntry(be.getEntryKey())) {
                 // get type
                 String type = be.getEntryType();
                 // check for valid value. don't import comments
-                if (type!=null && !type.equalsIgnoreCase("comment")) {
+                if (type != null && !type.equalsIgnoreCase("comment")) {
                     // if yes, add that entry to the linked list
                     bibtexentries.add(be);
                     // change modified state
@@ -503,16 +504,16 @@ public class BibTex {
         }
         return 0;
     }
-    
+
     /**
      * Gets the path to the last used bibtex-file
-     * @return the path of the last used bibtex-file, or {@code null} if no such path was
-     * specified nor does exist.
+     *
+     * @return the path of the last used bibtex-file, or {@code null} if no such path was specified
+     * nor does exist.
      */
     public File getFilePath() {
         return settingsObj.getLastUsedBibTexFile();
     }
-
 
     /**
      * Returns the currently attached bibtex-file. May be used to determine whether the user's
@@ -523,6 +524,7 @@ public class BibTex {
     public File getCurrentlyAttachedFile() {
         return currentlyattachedfile;
     }
+
     /**
      * "Detaches" the currently attached bibtex-file, which means that the filepath to the currently
      * attached file is set to {@code null}.
@@ -531,32 +533,32 @@ public class BibTex {
         currentlyattachedfile = null;
     }
 
-
     public void setEncoding(int encoding) {
         settingsObj.setLastUsedBibtexFormat(encoding);
     }
+
     public int getEncoding() {
         return settingsObj.getLastUsedBibtexFormat();
     }
 
     /**
      * This method opens (and "attaches") a bibtex-file which is specified via the
-     * {@link #setFilePath(java.io.File) setFilePath(File)} method. The file
-     * is parsed into the private variable {@code bibtexfile}, which can be accessed via
-     * {@link #getFile() getFile()}.
+     * {@link #setFilePath(java.io.File) setFilePath(File)} method. The file is parsed into the
+     * private variable {@code bibtexfile}, which can be accessed via {@link #getFile() getFile()}.
      *
      * @param encoding the character encoding of the file. use values of the array
      * {@code CConstants.BIBTEX_ENCODINGS} as parameter.
-     * @param suppressNewEntryImport {@code true} if missing entries should <b>not</b> be added to the {@link #bibtexentries},
-     * i.e. the ZKN3-Database. Use {@code false} if missing entries should be added.
-     * 
+     * @param suppressNewEntryImport {@code true} if missing entries should <b>not</b> be added to
+     * the {@link #bibtexentries}, i.e. the ZKN3-Database. Use {@code false} if missing entries
+     * should be added.
+     *
      * @return {@code true} if attachedfile was successfully opened, {@code false} otherwise.
      */
     public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport) {
         // reset currently attached filepath
         currentlyattachedfile = null;
         // if we have no bibtex-filepath, return false
-        if (null==getFilePath() || !getFilePath().exists()) {
+        if (null == getFilePath() || !getFilePath().exists()) {
             return false;
         }
         // create a new bibtex-parser for parsing the bibtex-file
@@ -579,10 +581,10 @@ public class BibTex {
             // reset old linked list
             attachedbibtexentries.clear();
             // iterate nodes
-            for(BibtexNode node : bibNodes) {
+            for (BibtexNode node : bibNodes) {
                 // check whether the node is of type "bibtexentry"
-                if(node instanceof BibtexEntry) {
-                    BibtexEntry be = (BibtexEntry)node;
+                if (node instanceof BibtexEntry) {
+                    BibtexEntry be = (BibtexEntry) node;
                     // if yes, add that entry to the linked list
                     attachedbibtexentries.add(be);
                     // now we have all entries from the specified bibtex-file
@@ -596,13 +598,12 @@ public class BibTex {
             try {
                 isr.close();
                 is.close();
-            }
-            catch (IOException e) {
-                Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+            } catch (IOException e) {
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                 return false;
             }
         } catch (ParseException | IOException e) {
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             return false;
         }
         // check whether missing entries should be added
@@ -610,16 +611,17 @@ public class BibTex {
             // add all new entries to data base
             int newentries = addEntries(attachedbibtexentries);
             // tell user
-            if (newentries>0) JOptionPane.showMessageDialog(null, resourceMap.getString("importMissingBibtexEntriesText", String.valueOf(newentries)), "BibTex-Import", JOptionPane.PLAIN_MESSAGE);
+            if (newentries > 0) {
+                JOptionPane.showMessageDialog(null, resourceMap.getString("importMissingBibtexEntriesText", String.valueOf(newentries)), "BibTex-Import", JOptionPane.PLAIN_MESSAGE);
+            }
         }
         return true;
     }
 
     /**
      * This method opens (and "attaches") a bibtex-file which is specified via the
-     * {@link #setFilePath(java.io.File) setFilePath(File)} method. The file
-     * is parsed into the private variable {@code bibtexfile}, which can be accessed via
-     * {@link #getFile() getFile()}.
+     * {@link #setFilePath(java.io.File) setFilePath(File)} method. The file is parsed into the
+     * private variable {@code bibtexfile}, which can be accessed via {@link #getFile() getFile()}.
      *
      * @param is
      * @param encoding the character encoding of the file. use values of the array
@@ -628,7 +630,7 @@ public class BibTex {
      */
     public boolean openFile(InputStream is, String encoding) {
         // if we have no bibtex-filepath, return false
-        if (null==is) {
+        if (null == is) {
             return false;
         }
         // create a new bibtex-parser for parsing the bibtex-file
@@ -648,11 +650,11 @@ public class BibTex {
             // reset old linked list
             bibtexentries.clear();
             // iterate nodes
-            for(BibtexNode node: bibNodes) {
+            for (BibtexNode node : bibNodes) {
                 // check whether the node is of type "bibtexentry"
-                if(node instanceof BibtexEntry) {
+                if (node instanceof BibtexEntry) {
                     // if yes, add that entry to the linked list
-                    bibtexentries.add((BibtexEntry)node);
+                    bibtexentries.add((BibtexEntry) node);
                     // now we have all entries from the specified bibtex-file
                     // parsed into a linked list, so we have easy access to each
                     // single bibtex-entry via the list "bibtexentries"
@@ -661,20 +663,20 @@ public class BibTex {
             try {
                 isr.close();
                 is.close();
-            }
-            catch (IOException e) {
-                Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+            } catch (IOException e) {
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                 return false;
             }
         } catch (ParseException | IOException e) {
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             return false;
         }
         return true;
     }
+
     public boolean appendFile(InputStream is, String encoding) {
         // if we have no bibtex-filepath, return false
-        if (null==is) {
+        if (null == is) {
             return false;
         }
         // create a new bibtex-parser for parsing the bibtex-file
@@ -692,11 +694,11 @@ public class BibTex {
             // prepare a linked list containing all entries of that bibtex-file
             List<BibtexNode> bibNodes = appfile.getEntries();
             // iterate nodes
-            for(BibtexNode node: bibNodes) {
+            for (BibtexNode node : bibNodes) {
                 // check whether the node is of type "bibtexentry"
-                if(node instanceof BibtexEntry) {
+                if (node instanceof BibtexEntry) {
                     // if yes, add that entry to the linked list
-                    addEntry((BibtexEntry)node);
+                    addEntry((BibtexEntry) node);
                     // now we have all entries from the specified bibtex-file
                     // parsed into a linked list, so we have easy access to each
                     // single bibtex-entry via the list "bibtexentries"
@@ -705,31 +707,33 @@ public class BibTex {
             try {
                 isr.close();
                 is.close();
-            }
-            catch (IOException e) {
-                Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+            } catch (IOException e) {
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                 return false;
             }
         } catch (ParseException | IOException e) {
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             return false;
         }
         return true;
     }
+
     /**
-     * This method exports all BibtexEntries in the list {@link #outputbibtexentries outputbibtexentries}
-     * to the file given in the parameter {@code fp}.<br><br>
-     * Use {@link #clearExportBibtexEntries() clearExportBibtexEntries()} to reset the list of export
-     * entries and {@link #addBibtexEntryForExport(bibtex.dom.BibtexEntry) addBibtexEntryForExport(bibtex.dom.BibtexEntry)}
+     * This method exports all BibtexEntries in the list
+     * {@link #outputbibtexentries outputbibtexentries} to the file given in the parameter
+     * {@code fp}.<br><br>
+     * Use {@link #clearExportBibtexEntries() clearExportBibtexEntries()} to reset the list of
+     * export entries and
+     * {@link #addBibtexEntryForExport(bibtex.dom.BibtexEntry) addBibtexEntryForExport(bibtex.dom.BibtexEntry)}
      * to add new entries to this list that should be exported.
      *
      * @return {@code true} if entries have been successfully exported, {@code false} otherwise.
      */
     public ByteArrayOutputStream saveFile() {
         ByteArrayOutputStream bs = new ByteArrayOutputStream();
-        OutputStreamWriter osw = new OutputStreamWriter(bs,Charset.forName("UTF-8"));
+        OutputStreamWriter osw = new OutputStreamWriter(bs, Charset.forName("UTF-8"));
         PrintWriter pf = new PrintWriter(osw);
-        
+
         Iterator<BibtexEntry> i = bibtexentries.iterator();
         while (i.hasNext()) {
             i.next().printBibtex(pf);
@@ -737,63 +741,68 @@ public class BibTex {
         try {
             osw.close();
             pf.close();
-        }
-        catch (IOException ex) {
-            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
+        } catch (IOException ex) {
+            Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
         }
         return bs;
     }
 
-    
     /**
-     * This method returns the amount of entries in the currently attachedfile, which equals
-     * the size of the list {@code inputbibtexentries}.
+     * This method returns the amount of entries in the currently attachedfile, which equals the
+     * size of the list {@code inputbibtexentries}.
      *
      * @return the amount of entries in the currently attachedfile
      */
     public int getAttachedFileCount() {
         return attachedbibtexentries.size();
     }
+
     /**
-     * This method returns the amount of entries in the bibtex file, which equals
-     * the size of the list {@code inputbibtexentries}.
+     * This method returns the amount of entries in the bibtex file, which equals the size of the
+     * list {@code inputbibtexentries}.
      *
      * @return the amount of entries in the currently bibtex file in the ZKN3-Database
      */
     public int getCount() {
         return bibtexentries.size();
     }
+
     /**
-     * 
+     *
      * @return
      */
     public BibtexFile getFile() {
         return bibtexfile;
     }
+
     /**
      * This method returns the file name of the last used bibtex-file.
-     * 
+     *
      * @return the name of the given file, excluding extension, or {@code null} if an error occured.
      */
     public String getFileName() {
         return FileOperationsUtil.getFileName(settingsObj.getLastUsedBibTexFile());
     }
+
     /**
      * This method returns the imported entries of the original ("attached") bibtex-file.
      * <br><br>
-     * Bibtex-entries that should be exported to a new created bibtex-file always use functions
-     * with the suffix "ForExport" (e.g. {@link #addBibtexEntryForExport(bibtex.dom.BibtexEntry) addBibtexEntryForExport()}).
+     * Bibtex-entries that should be exported to a new created bibtex-file always use functions with
+     * the suffix "ForExport" (e.g.
+     * {@link #addBibtexEntryForExport(bibtex.dom.BibtexEntry) addBibtexEntryForExport()}).
      *
      * @return
      */
     public ArrayList<BibtexEntry> getEntriesFromAttachedFile() {
         return attachedbibtexentries;
     }
+
     /**
      * This method returns the entries of the bibtex-file in the ZKN3-Database.
      * <br><br>
-     * Bibtex-entries that should be exported to a new created bibtex-file always use functions
-     * with the suffix "ForExport" (e.g. {@link #addBibtexEntryForExport(bibtex.dom.BibtexEntry) addBibtexEntryForExport()}).
+     * Bibtex-entries that should be exported to a new created bibtex-file always use functions with
+     * the suffix "ForExport" (e.g.
+     * {@link #addBibtexEntryForExport(bibtex.dom.BibtexEntry) addBibtexEntryForExport()}).
      *
      * @return
      */
@@ -801,36 +810,38 @@ public class BibTex {
         return bibtexentries;
     }
 
-    
     /**
      * Gets the bibtex-entry indicated by {@code nr} from the original (attached) bibtex-file.
+     *
      * @param nr the entry-number of the entry that should be returned
      * @return the related entry, or {@code null} if an error occured.
      */
     public BibtexEntry getEntryFromAttachedFile(int nr) {
         try {
             return attachedbibtexentries.get(nr);
-        }
-        catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException e) {
             return null;
         }
     }
+
     /**
-     * Gets the bibtex-entry indicated by {@code nr} from the original bibtex-file
-     * in the ZKN3-Database.
+     * Gets the bibtex-entry indicated by {@code nr} from the original bibtex-file in the
+     * ZKN3-Database.
+     *
      * @param nr the entry-number of the entry that should be returned
      * @return the related entry, or {@code null} if an error occured.
      */
     public BibtexEntry getEntry(int nr) {
         try {
             return bibtexentries.get(nr);
-        }
-        catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException e) {
             return null;
         }
     }
+
     /**
      * Gets the bibtex-entry indicated by {@code bibkey} from the original (attached) bibtex-file.
+     *
      * @param bibkey the bibkey of the entry that should be returned
      * @return the related entry, or {@code null} if an error occured.
      */
@@ -850,9 +861,11 @@ public class BibTex {
         // else, if nothing found, return null...
         return null;
     }
+    
     /**
-     * Gets the bibtex-entry indicated by {@code bibkey} from the original bibtex-file
-     * in the ZKN3-Database.
+     * Gets the bibtex-entry indicated by {@code bibkey} from the original bibtex-file in the
+     * ZKN3-Database.
+     *
      * @param bibkey the bibkey of the entry that should be returned
      * @return the related entry, or {@code null} if an error occured or nothing found.
      */
@@ -873,17 +886,19 @@ public class BibTex {
         return null;
     }
 
-
     /**
+     * Removes the entry with the bibkey {@code bibkey} from
+     * the database.
      * 
-     * @param bibkey
-     * @return 
+     * @param bibkey the bibkey value of the entry that should be removed from
+     * the internal bibtex database.
+     * @return the removed bibtex-entry, or {@code null} of no entry was removed.
      */
     public BibtexEntry removeEntry(String bibkey) {
         // retrieve entry index number
         int nr = getEntryIndexNumber(bibkey);
         // check for valid value
-        if (nr!=-1) {
+        if (nr != -1) {
             // remove entry
             BibtexEntry be = bibtexentries.remove(nr);
             // set modified state
@@ -893,15 +908,14 @@ public class BibTex {
         }
         return null;
     }
-    
-    
+
     /**
-     * Gets an bibtex-entry index-number from the bibtex-entry that is associated
-     * with the bibkey-value {@code bibkey} from the original bibtex-file in
-     * the ZKN3-Database.
+     * Gets an bibtex-entry index-number from the bibtex-entry that is associated with the
+     * bibkey-value {@code bibkey} from the original bibtex-file in the ZKN3-Database.
+     *
      * @param bibkey the bibkey of the entry which number should be returned
-     * @return the related entry-number of the bibtex-entry that has the bibkey-value {@code bibkey},
-     * or {@code -1} if no such entry or bibkey exists
+     * @return the related entry-number of the bibtex-entry that has the bibkey-value
+     * {@code bibkey}, or {@code -1} if no such entry or bibkey exists
      */
     public int getEntryIndexNumber(String bibkey) {
         // create an iterator
@@ -924,10 +938,9 @@ public class BibTex {
         return -1;
     }
 
-
     /**
-     * This method returns the bibkey of the entry {@code entrynr} from the currently
-     * attached file.
+     * This method returns the bibkey of the entry {@code entrynr} from the currently attached file.
+     *
      * @param entrynr the entry-number of an entry within the currently attached bibtex-file
      * @return the related bibkey, or null if no key or no such entry exists.
      */
@@ -935,17 +948,16 @@ public class BibTex {
         // retrieve entry
         BibtexEntry be = getEntryFromAttachedFile(entrynr);
         // if we have no valid entry, return null
-        if (null==be) {
+        if (null == be) {
             return null;
         }
         // return entry-key
         return be.getEntryKey();
     }
 
-
     /**
-     * This method returns the bibkey of the entry {@code entrynr} from the currently
-     * attached file.
+     * This method returns the bibkey of the entry {@code entrynr} from the currently attached file.
+     *
      * @param entrynr the entry-number of an entry within the currently attached bibtex-file
      * @return the related bibkey, or null if no key or no such entry exists.
      */
@@ -953,21 +965,22 @@ public class BibTex {
         // retrieve entry
         BibtexEntry be = getEntry(entrynr);
         // if we have no valid entry, return null
-        if (null==be) {
+        if (null == be) {
             return null;
         }
         // return entry-key
         return be.getEntryKey();
     }
 
-
     public String getAbstract(String bibkey) {
         // return abstract from bibtex entry
         return getAbstract(getEntry(bibkey));
     }
+
     /**
-     * This method returns the abstract or annotation of the entry {@code entrynr} from the currently
-     * attached file.
+     * This method returns the abstract or annotation of the entry {@code entrynr} from the
+     * currently attached file.
+     *
      * @param bibkey
      * @return the related abstract, or null if no key or no such entry exists.
      */
@@ -975,9 +988,10 @@ public class BibTex {
         // return abstract from bibtex entry
         return getAbstract(getEntryFromAttachedFile(bibkey));
     }
+
     /**
-     * This method retrieves the content of an bibtex-entry's abstract or annotation
-     * and returns it as string.
+     * This method retrieves the content of an bibtex-entry's abstract or annotation and returns it
+     * as string.
      *
      * @param be the bibtex-entry which abstract/annotation should be retrieved
      * @return the abstract or annotation as string, or {@code null} if no such entry or content
@@ -985,71 +999,76 @@ public class BibTex {
      */
     private String getAbstract(BibtexEntry be) {
         // if we have no valid entry, return null
-        if (null==be) {
+        if (null == be) {
             return null;
         }
         // init variable
         String content = null;
         // retrieve abstract
         BibtexAbstractValue bav = be.getFieldValue("abstract");
-        if (bav!=null) {
+        if (bav != null) {
             content = bav.toString();
         }
         // if the entry does not have a field named "abstract", try field-name "annote" instead
         // (this name is used by Synapsen when entries are exported).
-        if (null==content || content.isEmpty()) {
+        if (null == content || content.isEmpty()) {
             bav = be.getFieldValue("annote");
-            if (bav!=null) {
+            if (bav != null) {
                 content = bav.toString();
             }
             // if the entry does not have a field named "abstract" nor "annote", try field-name "note" instead
             // (this name is used by some apps when entries are exported).
-            if (null==content || content.isEmpty()) {
+            if (null == content || content.isEmpty()) {
                 bav = be.getFieldValue("note");
-                if (bav!=null) {
+                if (bav != null) {
                     content = bav.toString();
                 }
             }
         }
         // if we have any content, replace braces
-        if (content!=null) {
+        if (content != null) {
             content = content.replace("{", "").replace("}", "");
         }
         // return content
         return content;
     }
 
-
     public String[] getKeywords(String bibkey) {
         return getKewords(getEntry(bibkey));
     }
+
     public String[] getKeywords(int entrynr) {
         return getKewords(getEntry(entrynr));
     }
+
     /**
-     * This method returns the keywords or annotation of the entry {@code entrynr} from the currently
-     * attached file.
+     * This method returns the keywords or annotation of the entry {@code entrynr} from the
+     * currently attached file.
+     *
      * @param entrynr the entry-number of an entry within the currently attached bibtex-file
      * @return the related keywords as string-array, or null if no keywords or no such entry exists.
      */
     public String[] getKeywordsFromAttachedFile(int entrynr) {
         return getKewords(getEntryFromAttachedFile(entrynr));
     }
+
     /**
-     * This method returns the keywords or annotation of the entry {@code entrynr} from the currently
-     * attached file.
+     * This method returns the keywords or annotation of the entry {@code entrynr} from the
+     * currently attached file.
+     *
      * @param bibkey
      * @return the related keywords as string-array, or null if no keywords or no such entry exists.
      */
     public String[] getKeywordsFromAttachedFile(String bibkey) {
         return getKewords(getEntryFromAttachedFile(bibkey));
     }
+
     /**
      * This method retrieves the keywords of a bibtex-entry and returns them as string-array.
-     * 
+     *
      * @param be the bibtex-entry which keywords are requested
-     * @return the keywords of the bibtex-entry {@code be} as string-array, or {@code null}
-     * if no such entry or keywords exist.
+     * @return the keywords of the bibtex-entry {@code be} as string-array, or {@code null} if no
+     * such entry or keywords exist.
      */
     private String[] getKewords(BibtexEntry be) {
         // if we have no valid entry, return null
@@ -1067,8 +1086,7 @@ public class BibTex {
             String sep = (-1 == keywordline.indexOf(";")) ? "," : ";";
             // split keywords
             keywords = keywordline.split(sep);
-        } 
-        // in some cases, the field "keywords" is named "tags" instead. look for this
+        } // in some cases, the field "keywords" is named "tags" instead. look for this
         // field if "keywords" does not exist
         else {
             // retrieve keywods
@@ -1084,12 +1102,12 @@ public class BibTex {
         }
         // trim spaces
         if (keywords != null) {
-            for (int i = 0; i < keywords.length; i++)
+            for (int i = 0; i < keywords.length; i++) {
                 keywords[i] = keywords[i].trim();
+            }
         }
         return keywords;
     }
-
 
     /**
      *
@@ -1100,45 +1118,36 @@ public class BibTex {
         // retrieve entry
         BibtexEntry be = getEntry(bibkey);
         // if we have no valid entry, return null
-        if (null==be) {
+        if (null == be) {
             return -1;
         }
         // get entry's type
         String entrytype = be.getEntryType();
         // if no valid value was found, return null
-        if (null==entrytype || entrytype.isEmpty()) {
+        if (null == entrytype || entrytype.isEmpty()) {
             return -1;
         }
         if (entrytype.equalsIgnoreCase("book")) {
             return Constants.BIBTEX_ENTRYTYPE_BOOK;
-        }
-        else if (entrytype.equalsIgnoreCase("article")) {
+        } else if (entrytype.equalsIgnoreCase("article")) {
             return Constants.BIBTEX_ENTRYTYPE_ARTICLE;
-        }
-        else if (entrytype.equalsIgnoreCase("incollection")) {
+        } else if (entrytype.equalsIgnoreCase("incollection")) {
             return Constants.BIBTEX_ENTRYTYPE_CHAPTER;
-        }
-        else if (entrytype.equalsIgnoreCase("inbook")) {
+        } else if (entrytype.equalsIgnoreCase("inbook")) {
             return Constants.BIBTEX_ENTRYTYPE_BOOKARTICLE;
-        }
-        else if (entrytype.equalsIgnoreCase("mastersthesis")) {
+        } else if (entrytype.equalsIgnoreCase("mastersthesis")) {
             return Constants.BIBTEX_ENTRYTYPE_THESIS;
-        }
-        else if (entrytype.equalsIgnoreCase("phdthesis")) {
+        } else if (entrytype.equalsIgnoreCase("phdthesis")) {
             return Constants.BIBTEX_ENTRYTYPE_PHD;
-        }
-        else if (entrytype.equalsIgnoreCase("unpublished")) {
+        } else if (entrytype.equalsIgnoreCase("unpublished")) {
             return Constants.BIBTEX_ENTRYTYPE_UNPUBLISHED;
-        }
-        else if (entrytype.equalsIgnoreCase("conference")) {
+        } else if (entrytype.equalsIgnoreCase("conference")) {
             return Constants.BIBTEX_ENTRYTYPE_CONFERENCE;
-        }
-        else if (entrytype.equalsIgnoreCase("techreport") || entrytype.equalsIgnoreCase("report")) {
+        } else if (entrytype.equalsIgnoreCase("techreport") || entrytype.equalsIgnoreCase("report")) {
             return Constants.BIBTEX_ENTRYTYPE_REPORT;
         }
         return -1;
     }
-
 
     /**
      *
@@ -1155,17 +1164,19 @@ public class BibTex {
     public void clearExportBibtexEntries() {
         outputbibtexentries.clear();
     }
+
     public void clearEntries() {
         bibtexentries.clear();
         setModified(true);
     }
 
-
     /**
-     * This method exports all BibtexEntries in the list {@link #outputbibtexentries outputbibtexentries}
-     * to the file given in the parameter {@code fp}.<br><br>
-     * Use {@link #clearExportBibtexEntries() clearExportBibtexEntries()} to reset the list of export
-     * entries and {@link #addBibtexEntryForExport(bibtex.dom.BibtexEntry) addBibtexEntryForExport(bibtex.dom.BibtexEntry)}
+     * This method exports all BibtexEntries in the list
+     * {@link #outputbibtexentries outputbibtexentries} to the file given in the parameter
+     * {@code fp}.<br><br>
+     * Use {@link #clearExportBibtexEntries() clearExportBibtexEntries()} to reset the list of
+     * export entries and
+     * {@link #addBibtexEntryForExport(bibtex.dom.BibtexEntry) addBibtexEntryForExport(bibtex.dom.BibtexEntry)}
      * to add new entries to this list that should be exported.
      *
      * @param fp the filepath and filename of the new bibtex-file that should be created, containing
@@ -1173,12 +1184,12 @@ public class BibTex {
      * @return {@code true} if entries have been successfully exported, {@code false} otherwise.
      */
     public boolean exportBibtexEntries(File fp) {
-        if (outputbibtexentries.size()<1) {
+        if (outputbibtexentries.size() < 1) {
             return false;
         }
         try {
             OutputStream os = new FileOutputStream(fp);
-            OutputStreamWriter osw = new OutputStreamWriter(os,Constants.BIBTEX_ENCODINGS[settingsObj.getLastUsedBibtexFormat()]);
+            OutputStreamWriter osw = new OutputStreamWriter(os, Constants.BIBTEX_ENCODINGS[settingsObj.getLastUsedBibtexFormat()]);
             PrintWriter pf = new PrintWriter(osw);
 
             Iterator<BibtexEntry> i = outputbibtexentries.iterator();
@@ -1190,144 +1201,150 @@ public class BibTex {
                 pf.close();
                 osw.close();
                 os.close();
-            }
-            catch (IOException e) {
-                Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+            } catch (IOException e) {
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                 return false;
             }
 
         } catch (IOException e) {
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             return false;
         }
         return true;
     }
 
-
     /**
-     * This method returns a formatted string consisting of the author-, year- and title-value
-     * of an bibtex-entry of the currently attached bibtex-file. The requested entry is
-     * specified by its {@code entrynr}.
+     * This method returns a formatted string consisting of the author-, year- and title-value of an
+     * bibtex-entry of the currently attached bibtex-file. The requested entry is specified by its
+     * {@code entrynr}.
      *
      * @param entrynr the number of the entry that should be retrieved
-     * @return a string containing author, year and title-information of the entry that matched
-     * the bibkey {@code bibkey}
+     * @return a string containing author, year and title-information of the entry that matched the
+     * bibkey {@code bibkey}
      */
     public String getFormattedEntryFromAttachedFile(int entrynr) {
         // retrieve entry that is associated with the "bibkey"-parameter
         BibtexEntry be = getEntryFromAttachedFile(entrynr);
         return getFormattedEntry(be, true);
     }
+
     /**
-     * This method returns a formatted string consisting of the author-, year- and title-value
-     * of an bibtex-entry of the currently attached bibtex-file. The requested entry is
-     * specified by its {@code entrynr}.
+     * This method returns a formatted string consisting of the author-, year- and title-value of an
+     * bibtex-entry of the currently attached bibtex-file. The requested entry is specified by its
+     * {@code entrynr}.
      *
      * @param entrynr the number of the entry that should be retrieved
-     * @return a string containing author, year and title-information of the entry that matched
-     * the bibkey {@code bibkey}
+     * @return a string containing author, year and title-information of the entry that matched the
+     * bibkey {@code bibkey}
      */
     public String getFormattedEntry(int entrynr) {
         // retrieve entry that is associated with the "bibkey"-parameter
         BibtexEntry be = getEntry(entrynr);
         return getFormattedEntry(be, false);
     }
+
     /**
-     * This method returns a formatted string consisting of the author-, year- and title-value
-     * of an bibtex-entry of the currently attached bibtex-file. The requested entry is
-     * specified by its {@code bibkey}.
-     * 
+     * This method returns a formatted string consisting of the author-, year- and title-value of an
+     * bibtex-entry of the currently attached bibtex-file. The requested entry is specified by its
+     * {@code bibkey}.
+     *
      * @param bibkey the bibkey of the entry that should be retrieved
-     * @return a string containing author, year and title-information of the entry that matched
-     * the bibkey {@code bibkey}
+     * @return a string containing author, year and title-information of the entry that matched the
+     * bibkey {@code bibkey}
      */
     public String getFormattedEntry(String bibkey) {
         // retrieve entry that is associated with the "bibkey"-parameter
         BibtexEntry be = getEntry(bibkey);
-        return getFormattedEntry(be,false);
+        return getFormattedEntry(be, false);
     }
+
     /**
-     * This method returns a formatted string consisting of the author-, year- and title-value
-     * of an bibtex-entry of the currently attached bibtex-file. The requested entry is
-     * specified by its {@code entrynr}.
+     * This method returns a formatted string consisting of the author-, year- and title-value of an
+     * bibtex-entry of the currently attached bibtex-file. The requested entry is specified by its
+     * {@code entrynr}.
      *
      * @param entrynr the number of the entry that should be retrieved
-     * @return a string containing author, year and title-information of the entry that matched
-     * the bibkey {@code bibkey}
+     * @return a string containing author, year and title-information of the entry that matched the
+     * bibkey {@code bibkey}
      */
     public String getFormattedAuthor(int entrynr) {
         // retrieve entry that is associated with the "bibkey"-parameter
         BibtexEntry be = getEntry(entrynr);
         return getFormattedAuthor(be);
     }
+
     /**
-     * This method returns a formatted string consisting of the author-, year- and title-value
-     * of an bibtex-entry of the currently attached bibtex-file. The requested entry is
-     * specified by its {@code bibkey}.
-     * 
+     * This method returns a formatted string consisting of the author-, year- and title-value of an
+     * bibtex-entry of the currently attached bibtex-file. The requested entry is specified by its
+     * {@code bibkey}.
+     *
      * @param bibkey the bibkey of the entry that should be retrieved
-     * @return a string containing author, year and title-information of the entry that matched
-     * the bibkey {@code bibkey}
+     * @return a string containing author, year and title-information of the entry that matched the
+     * bibkey {@code bibkey}
      */
     public String getFormattedAuthor(String bibkey) {
         // retrieve entry that is associated with the "bibkey"-parameter
         BibtexEntry be = getEntry(bibkey);
         return getFormattedAuthor(be);
     }
+
     /**
-     * This method returns a formatted string consisting of the author-, year- and title-value
-     * of an bibtex-entry of the currently attached bibtex-file. This method does the work
-     * for both {@link #getFormattedEntryFromAttachedFile(java.lang.String) getFormattedEntryFromAttachedFile(String)}
-     * and {@link #getFormattedEntryFromAttachedFile(int) getFormattedEntryFromAttachedFile(int)}.<br><br>
-     * The way an author-value from the imported bibtex-value is formatted and output as string is defined
-     * via the {@link #initStyles() initStyles()}-method. There we create linked hashmaps that contain
-     * the elements for different literatur-types (books, articles, abstracts...).<br><br>
+     * This method returns a formatted string consisting of the author-, year- and title-value of an
+     * bibtex-entry of the currently attached bibtex-file. This method does the work for both
+     * {@link #getFormattedEntryFromAttachedFile(java.lang.String) getFormattedEntryFromAttachedFile(String)}
+     * and
+     * {@link #getFormattedEntryFromAttachedFile(int) getFormattedEntryFromAttachedFile(int)}.<br><br>
+     * The way an author-value from the imported bibtex-value is formatted and output as string is
+     * defined via the {@link #initStyles() initStyles()}-method. There we create linked hashmaps
+     * that contain the elements for different literatur-types (books, articles,
+     * abstracts...).<br><br>
      * In this method, we first check out the <i>type</i> of the bibtex-entry (book, article...) and
-     * then get the related LinkedHashMap. In this HashMap, we have the single elements of the literatur
-     * (author, title, year, publisher...) in a certain order, with special values associated to each
-     * element. This is the formatting.<br><br>
-     * E.g.: The key <b>"year"</b> has the value <b>" (*):"</b>, where the asterisk is replaced by the
-     * year-value, if the bibtex-entry contains a year-value. The formatted year thus would be for
-     * instance <b>" (2009):"</b>.
-     * 
+     * then get the related LinkedHashMap. In this HashMap, we have the single elements of the
+     * literatur (author, title, year, publisher...) in a certain order, with special values
+     * associated to each element. This is the formatting.<br><br>
+     * E.g.: The key <b>"year"</b> has the value <b>" (*):"</b>, where the asterisk is replaced by
+     * the year-value, if the bibtex-entry contains a year-value. The formatted year thus would be
+     * for instance <b>" (2009):"</b>.
+     *
      * @param be the BibtexEntry that should be formatted
-     * @return the formatted output-string containing author, year and title-information of 
-     * the BibtexEntry {@code be}.
+     * @return the formatted output-string containing author, year and title-information of the
+     * BibtexEntry {@code be}.
      */
     private String getFormattedEntry(BibtexEntry be, boolean fromAttachedFile) {
         // if we found any entry, go on...
-        if (be!=null) {
+        if (be != null) {
             // get all entry fields
             Map m = be.getFields();
             // create a new map that will contain all fields that have to be replaced
             // for formatting the author-value. see below
             Map<String, String> fields;
             // copy import-type based on current citestyle into variable
-            List<Map<String,String>> citetype = new ArrayList<>();
+            List<Map<String, String>> citetype = new ArrayList<>();
             switch (getCiteStyle()) {
-                case Constants.BIBTEX_CITE_STYLE_GENERAL: citetype = importtypes; break;
-                case Constants.BIBTEX_CITE_STYLE_CBE: citetype = importtypesCBE; break;
-                case Constants.BIBTEX_CITE_STYLE_APA: citetype = importtypesAPA; break;
+                case Constants.BIBTEX_CITE_STYLE_GENERAL:
+                    citetype = importtypes;
+                    break;
+                case Constants.BIBTEX_CITE_STYLE_CBE:
+                    citetype = importtypesCBE;
+                    break;
+                case Constants.BIBTEX_CITE_STYLE_APA:
+                    citetype = importtypesAPA;
+                    break;
             }
             // check whether entry type is known. needed below
             boolean entryTypeKnown = true;
             // here we choose the import-style, depending on the type of author (book, article...)
             if (be.getEntryType().equalsIgnoreCase("book")) {
                 fields = citetype.get(1);
-            }
-            else if (be.getEntryType().equalsIgnoreCase("article")) {
+            } else if (be.getEntryType().equalsIgnoreCase("article")) {
                 fields = citetype.get(2);
-            }
-            else if (be.getEntryType().equalsIgnoreCase("incollection")) {
+            } else if (be.getEntryType().equalsIgnoreCase("incollection")) {
                 fields = citetype.get(3);
-            }
-            else if (be.getEntryType().equalsIgnoreCase("inbook")) {
+            } else if (be.getEntryType().equalsIgnoreCase("inbook")) {
                 fields = citetype.get(4);
-            }
-            else if (be.getEntryType().equalsIgnoreCase("misc")) {
+            } else if (be.getEntryType().equalsIgnoreCase("misc")) {
                 fields = citetype.get(5);
-            }
-            else {
+            } else {
                 fields = citetype.get(0);
                 entryTypeKnown = false;
             }
@@ -1351,11 +1368,10 @@ public class BibTex {
                     // get abstract value. we do not convert it directly to string. in case "getFieldValue"
                     // returns null, this would lead to a nullpointerexception.
                     BibtexAbstractValue bav = be.getFieldValue(f);
-                    if (bav!=null) {
+                    if (bav != null) {
                         dummy = bav.toString();
                     }
-                }
-                // in some cases, we have books, that do not have authors but editors only... in this
+                } // in some cases, we have books, that do not have authors but editors only... in this
                 // case, check whether we have an editor-field instead of author-field.
                 else if (f.equalsIgnoreCase("author") && (be.getEntryType().equalsIgnoreCase("book") || !entryTypeKnown)) {
                     // check whether we find an editor-field instead of author-field
@@ -1363,27 +1379,26 @@ public class BibTex {
                         // get abstract value. we do not convert it directly to string. in case "getFieldValue"
                         // returns null, this would lead to a nullpointerexception.
                         BibtexAbstractValue bav = be.getFieldValue("editor");
-                        if (bav!=null) {
+                        if (bav != null) {
                             dummy = bav.toString();
                         }
                     }
-                }
-                // in some cases, we have the field "date" in bibtex entries instead of "year".
+                } // in some cases, we have the field "date" in bibtex entries instead of "year".
                 // in this case, we use the date-field as substitute for the year-field.
                 else if (ks.contains("date") && !ks.contains("year") && f.equalsIgnoreCase("year")) {
                     // get abstract value. we do not convert it directly to string. in case "getFieldValue"
                     // returns null, this would lead to a nullpointerexception.
                     BibtexAbstractValue bav = be.getFieldValue("date");
-                    if (bav!=null) {
+                    if (bav != null) {
                         dummy = bav.toString();
                     }
                 }
                 // if it's not empty...
-                if (dummy!=null && !dummy.isEmpty()) {
+                if (dummy != null && !dummy.isEmpty()) {
                     // ...get the "format template"
                     String app = fields.get(f);
                     // and replace the place holder with the associated value from the bibtex-file
-                    if (app!=null) {
+                    if (app != null) {
                         // first check, whether we have an author, because we need to split this
                         if (f.equalsIgnoreCase("author") || f.equalsIgnoreCase("editor")) {
                             // retrieve single authors
@@ -1400,60 +1415,83 @@ public class BibTex {
                                     // retrieve sur and given name of author
                                     String[] names = aunames.trim().split(",");
                                     // check whether we have any author-field and value at all
-                                    if (names!=null && names.length>0) {
+                                    if (names != null && names.length > 0) {
                                         // add surname
                                         finalauthors.append(names[0].trim());
                                         // add name separator, depending on citatoin-style
                                         switch (getCiteStyle()) {
-                                            case Constants.BIBTEX_CITE_STYLE_GENERAL: finalauthors.append(" "); break;
-                                            case Constants.BIBTEX_CITE_STYLE_CBE: finalauthors.append(" ");  break;
-                                            case Constants.BIBTEX_CITE_STYLE_APA: finalauthors.append(", ");  break;
+                                            case Constants.BIBTEX_CITE_STYLE_GENERAL:
+                                                finalauthors.append(" ");
+                                                break;
+                                            case Constants.BIBTEX_CITE_STYLE_CBE:
+                                                finalauthors.append(" ");
+                                                break;
+                                            case Constants.BIBTEX_CITE_STYLE_APA:
+                                                finalauthors.append(", ");
+                                                break;
                                         }
                                         // check whether we have any valid name-value at all, to avoid
                                         // null-pointer-exception
-                                        if (names.length>1 && names[1].length()>0) {
+                                        if (names.length > 1 && names[1].length() > 0) {
                                             // in case we have several givennames, separate them
                                             // all at each space
-                                            String [] givennames = names[1].trim().split(" ");
+                                            String[] givennames = names[1].trim().split(" ");
                                             // iterate all surnames
                                             for (String gname : givennames) {
                                                 // check for at least one char length
-                                                if (!gname.isEmpty() && gname.length()>0) {
+                                                if (!gname.isEmpty() && gname.length() > 0) {
                                                     switch (getCiteStyle()) {
-                                                        case Constants.BIBTEX_CITE_STYLE_GENERAL: finalauthors.append(gname.charAt(0)); break;
-                                                        case Constants.BIBTEX_CITE_STYLE_CBE: finalauthors.append(gname.charAt(0));  break;
-                                                        case Constants.BIBTEX_CITE_STYLE_APA: finalauthors.append(gname.charAt(0)).append(".");  break;
+                                                        case Constants.BIBTEX_CITE_STYLE_GENERAL:
+                                                            finalauthors.append(gname.charAt(0));
+                                                            break;
+                                                        case Constants.BIBTEX_CITE_STYLE_CBE:
+                                                            finalauthors.append(gname.charAt(0));
+                                                            break;
+                                                        case Constants.BIBTEX_CITE_STYLE_APA:
+                                                            finalauthors.append(gname.charAt(0)).append(".");
+                                                            break;
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                }
-                                // else the given name comes first, so we
+                                } // else the given name comes first, so we
                                 // separate each full author-name at space-sign, so we can
                                 // retieve sur- and given-name
                                 else {
                                     // retrieve sur and given name of author
                                     String[] names = aunames.trim().split(" ");
                                     // check whether we have any author-field and value at all
-                                    if (names!=null && names.length>0) {
+                                    if (names != null && names.length > 0) {
                                         // add sur-name
-                                        finalauthors.append(names[names.length-1].trim());
+                                        finalauthors.append(names[names.length - 1].trim());
                                         // add sur and given-name separator
                                         switch (getCiteStyle()) {
-                                            case Constants.BIBTEX_CITE_STYLE_GENERAL: finalauthors.append(" "); break;
-                                            case Constants.BIBTEX_CITE_STYLE_CBE: finalauthors.append(" ");  break;
-                                            case Constants.BIBTEX_CITE_STYLE_APA: finalauthors.append(", ");  break;
+                                            case Constants.BIBTEX_CITE_STYLE_GENERAL:
+                                                finalauthors.append(" ");
+                                                break;
+                                            case Constants.BIBTEX_CITE_STYLE_CBE:
+                                                finalauthors.append(" ");
+                                                break;
+                                            case Constants.BIBTEX_CITE_STYLE_APA:
+                                                finalauthors.append(", ");
+                                                break;
                                         }
                                         // iterate given names
-                                        for (int cnt=0; cnt<names.length-1; cnt++) {
+                                        for (int cnt = 0; cnt < names.length - 1; cnt++) {
                                             // check whether we have any valid name-value at all, to avoid
                                             // null-pointer-exception
-                                            if (names[cnt].length()>0) {
+                                            if (names[cnt].length() > 0) {
                                                 switch (getCiteStyle()) {
-                                                    case Constants.BIBTEX_CITE_STYLE_GENERAL: finalauthors.append(names[cnt].charAt(0)); break;
-                                                    case Constants.BIBTEX_CITE_STYLE_CBE: finalauthors.append(names[cnt].charAt(0));  break;
-                                                    case Constants.BIBTEX_CITE_STYLE_APA: finalauthors.append(names[cnt].charAt(0)).append(".");  break;
+                                                    case Constants.BIBTEX_CITE_STYLE_GENERAL:
+                                                        finalauthors.append(names[cnt].charAt(0));
+                                                        break;
+                                                    case Constants.BIBTEX_CITE_STYLE_CBE:
+                                                        finalauthors.append(names[cnt].charAt(0));
+                                                        break;
+                                                    case Constants.BIBTEX_CITE_STYLE_APA:
+                                                        finalauthors.append(names[cnt].charAt(0)).append(".");
+                                                        break;
                                                 }
                                             }
                                         }
@@ -1470,7 +1508,7 @@ public class BibTex {
                         // while we automatically add a period after it.
                         if ((dummy.endsWith("..") && !dummy.endsWith("...")) || (dummy.endsWith("?.") || dummy.endsWith("!."))) {
                             // cut the last period.
-                            dummy = dummy.substring(0, dummy.length()-1);
+                            dummy = dummy.substring(0, dummy.length() - 1);
                         }
                     }
                     // convert escape chars
@@ -1480,35 +1518,38 @@ public class BibTex {
                 }
             }
             // create a trimmed string, where tab and new-line-chars are replaced with spaces
-            String trimmedString = sb.toString().replace("\t"," ").replace("\n"," ").replace("\r","").replace("{ldots}","...").trim();
+            String trimmedString = sb.toString().replace("\t", " ").replace("\n", " ").replace("\r", "").replace("{ldots}", "...").trim();
             // to avoid double spaces, replace them with a single space
-            return trimmedString.replace("  "," ").trim();
+            return trimmedString.replace("  ", " ").trim();
         }
         return null;
     }
-   /**
-     * This method returns a formatted string wth the author- and year-value
-     * of an bibtex-entry for in-text-citing. This method does the work
-     * for both {@link #getFormattedEntryFromAttachedFile(java.lang.String) getFormattedEntryFromAttachedFile(String)}
-     * and {@link #getFormattedEntryFromAttachedFile(int) getFormattedEntryFromAttachedFile(int)}.<br><br>
-     * The way an author-value from the imported bibtex-value is formatted and output as string is defined
-     * via the {@link #initStyles() initStyles()}-method. There we create linked hashmaps that contain
-     * the elements for different literatur-types (books, articles, abstracts...).<br><br>
+
+    /**
+     * This method returns a formatted string wth the author- and year-value of an bibtex-entry for
+     * in-text-citing. This method does the work for both
+     * {@link #getFormattedEntryFromAttachedFile(java.lang.String) getFormattedEntryFromAttachedFile(String)}
+     * and
+     * {@link #getFormattedEntryFromAttachedFile(int) getFormattedEntryFromAttachedFile(int)}.<br><br>
+     * The way an author-value from the imported bibtex-value is formatted and output as string is
+     * defined via the {@link #initStyles() initStyles()}-method. There we create linked hashmaps
+     * that contain the elements for different literatur-types (books, articles,
+     * abstracts...).<br><br>
      * In this method, we first check out the <i>type</i> of the bibtex-entry (book, article...) and
-     * then get the related LinkedHashMap. In this HashMap, we have the single elements of the literatur
-     * (author, title, year, publisher...) in a certain order, with special values associated to each
-     * element. This is the formatting.<br><br>
-     * E.g.: The key <b>"year"</b> has the value <b>" (*):"</b>, where the asterisk is replaced by the
-     * year-value, if the bibtex-entry contains a year-value. The formatted year thus would be for
-     * instance <b>" (2009):"</b>.
-     * 
+     * then get the related LinkedHashMap. In this HashMap, we have the single elements of the
+     * literatur (author, title, year, publisher...) in a certain order, with special values
+     * associated to each element. This is the formatting.<br><br>
+     * E.g.: The key <b>"year"</b> has the value <b>" (*):"</b>, where the asterisk is replaced by
+     * the year-value, if the bibtex-entry contains a year-value. The formatted year thus would be
+     * for instance <b>" (2009):"</b>.
+     *
      * @param be the BibtexEntry that should be formatted
-     * @return the formatted output-string containing author and year information of 
-     * the BibtexEntry {@code be}.
+     * @return the formatted output-string containing author and year information of the BibtexEntry
+     * {@code be}.
      */
     private String getFormattedAuthor(BibtexEntry be) {
         // if we found any entry, go on...
-        if (be!=null) {
+        if (be != null) {
             // get all entry fields
             Map m = be.getFields();
             // retrieve all keys, i.e. author, title etc.
@@ -1520,23 +1561,22 @@ public class BibTex {
                 // get abstract value. we do not convert it directly to string. in case "getFieldValue"
                 // returns null, this would lead to a nullpointerexception.
                 BibtexAbstractValue bav = be.getFieldValue("author");
-                if (bav!=null) {
+                if (bav != null) {
                     dummy = bav.toString();
                 }
-            }
-            // in some cases, we have books, that do not have authors but editors only... in this
+            } // in some cases, we have books, that do not have authors but editors only... in this
             // case, check whether we have an editor-field instead of author-field.
             // check whether we find an editor-field instead of author-field
             else if (ks.contains("editor")) {
                 // get abstract value. we do not convert it directly to string. in case "getFieldValue"
                 // returns null, this would lead to a nullpointerexception.
                 BibtexAbstractValue bav = be.getFieldValue("editor");
-                if (bav!=null) {
+                if (bav != null) {
                     dummy = bav.toString();
                 }
             }
             // check whether we have any authors at all. if not, quit
-            if (null==dummy) {
+            if (null == dummy) {
                 return null;
             }
             // retrieve single authors
@@ -1552,32 +1592,29 @@ public class BibTex {
                     // retrieve sur and given name of author
                     String[] names = aunames.trim().split(",");
                     // check whether we have any author-field and value at all
-                    if (names!=null && names.length>0) {
+                    if (names != null && names.length > 0) {
                         // add surname
                         finalauthors.add(names[0].trim());
                     }
-                }
-                // else the given name comes first, so we
+                } // else the given name comes first, so we
                 // separate each full author-name at space-sign, so we can
                 // retieve sur- and given-name
                 else {
                     // retrieve sur and given name of author
                     String[] names = aunames.trim().split(" ");
                     // check whether we have any author-field and value at all
-                    if (names!=null && names.length>0) {
+                    if (names != null && names.length > 0) {
                         // add sur-name
-                        finalauthors.add(names[names.length-1].trim());
+                        finalauthors.add(names[names.length - 1].trim());
                     }
                 }
             }
             // check how many authors we have and add them to string builder
-            if (1==finalauthors.size()) {
+            if (1 == finalauthors.size()) {
                 sb.append(finalauthors.get(0));
-            }
-            else if (2==finalauthors.size()) {
+            } else if (2 == finalauthors.size()) {
                 sb.append(finalauthors.get(0)).append(" & ").append(finalauthors.get(1));
-            }
-            else if (finalauthors.size()>2) {
+            } else if (finalauthors.size() > 2) {
                 sb.append(finalauthors.get(0)).append(" et al.");
             }
             // retrieve year
@@ -1585,17 +1622,16 @@ public class BibTex {
                 // get abstract value. we do not convert it directly to string. in case "getFieldValue"
                 // returns null, this would lead to a nullpointerexception.
                 BibtexAbstractValue bav = be.getFieldValue("year");
-                if (bav!=null) {
+                if (bav != null) {
                     dummy = bav.toString();
                 }
-            }
-            // in some cases, we have the field "date" in bibtex entries instead of "year".
+            } // in some cases, we have the field "date" in bibtex entries instead of "year".
             // in this case, we use the date-field as substitute for the year-field.
             else if (ks.contains("date")) {
                 // get abstract value. we do not convert it directly to string. in case "getFieldValue"
                 // returns null, this would lead to a nullpointerexception.
                 BibtexAbstractValue bav = be.getFieldValue("date");
-                if (bav!=null) {
+                if (bav != null) {
                     dummy = bav.toString();
                 }
             }
@@ -1604,27 +1640,28 @@ public class BibTex {
             return convertEscapeChars(sb.toString(), false);
         }
         return null;
-    }    
+    }
+
     /**
-     * 
+     *
      * @param dummy
      * @param fromAttachedFile
-     * @return 
+     * @return
      */
     private String convertEscapeChars(String dummy, boolean fromAttachedFile) {
         // check whether we have citavi- or mendeley-import. in such case, umlauts are "encoded" with
         // backslah-quote (i.e. ä = \"a), so we have to re-cpnvert it.
-        if ((fromAttachedFile && getEncoding()==Constants.BIBTEX_DESC_BIBDESK_INDEX) || !fromAttachedFile) {
+        if ((fromAttachedFile && getEncoding() == Constants.BIBTEX_DESC_BIBDESK_INDEX) || !fromAttachedFile) {
             dummy = dummy.replace("{\\\"a}", "ä").replace("{\\\"A}", "Ä")
-                         .replace("{\\\"o}", "ö").replace("{\\\"O}", "Ö")
-                         .replace("{\\\"u}", "ü").replace("{\\\"U}", "Ü")
-                         .replace("{\\ss}", "ß");
+                    .replace("{\\\"o}", "ö").replace("{\\\"O}", "Ö")
+                    .replace("{\\\"u}", "ü").replace("{\\\"U}", "Ü")
+                    .replace("{\\ss}", "ß");
         }
-        if ((fromAttachedFile && getEncoding()==Constants.BIBTEX_DESC_CITAVI_INDEX || getEncoding()==Constants.BIBTEX_DESC_MENDELEY_INDEX || getEncoding()==Constants.BIBTEX_DESC_BIBDESK_INDEX) || !fromAttachedFile) {
+        if ((fromAttachedFile && getEncoding() == Constants.BIBTEX_DESC_CITAVI_INDEX || getEncoding() == Constants.BIBTEX_DESC_MENDELEY_INDEX || getEncoding() == Constants.BIBTEX_DESC_BIBDESK_INDEX) || !fromAttachedFile) {
             dummy = dummy.replace("\\\"a", "ä").replace("\\\"A", "Ä")
-                         .replace("\\\"o", "ö").replace("\\\"O", "Ö")
-                         .replace("\\\"u", "ü").replace("\\\"U", "Ü")
-                         .replace("\\ss", "ß");
+                    .replace("\\\"o", "ö").replace("\\\"O", "Ö")
+                    .replace("\\\"u", "ü").replace("\\\"U", "Ü")
+                    .replace("\\ss", "ß");
         }
         return dummy;
     }
