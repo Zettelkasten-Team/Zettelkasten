@@ -99,6 +99,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.html.HTML;
 import org.jdesktop.application.Action;
 
 
@@ -547,8 +549,18 @@ public class SearchResultsFrame extends javax.swing.JFrame {
                             mainframe.updateDisplay();
                         }
                     }
-                }
-                else {
+                } else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {
+                    javax.swing.text.Element elem = evt.getSourceElement();
+                    if (elem != null) {
+                        AttributeSet attr = elem.getAttributes();
+                        AttributeSet a = (AttributeSet) attr.getAttribute(HTML.Tag.A);
+                        if (a != null) {
+                            jEditorPaneSearchEntry.setToolTipText((String) a.getAttribute(HTML.Attribute.TITLE));
+                        }
+                    }
+                } else if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) {
+                    jEditorPaneSearchEntry.setToolTipText(null);
+                } else {
                     openAttachment(evt);
                 }
             }

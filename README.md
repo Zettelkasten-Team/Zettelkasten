@@ -29,6 +29,7 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 * Schwierigkeiten bei vertikaler Größenveränderung von Feldern unter OS X wurden behoben, der mit der Maus ziehbare Bereich vergrößert ([#49](https://github.com/sjPlot/Zettelkasten/issues/49)).
 * Dateipfade für das Einfügen von Bildern, Anhängen etc. wurden vergessen ([#20](https://github.com/sjPlot/Zettelkasten/issues/20)).
 * Beim Exportieren wurden nicht alle Format-Tags entfernt.
+* Tooltips bei Querverweisen wurden im Schreibtisch- und Suchergebnisfenster nicht angezeigt ([#69](https://github.com/sjPlot/Zettelkasten/issues/69)).
 
 ### Screenshots
 Aktuelle Screenshots [gibt es hier](http://zettelkasten.danielluedecke.de/gallery.php).

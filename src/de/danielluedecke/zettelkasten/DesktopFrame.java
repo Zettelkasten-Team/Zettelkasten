@@ -105,6 +105,8 @@ import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.HyperlinkEvent;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.html.HTML;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -298,7 +300,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     public DesktopFrame(ZettelkastenView zkn, TasksData td, Daten d, Bookmarks bm, DesktopData dk, Settings s, AcceleratorKeys ak, BibTex bt, AutoKorrektur auk, StenoData st) {
         // reference needed for fullscreen
         mainframe = this;
-        
+
         dataObj = d;
         taskdata = td;
         desktopObj = dk;
@@ -313,7 +315,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // check whether memory usage is logged. if so, tell logger that new entry windows was opened
         if (settingsObj.isMemoryUsageLogged) {
             // log info
-            Constants.zknlogger.log(Level.INFO,"Memory usage logged. Desktop Window opened.");
+            Constants.zknlogger.log(Level.INFO, "Memory usage logged. Desktop Window opened.");
         }
         // create brushed look for window, so toolbar and window-bar become a unit
         if (settingsObj.isMacAqua()) {
@@ -364,7 +366,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         updateTitle();
     }
 
-    
     private void initBorders(Settings settingsObj) {
         /*
          * Constructor for Matte Border
@@ -388,33 +389,32 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     }
 
     /**
-     * 
+     *
      */
     public final void updateTitle() {
         String currentTitle = getTitle();
         // get filename and find out where extension begins, so we can just set the filename as title
         File f = settingsObj.getFilePath();
         // check whether we have any valid filepath at all
-        if (f!=null && f.exists()) {
+        if (f != null && f.exists()) {
             String fname = f.getName();
             // find file-extension
             int extpos = fname.lastIndexOf(Constants.ZKN_FILEEXTENSION);
             // set the filename as title
-            if (extpos!=-1) {
+            if (extpos != -1) {
                 // show proxy-icon, only applies to mac.
                 getRootPane().putClientProperty("Window.documentFile", f);
                 // set file-name and app-name in title-bar
-                setTitle(currentTitle+" - ["+fname.substring(0,extpos)+"]");
+                setTitle(currentTitle + " - [" + fname.substring(0, extpos) + "]");
             }
         }
     }
 
-
     /**
-     * 
+     *
      */
     private void initListeners() {
-    // <editor-fold defaultstate="collapsed" desc="Here all relevant listeners are initiated.">
+        // <editor-fold defaultstate="collapsed" desc="Here all relevant listeners are initiated.">
         // these codelines add an escape-listener to the dialog. so, when the user
         // presses the escape-key, the same action is performed as if the user
         // presses the cancel button...
@@ -432,7 +432,8 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // presses the cancel button...
         stroke = KeyStroke.getKeyStroke(accKeys.getAcceleratorKey(AcceleratorKeys.MAINKEYS, "showSearchResultWindow"));
         ActionListener showSearchResultsAction = new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 zknframe.showSearchResultWindow();
             }
         };
@@ -442,7 +443,8 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // presses the cancel button...
         stroke = KeyStroke.getKeyStroke(accKeys.getAcceleratorKey(AcceleratorKeys.MAINKEYS, "showNewEntryWindow"));
         ActionListener showNewEntryFrameAction = new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 zknframe.showNewEntryWindow();
             }
         };
@@ -452,103 +454,157 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // presses the cancel button...
         stroke = KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0);
         ActionListener showMainFrameAction = new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 zknframe.bringToFront();
             }
         };
         getRootPane().registerKeyboardAction(showMainFrameAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
         jTextArea1.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
-                if (evt.isPopupTrigger()&& !jPopupMenuCutCopyPaste.isVisible()) jPopupMenuCutCopyPaste.show(jTextArea1, evt.getPoint().x, evt.getPoint().y);
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                if (evt.isPopupTrigger() && !jPopupMenuCutCopyPaste.isVisible()) {
+                    jPopupMenuCutCopyPaste.show(jTextArea1, evt.getPoint().x, evt.getPoint().y);
+                }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
-                if (evt.isPopupTrigger()&& !jPopupMenuCutCopyPaste.isVisible()) jPopupMenuCutCopyPaste.show(jTextArea1, evt.getPoint().x, evt.getPoint().y);
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                if (evt.isPopupTrigger() && !jPopupMenuCutCopyPaste.isVisible()) {
+                    jPopupMenuCutCopyPaste.show(jTextArea1, evt.getPoint().x, evt.getPoint().y);
+                }
             }
         });
         jTextArea2.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
-                if (evt.isPopupTrigger()&& !jPopupMenuCutCopyPaste.isVisible()) jPopupMenuCutCopyPaste.show(jTextArea2, evt.getPoint().x, evt.getPoint().y);
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                if (evt.isPopupTrigger() && !jPopupMenuCutCopyPaste.isVisible()) {
+                    jPopupMenuCutCopyPaste.show(jTextArea2, evt.getPoint().x, evt.getPoint().y);
+                }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
-                if (evt.isPopupTrigger()&& !jPopupMenuCutCopyPaste.isVisible()) jPopupMenuCutCopyPaste.show(jTextArea2, evt.getPoint().x, evt.getPoint().y);
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                if (evt.isPopupTrigger() && !jPopupMenuCutCopyPaste.isVisible()) {
+                    jPopupMenuCutCopyPaste.show(jTextArea2, evt.getPoint().x, evt.getPoint().y);
+                }
             }
         });
         jTextArea3.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
-                if (evt.isPopupTrigger()&& !jPopupMenuCutCopyPaste.isVisible()) jPopupMenuCutCopyPaste.show(jTextArea3, evt.getPoint().x, evt.getPoint().y);
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                if (evt.isPopupTrigger() && !jPopupMenuCutCopyPaste.isVisible()) {
+                    jPopupMenuCutCopyPaste.show(jTextArea3, evt.getPoint().x, evt.getPoint().y);
+                }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
-                if (evt.isPopupTrigger()&& !jPopupMenuCutCopyPaste.isVisible()) jPopupMenuCutCopyPaste.show(jTextArea3, evt.getPoint().x, evt.getPoint().y);
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                if (evt.isPopupTrigger() && !jPopupMenuCutCopyPaste.isVisible()) {
+                    jPopupMenuCutCopyPaste.show(jTextArea3, evt.getPoint().x, evt.getPoint().y);
+                }
             }
         });
         jTreeDesktop.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mousePressed(java.awt.event.MouseEvent evt) {
-                if (evt.isPopupTrigger()&& !jPopupMenuDesktop.isVisible()) jPopupMenuDesktop.show(jTreeDesktop, evt.getPoint().x, evt.getPoint().y);
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                if (evt.isPopupTrigger() && !jPopupMenuDesktop.isVisible()) {
+                    jPopupMenuDesktop.show(jTreeDesktop, evt.getPoint().x, evt.getPoint().y);
+                }
             }
-            @Override public void mouseReleased(java.awt.event.MouseEvent evt) {
-                if (evt.isPopupTrigger()&& !jPopupMenuDesktop.isVisible()) jPopupMenuDesktop.show(jTreeDesktop, evt.getPoint().x, evt.getPoint().y);
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                if (evt.isPopupTrigger() && !jPopupMenuDesktop.isVisible()) {
+                    jPopupMenuDesktop.show(jTreeDesktop, evt.getPoint().x, evt.getPoint().y);
+                }
             }
-            @Override public void mouseClicked(java.awt.event.MouseEvent evt) {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 // this listener should only react on left-mouse-button-clicks...
                 // if other button then left-button clicked, leeave...
-                if(evt.getButton()==MouseEvent.BUTTON1 && 2==evt.getClickCount()) modifiyEntry();
+                if (evt.getButton() == MouseEvent.BUTTON1 && 2 == evt.getClickCount()) {
+                    modifiyEntry();
+                }
             }
         });
         jTreeDesktop.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
-            @Override public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
+            @Override
+            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
                 updateToolbarAndMenu();
                 scrollToEntry();
             }
         });
         jTreeDesktop.addTreeExpansionListener(new javax.swing.event.TreeExpansionListener() {
-            @Override public void treeExpanded(javax.swing.event.TreeExpansionEvent evt) {
+            @Override
+            public void treeExpanded(javax.swing.event.TreeExpansionEvent evt) {
                 changeBulletTreefold(evt, true);
             }
-            @Override public void treeCollapsed(javax.swing.event.TreeExpansionEvent evt) {
+
+            @Override
+            public void treeCollapsed(javax.swing.event.TreeExpansionEvent evt) {
                 changeBulletTreefold(evt, false);
             }
         });
         jEditorPaneMain.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mouseClicked(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 updateView();
             }
         });
         jEditorPaneMain.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
-            @Override public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
+            @Override
+            public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
                 // retrieve the event type, e.g. if a link was clicked by the user
                 HyperlinkEvent.EventType typ = evt.getEventType();
                 // get the description, to check whether we have a file or a hyperlink to a website
                 String linktype = evt.getDescription();
                 // if the link was clicked, proceed
-                if (typ==HyperlinkEvent.EventType.ACTIVATED) {
+                if (typ == HyperlinkEvent.EventType.ACTIVATED) {
                     // call method that handles the hyperlink-click
                     String returnValue = Tools.openHyperlink(linktype, mainframe, Constants.FRAME_DESKTOP, dataObj, bibtexObj, settingsObj, jEditorPaneMain, -1);
                     // check whether we have a return value. this might be the case either when the user clicked on
                     // a footenote, or on the rating-stars
-                    if (returnValue!=null&& returnValue.startsWith("#z_")) {
+                    if (returnValue != null && returnValue.startsWith("#z_")) {
                         // show entry
                         zknframe.showEntry(dataObj.getCurrentZettelPos());
                     }
+                } else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {
+                    javax.swing.text.Element elem = evt.getSourceElement();
+                    if (elem != null) {
+                        AttributeSet attr = elem.getAttributes();
+                        AttributeSet a = (AttributeSet) attr.getAttribute(HTML.Tag.A);
+                        if (a != null) {
+                            jEditorPaneMain.setToolTipText((String) a.getAttribute(HTML.Attribute.TITLE));
+                        }
+                    }
+                } else if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) {
+                    jEditorPaneMain.setToolTipText(null);
                 }
             }
         });
+        
         jTextFieldLiveSearch.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override public void keyReleased(java.awt.event.KeyEvent evt) {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
                 // when the user presses the escape-key, hide panel
-                if (KeyEvent.VK_ESCAPE==evt.getKeyCode()) {
+                if (KeyEvent.VK_ESCAPE == evt.getKeyCode()) {
                     findCancel();
-                }
-                // when up/down arrows are pressed, find next/previous occurence of search term
+                } // when up/down arrows are pressed, find next/previous occurence of search term
                 else if (Tools.isNavigationKey(evt.getKeyCode())) {
                     switch (evt.getKeyCode()) {
                         // if user pressed arrow down key, find next occurence of live search
-                        case KeyEvent.VK_DOWN: findLiveNext(); break;
+                        case KeyEvent.VK_DOWN:
+                            findLiveNext();
+                            break;
                         // if user pressed arrow down key, find previous occurence of live search
-                        case KeyEvent.VK_UP: findLivePrev(); break;
-                   }
-                }
-                // when user presses enter key, retrieve new search term and highlight term
-                else if (KeyEvent.VK_ENTER==evt.getKeyCode() && jTextFieldLiveSearch.getText().length()>1) {
+                        case KeyEvent.VK_UP:
+                            findLivePrev();
+                            break;
+                    }
+                } // when user presses enter key, retrieve new search term and highlight term
+                else if (KeyEvent.VK_ENTER == evt.getKeyCode() && jTextFieldLiveSearch.getText().length() > 1) {
                     updateLiveSearchDisplay();
                 }
             }
@@ -557,14 +613,22 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // init the menu-listeners...
         //
         desktopMenuFile.addMenuListener(new javax.swing.event.MenuListener() {
-            @Override public void menuSelected(javax.swing.event.MenuEvent evt) {
-                exportMultipleMenuItem.setEnabled(desktopObj.getCount()>1);
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                exportMultipleMenuItem.setEnabled(desktopObj.getCount() > 1);
             }
-            @Override public void menuDeselected(javax.swing.event.MenuEvent evt) {}
-            @Override public void menuCanceled(javax.swing.event.MenuEvent evt) {}
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
         });
         desktopMenuView.addMenuListener(new javax.swing.event.MenuListener() {
-            @Override public void menuSelected(javax.swing.event.MenuEvent evt) {
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
                 // set selected state
                 showDesktopTreeEntryNumberMenuItem.setSelected(settingsObj.getShowDesktopEntryNumber());
                 // check whether we have any comments at all
@@ -572,34 +636,49 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                     // if not, disable menu item
                     jRadioButtonDesktopOnlyComments.setEnabled(false);
                     // if view option was comments only, change this option
-                    if (Constants.DESKTOP_ONLY_COMMENTS==settingsObj.getDesktopCommentDisplayOptions()) settingsObj.setDesktopCommentDisplayOptions(Constants.DESKTOP_WITH_COMMENTS);
-                }
-                else {
+                    if (Constants.DESKTOP_ONLY_COMMENTS == settingsObj.getDesktopCommentDisplayOptions()) {
+                        settingsObj.setDesktopCommentDisplayOptions(Constants.DESKTOP_WITH_COMMENTS);
+                    }
+                } else {
                     jRadioButtonDesktopOnlyComments.setEnabled(true);
                 }
                 switch (settingsObj.getDesktopCommentDisplayOptions()) {
-                    case Constants.DESKTOP_WITH_COMMENTS: jRadioButtonDesktopWithComment.setSelected(true); break;
-                    case Constants.DESKTOP_WITHOUT_COMMENTS: jRadioButtonDesktopWithoutComments.setSelected(true); break;
-                    case Constants.DESKTOP_ONLY_COMMENTS: jRadioButtonDesktopOnlyComments.setSelected(true); break;
-                    default: jRadioButtonDesktopWithComment.setSelected(true); break;
+                    case Constants.DESKTOP_WITH_COMMENTS:
+                        jRadioButtonDesktopWithComment.setSelected(true);
+                        break;
+                    case Constants.DESKTOP_WITHOUT_COMMENTS:
+                        jRadioButtonDesktopWithoutComments.setSelected(true);
+                        break;
+                    case Constants.DESKTOP_ONLY_COMMENTS:
+                        jRadioButtonDesktopOnlyComments.setSelected(true);
+                        break;
+                    default:
+                        jRadioButtonDesktopWithComment.setSelected(true);
+                        break;
                 }
             }
-            @Override public void menuDeselected(javax.swing.event.MenuEvent evt) {}
-            @Override public void menuCanceled(javax.swing.event.MenuEvent evt) {}
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
         });
 
-    // </editor-fold>
+        // </editor-fold>
     }
 
-
     /**
-     * This method changes a bullet-point's treefold-state, so it's remembered when re-building
-     * the treeview.
+     * This method changes a bullet-point's treefold-state, so it's remembered
+     * when re-building the treeview.
      *
-     * @param evt the {@code TreeExpansionEvent} which holds information about the node that
-     * was expanded or collapsed
-     * @param isExpanded {@code true} if the node was expandend, {@code false} if it was collapsed. This
-     * information is retrieved from the {@code addTreeExpansionListener}, see
+     * @param evt the {@code TreeExpansionEvent} which holds information about
+     * the node that was expanded or collapsed
+     * @param isExpanded {@code true} if the node was expandend, {@code false}
+     * if it was collapsed. This information is retrieved from the
+     * {@code addTreeExpansionListener}, see
      * {@link #initListeners() initListeners()}.
      */
     private void changeBulletTreefold(javax.swing.event.TreeExpansionEvent evt, boolean isExpanded) {
@@ -607,35 +686,41 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         TreePath tp = evt.getPath();
         // check whether root was expanded or not. therefore, retrieve root-node
         // and the last node of the treepath, i.e. the node which was expanded
-        TreeNode root = (TreeNode)jTreeDesktop.getModel().getRoot();
-        TreeNode expandednode = (TreeNode)tp.getLastPathComponent();
+        TreeNode root = (TreeNode) jTreeDesktop.getModel().getRoot();
+        TreeNode expandednode = (TreeNode) tp.getLastPathComponent();
         // if they equal, do nothing
-        if (expandednode.equals(root) || TreeUtil.nodeIsRoot((DefaultMutableTreeNode)expandednode)) return;
+        if (expandednode.equals(root) || TreeUtil.nodeIsRoot((DefaultMutableTreeNode) expandednode)) {
+            return;
+        }
         // else, retrieve node's timestamp
-        String timestamp = TreeUtil.getNodeTimestamp((DefaultMutableTreeNode)tp.getLastPathComponent());
+        String timestamp = TreeUtil.getNodeTimestamp((DefaultMutableTreeNode) tp.getLastPathComponent());
         // and set new treefold-state
         desktopObj.setBulletTreefold(timestamp, isExpanded);
     }
 
-
     /**
-     * This method initiates the drag&drop-hanlding for the jEditorPanes. By doing this, the user
-     * can drag entries from the jTree to the editorpane(s), and the entry's content will be displayed
-     * in that editorpane. it's just a more comfortable way to handle the notes a user can make when
-     * working with the outliner-feature - in case the user wants to keep entries permanently visible,
-     * this feature can be used.
+     * This method initiates the drag&drop-hanlding for the jEditorPanes. By
+     * doing this, the user can drag entries from the jTree to the
+     * editorpane(s), and the entry's content will be displayed in that
+     * editorpane. it's just a more comfortable way to handle the notes a user
+     * can make when working with the outliner-feature - in case the user wants
+     * to keep entries permanently visible, this feature can be used.
      *
-     * @param editorpane an existing jEditorPane, in this case we use the components
-     * {@code jEditorPaneS1}, {@code jEditorPaneS2} and {@code jEditorPaneS3}
+     * @param editorpane an existing jEditorPane, in this case we use the
+     * components {@code jEditorPaneS1}, {@code jEditorPaneS2} and
+     * {@code jEditorPaneS3}
      */
     private void initDropPanes(final javax.swing.JTextArea editorpane) {
         editorpane.setTransferHandler(new EntryStringTransferHandler() {
-            @Override protected String exportString(JComponent c) {
+            @Override
+            protected String exportString(JComponent c) {
                 return editorpane.getSelectedText();
             }
-            @Override protected boolean importString(JComponent c, String str) {
+
+            @Override
+            protected boolean importString(JComponent c, String str) {
                 // check for valid drop-string
-                if (str!=null) {
+                if (str != null) {
                     // each received string consists of two lines. the first one with information
                     // about the drag-source and the drag-operation, the second one with the data
                     // by this we can see whether we have received entries (i.e. a valid drop)
@@ -644,42 +729,43 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                     String[] sourceinfo = dropinformation[0].split(",");
                     // check out the source of the drag-operation. if we have a valid source,
                     // retrieve entries than.
-                    if (sourceinfo.length>1 && sourceinfo[1].equals(Constants.DRAG_SOURCE_TYPE_ENTRIES)) {
+                    if (sourceinfo.length > 1 && sourceinfo[1].equals(Constants.DRAG_SOURCE_TYPE_ENTRIES)) {
                         // we only accept drop-data from tables, so we might have several
                         // lines, separates by a new-line. thus, split all new lines into
                         // a string array.
                         String[] entries = dropinformation[1].split(",");
                         // if we have any dropped data, go on...
-                        if (entries!=null && entries.length>0) {
+                        if (entries != null && entries.length > 0) {
                             // get converted entry
                             StringBuilder text = new StringBuilder("");
                             for (String entrie : entries) {
                                 try {
                                     text.append(dataObj.getZettelContentAsHtml(Integer.parseInt(entrie)));
                                     text.append(lineseparator);
-                                }catch (NumberFormatException | IndexOutOfBoundsException ex) {
+                                } catch (NumberFormatException | IndexOutOfBoundsException ex) {
                                 }
                             }
                             // add content to editor pane
                             editorpane.setText(text.toString());
                         }
                         return true;
-                    }
-                    else {
+                    } else {
                         editorpane.append(str);
                     }
                 }
                 return false;
             }
-            @Override protected void cleanup(JComponent c, boolean remove) {
+
+            @Override
+            protected void cleanup(JComponent c, boolean remove) {
             }
         });
     }
 
-
     /**
-     * This method initialises the toolbar buttons. depending on the user-setting, we either
-     * display small, medium or large icons as toolbar-icons.
+     * This method initialises the toolbar buttons. depending on the
+     * user-setting, we either display small, medium or large icons as
+     * toolbar-icons.
      */
     public final void initToolbarIcons() {
         // check whether the toolbar should be displayed at all...
@@ -688,7 +774,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             jToolBarDesktop.setVisible(false);
             // and set a border to the main panel, because the toolbar's dark border is hidden
             // and remove border from the main panel
-            jPanel1.setBorder(new MatteBorder(1,0,0,0,ColorUtil.colorDarkLineGray));
+            jPanel1.setBorder(new MatteBorder(1, 0, 0, 0, ColorUtil.colorDarkLineGray));
             return;
         }
         // set toolbar visible
@@ -696,30 +782,29 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // and remove border from the main panel
         jPanel1.setBorder(null);
         // init toolbar button array
-        javax.swing.JButton toolbarButtons[] = new javax.swing.JButton[] {
+        javax.swing.JButton toolbarButtons[] = new javax.swing.JButton[]{
             tb_newbullet, tb_newentry, tb_modifyentry, tb_cut, tb_copy, tb_paste,
             tb_rename, tb_comment, tb_delete, tb_refresh, tb_addluhmann,
             tb_moveup, tb_movedown
         };
-        String[] buttonNames = new String[] { "tb_newbulletText", "tb_newdesktopentryText", "tb_editText",
-                                              "tb_cutText", "tb_copyText", "tb_pasteText",
-                                              "tb_renameText", "tb_commentText", "tb_deleteText",
-                                              "tb_refreshText", "tb_addluhmannText",
-                                              "tb_moveupText", "tb_movedownText"
+        String[] buttonNames = new String[]{"tb_newbulletText", "tb_newdesktopentryText", "tb_editText",
+            "tb_cutText", "tb_copyText", "tb_pasteText",
+            "tb_renameText", "tb_commentText", "tb_deleteText",
+            "tb_refreshText", "tb_addluhmannText",
+            "tb_moveupText", "tb_movedownText"
         };
-        String[] iconNames = new String[] { "newBulletIcon", "newDesktopEntryIcon", "editEntryIcon",
-                                            "cutIcon", "copyIcon", "pasteIcon",
-                                            "renameBulletIcon", "commentNodeIcon", "deleteIcon",
-                                            "updateViewIcon", "addLuhmannIcon",
-                                            "moveNodeUpIcon", "moveNodeDownIcon"
+        String[] iconNames = new String[]{"newBulletIcon", "newDesktopEntryIcon", "editEntryIcon",
+            "cutIcon", "copyIcon", "pasteIcon",
+            "renameBulletIcon", "commentNodeIcon", "deleteIcon",
+            "updateViewIcon", "addLuhmannIcon",
+            "moveNodeUpIcon", "moveNodeDownIcon"
         };
         // set toolbar-icons' text
         if (settingsObj.getShowIconText()) {
-            for (int cnt=0; cnt< toolbarButtons.length; cnt++) {
+            for (int cnt = 0; cnt < toolbarButtons.length; cnt++) {
                 toolbarButtons[cnt].setText(toolbarResourceMap.getString(buttonNames[cnt]));
             }
-        }
-        else {
+        } else {
             for (javax.swing.JButton tbb : toolbarButtons) {
                 tbb.setText("");
             }
@@ -728,11 +813,10 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         if (settingsObj.getShowIcons()) {
             // retrieve icon theme path
             String icontheme = settingsObj.getIconThemePath();
-            for (int cnt=0; cnt< toolbarButtons.length; cnt++) {
-                toolbarButtons[cnt].setIcon(new ImageIcon(ZettelkastenView.class.getResource(icontheme+toolbarResourceMap.getString(iconNames[cnt]))));
+            for (int cnt = 0; cnt < toolbarButtons.length; cnt++) {
+                toolbarButtons[cnt].setIcon(new ImageIcon(ZettelkastenView.class.getResource(icontheme + toolbarResourceMap.getString(iconNames[cnt]))));
             }
-        }
-        else {
+        } else {
             for (javax.swing.JButton tbb : toolbarButtons) {
                 tbb.setIcon(null);
             }
@@ -741,24 +825,26 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             tb_addluhmann.setVisible(false);
             tb_rename.setVisible(false);
         }
-        if (settingsObj.isMacAqua()) makeMacToolbar();
-        if (settingsObj.isSeaGlass()) makeSeaGlassToolbar();
+        if (settingsObj.isMacAqua()) {
+            makeMacToolbar();
+        }
+        if (settingsObj.isSeaGlass()) {
+            makeSeaGlassToolbar();
+        }
     }
-
 
     private void setupSeaGlassStyle() {
         getRootPane().setBackground(ColorUtil.colorSeaGlassGray);
         jTextFieldLiveSearch.putClientProperty("JTextField.variant", "search");
         jEditorPaneMain.setBackground(Color.white);
     }
-    
-    
+
     /**
-     * This method applies some graphical stuff so the appearance of the program is even more
-     * mac-like...
+     * This method applies some graphical stuff so the appearance of the program
+     * is even more mac-like...
      */
     private void setupMacOSXLeopardStyle() {
-    // <editor-fold defaultstate="collapsed" desc="This method applies some UI-stuff particular for Mac OS X">
+        // <editor-fold defaultstate="collapsed" desc="This method applies some UI-stuff particular for Mac OS X">
         // now we have to change back the background-color of all components in the mainpart of the
         // frame, since the brush-metal-look applies to all components
         //
@@ -784,19 +870,17 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         AbstractAction ac = (AbstractAction) org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(DesktopFrame.class, this).get("findCancel");
         // and change the large-icon-property, which is applied to the toolbar-icons,
         // to the new icon
-        ac.putValue(AbstractAction.LARGE_ICON_KEY,new ImageIcon(Toolkit.getDefaultToolkit().getImage("NSImage://NSStopProgressFreestandingTemplate").getScaledInstance(16, 16,Image.SCALE_SMOOTH)));
-        ac.putValue(AbstractAction.SMALL_ICON,new ImageIcon(Toolkit.getDefaultToolkit().getImage("NSImage://NSStopProgressFreestandingTemplate").getScaledInstance(16, 16,Image.SCALE_SMOOTH)));
+        ac.putValue(AbstractAction.LARGE_ICON_KEY, new ImageIcon(Toolkit.getDefaultToolkit().getImage("NSImage://NSStopProgressFreestandingTemplate").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+        ac.putValue(AbstractAction.SMALL_ICON, new ImageIcon(Toolkit.getDefaultToolkit().getImage("NSImage://NSStopProgressFreestandingTemplate").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
         // </editor-fold>
     }
 
-    
     private void makeSeaGlassToolbar() {
         Tools.makeTexturedToolBarButton(tb_newbullet, Tools.SEGMENT_POSITION_FIRST);
         if (settingsObj.getShowAllIcons()) {
             Tools.makeTexturedToolBarButton(tb_newentry, Tools.SEGMENT_POSITION_MIDDLE);
             Tools.makeTexturedToolBarButton(tb_addluhmann, Tools.SEGMENT_POSITION_LAST);
-        }
-        else {
+        } else {
             Tools.makeTexturedToolBarButton(tb_newentry, Tools.SEGMENT_POSITION_LAST);
         }
         Tools.makeTexturedToolBarButton(tb_modifyentry, Tools.SEGMENT_POSITION_FIRST);
@@ -808,16 +892,15 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         if (settingsObj.getShowAllIcons()) {
             Tools.makeTexturedToolBarButton(tb_rename, Tools.SEGMENT_POSITION_FIRST);
             Tools.makeTexturedToolBarButton(tb_comment, Tools.SEGMENT_POSITION_MIDDLE);
-        }
-        else {
+        } else {
             Tools.makeTexturedToolBarButton(tb_comment, Tools.SEGMENT_POSITION_FIRST);
         }
         Tools.makeTexturedToolBarButton(tb_delete, Tools.SEGMENT_POSITION_LAST);
         Tools.makeTexturedToolBarButton(tb_refresh, Tools.SEGMENT_POSITION_ONLY);
-        jToolBarDesktop.setPreferredSize(new java.awt.Dimension(jToolBarDesktop.getSize().width,Constants.seaGlassToolbarHeight));
+        jToolBarDesktop.setPreferredSize(new java.awt.Dimension(jToolBarDesktop.getSize().width, Constants.seaGlassToolbarHeight));
         jToolBarDesktop.add(new javax.swing.JToolBar.Separator(), 0);
     }
-    
+
     private void makeMacToolbar() {
         // hide default toolbr
         jToolBarDesktop.setVisible(false);
@@ -831,8 +914,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             if (settingsObj.getShowAllIcons()) {
                 mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_newentry, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
                 mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_addluhmann, MacToolbarButton.SEGMENT_POSITION_LAST));
-            }
-            else {
+            } else {
                 mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_newentry, MacToolbarButton.SEGMENT_POSITION_LAST));
             }
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
@@ -847,19 +929,19 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             if (settingsObj.getShowAllIcons()) {
                 mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_rename, MacToolbarButton.SEGMENT_POSITION_FIRST));
                 mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_comment, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-            }
-            else {
+            } else {
                 mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_comment, MacToolbarButton.SEGMENT_POSITION_FIRST));
             }
             mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_delete, MacToolbarButton.SEGMENT_POSITION_LAST));
             mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
             mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_refresh, MacToolbarButton.SEGMENT_POSITION_ONLY));
-            
+
             mactoolbar.installWindowDraggerOnWindow(this);
-            jPanel1.add(mactoolbar.getComponent(),BorderLayout.PAGE_START);
+            jPanel1.add(mactoolbar.getComponent(), BorderLayout.PAGE_START);
         }
         makeMacBottomBar();
     }
+
     private void makeMacBottomBar() {
         jPanel7.setVisible(false);
 
@@ -869,17 +951,17 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(jLabelWordCount));
         macbottombar.addComponentToLeft(jButtonShowMultipleOccurencesDlg);
         macbottombar.addComponentToRight(statusAnimationLabel);
-        
+
         jPanel2.remove(jPanel7);
         jPanel2.setBorder(null);
         jPanel2.setLayout(new BorderLayout());
-        jPanel2.add(macbottombar.getComponent(),BorderLayout.PAGE_START);
+        jPanel2.add(macbottombar.getComponent(), BorderLayout.PAGE_START);
     }
 
     /**
-     * This method sets the default font-size for tables, lists and treeviews. If the
-     * user wants to have bigger font-sizes for better viewing, the new font-size will
-     * be applied to the components here.
+     * This method sets the default font-size for tables, lists and treeviews.
+     * If the user wants to have bigger font-sizes for better viewing, the new
+     * font-size will be applied to the components here.
      */
     private void initDefaultFontSize() {
         // get the default fontsize for tables and lists
@@ -889,17 +971,17 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // retrieve default listvewfont
         Font defaultfont = settingsObj.getDesktopOutlineFont();
         // create new font, add fontsize-value
-        Font f = new Font(defaultfont.getName(), defaultfont.getStyle(), fsize+defaultsize);
+        Font f = new Font(defaultfont.getName(), defaultfont.getStyle(), fsize + defaultsize);
         // set new font
         jTreeDesktop.setFont(f);
     }
 
-    
     /**
-     * This method sets the accelerator table for all relevant actions which should have
-     * accelerator keys. We don't use the GUI designer to set the values, because the user
-     * should have the possibility to define own accelerator keys, which are managed
-     * within the CAcceleratorKeys-class and loaed/saved via the CSettings-class
+     * This method sets the accelerator table for all relevant actions which
+     * should have accelerator keys. We don't use the GUI designer to set the
+     * values, because the user should have the possibility to define own
+     * accelerator keys, which are managed within the CAcceleratorKeys-class and
+     * loaed/saved via the CSettings-class
      */
     private void initAcceleratorTable() {
         // setting up the accelerator table. we have two possibilities: either assigning
@@ -918,21 +1000,21 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // and retrieve action names as well as accelerator keys. this saves a lot of typing work here
         //
         // get the action map
-        javax.swing.ActionMap actionMap = 
-            org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-            getContext().getActionMap(DesktopFrame.class, this);
+        javax.swing.ActionMap actionMap
+                = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+                getContext().getActionMap(DesktopFrame.class, this);
         // iterate the xml file with the accelerator keys for the main window
-        for (int cnt=1; cnt<=accKeys.getCount(AcceleratorKeys.DESKTOPKEYS); cnt++) {
+        for (int cnt = 1; cnt <= accKeys.getCount(AcceleratorKeys.DESKTOPKEYS); cnt++) {
             // get the action's name
             String actionname = accKeys.getAcceleratorAction(AcceleratorKeys.DESKTOPKEYS, cnt);
             // check whether we have found any valid action name
-            if (actionname!=null && !actionname.isEmpty()) {
+            if (actionname != null && !actionname.isEmpty()) {
                 // retrieve action
                 AbstractAction ac = (AbstractAction) actionMap.get(actionname);
                 // get the action's accelerator key
                 String actionkey = accKeys.getAcceleratorKey(AcceleratorKeys.DESKTOPKEYS, cnt);
                 // check whether we have any valid actionkey
-                if (actionkey!=null && !actionkey.isEmpty()) {
+                if (actionkey != null && !actionkey.isEmpty()) {
                     // retrieve keystroke setting
                     KeyStroke ks = KeyStroke.getKeyStroke(actionkey);
                     // and put them together :-)
@@ -967,55 +1049,61 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // on Mac OS, at least for the German locale, the File menu is called different
         // compared to windows or linux. Furthermore, we don't need the about and preferences
         // menu items, since these are locates on the program's menu item in the apple-menu-bar
-        if (PlatformUtil.isMacOS()) desktopMenuFile.setText(resourceMap.getString("macFileMenuText"));
+        if (PlatformUtil.isMacOS()) {
+            desktopMenuFile.setText(resourceMap.getString("macFileMenuText"));
+        }
         // en- or disable fullscreen icons
         setFullScreenSupp(graphicdevice.isFullScreenSupported());
         // if fullscreen is not supportet, tell this in the tooltip
         if (!graphicdevice.isFullScreenSupported()) {
             AbstractAction ac = (AbstractAction) actionMap.get("viewFullScreen");
-            ac.putValue(AbstractAction.SHORT_DESCRIPTION,resourceMap.getString("fullScreenNotSupported"));
+            ac.putValue(AbstractAction.SHORT_DESCRIPTION, resourceMap.getString("fullScreenNotSupported"));
         }
         // jTrees have their own input-map, so we have to re-assign the standard-shortcuts for
         // the jTree here... otherwise, copying nodes would lead to copy just the node's text,
         // and not - as we are intending - the node itself...
-        String[] treeactions = new String[] {"cutNode","copyNode","pasteNode","renameBullet","moveNodeUp","moveNodeDown"};
+        String[] treeactions = new String[]{"cutNode", "copyNode", "pasteNode", "renameBullet", "moveNodeUp", "moveNodeDown"};
         // iterate the actions-array and change input-map for all relevant actions in the jTree
         for (String tac : treeactions) {
             // change tree's action-map for cut-action
-            jTreeDesktop.getActionMap().put(tac+"KeyPressed",actionMap.get(tac));
+            jTreeDesktop.getActionMap().put(tac + "KeyPressed", actionMap.get(tac));
             // associate new keystroke with that action
             KeyStroke ks = KeyStroke.getKeyStroke(accKeys.getAcceleratorKey(AcceleratorKeys.DESKTOPKEYS, tac));
             // and put the new keystroke-value to the tree's input-map
-            jTreeDesktop.getInputMap().put(ks, tac+"KeyPressed");
+            jTreeDesktop.getInputMap().put(ks, tac + "KeyPressed");
         }
     }
-    
-    
+
     /**
-     * This method inits the combobox. First it clears all existing items, then it
-     * adds all available desktop-data  and finally an actionlistener is added to
-     * the jcombobox, that updates the display each time another desktop is chosen.
+     * This method inits the combobox. First it clears all existing items, then
+     * it adds all available desktop-data and finally an actionlistener is added
+     * to the jcombobox, that updates the display each time another desktop is
+     * chosen.
      */
     private void initComboBox() {
         // clear combobox
         jComboBoxDesktop.removeAllItems();
         // fill combo box, if we have any items at all
-        if (desktopObj.getCount()>0) {
+        if (desktopObj.getCount() > 0) {
             // go through all desktops and add their names to the combobox
-            for (int cnt=0; cnt<desktopObj.getCount(); cnt++) jComboBoxDesktop.addItem(desktopObj.getDesktopName(cnt));
+            for (int cnt = 0; cnt < desktopObj.getCount(); cnt++) {
+                jComboBoxDesktop.addItem(desktopObj.getDesktopName(cnt));
+            }
             // add action listener
             addCbActionListener();
             // select first item
             jComboBoxDesktop.setSelectedIndex(settingsObj.getLastUsedDesktop(desktopObj.getCount()));
         }
     }
+
     /**
      * This method inits the action listener for the combo box.
      */
     private void addCbActionListener() {
         // add action listener to combo box
         jComboBoxDesktop.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 // save current notes
                 desktopObj.setDesktopNotes(1, jTextArea1.getText());
                 desktopObj.setDesktopNotes(2, jTextArea2.getText());
@@ -1026,7 +1114,9 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 // the xml-document
                 updateTreeView();
                 // if view option was comments only, change this option if we don't have any comments at all
-                if (Constants.DESKTOP_ONLY_COMMENTS==settingsObj.getDesktopCommentDisplayOptions() && !desktopObj.desktopHasComments(desktopObj.getCurrentDesktopElement())) settingsObj.setDesktopCommentDisplayOptions(Constants.DESKTOP_WITH_COMMENTS);
+                if (Constants.DESKTOP_ONLY_COMMENTS == settingsObj.getDesktopCommentDisplayOptions() && !desktopObj.desktopHasComments(desktopObj.getCurrentDesktopElement())) {
+                    settingsObj.setDesktopCommentDisplayOptions(Constants.DESKTOP_WITH_COMMENTS);
+                }
                 // tell the user that he should click to update...
                 jEditorPaneMain.setText(resourceMap.getString("clickToUpdateText"));
                 // init notes, if any
@@ -1038,7 +1128,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         });
     }
 
-
     /**
      * Toggles the visibility of the notes-sidebar, i.e. either collapses or
      * expands the splitpane on demand.
@@ -1049,58 +1138,63 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         if (isSidebarHidden) {
             setSplitLocation(jSplitPaneDesktop2.getDividerLocation());
             jSplitPaneDesktop2.setDividerLocation(1.0d);
-        }
-        else {
+        } else {
             int pos = getSplitLocation();
-            if (-1==pos) pos =  mainframe.getWidth() - Constants.MIN_SIDEBAR_SIZE;
+            if (-1 == pos) {
+                pos = mainframe.getWidth() - Constants.MIN_SIDEBAR_SIZE;
+            }
             jSplitPaneDesktop2.setDividerLocation(pos);
         }
     }
     private int savedDividerLocation = 0;
+
     private void setSplitLocation(int pos) {
         savedDividerLocation = pos;
     }
+
     private int getSplitLocation() {
         return savedDividerLocation;
     }
-    
-    
+
     @Action
     public void printContent() {
-        javax.swing.JEditorPane tmpPane=new javax.swing.JEditorPane();
+        javax.swing.JEditorPane tmpPane = new javax.swing.JEditorPane();
         tmpPane.setEditorKit(jEditorPaneMain.getEditorKit());
         tmpPane.setContentType(jEditorPaneMain.getContentType());
         StringBuilder sb = new StringBuilder("");
         sb.append(completePage);
         // if we have any content, insert html-header at the beginning...
-        if (sb.length()>0) sb.insert(0,HtmlUbbUtil.getHtmlHeaderForDesktop(settingsObj,true));
+        if (sb.length() > 0) {
+            sb.insert(0, HtmlUbbUtil.getHtmlHeaderForDesktop(settingsObj, true));
+        }
         tmpPane.setText(sb.toString());
         try {
             tmpPane.print();
-        }
-        catch (PrinterException e) {
+        } catch (PrinterException e) {
             Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
         }
     }
-    
-    
+
     /**
      * Displays the selected entry in the main frame.
      */
     @Action(enabledProperty = "entryNodeSelected")
     public void displayEntryInMainframe() {
         // retrieve selection from jtree
-        int nr = getSelectedEntryNumber(); 
+        int nr = getSelectedEntryNumber();
         // when we have a valid selection, go on
-        if (nr!=-1) zknframe.showEntry(nr);
+        if (nr != -1) {
+            zknframe.showEntry(nr);
+        }
     }
 
-    
     public void showEntryInDesktop(int entrynr) {
         // check for valid value
-        if (-1==entrynr) return;
+        if (-1 == entrynr) {
+            return;
+        }
         // itereate all desktops
-        for (int cnt=0; cnt<desktopObj.getCount(); cnt++) {
+        for (int cnt = 0; cnt < desktopObj.getCount(); cnt++) {
             // check whether entry is in this desktop
             if (desktopObj.isEntryInDesktop(entrynr, cnt)) {
                 // set entry number
@@ -1113,68 +1207,72 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         }
     }
 
-    
     @Action
     public void showDesktopEntryNumber() {
         boolean val = settingsObj.getShowDesktopEntryNumber();
         settingsObj.setShowDesktopEntryNumber(!val);
         val = isNeedsUpdate();
         updateTreeView();
-        if (!val) setNeedsUpdate(false);
+        if (!val) {
+            setNeedsUpdate(false);
+        }
     }
-    
-    
+
     /**
      * Each time we add/delete a desktop, the combo box is being updated. First,
-     * this method checks whether the current desktop was modified or not, and saves
-     * the current desktop-data to xml-file, if necessary.
+     * this method checks whether the current desktop was modified or not, and
+     * saves the current desktop-data to xml-file, if necessary.
      * <br><br>
      * Then all action listeners are removed, so no actionevent is fired when we
      * add new items to the combobox. Then all available desktop-data is added.
-     * Finally, an actionlistener is added to
-     * the jcombobox, that updates the display each time another desktop is chosen.
-     * 
-     * @param closing true when the window will be closed, false if the combobox should be updated
-     * and the desktop-window will not be closed.
+     * Finally, an actionlistener is added to the jcombobox, that updates the
+     * display each time another desktop is chosen.
+     *
+     * @param closing true when the window will be closed, false if the combobox
+     * should be updated and the desktop-window will not be closed.
      */
     private void updateComboBox(boolean closing) {
         // get all action listeners from the combo box
         ActionListener[] al = jComboBoxDesktop.getActionListeners();
         // remove all action listeners so we don't fire several action-events
         // when we update the combo box. we can set the action listener later again
-        for (ActionListener listener : al) jComboBoxDesktop.removeActionListener(listener);
+        for (ActionListener listener : al) {
+            jComboBoxDesktop.removeActionListener(listener);
+        }
         // clear combobox
         jComboBoxDesktop.removeAllItems();
         // add all desktop-items to combo-box
-        for (int cnt=0; cnt<desktopObj.getCount(); cnt++) jComboBoxDesktop.addItem(desktopObj.getDesktopName(cnt));
+        for (int cnt = 0; cnt < desktopObj.getCount(); cnt++) {
+            jComboBoxDesktop.addItem(desktopObj.getDesktopName(cnt));
+        }
         // add action listener to combo box
         addCbActionListener();
         // enable multiple-export-menu-item
-        exportMultipleMenuItem.setEnabled(desktopObj.getCount()>1);
+        exportMultipleMenuItem.setEnabled(desktopObj.getCount() > 1);
         // select last item
-        if (!closing) try {
-            jComboBoxDesktop.setSelectedIndex(jComboBoxDesktop.getItemCount()-1);
+        if (!closing) {
+            try {
+                jComboBoxDesktop.setSelectedIndex(jComboBoxDesktop.getItemCount() - 1);
+            } catch (IllegalArgumentException e) {
+            }
         }
-        catch (IllegalArgumentException e) {}
     }
 
-    
     /**
-     * A simple initialisation of the jTreeDesktop, i.e. the tree is cleared and 
+     * A simple initialisation of the jTreeDesktop, i.e. the tree is cleared and
      * single-selection-mode is set.
      */
     private void initTree() {
         // get the treemodel
-        DefaultTreeModel dtm = (DefaultTreeModel)jTreeDesktop.getModel();
+        DefaultTreeModel dtm = (DefaultTreeModel) jTreeDesktop.getModel();
         // and first of all, clear the jTree
         dtm.setRoot(null);
         // macstyle beim jTree setzen
         if (settingsObj.isMacAqua()) {
             jTreeDesktop.setUI(new MacSourceDesktopTree(desktopObj, dataObj, settingsObj));
-        }
-        else {
+        } else {
             // set cell renderer, for desktop icons
-            jTreeDesktop.setCellRenderer(new MyCommentRenderer(Constants.iconDesktopComment, 
+            jTreeDesktop.setCellRenderer(new MyCommentRenderer(Constants.iconDesktopComment,
                     Constants.iconDesktopLuhmann,
                     settingsObj.getUseMacBackgroundColor()));
             if (settingsObj.getUseMacBackgroundColor()) {
@@ -1191,19 +1289,19 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             @Override
             protected String exportString(JComponent c) {
                 // retrieve tree-component
-                javax.swing.JTree t = (javax.swing.JTree)c;
+                javax.swing.JTree t = (javax.swing.JTree) c;
                 // retrieve selected node that was dragged
                 DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) t.getSelectionPath().getLastPathComponent();
                 // prepare export-string, telling that the drag-source is the jTreeDesktop
-                StringBuilder retval = new StringBuilder(Constants.DRAG_SOURCE_JTREEDESKTOP+",");
+                StringBuilder retval = new StringBuilder(Constants.DRAG_SOURCE_JTREEDESKTOP + ",");
                 // and give information whether the dragged entry is a bullet or an entry
-                retval.append((selectedNode.getAllowsChildren())?Constants.DRAG_SOURCE_TYPE_BULLET+"\n":Constants.DRAG_SOURCE_TYPE_ENTRIES+"\n");
+                retval.append((selectedNode.getAllowsChildren()) ? Constants.DRAG_SOURCE_TYPE_BULLET + "\n" : Constants.DRAG_SOURCE_TYPE_ENTRIES + "\n");
                 // next line contains the entry-number, or -1 if a bullet was selected
                 retval.append(String.valueOf(getSelectedEntryNumber())).append("\n");
                 // retrieve treepath of dragged entry/bullet
                 TreePath tp = t.getSelectionPath();
                 // add each single path component to return string, new-line-separated
-                for (int cnt=1; cnt<tp.getPathCount(); cnt++) {
+                for (int cnt = 1; cnt < tp.getPathCount(); cnt++) {
                     retval.append(tp.getPathComponent(cnt).toString()).append("\n");
                 }
                 // finally, add node-ID to string-information
@@ -1213,14 +1311,15 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 // return information
                 return retval.toString();
             }
+
             @Override
             protected boolean importString(JComponent c, String str) {
                 // get drop-component, i.e. the jTreeDesktop
-                javax.swing.JTree t = (javax.swing.JTree)c;
+                javax.swing.JTree t = (javax.swing.JTree) c;
                 // retrieve selected node
                 DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) t.getSelectionPath().getLastPathComponent();
                 // check for valid drop-string
-                if (str!=null && selectedNode!=null) {
+                if (str != null && selectedNode != null) {
                     // retrieve nodetimestamp
                     String nodets = TreeUtil.getNodeTimestamp(selectedNode);
                     // each received string consists of two lines. the first one with information
@@ -1236,15 +1335,17 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                     // here we have
                     // - entries as drop-elements
                     // - and no root selected, i.e. a valid drop-location
-                    if (sourceinfo.length>1 && sourceinfo[1].equals(Constants.DRAG_SOURCE_TYPE_ENTRIES) && !selectedNode.isRoot()) {
+                    if (sourceinfo.length > 1 && sourceinfo[1].equals(Constants.DRAG_SOURCE_TYPE_ENTRIES) && !selectedNode.isRoot()) {
                         // check for self-drop
-                        if (TreeUtil.getNodeTimestamp(movedNodeToRemove).equals(nodets)) return false;
+                        if (TreeUtil.getNodeTimestamp(movedNodeToRemove).equals(nodets)) {
+                            return false;
+                        }
                         // here we have the jTreeDesktop as drag-source, i.e. a drag&drop from within
                         // the jDesktopComponent. that means, we have to delete the drag-source, i.e.
                         // the dragged node that was moved to the new location
                         if (sourceinfo[0].equals(Constants.DRAG_SOURCE_JTREEDESKTOP)) {
                             // retrieve node timestamp
-                            String ts = dropinformation[dropinformation.length-1];
+                            String ts = dropinformation[dropinformation.length - 1];
                             // save modifications
                             modifications = desktopObj.retrieveModifiedEntryContentFromTimestamp(ts);
                             // delete entry
@@ -1255,9 +1356,9 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                         // retrieve dropped entries. double entries are removed. if an entry comes from within
                         // the desktop, we have to check whether the dragged entry was just moved within a
                         // bullet. if so, we don't have to consider it as "double" entry.
-                        String entries = retrieveDropEntries(dropinformation[1],selectedNode);
+                        String entries = retrieveDropEntries(dropinformation[1], selectedNode);
                         // if we have any entries left, i.e. not only double entries, add them now
-                        if (entries!=null && entries.length()>0) {
+                        if (entries != null && entries.length() > 0) {
                             // add new entry
                             addEntries(entries, modifications);
                             // update toolbars
@@ -1265,42 +1366,42 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                             updateToolbarAndMenu();
                             return true;
                         }
-                    }
-                    // here we have
+                    } // here we have
                     // - a bullet as drag-source
                     // - and the root or a bullet (or: no entry) as drop-location
-                    else if (sourceinfo.length>1 && sourceinfo[1].equals(Constants.DRAG_SOURCE_TYPE_BULLET) && selectedNode.getAllowsChildren()) {
+                    else if (sourceinfo.length > 1 && sourceinfo[1].equals(Constants.DRAG_SOURCE_TYPE_BULLET) && selectedNode.getAllowsChildren()) {
                         // check for self-drop
-                        if (TreeUtil.getNodeTimestamp(movedNodeToRemove).equals(nodets)) return false;
+                        if (TreeUtil.getNodeTimestamp(movedNodeToRemove).equals(nodets)) {
+                            return false;
+                        }
                         // cut bullet from XML-data file
-                        desktopObj.cutBulletToClip(dropinformation[dropinformation.length-1]);
+                        desktopObj.cutBulletToClip(dropinformation[dropinformation.length - 1]);
                         // and paste the bullet at the target-destination
                         desktopObj.pasteBulletFromClip(TreeUtil.getNodeTimestamp(selectedNode), selectedNode.isRoot());
                         // update treeview and toolbars
                         updateTreeView();
                         updateToolbarAndMenu();
                         return true;
-                    }
-                    // if we have no drag-information specified, check whether we have a table-drag
+                    } // if we have no drag-information specified, check whether we have a table-drag
                     // and can retrieve any entry-information
                     else if (!selectedNode.isRoot()) {
                         // try to extract entry-numbers from dropped string
-                        int[] entrynrs = Tools.retrieveEntryNumbersFromTransferHandler(str,dataObj.getCount(Daten.ZKNCOUNT));
+                        int[] entrynrs = Tools.retrieveEntryNumbersFromTransferHandler(str, dataObj.getCount(Daten.ZKNCOUNT));
                         // if we have any entries left, i.e. not only double entries, add them now
-                        if (entrynrs!=null && entrynrs.length>0) {
+                        if (entrynrs != null && entrynrs.length > 0) {
                             // create new string builder
                             StringBuilder sb = new StringBuilder("");
                             // iterate all moved/copied/pasted entrynumbers
-                            for (int cnt=0; cnt<entrynrs.length; cnt++) {
+                            for (int cnt = 0; cnt < entrynrs.length; cnt++) {
                                 // check whether entrynumber already exists
-                                if (!entryExists(entrynrs[cnt],selectedNode)) {
+                                if (!entryExists(entrynrs[cnt], selectedNode)) {
                                     // if not, add it.
                                     sb.append(String.valueOf(entrynrs[cnt])).append(",");
                                 }
                             }
                             // delete last comma
-                            if (sb.length()>1) {
-                                sb.setLength((sb.length()-1));
+                            if (sb.length() > 1) {
+                                sb.setLength((sb.length() - 1));
                                 // add new entry
                                 addEntries(sb.toString());
                                 // update toolbars
@@ -1320,16 +1421,18 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         });
     }
 
-
     /**
-     * This method retrieves all entry-numbers of entries that have been dropped (or dragged and dropped)
-     * on the jTree. The method checks whether any of the dropped entries already exist as entry
-     * of the parent-bullet, and if so, the related entry-number will be removed.
+     * This method retrieves all entry-numbers of entries that have been dropped
+     * (or dragged and dropped) on the jTree. The method checks whether any of
+     * the dropped entries already exist as entry of the parent-bullet, and if
+     * so, the related entry-number will be removed.
      *
-     * @param entries the dropped entry-numbers as single string, comma separated.
+     * @param entries the dropped entry-numbers as single string, comma
+     * separated.
      * @param targetNode the node where the entries have been dropped
-     * @return a string with entry-numbers, comma separated, with double or multiple entries of
-     * the {@code targetNode} (or its parent, if targetNode is no bullet) removed.
+     * @return a string with entry-numbers, comma separated, with double or
+     * multiple entries of the {@code targetNode} (or its parent, if targetNode
+     * is no bullet) removed.
      */
     private String retrieveDropEntries(String entries, DefaultMutableTreeNode targetNode) {
         // split entries into array
@@ -1339,9 +1442,13 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // to the drop-location
         DefaultMutableTreeNode parent = targetNode;
         // if the targetPath itself is not already a bullet, retrieve its parent.
-        if (!targetNode.getAllowsChildren()) parent = (DefaultMutableTreeNode) parent.getParent();
+        if (!targetNode.getAllowsChildren()) {
+            parent = (DefaultMutableTreeNode) parent.getParent();
+        }
         //check for null
-        if (null==parent) return null;
+        if (null == parent) {
+            return null;
+        }
         // go through all entries and check, whether they exists. if so, remove them from the list,
         // so only valid entries are dropped...
         StringBuilder sb = new StringBuilder("");
@@ -1351,34 +1458,42 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             }
         }
         // delete last comma
-        if (sb.length()>1) sb.setLength((sb.length()-1));
+        if (sb.length() > 1) {
+            sb.setLength((sb.length() - 1));
+        }
         // if all elements have been removed, return null
-        if (sb.length()<1) return null;
+        if (sb.length() < 1) {
+            return null;
+        }
         // return result
         return sb.toString();
     }
 
-
     /**
-     * This method checks whether an entry with the number {@code dropnr} already exists
-     * as entry of the parent-bullet {@code parent}.
+     * This method checks whether an entry with the number {@code dropnr}
+     * already exists as entry of the parent-bullet {@code parent}.
      *
      * @param dropnr the number of the dropped entry
      * @param parent the parent-bullet of the dropped entry
-     * @return {@code true} if an entry with the same number as {@code dropnr} already exists as
-     * entry of the parent-bullet {@code parent}, {@code false} otherwise.
+     * @return {@code true} if an entry with the same number as {@code dropnr}
+     * already exists as entry of the parent-bullet {@code parent},
+     * {@code false} otherwise.
      */
     private boolean entryExists(int dropnr, DefaultMutableTreeNode parent) {
         // check for null
-        if (null==parent) return false;
+        if (null == parent) {
+            return false;
+        }
         // now go through all bullet's children
-        for (int counter=0; counter<parent.getChildCount(); counter++) {
+        for (int counter = 0; counter < parent.getChildCount(); counter++) {
             // get child
             DefaultMutableTreeNode doublechild = (DefaultMutableTreeNode) parent.getChildAt(counter);
             // retrieve the node's text and extract the entry-number
             int childnr = TreeUtil.extractEntryNumberFromNode(doublechild);
             // compare child's text with newBullet-text
-            if (childnr==dropnr) return true;
+            if (childnr == dropnr) {
+                return true;
+            }
         }
         return false;
     }
@@ -1412,11 +1527,11 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     public void windowDeactivated(WindowEvent e) {
     }
 
-
     /**
      *
      */
     private class MyCommentRenderer extends DefaultTreeCellRenderer {
+
         Icon commentIcon, luhmannIcon;
         boolean useMacBackgound;
 
@@ -1428,16 +1543,16 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 
         @Override
         public Component getTreeCellRendererComponent(JTree tree,
-                                                      Object value,
-                                                      boolean sel,
-                                                      boolean expanded,
-                                                      boolean leaf,
-                                                      int row,
-                                                      boolean hasFocus) {
+                Object value,
+                boolean sel,
+                boolean expanded,
+                boolean leaf,
+                int row,
+                boolean hasFocus) {
 
-            super.getTreeCellRendererComponent( tree, value, sel,
-                                                expanded, leaf, row,
-                                                hasFocus);
+            super.getTreeCellRendererComponent(tree, value, sel,
+                    expanded, leaf, row,
+                    hasFocus);
             setBackgroundNonSelectionColor(tree.getBackground());
             if (!leaf && !sel && useMacBackgound) {
                 setForeground(ColorUtil.colorJTreeDarkText);
@@ -1450,103 +1565,125 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             }
             return this;
         }
+
         /**
          * This method checks whether a selected node has a comment or not.
          *
          * @param value the selected node
-         * @return {@code true} if the selected node has a comment, {@code false} otherwise.
+         * @return {@code true} if the selected node has a comment,
+         * {@code false} otherwise.
          */
         protected boolean isCommentNode(Object value) {
             // if no value return
-            if (null==value) return false;
+            if (null == value) {
+                return false;
+            }
             // retrieve node
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
             // when root, return
-            if (node.isRoot()) return false;
-            return (!desktopObj.getComment(TreeUtil.getNodeTimestamp(node),"<br>").isEmpty());
+            if (node.isRoot()) {
+                return false;
+            }
+            return (!desktopObj.getComment(TreeUtil.getNodeTimestamp(node), "<br>").isEmpty());
         }
+
         /**
-         * This method checks whether an entry of a selected node 
-         * has follower numbers or not.
+         * This method checks whether an entry of a selected node has follower
+         * numbers or not.
          *
          * @param value the selected node
-         * @return {@code true} if the entry of the selected node has 
-         * followers, {@code false} otherwise.
+         * @return {@code true} if the entry of the selected node has followers,
+         * {@code false} otherwise.
          */
         protected boolean isLuhmannNode(Object value) {
             // if no value return
-            if (null == value || !settingsObj.getShowLuhmannIconInDesktop()) return false;
+            if (null == value || !settingsObj.getShowLuhmannIconInDesktop()) {
+                return false;
+            }
             // retrieve node
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
             // when root, return
-            if (node.isRoot()) return false;
+            if (node.isRoot()) {
+                return false;
+            }
             // else, get entry number of selected node
             int entry = TreeUtil.extractEntryNumberFromNode(node);
             // no entry selected? then return false
-            if (-1 == entry) return false;
+            if (-1 == entry) {
+                return false;
+            }
             // return, whether entry has followers
             return (dataObj.hasLuhmannNumbers(entry));
         }
     }
-    
+
     /**
-     * Updates/enables/disables the toolbar- and menu-buttons, depending on whether
-     * the functions are available and executable or not.
+     * Updates/enables/disables the toolbar- and menu-buttons, depending on
+     * whether the functions are available and executable or not.
      */
     private void updateToolbarAndMenu() {
         // get selection
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)jTreeDesktop.getLastSelectedPathComponent();
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
         // enable actions that require a selected bullet, but no root
-        setBulletSelected((node!=null) && (node.getAllowsChildren()));
+        setBulletSelected((node != null) && (node.getAllowsChildren()));
         // enable actions that either require a selcted bullet or child-node, but no root
-        setNodeSelected((node!=null) && (!node.isRoot()));
+        setNodeSelected((node != null) && (!node.isRoot()));
         // enable actions that either require a selcted bullet or child-node, but no root
-        setEntryNodeSelected((node!=null) && (!node.isRoot()) && (!node.getAllowsChildren()));
+        setEntryNodeSelected((node != null) && (!node.isRoot()) && (!node.getAllowsChildren()));
         // enable actions that require any selection
-        setAnyNodeSelected(node!=null);
+        setAnyNodeSelected(node != null);
         setModifiedEntryNode(desktopObj.isModifiedEntry(getSelectedNodeTimestamp()));
         // enable paste-option
-        setClipFilled(((clipBullet && isBulletSelected()) || (!clipBullet&&clipEntries!=null&&clipEntries.length>0)));
+        setClipFilled(((clipBullet && isBulletSelected()) || (!clipBullet && clipEntries != null && clipEntries.length > 0)));
         // enable the move-actions, which let the user move an entry/bullet up and down
-        setMoveUpEnabled(!isFirstNode() && node!=null && !node.isRoot());
-        setMoveDownEnabled(!isLastNode() && node!=null && !node.isRoot());
+        setMoveUpEnabled(!isFirstNode() && node != null && !node.isRoot());
+        setMoveDownEnabled(!isLastNode() && node != null && !node.isRoot());
         // create string that will hold the luhmann-numbers
         String luhmann = "";
         // get selected entry-number
         int nr = getSelectedEntryNumber();
         // if we have a valid entry, get luhmann-numbers
-        if (nr!=-1) luhmann = dataObj.getLuhmannNumbers(nr);
+        if (nr != -1) {
+            luhmann = dataObj.getLuhmannNumbers(nr);
+        }
         // enable actions that require a selected child-node (entty), that has luhmann-numbers
-        setLuhmannNodeSelected(isNodeSelected()&&!luhmann.isEmpty());
+        setLuhmannNodeSelected(isNodeSelected() && !luhmann.isEmpty());
     }
-    
 
     /**
-     * This method retrieves the entry of the selected node and extracts its entry-number.
+     * This method retrieves the entry of the selected node and extracts its
+     * entry-number.
+     *
      * @return the number of the selected entry, or -1 if nothing was selected.
      */
     private int getSelectedEntryNumber() {
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)jTreeDesktop.getLastSelectedPathComponent();
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
         // if we have a valid node, go on...
-        if (node!=null) {
+        if (node != null) {
             // return TreeUtil.extractEntryNumberFromNodeText(node);
             return TreeUtil.extractEntryNumberFromNode(node);
         }
         return -1;
     }
 
-    
     /**
-     * This method updates the display, i.e. receiving the entry-structure from the jTree
-     * and displays all those entries in html-formatting in the jEditorPane.
+     * This method updates the display, i.e. receiving the entry-structure from
+     * the jTree and displays all those entries in html-formatting in the
+     * jEditorPane.
      */
     private synchronized void updateDisplay() {
         // when the display is up to date, do nothing here...
-        if (!isNeedsUpdate()) return;
+        if (!isNeedsUpdate()) {
+            return;
+        }
         // cancel already running task if necessary, so we don't have more parallel tasks running
-        if (cDisplayTask != null) cDisplayTask.cancel(true);
+        if (cDisplayTask != null) {
+            cDisplayTask.cancel(true);
+        }
         // if task is already running, leave...
-        if (cDisplayTaskIsRunning) return;
+        if (cDisplayTaskIsRunning) {
+            return;
+        }
         Task cdT = displayTask();
         // get the application's context...
         ApplicationContext appC = Application.getInstance().getContext();
@@ -1556,19 +1693,29 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // with these we can execute the task and bring it to the foreground
         // i.e. making the animated progressbar and busy icon visible
         tS.execute(cdT);
-        tM.setForegroundTask(cdT);    
+        tM.setForegroundTask(cdT);
     }
 
-    
     /**
-     * This method fills recursively all entries' contents to the jEditorPane. Therefore,
-     * the jTreeDesktop is enumerated. Each element is then converted to a string, html-formatted,
-     * and appended to a StringBuilder. At the end, the StringBuilder's content is set to the jEditorPane.
-     * 
+     * This method fills recursively all entries' contents to the jEditorPane.
+     * Therefore, the jTreeDesktop is enumerated. Each element is then converted
+     * to a string, html-formatted, and appended to a StringBuilder. At the end,
+     * the StringBuilder's content is set to the jEditorPane.
+     *
      * @param node the root node, as starting point for the jTree-enumeration
-     * @param sb the stringbuilder which finally will contain all content in html-format
+     * @param sb the stringbuilder which finally will contain all content in
+     * html-format
      */
     private void exportEntriesToEditorPane(DefaultMutableTreeNode node, StringBuilder sb, boolean showComments) {
+        String tdOpen = "<td>";
+        String tdClose = "</td>";
+        String trOpen = "<tr>";
+        String trClose = "</tr>";
+        String tdContentOpen = "<td class=\"content\">";
+        // if we don't have comments, we don't need tables
+        if (!showComments) {
+            tdOpen = tdClose = trOpen = trClose = tdContentOpen = "";
+        }
         // get a list with all children of the node
         Enumeration en = node.children();
         // go through all children
@@ -1581,18 +1728,18 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 int lvl = node.getLevel();
                 String level = String.valueOf(lvl);
                 // new table row
-                sb.append("<tr>").append(lineseparator);
+                sb.append(trOpen).append(lineseparator);
                 // check whether comments should be displayed
                 if (showComments) {
                     // retieve and create comment
-                    String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node),"<br>");
+                    String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node), "<br>");
                     // insert comment as table-data
                     sb.append("<td valign=\"top\" class=\"comment\">");
                     sb.append(com);
                     sb.append("</td>").append(lineseparator);
                 }
                 // insert entry content
-                sb.append("<td><h").append(level).append(">");
+                sb.append(tdOpen).append("<h").append(level).append(">");
                 // now create the reference-ankh, so we can use the "scrollToReference" method
                 // of the jEditorPane easily each time the user clicks on an entry in the jTree
                 // to scroll to that entry in the text field.
@@ -1603,9 +1750,8 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 sb.append(TreeUtil.getNodeText(node));
                 // also add headline to wordcounter
                 sbWordCountDisplayTask.append(TreeUtil.getNodeText(node)).append(" ");
-                sb.append("</h").append(level).append("></td></tr>").append(lineseparator);
-            }
-            // now we know we have an entry. so get the entry number...
+                sb.append("</h").append(level).append(">").append(tdClose).append(trClose).append(lineseparator);
+            } // now we know we have an entry. so get the entry number...
             else {
                 // we now want to check whether the user has made modifications to the entry's
                 // content, which are only made to the desktop (the content of the entry in the main database
@@ -1624,32 +1770,31 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 // if nothing found, retrieve regular entry
                 // that means, if the entry with the unique-timestamp has no or an empty content-element, the
                 // entry was not modified - thus we retrieve the "original" entry.
-                if (null==text||text.isEmpty()) {
+                if (null == text || text.isEmpty()) {
                     // also cleaned text for wordcounter
                     sbWordCountDisplayTask.append(dataObj.getCleanZettelContent(nr)).append(" ");
                     // get zettel-text
-                    text = HtmlUbbUtil.getHtmlContentForDesktop(dataObj,bibtexObj,settingsObj,nr,isHeadingVisible,isEntryNumberVisible,false,false);
-                }
-                // else if we have a modified entry-content, we still need to convert its
+                    text = HtmlUbbUtil.getHtmlContentForDesktop(dataObj, bibtexObj, settingsObj, nr, isHeadingVisible, isEntryNumberVisible, false, false);
+                } // else if we have a modified entry-content, we still need to convert its
                 // ubb-tags to HTML. this is done here...
                 else {
                     // also cleaned text for wordcounter
                     sbWordCountDisplayTask.append(Tools.removeUbbFromString(text, true)).append(" ");
                     // get the html-text for an entry which content is passed as parameter...
-                    text = HtmlUbbUtil.getHtmlContentForDesktop(dataObj,bibtexObj,settingsObj,text,nr,isHeadingVisible,isEntryNumberVisible,false,false);
+                    text = HtmlUbbUtil.getHtmlContentForDesktop(dataObj, bibtexObj, settingsObj, text, nr, isHeadingVisible, isEntryNumberVisible, false, false);
                 }
                 // new table row
-                sb.append("<tr>").append(lineseparator);
+                sb.append(trOpen).append(lineseparator);
                 // check whether comments should be displayed
                 if (showComments) {
                     // retieve and create comment
-                    String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node),"<br>");
+                    String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node), "<br>");
                     // insert comment as table-data
                     sb.append("<td valign=\"top\" class=\"comment\">");
                     sb.append(com);
                     sb.append("</td>");
                 }
-                sb.append("<td class=\"content\">").append(lineseparator);
+                sb.append(tdContentOpen).append(lineseparator);
                 // now create the reference-ankh, so we can use the "scrollToReference" method
                 // of the jEditorPane easily each time the user clicks on an entry in the jTree
                 // to scroll to that entry in the text field.
@@ -1658,20 +1803,25 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 sb.append("\">&nbsp;</a>").append(lineseparator);
                 // and append the html-text of the entry...
                 sb.append(text);
-                sb.append("</td></tr>").append(lineseparator);
+                sb.append(tdClose).append(trClose).append(lineseparator);
             }
             // when the new node also has children, call this method again,
             // so we go through the strucuture recursively...
-            if (node.getChildCount()>0) exportEntriesToEditorPane(node,sb,showComments);
+            if (node.getChildCount() > 0) {
+                exportEntriesToEditorPane(node, sb, showComments);
+            }
         }
     }
+
     /**
-     * This method fills recursively all entries' contents to the jEditorPane. Therefore,
-     * the jTreeDesktop is enumerated. Each element is then converted to a string, html-formatted,
-     * and appended to a StringBuilder. At the end, the StringBuilder's content is set to the jEditorPane.
-     * 
+     * This method fills recursively all entries' contents to the jEditorPane.
+     * Therefore, the jTreeDesktop is enumerated. Each element is then converted
+     * to a string, html-formatted, and appended to a StringBuilder. At the end,
+     * the StringBuilder's content is set to the jEditorPane.
+     *
      * @param node the root node, as starting point for the jTree-enumeration
-     * @param sb the stringbuilder which finally will contain all content in html-format
+     * @param sb the stringbuilder which finally will contain all content in
+     * html-format
      */
     private void exportCommentsToEditorPane(DefaultMutableTreeNode node, StringBuilder sb) {
         // get a list with all children of the node
@@ -1686,9 +1836,9 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 int lvl = node.getLevel();
                 String level = String.valueOf(lvl);
                 // retieve and create comment
-                String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node),"<br>");
+                String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node), "<br>");
                 // check whether comment is empty or not
-                if (com!=null && !com.isEmpty()) {
+                if (com != null && !com.isEmpty()) {
                     // new table row
                     sb.append("<tr>");
                     // insert paragraph heading
@@ -1708,13 +1858,12 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                     // also add headline and comment to wordcounter
                     sbWordCountDisplayTask.append(TreeUtil.getNodeText(node)).append(" ").append(com).append(" ");
                 }
-            }
-            // now we know we have an entry. so get the entry number...
+            } // now we know we have an entry. so get the entry number...
             else {
                 // retieve and create comment
-                String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node),"<br>");
+                String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node), "<br>");
                 // check whether comment is empty or not
-                if (com!=null && !com.isEmpty()) {
+                if (com != null && !com.isEmpty()) {
                     // new table row
                     sb.append("<tr>");
                     sb.append("<td class=\"content\">");
@@ -1735,28 +1884,32 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             }
             // when the new node also has children, call this method again,
             // so we go through the strucuture recursively...
-            if (node.getChildCount()>0) exportCommentsToEditorPane(node,sb);
+            if (node.getChildCount() > 0) {
+                exportCommentsToEditorPane(node, sb);
+            }
         }
     }
 
-    
     /**
-     * This method scrolls to that entry in the jEditorPane, that is selected from the jTree.
-     * This is achieved by simply activating a hyperlink (ankh), thus we can scroll to the
-     * reference.<br><br>
-     * A unique reference for each entry is set in the node's text in the jTree via the method
+     * This method scrolls to that entry in the jEditorPane, that is selected
+     * from the jTree. This is achieved by simply activating a hyperlink (ankh),
+     * thus we can scroll to the reference.<br><br>
+     * A unique reference for each entry is set in the node's text in the jTree
+     * via the method
      * {@link #fillChildren(org.jdom.Element, javax.swing.tree.DefaultMutableTreeNode, javax.swing.tree.DefaultTreeModel) fillChildren}
-     * and {@link #exportEntriesToEditorPane(javax.swing.tree.DefaultMutableTreeNode, java.lang.StringBuilder) exportEntriesToEditorPane}.
+     * and
+     * {@link #exportEntriesToEditorPane(javax.swing.tree.DefaultMutableTreeNode, java.lang.StringBuilder) exportEntriesToEditorPane}.
      */
     private void scrollToEntry() {
         // get selected node
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)jTreeDesktop.getLastSelectedPathComponent();
-        if (null==node || node.isRoot()) return;
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
+        if (null == node || node.isRoot()) {
+            return;
+        }
         // get the node's text. this is what we want to search in the editor pane
-        jEditorPaneMain.scrollToReference("entry"+getSelectedNodeTimestamp());
+        jEditorPaneMain.scrollToReference("entry" + getSelectedNodeTimestamp());
     }
-    
-    
+
     @Action
     public void findLive() {
         // first, update the display, so we search in the current desktop
@@ -1766,7 +1919,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         jPanelLiveSearch.setVisible(true);
         // set input-focus to textfield
         jTextFieldLiveSearch.requestFocusInWindow();
-        
+
     }
 
     @Action
@@ -1775,32 +1928,37 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // the editorpane should scroll to. each found search term has a link-tag with
         // a consecutive numbering (<a name="hl1">, <a name="hl2"> etc...)
         // the variable "findlivepos" contains the number of the current references ankh
-        String ankh = "hl"+String.valueOf(findlivepos);
+        String ankh = "hl" + String.valueOf(findlivepos);
         // scroll the the reference
         jEditorPaneMain.scrollToReference(ankh);
         // increase findlivepos to refer to the next reference
-        if (findlivepos<findlivemax) findlivepos++;
-        // if we reach the last reference, start at first reference again
-        else findlivepos=1;
+        if (findlivepos < findlivemax) {
+            findlivepos++;
+        } // if we reach the last reference, start at first reference again
+        else {
+            findlivepos = 1;
+        }
     }
 
     @Action
     public void findLivePrev() {
         // decrease findlivepos.
-        if (findlivepos>1) findlivepos--;
-        // when we reached the first reference, set to last occurencs of search terms
-        else findlivepos=findlivemax;
+        if (findlivepos > 1) {
+            findlivepos--;
+        } // when we reached the first reference, set to last occurencs of search terms
+        else {
+            findlivepos = findlivemax;
+        }
         // create reference string
-        String ankh = "hl"+String.valueOf(findlivepos);
+        String ankh = "hl" + String.valueOf(findlivepos);
         // and scroll to reference
         jEditorPaneMain.scrollToReference(ankh);
     }
 
-
     @Action
     public void findCancel() {
         // restore complete page without highlighting
-        jEditorPaneMain.setText(HtmlUbbUtil.getHtmlHeaderForDesktop(settingsObj, false)+completePage);
+        jEditorPaneMain.setText(HtmlUbbUtil.getHtmlHeaderForDesktop(settingsObj, false) + completePage);
         // scroll to top
         jEditorPaneMain.setCaretPosition(0);
         // hide live-search-bar
@@ -1810,35 +1968,35 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     private void updateLiveSearchDisplay() {
         // retrieve search term from textfield and set it as highlight-term for
         // the html-conversion
-        HtmlUbbUtil.setHighlighTerms(new String[] {jTextFieldLiveSearch.getText()}, HtmlUbbUtil.HIGHLIGHT_STYLE_LIVESEARCH, false);
+        HtmlUbbUtil.setHighlighTerms(new String[]{jTextFieldLiveSearch.getText()}, HtmlUbbUtil.HIGHLIGHT_STYLE_LIVESEARCH, false);
         // init the counter for the references to the found search terms
         findlivepos = 1;
         // retrieve the desktop-content with highlighted search term
-        StringBuilder newtext = new StringBuilder(HtmlUbbUtil.highlightSearchTerms(completePage,HtmlUbbUtil.HIGHLIGHT_STYLE_LIVESEARCH));
+        StringBuilder newtext = new StringBuilder(HtmlUbbUtil.highlightSearchTerms(completePage, HtmlUbbUtil.HIGHLIGHT_STYLE_LIVESEARCH));
         // counter for bulding the HTML-link-tags, so we can scroll directly to each references
         // found search term, using the editor pane's scrollToReference()-method
         int counter = 1;
         int pos = 0;
         // while we find a highlighted search term, we want to insert an ankh (html-link-tag
         // including the reference-name) before that search term
-        while (pos!=-1) {
+        while (pos != -1) {
             // find occurence of highlighted text
             pos = newtext.toString().indexOf("<span class=\"hs_ls\"", pos);
             // if we found something...
-            if (pos!=-1) {
+            if (pos != -1) {
                 // insert linktag before.
-                newtext.insert(pos, "<a name=\"hl"+String.valueOf(counter++)+"\"></a>");
+                newtext.insert(pos, "<a name=\"hl" + String.valueOf(counter++) + "\"></a>");
                 // and increase position-index, so we don't have an infinite loop that always finds
                 // the same <span>-tag
-                pos = pos+40;
+                pos = pos + 40;
             }
         }
         // store the maximum amount of found/highlighted search terms, so we know when to
         // restart with our reference counter. see findLiveNext() and findLivePrev() for
         // more details
-        findlivemax = counter-1;
+        findlivemax = counter - 1;
         // set new highlighted text to editor pane
-        jEditorPaneMain.setText(HtmlUbbUtil.getHtmlHeaderForDesktop(settingsObj, false)+newtext.toString());
+        jEditorPaneMain.setText(HtmlUbbUtil.getHtmlHeaderForDesktop(settingsObj, false) + newtext.toString());
         // set scroll-area to top
         jEditorPaneMain.setCaretPosition(0);
         // and scroll to first reference in the editor pane
@@ -1846,14 +2004,12 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         jEditorPaneMain.scrollToReference(ankh);
     }
 
-
     @Action
     public void switchHeadingsVisibility() {
         isHeadingVisible = !isHeadingVisible;
         headingsVisibleMenuItem.setSelected(isHeadingVisible);
         setNeedsUpdate(true);
     }
-
 
     @Action
     public void switchLuhmannVisibility() {
@@ -1863,7 +2019,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         updateTreeView();
     }
 
-
     @Action
     public void switchEntryNumberVisibility() {
         isEntryNumberVisible = !isEntryNumberVisible;
@@ -1871,45 +2026,48 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         setNeedsUpdate(true);
     }
 
-
     @Action
     public void menuDisplayDesktopWithComments() {
         settingsObj.setDesktopCommentDisplayOptions(Constants.DESKTOP_WITH_COMMENTS);
         setNeedsUpdate(true);
     }
+
     @Action
     public void menuDisplayDesktopWithoutComments() {
         settingsObj.setDesktopCommentDisplayOptions(Constants.DESKTOP_WITHOUT_COMMENTS);
         setNeedsUpdate(true);
     }
+
     @Action
     public void menuDisplayDesktopOnlyComments() {
         settingsObj.setDesktopCommentDisplayOptions(Constants.DESKTOP_ONLY_COMMENTS);
         setNeedsUpdate(true);
     }
 
-    
     /**
-     * This method is called whenever an entry that is also on the desktop was changed. In this case
-     * we assume that the entry's content was changed, so we need an update to the treeview (in case
-     * the entry has a new title, we need to display it in the treeview as well) and we need an
-     * update to the html-content.
+     * This method is called whenever an entry that is also on the desktop was
+     * changed. In this case we assume that the entry's content was changed, so
+     * we need an update to the treeview (in case the entry has a new title, we
+     * need to display it in the treeview as well) and we need an update to the
+     * html-content.
      */
     public void updateEntriesAfterEditing() {
         updateTreeView();
     }
 
-    
     /**
-     * This method updates the treeview after each change made to the desktop. The changes are only
-     * applied to the desktop-data-file (the xml-file managed in the {@link #desktopObj CDesktop-Class}).
-     * This method retrieves the structure from this xml-document and copies it to the treeview.<br><br>
-     * Updating the treeview does <b>not</b> update the display of the entries as well, since many display-updates
-     * take much time. Rather the action {@link #updateView() updateView} is enabled, which updates the display.
+     * This method updates the treeview after each change made to the desktop.
+     * The changes are only applied to the desktop-data-file (the xml-file
+     * managed in the {@link #desktopObj CDesktop-Class}). This method retrieves
+     * the structure from this xml-document and copies it to the
+     * treeview.<br><br>
+     * Updating the treeview does <b>not</b> update the display of the entries
+     * as well, since many display-updates take much time. Rather the action
+     * {@link #updateView() updateView} is enabled, which updates the display.
      */
     private void updateTreeView() {
         // get the treemodel
-        DefaultTreeModel dtm = (DefaultTreeModel)jTreeDesktop.getModel();
+        DefaultTreeModel dtm = (DefaultTreeModel) jTreeDesktop.getModel();
         // and first of all, clear the jTree
         dtm.setRoot(null);
         // create a new root element from the current desktop name and set it as root
@@ -1926,13 +2084,13 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 //        expandAllTrees(true, jTreeDesktop);
         expandAllTrees();
         // check whether a certain entry should be selected or not
-        if (displayentrynr!=-1) {
+        if (displayentrynr != -1) {
             // check whether entry exists in current desktop
             if (desktopObj.isEntryInCurrentDesktop(displayentrynr)) {
                 // if yes, retrieve element
                 Element en = desktopObj.getFoundDesktopElement();
                 // check for valid value
-                if (en!=null) {
+                if (en != null) {
                     // get timestamp of entry
                     String timestamp = en.getAttributeValue("timestamp");
                     // select entry in treeview
@@ -1945,17 +2103,19 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // display needs to be updated...
         setNeedsUpdate(true);
     }
-    
 
     /**
-     * This method updates the jTreeView. Each time an update for the treevuew is needed, this
-     * method is called. It then recursevly traverses all XML-Elements of the currently activated
-     * desktop-element, where the starting desktop-element is passed in the parameter {@code e}.
+     * This method updates the jTreeView. Each time an update for the treevuew
+     * is needed, this method is called. It then recursevly traverses all
+     * XML-Elements of the currently activated desktop-element, where the
+     * starting desktop-element is passed in the parameter {@code e}.
      * <br><br>
-     * The method retrieves each element, checks whether the element is an entry- or a bullet-element,
-     * than either, in case of a bullet point, uses the name-attribute as node-name and appends the
-     * timestamp-attribute as ID; or it retrieves the entry's title from the entry-number that is stored
-     * in each entry-element, and appends the entry's timestamp-attribute as ID.
+     * The method retrieves each element, checks whether the element is an
+     * entry- or a bullet-element, than either, in case of a bullet point, uses
+     * the name-attribute as node-name and appends the timestamp-attribute as
+     * ID; or it retrieves the entry's title from the entry-number that is
+     * stored in each entry-element, and appends the entry's timestamp-attribute
+     * as ID.
      * <br><br>
      * After that, the node is inserted in the jTree.
      *
@@ -1992,8 +2152,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                     node = new DefaultMutableTreeNode(new TreeUserObject(sb.toString(), e.getAttributeValue("timestamp"), ""));
                     // and tell node to have children
                     node.setAllowsChildren(true);
-                }
-                else {
+                } else {
                     // now we know we have an entry. so get the entry number...
                     int nr = Integer.parseInt(e.getAttributeValue("id"));
                     // get the zettel title
@@ -2008,24 +2167,27 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 // when the new element also has children, call this method again,
                 // so we go through the strucuture recursively...
                 if (desktopObj.hasChildren(e)) {
-                    fillChildren(e,node,dtm);
+                    fillChildren(e, node, dtm);
                 }
             }
         }
     }
 
-
     /**
-     * This method retrieves all entries on the desktop and adds their number to the
-     * list {@code liste}. This array of entry-numbers is needed in the export-dialog.
+     * This method retrieves all entries on the desktop and adds their number to
+     * the list {@code liste}. This array of entry-numbers is needed in the
+     * export-dialog.
      *
-     * @param e the starting point for the jTree-enumeration, either the root elementor a bullet (if only
-     * a bullet should be exported, see {@link #exportDesktopBullet() exportDesktopBullet()}).
+     * @param e the starting point for the jTree-enumeration, either the root
+     * elementor a bullet (if only a bullet should be exported, see
+     * {@link #exportDesktopBullet() exportDesktopBullet()}).
      * @param liste an array-object that will hold the found entry-nubers
      */
     private void createExportEntries(Element e, ArrayList<Object> liste) {
         // if we have no element, return.
-        if (null==e) return;
+        if (null == e) {
+            return;
+        }
         // get a list with all children of the element
         List<Element> children = e.getChildren();
         // create an iterator
@@ -2056,9 +2218,8 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                     // succeeds, we have an entry, if a NumberFormatException is thrown, we have a headline.
                     // to treat headline with numbers only as headlines, we add a char to be sure that every
                     // headline will throw an exception when parsing the array's elements to integer.
-                    liste.add("h"+String.valueOf(headerlevel)+e.getAttributeValue("name"));
-                }
-                else {
+                    liste.add("h" + String.valueOf(headerlevel) + e.getAttributeValue("name"));
+                } else {
                     // now we know we have an entry. so get the entry number...
                     int nr = Integer.parseInt(e.getAttributeValue("id"));
                     liste.add(nr);
@@ -2066,14 +2227,12 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 // when the new element also has children, call this method again,
                 // so we go through the strucuture recursively...
                 if (desktopObj.hasChildren(e)) {
-                    createExportEntries(e,liste);
+                    createExportEntries(e, liste);
                 }
             }
         }
     }
 
-
-    
 //    /**
 //     * If expand is true, expands all nodes in the tree.
 //     * Otherwise, collapses all nodes in the tree.
@@ -2104,23 +2263,24 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 //        }
 //    }
     /**
-     * If expand is true, expands all nodes in the tree.
-     * Otherwise, collapses all nodes in the tree.
+     * If expand is true, expands all nodes in the tree. Otherwise, collapses
+     * all nodes in the tree.
      */
     public void expandAllTrees() {
         // get tree-root
-        TreeNode root = (TreeNode)jTreeDesktop.getModel().getRoot();
+        TreeNode root = (TreeNode) jTreeDesktop.getModel().getRoot();
         // Traverse tree from root
         expandAllTrees(new TreePath(root));
     }
+
     private void expandAllTrees(TreePath parent) {
         // Traverse children
-        TreeNode node = (TreeNode)parent.getLastPathComponent();
+        TreeNode node = (TreeNode) parent.getLastPathComponent();
         // if we have children, go on
         if (node.getChildCount() >= 0) {
             // itereate all children
-            for (Enumeration e=node.children(); e.hasMoreElements();) {
-                DefaultMutableTreeNode n = (DefaultMutableTreeNode)e.nextElement();
+            for (Enumeration e = node.children(); e.hasMoreElements();) {
+                DefaultMutableTreeNode n = (DefaultMutableTreeNode) e.nextElement();
                 TreePath path = parent.pathByAddingChild(n);
                 if (n.getAllowsChildren()) {
                     // Expansion or collapse must be done bottom-up
@@ -2143,18 +2303,18 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 //        }
     }
 
-    
     /**
-     * This method adds a new desktop to the desktop-data-file. The user can input a new 
-     * description (string-value). After that, the string is passed to the CDesktopData-class'es
-     * method "addNewDesktop", where a new desktop-element is created
+     * This method adds a new desktop to the desktop-data-file. The user can
+     * input a new description (string-value). After that, the string is passed
+     * to the CDesktopData-class'es method "addNewDesktop", where a new
+     * desktop-element is created
      */
     @Action
     public void newDesktop() {
         // user-input for new desktop-description
-        String newDesk = (String)JOptionPane.showInputDialog(null,resourceMap.getString("newDesktopMsg"), resourceMap.getString("newDesktopTitle"), JOptionPane.PLAIN_MESSAGE);
+        String newDesk = (String) JOptionPane.showInputDialog(null, resourceMap.getString("newDesktopMsg"), resourceMap.getString("newDesktopTitle"), JOptionPane.PLAIN_MESSAGE);
         // if we have any valdi input, go on...
-        if ((newDesk!=null)&&(newDesk.length()>0)) {
+        if ((newDesk != null) && (newDesk.length() > 0)) {
             //  add the description as new element to the desktop-data-class
             if (desktopObj.addNewDesktop(newDesk)) {
                 // save current notes
@@ -2162,55 +2322,51 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 desktopObj.setDesktopNotes(2, jTextArea2.getText());
                 desktopObj.setDesktopNotes(3, jTextArea3.getText());
                 // get the treemodel
-                DefaultTreeModel dtm = (DefaultTreeModel)jTreeDesktop.getModel();
+                DefaultTreeModel dtm = (DefaultTreeModel) jTreeDesktop.getModel();
                 // set the desktop-description as root-element.
                 DefaultMutableTreeNode root = new DefaultMutableTreeNode(newDesk);
                 root.setAllowsChildren(true);
                 dtm.setRoot(root);
                 // and update combo box
                 updateComboBox(false);
-            }
-            else {
+            } else {
                 // desktop-name already existed, so desktop was not added...
-                JOptionPane.showMessageDialog(this,resourceMap.getString("errDesktopExistsMsg"),resourceMap.getString("errDesktopExistsTitle"),JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(this, resourceMap.getString("errDesktopExistsMsg"), resourceMap.getString("errDesktopExistsTitle"), JOptionPane.PLAIN_MESSAGE);
             }
-        }
-        // if new desktop action was cancelled, check whether we have any desktops at all...
-        else if (desktopObj.getCount()<1) {
+        } // if new desktop action was cancelled, check whether we have any desktops at all...
+        else if (desktopObj.getCount() < 1) {
             // if not, close window
             resetAndClose();
         }
     }
-    
-    
+
     /**
-     * This action renames a bullet point, including the root-bullet, i.e.
-     * the name of the desktop. Entry-nodes cannot be renamed.
+     * This action renames a bullet point, including the root-bullet, i.e. the
+     * name of the desktop. Entry-nodes cannot be renamed.
      */
     @Action(enabledProperty = "bulletSelected")
     public void renameBullet() {
         // copy bullet's name into variable
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)jTreeDesktop.getLastSelectedPathComponent();
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
         // open an input-dialog, setting the selected value as default-value
-        String newBulletName = (String)JOptionPane.showInputDialog(this,resourceMap.getString("editBulletMsg"), resourceMap.getString("editBulletTitle"), JOptionPane.PLAIN_MESSAGE, null, null, node.toString());
+        String newBulletName = (String) JOptionPane.showInputDialog(this, resourceMap.getString("editBulletMsg"), resourceMap.getString("editBulletTitle"), JOptionPane.PLAIN_MESSAGE, null, null, node.toString());
         // if we have a valid return-value, and this bulletname does not already exist...
-        if ((newBulletName!=null) && (newBulletName.length()>0) && (!checkIfBulletExists(newBulletName))) {
+        if ((newBulletName != null) && (newBulletName.length() > 0) && (!checkIfBulletExists(newBulletName))) {
             // ...either change desktop's name if the root is selected
             if (node.isRoot()) {
                 // check whether renaming succeeded
-                if (!desktopObj.setDesktopName(desktopObj.getCurrentDesktopNr(),newBulletName)) {
+                if (!desktopObj.setDesktopName(desktopObj.getCurrentDesktopNr(), newBulletName)) {
                     // if not, tell user...
-                    JOptionPane.showMessageDialog(this,resourceMap.getString("errRenameDesktopMsg"),resourceMap.getString("errRenameDesktopTitle"),JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(this, resourceMap.getString("errRenameDesktopMsg"), resourceMap.getString("errRenameDesktopTitle"), JOptionPane.PLAIN_MESSAGE);
                     return;
                 }
                 // update the combobox
                 updateComboBox(false);
-            }
-            // ...or change the name of the selected bullet
+            } // ...or change the name of the selected bullet
             else {
-                if (!desktopObj.renameBullet(TreeUtil.getNodeTimestamp(node),newBulletName)) {
+                if (!desktopObj.renameBullet(TreeUtil.getNodeTimestamp(node), newBulletName)) {
                     // if not, tell user...
-                    JOptionPane.showMessageDialog(this,resourceMap.getString("errRenameBulletMsg"),resourceMap.getString("errRenameBulletTitle"),JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(this, resourceMap.getString("errRenameBulletMsg"), resourceMap.getString("errRenameBulletTitle"), JOptionPane.PLAIN_MESSAGE);
                     return;
                 }
                 // update treeview
@@ -2218,39 +2374,46 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             }
         }
     }
-    
-    
+
     /**
-     * This method deletes the selected entry, bullet with child-entries or even the complete
-     * desktop if the root is selected.
+     * This method deletes the selected entry, bullet with child-entries or even
+     * the complete desktop if the root is selected.
      */
     @Action(enabledProperty = "anyNodeSelected")
     public void deleteNode() {
         // get selection
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)jTreeDesktop.getLastSelectedPathComponent();
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
         // if we have a valid selection, go on
-        if (node!=null) {
+        if (node != null) {
             // variable that indicates what type of node we have to delete
             int delete_what;
             // check what we have to delete
-            if (node.isRoot()) delete_what=Constants.DEL_DESKTOP;
-            else if (node.getAllowsChildren()) delete_what=Constants.DEL_BULLET;
-            else delete_what=Constants.DEL_ENTRY;
+            if (node.isRoot()) {
+                delete_what = Constants.DEL_DESKTOP;
+            } else if (node.getAllowsChildren()) {
+                delete_what = Constants.DEL_BULLET;
+            } else {
+                delete_what = Constants.DEL_ENTRY;
+            }
             // create empty string
-            String msg="";
+            String msg = "";
             // create message for confirm dialog, based on the type what we want to delete
             switch (delete_what) {
-                case Constants.DEL_DESKTOP: msg = resourceMap.getString("askForDeleteDesktopMsg"); break;
-                case Constants.DEL_BULLET: msg = resourceMap.getString("askForDeleteBulletMsg"); break;
+                case Constants.DEL_DESKTOP:
+                    msg = resourceMap.getString("askForDeleteDesktopMsg");
+                    break;
+                case Constants.DEL_BULLET:
+                    msg = resourceMap.getString("askForDeleteBulletMsg");
+                    break;
             }
-            int option=-1;
+            int option = -1;
             // ask for delete only when the root or a bullet has to be deleted
-            if (delete_what!=Constants.DEL_ENTRY) {
+            if (delete_what != Constants.DEL_ENTRY) {
                 // ask user whether the node should be deleted
                 option = JOptionPane.showConfirmDialog(null, msg, resourceMap.getString("askForDeleteTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
             }
             // if yes, go on
-            if ((JOptionPane.YES_OPTION==option)||(Constants.DEL_ENTRY==delete_what)) {
+            if ((JOptionPane.YES_OPTION == option) || (Constants.DEL_ENTRY == delete_what)) {
                 // check which type of node was selected. either root, bullet or entry; and
                 // delete the related entry/bullet with children/complete desktop
                 switch (delete_what) {
@@ -2258,20 +2421,21 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                         // delete desktop
                         desktopObj.deleteDesktop();
                         // if we have any desktops left, update treeview
-                        if (desktopObj.getCount()>0) updateComboBox(false);
-                        // else reset all fields and close window
+                        if (desktopObj.getCount() > 0) {
+                            updateComboBox(false);
+                        } // else reset all fields and close window
                         else {
                             resetAndClose();
                         }
                         break;
-                                        
+
                     case Constants.DEL_BULLET:
                         // delete parent
                         desktopObj.deleteBullet(TreeUtil.getNodeTimestamp(node));
                         // update view
                         updateTreeView();
                         break;
-                        
+
                     case Constants.DEL_ENTRY:
                         // delete entry
                         desktopObj.deleteEntry(TreeUtil.getNodeTimestamp(node));
@@ -2282,7 +2446,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             }
         }
     }
-    
 
     private void resetAndClose() {
         // set click to update-text
@@ -2294,22 +2457,21 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // check whether memory usage is logged. if so, tell logger that new entry windows was opened
         if (settingsObj.isMemoryUsageLogged) {
             // log info
-            Constants.zknlogger.log(Level.INFO,"Memory usage logged. Desktop Window closed.");
+            Constants.zknlogger.log(Level.INFO, "Memory usage logged. Desktop Window closed.");
         }
         // make window invisible
         setVisible(false);
     }
 
-    
     /**
-     * Opens a dialog where the user can choose which additional items for an entry (like
-     * author, remarks etc.) should be displayed in the desktop.
+     * Opens a dialog where the user can choose which additional items for an
+     * entry (like author, remarks etc.) should be displayed in the desktop.
      */
     @Action
     public void displayItems() {
-        if (null==desktopDisplayItemsDlg) {
+        if (null == desktopDisplayItemsDlg) {
             // create a new dialog with the desktop-dialog, passing some initial values
-            desktopDisplayItemsDlg = new CDesktopDisplayItems(this,settingsObj);
+            desktopDisplayItemsDlg = new CDesktopDisplayItems(this, settingsObj);
             // center window
             desktopDisplayItemsDlg.setLocationRelativeTo(this);
         }
@@ -2322,36 +2484,39 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         }
         // delete the windows
         desktopDisplayItemsDlg.dispose();
-        desktopDisplayItemsDlg=null;
+        desktopDisplayItemsDlg = null;
     }
-    
-    
+
     /**
-     * This method adds a new header/bulletpoint to the desktop (and to the jtree). Bullets
-     * differ from "usual" note in such case, that they are allowed to have children - in contrary
-     * to nodes that refer to entries, which may not have children.
+     * This method adds a new header/bulletpoint to the desktop (and to the
+     * jtree). Bullets differ from "usual" note in such case, that they are
+     * allowed to have children - in contrary to nodes that refer to entries,
+     * which may not have children.
      * <br><br>
-     * New bullet are always addes to the end of a selected node's children-list, while a new
-     * "entry-node" should be added <b>before</b> bullets. Thus, in a children list, first come
-     * all entry-nodes, than all bullet-nodes (always in this order).
+     * New bullet are always addes to the end of a selected node's
+     * children-list, while a new "entry-node" should be added <b>before</b>
+     * bullets. Thus, in a children list, first come all entry-nodes, than all
+     * bullet-nodes (always in this order).
      */
     @Action(enabledProperty = "bulletSelected")
     public void addBullet() {
         // wait for user input
-        String newBullet = (String)JOptionPane.showInputDialog(null,resourceMap.getString("newBulletMsg"), resourceMap.getString("newBulletTitle"), JOptionPane.PLAIN_MESSAGE);
+        String newBullet = (String) JOptionPane.showInputDialog(null, resourceMap.getString("newBulletMsg"), resourceMap.getString("newBulletTitle"), JOptionPane.PLAIN_MESSAGE);
         // if we have a valid input and no cancel-operation, go on
-        if (newBullet!=null && newBullet.length()>0) {
+        if (newBullet != null && newBullet.length() > 0) {
             // now we have to check whether the name of "newBullet" already exists as a bullet on this
             // level of the outline/structure. Therefor, check whether "insert" is a selected entry or a node.
             // if it's an entry, thus the new bullet is located on the same level, retrieve the parent.
             // then we go through all parent's children and check for the occurence of a bullet named
             // "newBullet".
-            if (checkIfBulletExists(newBullet)) return;
+            if (checkIfBulletExists(newBullet)) {
+                return;
+            }
             // retrieve selected node
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode)jTreeDesktop.getLastSelectedPathComponent();
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
             // add bullet to xml-file. therefor, check whether selection is the root, then pass
             // "null" as parameter. in every other case, pass the bullet's timestamp as parameter
-            String timestamp = desktopObj.addBullet((node.isRoot())?null:TreeUtil.getNodeTimestamp(node), newBullet);
+            String timestamp = desktopObj.addBullet((node.isRoot()) ? null : TreeUtil.getNodeTimestamp(node), newBullet);
             // update treeview
             updateTreeView();
             // add new bullet to path and re-select new path...
@@ -2361,15 +2526,18 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         }
     }
 
-
     /**
-     * This method checks whether a new bullet {@code newBullet}, that should be added/inserted as sub-bullet
-     * to an existing bullet {@code insert}, already exists as sub-element of the parent {@code insert} or not.
+     * This method checks whether a new bullet {@code newBullet}, that should be
+     * added/inserted as sub-bullet to an existing bullet {@code insert},
+     * already exists as sub-element of the parent {@code insert} or not.
      *
-     * @param newBullet the name of the new bullet that should be inserted as child of {@code insert}
-     * @param insert the parent-bullet, where the bullet {@code newBullet} should be added to
-     * @return {@code true} if a bullet which name equals {@code newBullet} already exists, false if {@code newBullet}
-     * does not exist and can successfully be added/inserted.
+     * @param newBullet the name of the new bullet that should be inserted as
+     * child of {@code insert}
+     * @param insert the parent-bullet, where the bullet {@code newBullet}
+     * should be added to
+     * @return {@code true} if a bullet which name equals {@code newBullet}
+     * already exists, false if {@code newBullet} does not exist and can
+     * successfully be added/inserted.
      */
     private boolean checkIfBulletExists(String newBullet) {
         // get the selected node, so we know where to insert the new bullet
@@ -2379,9 +2547,9 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // if it's an entry, thus the new bullet is located on the same level, retrieve the parent.
         // then we go through all parent's children and check for the occurence of a bullet named
         // "newBullet".
-        DefaultMutableTreeNode parent = ((insert.getAllowsChildren()) ? insert : (DefaultMutableTreeNode)insert.getParent());
+        DefaultMutableTreeNode parent = ((insert.getAllowsChildren()) ? insert : (DefaultMutableTreeNode) insert.getParent());
         // got through all parent's children
-        for (int cnt=0; cnt<parent.getChildCount(); cnt++) {
+        for (int cnt = 0; cnt < parent.getChildCount(); cnt++) {
             // get child
             DefaultMutableTreeNode child = (DefaultMutableTreeNode) parent.getChildAt(cnt);
             // since each bullet-point has a timestamp-id, we need to extract the bullet's name
@@ -2389,11 +2557,11 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             String text = child.toString();
             int pos = text.indexOf("[");
             // only continue if we found something...
-            if (pos!=-1) {
+            if (pos != -1) {
                 // compare child's text with newBullet-text
                 if (newBullet.equalsIgnoreCase(text.substring(0, pos).trim())) {
                     // if we found a match, tell user about cancelling
-                    JOptionPane.showMessageDialog(this,resourceMap.getString("errBulletExistsMsg"),resourceMap.getString("errBulletExistsTitle"),JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(this, resourceMap.getString("errBulletExistsMsg"), resourceMap.getString("errBulletExistsTitle"), JOptionPane.PLAIN_MESSAGE);
                     return true;
                 }
             }
@@ -2401,90 +2569,95 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         return false;
     }
 
-
     /**
-     * This methods adds a new entry-node, i.e. a node that is not allowed to have children, to
-     * the jTree.
+     * This methods adds a new entry-node, i.e. a node that is not allowed to
+     * have children, to the jTree.
      * <br><br>
-     * First of all, an input-dialog is opened where the user can enter several entry-numbers,
-     * separated by commas, including "from-to"-option (e.g.: "4,7,13-16,22"). Then each
-     * entry is retrieved, setting entry-number and entry-title as node-text.
+     * First of all, an input-dialog is opened where the user can enter several
+     * entry-numbers, separated by commas, including "from-to"-option (e.g.:
+     * "4,7,13-16,22"). Then each entry is retrieved, setting entry-number and
+     * entry-title as node-text.
      * <br><br>
-     * The nodes are added to the end of the selected node's children-list, but <b>before</b> the
-     * first heading/bullet. so, a child-list always lists first the entry-nodes (that are not allowed
-     * to have children), followed by header/bullet-nodes (that may have children).
+     * The nodes are added to the end of the selected node's children-list, but
+     * <b>before</b> the first heading/bullet. so, a child-list always lists
+     * first the entry-nodes (that are not allowed to have children), followed
+     * by header/bullet-nodes (that may have children).
      * <br><br>
      * An entry-node shall never be located <b>behind</b> a bullet/header node!
-     * <br><br><i>This method is separated in two parts!</i> The main part can be found 
-     * in the {@link #addEntries addEntries} method.
+     * <br><br><i>This method is separated in two parts!</i> The main part can
+     * be found in the {@link #addEntries addEntries} method.
      */
     @Action(enabledProperty = "nodeSelected")
     public void addEntry() {
         // wait for user input
-        String newEntries = (String)JOptionPane.showInputDialog(null,resourceMap.getString("newEntryMsg"), resourceMap.getString("newEntryTitle"), JOptionPane.PLAIN_MESSAGE);
+        String newEntries = (String) JOptionPane.showInputDialog(null, resourceMap.getString("newEntryMsg"), resourceMap.getString("newEntryTitle"), JOptionPane.PLAIN_MESSAGE);
         // if we have a valid input and no cancel-operation, go on
-        if (newEntries!=null && newEntries.length()>0) addEntries(newEntries);
+        if (newEntries != null && newEntries.length() > 0) {
+            addEntries(newEntries);
+        }
     }
-    
 
     @Action(enabledProperty = "entryNodeSelected")
     public void editEntry() {
         // get selected entry
         int nr = getSelectedEntryNumber();
         // when we have a valid selection, go on
-        if (nr!=-1) zknframe.openEditWindow(true,nr,false,false,-1);
+        if (nr != -1) {
+            zknframe.openEditWindow(true, nr, false, false, -1);
+        }
     }
 
-    
     @Action(enabledProperty = "nodeSelected")
     public void insertEntry() {
         zknframe.editEntryFromDesktop = true;
         zknframe.openEditWindow(false, -1, false, false, getSelectedEntryNumber());
     }
-    
-        
+
     /**
-     * This methods adds a new entry-node, i.e. a node that is not allowed to have children, to
-     * the jTree.
+     * This methods adds a new entry-node, i.e. a node that is not allowed to
+     * have children, to the jTree.
      * <br><br>
-     * First of all, an input-dialog is opened where the user can enter several entry-numbers,
-     * separated by commas, including "from-to"-option (e.g.: "4,7,13-16,22"). Then each
-     * entry is retrieved, setting entry-number and entry-title as node-text.
+     * First of all, an input-dialog is opened where the user can enter several
+     * entry-numbers, separated by commas, including "from-to"-option (e.g.:
+     * "4,7,13-16,22"). Then each entry is retrieved, setting entry-number and
+     * entry-title as node-text.
      * <br><br>
-     * The nodes are added to the end of the selected node's children-list, but <b>before</b> the
-     * first heading/bullet. so, a child-list always lists first the entry-nodes (that are not allowed
-     * to have children), followed by header/bullet-nodes (that may have children).
+     * The nodes are added to the end of the selected node's children-list, but
+     * <b>before</b> the first heading/bullet. so, a child-list always lists
+     * first the entry-nodes (that are not allowed to have children), followed
+     * by header/bullet-nodes (that may have children).
      * <br><br>
      * An entry-node shall never be located <b>behind</b> a bullet/header node!
-     * <br><br><i>This method is separated in two parts!</i> The inital part can be found 
-     * in the {@link #addEntry addEntry} method.
-     * 
+     * <br><br><i>This method is separated in two parts!</i> The inital part can
+     * be found in the {@link #addEntry addEntry} method.
+     *
      * @param newEntries
-     */    
+     */
     private void addEntries(String newEntries) {
         addEntries(newEntries, null);
     }
-    
-    
+
     /**
-     * This methods adds a new entry-node, i.e. a node that is not allowed to have children, to
-     * the jTree.
+     * This methods adds a new entry-node, i.e. a node that is not allowed to
+     * have children, to the jTree.
      * <br><br>
-     * First of all, an input-dialog is opened where the user can enter several entry-numbers,
-     * separated by commas, including "from-to"-option (e.g.: "4,7,13-16,22"). Then each
-     * entry is retrieved, setting entry-number and entry-title as node-text.
+     * First of all, an input-dialog is opened where the user can enter several
+     * entry-numbers, separated by commas, including "from-to"-option (e.g.:
+     * "4,7,13-16,22"). Then each entry is retrieved, setting entry-number and
+     * entry-title as node-text.
      * <br><br>
-     * The nodes are added to the end of the selected node's children-list, but <b>before</b> the
-     * first heading/bullet. so, a child-list always lists first the entry-nodes (that are not allowed
-     * to have children), followed by header/bullet-nodes (that may have children).
+     * The nodes are added to the end of the selected node's children-list, but
+     * <b>before</b> the first heading/bullet. so, a child-list always lists
+     * first the entry-nodes (that are not allowed to have children), followed
+     * by header/bullet-nodes (that may have children).
      * <br><br>
      * An entry-node shall never be located <b>behind</b> a bullet/header node!
-     * <br><br><i>This method is separated in two parts!</i> The inital part can be found 
-     * in the {@link #addEntry addEntry} method.
-     * 
+     * <br><br><i>This method is separated in two parts!</i> The inital part can
+     * be found in the {@link #addEntry addEntry} method.
+     *
      * @param newEntries
      * @param modifications
-     */    
+     */
     private void addEntries(String newEntries, String modifications) {
         // at the end we need this to check for changes
         boolean modified = false;
@@ -2523,7 +2696,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             for (int cnt : entries) {
                 // check whether entry already exists
                 if (noDoubleEntries(insert, cnt)) {
-                // go through all desktops and check whether the current entry already exists.
+                    // go through all desktops and check whether the current entry already exists.
                     // if yes, add added entry to our linked list.
                     for (int me = 0; me < desktopObj.getCount(); me++) {
                         if (desktopObj.checkForDoubleEntry(me, cnt)) {
@@ -2568,7 +2741,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                         + multipleOccurencesMessage;
                 if (null == multipleOccurencesDlg) {
                     // create a new dialog with the desktop-dialog, passing some initial values
-                    multipleOccurencesDlg = new CShowMultipleDesktopOccurences(this, 
+                    multipleOccurencesDlg = new CShowMultipleDesktopOccurences(this,
                             settingsObj, false, multipleOccurencesMessage);
                     // center window
                     multipleOccurencesDlg.setLocationRelativeTo(null);
@@ -2584,20 +2757,20 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         }
     }
 
-
     @Action
     public void openMultipleOccurencesMessageDlg() {
-        if(multipleOccurencesMessage!=null) {
+        if (multipleOccurencesMessage != null) {
             multipleOccurencesMessage = resourceMap.getString("showMultipleEntriesOnDesktop")
-                                      + lineseparator+lineseparator
-                                      + multipleOccurencesMessage;
-            if (null==multipleOccurencesDlg) {
+                    + lineseparator + lineseparator
+                    + multipleOccurencesMessage;
+            if (null == multipleOccurencesDlg) {
                 // create a new dialog with the desktop-dialog, passing some initial values
-                multipleOccurencesDlg = new CShowMultipleDesktopOccurences(this,settingsObj,false,multipleOccurencesMessage);
+                multipleOccurencesDlg = new CShowMultipleDesktopOccurences(this, settingsObj, false, multipleOccurencesMessage);
                 // center window
                 multipleOccurencesDlg.setLocationRelativeTo(null);
+            } else {
+                multipleOccurencesDlg.setInfoMsg(multipleOccurencesMessage);
             }
-            else multipleOccurencesDlg.setInfoMsg(multipleOccurencesMessage);
             // show window
             ZettelkastenApp.getApplication().show(multipleOccurencesDlg);
             // hide button
@@ -2605,29 +2778,32 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         }
     }
 
-
     /**
-     * This method adds entries, indicated by their index-numbers, to the desktop. this method
-     * is usually used to add entries to the desktop from other windows, like main-window or
-     * searchresults-window etc.
-     * 
+     * This method adds entries, indicated by their index-numbers, to the
+     * desktop. this method is usually used to add entries to the desktop from
+     * other windows, like main-window or searchresults-window etc.
+     *
      * @param entries the entry-numbers in an integer-array
      */
     public void addEntries(int[] entries) {
         // when we have no entries, leave
-        if ((null==entries)||(entries.length<1)) return;
+        if ((null == entries) || (entries.length < 1)) {
+            return;
+        }
         // if we don't have any desktop created yet, tell the user to do so
         // before adding new entries...
-        while (desktopObj.getCount()<1) {
+        while (desktopObj.getCount() < 1) {
             // ask user whether a new desktop should be created...
             int option = JOptionPane.showConfirmDialog(null, resourceMap.getString("askForNewDesktopMsg"), resourceMap.getString("askForNewDesktopTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
             // if no, leave method...
-            if (JOptionPane.NO_OPTION==option ) return;
+            if (JOptionPane.NO_OPTION == option) {
+                return;
+            }
             // else create new desktop
             newDesktop();
             // when the user added a new desktop, select it
-            if(desktopObj.getCount()>=1) {
-                TreePath tp = new TreePath((TreeNode)jTreeDesktop.getModel().getRoot());
+            if (desktopObj.getCount() >= 1) {
+                TreePath tp = new TreePath((TreeNode) jTreeDesktop.getModel().getRoot());
                 jTreeDesktop.setSelectionPath(tp);
             }
         }
@@ -2637,7 +2813,9 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             // ask user whether a new bullet should be created...
             int option = JOptionPane.showConfirmDialog(null, resourceMap.getString("askForNewBulletMsg"), resourceMap.getString("askForNewBulletTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
             // if no, leave method
-            if (JOptionPane.NO_OPTION==option) return;
+            if (JOptionPane.NO_OPTION == option) {
+                return;
+            }
             // else add bullet
             addBullet();
         }
@@ -2653,34 +2831,33 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 sb.append(",");
             }
             // delete last comma
-            if (sb.length()>1) sb.setLength(sb.length()-1);
+            if (sb.length() > 1) {
+                sb.setLength(sb.length() - 1);
+            }
             // add entries
             addEntries(sb.toString());
-        }
-        else {
+        } else {
             // copy entries to "clipboard", so the user can paste them after selecting a bullet or node.
             clipEntries = entries;
             // tell user that a selection has to be made...
-            JOptionPane.showMessageDialog(this,resourceMap.getString("errSelectionNeededMsg"),resourceMap.getString("errSelectionNeededTitle"),JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(this, resourceMap.getString("errSelectionNeededMsg"), resourceMap.getString("errSelectionNeededTitle"), JOptionPane.PLAIN_MESSAGE);
         }
     }
-    
-    
+
     /**
-     * This action is enabled, when an entry has follower-entries (Luhmann-Numbers). If a user
-     * performs this action, all entry's follower-entries (Luhmann-Numbers) are added behind this
-     * entry.
+     * This action is enabled, when an entry has follower-entries
+     * (Luhmann-Numbers). If a user performs this action, all entry's
+     * follower-entries (Luhmann-Numbers) are added behind this entry.
      */
     @Action(enabledProperty = "luhmannNodeSelected")
     public void addLuhmann() {
         addEntries(dataObj.getLuhmannNumbers(getSelectedEntryNumber()));
     }
-    
-    
+
     /**
-     * This action is enabled, when an entry has follower-entries (Luhmann-Numbers). If a user
-     * performs this action, all entry's follower-entries (Luhmann-Numbers) are added behind this
-     * entry.
+     * This action is enabled, when an entry has follower-entries
+     * (Luhmann-Numbers). If a user performs this action, all entry's
+     * follower-entries (Luhmann-Numbers) are added behind this entry.
      */
     @Action(enabledProperty = "luhmannNodeSelected")
     public void addLuhmannComplete() {
@@ -2689,21 +2866,21 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // get recursive Luhmann-Numbers
         fillLuhmannNumbers(getSelectedEntryNumber());
         // add them...
-        if (luhmannnumbers.length()>0) {
+        if (luhmannnumbers.length() > 0) {
             // delete last comma
-            luhmannnumbers.setLength(luhmannnumbers.length()-1);
+            luhmannnumbers.setLength(luhmannnumbers.length() - 1);
             // add entries to treeview
             addEntries(luhmannnumbers.toString());
         }
     }
-    
-    
+
     /**
      * This method recursively retrieves all follower- and sub-follower-numbers
-     * (Luhmann-Numbers) of an entry and adds them to a stringbuilder. This method
-     * is needed for the {@link #addLuhmann addLuhmann}-Action that adds these
-     * follower-numbers to the treeview, directly behind the selected entry.
-     * 
+     * (Luhmann-Numbers) of an entry and adds them to a stringbuilder. This
+     * method is needed for the {@link #addLuhmann addLuhmann}-Action that adds
+     * these follower-numbers to the treeview, directly behind the selected
+     * entry.
+     *
      * @param zettelpos the number of the selected entry
      */
     private void fillLuhmannNumbers(int zettelpos) {
@@ -2724,7 +2901,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         }
     }
 
-    
 //    /**
 //     * This method recursively retrieves all follower- and sub-follower-numbers
 //     * (Luhmann-Numbers) of an entry and adds them to a stringbuilder. This method
@@ -2755,28 +2931,28 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 //        }
 //        return (lastadded);
 //    }
-
-    
     /**
-     * This method is called from "addEntry" and checks whether an entry-number already exists
-     * as a child of that parent.
-     * 
-     * @param parent the insert-parent, where the entry should be inserted as child
+     * This method is called from "addEntry" and checks whether an entry-number
+     * already exists as a child of that parent.
+     *
+     * @param parent the insert-parent, where the entry should be inserted as
+     * child
      * @param nr the number of the entry that should be inserted
-     * @return {@code true} if the entry "nr" already exists as child of "parent".
+     * @return {@code true} if the entry "nr" already exists as child of
+     * "parent".
      */
     private boolean noDoubleEntries(DefaultMutableTreeNode parent, int nr) {
         // got through all parent's children
-        for (int counter=0; counter<parent.getChildCount(); counter++) {
+        for (int counter = 0; counter < parent.getChildCount(); counter++) {
             // get child
             DefaultMutableTreeNode doublechild = (DefaultMutableTreeNode) parent.getChildAt(counter);
             // retrieve the node's text and extract the entry-number
             int childnr = TreeUtil.extractEntryNumberFromNode(doublechild);
             // compare child's text with newBullet-text
-            if (childnr==nr) {
+            if (childnr == nr) {
                 // if we found a match, tell user about cancelling
                 if (showMultipleEntryMsg) {
-                    JOptionPane.showMessageDialog(this,resourceMap.getString("errEntryExistsMsg"),resourceMap.getString("errEntryExistsTitle"),JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(this, resourceMap.getString("errEntryExistsMsg"), resourceMap.getString("errEntryExistsTitle"), JOptionPane.PLAIN_MESSAGE);
                     showMultipleEntryMsg = false;
                 }
                 return false;
@@ -2785,17 +2961,17 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         return true;
     }
 
-
     /**
-     * Exports the desktop-data to a file, i.e. the content will be written to a file "as it is" (wysiwyg).
-     * unlink the typical export method, this export method also export bullet-point-headings, invisible
-     * entry-titles, modified entries etc. some of these features are not supported by the usual export-method.
+     * Exports the desktop-data to a file, i.e. the content will be written to a
+     * file "as it is" (wysiwyg). unlink the typical export method, this export
+     * method also export bullet-point-headings, invisible entry-titles,
+     * modified entries etc. some of these features are not supported by the
+     * usual export-method.
      */
     @Action
     public void exportDesktop() {
-        export(desktopObj.getCurrentDesktopElement(),(DefaultMutableTreeNode)jTreeDesktop.getModel().getRoot());
+        export(desktopObj.getCurrentDesktopElement(), (DefaultMutableTreeNode) jTreeDesktop.getModel().getRoot());
     }
-
 
     @Action
     public void importArchivedDesktop() {
@@ -2805,21 +2981,21 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         File importdir = settingsObj.getFilePath();
         // let user choose filepath
         File filepath = FileOperationsUtil.chooseFile(this,
-                                          (settingsObj.isMacAqua())?FileDialog.LOAD:JFileChooser.OPEN_DIALOG,
-                                          JFileChooser.FILES_ONLY,
-                                          (null==importdir)?null:importdir.getPath(),
-                                          (null==importdir)?null:importdir.getName(),
-                                          resourceMap.getString("openArchiveTitle"),
-                                          new String[] {".zip"},
-                                          "Zip",
-                                          settingsObj);
+                (settingsObj.isMacAqua()) ? FileDialog.LOAD : JFileChooser.OPEN_DIALOG,
+                JFileChooser.FILES_ONLY,
+                (null == importdir) ? null : importdir.getPath(),
+                (null == importdir) ? null : importdir.getName(),
+                resourceMap.getString("openArchiveTitle"),
+                new String[]{".zip"},
+                "Zip",
+                settingsObj);
         // if we have a valid file, go on
-        if (filepath!=null && filepath.exists()) {
+        if (filepath != null && filepath.exists()) {
             // open the zip-file
             try (ZipInputStream zip = new ZipInputStream(new FileInputStream(filepath))) {
                 ZipEntry entry;
                 // now iterate the zip-file, searching for the requested file in it
-                while ((entry=zip.getNextEntry())!=null) {
+                while ((entry = zip.getNextEntry()) != null) {
                     // get filename of zip-entry
                     String entryname = entry.getName();
                     // if the found file matches the requested one, start the SAXBuilder
@@ -2828,19 +3004,17 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                             SAXBuilder builder = new SAXBuilder();
                             archive = builder.build(zip);
                             break;
-                        }
-                        catch (JDOMException e) {
-                            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+                        } catch (JDOMException e) {
+                            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                         }
                     }
                 }
                 // tell about success
-                Constants.zknlogger.log(Level.INFO,"Desktop archive successfully opened.");
-            }
-            catch (IOException e) {
-                Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+                Constants.zknlogger.log(Level.INFO, "Desktop archive successfully opened.");
+            } catch (IOException e) {
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                 // show error message dialog
-                JOptionPane.showMessageDialog(this,resourceMap.getString("openArchiveDlgErr"),resourceMap.getString("openArchiveDlgTitle"),JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(this, resourceMap.getString("openArchiveDlgErr"), resourceMap.getString("openArchiveDlgTitle"), JOptionPane.PLAIN_MESSAGE);
                 // and show error log
                 zknframe.showErrorIcon();
                 return;
@@ -2855,46 +3029,44 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 int result = desktopObj.importArchivedDesktop(archive);
                 // here we go on in case the desktop-name of the imported archive
                 // already exists. in this case, the user shoould rename the archive
-                if (DesktopData.IMPORT_ARCHIVE_ERR_DESKTOPNAME_EXISTS==result) {
+                if (DesktopData.IMPORT_ARCHIVE_ERR_DESKTOPNAME_EXISTS == result) {
                     // desktop-name already existed, so desktop was not added...
-                    JOptionPane.showMessageDialog(this,resourceMap.getString("errDesktopNameExistsMsg", archive.getRootElement().getAttributeValue("name")),resourceMap.getString("errDesktopNameExistsTitle"),JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(this, resourceMap.getString("errDesktopNameExistsMsg", archive.getRootElement().getAttributeValue("name")), resourceMap.getString("errDesktopNameExistsTitle"), JOptionPane.PLAIN_MESSAGE);
                     // user-input for new desktop-description
-                    String newDeskName = (String)JOptionPane.showInputDialog(this,resourceMap.getString("newDesktopMsg"), resourceMap.getString("newDesktopTitle"), JOptionPane.PLAIN_MESSAGE);
+                    String newDeskName = (String) JOptionPane.showInputDialog(this, resourceMap.getString("newDesktopMsg"), resourceMap.getString("newDesktopTitle"), JOptionPane.PLAIN_MESSAGE);
                     // check for valid-return value, or if the user cancelled the action
-                    if (newDeskName!=null && !newDeskName.isEmpty()) {
+                    if (newDeskName != null && !newDeskName.isEmpty()) {
                         // if everything was ok, set new name
                         archive.getRootElement().setAttribute("name", newDeskName);
-                    }
-                    else {
+                    } else {
                         // else user has cancelled process
-                        JOptionPane.showMessageDialog(this,resourceMap.getString("openArchiveCancelled"),resourceMap.getString("openArchiveDlgTitle"),JOptionPane.PLAIN_MESSAGE);
+                        JOptionPane.showMessageDialog(this, resourceMap.getString("openArchiveCancelled"), resourceMap.getString("openArchiveDlgTitle"), JOptionPane.PLAIN_MESSAGE);
                         return;
                     }
-                }
-                else if (DesktopData.IMPORT_ARCHIVE_ERR_OTHER==result) {
+                } else if (DesktopData.IMPORT_ARCHIVE_ERR_OTHER == result) {
                     // tell user about problem
-                    JOptionPane.showMessageDialog(this,resourceMap.getString("openArchiveError"),resourceMap.getString("openArchiveDlgTitle"),JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(this, resourceMap.getString("openArchiveError"), resourceMap.getString("openArchiveDlgTitle"), JOptionPane.PLAIN_MESSAGE);
                     // and show error log
                     zknframe.showErrorIcon();
                     return;
-                }
-                else if (DesktopData.IMPORT_ARCHIVE_OK==result) {
+                } else if (DesktopData.IMPORT_ARCHIVE_OK == result) {
                     // everything is ok, so quit while-loop
                     finished = true;
                 }
             }
             // show success
-            JOptionPane.showMessageDialog(this,resourceMap.getString("openArchiveOK"),resourceMap.getString("openArchiveTitle"),JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(this, resourceMap.getString("openArchiveOK"), resourceMap.getString("openArchiveTitle"), JOptionPane.PLAIN_MESSAGE);
             // and update combo box
             updateComboBox(false);
         }
     }
 
-
     /**
-     * This method archives the currently active desktop to a zipped xml-file. This method saves the
-     * current desktop-data, the related notes for this desktop and possible modified entries.<br><br>
-     * Archive files can be imported as well (see {@link #importArchivedDesktop() importArchivedDesktop()}).
+     * This method archives the currently active desktop to a zipped xml-file.
+     * This method saves the current desktop-data, the related notes for this
+     * desktop and possible modified entries.<br><br>
+     * Archive files can be imported as well (see
+     * {@link #importArchivedDesktop() importArchivedDesktop()}).
      */
     @Action
     public void archiveDesktop() {
@@ -2902,32 +3074,34 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         File datafp = settingsObj.getFilePath();
         // convert to string, and cut off filename by creating a substring that cuts off
         // everything after the last separator char
-        String datafilepath = (datafp!=null) ? datafp.getPath().substring(0, datafp.toString().lastIndexOf(java.io.File.separator)+1) : "";
+        String datafilepath = (datafp != null) ? datafp.getPath().substring(0, datafp.toString().lastIndexOf(java.io.File.separator) + 1) : "";
         // ... to cut off extension
-        if (!datafilepath.isEmpty()) datafilepath = datafilepath+desktopObj.getCurrentDesktopName()+resourceMap.getString("archiveDesktopSuffix");
+        if (!datafilepath.isEmpty()) {
+            datafilepath = datafilepath + desktopObj.getCurrentDesktopName() + resourceMap.getString("archiveDesktopSuffix");
+        }
         // create new path
         File exportdir = new File(datafilepath);
         // here we open a swing filechooser, in case the os ist no mac aqua
         File filepath = FileOperationsUtil.chooseFile(this,
-                                          (settingsObj.isMacAqua())?FileDialog.SAVE:JFileChooser.SAVE_DIALOG,
-                                          JFileChooser.FILES_ONLY,
-                                          exportdir.getPath(),
-                                          exportdir.getName(),
-                                          resourceMap.getString("fileDialogTitleSave"),
-                                          new String[] {".zip"},
-                                          "Zip",
-                                          settingsObj);
-        if (filepath!=null) {
+                (settingsObj.isMacAqua()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG,
+                JFileChooser.FILES_ONLY,
+                exportdir.getPath(),
+                exportdir.getName(),
+                resourceMap.getString("fileDialogTitleSave"),
+                new String[]{".zip"},
+                "Zip",
+                settingsObj);
+        if (filepath != null) {
             // add fileextenstion, if necessay
             if (!filepath.getName().endsWith(".zip")) {
-                filepath = new File(filepath.toString()+".zip");
+                filepath = new File(filepath.toString() + ".zip");
             }
             // check whether file already exists
             if (filepath.exists()) {
                 // file exists, ask user to overwrite it...
-                int optionDocExists = JOptionPane.showConfirmDialog(null, resourceMap.getString("askForOverwriteFileMsg",filepath.getName()), resourceMap.getString("askForOverwriteFileTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                int optionDocExists = JOptionPane.showConfirmDialog(null, resourceMap.getString("askForOverwriteFileMsg", filepath.getName()), resourceMap.getString("askForOverwriteFileTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
                 // if the user does *not* choose to overwrite, quit...
-                if (optionDocExists!=JOptionPane.YES_OPTION) {
+                if (optionDocExists != JOptionPane.YES_OPTION) {
                     // don't show "export was OK" message in main frame
                     return;
                 }
@@ -2935,9 +3109,9 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             // create desktop-archive-XML-document
             Document archiveddesktop = desktopObj.archiveDesktop(desktopObj.getCurrentDesktopName());
             // check whether an error occured
-            if (null==archiveddesktop) {
+            if (null == archiveddesktop) {
                 // tell user about error
-                JOptionPane.showMessageDialog(this,resourceMap.getString("archiveErrMsg"),resourceMap.getString("archiveErrTitle"),JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(this, resourceMap.getString("archiveErrMsg"), resourceMap.getString("archiveErrTitle"), JOptionPane.PLAIN_MESSAGE);
                 zknframe.showErrorIcon();
                 return;
             }
@@ -2953,27 +3127,29 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 // save archived desktop
                 zip.putNextEntry(new ZipEntry(Constants.archivedDesktopFileName));
                 out.output(archiveddesktop, zip);
-            }
-            catch (IOException | SecurityException e) {
-                Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
-                JOptionPane.showMessageDialog(this,resourceMap.getString("archiveErrMsg"),resourceMap.getString("archiveErrTitle"),JOptionPane.PLAIN_MESSAGE);
+            } catch (IOException | SecurityException e) {
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+                JOptionPane.showMessageDialog(this, resourceMap.getString("archiveErrMsg"), resourceMap.getString("archiveErrTitle"), JOptionPane.PLAIN_MESSAGE);
                 zknframe.showErrorIcon();
                 return;
             }
-            JOptionPane.showMessageDialog(this,resourceMap.getString("archiveOkMsg"),resourceMap.getString("archiveOkTitle"),JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(this, resourceMap.getString("archiveOkMsg"), resourceMap.getString("archiveOkTitle"), JOptionPane.PLAIN_MESSAGE);
         }
     }
 
-
     /**
-     * Exports the desktop-data to a file, i.e. the content will be written to a file "as it is" (wysiwyg).
-     * unlink the typical export method, this export method also export bullet-point-headings, invisible
-     * entry-titles, modified entries etc. some of these features are not supported by the usual export-method.
+     * Exports the desktop-data to a file, i.e. the content will be written to a
+     * file "as it is" (wysiwyg). unlink the typical export method, this export
+     * method also export bullet-point-headings, invisible entry-titles,
+     * modified entries etc. some of these features are not supported by the
+     * usual export-method.
      *
-     * @param startelement the starting point for the jTree-enumeration, either the root element or a bullet (if only
-     * a bullet should be exported, see {@link #exportDesktopBullet() exportDesktopBullet()}).
-     * @param startnode the starting point for the jTree-enumeration, either the root node or a bullet (if only
-     * a bullet should be exported, see {@link #exportDesktopBullet() exportDesktopBullet()}).
+     * @param startelement the starting point for the jTree-enumeration, either
+     * the root element or a bullet (if only a bullet should be exported, see
+     * {@link #exportDesktopBullet() exportDesktopBullet()}).
+     * @param startnode the starting point for the jTree-enumeration, either the
+     * root node or a bullet (if only a bullet should be exported, see
+     * {@link #exportDesktopBullet() exportDesktopBullet()}).
      */
     private void export(Element startelement, DefaultMutableTreeNode startnode) {
         // opens the Export Dialog. This Class is responsible
@@ -2983,7 +3159,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // now open the export-dialog
         if (null == exportWindow) {
             // get parent und init window
-            exportWindow = new CDesktopExport(this,settingsObj,bibtexObj);
+            exportWindow = new CDesktopExport(this, settingsObj, bibtexObj);
             // center window
             exportWindow.setLocationRelativeTo(this);
         }
@@ -3000,18 +3176,18 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             // when the user wants to export into PDF or LaTex, open a new dialog where the user
             // can make some extra settings like page settings and font-sizes.
             if (ExportTools.isExportSettingsOk(this, settingsObj, exportWindow.getExportType())) {
-            // if dialog window isn't already created, do this now
+                // if dialog window isn't already created, do this now
                 if (null == taskDlg) {
                     // create list that will contain all entries which should be exported
                     ArrayList<Object> liste = new ArrayList<>();
                     // here we recursively create the list of headlines and entry-numbers
                     // from the current desktop
-                    createExportEntries(startelement,liste);
+                    createExportEntries(startelement, liste);
                     // open export dialog
                     // get parent und init window
                     taskDlg = new TaskProgressDialog(this, TaskProgressDialog.TASK_EXPORTDATA, taskdata, dataObj, bookmarksObj, desktopObj, settingsObj, bibtexObj, null,
-                                                     exportWindow.getFilePath(), liste, exportWindow.getExportType(), 0, ';', startnode, false, false, 
-                                                     exportWindow.getExportBibTex(), false, exportWindow.getExportToc(), isHeadingVisible, isEntryNumberVisible);
+                            exportWindow.getFilePath(), liste, exportWindow.getExportType(), 0, ';', startnode, false, false,
+                            exportWindow.getExportBibTex(), false, exportWindow.getExportToc(), isHeadingVisible, isEntryNumberVisible);
                     // center window
                     taskDlg.setLocationRelativeTo(this);
                 }
@@ -3020,7 +3196,9 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 taskDlg.dispose();
                 taskDlg = null;
                 // else tell user that everything went fine
-                if (taskdata.showExportOkMessage()) JOptionPane.showMessageDialog(this,resourceMap.getString("exportOkMsg"),resourceMap.getString("exportOkTitle"),JOptionPane.PLAIN_MESSAGE);
+                if (taskdata.showExportOkMessage()) {
+                    JOptionPane.showMessageDialog(this, resourceMap.getString("exportOkMsg"), resourceMap.getString("exportOkTitle"), JOptionPane.PLAIN_MESSAGE);
+                }
             }
         }
         // we have to manually dispose the window and release the memory
@@ -3032,80 +3210,86 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         System.gc();
     }
 
-
     /**
-     * This method exports not a complete desktop, but the selected bullets with all its
-     * sub-entries (child-nodes) to a file.
+     * This method exports not a complete desktop, but the selected bullets with
+     * all its sub-entries (child-nodes) to a file.
      */
     @Action(enabledProperty = "bulletSelected")
     public void exportDesktopBullet() {
         // only export subentries, if a bullet-point is selected.
-        if (!isBulletSelected()) return;
+        if (!isBulletSelected()) {
+            return;
+        }
         // find starting-element (selected bullet) from timestamp
         String timestamp = getSelectedNodeTimestamp();
         // and export data
         export(desktopObj.findEntryElementFromTimestamp(desktopObj.getCurrentDesktopElement(), timestamp),
-              (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent());
+                (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent());
     }
 
-
     /**
-     * This method exports all desktops to a file. Unlike the typical export-function for desktop-data
-     * (see {@link #exportDesktop() exportDesktop()}, this method does not export the desktop-data "as it is"
-     * (including modified entries, see {@link #modifiyEntry() modifiyEntry()}), but only the simple
+     * This method exports all desktops to a file. Unlike the typical
+     * export-function for desktop-data (see
+     * {@link #exportDesktop() exportDesktop()}, this method does not export the
+     * desktop-data "as it is" (including modified entries, see
+     * {@link #modifiyEntry() modifiyEntry()}), but only the simple
      * entry-contents.<br><br>
-     * While the typical desktop-export-functions call the {@link #export(org.jdom.Element, javax.swing.tree.DefaultMutableTreeNode) export()}
+     * While the typical desktop-export-functions call the
+     * {@link #export(org.jdom.Element, javax.swing.tree.DefaultMutableTreeNode) export()}
      * method, this method calls the export-method from the mainframe.
      */
     @Action
     public void exportMultipleDesktop() {
         // check whether multiple desktops available
-        if (desktopObj.getCount()<2) return;
+        if (desktopObj.getCount() < 2) {
+            return;
+        }
 
-        if (null==desktopMultipleExportDlg) {
+        if (null == desktopMultipleExportDlg) {
             // create a new dialog with the desktop-dialog, passing some initial values
-            desktopMultipleExportDlg = new CDesktopMultipleExport(this,desktopObj,settingsObj);
+            desktopMultipleExportDlg = new CDesktopMultipleExport(this, desktopObj, settingsObj);
             // center window
             desktopMultipleExportDlg.setLocationRelativeTo(this);
         }
         // show window
         ZettelkastenApp.getApplication().show(desktopMultipleExportDlg);
         // check for return-value
-        if (desktopMultipleExportDlg.getChosenDesktops()!=null && desktopMultipleExportDlg.getChosenDesktops().length>0) {
+        if (desktopMultipleExportDlg.getChosenDesktops() != null && desktopMultipleExportDlg.getChosenDesktops().length > 0) {
             // create list that will contain all entries which should be exported
             ArrayList<Object> liste = new ArrayList<>();
             // iterate all chosen desktop-names
             for (String desktopname : desktopMultipleExportDlg.getChosenDesktops()) {
                 // here we recursively create the list of headlines and entry-numbers
                 // from the current desktop
-                createExportEntries(desktopObj.getDesktopElement(desktopname),liste);
+                createExportEntries(desktopObj.getDesktopElement(desktopname), liste);
             }
             // call export-method and export the entries.
             zknframe.exportEntries(liste);
         }
         // delete the windows
         desktopMultipleExportDlg.dispose();
-        desktopMultipleExportDlg=null;
+        desktopMultipleExportDlg = null;
     }
 
-
     /**
-     * This method "exports" all entries of the current desktop as search results, i.e. all entry-numbers
-     * are shown in the search results window.<br><br>
-     * You can also export just the entries of a selected bullet and all its sub-entries (child-nodes)
-     * as search result, see {@link #exportBulletToSearch() exportBulletToSearch()}.
+     * This method "exports" all entries of the current desktop as search
+     * results, i.e. all entry-numbers are shown in the search results
+     * window.<br><br>
+     * You can also export just the entries of a selected bullet and all its
+     * sub-entries (child-nodes) as search result, see
+     * {@link #exportBulletToSearch() exportBulletToSearch()}.
      */
     @Action
     public void exportToSearch() {
         zknframe.exportDesktopToSearch(desktopObj.retrieveDesktopEntries(desktopObj.getCurrentDesktopNr()), desktopObj.getCurrentDesktopName());
     }
 
-
     /**
-     * This method "exports" all entries of the currently selected bullet and all its sub-entries (child-nodes)
-     * as search results, i.e. all related entry-numbers are shown in the search results window.<br><br>
-     * You can also export the entries of the complete desktop as search result, see
-     * {@link #exportToSearch() exportToSearch()}.
+     * This method "exports" all entries of the currently selected bullet and
+     * all its sub-entries (child-nodes) as search results, i.e. all related
+     * entry-numbers are shown in the search results window.<br><br>
+     * You can also export the entries of the complete desktop as search result,
+     * see {@link #exportToSearch() exportToSearch()}.
      */
     @Action(enabledProperty = "bulletSelected")
     public void exportBulletToSearch() {
@@ -3118,34 +3302,33 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         }
     }
 
-
     /**
-     * This method shows all entries that are <b>not</b> used in the current desktop as
-     * search results, i.e. all entry-numbers that do not appear in the current desktop
-     * are shown in the search results window.
+     * This method shows all entries that are <b>not</b> used in the current
+     * desktop as search results, i.e. all entry-numbers that do not appear in
+     * the current desktop are shown in the search results window.
      */
     @Action
     public void exportMissingToSearch() {
         // retrieve all entry-numbers from current desktop
         int[] currentdesktopentries = desktopObj.retrieveDesktopEntries(desktopObj.getCurrentDesktopNr());
         // check for valid return value
-        if (currentdesktopentries!=null && currentdesktopentries.length>0) {
+        if (currentdesktopentries != null && currentdesktopentries.length > 0) {
             // create new integer-array
             ArrayList<Integer> expvalues = new ArrayList<>();
             // go through all entry-numbers
-            for (int cnt=1; cnt<=dataObj.getCount(Daten.ZKNCOUNT); cnt++) {
+            for (int cnt = 1; cnt <= dataObj.getCount(Daten.ZKNCOUNT); cnt++) {
                 // if entry-number is *not* on the desktop...
-                if (!isInArray(cnt,currentdesktopentries)) {
+                if (!isInArray(cnt, currentdesktopentries)) {
                     // ... add it to our result-array
                     expvalues.add(cnt);
                 }
             }
             // if we have any results, go on...
-            if (expvalues.size()>0) {
+            if (expvalues.size() > 0) {
                 // create return value
                 int[] retval = new int[expvalues.size()];
                 // and copy all integer-values from the list to that array
-                for (int cnt=0; cnt<retval.length; cnt++) {
+                for (int cnt = 0; cnt < retval.length; cnt++) {
                     retval[cnt] = expvalues.get(cnt);
                 }
                 zknframe.exportDesktopToSearch(retval, desktopObj.getCurrentDesktopName());
@@ -3153,37 +3336,41 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         }
     }
 
-    
     /**
-     * This method checks for the occurence of the value {@code nr} inside the array
-     * {@code arr}.
-     * 
+     * This method checks for the occurence of the value {@code nr} inside the
+     * array {@code arr}.
+     *
      * @param nr the integer-value we are looking for
      * @param arr the integer-array, which mightt contain{@code nr}
-     * @return {@code true} if {@code nr} was found inside {@code arr}, {@code false} otherwise.
+     * @return {@code true} if {@code nr} was found inside {@code arr},
+     * {@code false} otherwise.
      */
     private boolean isInArray(int nr, int[] arr) {
         // check for valid array
-        if (arr!=null && arr.length>0) {
+        if (arr != null && arr.length > 0) {
             // go through whole array
-            for (int cnt=0; cnt<arr.length; cnt++) {
+            for (int cnt = 0; cnt < arr.length; cnt++) {
                 // if we found the value "nr" inside the array "arr", return true
-                if (arr[cnt]==nr) return true;
+                if (arr[cnt] == nr) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
-
     /**
-     * This methods checks whether a selected entry is the last entry in the list of a bullet's
-     * child-nodes.
-     * 
-     * @return {@code true} if the selected entry is the last entry in a list of child-nodes, false otherwise
+     * This methods checks whether a selected entry is the last entry in the
+     * list of a bullet's child-nodes.
+     *
+     * @return {@code true} if the selected entry is the last entry in a list of
+     * child-nodes, false otherwise
      */
     private boolean isLastNode() {
         // if no node selected, return...
-        if (!isNodeSelected()) return false;
+        if (!isNodeSelected()) {
+            return false;
+        }
         // get the selected node, so we know where to insert the new bullet
         DefaultMutableTreeNode selection = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
@@ -3199,47 +3386,48 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                     node = children.nextElement();
                     // if the selected entry has another entry behind, return false
                     // otherwise true
-                    return(!isBulletSelected()) ? (node.getAllowsChildren()) : false;
+                    return (!isBulletSelected()) ? (node.getAllowsChildren()) : false;
                 }
-            }
-            catch (NoSuchElementException e) {
+            } catch (NoSuchElementException e) {
                 // if there is no entry after the selected one, return true
                 return true;
             }
         }
-        return false; 
+        return false;
     }
-    
-    
+
     /**
-     * This methods checks whether a selected entry is the first entry in the list of a bullet's
-     * child-nodes.
-     * 
-     * @return {@code true} if the selected entry is the first entry in a list of child-nodes, false otherwise
+     * This methods checks whether a selected entry is the first entry in the
+     * list of a bullet's child-nodes.
+     *
+     * @return {@code true} if the selected entry is the first entry in a list
+     * of child-nodes, false otherwise
      */
     private boolean isFirstNode() {
         // if no node selected, return...
-        if (!isNodeSelected()) return false;
+        if (!isNodeSelected()) {
+            return false;
+        }
         // get the selected node, so we know where to insert the new bullet
         DefaultMutableTreeNode selection = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
         // if the selection is a node-entry...
         // ...return true when selected entry equals the first child-node of the selected entry's parent
         if (!isBulletSelected()) {
-            return (0==selection.getParent().getIndex(selection));
+            return (0 == selection.getParent().getIndex(selection));
             // return (selection.equals(selection.getParent().getChildAt(0)));
-        }
-        // else if the selection is a bullet-point...
+        } // else if the selection is a bullet-point...
         else {
             // get the selected node's index
             int index = selection.getParent().getIndex(selection);
             // if index is 0, it is the first node.
-            if (0==index) return true;
+            if (0 == index) {
+                return true;
+            }
             // else check whether the node before the selection is a bullet and return false, if it is...
-            return !selection.getParent().getChildAt(index-1).getAllowsChildren();
+            return !selection.getParent().getChildAt(index - 1).getAllowsChildren();
         }
     }
-    
-    
+
     /**
      * Closes the window, i.e. makes it invisible
      */
@@ -3254,7 +3442,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // check whether memory usage is logged. if so, tell logger that new entry windows was opened
         if (settingsObj.isMemoryUsageLogged) {
             // log info
-            Constants.zknlogger.log(Level.INFO,"Memory usage logged. Desktop Window closed.");
+            Constants.zknlogger.log(Level.INFO, "Memory usage logged. Desktop Window closed.");
         }
         // dispose window
         dispose();
@@ -3264,37 +3452,39 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     }
 
     /**
-     * This method modifies an entry, but these changes are only applied to the desktop-view. the
-     * original entry's content in the main-database is not changed.
+     * This method modifies an entry, but these changes are only applied to the
+     * desktop-view. the original entry's content in the main-database is not
+     * changed.
      * <br><br>
-     * This is helpful when the user wants to "connect" entries by adding some words or paragraphs,
-     * which is only necessary for a readable text on the desktop, while the original entries should
-     * be left unmodified.
+     * This is helpful when the user wants to "connect" entries by adding some
+     * words or paragraphs, which is only necessary for a readable text on the
+     * desktop, while the original entries should be left unmodified.
      */
     @Action(enabledProperty = "entryNodeSelected")
     public void modifiyEntry() {
         // check whether a correct entry node was selected or not...
-        if (!isEntryNodeSelected()) return;
+        if (!isEntryNodeSelected()) {
+            return;
+        }
         // check whether an entry is already being edited, i.e. the edit-window is already created
         if (isEditModeActive) {
             // if so, bring that window to the front
             modifyEntryDlg.toFront();
-        }
-        // else create a new window and display it.
+        } // else create a new window and display it.
         else {
             // get the selected node, to tell the getComment method wether we have a bullet or an entry selected
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode)jTreeDesktop.getLastSelectedPathComponent();
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
             // retrieve and store edit-timestamp
             editModeTimeStamp = TreeUtil.getNodeTimestamp(node);
             // retrieve content from modified entry, if any...
             String oldcontent = desktopObj.retrieveModifiedEntryContentFromTimestamp(editModeTimeStamp);
             // check for any modified content. if we have no content, retrieve entry's original content instead
-            if (null==oldcontent || oldcontent.isEmpty()) {
+            if (null == oldcontent || oldcontent.isEmpty()) {
                 // get original entry content
                 oldcontent = dataObj.getZettelContent(TreeUtil.extractEntryNumberFromNode(node));
             }
             // create a new dialog with the bigger edit-field, passing some initial values
-            modifyEntryDlg = new CModifyDesktopEntry(this,settingsObj,spellObj,stenoObj,accKeys,oldcontent);
+            modifyEntryDlg = new CModifyDesktopEntry(this, settingsObj, spellObj, stenoObj, accKeys, oldcontent);
             // center window
             modifyEntryDlg.setLocationRelativeTo(this);
             ZettelkastenApp.getApplication().show(modifyEntryDlg);
@@ -3303,21 +3493,20 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         }
     }
 
-
     /**
-     * This method replaces an original's entry's content with the modifications that have been made
-     * for this entry on the desktop.
+     * This method replaces an original's entry's content with the modifications
+     * that have been made for this entry on the desktop.
      */
     @Action(enabledProperty = "modifiedEntryNode")
     public void applyModificationsToOriginalEntry() {
         // as whether original entry's content should really be replaced
         int option = JOptionPane.showConfirmDialog(null, resourceMap.getString("askForApplyModificationsMsg"), resourceMap.getString("askForApplyModificationsTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
         // if yes, go on
-        if (JOptionPane.YES_OPTION==option) {
+        if (JOptionPane.YES_OPTION == option) {
             // retrieve selected entry-number
             int nr = getSelectedEntryNumber();
             // check for valid value
-            if (nr!=-1) {
+            if (nr != -1) {
                 // retrieve timestamp of selected entry
                 String timestamp = getSelectedNodeTimestamp();
                 // retrieve modified content
@@ -3328,26 +3517,27 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 desktopObj.deleteModifiedEntry(timestamp);
                 // check whether modified entry is currently displayed. if so,
                 // update view in mainframe...
-                if (nr==zknframe.displayedZettel) zknframe.updateZettelContent(nr);
+                if (nr == zknframe.displayedZettel) {
+                    zknframe.updateZettelContent(nr);
+                }
             }
         }
     }
 
-
     /**
-     * This method replaces an original's entry's content with the modifications that have been made
-     * for this entry on the desktop.
+     * This method replaces an original's entry's content with the modifications
+     * that have been made for this entry on the desktop.
      */
     @Action
     public void applyAllModificationsToOriginalEntries() {
         // as whether original entry's content should really be replaced
         int option = JOptionPane.showConfirmDialog(null, resourceMap.getString("askForApplyModificationsMsg"), resourceMap.getString("askForApplyModificationsTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
         // if yes, go on
-        if (JOptionPane.YES_OPTION==option) {
+        if (JOptionPane.YES_OPTION == option) {
             // retrieve all entry timestamps from desktop
             String[] alltimestamps = desktopObj.retrieveEntryTimestampsFromDesktop();
             // check for valid value
-            if (alltimestamps!=null) {
+            if (alltimestamps != null) {
                 // iterate array
                 for (String ats : alltimestamps) {
                     // get entry number
@@ -3355,27 +3545,30 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                     // retrieve modified content
                     String content = desktopObj.retrieveModifiedEntryContentFromTimestamp(ats);
                     // check for valid values
-                    if (enr!=-1 && content!=null) {
+                    if (enr != -1 && content != null) {
                         // and change entry
                         dataObj.setZettelContent(enr, content, true);
                         // remove modified entry from modification list
                         desktopObj.deleteModifiedEntry(ats);
                         // check whether modified entry is currently displayed. if so,
                         // update view in mainframe...
-                        if (enr==zknframe.displayedZettel) zknframe.updateZettelContent(enr);
+                        if (enr == zknframe.displayedZettel) {
+                            zknframe.updateZettelContent(enr);
+                        }
                     }
                 }
             }
         }
     }
 
-
     /**
-     * This method is called after an entry was modified (see {@link #modifiyEntry() modifiyEntry()}
-     * and {@link #modifyEntryDlg modifyEntryDlg} for more details). Since the edit-window is modal,
-     * we need a message from that window when the editing is finished and when the changes can
-     * be applied to the desktop data. the edit-window calls this method to indicate the finishing
-     * of an edit-operation.
+     * This method is called after an entry was modified (see
+     * {@link #modifiyEntry() modifiyEntry()} and
+     * {@link #modifyEntryDlg modifyEntryDlg} for more details). Since the
+     * edit-window is modal, we need a message from that window when the editing
+     * is finished and when the changes can be applied to the desktop data. the
+     * edit-window calls this method to indicate the finishing of an
+     * edit-operation.
      */
     public void finishedEditing() {
         // after closing the window, get the new value
@@ -3383,28 +3576,25 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         boolean newconmodified = modifyEntryDlg.isModified();
         // delete the input-dialog
         modifyEntryDlg.dispose();
-        modifyEntryDlg=null;
+        modifyEntryDlg = null;
         // reset flag
         isEditModeActive = false;
         // check for valid return value
-        if (newconmodified && newcontent!=null && !newcontent.isEmpty()) {
+        if (newconmodified && newcontent != null && !newcontent.isEmpty()) {
             // change modified entry
             if (desktopObj.changeEntry(editModeTimeStamp, newcontent)) {
                 // update menu-items
                 updateToolbarAndMenu();
                 // change updateflag
                 setNeedsUpdate(true);
-            }
-            else {
+            } else {
                 // if an error occured, tell user about it...
-                JOptionPane.showMessageDialog(this,resourceMap.getString("errModifyEntryMsg"),resourceMap.getString("errModifyEntryTitle"),JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(this, resourceMap.getString("errModifyEntryMsg"), resourceMap.getString("errModifyEntryTitle"), JOptionPane.PLAIN_MESSAGE);
             }
         }
     }
 
-
     // TODO kommentare von einträgen mit kopieren/verschieben
-    
     /**
      * Retrieves the entry-number of the selected entry and copies it to the
      * internal clipboard. after that, the selected node is deleted.
@@ -3415,27 +3605,26 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             // store value, so we know the clipboard does contain bullets
             clipBullet = true;
             // copy bullet's name into variable
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode)jTreeDesktop.getLastSelectedPathComponent();
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
             clipBulletName = node.toString();
             // tell the desktop-data-class that the selected bullet has to be stored
             // for later use
             desktopObj.cutBulletToClip(TreeUtil.getNodeTimestamp(node));
             // update view
             updateTreeView();
-        }
-        else {
+        } else {
             // retrieve selected entry.
             int nr = getSelectedEntryNumber();
             // if we have any entries, copy their numbers to the clipboard
-            if (nr!=-1) {
+            if (nr != -1) {
                 // retrieve timestamp of selected node
-                String ts = TreeUtil.getNodeTimestamp((DefaultMutableTreeNode)jTreeDesktop.getLastSelectedPathComponent());
+                String ts = TreeUtil.getNodeTimestamp((DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent());
                 // retrieve modifications of that entry, if any modifications were made
                 clipModifiedEntryContent = desktopObj.retrieveModifiedEntryContentFromTimestamp(ts);
                 // delete selected node
                 deleteNode();
                 // and copy the entrynumber to the clipboard
-                clipEntries = new int[] {nr};
+                clipEntries = new int[]{nr};
                 // store value, so we know the clipboard does not contain bullets
                 clipBullet = false;
             }
@@ -3443,7 +3632,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // update toolbars
         updateToolbarAndMenu();
     }
-    
 
     /**
      * Retrieves the entry-number of the selected entry and copies it to the
@@ -3455,23 +3643,22 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             // store value, so we know the clipboard does contain bullets
             clipBullet = true;
             // copy bullet's name into variable
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode)jTreeDesktop.getLastSelectedPathComponent();
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
             clipBulletName = node.toString();
             // tell the desktop-data-class that the selected bullet has to be stored
             // for later use
             desktopObj.copyBulletToClip(TreeUtil.getNodeTimestamp(node));
-        }
-        else {
+        } else {
             // retrieve selected entry.
             int nr = getSelectedEntryNumber();
             // if we have any entries, copy their numbers to the clipboard
-            if (nr!=-1) {
+            if (nr != -1) {
                 // retrieve timestamp of selected node
-                String ts = TreeUtil.getNodeTimestamp((DefaultMutableTreeNode)jTreeDesktop.getLastSelectedPathComponent());
+                String ts = TreeUtil.getNodeTimestamp((DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent());
                 // retrieve modifications of that entry, if any modifications were made
                 clipModifiedEntryContent = desktopObj.retrieveModifiedEntryContentFromTimestamp(ts);
                 // and copy the entrynumber to the clipboard
-                clipEntries = new int[] {nr};
+                clipEntries = new int[]{nr};
                 // store value, so we know the clipboard does not contain bullets
                 clipBullet = false;
             }
@@ -3480,17 +3667,18 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         updateToolbarAndMenu();
     }
 
-    
     /**
-     * This method pastes a node or bullet from the clipboard into the treeview. Relevant variables
-     * for this operation are:<br><ul>
-     * <li>{@code clipBullet}, a boolean variable that indicates whether the internal clipboard is filled
-     * with entries (nodes) or a bullet</li>
-     * <li>{@code clipBulletName}, a string variable containing the name of the cut or copied bullet-point,
-     * in case we have a bullet-point in the clkipboard. this is need for checking if the bullet exists
-     * at that point where it should be inserted (pasted)</li>
-     * <li> {@code clipEntries}, an integer-array containing the entry-numbers of the entries that should
-     * be pasted in case we have entries (nodes) in the clipboard.</li>
+     * This method pastes a node or bullet from the clipboard into the treeview.
+     * Relevant variables for this operation are:<br><ul>
+     * <li>{@code clipBullet}, a boolean variable that indicates whether the
+     * internal clipboard is filled with entries (nodes) or a bullet</li>
+     * <li>{@code clipBulletName}, a string variable containing the name of the
+     * cut or copied bullet-point, in case we have a bullet-point in the
+     * clkipboard. this is need for checking if the bullet exists at that point
+     * where it should be inserted (pasted)</li>
+     * <li> {@code clipEntries}, an integer-array containing the entry-numbers
+     * of the entries that should be pasted in case we have entries (nodes) in
+     * the clipboard.</li>
      * </ul>
      */
     @Action(enabledProperty = "clipFilled")
@@ -3500,7 +3688,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             // cut off id from clipbullet-timestamp-id
             int pos = clipBulletName.indexOf("[");
             // only continue if we found something...
-            if (pos!=-1) {
+            if (pos != -1) {
                 // compare child's text with newBullet-text
                 clipBulletName = clipBulletName.substring(0, pos).trim();
             }
@@ -3508,25 +3696,24 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             // wants to pase the bullet
             if (!checkIfBulletExists(clipBulletName)) {
                 // get selection
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode)jTreeDesktop.getLastSelectedPathComponent();
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
                 // if not, insert it.
-                desktopObj.pasteBulletFromClip(getSelectedNodeTimestamp(),node.isRoot());
+                desktopObj.pasteBulletFromClip(getSelectedNodeTimestamp(), node.isRoot());
                 // update treeview
                 updateTreeView();
             }
-        }
-        // ...else if we have entries in the clipboard, add them now...
-        else if ((clipEntries!=null)&&(clipEntries.length>0)) {
+        } // ...else if we have entries in the clipboard, add them now...
+        else if ((clipEntries != null) && (clipEntries.length > 0)) {
             // check whether we have only one entry and modifications
             // this indicates a cut/copy and paste, so we use the other add-method
             // which also add modifications.
-            if (1==clipEntries.length) 
+            if (1 == clipEntries.length) {
                 addEntries(String.valueOf(clipEntries[0]), clipModifiedEntryContent);
-            else 
+            } else {
                 addEntries(clipEntries);
+            }
         }
     }
-    
 
     /**
      * This method moves the selected node in the jTree upwards, if possible.
@@ -3535,6 +3722,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     public void moveNodeUp() {
         moveNode(Constants.MOVE_UP);
     }
+
     /**
      * This method moves the selected node in the jTree downwards, if possible.
      */
@@ -3542,14 +3730,14 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     public void moveNodeDown() {
         moveNode(Constants.MOVE_DOWN);
     }
+
     /**
-     * This method moves the selected node up- or downwards, if possible, depending
-     * on the parameter {@code movement}.
+     * This method moves the selected node up- or downwards, if possible,
+     * depending on the parameter {@code movement}.
      *
-     * @param movement indicates whether the selected node in the jTree should be moved
-     * up- or downwards. use following constants:<br>
-     * - {@code CConstants.MOVE_UP}<br>
-     * - {@code CConstants.MOVE_DOWN}
+     * @param movement indicates whether the selected node in the jTree should
+     * be moved up- or downwards. use following constants:<br> -
+     * {@code CConstants.MOVE_UP}<br> - {@code CConstants.MOVE_DOWN}
      */
     private void moveNode(int movement) {
         // retrieve timestamp from selected node
@@ -3564,17 +3752,18 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         updateToolbarAndMenu();
     }
 
-
     /**
-     * This method selects the node in the jTree that matches the timestamp-id {@code timestamp}.
+     * This method selects the node in the jTree that matches the timestamp-id
+     * {@code timestamp}.
      *
-     * @param timestamp the timestamp of the entry which node should be selected in the jTree.
+     * @param timestamp the timestamp of the entry which node should be selected
+     * in the jTree.
      */
     private void selectTreePath(String timestamp) {
         // get the root
-        DefaultMutableTreeNode node = findNodeFromTimestamp((DefaultMutableTreeNode)jTreeDesktop.getModel().getRoot(),timestamp);
+        DefaultMutableTreeNode node = findNodeFromTimestamp((DefaultMutableTreeNode) jTreeDesktop.getModel().getRoot(), timestamp);
         // if we have a valid value...
-        if (node!=null) {
+        if (node != null) {
             // select node
             jTreeDesktop.setSelectionPath(new TreePath(node.getPath()));
         }
@@ -3583,21 +3772,24 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         jTreeDesktop.requestFocusInWindow();
     }
 
-
     /**
-     * This method recursevily traverses the jTree, starting at the position {@code node}, and
-     * tries to find an entry with the timestamp-id {@code timestamp}.
+     * This method recursevily traverses the jTree, starting at the position
+     * {@code node}, and tries to find an entry with the timestamp-id
+     * {@code timestamp}.
      *
-     * @param node the starting-point in the jTree, where this method searches through all (child-)elements.
+     * @param node the starting-point in the jTree, where this method searches
+     * through all (child-)elements.
      * @param timestamp the timestamp-id of the requested entry
-     * @return the found node that matches the entry with the timestamp-id {@code timestamp}, or {@code null}
-     * if nothing was found.
+     * @return the found node that matches the entry with the timestamp-id
+     * {@code timestamp}, or {@code null} if nothing was found.
      */
     private DefaultMutableTreeNode findNodeFromTimestamp(DefaultMutableTreeNode node, String timestamp) {
         // check whether the element "e" passed as parameter already has a timestamp-attribute that
         // matches the parameter "t". if so, return that element.
         String ts = TreeUtil.getNodeTimestamp(node);
-        if (ts!=null && ts.equals(timestamp)) return node;
+        if (ts != null && ts.equals(timestamp)) {
+            return node;
+        }
         // now go through all parts of the previously selected path
         Enumeration children = node.children();
         // go through all children
@@ -3606,62 +3798,72 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             node = (DefaultMutableTreeNode) children.nextElement();
             // check whether element has a timestamp value at all, and if it matches the parameter "t".
             ts = TreeUtil.getNodeTimestamp(node);
-            if (ts!=null && ts.equals(timestamp)) return node;
+            if (ts != null && ts.equals(timestamp)) {
+                return node;
+            }
             // when the new element also has children, call this method again,
             // so we go through the strucuture recursively...
-            if (node.getChildCount()>0) {
+            if (node.getChildCount() > 0) {
                 // if we have any child-elements, go into method again
                 // to traverse recursevely all elements
-                node = findNodeFromTimestamp(node,timestamp);
+                node = findNodeFromTimestamp(node, timestamp);
                 // retrieve timestamp from returned node.
                 ts = TreeUtil.getNodeTimestamp(node);
                 // if we found a match, leave function and don't iterate any further elements
-                if (ts!=null && ts.equals(timestamp)) return node; /* else return null; */
+                if (ts != null && ts.equals(timestamp)) {
+                    return node; /* else return null; */
+                }
             }
         }
         // retrieve timestamp from returned node.
         ts = TreeUtil.getNodeTimestamp(node);
         // and return either the node if timestamp matches or null if not.
-        if (ts!=null && ts.equals(timestamp)) return node; else return null;
+        if (ts != null && ts.equals(timestamp)) {
+            return node;
+        } else {
+            return null;
+        }
     }
 
-
-
     /**
-     * This method updates the display, i.e. the whole page (the entries in html-formatting) is
-     * new created and then set to the jEditorPane. This action is only enabled whenever changes
-     * to the desktopstructure have been made, like inserting or renaming bullets, inserting or
-     * removing entries and so on...
+     * This method updates the display, i.e. the whole page (the entries in
+     * html-formatting) is new created and then set to the jEditorPane. This
+     * action is only enabled whenever changes to the desktopstructure have been
+     * made, like inserting or renaming bullets, inserting or removing entries
+     * and so on...
      */
     @Action(enabledProperty = "needsUpdate")
     public void updateView() {
         updateDisplay();
     }
-    
-    
+
     /**
-     * Activates or deactivates the fullscreen-mode, thus switching between fullscreen and normal view.
+     * Activates or deactivates the fullscreen-mode, thus switching between
+     * fullscreen and normal view.
      */
     @Action(enabledProperty = "fullScreenSupp")
     public void viewFullScreen() {
         // check whether fullscreen is possible or not...
         if (graphicdevice.isFullScreenSupported()) {
             // if we already have a fullscreen window, quit fullscreen
-            if (graphicdevice.getFullScreenWindow()!=null) quitFullScreen();
-            // else show fullscreen window
-            else showFullScreen();
+            if (graphicdevice.getFullScreenWindow() != null) {
+                quitFullScreen();
+            } // else show fullscreen window
+            else {
+                showFullScreen();
+            }
         }
     }
-    
-    
+
     /**
-     * This method activates the fullscreen-mode, if it's not already activated yet. To have a 
-     * fullscreen-window without decoration, the frame is disposed first, then the decoration
-     * will be removed and the window made visible again.
+     * This method activates the fullscreen-mode, if it's not already activated
+     * yet. To have a fullscreen-window without decoration, the frame is
+     * disposed first, then the decoration will be removed and the window made
+     * visible again.
      */
     private void showFullScreen() {
         // check whether fullscreen is supported, and if we currently have a fullscreen-window
-        if (graphicdevice.isFullScreenSupported() && null==graphicdevice.getFullScreenWindow()) {
+        if (graphicdevice.isFullScreenSupported() && null == graphicdevice.getFullScreenWindow()) {
             // dispose frame, so we can remove the decoration when setting full screen mode
             mainframe.dispose();
             // hide menubar
@@ -3671,9 +3873,8 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             try {
                 // remove decoration
                 mainframe.setUndecorated(true);
-            }
-            catch (IllegalComponentStateException e) {
-                Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+            } catch (IllegalComponentStateException e) {
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             }
             // show frame again
             mainframe.setVisible(true);
@@ -3682,13 +3883,13 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         }
     }
 
-    
     /**
-     * This method <i>de</i>activates the fullscreen-mode, if it's not already deactivated yet.
+     * This method <i>de</i>activates the fullscreen-mode, if it's not already
+     * deactivated yet.
      */
     private void quitFullScreen() {
         // check whether fullscreen is supported, and if we currently have a fullscreen-window
-        if (graphicdevice.isFullScreenSupported() && graphicdevice.getFullScreenWindow()!=null) {
+        if (graphicdevice.isFullScreenSupported() && graphicdevice.getFullScreenWindow() != null) {
             // disable fullscreen-mode
             graphicdevice.setFullScreenWindow(null);
             // hide menubar
@@ -3700,45 +3901,43 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             try {
                 // set decoration
                 mainframe.setUndecorated(false);
-            }
-            catch (IllegalComponentStateException e) {
-                Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+            } catch (IllegalComponentStateException e) {
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             }
             // show frame again
             mainframe.setVisible(true);
         }
     }
 
-
     /**
      * This method extracts the timestamp-id of the selected node's name.
      *
-     * @return the timestamp-id of the node's name (userobject) as string, or {@code null}
-     * if an error occured or nothing was found.
+     * @return the timestamp-id of the node's name (userobject) as string, or
+     * {@code null} if an error occured or nothing was found.
      */
     private String getSelectedNodeTimestamp() {
-        DefaultMutableTreeNode selectednode = (DefaultMutableTreeNode)jTreeDesktop.getLastSelectedPathComponent();
+        DefaultMutableTreeNode selectednode = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
         return (TreeUtil.getNodeTimestamp(selectednode));
     }
 
-
     /**
-     * This actions opens an input-dialog where the user cann add comments to the
-     * currently selected node or bullet-point.<br><br>
-     * These comments are displayed in a grey area, just like it appears in typical
-     * office-word-programs (word, writer, pages...).<br><br>
-     * The comments are added to the xml-file that stores the desktop-data as well as
-     * to a linked list which manages the comments. See {@link #exportEntriesToEditorPane exportEntriesToEditorPane}
-     * for more details on how the display-page is created.
+     * This actions opens an input-dialog where the user cann add comments to
+     * the currently selected node or bullet-point.<br><br>
+     * These comments are displayed in a grey area, just like it appears in
+     * typical office-word-programs (word, writer, pages...).<br><br>
+     * The comments are added to the xml-file that stores the desktop-data as
+     * well as to a linked list which manages the comments. See
+     * {@link #exportEntriesToEditorPane exportEntriesToEditorPane} for more
+     * details on how the display-page is created.
      */
     @Action(enabledProperty = "nodeSelected")
     public void commentNode() {
         // get the comment of the selected entry
-        String oldcomment = desktopObj.getComment(getSelectedNodeTimestamp(),lineseparator);
+        String oldcomment = desktopObj.getComment(getSelectedNodeTimestamp(), lineseparator);
         // open an input-dialog, setting the selected value as default-value
         if (null == biggerEditDlg) {
             // create a new dialog with the bigger edit-field, passing some initial values
-            biggerEditDlg = new CBiggerEditField(this,settingsObj,resourceMap.getString("newCommentTitle"),oldcomment, "", Constants.EDIT_DESKTOP_COMMENT);
+            biggerEditDlg = new CBiggerEditField(this, settingsObj, resourceMap.getString("newCommentTitle"), oldcomment, "", Constants.EDIT_DESKTOP_COMMENT);
             // center window
             biggerEditDlg.setLocationRelativeTo(this);
         }
@@ -3748,9 +3947,9 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         String newcomment = biggerEditDlg.getNewValue();
         // delete the input-dialog
         biggerEditDlg.dispose();
-        biggerEditDlg=null;
-        
-        if (newcomment!=null) {
+        biggerEditDlg = null;
+
+        if (newcomment != null) {
             // and re-convert all new lines to br's. this is necessary for converting
             // them into <br>'s because the entry is displayed as html-content. simple
             // new lines without "<br>" command would not be shown as new lines
@@ -3760,10 +3959,12 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             // we replace "System.lineSeparator()" with "[br]", but only when
             // a "\n" is replaced by [br]. So, in case the system's line-separator also contains a
             // "\r", it is replaced by nothing, to clean the content.
-            if (lineseparator.contains("\r")) newcomment = newcomment.replace("\r", "");
-            newcomment = newcomment.replace("\n","[br]");
+            if (lineseparator.contains("\r")) {
+                newcomment = newcomment.replace("\r", "");
+            }
+            newcomment = newcomment.replace("\n", "[br]");
             // set the comment to the selected entry
-            if (desktopObj.setComment(getSelectedNodeTimestamp(),newcomment)) {
+            if (desktopObj.setComment(getSelectedNodeTimestamp(), newcomment)) {
                 // update treeview, so the new comment is also associated with the
                 // correct node. we have to do this, because the comments are managed
                 // via a linked list that is created in this method. otherwise the
@@ -3771,17 +3972,17 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 updateTreeView();
                 // display needs to be updated...
                 setNeedsUpdate(true);
-            }
-            else {
+            } else {
                 // in case the new comment could not be set, tell user about it...
-                JOptionPane.showMessageDialog(this,resourceMap.getString("errSetCommentMsg"),resourceMap.getString("errSetCommentTitle"),JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(this, resourceMap.getString("errSetCommentMsg"), resourceMap.getString("errSetCommentTitle"), JOptionPane.PLAIN_MESSAGE);
             }
         }
         // if view option was comments only, change this option if we don't have any comments at all
-        if (Constants.DESKTOP_ONLY_COMMENTS==settingsObj.getDesktopCommentDisplayOptions() && !desktopObj.desktopHasComments(desktopObj.getCurrentDesktopElement())) settingsObj.setDesktopCommentDisplayOptions(Constants.DESKTOP_WITH_COMMENTS);
+        if (Constants.DESKTOP_ONLY_COMMENTS == settingsObj.getDesktopCommentDisplayOptions() && !desktopObj.desktopHasComments(desktopObj.getCurrentDesktopElement())) {
+            settingsObj.setDesktopCommentDisplayOptions(Constants.DESKTOP_WITH_COMMENTS);
+        }
     }
-    
-    
+
     /**
      * @return the background task
      */
@@ -3789,11 +3990,13 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     public Task displayTask() {
         return new createDisplayTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
     }
-    
+
     @SuppressWarnings("LeakingThisInConstructor")
     private class createDisplayTask extends org.jdesktop.application.Task<Object, Void> {
+
         // create a new stringbuilder that will contain the final string, i.e.
         // the html-page which we set to the jeditorpane
+
         StringBuilder sbDisplayTask = new StringBuilder("");
 
         createDisplayTask(org.jdesktop.application.Application app) {
@@ -3801,32 +4004,35 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             // doInBackground() depends on from parameters
             // to createLinksTask fields, here.
             super(app);
-            
+
             cDisplayTask = this;
-        }        
-        
-        @Override protected Object doInBackground() {
+        }
+
+        @Override
+        protected Object doInBackground() {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
-        
+
             // tell programm that the task is running
             cDisplayTaskIsRunning = true;
             // clear content
             jEditorPaneMain.setText(resourceMap.getString("contentBeingUpdated"));
             // get the treemodel
-            DefaultTreeModel dtm = (DefaultTreeModel)jTreeDesktop.getModel();
+            DefaultTreeModel dtm = (DefaultTreeModel) jTreeDesktop.getModel();
             // create a new root element from the current desktop name and set it as root
             DefaultMutableTreeNode root = (DefaultMutableTreeNode) dtm.getRoot();
             // check whether the current desktop has any children at all
-            if (root.getChildCount()>0) {
+            if (root.getChildCount() > 0) {
                 //
                 boolean showComments;
                 // clean stringbuilder for word-count
                 sbWordCountDisplayTask.setLength(0);
                 // create the content for the html-page
                 sbDisplayTask.append("<table ");
-                if (PlatformUtil.isJava7OnMac() || PlatformUtil.isJava7OnWindows()) sbDisplayTask.append("cellspacing=\"0\" ");
+                if (PlatformUtil.isJava7OnMac() || PlatformUtil.isJava7OnWindows()) {
+                    sbDisplayTask.append("cellspacing=\"0\" ");
+                }
                 sbDisplayTask.append("class=\"maintable\">");
                 // check which display option is chosen
                 switch (settingsObj.getDesktopCommentDisplayOptions()) {
@@ -3849,14 +4055,14 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 }
                 // retrieve all authors from desktop
                 // therefor, we first need all entries
-                int [] entries = desktopObj.retrieveDesktopEntries();
+                int[] entries = desktopObj.retrieveDesktopEntries();
                 LinkedList<String> remainingAuthors = new LinkedList<>();
                 // interate entries
                 for (int e : entries) {
                     // get authors
-                    String [] aus = dataObj.getAuthors(e);
+                    String[] aus = dataObj.getAuthors(e);
                     // iterate all authors
-                    if (aus!=null && aus.length>0) {
+                    if (aus != null && aus.length > 0) {
                         for (String au : aus) {
                             // check whether author exists in our array
                             if (!remainingAuthors.contains(au)) {
@@ -3868,29 +4074,35 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 }
                 // extract footnotes.
                 LinkedList<String> footnotes = Tools.extractFootnotesFromContent(sbDisplayTask.toString());
-                boolean hasAuthors = (footnotes.size()>0 || remainingAuthors.size()>0);
+                boolean hasAuthors = (footnotes.size() > 0 || remainingAuthors.size() > 0);
                 // check whether we have any footnotes or authors
                 if (hasAuthors) {
                     // first, init the list in html...
                     // create a separator line
                     sbDisplayTask.append("<tr>");
-                    if (showComments) sbDisplayTask.append(lineseparator).append("<td class=\"comment\"></td>");
+                    if (showComments) {
+                        sbDisplayTask.append(lineseparator).append("<td class=\"comment\"></td>");
+                    }
                     sbDisplayTask.append(lineseparator).append("<td><hr></td></tr>").append(lineseparator);
                     // add title "references"
                     sbDisplayTask.append("<tr>");
-                    if (showComments) sbDisplayTask.append(lineseparator).append("<td class=\"comment\"></td>");
+                    if (showComments) {
+                        sbDisplayTask.append(lineseparator).append("<td class=\"comment\"></td>");
+                    }
                     sbDisplayTask.append(lineseparator).append("<td><h1>");
                     // append a new headline with the bullet's name
                     sbDisplayTask.append(resourceMap.getString("referenceListHeading"));
                     sbDisplayTask.append("</h1></td></tr>").append(lineseparator);
                     // and add another table row for the unordered list...
                     sbDisplayTask.append("<tr>");
-                    if (showComments) sbDisplayTask.append(lineseparator).append("<td class=\"comment\"></td>");
+                    if (showComments) {
+                        sbDisplayTask.append(lineseparator).append("<td class=\"comment\"></td>");
+                    }
                     sbDisplayTask.append(lineseparator).append("<td>").append(lineseparator);
                 }
                 // now we have all footnotes, i.e. the author-index-numbers, in the linked
                 // list. now we can create a reference list
-                if (footnotes.size()>0) {
+                if (footnotes.size() > 0) {
                     // iterator for the linked list
                     Iterator<String> i = footnotes.iterator();
 
@@ -3904,14 +4116,13 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                             sbDisplayTask.append("</p>").append(lineseparator);
                             // remove author from remaining list
                             remainingAuthors.remove(aus);
-                        }
-                        catch (NumberFormatException e) {
-                            Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+                        } catch (NumberFormatException e) {
+                            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
                         }
                     }
                 }
                 // check whether we have any remaining authors that did not appear in footnotes
-                if (remainingAuthors.size()>0) {
+                if (remainingAuthors.size() > 0) {
                     // sort array
                     java.util.Collections.sort(remainingAuthors);
                     // iterator for the linked list
@@ -3924,20 +4135,22 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                     }
                 }
                 // close tags
-                if (hasAuthors) sbDisplayTask.append("</td></tr>").append(lineseparator);
+                if (hasAuthors) {
+                    sbDisplayTask.append("</td></tr>").append(lineseparator);
+                }
                 // and close table tags...
                 sbDisplayTask.append("</table>");
                 // get complete entry-content, i.e. title and content
                 String wordcoutnstring = sbWordCountDisplayTask.toString();
                 // split complete content at each word
                 String[] words = wordcoutnstring.toLowerCase().
-                                                replace("ä","ae").
-                                                replace("ö","oe").
-                                                replace("ü","ue").
-                                                replace("ß","ss").
-                                                split("\\W");
+                        replace("ä", "ae").
+                        replace("ö", "oe").
+                        replace("ü", "ue").
+                        replace("ß", "ss").
+                        split("\\W");
                 // init wordcounter
-                int wordcount=0;
+                int wordcount = 0;
                 // iterate all words of the entry
                 for (String word : words) {
                     // remove all non-letter-chars
@@ -3945,15 +4158,18 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                     // trim spaces
                     word = word.trim();
                     // if we have a "word" with more than one char, count it as word...
-                    if (!word.isEmpty() /* && word.length()>1 */) wordcount++;
+                    if (!word.isEmpty() /* && word.length()>1 */) {
+                        wordcount++;
+                    }
                 }
                 // set count words to label
-                jLabelWordCount.setText("("+String.valueOf(wordcount)+" "+resourceMap.getString("WordCount")+", "+String.valueOf(sbWordCountDisplayTask.length())+" "+resourceMap.getString("CharCount")+")");
+                jLabelWordCount.setText("(" + String.valueOf(wordcount) + " " + resourceMap.getString("WordCount") + ", " + String.valueOf(sbWordCountDisplayTask.length()) + " " + resourceMap.getString("CharCount") + ")");
             }
             return null;
         }
-        
-        @Override protected void succeeded(Object result) {
+
+        @Override
+        protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
             //
@@ -3964,7 +4180,9 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             // we can't retrieve the page's content via jEditorPane.getText().
             completePage = sbDisplayTask.toString();
             // if we have any content, insert html-header at the beginning...
-            if (sbDisplayTask.length()>0) sbDisplayTask.insert(0,HtmlUbbUtil.getHtmlHeaderForDesktop(settingsObj, false));
+            if (sbDisplayTask.length() > 0) {
+                sbDisplayTask.insert(0, HtmlUbbUtil.getHtmlHeaderForDesktop(settingsObj, false));
+            }
             // set the html-page to the editor pane
             jEditorPaneMain.setText(sbDisplayTask.toString());
             // scroll to first entry
