@@ -794,7 +794,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // change setting
                 settings.setShowAllLuhmann(jCheckBoxShowAllLuhmann.isSelected());
                 // refresh follower view
-                showLuhmann(false);
+                showLuhmann(true);
             }
         });
         // this settings toggles the setting whether the cluster-list in the jTreeCluster
