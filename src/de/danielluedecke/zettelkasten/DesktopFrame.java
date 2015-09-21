@@ -1328,8 +1328,10 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                     String[] dropinformation = str.split("\n");
                     // get source information
                     String[] sourceinfo = dropinformation[0].split(",");
-                    // in case an edited entry has been dragged, remember modifications
+                    // in case an edited entry has been dragged, remember 
+                    // modifications and comment
                     String modifications = null;
+                    String comment = null;
                     // check out the source of the drag-operation. if we have a valid source,
                     // retrieve entries.
                     // here we have
@@ -1346,8 +1348,9 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                         if (sourceinfo[0].equals(Constants.DRAG_SOURCE_JTREEDESKTOP)) {
                             // retrieve node timestamp
                             String ts = dropinformation[dropinformation.length - 1];
-                            // save modifications
+                            // save modifications and comment
                             modifications = desktopObj.retrieveModifiedEntryContentFromTimestamp(ts);
+                            comment = desktopObj.getComment(ts, "[br]");
                             // delete entry
                             desktopObj.deleteEntry(ts);
                             // and remove node from original position
@@ -1360,7 +1363,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                         // if we have any entries left, i.e. not only double entries, add them now
                         if (entries != null && entries.length() > 0) {
                             // add new entry
-                            addEntries(entries, modifications);
+                            addEntries(entries, modifications, comment);
                             // update toolbars
                             // updateTreeView();
                             updateToolbarAndMenu();
@@ -2638,7 +2641,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * @param newEntries
      */
     private void addEntries(String newEntries) {
-        addEntries(newEntries, null);
+        addEntries(newEntries, null, null);
     }
 
     /**
@@ -2662,7 +2665,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * @param newEntries
      * @param modifications
      */
-    private void addEntries(String newEntries, String modifications) {
+    private void addEntries(String newEntries, String modifications, String comment) {
         // at the end we need this to check for changes
         boolean modified = false;
         // counter for inserting the new node, used below
@@ -2714,6 +2717,9 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                     // check whether we also have modifications to add
                     if (modifications != null && !modifications.isEmpty()) {
                         desktopObj.addModifiedEntry(lastadded, modifications);
+                    }
+                    if (comment != null && !comment.isEmpty()) {
+                        desktopObj.setComment(lastadded, comment);
                     }
                     // remember that we have changes
                     modified = true;
@@ -3712,7 +3718,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             // this indicates a cut/copy and paste, so we use the other add-method
             // which also add modifications.
             if (1 == clipEntries.length) {
-                addEntries(String.valueOf(clipEntries[0]), clipModifiedEntryContent);
+                addEntries(String.valueOf(clipEntries[0]), clipModifiedEntryContent, null);
             } else {
                 addEntries(clipEntries);
             }

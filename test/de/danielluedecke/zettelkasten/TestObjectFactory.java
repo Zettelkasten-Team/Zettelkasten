@@ -34,11 +34,11 @@ public class TestObjectFactory {
 		return TestObjectFactory.instance;
 	}
 
-	private StenoData stenoData;
-	private AutoKorrektur autoKorrektur;
-	private TasksData tasksData;
-	private AcceleratorKeys acceleratorKeys;
-	private Synonyms synonyms;
+	private final StenoData stenoData;
+	private final AutoKorrektur autoKorrektur;
+	private final TasksData tasksData;
+	private final AcceleratorKeys acceleratorKeys;
+	private final Synonyms synonyms;
 
 	private TestObjectFactory() throws Exception {
 		stenoData = null;
@@ -98,6 +98,10 @@ public class TestObjectFactory {
 
 	/**
 	 * Helper to retrieve a private / protected field.
+     * @param instance
+     * @param fieldName
+     * @return 
+     * @throws java.lang.Exception 
 	 */
 	public static Object getPrivateField(Object instance, String fieldName)
 			throws Exception {
