@@ -9298,7 +9298,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             bibtex.detachCurrentlyAttachedFile();
             // open selected file, using the character encoding of the related reference-manager (i.e.
             // the programme that has exported the bib-tex-file).
-            if (bibtex.openAttachedFile(Constants.BIBTEX_ENCODINGS[settings.getLastUsedBibtexFormat()], false)) {
+            if (bibtex.refreshBibTexFile(settings, data)) {
+                // update author list
+                data.setAuthorlistUpToDate(false);
+                showAuthors();
                 // tell about success
                 Constants.zknlogger.log(Level.INFO,"BibTex-File was successfully refreshed.");
             }

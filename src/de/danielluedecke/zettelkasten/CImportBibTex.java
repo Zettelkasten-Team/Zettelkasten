@@ -30,7 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 package de.danielluedecke.zettelkasten;
 
 import bibtex.dom.BibtexEntry;
@@ -81,6 +80,7 @@ import org.jdesktop.application.TaskService;
  * @author danielludecke
  */
 public class CImportBibTex extends javax.swing.JDialog {
+
     /**
      *
      */
@@ -94,12 +94,12 @@ public class CImportBibTex extends javax.swing.JDialog {
      */
     private Daten dataObj;
     /**
-     * When the user wants to re-import bibtex-entries, abstracts/annotations of bibtex-entries
-     * that create a new entry can be a) added as new entry, b) replace an existing entry that
-     * already has been created from a bibtex-abstract or c) added to that existing entry.
+     * When the user wants to re-import bibtex-entries, abstracts/annotations of bibtex-entries that
+     * create a new entry can be a) added as new entry, b) replace an existing entry that already
+     * has been created from a bibtex-abstract or c) added to that existing entry.
      * <br><br>
-     * The user's choice, made in {@link #addSelectedAuthors() addSelectedAuthors()}, is stored
-     * in this variable
+     * The user's choice, made in {@link #addSelectedAuthors() addSelectedAuthors()}, is stored in
+     * this variable
      */
     private int updateOption = -1;
     /**
@@ -109,39 +109,41 @@ public class CImportBibTex extends javax.swing.JDialog {
     private static final int UPDATE_OPTION_NEW = 1;
     private static final int UPDATE_OPTION_CONCAT = 2;
     private static final int UPDATE_OPTION_CANCEL = 3;
-    
+
     public static final int BIBTEX_SOURCE_FILE = 1;
     public static final int BIBTEX_SOURCE_DB = 2;
-    
+
     private ZettelkastenView mainframe;
-    
+
     /**
      * This array-list contains all entry-numbers of those entries that have been modified during
-     * the import-operation, e.g. if bibtex-entries contained abstracts and the user chose to
-     * modify existing entries.
+     * the import-operation, e.g. if bibtex-entries contained abstracts and the user chose to modify
+     * existing entries.
      */
     private ArrayList<Integer> modifiedEntries;
+
     /**
      * This array-list contains all entry-numbers of those entries that have been modified during
-     * the import-operation, e.g. if bibtex-entries contained abstracts and the user chose to
-     * modify existing entries.
-     * 
-     * @return all entry-numbers of those entries that have been modified during
-     * the import-operation
+     * the import-operation, e.g. if bibtex-entries contained abstracts and the user chose to modify
+     * existing entries.
+     *
+     * @return all entry-numbers of those entries that have been modified during the
+     * import-operation
      */
     public ArrayList<Integer> getModifiedEntries() {
         return modifiedEntries;
     }
     /**
-     * This variable stores the amount of entries that have been added during
-     * the import-operation (i.e. which are new), e.g. if bibtex-entries contained abstacts 
-     * and the user chose to create new entries.
+     * This variable stores the amount of entries that have been added during the import-operation
+     * (i.e. which are new), e.g. if bibtex-entries contained abstacts and the user chose to create
+     * new entries.
      */
     private int newEntries = 0;
+
     /**
-     * In case any bibtex-entries have been imported, this method returns the
-     * count of new added / imported entries.
-     * 
+     * In case any bibtex-entries have been imported, this method returns the count of new added /
+     * imported entries.
+     *
      * @return The amount of imported entries.
      */
     public int getNewEntriesCount() {
@@ -155,17 +157,17 @@ public class CImportBibTex extends javax.swing.JDialog {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(CImportBibTex.class);
+    private org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(CImportBibTex.class);
 
     /**
-     * 
+     *
      * @param parent
      * @param mf
      * @param d
      * @param bt
-     * @param s 
+     * @param s
      */
     public CImportBibTex(java.awt.Frame parent, ZettelkastenView mf, Daten d, BibTex bt, Settings s) {
         super(parent);
@@ -177,7 +179,11 @@ public class CImportBibTex extends javax.swing.JDialog {
         initComboBox();
         initBorders(settingsObj);
         // set combobox items
-        jComboBoxShowBibTex.setModel(new javax.swing.DefaultComboBoxModel(new String[] { resourceMap.getString("comboBoxItem1"), resourceMap.getString("comboBoxItem2"), resourceMap.getString("comboBoxItem3") }));
+        jComboBoxShowBibTex.setModel(new javax.swing.DefaultComboBoxModel(new String[]{
+            resourceMap.getString("comboBoxItem1"),
+            resourceMap.getString("comboBoxItem2"),
+            resourceMap.getString("comboBoxItem3")
+        }));
         // set application icon
         setIconImage(Constants.zknicon.getImage());
         // set last settings
@@ -201,7 +207,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         // if we have mac os x with aqua-look&feel, make certain components look like mac...
         if (settingsObj.isMacAqua() || settingsObj.isSeaGlass()) {
             // make button smaller...
-            jButtonSelectAll.putClientProperty("JButton.buttonType","roundRect");
+            jButtonSelectAll.putClientProperty("JButton.buttonType", "roundRect");
             // textfield should look like search-textfield...
             jTextFieldFilterTable.putClientProperty("JTextField.variant", "search");
             if (settingsObj.isSeaGlass()) {
@@ -216,16 +222,14 @@ public class CImportBibTex extends javax.swing.JDialog {
             File cuf = bibtexObj.getCurrentlyAttachedFile();
             File luf = bibtexObj.getFilePath();
             // and set it as initial value to the textfield
-            if (cuf!=null && cuf.exists()) {
+            if (cuf != null && cuf.exists()) {
                 jTextFieldBibtexFilepath.setText(cuf.toString());
                 fillBibtexTable();
-            }
-            else if (luf!=null && luf.exists()) {
+            } else if (luf != null && luf.exists()) {
                 jTextFieldBibtexFilepath.setText(luf.toString());
                 fillBibtexTable();
             }
-        }
-        else {
+        } else {
             fillBibtexTable();
         }
         jButtonRefresh.setEnabled(false);
@@ -238,21 +242,20 @@ public class CImportBibTex extends javax.swing.JDialog {
          */
         jScrollPane1.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
     }
-    
+
     private void initTable() {
         // create new table sorter
         TableRowSorter<TableModel> sorter = new TableRowSorter<>();
         // tell tgis jtable that it has an own sorter
         jTableBibEntries.setRowSorter(sorter);
         // and tell the sorter, which table model to sort.
-        sorter.setModel((DefaultTableModel)jTableBibEntries.getModel());
+        sorter.setModel((DefaultTableModel) jTableBibEntries.getModel());
         // in this table, the first column needs a custom comparator.
         try {
-            sorter.setComparator(0,new Comparer());
-            sorter.setComparator(1,new Comparer());
-        }
-        catch (IndexOutOfBoundsException e) {
-            Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+            sorter.setComparator(0, new Comparer());
+            sorter.setComparator(1, new Comparer());
+        } catch (IndexOutOfBoundsException e) {
+            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
         }
         // noe header re-ordering
         jTableBibEntries.getTableHeader().setReorderingAllowed(false);
@@ -264,11 +267,11 @@ public class CImportBibTex extends javax.swing.JDialog {
         // get the default fontsize for tables and lists
         int defaultsize = settingsObj.getTableFontSize();
         // only set new fonts, when fontsize differs from the initial value
-        if (defaultsize>0) {
+        if (defaultsize > 0) {
             // get current font
             Font f = jTableBibEntries.getFont();
             // create new font, add fontsize-value
-            f = new Font(f.getName(), f.getStyle(), f.getSize()+defaultsize);
+            f = new Font(f.getName(), f.getStyle(), f.getSize() + defaultsize);
             // set new font
             jTableBibEntries.setFont(f);
         }
@@ -285,12 +288,11 @@ public class CImportBibTex extends javax.swing.JDialog {
             jTableBibEntries.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
         }
     }
-    
-    
+
     /**
      * Here we set all available character-encodings for the bibtex-file. each reference-manager
-     * (jabref, refworks, citavi) has its own character-encoding, so we have to take this
-     * into account when importing bibtex-files.
+     * (jabref, refworks, citavi) has its own character-encoding, so we have to take this into
+     * account when importing bibtex-files.
      */
     private void initComboBox() {
         // reset combobox
@@ -302,9 +304,8 @@ public class CImportBibTex extends javax.swing.JDialog {
         try {
             // auto-select last used format, when we auto-load the last used bibtex-file
             jComboBoxEncoding.setSelectedIndex(settingsObj.getLastUsedBibtexFormat());
-        }
-        catch (IllegalArgumentException e) {
-            Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+        } catch (IllegalArgumentException e) {
+            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
         }
         // reset combobox that contains the citation styles
         jComboBoxCiteStyle.removeAllItems();
@@ -315,13 +316,11 @@ public class CImportBibTex extends javax.swing.JDialog {
         try {
             // auto-select last used cite style, when we auto-load the last used bibtex-file
             jComboBoxCiteStyle.setSelectedIndex(bibtexObj.getCiteStyle());
-        }
-        catch (IllegalArgumentException e) {
-            Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+        } catch (IllegalArgumentException e) {
+            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
         }
     }
 
-    
     /**
      * Init several listeners for the components.
      */
@@ -331,7 +330,8 @@ public class CImportBibTex extends javax.swing.JDialog {
         // presses the cancel button...
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
         ActionListener cancelAction = new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 cancel();
             }
         };
@@ -339,13 +339,17 @@ public class CImportBibTex extends javax.swing.JDialog {
         // when the radio-button for file-input is selected, we want to enable its related
         // components and disable all the stuff for the manual-selection-radio-button
         jComboBoxEncoding.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if (jComboBoxEncoding.getSelectedIndex()!=-1) settingsObj.setLastUsedBibtexFormat(jComboBoxEncoding.getSelectedIndex());
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (jComboBoxEncoding.getSelectedIndex() != -1) {
+                    settingsObj.setLastUsedBibtexFormat(jComboBoxEncoding.getSelectedIndex());
+                }
             }
         });
         jComboBoxCiteStyle.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if (jComboBoxCiteStyle.getSelectedIndex()!=-1) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (jComboBoxCiteStyle.getSelectedIndex() != -1) {
                     // change cite-style-setting
                     bibtexObj.setCiteStyle(jComboBoxCiteStyle.getSelectedIndex());
                     // if we already have any attached bibtex-file, upate table
@@ -354,7 +358,8 @@ public class CImportBibTex extends javax.swing.JDialog {
             }
         });
         jComboBoxShowBibTex.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fillBibtexTable();
             }
         });
@@ -362,21 +367,22 @@ public class CImportBibTex extends javax.swing.JDialog {
         jTableBibEntries.getSelectionModel().addListSelectionListener(listener);
         jTableBibEntries.getColumnModel().getSelectionModel().addListSelectionListener(listener);
         jTextFieldFilterTable.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override public void keyReleased(java.awt.event.KeyEvent evt) {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
                 if (Tools.isNavigationKey(evt.getKeyCode())) {
                     // if user pressed navigation key, select next table entry
                     de.danielluedecke.zettelkasten.util.TableUtils.navigateThroughList(jTableBibEntries, evt.getKeyCode());
-                }
-                else {
+                } else {
                     // select table-entry live, while the user is typing...
-                    de.danielluedecke.zettelkasten.util.TableUtils.selectByTyping(jTableBibEntries,jTextFieldFilterTable,1);
+                    de.danielluedecke.zettelkasten.util.TableUtils.selectByTyping(jTableBibEntries, jTextFieldFilterTable, 1);
                 }
             }
         });
         // when the radio.button for manual input is selected, we want to enable its related
         // components and disable all the stuff for the file-selection-radio-button
         jRadioButtonSourceDB.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fillBibtexTable();
                 settingsObj.setLastUsedBibtexImportSource(BIBTEX_SOURCE_DB);
             }
@@ -384,69 +390,78 @@ public class CImportBibTex extends javax.swing.JDialog {
         // when the radio.button for manual input is selected, we want to enable its related
         // components and disable all the stuff for the file-selection-radio-button
         jRadioButtonSourceFile.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fillBibtexTable();
                 settingsObj.setLastUsedBibtexImportSource(BIBTEX_SOURCE_FILE);
             }
         });
         // create action which should be executed when the user presses
         // the enter-key
-        AbstractAction a_enter = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
-                if (jTextFieldFilterTable==e.getSource()) filterList(false);
+        AbstractAction a_enter = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jTextFieldFilterTable == e.getSource()) {
+                    filterList(false);
+                }
             }
         };
         // put action to the textfield's actionmaps
-        jTextFieldFilterTable.getActionMap().put("EnterKeyPressed",a_enter);
+        jTextFieldFilterTable.getActionMap().put("EnterKeyPressed", a_enter);
         // associate enter-keystroke with that action
         KeyStroke ks = KeyStroke.getKeyStroke("ENTER");
         jTextFieldFilterTable.getInputMap().put(ks, "EnterKeyPressed");
         // create action which should be executed when the user presses
         // the alt + enter-key (reg ex search)
-        AbstractAction a_regex_enter = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
-                if (jTextFieldFilterTable==e.getSource()) filterList(true);
+        AbstractAction a_regex_enter = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jTextFieldFilterTable == e.getSource()) {
+                    filterList(true);
+                }
             }
         };
         // put action to the textfield's actionmaps
-        jTextFieldFilterTable.getActionMap().put("RegExEnterKeyPressed",a_regex_enter);
+        jTextFieldFilterTable.getActionMap().put("RegExEnterKeyPressed", a_regex_enter);
         // associate enter-keystroke with that action
         ks = KeyStroke.getKeyStroke("alt ENTER");
         jTextFieldFilterTable.getInputMap().put(ks, "RegExEnterKeyPressed");
         // create action which should be executed when the user presses
         // the delete/backspace-key
-        AbstractAction a_delete = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
-                if (jTableBibEntries==e.getSource()) {
+        AbstractAction a_delete = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jTableBibEntries == e.getSource()) {
                     deleteBibtexEntry();
                 }
             }
         };
         // put action to the tables' actionmaps
-        jTableBibEntries.getActionMap().put("DeleteKeyPressed",a_delete);
+        jTableBibEntries.getActionMap().put("DeleteKeyPressed", a_delete);
         // check for os, and use appropriate controlKey
-        ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS())?"BACK_SPACE":"DELETE");
+        ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS()) ? "BACK_SPACE" : "DELETE");
         jTableBibEntries.getInputMap().put(ks, "DeleteKeyPressed");
     }
-
 
     private void deleteBibtexEntry() {
         // get the selected rows
         int[] rows = jTableBibEntries.getSelectedRows();
         // if we have no selected values, leave method
-        if (rows.length<1) return;
+        if (rows.length < 1) {
+            return;
+        }
         // ask whether bibtex entries really should be removed
         int option = JOptionPane.showConfirmDialog(null, resourceMap.getString("removeBibtexEntryMsg"), resourceMap.getString("removeBibtexEntryTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
         // the user chose to cancel the operation, so return "null"
-        if (JOptionPane.YES_OPTION==option) {
+        if (JOptionPane.YES_OPTION == option) {
             // iterate all selected values
-            for (int cnt=0; cnt<rows.length; cnt++) {
+            for (int cnt = 0; cnt < rows.length; cnt++) {
                 // now to the bibey
                 Object bibkey = jTableBibEntries.getValueAt(rows[cnt], 0);
                 // if we have any author, go on...
                 bibtexObj.removeEntry(bibkey.toString());
                 // check for filtered list
-                if (linkedtablelist!=null && linkedtablelist.size()>0) {
+                if (linkedtablelist != null && linkedtablelist.size() > 0) {
                     // init the object-variable
                     Object[] o = new Object[2];
                     // fill object with values
@@ -457,16 +472,14 @@ public class CImportBibTex extends javax.swing.JDialog {
                 }
             }
             // check for filtered list
-            if (linkedtablelist!=null && linkedtablelist.size()>0) {
+            if (linkedtablelist != null && linkedtablelist.size() > 0) {
                 refreshList();
-            }
-            else {
+            } else {
                 fillBibtexTable();
             }
         }
     }
-    
-    
+
     private void filterList(boolean regEx) {
         // when we filter the table and want to restore it, we don't need to run the
         // time-consuming task that creates the author-list and related author-frequencies.
@@ -478,15 +491,17 @@ public class CImportBibTex extends javax.swing.JDialog {
         // convert to lowercase, we don't want case-sensitive search
         String text = jTextFieldFilterTable.getText().toLowerCase();
         // when we have no text, do nothing
-        if (text.isEmpty()) return;
+        if (text.isEmpty()) {
+            return;
+        }
         // get table model
-        DefaultTableModel dtm = (DefaultTableModel)jTableBibEntries.getModel();
+        DefaultTableModel dtm = (DefaultTableModel) jTableBibEntries.getModel();
         // if we haven't already stored the current complete table data, do this now
-        if (null==linkedtablelist) {
+        if (null == linkedtablelist) {
             // create new instance of list
             linkedtablelist = new LinkedList<>();
             // go through all table-data
-            for (int cnt=0; cnt<dtm.getRowCount(); cnt++) {
+            for (int cnt = 0; cnt < dtm.getRowCount(); cnt++) {
                 // init the object-variable
                 Object[] o = new Object[2];
                 // fill object with values
@@ -501,11 +516,10 @@ public class CImportBibTex extends javax.swing.JDialog {
         jTextFieldFilterTable.setText("");
         jTextFieldFilterTable.requestFocusInWindow();
         // enable textfield only if we have more than 1 element in the jtable
-        jTextFieldFilterTable.setEnabled(jTableBibEntries.getRowCount()>0);
+        jTextFieldFilterTable.setEnabled(jTableBibEntries.getRowCount() > 0);
         // enable refresh button
         jButtonRefresh.setEnabled(true);
     }
-
 
     private void fillBibtexTable() {
         if (jRadioButtonSourceFile.isSelected()) {
@@ -513,7 +527,7 @@ public class CImportBibTex extends javax.swing.JDialog {
             File currentlyattachedfile = bibtexObj.getCurrentlyAttachedFile();
             // if we have no currently attached bibtex-file, or the currently attached bibtex-file
             // differs from the new selected file of the user, open the bibtex-file now
-            if ((null==currentlyattachedfile) || (!currentlyattachedfile.toString().equals(bibtexObj.getFilePath().toString()))) {
+            if ((null == currentlyattachedfile) || (!currentlyattachedfile.toString().equals(bibtexObj.getFilePath().toString()))) {
                 // open selected file, using the character encoding of the related reference-manager (i.e.
                 // the programme that has exported the bib-tex-file).
                 bibtexObj.openAttachedFile(Constants.BIBTEX_ENCODINGS[jComboBoxEncoding.getSelectedIndex()], false);
@@ -521,7 +535,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                 currentlyattachedfile = bibtexObj.getCurrentlyAttachedFile();
             }
             // set filepath to textfield
-            jTextFieldBibtexFilepath.setText((currentlyattachedfile!=null && currentlyattachedfile.exists()) ? currentlyattachedfile.toString() : "");
+            jTextFieldBibtexFilepath.setText((currentlyattachedfile != null && currentlyattachedfile.exists()) ? currentlyattachedfile.toString() : "");
         }
         // block all components
         setComponentsBlocked(true);
@@ -556,7 +570,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         jRadioButtonSourceFile.setEnabled(!block);
         // refresh button is either blockes (disabled) or enabled whether
         // we have any content in linkedtablelist.
-        jButtonRefresh.setEnabled((block)?false:linkedtablelist!=null);
+        jButtonRefresh.setEnabled((block) ? false : linkedtablelist != null);
     }
 
     @Action
@@ -565,25 +579,25 @@ public class CImportBibTex extends javax.swing.JDialog {
         // wants to import bibtex-abstracts AND automatically create entries from those
         // abstracts, where existing entries will be replaced by new bibtex-updates.
         // in this case, the combo box's selected index must be greater than 0
-        if (jComboBoxShowBibTex.getSelectedIndex()>0) {
+        if (jComboBoxShowBibTex.getSelectedIndex() > 0) {
             // create a JOptionPane with repalce/new/concat/cancel options
             updateOption = JOptionPane.showOptionDialog(this,
-                             resourceMap.getString("msgConfirmUpdateEntry"),
-                             resourceMap.getString("msgConfirmUpdateEntryTitle"),
-                             JOptionPane.YES_NO_CANCEL_OPTION,
-                             JOptionPane.PLAIN_MESSAGE,
-                             null,
-                             new Object[] {
-                                resourceMap.getString("optionReplace"),
-                                resourceMap.getString("optionNew"),
-                                resourceMap.getString("optionConcat"),
-                                resourceMap.getString("optionCancel"),
-                             },
-                             resourceMap.getString("optioneReplace"));
+                    resourceMap.getString("msgConfirmUpdateEntry"),
+                    resourceMap.getString("msgConfirmUpdateEntryTitle"),
+                    JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    new Object[]{
+                        resourceMap.getString("optionReplace"),
+                        resourceMap.getString("optionNew"),
+                        resourceMap.getString("optionConcat"),
+                        resourceMap.getString("optionCancel"),},
+                    resourceMap.getString("optioneReplace"));
             // if user closes or cancels the dialog, return...
-            if (JOptionPane.CLOSED_OPTION == updateOption || updateOption == UPDATE_OPTION_CANCEL) return null;
-        }
-        // in this case, only new entries are imported, thus we can ignore the variable updateOption
+            if (JOptionPane.CLOSED_OPTION == updateOption || updateOption == UPDATE_OPTION_CANCEL) {
+                return null;
+            }
+        } // in this case, only new entries are imported, thus we can ignore the variable updateOption
         else {
             updateOption = -1;
         }
@@ -601,7 +615,7 @@ public class CImportBibTex extends javax.swing.JDialog {
             // to createLinksTask fields, here.
             super(app);
         }
-        
+
         @Override
         protected Object doInBackground() {
             // get the selected rows
@@ -678,8 +692,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                                 }
                             }
                         }
-                    }
-                    // here we have an already existing bibkey and update the author-values...
+                    } // here we have an already existing bibkey and update the author-values...
                     // so we have the index-number of that author-value with the bibkey "bibkey"
                     // stored in the value "bibkeypos".
                     else {

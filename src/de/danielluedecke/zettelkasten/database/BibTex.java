@@ -133,6 +133,7 @@ public class BibTex {
      */
     private int citestyle = Constants.BIBTEX_CITE_STYLE_GENERAL;
     private boolean modified;
+    private final String editorToken = "°###°";
     /**
      * Reference to the main frame.
      */
@@ -541,6 +542,12 @@ public class BibTex {
         return settingsObj.getLastUsedBibtexFormat();
     }
 
+    public boolean refreshBibTexFile(Settings settingsObj, Daten dataObj) {
+        // attach new file
+        boolean success = openAttachedFile(Constants.BIBTEX_ENCODINGS[settingsObj.getLastUsedBibtexFormat()], false, true, dataObj);        
+        return success;
+    }
+    
     /**
      * This method opens (and "attaches") a bibtex-file which is specified via the
      * {@link #setFilePath(java.io.File) setFilePath(File)} method. The file is parsed into the
@@ -551,10 +558,14 @@ public class BibTex {
      * @param suppressNewEntryImport {@code true} if missing entries should <b>not</b> be added to
      * the {@link #bibtexentries}, i.e. the ZKN3-Database. Use {@code false} if missing entries
      * should be added.
+     * @param updateExistingEntries {@code true} whether entries with identical bibkey that have
+     * already been imported into the internal data base should be updated (replaced) with entries
+     * from the attached bibtex file.
+     * @param dataObj a refrence to the Daten class.
      *
      * @return {@code true} if attachedfile was successfully opened, {@code false} otherwise.
      */
-    public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport) {
+    public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport, boolean updateExistingEntries, Daten dataObj) {
         // reset currently attached filepath
         currentlyattachedfile = null;
         // if we have no bibtex-filepath, return false
@@ -606,6 +617,20 @@ public class BibTex {
             Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             return false;
         }
+        // check whether existing entries should be replaced
+        if (updateExistingEntries && dataObj != null) {
+            // iterate all new entries
+            for (BibtexEntry attachedbibtexentry : attachedbibtexentries) {
+                // do we have this entry?
+                String bibkey = attachedbibtexentry.getEntryKey();
+                if (hasEntry(bibkey)) {
+                    // if yes, update it
+                    setEntry(bibkey, attachedbibtexentry);
+                    // and also update author data 
+                    dataObj.setAuthor(dataObj.getAuthorBibKeyPosition(bibkey), getFormattedEntry(attachedbibtexentry, true));
+                }
+            }
+        }
         // check whether missing entries should be added
         if (!suppressNewEntryImport) {
             // add all new entries to data base
@@ -618,6 +643,23 @@ public class BibTex {
         return true;
     }
 
+  /**
+     * This method opens (and "attaches") a bibtex-file which is specified via the
+     * {@link #setFilePath(java.io.File) setFilePath(File)} method. The file is parsed into the
+     * private variable {@code bibtexfile}, which can be accessed via {@link #getFile() getFile()}.
+     *
+     * @param encoding the character encoding of the file. use values of the array
+     * {@code CConstants.BIBTEX_ENCODINGS} as parameter.
+     * @param suppressNewEntryImport {@code true} if missing entries should <b>not</b> be added to
+     * the {@link #bibtexentries}, i.e. the ZKN3-Database. Use {@code false} if missing entries
+     * should be added.
+     *
+     * @return {@code true} if attachedfile was successfully opened, {@code false} otherwise.
+     */
+    public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport) {
+        return openAttachedFile(encoding, suppressNewEntryImport, false, null);
+    }
+    
     /**
      * This method opens (and "attaches") a bibtex-file which is specified via the
      * {@link #setFilePath(java.io.File) setFilePath(File)} method. The file is parsed into the
@@ -884,6 +926,42 @@ public class BibTex {
         }
         // else, if nothing found, return null...
         return null;
+    }
+
+    /**
+     * Checks whether an entry with the {@code bibkey} already exists in the data base.
+     * 
+     * @param bibkey the bibkey, which should be checked for existence
+     * @return {@code true} if an entry with {@code bibkey} exists in the interal data base,
+     * {@code false} otherwise.
+     */
+    public boolean hasEntry(String bibkey) {
+        return getEntry(bibkey) != null;
+    }
+    
+    /**
+     * Sets (replaces) the bibtex-entry indicated by {@code bibkey} from the original bibtex-file in the
+     * ZKN3-Database with a new BibTexEntry {@code entry}.
+     *
+     * @param bibkey the bibkey of the entry that should be updated / set
+     * @param entry the bibtexentry that should replace the old value
+     */
+    public void setEntry(String bibkey, BibtexEntry entry) {
+        // do we have any entries?
+        if (null == bibtexentries || 0 == bibtexentries.size()) {
+            return;
+        }
+        // create an iterator
+        for (int i = 0; i < bibtexentries.size(); i++) {
+            // get each bibtex-entry
+            BibtexEntry be = bibtexentries.get(i);
+            // if the entry-key (which is a bibkey) equals the parameter bibkey,
+            // return that entry
+            if (be.getEntryKey().equals(bibkey)) {
+                bibtexentries.set(i, entry);
+                return;
+            }
+        }
     }
 
     /**
@@ -1402,7 +1480,11 @@ public class BibTex {
                         // first check, whether we have an author, because we need to split this
                         if (f.equalsIgnoreCase("author") || f.equalsIgnoreCase("editor")) {
                             // retrieve single authors
-                            String[] singleauthors = dummy.replace("{{", "{").replace("}}", "}").split(Pattern.quote(" and "));
+                            String[] singleauthors = dummy.replace("{{", editorToken)
+                                    .replace("}}", "")
+                                    .replace("{", "")
+                                    .replace("}", "")
+                                    .split(Pattern.quote(" and "));
                             // prepare string builder
                             StringBuilder finalauthors = new StringBuilder("");
                             // iterate all found authors
@@ -1412,8 +1494,8 @@ public class BibTex {
                                 // we have already removed one curly braces. if we have another one,
                                 // we have a comolete author phrase that should not be separated
                                 // we can completely add it as authors
-                                if (aunames.contains("{")) {
-                                   finalauthors.append(aunames.replace("{", "").replace("}", ""));
+                                if (aunames.contains(editorToken)) {
+                                   finalauthors.append(aunames.replace(editorToken, ""));
                                 }
                                 // if author sur- and given-names are comma-separated, we assume that the
                                 // sur-name comes first
@@ -1586,7 +1668,11 @@ public class BibTex {
                 return null;
             }
             // retrieve single authors
-            String[] singleauthors = dummy.replace("{{", "{").replace("}}", "}").split(Pattern.quote(" and "));
+            String[] singleauthors = dummy.replace("{{", editorToken)
+                    .replace("}}", "")
+                    .replace("{", "")
+                    .replace("}", "")
+                    .split(Pattern.quote(" and "));
             // prepare string builder
             List<String> finalauthors = new ArrayList<>();
             // iterate all found authors
@@ -1594,8 +1680,8 @@ public class BibTex {
                 // we have already removed one curly braces. if we have another one,
                 // we have a comolete author phrase that should not be separated
                 // we can completely add it as authors
-                if (aunames.contains("{")) {
-                   finalauthors.add(aunames.replace("{", "").replace("}", ""));
+                if (aunames.contains(editorToken)) {
+                   finalauthors.add(aunames.replace(editorToken, ""));
                 }
                 // check how many authors we have
                 // if author sur- and given-names are comma-separated, we assume that the
