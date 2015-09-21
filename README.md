@@ -16,6 +16,7 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 * Im Schreibtischfenster können jetzt nur die direkten Folgezettel eines Zettels, oder aber alle Folgezettel inkl. Unterfolgezettel eingefügt werden.
 * Zettel im Schreibtischfenster, die einen Folgezettel enthalten, werden durch ein eigenes Symbol in der Baumansicht hervorgehoben. Dies kann im Menü _Ansicht_ deaktiviert werden.
 * Die manuelle Sortierung von Zetteln (z.B. das Verschieben in der Registerkarte _Überschriften_) wurde entfernt, da diese Funktion den Im- und Export zu fehleranfällig machte.
+* Folgezettel in der Registerkarte können jetzt standardmäßig nur bis zu einer bestimmten Ebene aufgeklappt werden ([#73](https://github.com/sjPlot/Zettelkasten/issues/73)).
 * Fußnoten-Zitierstil beim LaTex-Export verwendet nun `\footcite` statt `footnote{\cite}` ([#63](https://github.com/sjPlot/Zettelkasten/issues/63)).
 * Erweiterte LaTex-Exportoptionen: Erstellen der Präambel und Konvertieren von Umlauten ist optional ([#1](https://github.com/sjPlot/Zettelkasten/issues/1) und [#62](https://github.com/sjPlot/Zettelkasten/issues/62)).
 * Literaturfußnoten können jetzt auch Seitenzahlen beinhalten. Diese müssen durch einen `:` von der Literatur-Indexnummer getrennt werden, bspw. `[fn 666:31]` wird zu `Luhmann 1984, S.31`.

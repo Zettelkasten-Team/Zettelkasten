@@ -1707,15 +1707,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * html-format
      */
     private void exportEntriesToEditorPane(DefaultMutableTreeNode node, StringBuilder sb, boolean showComments) {
-        String tdOpen = "<td>";
-        String tdClose = "</td>";
-        String trOpen = "<tr>";
-        String trClose = "</tr>";
-        String tdContentOpen = "<td class=\"content\">";
-        // if we don't have comments, we don't need tables
-        if (!showComments) {
-            tdOpen = tdClose = trOpen = trClose = tdContentOpen = "";
-        }
         // get a list with all children of the node
         Enumeration en = node.children();
         // go through all children
@@ -1728,29 +1719,36 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 int lvl = node.getLevel();
                 String level = String.valueOf(lvl);
                 // new table row
-                sb.append(trOpen).append(lineseparator);
+                sb.append("<tr>").append(lineseparator);
                 // check whether comments should be displayed
                 if (showComments) {
                     // retieve and create comment
                     String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node), "<br>");
                     // insert comment as table-data
-                    sb.append("<td valign=\"top\" class=\"comment\">");
-                    sb.append(com);
-                    sb.append("</td>").append(lineseparator);
+                    sb.append("<td valign=\"top\" class=\"comment\">")
+                            .append(com)
+                            .append("</td>")
+                            .append(lineseparator);
                 }
                 // insert entry content
-                sb.append(tdOpen).append("<h").append(level).append(">");
+                sb.append("<td>").append("<h").append(level).append(">");
                 // now create the reference-ankh, so we can use the "scrollToReference" method
                 // of the jEditorPane easily each time the user clicks on an entry in the jTree
                 // to scroll to that entry in the text field.
-                sb.append("<a name=\"");
-                sb.append("entry").append(TreeUtil.getNodeTimestamp(node));
-                sb.append("\">&nbsp;</a>");
+                sb.append("<a name=\"")
+                        .append("entry")
+                        .append(TreeUtil.getNodeTimestamp(node))
+                        .append("\">&nbsp;</a>");
                 // append a new headline with the bullet's name
                 sb.append(TreeUtil.getNodeText(node));
                 // also add headline to wordcounter
                 sbWordCountDisplayTask.append(TreeUtil.getNodeText(node)).append(" ");
-                sb.append("</h").append(level).append(">").append(tdClose).append(trClose).append(lineseparator);
+                sb.append("</h")
+                        .append(level)
+                        .append(">")
+                        .append("</td>")
+                        .append("</tr>")
+                        .append(lineseparator);
             } // now we know we have an entry. so get the entry number...
             else {
                 // we now want to check whether the user has made modifications to the entry's
@@ -1781,29 +1779,35 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                     // also cleaned text for wordcounter
                     sbWordCountDisplayTask.append(Tools.removeUbbFromString(text, true)).append(" ");
                     // get the html-text for an entry which content is passed as parameter...
-                    text = HtmlUbbUtil.getHtmlContentForDesktop(dataObj, bibtexObj, settingsObj, text, nr, isHeadingVisible, isEntryNumberVisible, false, false);
+                    text = HtmlUbbUtil.getHtmlContentForDesktop(dataObj, 
+                            bibtexObj, settingsObj, text, nr, isHeadingVisible, 
+                            isEntryNumberVisible, false, false);
                 }
                 // new table row
-                sb.append(trOpen).append(lineseparator);
+                sb.append("<tr>").append(lineseparator);
                 // check whether comments should be displayed
                 if (showComments) {
                     // retieve and create comment
                     String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node), "<br>");
                     // insert comment as table-data
-                    sb.append("<td valign=\"top\" class=\"comment\">");
-                    sb.append(com);
-                    sb.append("</td>");
+                    sb.append("<td valign=\"top\" class=\"comment\">")
+                            .append(com)
+                            .append("</td>");
                 }
-                sb.append(tdContentOpen).append(lineseparator);
+                sb.append("<td class=\"content\">").append(lineseparator);
                 // now create the reference-ankh, so we can use the "scrollToReference" method
                 // of the jEditorPane easily each time the user clicks on an entry in the jTree
                 // to scroll to that entry in the text field.
-                sb.append("<a name=\"");
-                sb.append("entry").append(TreeUtil.getNodeTimestamp(node));
-                sb.append("\">&nbsp;</a>").append(lineseparator);
+                sb.append("<a name=\"")
+                        .append("entry")
+                        .append(TreeUtil.getNodeTimestamp(node))
+                        .append("\">&nbsp;</a>")
+                        .append(lineseparator);
                 // and append the html-text of the entry...
-                sb.append(text);
-                sb.append(tdClose).append(trClose).append(lineseparator);
+                sb.append(text)
+                        .append("</td>")
+                        .append("</tr>")
+                        .append(lineseparator);
             }
             // when the new node also has children, call this method again,
             // so we go through the strucuture recursively...

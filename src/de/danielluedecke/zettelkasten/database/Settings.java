@@ -324,7 +324,8 @@ public class Settings {
     private static final String SETTING_LASTUSEDSETBIBKEYTYPE = "lastusedbibkeytype";
     private static final String SETTING_LASTUSEDSETBIBIMPORTSOURCE = "lastusedbibimportsource";
     private static final String SETTING_SHOWALLLUHMANN = "showallluhmann";
-    private static final String SETTING_SHOWLUHMANNICONINDESK = "showaluhmanniconindesk";
+    private static final String SETTING_SHOWLUHMANNICONINDESK = "showluhmanniconindesk";
+    private static final String SETTING_LUHMANNTREEEXPANDLEVEL = "luhmanntreeexpandlevel";
 
     public static final String SETTING_LOGKEYWORDLIST_OR = "OR";
     public static final String SETTING_LOGKEYWORDLIST_AND = "AND";
@@ -776,6 +777,7 @@ public class Settings {
         genericElementInit(SETTING_HIGHLIGHTLIVESEARCHBACKGROUNDCOLOR, "ffff66");
         genericElementInit(SETTING_TABLEFONT, font);
         genericElementInit(SETTING_DESKTOPOUTLINEFONT, font);
+        genericElementInit(SETTING_LUHMANNTREEEXPANDLEVEL, "-1");
         
         if (null == settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTSEARCHSTYLE)) {
             // create element for font
@@ -1669,6 +1671,25 @@ public class Settings {
         genericIntSetter(SETTING_DESKTOPDISPLAYITEMS, items);
     }
 
+    /**
+     * Returns the depth of expanded levels from the follower tab.
+     * @return the depth of expanded levels from the follower tab.
+     */
+    public int getLuhmannExpandLevel() {
+        return genericIntGetter(SETTING_LUHMANNTREEEXPANDLEVEL, -1);
+    }
+    
+    /**
+     * Sets the depths of levels that should be expanded when the follower
+     * tab is viewed.
+     * 
+     * @param level the depths of levels that should be expanded when the 
+     * follower tab is shown.
+     */
+    public void setLuhmannExpandLevel(int level) {
+        genericIntSetter(SETTING_LUHMANNTREEEXPANDLEVEL, level);
+    }
+    
     /**
      * this method gets the initiated fields (checkboxes) for the find-dialog, which is opened from
      * the main window. depending on this variable (and the set bits of it) we can figure out which
@@ -5838,6 +5859,17 @@ public class Settings {
         }
         el.setText((val) ? "1" : "0");
     }
+    
+    /**
+     * Returns the setting (saved value) for integer values. Return
+     * the argument {@code defaultValue} if element does not exist
+     * in the settings file.
+     * 
+     * @param key the key of the specific settings
+     * @param defaultValue a default value that will be returned in case the 
+     * setting {@code key} does not exist.
+     * @return the saved setting for {@code key} as integer value.
+     */
     private int genericIntGetter(String key, int defaultValue) {
         Element el = settingsFile.getRootElement().getChild(key);
         if (el != null) {

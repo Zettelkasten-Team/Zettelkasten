@@ -2480,6 +2480,72 @@
                 <Property name="name" type="java.lang.String" value="viewMenuLuhmannShowNumbers" noResource="true"/>
               </Properties>
             </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator101">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="jSeparator101" noResource="true"/>
+              </Properties>
+            </MenuItem>
+            <Menu class="javax.swing.JMenu" name="viewMenuLuhmannShowLevel">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="viewMenuLuhmannShowLevel.text"/>
+                <Property name="name" type="java.lang.String" value="viewMenuLuhmannShowLevel" noResource="true"/>
+              </Properties>
+              <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="viewMenuLuhmannDepthAll">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="setLuhmannLevelAll" methodName="setLuhmannLevelAll"/>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="viewMenuLuhmannDepthAll" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator119">
+                  <Properties>
+                    <Property name="name" type="java.lang.String" value="jSeparator119" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="viewMenuLuhmannDepth1">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="setLuhmannLevel1" methodName="setLuhmannLevel1"/>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="viewMenuLuhmannDepth1" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="viewMenuLuhmannDepth2">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="setLuhmannLevel2" methodName="setLuhmannLevel2"/>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="viewMenuLuhmannDepth2" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="viewMenuLuhmannDepth3">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="setLuhmannLevel3" methodName="setLuhmannLevel3"/>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="viewMenuLuhmannDepth3" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="viewMenuLuhmannDepth4">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="setLuhmannLevel4" methodName="setLuhmannLevel4"/>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="viewMenuLuhmannDepth4" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="viewMenuLuhmannDepth5">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="setLuhmannLevel5" methodName="setLuhmannLevel5"/>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="viewMenuLuhmannDepth5" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+              </SubComponents>
+            </Menu>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="viewMenuKeywords">
@@ -4235,6 +4301,72 @@
             <Property name="name" type="java.lang.String" value="popupLuhmannDesktop" noResource="true"/>
           </Properties>
         </MenuItem>
+        <Component class="javax.swing.JPopupMenu$Separator" name="jSeparator117">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="jSeparator117" noResource="true"/>
+          </Properties>
+        </Component>
+        <Menu class="javax.swing.JMenu" name="popupLuhmannSetLevel">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="popupLuhmannSetLevel.text"/>
+            <Property name="name" type="java.lang.String" value="popupLuhmannSetLevel" noResource="true"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="popupLuhmannLevelAll">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="setLuhmannLevelAll" methodName="setLuhmannLevelAll"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="popupLuhmannLevelAll" noResource="true"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator74">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="jSeparator74" noResource="true"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="popupLuhmannLevel1">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="setLuhmannLevel1" methodName="setLuhmannLevel1"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="popupLuhmannLevel1" noResource="true"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="popupLuhmannLevel2">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="setLuhmannLevel2" methodName="setLuhmannLevel2"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="popupLuhmannLevel2" noResource="true"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="popupLuhmannLevel3">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="setLuhmannLevel3" methodName="setLuhmannLevel3"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="popupLuhmannLevel3" noResource="true"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="popupLuhmannLevel4">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="setLuhmannLevel4" methodName="setLuhmannLevel4"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="popupLuhmannLevel4" noResource="true"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="popupLuhmannLevel5">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="setLuhmannLevel5" methodName="setLuhmannLevel5"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="popupLuhmannLevel5" noResource="true"/>
+              </Properties>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPopupMenu" name="jPopupMenuTitles">

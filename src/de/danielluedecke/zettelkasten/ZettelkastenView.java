@@ -794,7 +794,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // change setting
                 settings.setShowAllLuhmann(jCheckBoxShowAllLuhmann.isSelected());
                 // refresh follower view
-                showLuhmann();
+                showLuhmann(false);
             }
         });
         // this settings toggles the setting whether the cluster-list in the jTreeCluster
@@ -2303,7 +2303,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                                 // insert entry at new index-position
                                 data.insertLuhmannNumber(dropentrynr, draggedentrynr, insertIndex);
                                 // update tabbed pane
-                                showLuhmann();
+                                showLuhmann(false);
                                 // return success value
                                 return true;
                             } catch (NumberFormatException | IndexOutOfBoundsException e) {
@@ -2947,6 +2947,60 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     /**
+     * Sets the default expand level of jLuhmannTree to first level.
+     */
+    @Action
+    public void setLuhmannLevel1() {
+        settings.setLuhmannExpandLevel(1);
+        showLuhmann(true);
+    }
+    
+    /**
+     * Sets the default expand level of jLuhmannTree to second level.
+     */
+    @Action
+    public void setLuhmannLevel2() {
+        settings.setLuhmannExpandLevel(2);
+        showLuhmann(true);
+    }
+    
+    /**
+     * Sets the default expand level of jLuhmannTree to third level.
+     */
+    @Action
+    public void setLuhmannLevel3() {
+        settings.setLuhmannExpandLevel(3);
+        showLuhmann(true);
+    }
+    
+    /**
+     * Sets the default expand level of jLuhmannTree to fourth level.
+     */
+    @Action
+    public void setLuhmannLevel4() {
+        settings.setLuhmannExpandLevel(4);
+        showLuhmann(true);
+    }
+    
+    /**
+     * Sets the default expand level of jLuhmannTree to fifth level.
+     */
+    @Action
+    public void setLuhmannLevel5() {
+        settings.setLuhmannExpandLevel(5);
+        showLuhmann(true);
+    }
+    
+    /**
+     * Sets the default expand level of jLuhmannTree to all level.
+     */
+    @Action
+    public void setLuhmannLevelAll() {
+        settings.setLuhmannExpandLevel(-1);
+        showLuhmann(true);
+    }
+    
+    /**
      * This method checks whether a certain menu has already been added to the
      * menu bar. We need this to avoid multiple occurences of same menus that
      * are related to the JTabbedPane.
@@ -3117,7 +3171,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 showLinks();
                 break;
             case TAB_LUHMANN:
-                showLuhmann();
+                showLuhmann(false);
                 break;
             case TAB_KEYWORDS:
                 showKeywords();
@@ -3424,7 +3478,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void showLuhmannEntryNumber() {
         boolean val = settings.getShowLuhmannEntryNumber();
         settings.setShowLuhmannEntryNumber(!val);
-        showLuhmann();
+        showLuhmann(false);
     }
 
     /**
@@ -3464,8 +3518,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * So, the Luhmann-numbers of an entry only have one subordinated level of
      * sub-entries. the tree- structure comes from those sub-entries, that might
      * have their own sub-entries again.
+     * 
+     * @param resetCollapsedNodes logical, {@code true} if all former collapsed
+     * nodes should be expanded now, or {@code false} if collapsed state should
+     * be remembered.
      */
-    private synchronized void showLuhmann() {
+    private synchronized void showLuhmann(boolean resetCollapsedNodes) {
         // if no data available, leave method
         if (data.getCount(Daten.ZKNCOUNT) < 1) {
             return;
@@ -3475,7 +3533,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             return;
         }
         // show Luhmann numbers
-        luhmannTask();
+        luhmannTask(resetCollapsedNodes);
     }
 
     /**
@@ -6623,9 +6681,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * entry. Since follower-entries can have other followers itself (subentries), we iterate
      * all entries and subentries here, creating a jTreeView out of all entries and subentries.
      */
-    private void luhmannTask() {
-        // retrieve collapsed status
-        TreeUtil.retrieveCollapsedNodes(jTreeLuhmann);
+    private void luhmannTask(boolean resetCollapsedNodes) {
+        // retrieve collapsed status?
+        if (resetCollapsedNodes) {
+            TreeUtil.resetCollapsedNodes();
+        } else {
+            TreeUtil.retrieveCollapsedNodes(jTreeLuhmann);
+        }
         // get the treemodel
         DefaultTreeModel dtm = (DefaultTreeModel) jTreeLuhmann.getModel();
         // and first of all, clear the jTree
@@ -6650,7 +6712,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // now call a recursive method that fills the jTree with the luhmann-numbers,
         // i.e. with the follower- or sub-entries
         fillLuhmannNumbers(root, parentLuhmann, data.getCurrentZettelPos());
-        // completely expand the jTree
+        // expand the jTree to specific level
+        TreeUtil.setExpandLevel(settings.getLuhmannExpandLevel());
         TreeUtil.expandAllTrees(jTreeLuhmann);
         // select current entry
         TreePath tp = new TreePath(selectedLuhmannNode.getPath());
@@ -11554,6 +11617,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             viewMenuLuhmannExportSearch = new javax.swing.JMenuItem();
             jSeparator118 = new javax.swing.JPopupMenu.Separator();
             viewMenuLuhmannShowNumbers = new javax.swing.JCheckBoxMenuItem();
+            jSeparator101 = new javax.swing.JPopupMenu.Separator();
+            viewMenuLuhmannShowLevel = new javax.swing.JMenu();
+            viewMenuLuhmannDepthAll = new javax.swing.JMenuItem();
+            jSeparator119 = new javax.swing.JPopupMenu.Separator();
+            viewMenuLuhmannDepth1 = new javax.swing.JMenuItem();
+            viewMenuLuhmannDepth2 = new javax.swing.JMenuItem();
+            viewMenuLuhmannDepth3 = new javax.swing.JMenuItem();
+            viewMenuLuhmannDepth4 = new javax.swing.JMenuItem();
+            viewMenuLuhmannDepth5 = new javax.swing.JMenuItem();
             viewMenuKeywords = new javax.swing.JMenu();
             viewKeywordsCopy = new javax.swing.JMenuItem();
             jSeparator25 = new javax.swing.JSeparator();
@@ -11767,6 +11839,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             popupLuhmannBookmarks = new javax.swing.JMenuItem();
             jSeparator63 = new javax.swing.JSeparator();
             popupLuhmannDesktop = new javax.swing.JMenuItem();
+            jSeparator117 = new javax.swing.JPopupMenu.Separator();
+            popupLuhmannSetLevel = new javax.swing.JMenu();
+            popupLuhmannLevelAll = new javax.swing.JMenuItem();
+            jSeparator74 = new javax.swing.JPopupMenu.Separator();
+            popupLuhmannLevel1 = new javax.swing.JMenuItem();
+            popupLuhmannLevel2 = new javax.swing.JMenuItem();
+            popupLuhmannLevel3 = new javax.swing.JMenuItem();
+            popupLuhmannLevel4 = new javax.swing.JMenuItem();
+            popupLuhmannLevel5 = new javax.swing.JMenuItem();
             jPopupMenuTitles = new javax.swing.JPopupMenu();
             popupTitlesCopy = new javax.swing.JMenuItem();
             jSeparator20 = new javax.swing.JSeparator();
@@ -13206,6 +13287,41 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             viewMenuLuhmannShowNumbers.setName("viewMenuLuhmannShowNumbers"); // NOI18N
             viewMenuLuhmann.add(viewMenuLuhmannShowNumbers);
 
+            jSeparator101.setName("jSeparator101"); // NOI18N
+            viewMenuLuhmann.add(jSeparator101);
+
+            viewMenuLuhmannShowLevel.setText(resourceMap.getString("viewMenuLuhmannShowLevel.text")); // NOI18N
+            viewMenuLuhmannShowLevel.setName("viewMenuLuhmannShowLevel"); // NOI18N
+
+            viewMenuLuhmannDepthAll.setAction(actionMap.get("setLuhmannLevelAll")); // NOI18N
+            viewMenuLuhmannDepthAll.setName("viewMenuLuhmannDepthAll"); // NOI18N
+            viewMenuLuhmannShowLevel.add(viewMenuLuhmannDepthAll);
+
+            jSeparator119.setName("jSeparator119"); // NOI18N
+            viewMenuLuhmannShowLevel.add(jSeparator119);
+
+            viewMenuLuhmannDepth1.setAction(actionMap.get("setLuhmannLevel1")); // NOI18N
+            viewMenuLuhmannDepth1.setName("viewMenuLuhmannDepth1"); // NOI18N
+            viewMenuLuhmannShowLevel.add(viewMenuLuhmannDepth1);
+
+            viewMenuLuhmannDepth2.setAction(actionMap.get("setLuhmannLevel2")); // NOI18N
+            viewMenuLuhmannDepth2.setName("viewMenuLuhmannDepth2"); // NOI18N
+            viewMenuLuhmannShowLevel.add(viewMenuLuhmannDepth2);
+
+            viewMenuLuhmannDepth3.setAction(actionMap.get("setLuhmannLevel3")); // NOI18N
+            viewMenuLuhmannDepth3.setName("viewMenuLuhmannDepth3"); // NOI18N
+            viewMenuLuhmannShowLevel.add(viewMenuLuhmannDepth3);
+
+            viewMenuLuhmannDepth4.setAction(actionMap.get("setLuhmannLevel4")); // NOI18N
+            viewMenuLuhmannDepth4.setName("viewMenuLuhmannDepth4"); // NOI18N
+            viewMenuLuhmannShowLevel.add(viewMenuLuhmannDepth4);
+
+            viewMenuLuhmannDepth5.setAction(actionMap.get("setLuhmannLevel5")); // NOI18N
+            viewMenuLuhmannDepth5.setName("viewMenuLuhmannDepth5"); // NOI18N
+            viewMenuLuhmannShowLevel.add(viewMenuLuhmannDepth5);
+
+            viewMenuLuhmann.add(viewMenuLuhmannShowLevel);
+
             menuBar.add(viewMenuLuhmann);
 
             viewMenuKeywords.setText(resourceMap.getString("viewMenuKeywords.text")); // NOI18N
@@ -14179,6 +14295,41 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             popupLuhmannDesktop.setName("popupLuhmannDesktop"); // NOI18N
             jPopupMenuLuhmann.add(popupLuhmannDesktop);
 
+            jSeparator117.setName("jSeparator117"); // NOI18N
+            jPopupMenuLuhmann.add(jSeparator117);
+
+            popupLuhmannSetLevel.setText(resourceMap.getString("popupLuhmannSetLevel.text")); // NOI18N
+            popupLuhmannSetLevel.setName("popupLuhmannSetLevel"); // NOI18N
+
+            popupLuhmannLevelAll.setAction(actionMap.get("setLuhmannLevelAll")); // NOI18N
+            popupLuhmannLevelAll.setName("popupLuhmannLevelAll"); // NOI18N
+            popupLuhmannSetLevel.add(popupLuhmannLevelAll);
+
+            jSeparator74.setName("jSeparator74"); // NOI18N
+            popupLuhmannSetLevel.add(jSeparator74);
+
+            popupLuhmannLevel1.setAction(actionMap.get("setLuhmannLevel1")); // NOI18N
+            popupLuhmannLevel1.setName("popupLuhmannLevel1"); // NOI18N
+            popupLuhmannSetLevel.add(popupLuhmannLevel1);
+
+            popupLuhmannLevel2.setAction(actionMap.get("setLuhmannLevel2")); // NOI18N
+            popupLuhmannLevel2.setName("popupLuhmannLevel2"); // NOI18N
+            popupLuhmannSetLevel.add(popupLuhmannLevel2);
+
+            popupLuhmannLevel3.setAction(actionMap.get("setLuhmannLevel3")); // NOI18N
+            popupLuhmannLevel3.setName("popupLuhmannLevel3"); // NOI18N
+            popupLuhmannSetLevel.add(popupLuhmannLevel3);
+
+            popupLuhmannLevel4.setAction(actionMap.get("setLuhmannLevel4")); // NOI18N
+            popupLuhmannLevel4.setName("popupLuhmannLevel4"); // NOI18N
+            popupLuhmannSetLevel.add(popupLuhmannLevel4);
+
+            popupLuhmannLevel5.setAction(actionMap.get("setLuhmannLevel5")); // NOI18N
+            popupLuhmannLevel5.setName("popupLuhmannLevel5"); // NOI18N
+            popupLuhmannSetLevel.add(popupLuhmannLevel5);
+
+            jPopupMenuLuhmann.add(popupLuhmannSetLevel);
+
             jPopupMenuTitles.setName("jPopupMenuTitles"); // NOI18N
 
             popupTitlesCopy.setAction(actionMap.get("copy"));
@@ -14524,6 +14675,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator10;
     private javax.swing.JSeparator jSeparator100;
+    private javax.swing.JPopupMenu.Separator jSeparator101;
     private javax.swing.JSeparator jSeparator102;
     private javax.swing.JSeparator jSeparator103;
     private javax.swing.JSeparator jSeparator104;
@@ -14540,7 +14692,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JPopupMenu.Separator jSeparator114;
     private javax.swing.JPopupMenu.Separator jSeparator115;
     private javax.swing.JPopupMenu.Separator jSeparator116;
+    private javax.swing.JPopupMenu.Separator jSeparator117;
     private javax.swing.JPopupMenu.Separator jSeparator118;
+    private javax.swing.JPopupMenu.Separator jSeparator119;
     private javax.swing.JSeparator jSeparator12;
     private javax.swing.JSeparator jSeparator13;
     private javax.swing.JSeparator jSeparator14;
@@ -14609,6 +14763,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JSeparator jSeparator71;
     private javax.swing.JPopupMenu.Separator jSeparator72;
     private javax.swing.JPopupMenu.Separator jSeparator73;
+    private javax.swing.JPopupMenu.Separator jSeparator74;
     private javax.swing.JSeparator jSeparator75;
     private javax.swing.JSeparator jSeparator76;
     private javax.swing.JSeparator jSeparator77;
@@ -14741,7 +14896,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JMenuItem popupLuhmannBookmarks;
     private javax.swing.JMenuItem popupLuhmannDelete;
     private javax.swing.JMenuItem popupLuhmannDesktop;
+    private javax.swing.JMenuItem popupLuhmannLevel1;
+    private javax.swing.JMenuItem popupLuhmannLevel2;
+    private javax.swing.JMenuItem popupLuhmannLevel3;
+    private javax.swing.JMenuItem popupLuhmannLevel4;
+    private javax.swing.JMenuItem popupLuhmannLevel5;
+    private javax.swing.JMenuItem popupLuhmannLevelAll;
     private javax.swing.JMenuItem popupLuhmannManLinks;
+    private javax.swing.JMenu popupLuhmannSetLevel;
     private javax.swing.JMenuItem popupMainAddToKeyword;
     private javax.swing.JMenuItem popupMainCopy;
     private javax.swing.JMenuItem popupMainCopyPlain;
@@ -14887,10 +15049,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JMenu viewMenuLuhmann;
     private javax.swing.JMenuItem viewMenuLuhmannBookmarks;
     private javax.swing.JMenuItem viewMenuLuhmannDelete;
+    private javax.swing.JMenuItem viewMenuLuhmannDepth1;
+    private javax.swing.JMenuItem viewMenuLuhmannDepth2;
+    private javax.swing.JMenuItem viewMenuLuhmannDepth3;
+    private javax.swing.JMenuItem viewMenuLuhmannDepth4;
+    private javax.swing.JMenuItem viewMenuLuhmannDepth5;
+    private javax.swing.JMenuItem viewMenuLuhmannDepthAll;
     private javax.swing.JMenuItem viewMenuLuhmannDesktop;
     private javax.swing.JMenuItem viewMenuLuhmannExport;
     private javax.swing.JMenuItem viewMenuLuhmannExportSearch;
     private javax.swing.JMenuItem viewMenuLuhmannManLinks;
+    private javax.swing.JMenu viewMenuLuhmannShowLevel;
     private javax.swing.JCheckBoxMenuItem viewMenuLuhmannShowNumbers;
     private javax.swing.JMenuItem viewMenuLuhmannShowTopLevel;
     private javax.swing.JMenu viewMenuTitles;
