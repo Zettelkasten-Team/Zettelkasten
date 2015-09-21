@@ -1,6 +1,6 @@
 /*
  * Zettelkasten - nach Luhmann
- ** Copyright (C) 2001-2014 by Daniel Lüdecke (http://www.danielluedecke.de)
+ * Copyright (C) 2001-2015 by Daniel Lüdecke (http://www.danielluedecke.de)
  *
  * Homepage: http://zettelkasten.danielluedecke.de
  *
