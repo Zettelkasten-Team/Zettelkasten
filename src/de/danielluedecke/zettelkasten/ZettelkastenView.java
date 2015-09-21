@@ -1187,7 +1187,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // when the user presses the escape-key, hide panel
                 if (KeyEvent.VK_ESCAPE == evt.getKeyCode()) {
                     findLiveCancel();
-                } else {
+                } else if (KeyEvent.VK_ENTER == evt.getKeyCode()) {
                     // get the text from the live-search-textbox
                     String livetext = jTextFieldLiveSearch.getText();
                     // only highlight text, when we have more that two chars
