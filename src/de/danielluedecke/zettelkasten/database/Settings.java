@@ -1572,16 +1572,7 @@ public class Settings {
      * @return the number of the startup entry
      */
     public int getStartupEntry() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_STARTUPENTRY);
-        int retval = -1;
-        if (el != null) {
-            try {
-                retval = Integer.parseInt(el.getText());
-            } catch (NumberFormatException e) {
-                retval = -1;
-            }
-        }
-        return retval;
+        return genericIntGetter(SETTING_STARTUPENTRY, -1);
     }
 
     /**
@@ -1591,12 +1582,7 @@ public class Settings {
      * @param nr (the number of the last viewed/activated entry)
      */
     public void setStartupEntry(int nr) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_STARTUPENTRY);
-        if (null == el) {
-            el = new Element(SETTING_STARTUPENTRY);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(String.valueOf(nr));
+        genericIntSetter(SETTING_STARTUPENTRY, nr);
     }
 
     /**
@@ -1825,7 +1811,7 @@ public class Settings {
      * @return the last used search term for the find dialog
      */
     public String getSearchWhat() {
-        return genericStringGetter(SETTING_SEARCHWHAT);
+        return genericStringGetter(SETTING_SEARCHWHAT, "");
     }
 
     /**
@@ -1845,7 +1831,7 @@ public class Settings {
      * @return the last used replaceterm for the replace dialog
      */
     public String getReplaceWhat() {
-        return genericStringGetter(SETTING_REPLACEWHAT);
+        return genericStringGetter(SETTING_REPLACEWHAT, "");
     }
 
     /**
@@ -1904,7 +1890,7 @@ public class Settings {
      * @return
      */
     public String getLogKeywordlist() {
-        return genericStringGetter(SETTING_LOGKEYWORDLIST);
+        return genericStringGetter(SETTING_LOGKEYWORDLIST, "");
     }
 
     /**
@@ -1923,7 +1909,7 @@ public class Settings {
      * @return the string for the look'n'feel's classname
      */
     public String getLookAndFeel() {
-        return genericStringGetter(SETTING_LAF);
+        return genericStringGetter(SETTING_LAF, "");
     }
 
     /**
@@ -1944,11 +1930,7 @@ public class Settings {
      * flase otherwise
      */
     public boolean getShowGridHorizontal() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SHOWGRID_HORIZONTAL);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_SHOWGRID_HORIZONTAL);
     }
 
     /**
@@ -1958,12 +1940,7 @@ public class Settings {
      * @param show true if the grids should be displayed, false otherweise
      */
     public void setShowGridHorizontal(boolean show) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SHOWGRID_HORIZONTAL);
-        if (null == el) {
-            el = new Element(SETTING_SHOWGRID_HORIZONTAL);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((show) ? "1" : "0");
+        genericBooleanSetter(SETTING_SHOWGRID_HORIZONTAL, show);
     }
 
     /**
@@ -1974,11 +1951,7 @@ public class Settings {
      * flase otherwise
      */
     public boolean getShowGridVertical() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SHOWGRID_VERTICAL);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_SHOWGRID_VERTICAL);
     }
 
     /**
@@ -1988,12 +1961,7 @@ public class Settings {
      * @param show true if the grids should be displayed, false otherweise
      */
     public void setShowGridVertical(boolean show) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SHOWGRID_VERTICAL);
-        if (null == el) {
-            el = new Element(SETTING_SHOWGRID_VERTICAL);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((show) ? "1" : "0");
+        genericBooleanSetter(SETTING_SHOWGRID_VERTICAL, show);
     }
 
     /**
@@ -2004,11 +1972,7 @@ public class Settings {
      * be shown in trailing entries; {@code false} otherwise.
      */
     public boolean getShowAllLuhmann() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SHOWALLLUHMANN);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_SHOWALLLUHMANN);
     }
 
     /**
@@ -2019,12 +1983,7 @@ public class Settings {
      * be shown in trailing entries; {@code false} otherwise.
      */
     public void setShowAllLuhmann(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SHOWALLLUHMANN);
-        if (null == el) {
-            el = new Element(SETTING_SHOWALLLUHMANN);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_SHOWALLLUHMANN, val);
     }
 
     /**
@@ -2035,11 +1994,7 @@ public class Settings {
      * be shown in trailing entries; {@code false} otherwise.
      */
     public boolean getShowLuhmannIconInDesktop() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SHOWLUHMANNICONINDESK);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_SHOWLUHMANNICONINDESK);
     }
 
     /**
@@ -2050,12 +2005,7 @@ public class Settings {
      * be shown in trailing entries; {@code false} otherwise.
      */
     public void setShowLuhmannIconInDesktop(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SHOWLUHMANNICONINDESK);
-        if (null == el) {
-            el = new Element(SETTING_SHOWLUHMANNICONINDESK);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_SHOWLUHMANNICONINDESK, val);
     }
 
     /**
@@ -2065,11 +2015,7 @@ public class Settings {
      * @return {@code true} if the search should include synonyms, false otherwise
      */
     public boolean getSearchAlwaysSynonyms() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHALWAYSSYNONYMS);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_SEARCHALWAYSSYNONYMS);
     }
 
     /**
@@ -2079,12 +2025,7 @@ public class Settings {
      * @param val true if the search should include synonyms, false otherwise
      */
     public void setSearchAlwaysSynonyms(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHALWAYSSYNONYMS);
-        if (null == el) {
-            el = new Element(SETTING_SEARCHALWAYSSYNONYMS);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_SEARCHALWAYSSYNONYMS, val);
     }
 
     /**
@@ -2094,11 +2035,7 @@ public class Settings {
      * otherwise
      */
     public boolean getShowSynonymsInTable() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SHOWSYNONYMSINTABLE);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_SHOWSYNONYMSINTABLE);
     }
 
     /**
@@ -2107,12 +2044,7 @@ public class Settings {
      * @param val true keyword-synonyms should be displayed in the jTableKeywords, false otherwise
      */
     public void setShowSynonymsInTable(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SHOWSYNONYMSINTABLE);
-        if (null == el) {
-            el = new Element(SETTING_SHOWSYNONYMSINTABLE);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_SHOWSYNONYMSINTABLE, val);
     }
 
     /**
@@ -2165,11 +2097,7 @@ public class Settings {
      * @return {@code true} if the keyword-quickinput should be activated
      */
     public boolean getQuickInput() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_QUICKINPUT);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_QUICKINPUT);
     }
 
     /**
@@ -2178,12 +2106,7 @@ public class Settings {
      * @param val true if the keyword-quickinput should be activated
      */
     public void setQuickInput(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_QUICKINPUT);
-        if (null == el) {
-            el = new Element(SETTING_QUICKINPUT);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_QUICKINPUT, val);
     }
 
     /**
@@ -2192,11 +2115,7 @@ public class Settings {
      * @return {@code true} if autobackup should be activated
      */
     public boolean getAutoBackup() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_AUTOBACKUP);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_AUTOBACKUP);
     }
 
     /**
@@ -2205,12 +2124,7 @@ public class Settings {
      * @param val true if the autobackup should be activated
      */
     public void setAutoBackup(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_AUTOBACKUP);
-        if (null == el) {
-            el = new Element(SETTING_AUTOBACKUP);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_AUTOBACKUP, val);
     }
 
     /**
@@ -2219,11 +2133,7 @@ public class Settings {
      * @return {@code true} if minimizing to tray should be activated
      */
     public boolean getMinimizeToTray() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_MINIMIZETOTRAY);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_MINIMIZETOTRAY);
     }
 
     /**
@@ -2232,12 +2142,7 @@ public class Settings {
      * @param val true if minimizing to tray should be activated
      */
     public void setMinimizeToTray(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_MINIMIZETOTRAY);
-        if (null == el) {
-            el = new Element(SETTING_MINIMIZETOTRAY);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_MINIMIZETOTRAY, val);
     }
 
     /**
@@ -2246,11 +2151,7 @@ public class Settings {
      * @return {@code true} if autobackup should be activated
      */
     public boolean getAutoUpdate() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_AUTOUPDATE);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_AUTOUPDATE);
     }
 
     /**
@@ -2259,12 +2160,7 @@ public class Settings {
      * @param val true if the autobackup should be activated
      */
     public void setAutoUpdate(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_AUTOUPDATE);
-        if (null == el) {
-            el = new Element(SETTING_AUTOUPDATE);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_AUTOUPDATE, val);
     }
 
     /**
@@ -2275,11 +2171,7 @@ public class Settings {
      * added entries already have been added before, should be shown
      */
     public boolean getHideMultipleDesktopOccurencesDlg() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_HIDEMULTIPLEDESKTOPOCCURENCESDLG);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_HIDEMULTIPLEDESKTOPOCCURENCESDLG);
     }
 
     /**
@@ -2290,12 +2182,7 @@ public class Settings {
      * added entries already have been added before, should be shown
      */
     public void setHideMultipleDesktopOccurencesDlg(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_HIDEMULTIPLEDESKTOPOCCURENCESDLG);
-        if (null == el) {
-            el = new Element(SETTING_HIDEMULTIPLEDESKTOPOCCURENCESDLG);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_HIDEMULTIPLEDESKTOPOCCURENCESDLG, val);
     }
 
     /**
@@ -2304,11 +2191,7 @@ public class Settings {
      * @return {@code true} if a table of contents should be created when exporting desktop data.
      */
     public boolean getTOCForDesktopExport() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_TOCFORDESKTOPEXPORT);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_TOCFORDESKTOPEXPORT);
     }
 
     /**
@@ -2317,12 +2200,7 @@ public class Settings {
      * @param val {@code true} if a table of contents should be created when exporting desktop data.
      */
     public void setTOCForDesktopExport(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_TOCFORDESKTOPEXPORT);
-        if (null == el) {
-            el = new Element(SETTING_TOCFORDESKTOPEXPORT);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_TOCFORDESKTOPEXPORT, val);
     }
 
     /**
@@ -2333,11 +2211,7 @@ public class Settings {
      * removed
      */
     public boolean getRemoveLinesForDesktopExport() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_REMOVELINESFORDESKTOPEXPORT);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_REMOVELINESFORDESKTOPEXPORT);
     }
 
     /**
@@ -2348,12 +2222,7 @@ public class Settings {
      * removed
      */
     public void setRemoveLinesForDesktopExport(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_REMOVELINESFORDESKTOPEXPORT);
-        if (null == el) {
-            el = new Element(SETTING_REMOVELINESFORDESKTOPEXPORT);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_REMOVELINESFORDESKTOPEXPORT, val);
     }
 
     /**
@@ -2535,11 +2404,7 @@ public class Settings {
      * @return a string with a lowercase-2-letter-country-code for the default languags
      */
     public String getLanguage() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LOCALE);
-        if (el != null) {
-            return el.getText();
-        }
-        return Locale.getDefault().getLanguage();
+        return genericStringGetter(SETTING_LOCALE, Locale.getDefault().getLanguage());
     }
 
     /**
@@ -2548,12 +2413,7 @@ public class Settings {
      * @param lang a string with a lowercase-2-letter-country-code for the default languags
      */
     public void setLanguage(String lang) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LOCALE);
-        if (null == el) {
-            el = new Element(SETTING_LOCALE);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(lang.toLowerCase());
+        genericStringSetter(SETTING_LOCALE, lang.toLowerCase());
     }
 
     /**
@@ -5889,9 +5749,9 @@ public class Settings {
         }
         el.setText(String.valueOf(val));
     }
-    private String genericStringGetter(String key) {
+    private String genericStringGetter(String key, String defaultValue) {
         Element el = settingsFile.getRootElement().getChild(key);
-        String retval = "";
+        String retval = defaultValue;
         if (el != null) {
             retval = el.getText();
         }
