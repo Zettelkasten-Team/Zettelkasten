@@ -1373,7 +1373,7 @@ public class BibTex {
                     }
                 } // in some cases, we have books, that do not have authors but editors only... in this
                 // case, check whether we have an editor-field instead of author-field.
-                else if (f.equalsIgnoreCase("author") && (be.getEntryType().equalsIgnoreCase("book") || !entryTypeKnown)) {
+                else if (f.equalsIgnoreCase("author") && (be.getEntryType().equalsIgnoreCase("misc") || be.getEntryType().equalsIgnoreCase("book") || !entryTypeKnown)) {
                     // check whether we find an editor-field instead of author-field
                     if (ks.contains("editor")) {
                         // get abstract value. we do not convert it directly to string. in case "getFieldValue"
@@ -1402,16 +1402,22 @@ public class BibTex {
                         // first check, whether we have an author, because we need to split this
                         if (f.equalsIgnoreCase("author") || f.equalsIgnoreCase("editor")) {
                             // retrieve single authors
-                            String[] singleauthors = dummy.replace("{", "").replace("}", "").split(Pattern.quote(" and "));
+                            String[] singleauthors = dummy.replace("{{", "{").replace("}}", "}").split(Pattern.quote(" and "));
                             // prepare string builder
                             StringBuilder finalauthors = new StringBuilder("");
                             // iterate all found authors
                             for (String aunames : singleauthors) {
                                 // add separator
                                 finalauthors.append(", ");
+                                // we have already removed one curly braces. if we have another one,
+                                // we have a comolete author phrase that should not be separated
+                                // we can completely add it as authors
+                                if (aunames.contains("{")) {
+                                   finalauthors.append(aunames.replace("{", "").replace("}", ""));
+                                }
                                 // if author sur- and given-names are comma-separated, we assume that the
                                 // sur-name comes first
-                                if (aunames.contains(",")) {
+                                else if (aunames.contains(",")) {
                                     // retrieve sur and given name of author
                                     String[] names = aunames.trim().split(",");
                                     // check whether we have any author-field and value at all
@@ -1580,15 +1586,21 @@ public class BibTex {
                 return null;
             }
             // retrieve single authors
-            String[] singleauthors = dummy.replace("{", "").replace("}", "").split(Pattern.quote(" and "));
+            String[] singleauthors = dummy.replace("{{", "{").replace("}}", "}").split(Pattern.quote(" and "));
             // prepare string builder
             List<String> finalauthors = new ArrayList<>();
             // iterate all found authors
             for (String aunames : singleauthors) {
+                // we have already removed one curly braces. if we have another one,
+                // we have a comolete author phrase that should not be separated
+                // we can completely add it as authors
+                if (aunames.contains("{")) {
+                   finalauthors.add(aunames.replace("{", "").replace("}", ""));
+                }
                 // check how many authors we have
                 // if author sur- and given-names are comma-separated, we assume that the
                 // sur-name comes first
-                if (aunames.contains(",")) {
+                else if (aunames.contains(",")) {
                     // retrieve sur and given name of author
                     String[] names = aunames.trim().split(",");
                     // check whether we have any author-field and value at all
