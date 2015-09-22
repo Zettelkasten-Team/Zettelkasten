@@ -129,6 +129,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
     public static final int TASK_MERGEKEYWORDS = 18;
     public static final int TASK_ENTRIESTOLUHMANN = 19;
     public static final int TASK_CONVERTFORMATTAGS = 20;
+    public static final int TASK_REFRESHBIBTEX = 21;
 
     /**
      * This constructor is called when:
@@ -180,6 +181,38 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         startTask();
     }
 
+    /**
+     * 
+     * @param parent
+     * @param task_id
+     * @param td
+     * @param d
+     * @param bib
+     */
+    public TaskProgressDialog(java.awt.Frame parent, int task_id, TasksData td, Daten d, BibTex bib) {
+        super(parent);
+        dataObj = d;
+        bibtexObj = bib;
+        taskinfo = td;
+
+        initComponents();
+        // set application icon
+        setIconImage(Constants.zknicon.getImage());
+        // init the progress bar and status icon for
+        // the swingworker background thread
+        // creates a new class object. This variable is not used, it just associates task monitors to
+        // the background tasks. furthermore, by doing this, this class object also animates the
+        // busy icon and the progress bar of this frame.
+        InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
+        // check which task was requested and start that task
+        switch (task_id) {
+            case TASK_REFRESHBIBTEX:
+                foregroundTask = refreshBibTex();
+                break;
+        }
+        startTask();
+    }
+    
     /**
      * This constructor is called when:
      * <ul>
@@ -1128,6 +1161,17 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         // feedback during open and save operations
         return new LoadFileTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
                 this, msgLabel, dataObj, bookmarkObj, searchrequestsObj, desktopObj, synonymsObj, settingsObj, bibtexObj);
+    }
+
+    /**
+     *
+     * @return
+     */
+    private Task refreshBibTex() {
+        // initiate the "statusbar" (the loading splash screen), giving visiual
+        // feedback during open and save operations
+        return new RefreshBibTexTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
+                this, msgLabel, taskinfo, dataObj, bibtexObj);
     }
 
     /**

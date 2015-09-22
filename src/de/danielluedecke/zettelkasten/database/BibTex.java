@@ -542,9 +542,9 @@ public class BibTex {
         return settingsObj.getLastUsedBibtexFormat();
     }
 
-    public boolean refreshBibTexFile(Settings settingsObj, Daten dataObj) {
+    public boolean refreshBibTexFile(Settings settingsObj) {
         // attach new file
-        boolean success = openAttachedFile(Constants.BIBTEX_ENCODINGS[settingsObj.getLastUsedBibtexFormat()], false, true, dataObj);        
+        boolean success = openAttachedFile(Constants.BIBTEX_ENCODINGS[settingsObj.getLastUsedBibtexFormat()], false, true);        
         return success;
     }
     
@@ -561,11 +561,10 @@ public class BibTex {
      * @param updateExistingEntries {@code true} whether entries with identical bibkey that have
      * already been imported into the internal data base should be updated (replaced) with entries
      * from the attached bibtex file.
-     * @param dataObj a refrence to the Daten class.
      *
      * @return {@code true} if attachedfile was successfully opened, {@code false} otherwise.
      */
-    public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport, boolean updateExistingEntries, Daten dataObj) {
+    public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport, boolean updateExistingEntries) {
         // reset currently attached filepath
         currentlyattachedfile = null;
         // if we have no bibtex-filepath, return false
@@ -617,22 +616,8 @@ public class BibTex {
             Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             return false;
         }
-        // check whether existing entries should be replaced
-        if (updateExistingEntries && dataObj != null) {
-            // iterate all new entries
-            for (BibtexEntry attachedbibtexentry : attachedbibtexentries) {
-                // do we have this entry?
-                String bibkey = attachedbibtexentry.getEntryKey();
-                if (hasEntry(bibkey)) {
-                    // if yes, update it
-                    setEntry(bibkey, attachedbibtexentry);
-                    // and also update author data 
-                    dataObj.setAuthor(dataObj.getAuthorBibKeyPosition(bibkey), getFormattedEntry(attachedbibtexentry, true));
-                }
-            }
-        }
         // check whether missing entries should be added
-        if (!suppressNewEntryImport) {
+        if (!updateExistingEntries && !suppressNewEntryImport) {
             // add all new entries to data base
             int newentries = addEntries(attachedbibtexentries);
             // tell user
@@ -657,7 +642,7 @@ public class BibTex {
      * @return {@code true} if attachedfile was successfully opened, {@code false} otherwise.
      */
     public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport) {
-        return openAttachedFile(encoding, suppressNewEntryImport, false, null);
+        return openAttachedFile(encoding, suppressNewEntryImport, false);
     }
     
     /**
@@ -1385,10 +1370,11 @@ public class BibTex {
      * for instance <b>" (2009):"</b>.
      *
      * @param be the BibtexEntry that should be formatted
+     * @param fromAttachedFile
      * @return the formatted output-string containing author, year and title-information of the
      * BibtexEntry {@code be}.
      */
-    private String getFormattedEntry(BibtexEntry be, boolean fromAttachedFile) {
+    public String getFormattedEntry(BibtexEntry be, boolean fromAttachedFile) {
         // if we found any entry, go on...
         if (be != null) {
             // get all entry fields
@@ -1457,6 +1443,14 @@ public class BibTex {
                         // get abstract value. we do not convert it directly to string. in case "getFieldValue"
                         // returns null, this would lead to a nullpointerexception.
                         BibtexAbstractValue bav = be.getFieldValue("editor");
+                        if (bav != null) {
+                            dummy = bav.toString();
+                        }
+                    } // check whether we find an collaborator-field instead of author-field
+                    else if (ks.contains("collaborator")) {
+                        // get abstract value. we do not convert it directly to string. in case "getFieldValue"
+                        // returns null, this would lead to a nullpointerexception.
+                        BibtexAbstractValue bav = be.getFieldValue("collaborator");
                         if (bav != null) {
                             dummy = bav.toString();
                         }
@@ -1659,6 +1653,14 @@ public class BibTex {
                 // get abstract value. we do not convert it directly to string. in case "getFieldValue"
                 // returns null, this would lead to a nullpointerexception.
                 BibtexAbstractValue bav = be.getFieldValue("editor");
+                if (bav != null) {
+                    dummy = bav.toString();
+                }
+            } // check whether we find an collaborator-field instead of author-field
+            else if (ks.contains("collaborator")) {
+                // get abstract value. we do not convert it directly to string. in case "getFieldValue"
+                // returns null, this would lead to a nullpointerexception.
+                BibtexAbstractValue bav = be.getFieldValue("collaborator");
                 if (bav != null) {
                     dummy = bav.toString();
                 }

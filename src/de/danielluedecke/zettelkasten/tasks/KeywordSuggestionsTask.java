@@ -51,41 +51,41 @@ public class KeywordSuggestionsTask extends org.jdesktop.application.Task<Object
     /**
      * Daten object, which contains the XML data of the Zettelkasten
      */
-    private Daten dataObj;
+    private final Daten dataObj;
     /**
      *
      */
-    private TasksData taskinfo;
+    private final TasksData taskinfo;
     /**
      *
      */
-    private Synonyms synonymsObj;
+    private final Synonyms synonymsObj;
     /**
      *
      */
-    private Settings settingsObj;
+    private final Settings settingsObj;
     /**
      * Indicates whether we have an extended quick input setting. when this setting is activated,
      * keyword-values consisting of more than one word are splitted, and the occurence of each
      * keyword-part is searched in the main entries content. if found, the related keyword also
      * counts as match.
      */
-    private int extendedQuickInput;
+    private final int extendedQuickInput;
     /**
      * Indictaes which of the four steps for the quick input is currently processed.
      */
-    private int quickstep;
+    private final int quickstep;
     /**
      * The entry-text that contains the content of the entry, where we want to find related
      * keywords for.
      */
-    private String entrytext;
+    private final String entrytext;
     /**
      * The keywords the user selected in the first step of the quick input. needed to retrieve
      * the keywords for the seconde step, since in this 2. step we want to have all related keywords
      * of those keywords that have been selected in the first step.
      */
-    private LinkedList<String> selectedKeywords;
+    private final LinkedList<String> selectedKeywords;
     /**
      * A List containing the remaining keywords that haven't been retrieved during the past quick
      * input steps. having this list, we don't need to look through the whole keyword list on the
@@ -101,18 +101,34 @@ public class KeywordSuggestionsTask extends org.jdesktop.application.Task<Object
      * Similar to {@link #selectedKeywords selectedKeywords}. We need the keywords of the first step
      * for the third step. See task-comments below.
      */
-    private LinkedList<String> fromFirstStep;
+    private final LinkedList<String> fromFirstStep;
 
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
 
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(KeywordSuggestionsTask.class);
 
+    /**
+     * 
+     * @param app
+     * @param parent
+     * @param label
+     * @param td
+     * @param d
+     * @param syn
+     * @param st
+     * @param eqi
+     * @param step
+     * @param sel
+     * @param rest
+     * @param ffs
+     * @param t 
+     */
     KeywordSuggestionsTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label,
                         TasksData td, Daten d, Synonyms syn, Settings st,
                         int eqi, int step, LinkedList<String> sel, LinkedList<String> rest, LinkedList<String> ffs, String t) {
@@ -144,7 +160,7 @@ public class KeywordSuggestionsTask extends org.jdesktop.application.Task<Object
         // definition of variables
         Iterator<String> i;
         // create list for the new keywords
-        newKeywords = new LinkedList<String>();
+        newKeywords = new LinkedList<>();
 
         switch (quickstep) {
             /*
@@ -166,7 +182,7 @@ public class KeywordSuggestionsTask extends org.jdesktop.application.Task<Object
              */
             case 1:
                 // create the list with remaining keywords
-                remainingKeywords = new LinkedList<String>();
+                remainingKeywords = new LinkedList<>();
                 // copy all keywords to the remaining list
                 for (int cnt=1; cnt<=dataObj.getCount(Daten.KWCOUNT); cnt++) {
                     String kw = dataObj.getKeyword(cnt);

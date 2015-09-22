@@ -199,7 +199,6 @@ import org.jdom2.output.XMLOutputter;
 public class ZettelkastenView extends FrameView implements WindowListener, DropTargetListener {
 
     // <editor-fold defaultstate="collapsed" desc="Variablendeklaration">
-
     /**
      * initiate the data class. this class stores and manages the main data for
      * this program.
@@ -521,7 +520,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             getContext().getResourceMap(ToolbarIcons.class);
 
     // </editor-fold>
-
     /**
      *
      * @param app
@@ -2954,7 +2952,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         settings.setLuhmannExpandLevel(1);
         showLuhmann(true);
     }
-    
+
     /**
      * Sets the default expand level of jLuhmannTree to second level.
      */
@@ -2963,7 +2961,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         settings.setLuhmannExpandLevel(2);
         showLuhmann(true);
     }
-    
+
     /**
      * Sets the default expand level of jLuhmannTree to third level.
      */
@@ -2972,7 +2970,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         settings.setLuhmannExpandLevel(3);
         showLuhmann(true);
     }
-    
+
     /**
      * Sets the default expand level of jLuhmannTree to fourth level.
      */
@@ -2981,7 +2979,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         settings.setLuhmannExpandLevel(4);
         showLuhmann(true);
     }
-    
+
     /**
      * Sets the default expand level of jLuhmannTree to fifth level.
      */
@@ -2990,7 +2988,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         settings.setLuhmannExpandLevel(5);
         showLuhmann(true);
     }
-    
+
     /**
      * Sets the default expand level of jLuhmannTree to all level.
      */
@@ -2999,7 +2997,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         settings.setLuhmannExpandLevel(-1);
         showLuhmann(true);
     }
-    
+
     /**
      * This method checks whether a certain menu has already been added to the
      * menu bar. We need this to avoid multiple occurences of same menus that
@@ -3518,7 +3516,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * So, the Luhmann-numbers of an entry only have one subordinated level of
      * sub-entries. the tree- structure comes from those sub-entries, that might
      * have their own sub-entries again.
-     * 
+     *
      * @param resetCollapsedNodes logical, {@code true} if all former collapsed
      * nodes should be expanded now, or {@code false} if collapsed state should
      * be remembered.
@@ -5387,16 +5385,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-
     private boolean addKeywords(String[] kws, boolean comesFromTextSelection) {
         // check for valid array
-        if ((kws!=null)&&(kws.length>0)) {
+        if ((kws != null) && (kws.length > 0)) {
             // add keywords to entry... all relevant stuff like checking for multiple keywords,
             // synonyms or their related index-words etc. is done in this mehtod. an array of those
             // keywords that have been added is returned.
             kws = data.addKeywordsToEntry(kws, displayedZettel, 1);
             // iterate array and update table-frequencies.
-            if (kws!=null && kws.length>0) {
+            if (kws != null && kws.length > 0) {
                 // update table with linked list. when "comesFromTextSelection" is true, we have
                 // to check whether we have a completely new keyword, so we have to use the
                 // updateTableFrequencyNew-method, or an existing one...
@@ -5410,38 +5407,38 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         // exists or not. if *not*, selectedKeywordExists is set to true - so we can use another
                         // updateTable-Method below. in case we find the keyword, so it already exists, we leave
                         // "selectedKeywordExists" to false, so below is a simple change-frequency update
-                        boolean selectedKeywordExists = (data.getKeywordPosition(k,false)!=-1);
+                        boolean selectedKeywordExists = (data.getKeywordPosition(k, false) != -1);
                         // in this case we have an existing keyword from the text selection, so we need
                         // to update the keyword-list
                         if (selectedKeywordExists) {
                             // to update the list, we have to select the added keyword in the
                             // jTable. we do this here, and then we call the update method which
                             // adds selected keywords as new keywords
-                            for (int cnt=0;cnt<jTableKeywords.getRowCount();cnt++) {
+                            for (int cnt = 0; cnt < jTableKeywords.getRowCount(); cnt++) {
                                 // get each value
-                                String val = jTableKeywords.getValueAt(cnt,0).toString();
+                                String val = jTableKeywords.getValueAt(cnt, 0).toString();
                                 // if table-value starts with the entered text in the textfield...
                                 if (val.equals(k)) {
                                     // ...select that value
-                                    jTableKeywords.getSelectionModel().setSelectionInterval(cnt,cnt);
+                                    jTableKeywords.getSelectionModel().setSelectionInterval(cnt, cnt);
                                     // and make it visible
-                                    jTableKeywords.scrollRectToVisible(jTableKeywords.getCellRect(cnt,0,false));
+                                    jTableKeywords.scrollRectToVisible(jTableKeywords.getCellRect(cnt, 0, false));
                                 }
                             }
                             linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableKeywords, linkedkeywordlist, k, 1);
-                        }
-                        // in this case we have a new keyword from the text selection, which is added
+                        } // in this case we have a new keyword from the text selection, which is added
                         // to the keyword-list
                         else {
                             linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyNew(jTableKeywords, linkedkeywordlist, k, 1);
                         }
                     }
-                }
-                // else when we have already existing keywords, update table with linked list using
+                } // else when we have already existing keywords, update table with linked list using
                 // the updateTableFrequencyChange-method.
                 else {
-                    for (String k: kws) {
-                        if (!k.isEmpty()) linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableKeywords, linkedkeywordlist, k, 1);
+                    for (String k : kws) {
+                        if (!k.isEmpty()) {
+                            linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableKeywords, linkedkeywordlist, k, 1);
+                        }
                     }
                 }
                 // update the display
@@ -5452,27 +5449,29 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         return false;
     }
 
-
     /**
      * Adds the displayed entry to the bookmark list.
      */
     @Action(enabledProperty = "entryBookmarked")
     public void addToBookmark() {
-        addToBookmarks(new int[] {displayedZettel}, false);
+        addToBookmarks(new int[]{displayedZettel}, false);
     }
 
-    
     /**
      * Adds one or more bookmarks to the bookmark-datafile.
-     * 
-     * @param bms one or more bookmarks (entry-numbers) stored in an integer-array
-     * @param edit true when existing bookmarks should be edited, false if new bookmarks
-     * should be added.
-     * @return {@code true} if bookmarks have been successfully added, false if an error occured
+     *
+     * @param bms one or more bookmarks (entry-numbers) stored in an
+     * integer-array
+     * @param edit true when existing bookmarks should be edited, false if new
+     * bookmarks should be added.
+     * @return {@code true} if bookmarks have been successfully added, false if
+     * an error occured
      */
     public boolean addToBookmarks(int[] bms, boolean edit) {
         // return false on null or empty array
-        if (null==bms||bms.length<1) return false;
+        if (null == bms || bms.length < 1) {
+            return false;
+        }
         // open the bookmark-dialog
         if (null == newBookmarkDlg) {
             // create a new dialog for editing new bookmarks
@@ -5485,49 +5484,50 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // when the dialog is not cancelled, update display
         if (!newBookmarkDlg.isCancelled()) {
             // update bookmarks-list if it is displayed
-            if (TAB_BOOKMARKS==jTabbedPaneMain.getSelectedIndex()) showBookmarks();
+            if (TAB_BOOKMARKS == jTabbedPaneMain.getSelectedIndex()) {
+                showBookmarks();
+            }
             // and toolbar
             updateToolbarAndMenu();
         }
         // delete the input-dialog
         newBookmarkDlg.dispose();
-        newBookmarkDlg=null;
+        newBookmarkDlg = null;
         // everything ok
         return true;
     }
 
-    
     private void addAttachments(String[] att) {
         // add attachments
         data.addAttachments(displayedZettel, att);
         // update display
         displayZettelContent(displayedZettel);
     }
-    
-    
+
     /**
-     * This method retrieves the selected authors(s) from the jTableAuthors and adds
-     * them to the author-textfield of the entry.
+     * This method retrieves the selected authors(s) from the jTableAuthors and
+     * adds them to the author-textfield of the entry.
      */
     @Action(enabledProperty = "tableEntriesSelected")
     public void addAuthorToList() {
         // check for any selections. if nothing selected, leave
-        if (jTableAuthors.getRowCount()<1) return;
+        if (jTableAuthors.getRowCount() < 1) {
+            return;
+        }
         // get selections
-        String[] aus = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors,0);
+        String[] aus = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors, 0);
         addAuthorToList(aus);
     }
 
-
     private void addAuthorToList(String[] aus) {
         // check for valid array
-        if ((aus!=null)&&(aus.length>0)) {
+        if ((aus != null) && (aus.length > 0)) {
             // iterate array
-            for (String a: aus) {
+            for (String a : aus) {
                 // if the author does not already exist in the current entry...
-                if (!a.isEmpty() && !data.existsInAuthors(a,displayedZettel)) {
+                if (!a.isEmpty() && !data.existsInAuthors(a, displayedZettel)) {
                     // ...add it to that entry
-                    data.addAuthorToEntry(a,displayedZettel,1);
+                    data.addAuthorToEntry(a, displayedZettel, 1);
                     // and update table frequencies...
                     linkedauthorlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableAuthors, linkedauthorlist, a, 1);
                 }
@@ -5537,7 +5537,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-    
     /**
      * This action shows the tab with the sub-entries of an entry.
      * <br><br>
@@ -5549,8 +5548,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void menuShowLuhmann() {
         jTabbedPaneMain.setSelectedIndex(TAB_LUHMANN);
     }
-    
-    
+
     /**
      * This action shows the tab with the authors of the main data.
      * <br><br>
@@ -5562,8 +5560,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void menuShowAuthors() {
         jTabbedPaneMain.setSelectedIndex(TAB_AUTHORS);
     }
-    
-    
+
     /**
      * This action shows the tab with the bookmarks.
      * <br><br>
@@ -5575,21 +5572,24 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void menuShowBookmarks() {
         jTabbedPaneMain.setSelectedIndex(TAB_BOOKMARKS);
     }
-    
-    
+
     private void showAttachments() {
         // if no data available, leave method
-        if (data.getCount(Daten.ZKNCOUNT)<1) return;
+        if (data.getCount(Daten.ZKNCOUNT) < 1) {
+            return;
+        }
         // reset status text, since the amount of titles is euqal to the amount of entries
         statusMsgLabel.setText("");
         // show/enabke related menu
         showTabMenu(viewMenuAttachments);
         // if list is up to date, leave method
-        if (data.isAttachmentlistUpToDate()) return;
+        if (data.isAttachmentlistUpToDate()) {
+            return;
+        }
         // if dialog window isn't already created, do this now
         if (null == taskDlg) {
             // get parent und init window
-            taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWATTACHMENTS, data, null /*only needed for authors*/, null /*only needed for authors*/, settings, false /*only need for keywords*/, 0 /*only need for authors*/, (DefaultTableModel)jTableAttachments.getModel());
+            taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWATTACHMENTS, data, null /*only needed for authors*/, null /*only needed for authors*/, settings, false /*only need for keywords*/, 0 /*only need for authors*/, (DefaultTableModel) jTableAttachments.getModel());
             // center window
             taskDlg.setLocationRelativeTo(getFrame());
         }
@@ -5598,14 +5598,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         taskDlg.dispose();
         taskDlg = null;
         // enable textfield only if we have more than 1 element in the jtable
-        jTextFieldFilterAttachments.setEnabled(jTableAttachments.getRowCount()>0);
+        jTextFieldFilterAttachments.setEnabled(jTableAttachments.getRowCount() > 0);
         // show amount of entries
-        statusMsgLabel.setText("("+String.valueOf(jTableAttachments.getRowCount())+" "+getResourceMap().getString("statusTextAttachments")+")");
+        statusMsgLabel.setText("(" + String.valueOf(jTableAttachments.getRowCount()) + " " + getResourceMap().getString("statusTextAttachments") + ")");
         // try to motivate garbage collector
         System.gc();
     }
-    
-    
+
     /**
      * This method displays the all bookmarks in the jtable
      */
@@ -5616,7 +5615,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         ActionListener[] al = jComboBoxBookmarkCategory.getActionListeners();
         // remove all action listeners so we don't fire several action-events
         // when we update the combo box. we can set the action listener later again
-        for (ActionListener listener : al) jComboBoxBookmarkCategory.removeActionListener(listener);
+        for (ActionListener listener : al) {
+            jComboBoxBookmarkCategory.removeActionListener(listener);
+        }
         // clear combobox
         jComboBoxBookmarkCategory.removeAllItems();
         // add first cat-description
@@ -5624,22 +5625,24 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // retrieve bookmark-categories
         String[] bmcats = bookmarks.getCategoriesInSortedOrder();
         // check if we have any categories
-        if (bmcats!=null && bmcats.length>0) {
+        if (bmcats != null && bmcats.length > 0) {
             // iterate array and add categories to combobox
-            for (String bmc : bmcats) jComboBoxBookmarkCategory.addItem(bmc);
+            for (String bmc : bmcats) {
+                jComboBoxBookmarkCategory.addItem(bmc);
+            }
         }
         // add action listener to combo box
         jComboBoxBookmarkCategory.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 // get selection
                 int selected = jComboBoxBookmarkCategory.getSelectedIndex();
                 // check for valid selection
-                if (selected!=-1) {
+                if (selected != -1) {
                     // check whether first value was selected. if so, show all bookmarks
-                    if (0==selected) {
+                    if (0 == selected) {
                         fillBookmarksToTables(bookmarks.getAllBookmarkedEntries());
-                    }
-                    // else retrieve category and show only bookmarks of the selected category
+                    } // else retrieve category and show only bookmarks of the selected category
                     else {
                         // retrieve selected category
                         String cat = jComboBoxBookmarkCategory.getSelectedItem().toString();
@@ -5647,18 +5650,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         fillBookmarksToTables(bookmarks.getBookmarkedEntriesFromCat(cat));
                     }
                     // show amount of entries
-                    statusMsgLabel.setText("("+String.valueOf(jTableBookmarks.getRowCount())+" "+getResourceMap().getString("statusTextBookmarks")+")");
+                    statusMsgLabel.setText("(" + String.valueOf(jTableBookmarks.getRowCount()) + " " + getResourceMap().getString("statusTextBookmarks") + ")");
                 }
             }
         });
         // show/enabke related menu
         showTabMenu(viewMenuBookmarks);
         // show amount of entries
-        statusMsgLabel.setText("("+String.valueOf(jTableBookmarks.getRowCount())+" "+getResourceMap().getString("statusTextBookmarks")+")");
+        statusMsgLabel.setText("(" + String.valueOf(jTableBookmarks.getRowCount()) + " " + getResourceMap().getString("statusTextBookmarks") + ")");
     }
+
     /**
-     * This method fills all bookmarked entries, which are passed as parameter {@code bms},
-     * into the jTableBookmarks.
+     * This method fills all bookmarked entries, which are passed as parameter
+     * {@code bms}, into the jTableBookmarks.
      *
      * @param bms an integer-array with all bookmarked entries.
      */
@@ -5668,15 +5672,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // reset the table
         tm.setRowCount(0);
         // check if we have any bookmarks at all
-        if (bms!=null && bms.length>0) {
+        if (bms != null && bms.length > 0) {
             // sort array
             Arrays.sort(bms);
             // go through all bookmark-entries
-            for (int cnt=0; cnt<bms.length; cnt++) {
+            for (int cnt = 0; cnt < bms.length; cnt++) {
                 // get bookmark
                 String[] bm = bookmarks.getCompleteBookmark(bookmarks.getBookmarkPosition(bms[cnt]));
                 // check if bookmark exists
-                if (bm!=null) {
+                if (bm != null) {
                     // create a new object
                     Object[] ob = new Object[2];
                     // store the information in that object
@@ -5689,25 +5693,29 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-    
     /**
-     * This method displays the all authors in the author data file using
-     * a background task. after the task finishes, all authors and their useage frequency
-     * in the main data file (zknfile) are displayed in the JTable of the JTabbedPane
+     * This method displays the all authors in the author data file using a
+     * background task. after the task finishes, all authors and their useage
+     * frequency in the main data file (zknfile) are displayed in the JTable of
+     * the JTabbedPane
      */
     private void showAuthors() {
         // if no data available, leave method
-        if (data.getCount(Daten.ZKNCOUNT)<1) return;
+        if (data.getCount(Daten.ZKNCOUNT) < 1) {
+            return;
+        }
         // show amount of entries
-        statusMsgLabel.setText("("+String.valueOf(jTableAuthors.getRowCount())+" "+getResourceMap().getString("statusTextAuthors")+")");
+        statusMsgLabel.setText("(" + String.valueOf(jTableAuthors.getRowCount()) + " " + getResourceMap().getString("statusTextAuthors") + ")");
         // show/enable related menu
         showTabMenu(viewMenuAuthors);
         // if authorlist is up to date, leave method
-        if (data.isAuthorlistUpToDate()) return;
+        if (data.isAuthorlistUpToDate()) {
+            return;
+        }
         // if dialog window isn't already created, do this now
         if (null == taskDlg) {
             // get parent und init window
-            taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWAUTHORS, data, null /*only needed for keywords*/, bibtex, null /*only needed for attachments*/, false /*only needed for keywords*/, jComboBoxAuthorType.getSelectedIndex(), (DefaultTableModel)jTableAuthors.getModel());
+            taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWAUTHORS, data, null /*only needed for keywords*/, bibtex, null /*only needed for attachments*/, false /*only needed for keywords*/, jComboBoxAuthorType.getSelectedIndex(), (DefaultTableModel) jTableAuthors.getModel());
             // center window
             taskDlg.setLocationRelativeTo(getFrame());
         }
@@ -5716,21 +5724,20 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         taskDlg.dispose();
         taskDlg = null;
         // check whether we have a new added author, and if so, select it
-        if (newAddedAuthor!=null) {
+        if (newAddedAuthor != null) {
             // select recently added value
             de.danielluedecke.zettelkasten.util.TableUtils.selectValueInTable(jTableAuthors, newAddedAuthor, 0);
             // and clear strimg
             newAddedAuthor = null;
         }
         // enable textfield only if we have more than 1 element in the jtable
-        jTextFieldFilterAuthors.setEnabled(jTableAuthors.getRowCount()>0);
+        jTextFieldFilterAuthors.setEnabled(jTableAuthors.getRowCount() > 0);
         // show amount of entries
-        statusMsgLabel.setText("("+String.valueOf(jTableAuthors.getRowCount())+" "+getResourceMap().getString("statusTextAuthors")+")");
+        statusMsgLabel.setText("(" + String.valueOf(jTableAuthors.getRowCount()) + " " + getResourceMap().getString("statusTextAuthors") + ")");
         // try to motivate garbage collector
         System.gc();
     }
-    
-    
+
     /**
      * This action shows the tab with the titles of the current data file.
      * <br><br>
@@ -5742,7 +5749,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void menuShowTitles() {
         jTabbedPaneMain.setSelectedIndex(TAB_TITLES);
     }
-    
 
     /**
      * This action shows the tab with the titles of the current data file.
@@ -5755,7 +5761,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void menuShowCluster() {
         jTabbedPaneMain.setSelectedIndex(TAB_CLUSTER);
     }
-    
 
     /**
      * This methods displays the entry which is selected in the titles-table
@@ -5764,45 +5769,56 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private void showEntryFromTitles() {
         // if no data available, leave method
-        if (data.getCount(Daten.ZKNCOUNT)<1) return;
+        if (data.getCount(Daten.ZKNCOUNT) < 1) {
+            return;
+        }
         // get the selected row
-        int entry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableTitles,0);
+        int entry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableTitles, 0);
         // if we don't have a valid selection, use current entry as reference
-        if (-1==entry) updateDisplayParts(data.getCurrentZettelPos());
-        // and if it was a avalid value, show entry
-        else updateDisplayParts(entry);
+        if (-1 == entry) {
+            updateDisplayParts(data.getCurrentZettelPos());
+        } // and if it was a avalid value, show entry
+        else {
+            updateDisplayParts(entry);
+        }
     }
-            
 
     /**
      * This methods displays the entry which is selected in the attachment-table
-     * (jTableAttachment). This method is especially called from the mouse-clicked
-     * and key-released events from the jTableTitle.
+     * (jTableAttachment). This method is especially called from the
+     * mouse-clicked and key-released events from the jTableTitle.
      */
     private void showEntryFromAttachments() {
         // if no data available, leave method
-        if (data.getCount(Daten.ZKNCOUNT)<1) return;
+        if (data.getCount(Daten.ZKNCOUNT) < 1) {
+            return;
+        }
         // get the selected row
-        int entry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableAttachments,2);
+        int entry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableAttachments, 2);
         // if we don't have a valid selection, use current entry as reference
-        if (-1==entry) updateDisplayParts(data.getCurrentZettelPos());
-        // and if it was a avalid value, show entry
-        else updateDisplayParts(entry);
+        if (-1 == entry) {
+            updateDisplayParts(data.getCurrentZettelPos());
+        } // and if it was a avalid value, show entry
+        else {
+            updateDisplayParts(entry);
+        }
     }
 
-
     /**
-     * This method retrieves the selected authors from the jTableAuthors and displays
-     * in the text area on the author-tab, so the user can see the complete author-value.
-     * the table-row usually is not wide enough to display the whole author-text
+     * This method retrieves the selected authors from the jTableAuthors and
+     * displays in the text area on the author-tab, so the user can see the
+     * complete author-value. the table-row usually is not wide enough to
+     * display the whole author-text
      */
     public void showAuthorText() {
         // if no data available, leave method
-        if (data.getCount(Daten.AUCOUNT)<1) return;
+        if (data.getCount(Daten.AUCOUNT) < 1) {
+            return;
+        }
         // get selected authors from table
-        String[] aus = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors,0);
+        String[] aus = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors, 0);
         // if we have any selection, go on
-        if (aus!=null&&aus.length>0) {
+        if (aus != null && aus.length > 0) {
             // string builder for output
             StringBuilder sb = new StringBuilder("");
             // append style-definition
@@ -5815,120 +5831,139 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // get author-bibkey
                 String bibkey = data.getAuthorBibKey(a);
                 // if bibkey available, add it as well
-                if (bibkey!=null && !bibkey.isEmpty()) sb.append(" <i>(Bibkey: ").append(bibkey).append(")</i>");
+                if (bibkey != null && !bibkey.isEmpty()) {
+                    sb.append(" <i>(Bibkey: ").append(bibkey).append(")</i>");
+                }
                 // add line-separators
                 sb.append("<br><br>");
             }
             // cut of last two line separators
-            if (sb.length()>0) sb.setLength(sb.length()-8);
-            finalcontent = finalcontent+"<body>"+sb.toString()+"</body>";
+            if (sb.length() > 0) {
+                sb.setLength(sb.length() - 8);
+            }
+            finalcontent = finalcontent + "<body>" + sb.toString() + "</body>";
             // show full author-text in text area
             jEditorPaneDispAuthor.setText(finalcontent);
+        } else {
+            jEditorPaneDispAuthor.setText("");
         }
-        else jEditorPaneDispAuthor.setText("");
     }
-
 
     /**
      * This methods displays the entry which is selected in the bookmarks-table
-     * (jTableBookmarks). This method is especially called from the mouse-clicked
-     * and key-released events from the jTableBookmarks.
+     * (jTableBookmarks). This method is especially called from the
+     * mouse-clicked and key-released events from the jTableBookmarks.
      */
     private void showEntryFromBookmarks() {
         // if no data available, leave method
-        if (data.getCount(Daten.ZKNCOUNT)<1) return;
+        if (data.getCount(Daten.ZKNCOUNT) < 1) {
+            return;
+        }
         // get the entry number from selected bookmark
-        int nr = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableBookmarks,0);
+        int nr = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableBookmarks, 0);
         // if no entry is selected, show current entry
-        if (-1==nr) {
+        if (-1 == nr) {
             // clear textfield content
             jEditorPaneBookmarkComment.setText("");
             // and update display
             updateDisplayParts(data.getCurrentZettelPos());
-        }
-        else {
+        } else {
             // get the selected row
             int row = jTableBookmarks.getSelectedRow();
             // show comment of bookmark
-            String comment = (row!=-1)?bookmarks.getCommentAsHtml(row):"";
+            String comment = (row != -1) ? bookmarks.getCommentAsHtml(row) : "";
             // show comment
             jEditorPaneBookmarkComment.setText(comment);
             // update displaypart
             updateDisplayParts(nr);
         }
     }
-    
-    
+
     private void showEntryFromManualLinks() {
         // if no data available, leave method
-        if (data.getCount(Daten.ZKNCOUNT)<1) return;
+        if (data.getCount(Daten.ZKNCOUNT) < 1) {
+            return;
+        }
         // get the selected row
-        int entry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableManLinks,0);
+        int entry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableManLinks, 0);
         // if we don't have a valid selection, use current entry as reference
-        if (-1==entry) updateDisplayParts(data.getCurrentZettelPos());
-        // and if it was a avalid value, show entry
-        else updateDisplayParts(entry);
+        if (-1 == entry) {
+            updateDisplayParts(data.getCurrentZettelPos());
+        } // and if it was a avalid value, show entry
+        else {
+            updateDisplayParts(entry);
+        }
     }
 
-    
     /**
-     * This method displays the the keyword-clusters, i.e. the relation between keywords and those
-     * entries that contain all these related keywords.
+     * This method displays the the keyword-clusters, i.e. the relation between
+     * keywords and those entries that contain all these related keywords.
      * <br><br>
-     * Therefore, this method first displays all keywords as first-level-elements of the jTreeCluster.
-     * Then, when a keyword is selected, this method searches for all entries that contain this
-     * keyword and sets the related entry-numbers into the jListCluster.
+     * Therefore, this method first displays all keywords as
+     * first-level-elements of the jTreeCluster. Then, when a keyword is
+     * selected, this method searches for all entries that contain this keyword
+     * and sets the related entry-numbers into the jListCluster.
      * <br><br>
-     * After that, all keywords of those found entries are collected and displayed as children
-     * of the selected keyword. This repeats for each selected keyword, i.e. if a children is selected,
-     * the method searches for the selected keyword and all parent-keywords in the entries of the jList.
-     * All entries, that contain each(!) keyword from the first-level-keyword to the selected child
-     * will be displayed in the jList.
+     * After that, all keywords of those found entries are collected and
+     * displayed as children of the selected keyword. This repeats for each
+     * selected keyword, i.e. if a children is selected, the method searches for
+     * the selected keyword and all parent-keywords in the entries of the jList.
+     * All entries, that contain each(!) keyword from the first-level-keyword to
+     * the selected child will be displayed in the jList.
      */
     private void showCluster() {
         // if no data available, leave method
-        if (data.getCount(Daten.ZKNCOUNT)<1) return;
+        if (data.getCount(Daten.ZKNCOUNT) < 1) {
+            return;
+        }
         // when a cluster-taks is already running, return
-        if (createClusterIsRunning) return;
+        if (createClusterIsRunning) {
+            return;
+        }
         // show/enabke related menu
         showTabMenu(viewMenuCluster);
         // if clusterlist is up to date, leave method
-        if (data.isClusterlistUpToDate()) return;
+        if (data.isClusterlistUpToDate()) {
+            return;
+        }
         // reset status text, since the amount of titles is euqal to the amount of entries
         statusMsgLabel.setText("");
         // init the cluster list. this method is separate, because we can
         // also use it for the "refreshClusterList()" method.
         initClusterList();
-        
+
         if (!jCheckBoxCluster.isSelected()) {
             // enable textfield only if we have more than 1 element in the jTree
-            jTextFieldFilterCluster.setEnabled(jTreeCluster.getRowCount()>1);
+            jTextFieldFilterCluster.setEnabled(jTreeCluster.getRowCount() > 1);
             // show amount of entries
-            statusMsgLabel.setText("("+String.valueOf(jTreeCluster.getRowCount())+" "+getResourceMap().getString("statusTextKeywords")+")");
+            statusMsgLabel.setText("(" + String.valueOf(jTreeCluster.getRowCount()) + " " + getResourceMap().getString("statusTextKeywords") + ")");
         }
     }
-    
-    
+
     private synchronized void initClusterList() {
         // get the treemodel
-        DefaultTreeModel dtm = (DefaultTreeModel)jTreeCluster.getModel();
+        DefaultTreeModel dtm = (DefaultTreeModel) jTreeCluster.getModel();
         // and first of all, clear the jTree
         dtm.setRoot(null);
         // get the amount of keywords
         int kwcount = data.getCount(Daten.KWCOUNT);
         // if we have no keywords, quit
-        if (kwcount<1) return;
+        if (kwcount < 1) {
+            return;
+        }
         // if this checkbox is selected, we don't show the relations of *all*
         // keywords, but only of those keywords that appear in the current entry
         // and all related keywords of the current entry's keywords.
         if (jCheckBoxCluster.isSelected()) {
             // when a cluster-taks is already running, return
-            if (createClusterIsRunning) return;
+            if (createClusterIsRunning) {
+                return;
+            }
             // disable checkbox during task operation
             jCheckBoxCluster.setEnabled(false);
             // tell user that we are doing something...
             statusMsgLabel.setText(getResourceMap().getString("createLuhmannMsg"));
-            
+
             Task ccT = clusterTask();
             // get the application's context...
             ApplicationContext appC = Application.getInstance().getContext();
@@ -5938,27 +5973,32 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // with these we can execute the task and bring it to the foreground
             // i.e. making the animated progressbar and busy icon visible
             tS.execute(ccT);
-            tM.setForegroundTask(ccT);    
-        }
-        else {
+            tM.setForegroundTask(ccT);
+        } else {
             // else create a string array (for sorting the keywords)
             String[] kws = new String[kwcount];
             // copy all keywords to that array
-            for (int cnt=1; cnt<=kwcount; cnt++) kws[cnt-1] = data.getKeyword(cnt);
+            for (int cnt = 1; cnt <= kwcount; cnt++) {
+                kws[cnt - 1] = data.getKeyword(cnt);
+            }
             // sort the array
-            if (kws!=null && kws.length>0) Arrays.sort(kws, new Comparer());
+            if (kws != null && kws.length > 0) {
+                Arrays.sort(kws, new Comparer());
+            }
             // set this as root node. we don't need to care about this, since the
             // root is not visible.
             DefaultMutableTreeNode root = new DefaultMutableTreeNode("ZKN3-Cluster");
             dtm.setRoot(root);
             // if we have any keywords, set them to the list
-            if (kws!=null) {
+            if (kws != null) {
                 // for each array in the keyword-array...
                 for (String kw : kws) {
                     // create a new node and add the keyword to the tree
                     // remember that we might have empty keyword-entries in the array, which
                     // have to be "removed" here
-                    if (!kw.isEmpty()) root.add(new DefaultMutableTreeNode(kw));
+                    if (!kw.isEmpty()) {
+                        root.add(new DefaultMutableTreeNode(kw));
+                    }
                 }
                 // completely expand the jTree
                 TreeUtil.expandAllTrees(true, jTreeCluster);
@@ -5970,49 +6010,64 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-    
     /**
-     * This method builds the cluster or keyword-relations. That means, all entries that contain
-     * <b>all</b> keywords from the tree root through the selected path are extracted and displayed
-     * in the related list.
+     * This method builds the cluster or keyword-relations. That means, all
+     * entries that contain
+     * <b>all</b> keywords from the tree root through the selected path are
+     * extracted and displayed in the related list.
      * <br><br>
-     * After all Keywords from the selected path and their related entries are set to the list,
-     * we get <b>all</b> keywords of the entries in that list. all new keywords, that do not
-     * already appear in the tree-path, are added as new children to the last selected keyword
-     * in the tree. Thus, by selecting a keyword, the related entries are shown and then the 
-     * remaining related keywords are addes as new children.
+     * After all Keywords from the selected path and their related entries are
+     * set to the list, we get <b>all</b> keywords of the entries in that list.
+     * all new keywords, that do not already appear in the tree-path, are added
+     * as new children to the last selected keyword in the tree. Thus, by
+     * selecting a keyword, the related entries are shown and then the remaining
+     * related keywords are addes as new children.
      */
     private void showClusterRelations() {
         // if no data available, leave method
-        if (data.getCount(Daten.ZKNCOUNT)<1) return;
+        if (data.getCount(Daten.ZKNCOUNT) < 1) {
+            return;
+        }
         // if the link-table is not shown, leave
-        if (jTabbedPaneMain.getSelectedIndex()!=TAB_CLUSTER) return;
+        if (jTabbedPaneMain.getSelectedIndex() != TAB_CLUSTER) {
+            return;
+        }
         // retrieve selected node
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)jTreeCluster.getLastSelectedPathComponent();        
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTreeCluster.getLastSelectedPathComponent();
         // if we have don't a valid selection, quit
-        if (null==node) return;
+        if (null == node) {
+            return;
+        }
         // get the treepath to the selection. this path contains all nodes from root
         // until to the selected child. we will set these nodes to the keywordlist
         TreePath tp = jTreeCluster.getLeadSelectionPath();
         // disable tree, showing that the program works...
-        jTreeCluster.setEnabled(false);        
+        jTreeCluster.setEnabled(false);
         // create a linked list. here we will add all keywords from the selection to the 
         // first level paremt
         LinkedList<String> kws = new LinkedList<>();
         // start from the second element, since we don't want the root-element
         // and copy all nodes from this path to the linked list
-        for (int cnt=1; cnt<tp.getPathCount(); cnt++) kws.add(tp.getPathComponent(cnt).toString());
+        for (int cnt = 1; cnt < tp.getPathCount(); cnt++) {
+            kws.add(tp.getPathComponent(cnt).toString());
+        }
         // now copy all related keywords into an array
         String[] keywords = kws.toArray(new String[kws.size()]);
         // copy all keywords to the string builder as well, so we can set the relations
         // as status msg label text
         StringBuilder sb = new StringBuilder("");
         // and convert them to strings
-        for (String kwsingle : keywords) sb.append(kwsingle).append(" + ");
+        for (String kwsingle : keywords) {
+            sb.append(kwsingle).append(" + ");
+        }
         // trim string
-        if (sb.length()>3) sb.setLength(sb.length()-3);
+        if (sb.length() > 3) {
+            sb.setLength(sb.length() - 3);
+        }
         // and set the relations as status message label
-        if (!settings.isMacAqua()) statusMsgLabel.setText(sb.toString());
+        if (!settings.isMacAqua()) {
+            statusMsgLabel.setText(sb.toString());
+        }
         jTreeCluster.setToolTipText(sb.toString());
         // remember this relation as "global variable"
         lastClusterRelationKeywords = sb.toString();
@@ -6022,9 +6077,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         int count = data.getCount(Daten.ZKNCOUNT);
         // go through all entries and get those entries
         // that contain *all* of the keywords in the array (true as parameter)
-        for (int cnt=1; cnt<=count; cnt++) if (data.existsInKeywords(keywords,cnt,true,false)) clusterList.add(String.valueOf(cnt));
+        for (int cnt = 1; cnt <= count; cnt++) {
+            if (data.existsInKeywords(keywords, cnt, true, false)) {
+                clusterList.add(String.valueOf(cnt));
+            }
+        }
         // get selected node again
-        node = (DefaultMutableTreeNode)jTreeCluster.getLastSelectedPathComponent();
+        node = (DefaultMutableTreeNode) jTreeCluster.getLastSelectedPathComponent();
         // remove all children
         node.removeAllChildren();
         // save the current size of the linked list. we will add all new keywords to this
@@ -6038,20 +6097,32 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             String[] entrykws = data.getKeywords(nr);
             // go through all keywords of this array
             // if the keyword does not already exist in the list, add it
-            if (entrykws!=null) for (String ek : entrykws) if (-1==kws.indexOf(ek)) kws.add(ek);
+            if (entrykws != null) {
+                for (String ek : entrykws) {
+                    if (-1 == kws.indexOf(ek)) {
+                        kws.add(ek);
+                    }
+                }
+            }
         }
         // if we have any new keywords, i.e. children, go on
-        if (kws.size()>previousSize) {
+        if (kws.size() > previousSize) {
             // create string array with the size of the new children
-            String[] children = new String[kws.size()-previousSize];
+            String[] children = new String[kws.size() - previousSize];
             // receive all new element of that list
             // and copy them to the string array
-            for (int cnt=0; cnt<(kws.size()-previousSize); cnt++) children[cnt] = kws.get(cnt+previousSize);
+            for (int cnt = 0; cnt < (kws.size() - previousSize); cnt++) {
+                children[cnt] = kws.get(cnt + previousSize);
+            }
             // sort the array
-            if (children!=null && children.length>0) Arrays.sort(children, new Comparer());
+            if (children != null && children.length > 0) {
+                Arrays.sort(children, new Comparer());
+            }
             // add each item as child of note
             // create and add a new child
-            for (String c : children) node.add(new DefaultMutableTreeNode(c));
+            for (String c : children) {
+                node.add(new DefaultMutableTreeNode(c));
+            }
         }
         // set cluster links
         jEditorPaneClusterEntries.setText(HtmlUbbUtil.getLinkedEntriesAsHtml(data, settings, clusterList, "clusterListText"));
@@ -6059,25 +6130,29 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTreeCluster.setEnabled(true);
         jTreeCluster.requestFocusInWindow();
     }
-    
+
     /**
-     * This method displays the all entries' titles using
-     * a background task. after the task finishes, all titles and ther related entry number
-     * in the main data file (zknfile) are displayed in the JTable of the JTabbedPane
+     * This method displays the all entries' titles using a background task.
+     * after the task finishes, all titles and ther related entry number in the
+     * main data file (zknfile) are displayed in the JTable of the JTabbedPane
      */
     private void showTitles() {
         // if no data available, leave method
-        if (data.getCount(Daten.ZKNCOUNT)<1) return;
+        if (data.getCount(Daten.ZKNCOUNT) < 1) {
+            return;
+        }
         // reset status text, since the amount of titles is euqal to the amount of entries
         statusMsgLabel.setText("");
         // show/enabke related menu
         showTabMenu(viewMenuTitles);
         // if keywordlist is up to date, leave method
-        if (data.isTitlelistUpToDate()) return;
+        if (data.isTitlelistUpToDate()) {
+            return;
+        }
         // if dialog window isn't already created, do this now
         if (null == taskDlg) {
             // get parent und init window
-            taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWTITLES, data, null /*only needed for keywords*/, null /*only needed for authors*/, null /*only needed for attachments*/, false /*only needed for keywords*/, 0 /*only needed for authors*/, (DefaultTableModel)jTableTitles.getModel());
+            taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWTITLES, data, null /*only needed for keywords*/, null /*only needed for authors*/, null /*only needed for attachments*/, false /*only needed for keywords*/, 0 /*only needed for authors*/, (DefaultTableModel) jTableTitles.getModel());
             // center window
             taskDlg.setLocationRelativeTo(getFrame());
         }
@@ -6090,16 +6165,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // disable refresh button
         jButtonRefreshTitles.setEnabled(false);
         // enable textfield only if we have more than 1 element in the jtable
-        jTextFieldFilterTitles.setEnabled(jTableTitles.getRowCount()>0);
+        jTextFieldFilterTitles.setEnabled(jTableTitles.getRowCount() > 0);
         // try to motivate garbage collector
         System.gc();
     }
-    
-    
+
     /**
-     * This Action creates the links between of the currently displayed entry with all other enries,
-     * based on matching keywords. These hyperlinks are stored in the JTable of the JTabbedPane
-     * 
+     * This Action creates the links between of the currently displayed entry
+     * with all other enries, based on matching keywords. These hyperlinks are
+     * stored in the JTable of the JTabbedPane
+     *
      * @return the background task
      */
     @Action
@@ -6107,10 +6182,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         return new createLinksTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
     }
 
-
     /**
-     * This method adds the content of the clipboard as new entry. The new entry is created automatically,
-     * where the clipboard content is used as entry content. No edit-window will be opened.
+     * This method adds the content of the clipboard as new entry. The new entry
+     * is created automatically, where the clipboard content is used as entry
+     * content. No edit-window will be opened.
      */
     @Action
     public void quickNewEntry() {
@@ -6120,7 +6195,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // retrieve clipboard content
             Transferable content = clipboard.getContents(null);
             // if we have any content, create new entry...
-            if (content!=null) {
+            if (content != null) {
                 // first, copy clipboard to string
                 String text = content.getTransferData(DataFlavor.stringFlavor).toString().trim();
                 // identify new-line/line-separator-char
@@ -6137,27 +6212,26 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // and titles might be out of date now as well...
                 data.setTitlelistUpToDate(false);
                 // tell about success
-                Constants.zknlogger.log(Level.INFO,"Entry save finished.");
+                Constants.zknlogger.log(Level.INFO, "Entry save finished.");
                 // update the dislay...
                 updateDisplay();
                 // tell about success
-                Constants.zknlogger.log(Level.INFO,"Display updated.");
+                Constants.zknlogger.log(Level.INFO, "Display updated.");
                 // and create a backup...
                 makeAutoBackup();
                 // tell about success
-                Constants.zknlogger.log(Level.INFO,"Autobackup finished (if necessary).");
+                Constants.zknlogger.log(Level.INFO, "Autobackup finished (if necessary).");
             }
-        }
-        catch(IllegalStateException | IOException | UnsupportedFlavorException e) {
+        } catch (IllegalStateException | IOException | UnsupportedFlavorException e) {
             Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
         }
     }
 
-
     /**
-     * This method adds the content of the clipboard as new entry. The first line of the clipboard content
-     * will be automatically set as entry's title. The new entry is created automatically,
-     * where the clipboard content is used as entry content. No edit-window will be opened.
+     * This method adds the content of the clipboard as new entry. The first
+     * line of the clipboard content will be automatically set as entry's title.
+     * The new entry is created automatically, where the clipboard content is
+     * used as entry content. No edit-window will be opened.
      */
     @Action
     public void quickNewEntryWithTitle() {
@@ -6167,7 +6241,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // retrieve clipboard content
             Transferable content = clipboard.getContents(null);
             // if we have any content, create new entry...
-            if (content!=null) {
+            if (content != null) {
                 // first, copy clipboard to string
                 String text = content.getTransferData(DataFlavor.stringFlavor).toString().trim();
                 // identify new-line/line-separator-char
@@ -6180,7 +6254,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // retrieve first line
                 int pos = text.indexOf(sepval);
                 // if we have more than one line, a first line is found
-                if (pos!=-1) {
+                if (pos != -1) {
                     // cut first line and set it as title
                     title = text.substring(0, pos).trim();
                     // remove first line from text
@@ -6212,30 +6286,31 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // and titles might be out of date now as well...
                 data.setTitlelistUpToDate(false);
                 // tell about success
-                Constants.zknlogger.log(Level.INFO,"Entry save finished.");
+                Constants.zknlogger.log(Level.INFO, "Entry save finished.");
                 // update the dislay...
                 updateDisplay();
                 // tell about success
-                Constants.zknlogger.log(Level.INFO,"Display updated.");
+                Constants.zknlogger.log(Level.INFO, "Display updated.");
                 // and create a backup...
                 makeAutoBackup();
                 // tell about success
-                Constants.zknlogger.log(Level.INFO,"Autobackup finished (if necessary).");
+                Constants.zknlogger.log(Level.INFO, "Autobackup finished (if necessary).");
             }
-        }
-        catch(IllegalStateException | IOException | UnsupportedFlavorException e) {
+        } catch (IllegalStateException | IOException | UnsupportedFlavorException e) {
             Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
         }
     }
 
-
     /**
-     * This method inits the system tray. if supported, the program's window does not deiconfy/minimize
-     * to the taskbar, but hides and displays an icon in the system tray instead.
+     * This method inits the system tray. if supported, the program's window
+     * does not deiconfy/minimize to the taskbar, but hides and displays an icon
+     * in the system tray instead.
      */
     private void initSystemTray() {
         // if systemtray is not supported, leave method
-        if (!SystemTray.isSupported()) return;
+        if (!SystemTray.isSupported()) {
+            return;
+        }
         // create tray-icon with tooltip
         trayIcon = new TrayIcon((new ImageIcon(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/zkn3_16x16.png"), "Zettelkasten")).getImage());
         // retrieve system tray
@@ -6251,13 +6326,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         trayIcon.setToolTip("Zettelkasten");
         // and mouse listener, so the window will be restored when the user clicks on the tray icon
         trayIcon.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mouseClicked(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 // set main frame visible
                 getFrame().setVisible(true);
                 // restore frame state to normal state
                 getFrame().setExtendedState(java.awt.Frame.NORMAL);
                 // if we have a tray icon, remove it
-                if (tray!=null) {
+                if (tray != null) {
                     // clear popup menu
                     trayIcon.setPopupMenu(null);
                     // remove tray icon
@@ -6270,9 +6346,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         trayIconInstalled = true;
     }
 
-
     @Override
-    public void windowOpened(WindowEvent arg0) {}
+    public void windowOpened(WindowEvent arg0) {
+    }
 
     @Override
     public void windowClosing(WindowEvent arg0) {
@@ -6282,7 +6358,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     @Override
-    public void windowClosed(WindowEvent arg0) {}
+    public void windowClosed(WindowEvent arg0) {
+    }
 
     @Override
     public void windowIconified(WindowEvent arg0) {
@@ -6291,7 +6368,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // when window is minimized to tray, init the system tray icon
             initSystemTray();
             // and hide the window, when try icon was successfully installed
-            if (trayIconInstalled) getFrame().setVisible(false);
+            if (trayIconInstalled) {
+                getFrame().setVisible(false);
+            }
         }
     }
 
@@ -6300,10 +6379,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     @Override
-    public void windowActivated(WindowEvent arg0) {}
+    public void windowActivated(WindowEvent arg0) {
+    }
 
     @Override
-    public void windowDeactivated(WindowEvent arg0) {}
+    public void windowDeactivated(WindowEvent arg0) {
+    }
 
     @Override
     public void dragEnter(DropTargetDragEvent dtde) {
@@ -6340,16 +6421,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     // importWebPage(url);
                     // else add the text to the keyword-list (JList)
                     addAttachments(new String[]{url.toString()});
-                }
-                else if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                } else if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
                     // retrieve list of dropped files
-                    java.util.List files = (java.util.List)tr.getTransferData(DataFlavor.javaFileListFlavor);
+                    java.util.List files = (java.util.List) tr.getTransferData(DataFlavor.javaFileListFlavor);
                     // check for valid values
-                    if (files!=null && files.size()>0) {
+                    if (files != null && files.size() > 0) {
                         // create array
                         File[] atts = new File[files.size()];
                         // iterate drop files and convert to array
-                        for (int i=0; i<files.size(); i++) {
+                        for (int i = 0; i < files.size(); i++) {
                             atts[i] = new File(files.get(i).toString());
                         }
                         // insert attachments
@@ -6359,26 +6439,25 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                             // retrieve final added attachments
                             String[] finalatts = FileOperationsUtil.getAddedAttachments();
                             // checkfor valid values
-                            if (finalatts!=null && finalatts.length>0) {
+                            if (finalatts != null && finalatts.length > 0) {
                                 addAttachments(finalatts);
                             }
                         }
                     }
-                }
-                else if (tr.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                } else if (tr.isDataFlavorSupported(DataFlavor.stringFlavor)) {
                     // get drop data
-                    String tfd = (String)tr.getTransferData(DataFlavor.stringFlavor);
+                    String tfd = (String) tr.getTransferData(DataFlavor.stringFlavor);
                     // check for valid values
-                    if (tfd!=null && !tfd.isEmpty()) {
+                    if (tfd != null && !tfd.isEmpty()) {
                         // retrieve drag source info
                         String[] sourceinformation = tfd.split("\\n");
                         // check if authors have been dropped
                         if (sourceinformation[0].equals(Constants.DRAG_SOURCE_TYPE_AUTHORS)) {
                             // new array
-                            String aus[] = new String[sourceinformation.length-1];
+                            String aus[] = new String[sourceinformation.length - 1];
                             // prepare new array without drag info
-                            for (int i=1; i<sourceinformation.length; i++) {
-                                aus[i-1] = sourceinformation[i];
+                            for (int i = 1; i < sourceinformation.length; i++) {
+                                aus[i - 1] = sourceinformation[i];
                             }
                             // add authors
                             addAuthorToList(aus);
@@ -6390,27 +6469,28 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 Constants.zknlogger.log(Level.WARNING, "DataFlavor is not supported, drop rejected!");
                 dtde.rejectDrop();
             }
-        }
-        catch (IOException | UnsupportedFlavorException ex) {
+        } catch (IOException | UnsupportedFlavorException ex) {
             Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
             dtde.rejectDrop();
         }
     }
 
-    
     /**
-     * This Action creates the links between of the currently displayed entry with all other enries,
-     * based on matching keywords. These hyperlinks are stored in the JTable of the JTabbedPane
-     * 
+     * This Action creates the links between of the currently displayed entry
+     * with all other enries, based on matching keywords. These hyperlinks are
+     * stored in the JTable of the JTabbedPane
+     *
      * @return the background task
      */
     private class createLinksTask extends org.jdesktop.application.Task<Object, Void> {
+
         /**
-         * This variable stores the table data of the links-list.
-         * We use this variable in the "createLinksTask", because when we add the values to the
-         * tables directly (via tablemodel) and the user skips through the entries before the task
-         * has finished, the table contains wrong values. so, within the task this list is filled,
-         * and only when the task has finished, we copy this list to the table.
+         * This variable stores the table data of the links-list. We use this
+         * variable in the "createLinksTask", because when we add the values to
+         * the tables directly (via tablemodel) and the user skips through the
+         * entries before the task has finished, the table contains wrong
+         * values. so, within the task this list is filled, and only when the
+         * task has finished, we copy this list to the table.
          */
         private ArrayList<Object[]> linkedlinkslist;
 
@@ -6421,13 +6501,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // to createLinksTask fields, here.
             super(app);
             cLinksTask = this;
-        }        
-        
-        @Override protected Object doInBackground() {
+        }
+
+        @Override
+        protected Object doInBackground() {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
-            
+
             // tell program that this thread is running...
             createLinksIsRunning = true;
             // variable that indicates whether a match of keywords was found
@@ -6438,19 +6519,21 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // get the keyword index numbers of the current entry
             String[] kws = data.getCurrentKeywords();
             // if we have any keywords, go on
-            if (kws!=null) {
+            if (kws != null) {
                 // create new instance of that variable
                 linkedlinkslist = new ArrayList<>();
                 // iterate all entrys of the zettelkasten
-                for (cnt=1; cnt<=len; cnt++) {
+                for (cnt = 1; cnt <= len; cnt++) {
                     // leave out the comparison of the current entry with itself
-                    if (cnt==data.getCurrentZettelPos()) continue;
+                    if (cnt == data.getCurrentZettelPos()) {
+                        continue;
+                    }
                     // init the found indicator
                     found = false;
                     // iterate all keywords of current entry
                     for (String k : kws) {
                         // look for occurences of any of the current keywords
-                        if (data.existsInKeywords(k,cnt,false)) {
+                        if (data.existsInKeywords(k, cnt, false)) {
                             // set found-indicator
                             found = true;
                             break;
@@ -6464,32 +6547,34 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         // store the information in that object
                         ob[0] = cnt;
                         ob[1] = data.getZettelTitle(cnt);
-                        ob[2] = data.getLinkStrength(data.getCurrentZettelPos(),cnt);
+                        ob[2] = data.getLinkStrength(data.getCurrentZettelPos(), cnt);
                         ob[3] = data.getZettelRating(cnt);
                         // and add that content as a new row to the table
                         linkedlinkslist.add(ob);
                     }
                 }
             }
-            
+
             return null;
         }
-        
-        @Override protected void succeeded(Object result) {
+
+        @Override
+        protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
             DefaultTableModel tm = (DefaultTableModel) jTableLinks.getModel();
             // reset the table
             tm.setRowCount(0);
             // check whether we have any entries at all...
-            if (linkedlinkslist!=null) {
+            if (linkedlinkslist != null) {
                 // create iterator for linked list
                 Iterator<Object[]> i = linkedlinkslist.iterator();
                 // go through linked list and add all objects to the table model
                 try {
-                    while (i.hasNext()) tm.addRow(i.next());
-                }
-                catch (ConcurrentModificationException e) {
+                    while (i.hasNext()) {
+                        tm.addRow(i.next());
+                    }
+                } catch (ConcurrentModificationException e) {
                     // reset the table when we have overlappings threads
                     tm.setRowCount(0);
                 }
@@ -6504,19 +6589,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             cLinksTask = null;
             createLinksIsRunning = false;
             // show/enable viewmenu, if we have at least one entry...
-            if ((jTableLinks.getRowCount()>0)&&(TAB_LINKS==jTabbedPaneMain.getSelectedIndex())) {
+            if ((jTableLinks.getRowCount() > 0) && (TAB_LINKS == jTabbedPaneMain.getSelectedIndex())) {
                 showTabMenu(viewMenuLinks);
             }
             // show amount of entries
-            statusMsgLabel.setText("("+String.valueOf(jTableLinks.getRowCount())+" "+org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(ZettelkastenView.class).getString("statusTextLinks")+")");
+            statusMsgLabel.setText("(" + String.valueOf(jTableLinks.getRowCount()) + " " + org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(ZettelkastenView.class).getString("statusTextLinks") + ")");
         }
     }
-            
-    
+
     private void fillLuhmannNumbers(MutableTreeNode node, int zettelpos, int selection) {
         // is current entry = to be selected entry?
         if (zettelpos == selection) {
-            selectedLuhmannNode = (DefaultMutableTreeNode)node;
+            selectedLuhmannNode = (DefaultMutableTreeNode) node;
         }
         // get the text from the luhmann-numbers
         String lnr = data.getLuhmannNumbers(zettelpos);
@@ -6538,17 +6622,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             }
         }
     }
-    
+
     /**
-     * This method, called when the user enters "m" as input in the entry-textfield in the lower
-     * statusbar, toggles a timer that display the current memory usage of the application. this
-     * timer is executes every 5 seconds, so the memory-usage is updated each 5 seconds.
+     * This method, called when the user enters "m" as input in the
+     * entry-textfield in the lower statusbar, toggles a timer that display the
+     * current memory usage of the application. this timer is executes every 5
+     * seconds, so the memory-usage is updated each 5 seconds.
      * <br><br>
      * If the user types "m" for the second time, the timer is stopped.
      */
     public void toggleMemoryTimer() {
         // check whether we have a already running timer...
-        if (null==memoryDisplayTimer) {
+        if (null == memoryDisplayTimer) {
             // if not, create new one
             memoryDisplayTimer = new Timer();
             // this timer should start immediately and update every 5 seconds
@@ -6560,9 +6645,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // switch on toggle
             settings.isMemoryUsageLogged = true;
             // log info
-            Constants.zknlogger.log(Level.INFO,"Memory usage logging swicthed on.");
-        }
-        else {
+            Constants.zknlogger.log(Level.INFO, "Memory usage logging swicthed on.");
+        } else {
             // if timer was running, cancel it
             memoryDisplayTimer.cancel();
             // purge it from the task-list
@@ -6574,14 +6658,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // switch off toggle
             settings.isMemoryUsageLogged = false;
             // log info
-            Constants.zknlogger.log(Level.INFO,"Memory usage logging swicthed off.");
+            Constants.zknlogger.log(Level.INFO, "Memory usage logging swicthed off.");
         }
         // show current entry number again
         jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
     }
 
     private void terminateTimers() {
-        if (memoryDisplayTimer!=null) {
+        if (memoryDisplayTimer != null) {
             // if timer was running, cancel it
             memoryDisplayTimer.cancel();
             // purge it from the task-list
@@ -6591,7 +6675,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // free timer-object
             memoryDisplayTimer = null;
         }
-        if (makeAutoBackupTimer!=null) {
+        if (makeAutoBackupTimer != null) {
             // if timer was running, cancel it
             makeAutoBackupTimer.cancel();
             // purge it from the task-list
@@ -6601,7 +6685,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // reset counter
             memoryLogCounter = 0;
         }
-        if (flashErrorIconTimer!=null) {
+        if (flashErrorIconTimer != null) {
             // if timer was running, cancel it
             flashErrorIconTimer.cancel();
             // purge it from the task-list
@@ -6619,16 +6703,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // calculate the maximum system memory
         long maxMem = Runtime.getRuntime().maxMemory();
         // convert values to string
-        String freeMemory = String.valueOf((totalMem-freeMem)/1048576);
-        String totalMemory = String.valueOf(totalMem/1048576);
-        String maximalMemory = String.valueOf(maxMem/1048576);
+        String freeMemory = String.valueOf((totalMem - freeMem) / 1048576);
+        String totalMemory = String.valueOf(totalMem / 1048576);
+        String maximalMemory = String.valueOf(maxMem / 1048576);
         // display memory-usage
-        jLabelMemory.setText(freeMemory+"MB / "+totalMemory+"MB (max. "+maximalMemory+"MB)");
+        jLabelMemory.setText(freeMemory + "MB / " + totalMemory + "MB (max. " + maximalMemory + "MB)");
         // increase log-counter. we want to update the *display* of the memory-usage every
         // 5 seconds, but logging it to a file only each minute
         memoryLogCounter++;
         // when 12 ticks are over, we have one minute passed, so log info now...
-        if (memoryLogCounter>=12) {
+        if (memoryLogCounter >= 12) {
             // log memory usage
             Constants.zknlogger.log(Level.INFO, "Memory-Usage: {0}MB / {1}MB (max. {2}MB)", new Object[]{freeMemory, totalMemory, maximalMemory});
             // reset counter
@@ -6640,46 +6724,56 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         errorIconIsVisible = !errorIconIsVisible;
         if (errorIconIsVisible) {
             statusErrorButton.setIcon(Constants.errorIcon);
-        }
-        else {
+        } else {
             statusErrorButton.setIcon(Constants.errorIconFaded);
         }
 
     }
 
     /**
-     * This class starts a timer that displays the memory-usage of the zettelkasten
+     * This class starts a timer that displays the memory-usage of the
+     * zettelkasten
      */
     class MemoryTimer extends TimerTask {
-        @Override public void run() {
+
+        @Override
+        public void run() {
             // display memory usage
             calculateMemoryUsage();
         }
     }
+
     /**
-     * This class starts a timer that displays the memory-usage of the zettelkasten
+     * This class starts a timer that displays the memory-usage of the
+     * zettelkasten
      */
     class ErrorIconTimer extends TimerTask {
-        @Override public void run() {
+
+        @Override
+        public void run() {
             // make update-icon flash
             flashErrorIcon();
         }
     }
+
     /**
-     * This class starts a timer that displays the memory-usage of the zettelkasten
+     * This class starts a timer that displays the memory-usage of the
+     * zettelkasten
      */
     class AutoBackupTimer extends TimerTask {
-        @Override public void run() {
+
+        @Override
+        public void run() {
             // create autobackup
             makeAutoBackup();
         }
     }
-    
-    
+
     /**
-     * This method creates the so-called Luhmann-numbers, i.e. follower-entries of the current
-     * entry. Since follower-entries can have other followers itself (subentries), we iterate
-     * all entries and subentries here, creating a jTreeView out of all entries and subentries.
+     * This method creates the so-called Luhmann-numbers, i.e. follower-entries
+     * of the current entry. Since follower-entries can have other followers
+     * itself (subentries), we iterate all entries and subentries here, creating
+     * a jTreeView out of all entries and subentries.
      */
     private void luhmannTask(boolean resetCollapsedNodes) {
         // retrieve collapsed status?
@@ -6703,8 +6797,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             }
         }
         // retrieve node title
-        String title = TreeUtil.retrieveNodeTitle(data, 
-                settings.getShowLuhmannEntryNumber(), 
+        String title = TreeUtil.retrieveNodeTitle(data,
+                settings.getShowLuhmannEntryNumber(),
                 String.valueOf(parentLuhmann));
         // set this as root node
         MutableTreeNode root = new DefaultMutableTreeNode(new TreeUserObject(title, String.valueOf(parentLuhmann), false));
@@ -6754,9 +6848,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         showTabMenu(viewMenuLuhmann);
     }
 
-    
     /**
      * Action with background task, which imorts the file
+     *
      * @return
      */
     @Action
@@ -6765,27 +6859,30 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     private class createAutoBackupTask extends org.jdesktop.application.Task<Object, Void> {
+
         /**
-         * Store old value of status-label, so we can restore it after task is finished
+         * Store old value of status-label, so we can restore it after task is
+         * finished
          */
         String oldmsg;
-        org.jdesktop.application.ResourceMap rm = 
-                org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-                getContext().getResourceMap(ZettelkastenView.class);                        
-        
+        org.jdesktop.application.ResourceMap rm
+                = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+                getContext().getResourceMap(ZettelkastenView.class);
+
         createAutoBackupTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters
             // to ImportFileTask fields, here.
             super(app);
         }
+
         @Override
         protected Object doInBackground() throws IOException {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
             // prevent task from processing when the file path is incorrect
-            
+
             // get filepath
             File fp = settings.getFilePath();
             // copy current filepath to string
@@ -6794,7 +6891,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // is needed to set another extension for the backup-file
             int lastDot = newfp.lastIndexOf(".");
             // if extension was found...
-            if (-1==lastDot) {
+            if (-1 == lastDot) {
                 // log error
                 Constants.zknlogger.log(Level.WARNING, "Couldn't find file-extension! Auto-backup was not created!");
                 return null;
@@ -6812,8 +6909,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 try {
                     // try to remove write protection
                     backup.setWritable(true);
-                }
-                catch (SecurityException ex) {
+                } catch (SecurityException ex) {
                     // log error-message
                     Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
                     Constants.zknlogger.log(Level.SEVERE, "Autobackup-file is write-protected. Write protection could not be removed!");
@@ -6867,14 +6963,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     out.output(desktop.getDesktopNotesData(), zip);
                 }
                 bout.close();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 // log error message
-                Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                 // create a copy of the data file in case we have problems creating the auto-backup
                 File datafiledummy = settings.getFilePath();
                 // check for valid value
-                if (datafiledummy!=null && datafiledummy.exists()) {
+                if (datafiledummy != null && datafiledummy.exists()) {
                     try {
                         // first, create basic backup-file
                         File checkbackup = FileOperationsUtil.getBackupFilePath(datafiledummy);
@@ -6890,22 +6985,20 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                             JOptionPane.showMessageDialog(getFrame(), rm.getString("errorSavingWriteProtectedMsg"), rm.getString("autobackupSaveErrTitle"), JOptionPane.PLAIN_MESSAGE);
                         }
                         // tell user that an error occured
-                        JOptionPane.showMessageDialog(getFrame(), rm.getString("autobackupSaveErrMsg","\""+checkbackup.getName()+"\""),
-                                                      rm.getString("autobackupSaveErrTitle"),
-                                                      JOptionPane.PLAIN_MESSAGE);
-                    }
-                    catch (IOException e2) {
-                        Constants.zknlogger.log(Level.SEVERE,e2.getLocalizedMessage());
+                        JOptionPane.showMessageDialog(getFrame(), rm.getString("autobackupSaveErrMsg", "\"" + checkbackup.getName() + "\""),
+                                rm.getString("autobackupSaveErrTitle"),
+                                JOptionPane.PLAIN_MESSAGE);
+                    } catch (IOException e2) {
+                        Constants.zknlogger.log(Level.SEVERE, e2.getLocalizedMessage());
                     }
                 }
-            }           
-            catch (SecurityException e) {
+            } catch (SecurityException e) {
                 // log error message
-                Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                 // create a copy of the data file in case we have problems creating the auto-backup
                 File datafiledummy = settings.getFilePath();
                 // check for valid value
-                if (datafiledummy!=null && datafiledummy.exists()) {
+                if (datafiledummy != null && datafiledummy.exists()) {
                     try {
                         // first, create basic backup-file
                         File checkbackup = FileOperationsUtil.getBackupFilePath(datafiledummy);
@@ -6914,23 +7007,24 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         // log path.
                         Constants.zknlogger.log(Level.INFO, "A backup of the data file was saved to {0}", checkbackup.toString());
                         // tell user that an error occured
-                        JOptionPane.showMessageDialog(getFrame(), rm.getString("autobackupSaveErrMsg","\""+checkbackup.getName()+"\""),
-                                                      rm.getString("autobackupSaveErrTitle"),
-                                                      JOptionPane.PLAIN_MESSAGE);
-                    }
-                    catch (IOException e2) {
-                        Constants.zknlogger.log(Level.SEVERE,e2.getLocalizedMessage());
+                        JOptionPane.showMessageDialog(getFrame(), rm.getString("autobackupSaveErrMsg", "\"" + checkbackup.getName() + "\""),
+                                rm.getString("autobackupSaveErrTitle"),
+                                JOptionPane.PLAIN_MESSAGE);
+                    } catch (IOException e2) {
+                        Constants.zknlogger.log(Level.SEVERE, e2.getLocalizedMessage());
                     }
                 }
-            }            
+            }
 
             return null;  // return your result
         }
+
         @Override
         protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
         }
+
         @Override
         protected void finished() {
             super.finished();
@@ -6941,13 +7035,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // no autoback necessary at the moment
             isbackupnecessary = false;
             // and log info message
-            Constants.zknlogger.log(Level.INFO,"Automatic backup was successfully created.");
+            Constants.zknlogger.log(Level.INFO, "Automatic backup was successfully created.");
         }
     }
 
-    
     /**
      * Action with background task, which imorts the file
+     *
      * @return
      */
     @Action
@@ -6956,7 +7050,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     private class checkForUpdateTask extends org.jdesktop.application.Task<Object, Void> {
+
         // indicates whether the zettelkasten has updates or not.
+
         boolean updateavailable = false;
         boolean showUpdateMsg = true;
         String updateBuildNr = "0";
@@ -6979,14 +7075,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // buffer for stream
                 int buff = 0;
                 // read update-file and copy content to string builder
-                while (buff!=-1) {
+                while (buff != -1) {
                     buff = is.read();
-                    if (buff!=-1) updateinfo.append((char)buff);
+                    if (buff != -1) {
+                        updateinfo.append((char) buff);
+                    }
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 // tell about fail
-                Constants.zknlogger.log(Level.INFO,"No access to Zettelkasten-Website. Automatic update-check failed.");
+                Constants.zknlogger.log(Level.INFO, "No access to Zettelkasten-Website. Automatic update-check failed.");
                 updateavailable = false;
                 return null;
             }
@@ -7000,77 +7097,91 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // the Swing GUI from here.
             String updateinfo = accessUpdateFile(new URL(Constants.UPDATE_INFO_URI));
             // check for valid access
-            if (null==updateinfo || updateinfo.isEmpty()) return null;
+            if (null == updateinfo || updateinfo.isEmpty()) {
+                return null;
+            }
             // retrieve update info and split them into an array. this array will hold the latest
             // build-version-number in the first field, and the type of update in the 2. field.
             String[] updateversion = updateinfo.split("\n");
             // check whether we have a valid array with content
-            if (updateversion!=null && updateversion.length>0) {
+            if (updateversion != null && updateversion.length > 0) {
                 // retrieve start-index of the build-number within the version-string.
-                int substringindex = Constants.BUILD_VERSION.indexOf("(Build")+7;
+                int substringindex = Constants.BUILD_VERSION.indexOf("(Build") + 7;
                 // only copy buildinfo into string, other information of version-info are not needed
-                String curversion = Constants.BUILD_VERSION.substring(substringindex,substringindex+8);
+                String curversion = Constants.BUILD_VERSION.substring(substringindex, substringindex + 8);
                 // store build number of update
                 updateBuildNr = updateversion[0];
                 // check whether there's a newer version online
-                updateavailable = (curversion.compareTo(updateBuildNr)<0);
+                updateavailable = (curversion.compareTo(updateBuildNr) < 0);
                 // check whether update hint should be shown for this version or not
-                showUpdateMsg = (updateBuildNr.compareTo(settings.getShowUpdateHintVersion())!=0);
+                showUpdateMsg = (updateBuildNr.compareTo(settings.getShowUpdateHintVersion()) != 0);
                 // if no update available and user wants to check for nightly versions,
                 // check this now
                 if (!updateavailable && settings.getAutoNightlyUpdate()) {
                     updateinfo = accessUpdateFile(new URL(Constants.UPDATE_NIGHTLY_INFO_URI));
                     // check for valid access
-                    if (null==updateinfo || updateinfo.isEmpty()) return null;
+                    if (null == updateinfo || updateinfo.isEmpty()) {
+                        return null;
+                    }
                     // retrieve update info and split them into an array. this array will hold the latest
                     // build-version-number in the first field, and the type of update in the 2. field.
                     updateversion = updateinfo.split("\n");
-                    if (updateversion!=null && updateversion.length>0) {
-                        updateavailable = (curversion.compareTo(updateversion[0])<0);
-                        if (updateavailable) updateURI = Constants.UPDATE_NIGHTLY_URI;
+                    if (updateversion != null && updateversion.length > 0) {
+                        updateavailable = (curversion.compareTo(updateversion[0]) < 0);
+                        if (updateavailable) {
+                            updateURI = Constants.UPDATE_NIGHTLY_URI;
+                        }
                     }
                 }
             }
             return null;  // return your result
         }
+
         @Override
         protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
         }
+
         @Override
         protected void finished() {
             if (updateavailable) {
                 //log info
-                Constants.zknlogger.log(Level.INFO,"A new version of the Zettelkasten is available!");
-                if (showUpdateMsg) updateZettelkasten(updateBuildNr);
+                Constants.zknlogger.log(Level.INFO, "A new version of the Zettelkasten is available!");
+                if (showUpdateMsg) {
+                    updateZettelkasten(updateBuildNr);
+                }
             }
         }
     }
 
-
     /**
-     * This task creates the related (clustered) keywords from the current entry. Therefore,
-     * the current entry's keywords are retrieved. Then, in each entry of the data-file
-     * we look for occurences of the current entry's keywords. If we found any matches, the
-     * related entry's other keywords are added to the final keyword-list.
-     * 
+     * This task creates the related (clustered) keywords from the current
+     * entry. Therefore, the current entry's keywords are retrieved. Then, in
+     * each entry of the data-file we look for occurences of the current entry's
+     * keywords. If we found any matches, the related entry's other keywords are
+     * added to the final keyword-list.
+     *
      * @return the background task
      */
     @Action
     public Task clusterTask() {
         return new createClusterTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
     }
+
     /**
-     * This task creates the related (clustered) keywords from the current entry. Therefore,
-     * the current entry's keywords are retrieved. Then, in each entry of the data-file
-     * we look for occurences of the current entry's keywords. If we found any matches, the
-     * related entry's other keywords are added to the final keyword-list.
-     * 
+     * This task creates the related (clustered) keywords from the current
+     * entry. Therefore, the current entry's keywords are retrieved. Then, in
+     * each entry of the data-file we look for occurences of the current entry's
+     * keywords. If we found any matches, the related entry's other keywords are
+     * added to the final keyword-list.
+     *
      * @return the background task
      */
     private class createClusterTask extends org.jdesktop.application.Task<Object, Void> {
+
         // create link list for the keywords and related keywords
+
         LinkedList<String> lwsClusterTask = new LinkedList<>();
 
         createClusterTask(org.jdesktop.application.Application app) {
@@ -7078,8 +7189,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // doInBackground() depends on from parameters
             // to createLinksTask fields, here.
             super(app);
-        }        
-        @Override protected Object doInBackground() {
+        }
+
+        @Override
+        protected Object doInBackground() {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
@@ -7089,7 +7202,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // get current entries keywords
             String[] cws = data.getCurrentKeywords();
             // if we have any current keywords, go on
-            if (cws!=null) {
+            if (cws != null) {
                 // get amount of entries
                 int count = data.getCount(Daten.ZKNCOUNT);
                 // add all current keywords and their related keywords to
@@ -7098,18 +7211,20 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     // add each curent keyword to cluster list
                     lwsClusterTask.add(c);
                     // now go through all entries
-                    for (int cnt=1; cnt<=count;cnt++) {
+                    for (int cnt = 1; cnt <= count; cnt++) {
                         // check whether current keywords exits in entry
-                        if (data.existsInKeywords(c,cnt,false)) {
+                        if (data.existsInKeywords(c, cnt, false)) {
                             // if yes, retrieve entry's keywords
                             String[] newkws = data.getKeywords(cnt);
                             // check whether we have any keywords at all
-                            if (newkws!=null) {
+                            if (newkws != null) {
                                 // if so, iterate keywords
                                 for (String n : newkws) {
                                     // and add each keyword to the link list, if it's not
                                     // already in that list...
-                                    if (!lwsClusterTask.contains(n)) lwsClusterTask.add(n);
+                                    if (!lwsClusterTask.contains(n)) {
+                                        lwsClusterTask.add(n);
+                                    }
                                 }
                             }
                         }
@@ -7122,22 +7237,23 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             linkedclusterlist = false;
             // indicate that the cluster list is up to date...
             data.setClusterlistUpToDate(true);
-            
+
             return null;
         }
-        
-        @Override protected void succeeded(Object result) {
+
+        @Override
+        protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
             //
             // get the treemodel
-            DefaultTreeModel dtm = (DefaultTreeModel)jTreeCluster.getModel();
+            DefaultTreeModel dtm = (DefaultTreeModel) jTreeCluster.getModel();
             // set this as root node. we don't need to care about this, since the
             // root is not visible.
             DefaultMutableTreeNode root = new DefaultMutableTreeNode("ZKN3-Cluster");
             dtm.setRoot(root);
             // if we have any keywords, set them to the list
-            if (lwsClusterTask.size()>0) {
+            if (lwsClusterTask.size() > 0) {
                 // create iterator
                 Iterator<String> i = lwsClusterTask.iterator();
                 // and add all items to the list
@@ -7155,43 +7271,49 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             createClusterIsRunning = false;
             jCheckBoxCluster.setEnabled(true);
             // enable textfield only if we have more than 1 element in the jTree
-            jTextFieldFilterCluster.setEnabled(jTreeCluster.getRowCount()>1);
+            jTextFieldFilterCluster.setEnabled(jTreeCluster.getRowCount() > 1);
             // show amount of entries
-            statusMsgLabel.setText("("+String.valueOf(jTreeCluster.getRowCount())+" "+org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(ZettelkastenView.class).getString("statusTextKeywords")+")");
+            statusMsgLabel.setText("(" + String.valueOf(jTreeCluster.getRowCount()) + " " + org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(ZettelkastenView.class).getString("statusTextKeywords") + ")");
             jTreeCluster.setToolTipText(null);
         }
     }
-    
-    
+
     /**
-     * This Action creates the links between of the currently displayed entry with all other enries,
-     * based on matching keywords. These hyperlinks are stored in the JTable of the JTabbedPane.<br><br>
-     * Unlike the createLinks-task, this task does not look for any single occurences of keywords,
-     * but of logical-combination of the selected keywords. I.e., whether <i>all</i> or <i>at least one</i>
+     * This Action creates the links between of the currently displayed entry
+     * with all other enries, based on matching keywords. These hyperlinks are
+     * stored in the JTable of the JTabbedPane.<br><br>
+     * Unlike the createLinks-task, this task does not look for any single
+     * occurences of keywords, but of logical-combination of the selected
+     * keywords. I.e., whether <i>all</i> or <i>at least one</i>
      * of the selected keywords is/are part of another entry's keywords-list.
-     * 
+     *
      * @return the background task
      */
     @Action
     public Task createFilterLinks() {
         return new createFilterLinksTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
     }
+
     /**
-     * This Action creates the links between of the currently displayed entry with all other enries,
-     * based on matching keywords. These hyperlinks are stored in the JTable of the JTabbedPane.<br><br>
-     * Unlike the createLinks-task, this task does not look for any single occurences of keywords,
-     * but of logical-combination of the selected keywords. I.e., whether <i>all</i> or <i>at least one</i>
+     * This Action creates the links between of the currently displayed entry
+     * with all other enries, based on matching keywords. These hyperlinks are
+     * stored in the JTable of the JTabbedPane.<br><br>
+     * Unlike the createLinks-task, this task does not look for any single
+     * occurences of keywords, but of logical-combination of the selected
+     * keywords. I.e., whether <i>all</i> or <i>at least one</i>
      * of the selected keywords is/are part of another entry's keywords-list.
-     * 
+     *
      * @return the background task
      */
     private class createFilterLinksTask extends org.jdesktop.application.Task<Object, Void> {
+
         /**
-         * This variable stores the table data of the filtered links-list.
-         * We use this variable in the "createLinksTask", because when we add the values to the
-         * tables directly (via tablemodel) and the user skips through the entries before the task
-         * has finished, the table contains wrong values. so, within the task this list is filled,
-         * and only when the task has finished, we copy this list to the table.
+         * This variable stores the table data of the filtered links-list. We
+         * use this variable in the "createLinksTask", because when we add the
+         * values to the tables directly (via tablemodel) and the user skips
+         * through the entries before the task has finished, the table contains
+         * wrong values. so, within the task this list is filled, and only when
+         * the task has finished, we copy this list to the table.
          */
         private ArrayList<Object[]> linkedfilteredlinkslist;
 
@@ -7200,9 +7322,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // doInBackground() depends on from parameters
             // to createLinksTask fields, here.
             super(app);
-        }        
-        
-        @Override protected Object doInBackground() {
+        }
+
+        @Override
+        protected Object doInBackground() {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
@@ -7217,7 +7340,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // if we have no selection, return null. this happens, when the view is refreshed and a value
             // in the jListEntryKeywords is selected - the jList then loses somehow the selectiob, so this
             // task is startet, although no keyword is selected...
-            if (null==kws) return null;
+            if (null == kws) {
+                return null;
+            }
             // get the length of the data file, i.e. the amount of entrys
             final int len = data.getCount(Daten.ZKNCOUNT);
             // get setting, whether we have logical-and or logical-or-search
@@ -7225,14 +7350,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // create new instance of that variable
             linkedfilteredlinkslist = new ArrayList<>();
             // iterate all entrys of the zettelkasten
-            for (cnt=1; cnt<=len; cnt++) {
+            for (cnt = 1; cnt <= len; cnt++) {
                 // leave out the comparison of the current entry with itself
-                if (cnt==data.getCurrentZettelPos()) continue;
+                if (cnt == data.getCurrentZettelPos()) {
+                    continue;
+                }
                 // init the found indicator
                 found = false;
                 // if we have logical-or, at least one of the keywords must exist.
                 // so go through all selected keywords and look for occurences
-                if (data.existsInKeywords(kws,cnt,log_and,false)) found = true;
+                if (data.existsInKeywords(kws, cnt, log_and, false)) {
+                    found = true;
+                }
                 // if we have a match, connect entries, i.e. display the number and title of
                 // the linked entries in the table of the tabbed pane
                 if (found) {
@@ -7241,36 +7370,38 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     // store the information in that object
                     ob[0] = cnt;
                     ob[1] = data.getZettelTitle(cnt);
-                    ob[2] = data.getLinkStrength(data.getCurrentZettelPos(),cnt);
+                    ob[2] = data.getLinkStrength(data.getCurrentZettelPos(), cnt);
                     // and add that content to the linked list
                     linkedfilteredlinkslist.add(ob);
                 }
             }
-            
+
             return null;
         }
-        
-        @Override protected void succeeded(Object result) {
+
+        @Override
+        protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
             DefaultTableModel tm = (DefaultTableModel) jTableLinks.getModel();
             // reset the table
             tm.setRowCount(0);
             // check whether we have any entries at all...
-            if (linkedfilteredlinkslist!=null) {
+            if (linkedfilteredlinkslist != null) {
                 // create iterator for linked list
                 Iterator<Object[]> i = linkedfilteredlinkslist.iterator();
                 // go through linked list and add all objects to the table model
                 try {
-                    while (i.hasNext()) tm.addRow(i.next());
-                }
-                catch (ConcurrentModificationException e) {
+                    while (i.hasNext()) {
+                        tm.addRow(i.next());
+                    }
+                } catch (ConcurrentModificationException e) {
                     // reset the table when we have overlappings threads
                     tm.setRowCount(0);
                 }
             }
             // show amount of entries
-            statusMsgLabel.setText("("+String.valueOf(jTableLinks.getRowCount())+" "+org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(ZettelkastenView.class).getString("statusTextLinks")+")");
+            statusMsgLabel.setText("(" + String.valueOf(jTableLinks.getRowCount()) + " " + org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(ZettelkastenView.class).getString("statusTextLinks") + ")");
         }
 
         @Override
@@ -7280,14 +7411,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-
     /**
      * This method opens the preferences-window (settings-window).
      */
     @Action
     public void settingsWindow() {
         if (null == settingsDlg) {
-            settingsDlg = new CSettingsDlg(getFrame(),settings,data,autoKorrekt,synonyms,steno);
+            settingsDlg = new CSettingsDlg(getFrame(), settings, data, autoKorrekt, synonyms, steno);
             settingsDlg.setLocationRelativeTo(getFrame());
         }
         ZettelkastenApp.getApplication().show(settingsDlg);
@@ -7297,13 +7427,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             isbackupnecessary = true;
             setSaveEnabled(true);
             // check whether we have to update tabbed pane
-            if (!data.isKeywordlistUpToDate()) updateTabbedPane();
+            if (!data.isKeywordlistUpToDate()) {
+                updateTabbedPane();
+            }
         }
         // check whether only entry display should be updated
         if (settingsDlg.getDisplayUpdate()) {
             updateZettelContent(displayedZettel);
-            if (desktopDlg!=null) desktopDlg.updateEntriesAfterEditing();
-            if (searchResultsDlg!=null) searchResultsDlg.updateDisplayAfterEditing();
+            if (desktopDlg != null) {
+                desktopDlg.updateEntriesAfterEditing();
+            }
+            if (searchResultsDlg != null) {
+                searchResultsDlg.updateDisplayAfterEditing();
+            }
             // set background color
             jEditorPaneEntry.setBackground(new Color(Integer.parseInt(settings.getMainBackgroundColor(), 16)));
         }
@@ -7313,231 +7449,257 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             initTables();
             // update toolbar, to show new icons if necessary
             initToolbarIcons(false);
-            if (searchResultsDlg!=null) searchResultsDlg.initToolbarIcons();
-            if (desktopDlg!=null) desktopDlg.initToolbarIcons();
-            if (newEntryDlg!=null) newEntryDlg.initToolbarIcons();
+            if (searchResultsDlg != null) {
+                searchResultsDlg.initToolbarIcons();
+            }
+            if (desktopDlg != null) {
+                desktopDlg.initToolbarIcons();
+            }
+            if (newEntryDlg != null) {
+                newEntryDlg.initToolbarIcons();
+            }
             // set background color
             jEditorPaneEntry.setBackground(new Color(Integer.parseInt(settings.getMainBackgroundColor(), 16)));
             // update display, in case the user changed the font-settings
             updateDisplay();
         }
         // when the user chose a new look and feel, or font-size for tables and lists, update ist
-        if (settingsDlg.getNeedsLafUpdate()) JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("needsRestartMsg"),getResourceMap().getString("needsRestartTitle"),JOptionPane.PLAIN_MESSAGE);
+        if (settingsDlg.getNeedsLafUpdate()) {
+            JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("needsRestartMsg"), getResourceMap().getString("needsRestartTitle"), JOptionPane.PLAIN_MESSAGE);
+        }
         // when we have any changes in visual settings, tell desktop to update display
-        if (desktopDlg!=null) desktopDlg.setNeedsUpdate(true);
+        if (desktopDlg != null) {
+            desktopDlg.setNeedsUpdate(true);
+        }
         // check for correct saving of settings
         if (!settingsDlg.isSaveSettingsOk()) {
             // show error log
             showErrorIcon();
         }
         settingsDlg.dispose();
-        settingsDlg=null;
+        settingsDlg = null;
         // try to motivate garbage collector
         System.gc();
     }
 
-    
     /**
      * This method searches for entries that contain at least on of the selected
-     * entries (log-or) from the jTableAuthors or jTableKewords, and adds those entries as manual
-     * links to the current entry.
+     * entries (log-or) from the jTableAuthors or jTableKewords, and adds those
+     * entries as manual links to the current entry.
      */
     @Action(enabledProperty = "tableEntriesSelected")
     public void addManLinksLogOr() {
         switch (jTabbedPaneMain.getSelectedIndex()) {
-            case TAB_AUTHORS: addManLinksFromAuthors(Constants.LOG_OR); break;
-            case TAB_KEYWORDS: addManLinksFromKeywords(Constants.LOG_OR); break;
+            case TAB_AUTHORS:
+                addManLinksFromAuthors(Constants.LOG_OR);
+                break;
+            case TAB_KEYWORDS:
+                addManLinksFromKeywords(Constants.LOG_OR);
+                break;
         }
     }
 
-    
     /**
-     * This method searches for entries that contain <i>all</i> selected
-     * entries (log-and) from the jTableAuthors or jTableKeywords, and adds those entries as manual
-     * links to the current entry.
+     * This method searches for entries that contain <i>all</i> selected entries
+     * (log-and) from the jTableAuthors or jTableKeywords, and adds those
+     * entries as manual links to the current entry.
      */
     @Action(enabledProperty = "tableEntriesSelected")
     public void addManLinksLogAnd() {
         switch (jTabbedPaneMain.getSelectedIndex()) {
-            case TAB_AUTHORS: addManLinksFromAuthors(Constants.LOG_AND); break;
-            case TAB_KEYWORDS: addManLinksFromKeywords(Constants.LOG_AND); break;
+            case TAB_AUTHORS:
+                addManLinksFromAuthors(Constants.LOG_AND);
+                break;
+            case TAB_KEYWORDS:
+                addManLinksFromKeywords(Constants.LOG_AND);
+                break;
         }
     }
 
-
     /**
-     * This method searches for entries that contain the selected
-     * keywords from the jTableKeywords, and adds those entries as luhmann-numbers
-     * (follower) to the current entry.
+     * This method searches for entries that contain the selected keywords from
+     * the jTableKeywords, and adds those entries as luhmann-numbers (follower)
+     * to the current entry.
      * <br><br>
      * See {@link #addLuhmannLogOr() addLuhmannLogOr()} and
-     * {@link #addLuhmannLogAnd() addLuhmannLogAnd()} for more
-     * details.
-     * 
-     * @param log the logical combination of the search, whether at least one keywords should exist
-     * (log-or) or if only entries are added that contain all keywords (log-and)
+     * {@link #addLuhmannLogAnd() addLuhmannLogAnd()} for more details.
+     *
+     * @param log the logical combination of the search, whether at least one
+     * keywords should exist (log-or) or if only entries are added that contain
+     * all keywords (log-and)
      */
     private void addLuhmannFromKeywords(int log) {
         // search for all entries that contain the selected keywords
         // and add them as luhmann-numbers
-        startSearch(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords,0), // string-array with search terms
-                    Constants.SEARCH_KEYWORDS,           // the type of search, i.e. where to look
-                    log,                                  // the logical combination
-                    true,                                 // whole-word-search
-                    true,                                 // match-case-search
-                    settings.getSearchAlwaysSynonyms(),   // whether synonyms should be included or not
-                    false,                                // whether the search terms contain regular expressions or not
-                    false,                                // time-period search
-                    "",                                   // timestamp, date from (period start)
-                    "",                                   // timestamp, date to (period end)
-                    0,                                    // timestampindex (whether the period should focus on creation or edited date, or both)
-                    true,                                 // no display - whether the results should only be used for adding entries to the desktop or so (true), or if a searchresults-window shoud be opened (false)
-                    Constants.STARTSEARCH_LUHMANN,        // whether we have a usual search, or a search for entries without remarks or keywords and so on - see related method findEntryWithout
-                    Constants.SEARCH_USUAL);
+        startSearch(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords, 0), // string-array with search terms
+                Constants.SEARCH_KEYWORDS, // the type of search, i.e. where to look
+                log, // the logical combination
+                true, // whole-word-search
+                true, // match-case-search
+                settings.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
+                false, // whether the search terms contain regular expressions or not
+                false, // time-period search
+                "", // timestamp, date from (period start)
+                "", // timestamp, date to (period end)
+                0, // timestampindex (whether the period should focus on creation or edited date, or both)
+                true, // no display - whether the results should only be used for adding entries to the desktop or so (true), or if a searchresults-window shoud be opened (false)
+                Constants.STARTSEARCH_LUHMANN, // whether we have a usual search, or a search for entries without remarks or keywords and so on - see related method findEntryWithout
+                Constants.SEARCH_USUAL);
         // update display
         updateDisplay();
     }
 
-    
     /**
-     * This method searches for entries that contain the selected
-     * keywords from the jTableKeywords, and adds those entries as manual links
-     * (follower) to the current entry.
+     * This method searches for entries that contain the selected keywords from
+     * the jTableKeywords, and adds those entries as manual links (follower) to
+     * the current entry.
      * <br><br>
      * See {@link #addManLinksLogOr() addManLinksLogOr()} and
-     * {@link #addManLinksLogAnd() addManLinksLogAnd()} for more
-     * details.
-     * 
-     * @param log the logical combination of the search, whether at least one keywords should exist
-     * (log-or) or if only entries are added that contain all keywords (log-and)
+     * {@link #addManLinksLogAnd() addManLinksLogAnd()} for more details.
+     *
+     * @param log the logical combination of the search, whether at least one
+     * keywords should exist (log-or) or if only entries are added that contain
+     * all keywords (log-and)
      */
     private void addManLinksFromKeywords(int log) {
         // search for all entries that contain the selected keywords
         // and add them as manual links
-        startSearch(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords,0), // string-array with search terms
-                    Constants.SEARCH_KEYWORDS,           // the type of search, i.e. where to look
-                    log,                                  // the logical combination
-                    true,                                 // whole-word-search
-                    true,                                 // match-case-search
-                    settings.getSearchAlwaysSynonyms(),   // whether synonyms should be included or not
-                    false,                                // whether the search terms contain regular expressions or not
-                    false,                                // time-period search
-                    "",                                   // timestamp, date from (period start)
-                    "",                                   // timestamp, date to (period end)
-                    0,                                    // timestampindex (whether the period should focus on creation or edited date, or both)
-                    true,                                 // no display - whether the results should only be used for adding entries to the desktop or so (true), or if a searchresults-window shoud be opened (false)
-                    Constants.STARTSEARCH_MANLINK,        // whether we have a usual search, or a search for entries without remarks or keywords and so on - see related method findEntryWithout
-                    Constants.SEARCH_USUAL);
+        startSearch(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords, 0), // string-array with search terms
+                Constants.SEARCH_KEYWORDS, // the type of search, i.e. where to look
+                log, // the logical combination
+                true, // whole-word-search
+                true, // match-case-search
+                settings.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
+                false, // whether the search terms contain regular expressions or not
+                false, // time-period search
+                "", // timestamp, date from (period start)
+                "", // timestamp, date to (period end)
+                0, // timestampindex (whether the period should focus on creation or edited date, or both)
+                true, // no display - whether the results should only be used for adding entries to the desktop or so (true), or if a searchresults-window shoud be opened (false)
+                Constants.STARTSEARCH_MANLINK, // whether we have a usual search, or a search for entries without remarks or keywords and so on - see related method findEntryWithout
+                Constants.SEARCH_USUAL);
         // update display
         updateDisplay();
     }
 
-    
     /**
-     * This method adds the selected entries from the the current activated tab in the tabbed pane,
-     * and adds those entries to the desktop.
+     * This method adds the selected entries from the the current activated tab
+     * in the tabbed pane, and adds those entries to the desktop.
      */
     @Action(enabledProperty = "tableEntriesSelected")
     public void addDesktop() {
         switch (jTabbedPaneMain.getSelectedIndex()) {
-            case TAB_TITLES: addToDesktop(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableTitles,0)); break;
-            case TAB_LINKS: addToDesktop(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableLinks,0));
-                            addToDesktop(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableManLinks,0)); break;
-            case TAB_LUHMANN: addToDesktop(new int[] {retrieveEntryNrFromLuhmann()}); break;
-            case TAB_BOOKMARKS: addToDesktop(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableBookmarks,0)); break;
+            case TAB_TITLES:
+                addToDesktop(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableTitles, 0));
+                break;
+            case TAB_LINKS:
+                addToDesktop(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableLinks, 0));
+                addToDesktop(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableManLinks, 0));
+                break;
+            case TAB_LUHMANN:
+                addToDesktop(new int[]{retrieveEntryNrFromLuhmann()});
+                break;
+            case TAB_BOOKMARKS:
+                addToDesktop(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableBookmarks, 0));
+                break;
         }
     }
 
-
     /**
-     * This method searches for entries that contain the selected
-     * keywords from the jTableKeywords, and adds those entries to the desktop.
+     * This method searches for entries that contain the selected keywords from
+     * the jTableKeywords, and adds those entries to the desktop.
      * <br><br>
      * See {@link #addDesktopLogOr() addDesktopLogOr()} and
-     * {@link #addDesktopLogAnd() addDesktopLogAnd()} for more
-     * details.
-     * 
-     * @param log the logical combination of the search, whether at least one keywords should exist
-     * (log-or) or if only entries are added that contain all keywords (log-and)
+     * {@link #addDesktopLogAnd() addDesktopLogAnd()} for more details.
+     *
+     * @param log the logical combination of the search, whether at least one
+     * keywords should exist (log-or) or if only entries are added that contain
+     * all keywords (log-and)
      */
     private void addDesktopFromKeywords(int log) {
         // search for all entries that contain the selected keywords and add them to the desktop
-        startSearch(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords,0), // string-array with search terms
-                    Constants.SEARCH_KEYWORDS,           // the type of search, i.e. where to look
-                    log,                                  // the logical combination
-                    true,                                 // whole-word-search
-                    true,                                 // match-case-search
-                    settings.getSearchAlwaysSynonyms(),   // whether synonyms should be included or not
-                    false,                                // whether the search terms contain regular expressions or not
-                    false,                                // time-period search
-                    "",                                   // timestamp, date from (period start)
-                    "",                                   // timestamp, date to (period end)
-                    0,                                    // timestampindex (whether the period should focus on creation or edited date, or both)
-                    true,                                 // no display - whether the results should only be used for adding entries to the desktop or so (true), or if a searchresults-window shoud be opened (false)
-                    Constants.STARTSEARCH_DESKTOP,        // whether we have a usual search, or a search for entries without remarks or keywords and so on - see related method findEntryWithout
-                    Constants.SEARCH_USUAL);
+        startSearch(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords, 0), // string-array with search terms
+                Constants.SEARCH_KEYWORDS, // the type of search, i.e. where to look
+                log, // the logical combination
+                true, // whole-word-search
+                true, // match-case-search
+                settings.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
+                false, // whether the search terms contain regular expressions or not
+                false, // time-period search
+                "", // timestamp, date from (period start)
+                "", // timestamp, date to (period end)
+                0, // timestampindex (whether the period should focus on creation or edited date, or both)
+                true, // no display - whether the results should only be used for adding entries to the desktop or so (true), or if a searchresults-window shoud be opened (false)
+                Constants.STARTSEARCH_DESKTOP, // whether we have a usual search, or a search for entries without remarks or keywords and so on - see related method findEntryWithout
+                Constants.SEARCH_USUAL);
     }
-    
-    
+
     /**
      * This method searches for entries that contain at least on of the selected
-     * entries (log-or) from the jTableAuthors or jTableKeywords, and adds those entries to the desktop.
+     * entries (log-or) from the jTableAuthors or jTableKeywords, and adds those
+     * entries to the desktop.
      */
     @Action(enabledProperty = "tableEntriesSelected")
     public void addDesktopLogOr() {
         switch (jTabbedPaneMain.getSelectedIndex()) {
-            case TAB_AUTHORS: addDesktopFromAuthors(Constants.LOG_OR); break;
-            case TAB_KEYWORDS: addDesktopFromKeywords(Constants.LOG_OR); break;
+            case TAB_AUTHORS:
+                addDesktopFromAuthors(Constants.LOG_OR);
+                break;
+            case TAB_KEYWORDS:
+                addDesktopFromKeywords(Constants.LOG_OR);
+                break;
         }
     }
 
-    
     /**
-     * This method searches for entries that contain <i>all</i> selected
-     * entries (log-and) from the jTableAuthors or jTableKeywords, and adds those entries to the desktop.
+     * This method searches for entries that contain <i>all</i> selected entries
+     * (log-and) from the jTableAuthors or jTableKeywords, and adds those
+     * entries to the desktop.
      */
     @Action(enabledProperty = "tableEntriesSelected")
     public void addDesktopLogAnd() {
         switch (jTabbedPaneMain.getSelectedIndex()) {
-            case TAB_AUTHORS: addDesktopFromAuthors(Constants.LOG_AND); break;
-            case TAB_KEYWORDS: addDesktopFromKeywords(Constants.LOG_AND); break;
+            case TAB_AUTHORS:
+                addDesktopFromAuthors(Constants.LOG_AND);
+                break;
+            case TAB_KEYWORDS:
+                addDesktopFromKeywords(Constants.LOG_AND);
+                break;
         }
     }
-    
-    
+
     /**
-     * This method searches for entries that contain the selected
-     * authors from the jTableAuthors, and adds those entries to the desktop.
+     * This method searches for entries that contain the selected authors from
+     * the jTableAuthors, and adds those entries to the desktop.
      * <br><br>
      * See {@link #addDesktopLogOr() addDesktopLogOr()} and
-     * {@link #addDesktopLogAnd() addDesktopLogAnd()} for more
-     * details.
-     * 
-     * @param log the logical combination of the search, whether at least one author should exist
-     * (log-or) or if only entries are added that contain all authors (log-and)
+     * {@link #addDesktopLogAnd() addDesktopLogAnd()} for more details.
+     *
+     * @param log the logical combination of the search, whether at least one
+     * author should exist (log-or) or if only entries are added that contain
+     * all authors (log-and)
      */
     private void addDesktopFromAuthors(int log) {
         // search for all entries that contain the selected authors and add them to the destzop
-        startSearch(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors,0), // string-array with search terms
-                    Constants.SEARCH_AUTHOR,            // the type of search, i.e. where to look
-                    log,                                 // the logical combination
-                    true,                                // whole-word-search
-                    true,                                // match-case-search
-                    settings.getSearchAlwaysSynonyms(),  // whether synonyms should be included or not
-                    false,                                // whether the search terms contain regular expressions or not
-                    false,                               // time-period search
-                    "",                                  // timestamp, date from (period start)
-                    "",                                  // timestamp, date to (period end)
-                    0,                                   // timestampindex (whether the period should focus on creation or edited date, or both)
-                    true,                                // no display - whether the results should only be used for adding entries to the desktop or so (true), or if a searchresults-window shoud be opened (false)
-                    Constants.STARTSEARCH_DESKTOP,       // whether we have a usual search, or a search for entries without remarks or keywords and so on - see related method findEntryWithout
-                    Constants.SEARCH_USUAL);
+        startSearch(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors, 0), // string-array with search terms
+                Constants.SEARCH_AUTHOR, // the type of search, i.e. where to look
+                log, // the logical combination
+                true, // whole-word-search
+                true, // match-case-search
+                settings.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
+                false, // whether the search terms contain regular expressions or not
+                false, // time-period search
+                "", // timestamp, date from (period start)
+                "", // timestamp, date to (period end)
+                0, // timestampindex (whether the period should focus on creation or edited date, or both)
+                true, // no display - whether the results should only be used for adding entries to the desktop or so (true), or if a searchresults-window shoud be opened (false)
+                Constants.STARTSEARCH_DESKTOP, // whether we have a usual search, or a search for entries without remarks or keywords and so on - see related method findEntryWithout
+                Constants.SEARCH_USUAL);
     }
-    
-    
+
     /**
-     * This method rerieves the selected entries from the current activated tab in the tabbedpane
-     * as manual links to the current entry.
+     * This method rerieves the selected entries from the current activated tab
+     * in the tabbedpane as manual links to the current entry.
      */
     @Action(enabledProperty = "tableEntriesSelected")
     public void addManLinks() {
@@ -7547,181 +7709,207 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         int activatedEntry = data.getCurrentZettelPos();
         // retrieve selected tab
         switch (jTabbedPaneMain.getSelectedIndex()) {
-            case TAB_TITLES:    addToManLinks(activatedEntry, ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableTitles,0));
-                                break;
+            case TAB_TITLES:
+                addToManLinks(activatedEntry, ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableTitles, 0));
+                break;
             // in this single case, we have to update the tab with the links-table...
-            case TAB_LINKS:     needsLinkUpdate=true;
-                                addToManLinks(activatedEntry ,ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableLinks,0));
-                                break;
-            case TAB_BOOKMARKS: addToManLinks(activatedEntry, ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableBookmarks,0));
-                                break;
-            case TAB_LUHMANN:   addToManLinks(activatedEntry, new int[] {retrieveEntryNrFromLuhmann()});
-                                break;
+            case TAB_LINKS:
+                needsLinkUpdate = true;
+                addToManLinks(activatedEntry, ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableLinks, 0));
+                break;
+            case TAB_BOOKMARKS:
+                addToManLinks(activatedEntry, ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableBookmarks, 0));
+                break;
+            case TAB_LUHMANN:
+                addToManLinks(activatedEntry, new int[]{retrieveEntryNrFromLuhmann()});
+                break;
         }
-    }    
-    
+    }
 
     /**
-     * This method adds one or more entries as follower-numbers to the entry that is selected in
-     * the jTreeLuhmann. The entry-numbers
-     * of the to be added entries have to be passed as integer-array.<br><br>
-     * This method needs to be public, since we want to access it from other frames,
-     * like for instance {@link CSearchResults}.
-     * 
-     * @param entries an int-array conatining the entry-numbers of those entries that should
-     * be added as follower-entries
+     * This method adds one or more entries as follower-numbers to the entry
+     * that is selected in the jTreeLuhmann. The entry-numbers of the to be
+     * added entries have to be passed as integer-array.<br><br>
+     * This method needs to be public, since we want to access it from other
+     * frames, like for instance {@link CSearchResults}.
+     *
+     * @param entries an int-array conatining the entry-numbers of those entries
+     * that should be added as follower-entries
      * @return {@code true} if everything went ok, false if an error occured
      */
     public boolean addToLuhmann(int[] entries) {
-        if ((null==entries)||(entries.length<1)||(-1==entries[0])) return false;
+        if ((null == entries) || (entries.length < 1) || (-1 == entries[0])) {
+            return false;
+        }
         // if we have a selected entry, add numbers to that (sub-)entry
         int currentZettel = retrieveEntryNrFromLuhmann();
         // if no valid selection made, get current entry number
-        if (-1==currentZettel) currentZettel = data.getCurrentZettelPos();
+        if (-1 == currentZettel) {
+            currentZettel = data.getCurrentZettelPos();
+        }
         // init message-box indicator
         boolean error = false;
         // iterate array and add it to the current entry
-        for (int nr : entries) if (!data.addLuhmannNumber(currentZettel, nr)) error = true;
+        for (int nr : entries) {
+            if (!data.addLuhmannNumber(currentZettel, nr)) {
+                error = true;
+            }
+        }
         // display error message box, when any problems occured
-        if (error) JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("errLuhmannExistsMsg"),getResourceMap().getString("errLuhmannExistsTitle"),JOptionPane.PLAIN_MESSAGE);
+        if (error) {
+            JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("errLuhmannExistsMsg"), getResourceMap().getString("errLuhmannExistsTitle"), JOptionPane.PLAIN_MESSAGE);
+        }
         // update the display
         updateDisplay();
         return true;
     }
-    
-    
+
     /**
-     * This method rerieves the selected entries from the current activated tab in the tabbedpane
-     * and adds them to the bookmarks of the current entry.
+     * This method rerieves the selected entries from the current activated tab
+     * in the tabbedpane and adds them to the bookmarks of the current entry.
      */
     @Action(enabledProperty = "tableEntriesSelected")
     public void addBookmarks() {
         switch (jTabbedPaneMain.getSelectedIndex()) {
-            case TAB_TITLES: addToBookmarks(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data,jTableTitles,0),false); break;
-            case TAB_LUHMANN: addToBookmarks(new int[] {retrieveEntryNrFromLuhmann()},false); break;
+            case TAB_TITLES:
+                addToBookmarks(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableTitles, 0), false);
+                break;
+            case TAB_LUHMANN:
+                addToBookmarks(new int[]{retrieveEntryNrFromLuhmann()}, false);
+                break;
         }
     }
 
-
     /**
-     * This method rerieves the selected entries from the current activated tab in the tabbedpane
-     * and adds them as luhmann-numbers (follower) of the current entry.
+     * This method rerieves the selected entries from the current activated tab
+     * in the tabbedpane and adds them as luhmann-numbers (follower) of the
+     * current entry.
      */
     @Action(enabledProperty = "tableEntriesSelected")
     public void addLuhmann() {
         switch (jTabbedPaneMain.getSelectedIndex()) {
-            case TAB_BOOKMARKS: addToLuhmann(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data,jTableBookmarks,0)); break;
-            case TAB_LINKS: addToLuhmann(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data,jTableLinks,0));
-                            addToLuhmann(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data,jTableManLinks,0)); break;
-            case TAB_TITLES: addToLuhmann(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data,jTableTitles,0)); break;
+            case TAB_BOOKMARKS:
+                addToLuhmann(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableBookmarks, 0));
+                break;
+            case TAB_LINKS:
+                addToLuhmann(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableLinks, 0));
+                addToLuhmann(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableManLinks, 0));
+                break;
+            case TAB_TITLES:
+                addToLuhmann(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableTitles, 0));
+                break;
         }
-    }    
-    
-    
+    }
+
     /**
      * This method searches for entries that contain at least on of the selected
-     * entries (log-or) from the jTableAuthors or jTableKeywords, and adds those entries as luhmann-numbers
-     * (follower) to the current entry.
+     * entries (log-or) from the jTableAuthors or jTableKeywords, and adds those
+     * entries as luhmann-numbers (follower) to the current entry.
      */
     @Action(enabledProperty = "tableEntriesSelected")
     public void addLuhmannLogOr() {
         switch (jTabbedPaneMain.getSelectedIndex()) {
-            case TAB_AUTHORS: addLuhmannFromAuthors(Constants.LOG_OR); break;
-            case TAB_KEYWORDS: addLuhmannFromKeywords(Constants.LOG_OR); break;
+            case TAB_AUTHORS:
+                addLuhmannFromAuthors(Constants.LOG_OR);
+                break;
+            case TAB_KEYWORDS:
+                addLuhmannFromKeywords(Constants.LOG_OR);
+                break;
         }
-        
+
     }
-    
-    
+
     /**
      * This method searches for entries that contain <i>all</i>of the selected
-     * entries (log-and) from the jTableAuthors or jTableKeywords, and adds those entries as luhmann-numbers
-     * (follower) to the current entry.
+     * entries (log-and) from the jTableAuthors or jTableKeywords, and adds
+     * those entries as luhmann-numbers (follower) to the current entry.
      */
     @Action(enabledProperty = "tableEntriesSelected")
     public void addLuhmannLogAnd() {
         switch (jTabbedPaneMain.getSelectedIndex()) {
-            case TAB_AUTHORS: addLuhmannFromAuthors(Constants.LOG_AND); break;
-            case TAB_KEYWORDS: addLuhmannFromKeywords(Constants.LOG_AND); break;
+            case TAB_AUTHORS:
+                addLuhmannFromAuthors(Constants.LOG_AND);
+                break;
+            case TAB_KEYWORDS:
+                addLuhmannFromKeywords(Constants.LOG_AND);
+                break;
         }
 
     }
 
-
     /**
-     * This method searches for entries that contain the selected
-     * authors from the jTableAuthors, and adds those entries as luhmann-numbers
-     * (follower) to the current entry.
+     * This method searches for entries that contain the selected authors from
+     * the jTableAuthors, and adds those entries as luhmann-numbers (follower)
+     * to the current entry.
      * <br><br>
      * See {@link #addLuhmannLogOr() addLuhmannLogOr()} and
-     * {@link #addLuhmannLogAnd() addLuhmannLogAnd()} for more
-     * details.
-     * 
-     * @param log the logical combination of the search, whether at least one author should exist
-     * (log-or) or if only entries are added that contain all authors (log-and)
+     * {@link #addLuhmannLogAnd() addLuhmannLogAnd()} for more details.
+     *
+     * @param log the logical combination of the search, whether at least one
+     * author should exist (log-or) or if only entries are added that contain
+     * all authors (log-and)
      */
     private void addLuhmannFromAuthors(int log) {
         // search for all entries that contain at least on of the selected keywords
         // and add them as luhmann-numbers
-        startSearch(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors,0), // string-array with search terms
-                    Constants.SEARCH_AUTHOR,             // the type of search, i.e. where to look
-                    log,                                  // the logical combination
-                    true,                                 // whole-word-search
-                    true,                                 // match-case-search
-                    settings.getSearchAlwaysSynonyms(),   // whether synonyms should be included or not
-                    false,                                // whether the search terms contain regular expressions or not
-                    false,                                // time-period search
-                    "",                                   // timestamp, date from (period start)
-                    "",                                   // timestamp, date to (period end)
-                    0,                                    // timestampindex (whether the period should focus on creation or edited date, or both)
-                    true,                                 // no display - whether the results should only be used for adding entries to the desktop or so (true), or if a searchresults-window shoud be opened (false)
-                    Constants.STARTSEARCH_LUHMANN,        // whether we have a usual search, or a search for entries without remarks or keywords and so on - see related method findEntryWithout
-                    Constants.SEARCH_USUAL);
+        startSearch(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors, 0), // string-array with search terms
+                Constants.SEARCH_AUTHOR, // the type of search, i.e. where to look
+                log, // the logical combination
+                true, // whole-word-search
+                true, // match-case-search
+                settings.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
+                false, // whether the search terms contain regular expressions or not
+                false, // time-period search
+                "", // timestamp, date from (period start)
+                "", // timestamp, date to (period end)
+                0, // timestampindex (whether the period should focus on creation or edited date, or both)
+                true, // no display - whether the results should only be used for adding entries to the desktop or so (true), or if a searchresults-window shoud be opened (false)
+                Constants.STARTSEARCH_LUHMANN, // whether we have a usual search, or a search for entries without remarks or keywords and so on - see related method findEntryWithout
+                Constants.SEARCH_USUAL);
         // update display
         updateDisplay();
     }
 
-    
     /**
-     * This method searches for entries that contain the selected
-     * authors from the jTableAuthors, and adds those entries as manual links
-     * to the current entry.
+     * This method searches for entries that contain the selected authors from
+     * the jTableAuthors, and adds those entries as manual links to the current
+     * entry.
      * <br><br>
      * See {@link #addManLinksFromAuthors() addManLinksFromAuthors()} and
-     * {@link #addManLinksFromAuthorsLogAnd() addManLinksFromAuthorsLogAnd()} for more
-     * details.
-     * 
-     * @param log the logical combination of the search, whether at least one author should exist
-     * (log-or) or if only entries are added that contain all authors (log-and)
+     * {@link #addManLinksFromAuthorsLogAnd() addManLinksFromAuthorsLogAnd()}
+     * for more details.
+     *
+     * @param log the logical combination of the search, whether at least one
+     * author should exist (log-or) or if only entries are added that contain
+     * all authors (log-and)
      */
     private void addManLinksFromAuthors(int log) {
         // search for all entries that contain at least on of the selected authors
         // and add them as manual links
-        startSearch(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors,0), // string-array with search terms
-                    Constants.SEARCH_AUTHOR,            // the type of search, i.e. where to look
-                    log,                                 // the logical combination
-                    true,                                // whole-word-search
-                    true,                                // match-case-search
-                    settings.getSearchAlwaysSynonyms(),  // whether synonyms should be included or not
-                    false,                                // whether the search terms contain regular expressions or not
-                    false,                               // time-period search
-                    "",                                  // timestamp, date from (period start)
-                    "",                                  // timestamp, date to (period end)
-                    0,                                   // timestampindex (whether the period should focus on creation or edited date, or both)
-                    true,                                // no display - whether the results should only be used for adding entries to the desktop or so (true), or if a searchresults-window shoud be opened (false)
-                    Constants.STARTSEARCH_MANLINK,       // whether we have a usual search, or a search for entries without remarks or keywords and so on - see related method findEntryWithout
-                    Constants.SEARCH_USUAL);
+        startSearch(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors, 0), // string-array with search terms
+                Constants.SEARCH_AUTHOR, // the type of search, i.e. where to look
+                log, // the logical combination
+                true, // whole-word-search
+                true, // match-case-search
+                settings.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
+                false, // whether the search terms contain regular expressions or not
+                false, // time-period search
+                "", // timestamp, date from (period start)
+                "", // timestamp, date to (period end)
+                0, // timestampindex (whether the period should focus on creation or edited date, or both)
+                true, // no display - whether the results should only be used for adding entries to the desktop or so (true), or if a searchresults-window shoud be opened (false)
+                Constants.STARTSEARCH_MANLINK, // whether we have a usual search, or a search for entries without remarks or keywords and so on - see related method findEntryWithout
+                Constants.SEARCH_USUAL);
         // update display
         updateDisplay();
     }
 
-    
     // TODO wenn import abbricht, werden nicht alle listen resettet, bspw. table enthalten noch alte daten
-
     /**
-     * This method opens two dialogs: 1) the import dialog where the user can choose
-     * which type of data to import and where the file is locates. and 2) the status
-     * message window which does the import action in a background task
+     * This method opens two dialogs: 1) the import dialog where the user can
+     * choose which type of data to import and where the file is locates. and 2)
+     * the status message window which does the import action in a background
+     * task
      */
     @Action
     public void importWindow() {
@@ -7752,13 +7940,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             if (Constants.TYPE_BIB == importWindow.getImportType()) {
                 importAuthors();
             } else {
-                
+
                 // TODO wieder entfernen, wenn CSV implementiert
                 if (Constants.TYPE_CSV == importWindow.getImportType()) {
                     JOptionPane.showMessageDialog(getFrame(), "CSV-import not implemented yet!", "Import", JOptionPane.PLAIN_MESSAGE);
                     return;
                 }
-                
+
                 // first check whether we have unsaved changes, when the user wants
                 // to create a new data-file - but only the import-type is a data-file!
                 if (((Constants.TYPE_ZKN3 == importWindow.getImportType())
@@ -7844,14 +8032,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         System.gc();
     }
 
-
     /**
      * This method displays the log-file in a new window.
      */
     @Action
     public void showErrorLog() {
         // terminate timer
-        if (flashErrorIconTimer!=null) {
+        if (flashErrorIconTimer != null) {
             // if timer was running, cancel it
             flashErrorIconTimer.cancel();
             // purge it from the task-list
@@ -7861,8 +8048,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
         // hide button
         statusErrorButton.setVisible(false);
-        if (null==errorDlg) {
-            errorDlg = new CErrorLog(getFrame(),this,settings);
+        if (null == errorDlg) {
+            errorDlg = new CErrorLog(getFrame(), this, settings);
             errorDlg.setLocationRelativeTo(getFrame());
         }
         ZettelkastenApp.getApplication().show(errorDlg);
@@ -7877,28 +8064,31 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // show button
         statusErrorButton.setVisible(true);
         // check whether timer already exists
-        if (flashErrorIconTimer!=null) return;
+        if (flashErrorIconTimer != null) {
+            return;
+        }
         // create timer for flashing the update icon
         flashErrorIconTimer = new Timer();
         // this timer should start immediately and update each second
         flashErrorIconTimer.schedule(new ErrorIconTimer(), 0, 1000);
     }
 
-
     /**
      * This method opens three dialogs:
-     * <br><br>1) a dialog where the user can choose, which entries he wants to export.
-     * <br><br>2) the export dialog where the user can choose
-     * which type of format the data to be exported and where the file should be saved.
-     * <br><br>and 3) the status message window which does the export action in a background task
+     * <br><br>1) a dialog where the user can choose, which entries he wants to
+     * export.
+     * <br><br>2) the export dialog where the user can choose which type of
+     * format the data to be exported and where the file should be saved.
+     * <br><br>and 3) the status message window which does the export action in
+     * a background task
      */
     @Action(enabledProperty = "entriesAvailable")
     public void exportWindow() {
         // first, let the user choose, which entries to export - whether all entries
         // or just a selection...
-        if (null==exportEntriesDlg) {
+        if (null == exportEntriesDlg) {
             // get parent und init window
-            exportEntriesDlg = new CExportEntries(getFrame(),data.getCount(Daten.ZKNCOUNT),settings);
+            exportEntriesDlg = new CExportEntries(getFrame(), data.getCount(Daten.ZKNCOUNT), settings);
             // center window
             exportEntriesDlg.setLocationRelativeTo(getFrame());
         }
@@ -7916,36 +8106,37 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         exportEntriesDlg = null;
     }
 
-
     /**
-     * This method opens the export-dialog where the user can choose which format to use when
-     * exporting entries. This method is public, because it is also called from the CSearchResults-window
-     * to export search results and from the Desktop/Outliner to export data.
+     * This method opens the export-dialog where the user can choose which
+     * format to use when exporting entries. This method is public, because it
+     * is also called from the CSearchResults-window to export search results
+     * and from the Desktop/Outliner to export data.
      *
-     * @param entries an array of entry-numbers that should be exported. use {@code null} to export
-     * all entries.
+     * @param entries an array of entry-numbers that should be exported. use
+     * {@code null} to export all entries.
      */
     public void exportEntries(int[] entries) {
         // here we copy the integer-array to an object-array-list,
         // since our export-entries need to be in array-object-format
         ArrayList<Object> liste = new ArrayList<>();
-        if (null==entries || entries.length<1) {
+        if (null == entries || entries.length < 1) {
             liste = null;
-        }
-        else {
-            for (int cnt=0; cnt<entries.length; cnt++) liste.add(entries[cnt]);
+        } else {
+            for (int cnt = 0; cnt < entries.length; cnt++) {
+                liste.add(entries[cnt]);
+            }
         }
         exportEntries(liste);
     }
 
-
     /**
-     * This method opens the export-dialog where the user can choose which format to use when
-     * exporting entries. This method is public, because it is also called from the CSearchResults-window
-     * to export search results and from the Desktop/Outliner to export data.
+     * This method opens the export-dialog where the user can choose which
+     * format to use when exporting entries. This method is public, because it
+     * is also called from the CSearchResults-window to export search results
+     * and from the Desktop/Outliner to export data.
      *
-     * @param entries an array of entry-numbers that should be exported. use {@code null} to export
-     * all entries.
+     * @param entries an array of entry-numbers that should be exported. use
+     * {@code null} to export all entries.
      */
     public void exportEntries(ArrayList<Object> entries) {
         // opens the Export Dialog. This Class is responsible
@@ -7955,7 +8146,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // now open the export-dialog
         if (null == exportWindow) {
             // get parent und init window
-            exportWindow = new CExport(getFrame(),settings,bibtex);
+            exportWindow = new CExport(getFrame(), settings, bibtex);
             // center window
             exportWindow.setLocationRelativeTo(getFrame());
         }
@@ -7977,9 +8168,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     // open export dialog
                     // get parent und init window
                     taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_EXPORTDATA, taskinfo, data, bookmarks, desktop, settings, bibtex, synonyms,
-                                                     exportWindow.getFilePath(), entries, exportWindow.getExportType(), exportWindow.getExportParts(), 
-                                                     exportWindow.getCSVSeparator(), null, exportWindow.isAllInOneFile(), exportWindow.getFormatTagsRemoved(), 
-                                                     exportWindow.getExportBibTex(), exportWindow.getKeywordsHighlighted(), false, false, exportWindow.hasTitlePrefix());
+                            exportWindow.getFilePath(), entries, exportWindow.getExportType(), exportWindow.getExportParts(),
+                            exportWindow.getCSVSeparator(), null, exportWindow.isAllInOneFile(), exportWindow.getFormatTagsRemoved(),
+                            exportWindow.getExportBibTex(), exportWindow.getKeywordsHighlighted(), false, false, exportWindow.hasTitlePrefix());
                     // center window
                     taskDlg.setLocationRelativeTo(getFrame());
                 }
@@ -7988,9 +8179,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 taskDlg.dispose();
                 taskDlg = null;
                 // if an error occured, show error-log
-                if (!taskinfo.isExportOk()) showErrorIcon();
-                // else tell user that everything went fine
-                else if (taskinfo.showExportOkMessage()) JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("exportOkMsg"),getResourceMap().getString("exportOkTitle"),JOptionPane.PLAIN_MESSAGE);
+                if (!taskinfo.isExportOk()) {
+                    showErrorIcon();
+                } // else tell user that everything went fine
+                else if (taskinfo.showExportOkMessage()) {
+                    JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("exportOkMsg"), getResourceMap().getString("exportOkTitle"), JOptionPane.PLAIN_MESSAGE);
+                }
             }
         }
         // we have to manually dispose the window and release the memory
@@ -8002,15 +8196,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         System.gc();
     }
 
-    
     /**
-     * Shows the about box and gives information
-     * about the programm and version
+     * Shows the about box and gives information about the programm and version
      */
     @Action
     public void showAboutBox() {
         if (null == zknAboutBox) {
-            zknAboutBox = new AboutBox(getFrame(),settings.isMacAqua() | settings.isMacStyle());
+            zknAboutBox = new AboutBox(getFrame(), settings.isMacAqua() | settings.isMacStyle());
             zknAboutBox.setLocationRelativeTo(getFrame());
         }
         ZettelkastenApp.getApplication().show(zknAboutBox);
@@ -8021,115 +8213,127 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         System.gc();
     }
 
-
     /**
-     * This method duplicates the currently displayed entry and adds it to the end
-     * of the Zettelkasten database.
+     * This method duplicates the currently displayed entry and adds it to the
+     * end of the Zettelkasten database.
      */
     @Action(enabledProperty = "entriesAvailable")
     public void duplicateEntry() {
         duplicateEntry(displayedZettel);
     }
 
-
     /**
-     * This method duplicates the entry {@code nr} and adds it to the end of
-     * the Zettelkasten database.
+     * This method duplicates the entry {@code nr} and adds it to the end of the
+     * Zettelkasten database.
+     *
      * @param nr the entry-number of that entry that should be duplicated.
      */
     public void duplicateEntry(int nr) {
         // first, retrieve the entry's authors, so we can update the table jTableAuthors,
         // by increasing the frequencies...
         String[] aus = data.getAuthors(nr);
-        if (aus!=null) for (String a : aus) linkedauthorlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableAuthors, linkedauthorlist, a, 1);
+        if (aus != null) {
+            for (String a : aus) {
+                linkedauthorlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableAuthors, linkedauthorlist, a, 1);
+            }
+        }
         // then, retrieve the entry's keywords, so we can update the table jTableKeywords,
         // by increasing the frequencies...
         String[] kws = data.getKeywords(nr);
-        if (kws!=null) for (String k : kws) linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableKeywords, linkedkeywordlist, k, 1);
+        if (kws != null) {
+            for (String k : kws) {
+                linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableKeywords, linkedkeywordlist, k, 1);
+            }
+        }
         // finally, duplicate entry
         if (!data.duplicateEntry(nr)) {
             // tell user about problem
             JOptionPane.showMessageDialog(getFrame(),
-                                          getResourceMap().getString("errDuplicateEntryMsg"),
-                                          getResourceMap().getString("errDuplicateEntryTitle"),
-                                          JOptionPane.PLAIN_MESSAGE);
+                    getResourceMap().getString("errDuplicateEntryMsg"),
+                    getResourceMap().getString("errDuplicateEntryTitle"),
+                    JOptionPane.PLAIN_MESSAGE);
             showErrorIcon();
-        }
-        else {
+        } else {
             // update display if everything ok
             updateDisplay();
         }
     }
 
-
     /**
-     * This method opens the window for editing new entries. All the stuff like saving the
-     * data to the main-data-object is done within the class "CNewEntry.java"
+     * This method opens the window for editing new entries. All the stuff like
+     * saving the data to the main-data-object is done within the class
+     * "CNewEntry.java"
      */
     @Action
     public void newEntry() {
-        openEditWindow(false,-1,false,false,-1);
+        openEditWindow(false, -1, false, false, -1);
     }
-    
-    
+
     /**
-     * This method opens the window for editing existing entries. All the stuff like saving the
-     * data to the main-data-object is done within the class "CNewEntry.java"
+     * This method opens the window for editing existing entries. All the stuff
+     * like saving the data to the main-data-object is done within the class
+     * "CNewEntry.java"
      */
     @Action(enabledProperty = "entriesAvailable")
     public void editEntry() {
         if (data.isDeleted(displayedZettel)) {
-            openEditWindow(false,displayedZettel,false,true,-1);
-        }
-        else {
-            openEditWindow(true,displayedZettel,false,false,-1);
+            openEditWindow(false, displayedZettel, false, true, -1);
+        } else {
+            openEditWindow(true, displayedZettel, false, false, -1);
         }
     }
 
-    
     /**
-     * This method opens the new-entry-window for editing new or existing entries. if an entry
-     * is currently being edited, the {@code isEditModeActive} flag is set. In this case, the
-     * edit-window is only brought to the front. Else, a new window is created.
-     * 
-     * @param isEditing true if we want to edit an existing entry, false if a new entry is to be created
-     * @param entrynumber the entrynumber. relevant for editing existing entries.
-     * @param isLuhmann true if the new entry should be inserted as follower of the current entry.
-     * @param isDeleted true if the user wants to edit a deleted entry, thus inserting a new entry
-     * at an deleted entry's position
-     * @param insertAfterEntry This variable stores the number of that entry after which the new entry should
-     * be inserted. does only affect the prev/next attributes of an entry. Use {@code -1} to add entry
-     * to the end of entry order.
+     * This method opens the new-entry-window for editing new or existing
+     * entries. if an entry is currently being edited, the
+     * {@code isEditModeActive} flag is set. In this case, the edit-window is
+     * only brought to the front. Else, a new window is created.
+     *
+     * @param isEditing true if we want to edit an existing entry, false if a
+     * new entry is to be created
+     * @param entrynumber the entrynumber. relevant for editing existing
+     * entries.
+     * @param isLuhmann true if the new entry should be inserted as follower of
+     * the current entry.
+     * @param isDeleted true if the user wants to edit a deleted entry, thus
+     * inserting a new entry at an deleted entry's position
+     * @param insertAfterEntry This variable stores the number of that entry
+     * after which the new entry should be inserted. does only affect the
+     * prev/next attributes of an entry. Use {@code -1} to add entry to the end
+     * of entry order.
      */
-    public void openEditWindow(boolean isEditing,int entrynumber,boolean isLuhmann, boolean isDeleted, int insertAfterEntry) {
+    public void openEditWindow(boolean isEditing, int entrynumber, boolean isLuhmann, boolean isDeleted, int insertAfterEntry) {
         openEditWindow(isEditing, entrynumber, isLuhmann, isDeleted, insertAfterEntry, jEditorPaneEntry.getSelectedText());
     }
 
-    
     /**
-     * This method opens the new-entry-window for editing new or existing entries. if an entry
-     * is currently being edited, the {@code isEditModeActive} flag is set. In this case, the
-     * edit-window is only brought to the front. Else, a new window is created.
-     * 
-     * @param isEditing true if we want to edit an existing entry, false if a new entry is to be created
-     * @param entrynumber the entrynumber. relevant for editing existing entries.
-     * @param isLuhmann true if the new entry should be inserted as follower of the current entry.
-     * @param isDeleted true if the user wants to edit a deleted entry, thus inserting a new entry
-     * at an deleted entry's position
-     * @param insertAfterEntry This variable stores the number of that entry after which the new entry should
-     * be inserted. does only affect the prev/next attributes of an entry. Use {@code -1} to add entry
-     * to the end of entry order.
+     * This method opens the new-entry-window for editing new or existing
+     * entries. if an entry is currently being edited, the
+     * {@code isEditModeActive} flag is set. In this case, the edit-window is
+     * only brought to the front. Else, a new window is created.
+     *
+     * @param isEditing true if we want to edit an existing entry, false if a
+     * new entry is to be created
+     * @param entrynumber the entrynumber. relevant for editing existing
+     * entries.
+     * @param isLuhmann true if the new entry should be inserted as follower of
+     * the current entry.
+     * @param isDeleted true if the user wants to edit a deleted entry, thus
+     * inserting a new entry at an deleted entry's position
+     * @param insertAfterEntry This variable stores the number of that entry
+     * after which the new entry should be inserted. does only affect the
+     * prev/next attributes of an entry. Use {@code -1} to add entry to the end
+     * of entry order.
      * @param String content
      */
-    private void openEditWindow(boolean isEditing,int entrynumber,boolean isLuhmann, boolean isDeleted, int insertAfterEntry, String content) {
+    private void openEditWindow(boolean isEditing, int entrynumber, boolean isLuhmann, boolean isDeleted, int insertAfterEntry, String content) {
         // check whether an entry is already being edited, i.e. the edit-window is already created
         if (isEditModeActive) {
             // if so, bring that window to the front
             newEntryDlg.toFront();
-        }
-        // else create a new window and display it.
+        } // else create a new window and display it.
         else {
-            newEntryDlg = new NewEntryFrame(this,data,taskinfo,acceleratorKeys,settings,autoKorrekt,synonyms,steno,content,isEditing,entrynumber,isLuhmann,isDeleted,insertAfterEntry);
+            newEntryDlg = new NewEntryFrame(this, data, taskinfo, acceleratorKeys, settings, autoKorrekt, synonyms, steno, content, isEditing, entrynumber, isLuhmann, isDeleted, insertAfterEntry);
             newEntryDlg.setLocationRelativeTo(getFrame());
             ZettelkastenApp.getApplication().show(newEntryDlg);
             // edit window was initialized
@@ -8138,10 +8342,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             newEntryDlg.toFront();
         }
     }
-    
 
     /**
-     * This method is called from the CNewEntry-frame to indicate when an edit.action has been finished.
+     * This method is called from the CNewEntry-frame to indicate when an
+     * edit.action has been finished.
      */
     public void finishedEditing() {
         // edit window was closed
@@ -8153,18 +8357,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // here we update modified entries in the desktop window
             //
             // when we had an edit-option...
-            if (newEntryDlg.isEditMode() &&
-                // and whether a current desktop-dialog is opened.
-                desktopDlg!=null &&
-                // check whether the changed entry was on the desktop...
-                desktop.checkForDoubleEntry(desktop.getCurrentDesktopNr(),newEntryDlg.entryNumber))
-                // if yes, update desktop-view
+            if (newEntryDlg.isEditMode()
+                    && // and whether a current desktop-dialog is opened.
+                    desktopDlg != null
+                    && // check whether the changed entry was on the desktop...
+                    desktop.checkForDoubleEntry(desktop.getCurrentDesktopNr(), newEntryDlg.entryNumber)) // if yes, update desktop-view
+            {
                 desktopDlg.updateEntriesAfterEditing();
+            }
             //
             // here we update modified entries in the searchresults window
             //
             // when we had an edit-option and whether a current search-dialog is opened.
-            if (newEntryDlg.isEditMode() && searchResultsDlg!=null) {
+            if (newEntryDlg.isEditMode() && searchResultsDlg != null) {
                 // if yes, update desktop-view
                 searchResultsDlg.updateDisplayAfterEditing();
             }
@@ -8177,32 +8382,36 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // and attachment-list might be out of date now as well...
             data.setAttachmentlistUpToDate(false);
             // tell about success
-            Constants.zknlogger.log(Level.INFO,"Entry save finished.");
+            Constants.zknlogger.log(Level.INFO, "Entry save finished.");
             // update the dislay...
             updateDisplay();
             // tell about success
-            Constants.zknlogger.log(Level.INFO,"Display updated.");
+            Constants.zknlogger.log(Level.INFO, "Display updated.");
             // and create a backup...
             makeAutoBackup();
             // tell about success
-            Constants.zknlogger.log(Level.INFO,"Autobackup finished (if necessary).");
+            Constants.zknlogger.log(Level.INFO, "Autobackup finished (if necessary).");
             // check whether new entry was edited from search results window
             if (editEntryFromSearchWindow) {
                 // bring window to front
-                if (searchResultsDlg!=null) searchResultsDlg.toFront();
+                if (searchResultsDlg != null) {
+                    searchResultsDlg.toFront();
+                }
             }
             // check whether new entry was edited from desktop window
             if (editEntryFromDesktop) {
                 // check whether window is opened
-                if (desktopDlg!=null) {
+                if (desktopDlg != null) {
                     // retrieve ID of latest added entry
                     String id = data.getLastAddedZettelID();
                     // check for valid value
-                    if (id!=null) {
+                    if (id != null) {
                         // find index number from ID
                         int nr = data.getZettelNumberFromID(id);
                         // if we found an entry, add it
-                        if (nr!=-1) desktopDlg.addEntries(new int[]{nr});
+                        if (nr != -1) {
+                            desktopDlg.addEntries(new int[]{nr});
+                        }
                     }
                     // bring window to front
                     desktopDlg.toFront();
@@ -8216,14 +8425,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         System.gc();
     }
 
-
     /**
-     * This method starts a background thread that creates an automatic backup of the
-     * current main data file. the file is saved to the same directory as the main data file,
-     * just changing the extenstion to ".zkb3".
+     * This method starts a background thread that creates an automatic backup
+     * of the current main data file. the file is saved to the same directory as
+     * the main data file, just changing the extenstion to ".zkb3".
      * <br><br>
-     * This method is called when we have changes that are not save, e.g. after the methods
-     * {@link #newEntry() newEntry()} or {@link #editEntry() editEntry()}.
+     * This method is called when we have changes that are not save, e.g. after
+     * the methods {@link #newEntry() newEntry()} or
+     * {@link #editEntry() editEntry()}.
      */
     private void makeAutoBackup() {
         // if
@@ -8231,9 +8440,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // - no backup necessary
         // - or an save-operation is in progress...
         // ...then do nothing.
-        if (createAutoBackupIsRunning || !isbackupnecessary || isSaving) return;
+        if (createAutoBackupIsRunning || !isbackupnecessary || isSaving) {
+            return;
+        }
         // check for autobackup
-        if (settings.getAutoBackup()&&(settings.getFilePath()!=null)) {
+        if (settings.getAutoBackup() && (settings.getFilePath() != null)) {
             Task cabT = autoBackupTask();
             // get the application's context...
             ApplicationContext appC = Application.getInstance().getContext();
@@ -8243,27 +8454,27 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // with these we can execute the task and bring it to the foreground
             // i.e. making the animated progressbar and busy icon visible
             tS.execute(cabT);
-            tM.setForegroundTask(cabT);    
+            tM.setForegroundTask(cabT);
         }
     }
 
-
     /**
      * This mehtod creates an additional backup of<br>
-     * - the data-file
-     * - the meta-data ({@code zettelkasten-data.zkd3})
-     * when the user quits the application. These files are saved to a certain directory
+     * - the data-file - the meta-data ({@code zettelkasten-data.zkd3}) when the
+     * user quits the application. These files are saved to a certain directory
      * that is specified by the user.
      */
     private void makeExtraBackup() {
         // when no extrabackup is requested, leave method
-        if (!settings.getExtraBackup()) return;
+        if (!settings.getExtraBackup()) {
+            return;
+        }
         // retrieve backup-directory
         File backuppath = settings.getExtraBackupPath();
         // when the path does not exist, leave...
-        if (null==backuppath) {
+        if (null == backuppath) {
             // log error
-            Constants.zknlogger.log(Level.WARNING,"The file path to the extra backup (which is created when closing the application) is null! Extra backup could not be created!");
+            Constants.zknlogger.log(Level.WARNING, "The file path to the extra backup (which is created when closing the application) is null! Extra backup could not be created!");
             return;
         }
         if (!backuppath.exists()) {
@@ -8274,20 +8485,22 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // get filename and find out where extension begins, so we can retrieve the filename
         File datafile = settings.getFilePath();
         // if we have a valid file-path, go on...
-        if (datafile!=null) {
+        if (datafile != null) {
             // create a backup-filename, that consists of the data-file's filename
             String backupfilename = datafile.getName();
             // retrieve os-separator-char
             String sepchar = String.valueOf(File.separatorChar);
             // add additional separator-char if the file-path does not contain a trailing separator char
-            if (!backuppath.toString().endsWith(sepchar)) backupfilename = sepchar+backupfilename;
+            if (!backuppath.toString().endsWith(sepchar)) {
+                backupfilename = sepchar + backupfilename;
+            }
             // create final backup-file-path
-            File backupfile = new File(backuppath.toString()+backupfilename);
+            File backupfile = new File(backuppath.toString() + backupfilename);
             // if backup-filepath is identical with the data-filepath, we don't create an extra backup
             // to prevent overwriting the file...
             if (backupfile.toString().equalsIgnoreCase(datafile.toString())) {
                 // log error
-                Constants.zknlogger.log(Level.WARNING,"The file path of the extra backup (which is created when closing the application) equals the main data file name! To prevent overwriting the data file, the extra backup was not created!");
+                Constants.zknlogger.log(Level.WARNING, "The file path of the extra backup (which is created when closing the application) equals the main data file name! To prevent overwriting the data file, the extra backup was not created!");
                 return;
             }
             try {
@@ -8298,48 +8511,49 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // retrieve filepath of meta-file, i.e. the file that stores spellchecking, synonyms etc.
                 File metafile = settings.getMetaFilePath();
                 // check whether file exists
-                if (metafile!=null && metafile.exists()) {
+                if (metafile != null && metafile.exists()) {
                     // get filename
                     String metafilename = "zettelkasten-data.zkd3";
-                    if (!backuppath.toString().endsWith(sepchar)) metafilename = sepchar+metafilename;
+                    if (!backuppath.toString().endsWith(sepchar)) {
+                        metafilename = sepchar + metafilename;
+                    }
                     // create backupfilepath
-                    File backupmetafile = new File(backuppath.toString()+metafilename);
+                    File backupmetafile = new File(backuppath.toString() + metafilename);
                     // copy meta-file
                     FileOperationsUtil.copyFile(metafile, backupmetafile, 4096);
                     // log file path and success
                     Constants.zknlogger.log(Level.INFO, "Extra-backup meta-data was copied to {0}", backupmetafile.toString());
-                }
-                else {
+                } else {
                     // log error
                     Constants.zknlogger.log(Level.WARNING, "Extra-backup meta-data does not exists and thus could not be created!");
                 }
 
             } catch (IOException ex) {
-                Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
+                Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
             }
         }
     }
 
-
     /**
-     * This method deletes the currently displayed zettel. usually this method is called from the
-     * delete-action from the toolbbar or menu, in contrary to the delete-function from the jTableTitles
-     * which deletes selected entries (see {@link #deleteEntry() deleteEntry()}).<br><br>
-     * The entry is not being deleted completely. To keep the ordering and index-numbers of existing
-     * entries, a deleted entry will just be cleared (all content set to empty string values), and if
-     * a deleted entry is displayed, just a hint "deleted" is displayed in the main editor pane.
+     * This method deletes the currently displayed zettel. usually this method
+     * is called from the delete-action from the toolbbar or menu, in contrary
+     * to the delete-function from the jTableTitles which deletes selected
+     * entries (see {@link #deleteEntry() deleteEntry()}).<br><br>
+     * The entry is not being deleted completely. To keep the ordering and
+     * index-numbers of existing entries, a deleted entry will just be cleared
+     * (all content set to empty string values), and if a deleted entry is
+     * displayed, just a hint "deleted" is displayed in the main editor pane.
      */
     @Action(enabledProperty = "entriesAvailable")
     public void deleteCurrentEntry() {
         // delete currently displayed zettel
-        if (deleteEntries(new int[] {displayedZettel})) {
+        if (deleteEntries(new int[]{displayedZettel})) {
             // set uptodate-state to false
             data.setTitlelistUpToDate(false);
             // update tabbed pane
             updateTabbedPane();
         }
     }
-    
 
     /**
      * This method adds the currently displayed entry to the desktop-window.
@@ -8347,102 +8561,109 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     @Action(enabledProperty = "moreEntriesAvailable")
     public void addToDesktop() {
         // add entyry to desktop
-        addToDesktop(new int[] {displayedZettel});
+        addToDesktop(new int[]{displayedZettel});
     }
-    
-    
+
     /**
-     * This method adds one or more entries to the desktop-window. The entry-numbers
-     * of the to be added entries have to be passed as integer-array.<br><br>
-     * This method needs to be public, since we want to access it from other frames,
-     * like for instance {@link CSearchResults}.
-     * 
-     * @param entries an int-array conatining the entry-numbers of those entries that should
-     * be added to the desktop.
+     * This method adds one or more entries to the desktop-window. The
+     * entry-numbers of the to be added entries have to be passed as
+     * integer-array.<br><br>
+     * This method needs to be public, since we want to access it from other
+     * frames, like for instance {@link CSearchResults}.
+     *
+     * @param entries an int-array conatining the entry-numbers of those entries
+     * that should be added to the desktop.
      */
     public void addToDesktop(int[] entries) {
         // check for valid values
-        if ((null==entries)||(entries.length<1)||(-1==entries[0])) return;
+        if ((null == entries) || (entries.length < 1) || (-1 == entries[0])) {
+            return;
+        }
         // if dialog window isn't already created, do this now
-        if (null == desktopDlg) desktopDlg = new DesktopFrame(this,taskinfo,data,bookmarks,desktop,settings,acceleratorKeys,bibtex,autoKorrekt,steno);
+        if (null == desktopDlg) {
+            desktopDlg = new DesktopFrame(this, taskinfo, data, bookmarks, desktop, settings, acceleratorKeys, bibtex, autoKorrekt, steno);
+        }
         // show desktop
         ZettelkastenApp.getApplication().show(desktopDlg);
         // add entyry to desktop
         desktopDlg.addEntries(entries);
         // enable window-menu-item, if we have loaded desktop data
-        setDesktopAvailable(desktop.getCount()>0);
+        setDesktopAvailable(desktop.getCount() > 0);
     }
-    
-    
+
     @Action(enabledProperty = "entriesAvailable")
     public void newDesktop() {
         // if dialog window isn't already created, do this now
-        if (null == desktopDlg) desktopDlg = new DesktopFrame(this,taskinfo,data,bookmarks,desktop,settings,acceleratorKeys,bibtex,autoKorrekt,steno);
+        if (null == desktopDlg) {
+            desktopDlg = new DesktopFrame(this, taskinfo, data, bookmarks, desktop, settings, acceleratorKeys, bibtex, autoKorrekt, steno);
+        }
         // show desktop
         ZettelkastenApp.getApplication().show(desktopDlg);
         // let user create new desktop
         desktopDlg.newDesktop();
         // enable window-menu-item, if we have loaded desktop data
-        setDesktopAvailable(desktop.getCount()>0);
+        setDesktopAvailable(desktop.getCount() > 0);
     }
 
-
     /**
-     * This method opens the window for inserting new entries as "followers" or "sub-entries".
-     * These entries are inserted at the end of the data set, but are indicated as "followers" 
-     * (i.e.: sub-entries) of the current visible entry.
-     * All the stuff like saving the data to the main-data-object is done within the class "CNewEntry.java".
-     * We than additionally set the "luhmann"-tag here (see CDaten.java for more detaiks), which is used
-     * in the "showLuhmann" method here.
+     * This method opens the window for inserting new entries as "followers" or
+     * "sub-entries". These entries are inserted at the end of the data set, but
+     * are indicated as "followers" (i.e.: sub-entries) of the current visible
+     * entry. All the stuff like saving the data to the main-data-object is done
+     * within the class "CNewEntry.java". We than additionally set the
+     * "luhmann"-tag here (see CDaten.java for more detaiks), which is used in
+     * the "showLuhmann" method here.
      */
     @Action(enabledProperty = "entriesAvailable")
     public void insertEntry() {
-        openEditWindow(false,displayedZettel,true,false,displayedZettel);
+        openEditWindow(false, displayedZettel, true, false, displayedZettel);
     }
 
-    
     /**
-     * This method opens the window for inserting new entries as "followers" or "sub-entries".
-     * These entries are inserted at the end of the data set, but are indicated as "followers" 
-     * (i.e.: sub-entries) of the current visible entry.
-     * All the stuff like saving the data to the main-data-object is done within the class "CNewEntry.java".
-     * We than additionally set the "luhmann"-tag here (see CDaten.java for more detaiks), which is used
-     * in the "showLuhmann" method here.
+     * This method opens the window for inserting new entries as "followers" or
+     * "sub-entries". These entries are inserted at the end of the data set, but
+     * are indicated as "followers" (i.e.: sub-entries) of the current visible
+     * entry. All the stuff like saving the data to the main-data-object is done
+     * within the class "CNewEntry.java". We than additionally set the
+     * "luhmann"-tag here (see CDaten.java for more detaiks), which is used in
+     * the "showLuhmann" method here.
      */
     @Action(enabledProperty = "entriesAvailable")
     public void insertEntryAt() {
-        openEditWindow(false,displayedZettel,false,false,displayedZettel);
+        openEditWindow(false, displayedZettel, false, false, displayedZettel);
     }
-    
-    
+
     /**
-     * This method opens the window for inserting new entries as "followers" or "sub-entries".
-     * These entries are inserted at the end of the data set, but are indicated as "followers" 
-     * (i.e.: sub-entries) of the current visible entry, <b>or</b> of the currently selected entry
-     * of the jTreeLuhmann - if there is any selection.<br><br>
-     * All the stuff like saving the data to the main-data-object is done within the class "CNewEntry.java".
-     * We than additionally set the "luhmann"-tag here (see CDaten.java for more detaiks), which is used
-     * in the "showLuhmann" method here.<br><br>
+     * This method opens the window for inserting new entries as "followers" or
+     * "sub-entries". These entries are inserted at the end of the data set, but
+     * are indicated as "followers" (i.e.: sub-entries) of the current visible
+     * entry, <b>or</b> of the currently selected entry of the jTreeLuhmann - if
+     * there is any selection.<br><br>
+     * All the stuff like saving the data to the main-data-object is done within
+     * the class "CNewEntry.java". We than additionally set the "luhmann"-tag
+     * here (see CDaten.java for more detaiks), which is used in the
+     * "showLuhmann" method here.<br><br>
      * Entries may be separated with commas, or also contain a "from-to" option.
      * example: "4,6,11-15,19"
      */
     @Action(enabledProperty = "moreEntriesAvailable")
     public void manualInsertEntry() {
         // open an input-dialog
-        String newLuhmann = (String)JOptionPane.showInputDialog(getFrame(),
-                                                                getResourceMap().getString("newLuhmannMsg"),
-                                                                getResourceMap().getString("newLuhmannTitle"),
-                                                                JOptionPane.PLAIN_MESSAGE);
+        String newLuhmann = (String) JOptionPane.showInputDialog(getFrame(),
+                getResourceMap().getString("newLuhmannMsg"),
+                getResourceMap().getString("newLuhmannTitle"),
+                JOptionPane.PLAIN_MESSAGE);
         // if we have a valid return-value...
-        if ((newLuhmann!=null) && (newLuhmann.length()>0)) {
+        if ((newLuhmann != null) && (newLuhmann.length() > 0)) {
             // convert the string-input into an int-array
             int[] selectedValues = Tools.retrieveEntryNumbersFromInput(newLuhmann, data.getCount(Daten.ZKNCOUNT));
             // and add them as follower-entries
-            if (selectedValues!=null) addToLuhmann(selectedValues);
+            if (selectedValues != null) {
+                addToLuhmann(selectedValues);
+            }
         }
     }
-    
-    
+
     /**
      * This method opens the window for inserting new entries as manual links.
      * Entries may be separated with commas, or also contain a "from-to" option.
@@ -8451,34 +8672,36 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     @Action(enabledProperty = "moreEntriesAvailable")
     public void manualInsertLinks() {
         // open an input-dialog
-        String manLinks = (String)JOptionPane.showInputDialog(getFrame(),
-                                                              getResourceMap().getString("newManLinksMsg"),
-                                                              getResourceMap().getString("newManLinksTitle"),
-                                                              JOptionPane.PLAIN_MESSAGE);
+        String manLinks = (String) JOptionPane.showInputDialog(getFrame(),
+                getResourceMap().getString("newManLinksMsg"),
+                getResourceMap().getString("newManLinksTitle"),
+                JOptionPane.PLAIN_MESSAGE);
         // if we have a valid return-value...
-        if ((manLinks!=null) && (manLinks.length()>0)) {
+        if ((manLinks != null) && (manLinks.length() > 0)) {
             // convert the string-input into an int-array
             int[] selectedValues = Tools.retrieveEntryNumbersFromInput(manLinks, data.getCount(Daten.ZKNCOUNT));
             // and add them as follower-entries
-            if (selectedValues!=null) addToManLinks(selectedValues);
+            if (selectedValues != null) {
+                addToManLinks(selectedValues);
+            }
         }
     }
 
-
     public void editManualLinks() {
         // open an input-dialog
-        String manLinks = (String)JOptionPane.showInputDialog(getFrame(),
-                                                              getResourceMap().getString("newManLinksMsg"),
-                                                              data.getManualLinksAsSingleString(displayedZettel));
+        String manLinks = (String) JOptionPane.showInputDialog(getFrame(),
+                getResourceMap().getString("newManLinksMsg"),
+                data.getManualLinksAsSingleString(displayedZettel));
         // if we have a valid return-value...
-        if (manLinks!=null) {
+        if (manLinks != null) {
             if (!manLinks.isEmpty()) {
                 // convert the string-input into an int-array
                 int[] selectedValues = Tools.retrieveEntryNumbersFromInput(manLinks, data.getCount(Daten.ZKNCOUNT));
                 // and add them as crossreference-entries
-                if (selectedValues!=null) addToManLinks(selectedValues);
-            }
-            // if we have a valid empty return-value...
+                if (selectedValues != null) {
+                    addToManLinks(selectedValues);
+                }
+            } // if we have a valid empty return-value...
             else {
                 // delete manual links
                 data.setManualLinks(displayedZettel, "");
@@ -8489,55 +8712,63 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-
     /**
-     * This method adds one or more entries as manual links to the current entry. The entry-numbers
-     * of the to be added entries have to be passed as integer-array.<br><br>
-     * This method needs to be public, since we want to access it from other frames,
-     * like for instance {@link CSearchResults}.
+     * This method adds one or more entries as manual links to the current
+     * entry. The entry-numbers of the to be added entries have to be passed as
+     * integer-array.<br><br>
+     * This method needs to be public, since we want to access it from other
+     * frames, like for instance {@link CSearchResults}.
      *
-     * @param entries an int-array conatining the entry-numbers of those entries that should
-     * be added as manual links
-     * @return {@code true} if entries have been successfully added, false if an error occured
+     * @param entries an int-array conatining the entry-numbers of those entries
+     * that should be added as manual links
+     * @return {@code true} if entries have been successfully added, false if an
+     * error occured
      */
     public boolean addToManLinks(int[] entries) {
         return addToManLinks(displayedZettel, entries);
     }
 
-
     /**
-     * This method adds one or more entries as manual links to the current entry. The entry-numbers
-     * of the to be added entries have to be passed as integer-array.<br><br>
+     * This method adds one or more entries as manual links to the current
+     * entry. The entry-numbers of the to be added entries have to be passed as
+     * integer-array.<br><br>
      * We have this method with additional parameter (in addition to
-     * {@link #addToManLinks(int[]) addToManLinks(int[])}, in case we want to add manual
-     * links from the jTableLinks to the current entry. Usually, manual links are added
-     * to the displayed entry. Since the displayed entry is the entry that is selected in the
-     * jTableLinks, we would add the selected entry as manual link to the selected entry - which
-     * doesn't work. So, whenever an entry in the jTableLinks is selected, it will be added
-     * as manual link to the <b>activated</b> entry.<br><br>
-     * In all other cases, manual links are added to the displayed entry, thus calling
-     * the {@link #addToManLinks(int[]) addToManLinks(int[])} method.
+     * {@link #addToManLinks(int[]) addToManLinks(int[])}, in case we want to
+     * add manual links from the jTableLinks to the current entry. Usually,
+     * manual links are added to the displayed entry. Since the displayed entry
+     * is the entry that is selected in the jTableLinks, we would add the
+     * selected entry as manual link to the selected entry - which doesn't work.
+     * So, whenever an entry in the jTableLinks is selected, it will be added as
+     * manual link to the <b>activated</b> entry.<br><br>
+     * In all other cases, manual links are added to the displayed entry, thus
+     * calling the {@link #addToManLinks(int[]) addToManLinks(int[])} method.
      *
-     * @param activatedEntry the entry-number where the manual links should be added to...
-     * @param entries an int-array conatining the entry-numbers of those entries that should
-     * be added as manual links
-     * @return {@code true} if entries have been successfully added, false if an error occured
+     * @param activatedEntry the entry-number where the manual links should be
+     * added to...
+     * @param entries an int-array conatining the entry-numbers of those entries
+     * that should be added as manual links
+     * @return {@code true} if entries have been successfully added, false if an
+     * error occured
      */
     private boolean addToManLinks(int activatedEntry, int[] entries) {
-        if ((null==entries)||(entries.length<1)||(-1==entries[0])) return false;
+        if ((null == entries) || (entries.length < 1) || (-1 == entries[0])) {
+            return false;
+        }
         // init message-box indicator
         boolean error = false;
         // iterate array
         // and add it to the current entry
         for (int nr : entries) {
-            if (!data.addManualLink(activatedEntry, nr)) error = true;
+            if (!data.addManualLink(activatedEntry, nr)) {
+                error = true;
+            }
         }
         // display error message box, when any problems occured
         if (error) {
             JOptionPane.showMessageDialog(getFrame(),
-                                          getResourceMap().getString("errManLinksExistsMsg"),
-                                          getResourceMap().getString("errManLinksExistsTitle"),
-                                          JOptionPane.PLAIN_MESSAGE);
+                    getResourceMap().getString("errManLinksExistsMsg"),
+                    getResourceMap().getString("errManLinksExistsTitle"),
+                    JOptionPane.PLAIN_MESSAGE);
         }
         // update the display
         updateDisplay();
@@ -8545,10 +8776,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         return true;
     }
 
-    
     /**
-     * This method creates a new, empty zettelkasten. If there are unsaved changes, the user
-     * can save them before. else, the currently opened datafile is immediately closed
+     * This method creates a new, empty zettelkasten. If there are unsaved
+     * changes, the user can save them before. else, the currently opened
+     * datafile is immediately closed
      */
     @Action
     public void newZettelkasten() {
@@ -8578,8 +8809,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             updateDisplay();
         }
     }
-    
-    
+
     /**
      * Displays the first entry in the zettelkasten.
      */
@@ -8590,7 +8820,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // and update the whole content
         updateDisplay();
     }
-    
 
     /**
      * Displays the last entry in the zettelkasten.
@@ -8603,7 +8832,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         updateDisplay();
     }
 
-
     /**
      * Displays the next entry in the zettelkasten.
      */
@@ -8615,46 +8843,50 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         updateDisplay();
     }
 
-
     /**
-     * Sets the input focus to the textfield where the user can input an entry-number,
-     * so the requested entry is displayed.
+     * Sets the input focus to the textfield where the user can input an
+     * entry-number, so the requested entry is displayed.
      */
     @Action(enabledProperty = "moreEntriesAvailable")
     public void gotoEntry() {
         jTextFieldEntryNumber.requestFocusInWindow();
     }
 
-
     /**
      * Displays the entry which is given via the parameter
+     *
      * @param nr (the entry number to display)
      */
     public void showEntry(int nr) {
         // goto the requested entry and update the content, if the number-parameter
         // was within the right boundaries
-        if (data.gotoEntry(nr)) updateDisplay();
+        if (data.gotoEntry(nr)) {
+            updateDisplay();
+        }
     }
 
     /**
-     * This method displays a random entry, where deleted entries will not be shown.
+     * This method displays a random entry, where deleted entries will not be
+     * shown.
      */
     @Action
     public void showRandomEntry() {
         // check for available entries
-        if (!data.hasEntriesExcludingDeleted()) return;
+        if (!data.hasEntriesExcludingDeleted()) {
+            return;
+        }
         // init variable
         int randomnumber = -1;
         // create randomnumber and check, whether the entry with the created random number
         // is deleted or not
-        while (-1==randomnumber || data.isDeleted(randomnumber)) {
+        while (-1 == randomnumber || data.isDeleted(randomnumber)) {
             // create new random number until we have found a valid, non-deleted entry
-            randomnumber = (int)(Math.random()*data.getCount(Daten.ZKNCOUNT))+1;
+            randomnumber = (int) (Math.random() * data.getCount(Daten.ZKNCOUNT)) + 1;
         }
         // show that entry
         showEntry(randomnumber);
     }
-        
+
     /**
      * displays the first entry in the zettelkasten
      */
@@ -8666,16 +8898,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         updateDisplay();
     }
 
-
     /**
      * Searches the database for multiple entries and displays them in a table.
      */
     @Action(enabledProperty = "moreEntriesAvailable")
     public void findDoubleEntries() {
         // check whether dialog is already visible or was created
-        if (null==doubleEntriesDlg || !doubleEntriesDlg.isVisible()) {
+        if (null == doubleEntriesDlg || !doubleEntriesDlg.isVisible()) {
             // if not, create new dialog
-            doubleEntriesDlg = new FindDoubleEntriesTask(getFrame(),this,data,settings);
+            doubleEntriesDlg = new FindDoubleEntriesTask(getFrame(), this, data, settings);
             // center window
             doubleEntriesDlg.setLocationRelativeTo(getFrame());
         }
@@ -8685,10 +8916,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         doubleEntriesDlg.startTask();
     }
 
-
     /**
-     * Opens a file dialog and lets the user choose a zkn3-file. Then a method in the CLoadSave-class
-     * is called to open the file and store the data in the CData-class.
+     * Opens a file dialog and lets the user choose a zkn3-file. Then a method
+     * in the CLoadSave-class is called to open the file and store the data in
+     * the CData-class.
      */
     @Action
     public void openDocument() {
@@ -8701,21 +8932,21 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             String filedir = null;
             String filename = null;
             // check whether we have any valid filepath at all
-            if (loadfile!=null && loadfile.exists()) {
+            if (loadfile != null && loadfile.exists()) {
                 filedir = loadfile.toString();
                 filename = loadfile.getName();
             }
             // create a swing filechooser when we have no mac
             File filepath = FileOperationsUtil.chooseFile(getFrame(),
-                                                      (settings.isMacAqua())?FileDialog.LOAD:JFileChooser.OPEN_DIALOG,
-                                                      JFileChooser.FILES_ONLY,
-                                                      filedir,
-                                                      filename,
-                                                      getResourceMap().getString("fileDialogTitleOpen"),
-                                                      new String[] {Constants.ZKN_FILEEXTENSION, Constants.ZKN_BACKUPFILEEXTENSION},
-                                                      getResourceMap().getString("fileDescription1"),
-                                                      settings);
-            if ((filepath!=null) && filepath.exists()) {
+                    (settings.isMacAqua()) ? FileDialog.LOAD : JFileChooser.OPEN_DIALOG,
+                    JFileChooser.FILES_ONLY,
+                    filedir,
+                    filename,
+                    getResourceMap().getString("fileDialogTitleOpen"),
+                    new String[]{Constants.ZKN_FILEEXTENSION, Constants.ZKN_BACKUPFILEEXTENSION},
+                    getResourceMap().getString("fileDescription1"),
+                    settings);
+            if ((filepath != null) && filepath.exists()) {
                 // check whether opened file is a backup-file
                 if (filepath.toString().toLowerCase().endsWith(Constants.ZKN_BACKUPFILEEXTENSION.toLowerCase())) {
                     try {
@@ -8732,19 +8963,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         filepath = fp;
                         // tell user that the backup-file has been loaded and the old original file backuped
                         JOptionPane.showMessageDialog(getFrame(),
-                                                      getResourceMap().getString("backupLoadedMsg",
-                                                                                 "\""+checkbackup.getName()+"\"",
-                                                                                 System.lineSeparator()+
-                                                                                 System.lineSeparator()+
-                                                                                 "\""+fp.toString().substring(0, fp.toString().lastIndexOf(File.separatorChar))+"\""+
-                                                                                 System.lineSeparator()+
-                                                                                 System.lineSeparator(),
-                                                                                 "\""+fp.getName()+"\""),
-                                                      getResourceMap().getString("backupLoadedTitle"),
-                                                      JOptionPane.PLAIN_MESSAGE);
-                    }
-                    catch(SecurityException | NullPointerException e) {
-                        Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+                                getResourceMap().getString("backupLoadedMsg",
+                                        "\"" + checkbackup.getName() + "\"",
+                                        System.lineSeparator()
+                                        + System.lineSeparator()
+                                        + "\"" + fp.toString().substring(0, fp.toString().lastIndexOf(File.separatorChar)) + "\""
+                                        + System.lineSeparator()
+                                        + System.lineSeparator(),
+                                        "\"" + fp.getName() + "\""),
+                                getResourceMap().getString("backupLoadedTitle"),
+                                JOptionPane.PLAIN_MESSAGE);
+                    } catch (SecurityException | NullPointerException e) {
+                        Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                     }
                 }
                 // save new filepath
@@ -8757,8 +8987,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             }
         }
     }
+
     /**
-     * Opens the file {@code fp} and asks to save changes before opening the file
+     * Opens the file {@code fp} and asks to save changes before opening the
+     * file
+     *
      * @param fp the data file to be opened
      */
     public void openDocument(String fp) {
@@ -8779,21 +9012,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             }
         }
     }
-    
-    
-    /** 
-     * load the document by opening
-     * a modal dialog, which opens the data via a background task. the
-     * dialog only displays a progressbar and an animated busyicon while
-     * opening the file, no user-interaction possible....
+
+    /**
+     * load the document by opening a modal dialog, which opens the data via a
+     * background task. the dialog only displays a progressbar and an animated
+     * busyicon while opening the file, no user-interaction possible....
      * <br><br>
-     * We have this part of code "outsourced" into an own method because we
-     * need this more often, e.g. when automatically loading the data at
-     * program start-up.
+     * We have this part of code "outsourced" into an own method because we need
+     * this more often, e.g. when automatically loading the data at program
+     * start-up.
      * <br><br>
-     * Furthermore, we have the method "updateAfterOpen". We need this additional
-     * method because in that method we do all the stuff which e.g. has also to be
-     * made after importing files...
+     * Furthermore, we have the method "updateAfterOpen". We need this
+     * additional method because in that method we do all the stuff which e.g.
+     * has also to be made after importing files...
      */
     private boolean loadDocument() {
         // get the file path from the data file which has to be opened
@@ -8823,19 +9054,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             long modifiedBackup = backupfile.lastModified();
             // if original-file is *older* than backup-file, ask
             // the user what to do...
-            if (modifiedOriginal<modifiedBackup) {
+            if (modifiedOriginal < modifiedBackup) {
                 // ask the user whether he wants to load the original file,
                 // the newer backup-file or cancel the complete load-operation...
                 int option = JOptionPane.showConfirmDialog(getFrame(), getResourceMap().getString("newerBackupMsg"), getResourceMap().getString("newerBackupTitle"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 // the user chose to cancel the operation, so return "null"
-                if (JOptionPane.CANCEL_OPTION==option || JOptionPane.CLOSED_OPTION==option /*User pressed cancel key*/) {
+                if (JOptionPane.CANCEL_OPTION == option || JOptionPane.CLOSED_OPTION == option /*User pressed cancel key*/) {
                     // clear filepath, so the data-file won't be accidently overwritten...
                     settings.setFilePath(null);
                     // return result
                     return false;
                 }
                 // here the user wants to open the backup-file instead of the older file...
-                if (JOptionPane.NO_OPTION==option) {
+                if (JOptionPane.NO_OPTION == option) {
                     try {
                         // in case the user already created a backup, we concatenate a trainling
                         // backup-counter-number to avoid overwriting existing backup-files
@@ -8844,15 +9075,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         // the backup-extension
                         String backupext = ".backup";
                         // first, create basic backup-file
-                        File checkbackup = new File(fp.toString()+backupext);
+                        File checkbackup = new File(fp.toString() + backupext);
                         // check whether backup-file already exists
-                        while(checkbackup.exists()) {
+                        while (checkbackup.exists()) {
                             // if yes, increase extension-counter
                             backupcounter++;
                             // append it to extension
-                            backupext = ".backup-"+String.valueOf(backupcounter);
+                            backupext = ".backup-" + String.valueOf(backupcounter);
                             // and create new file-name which we want to check...
-                            checkbackup = new File(fp.toString()+backupext);
+                            checkbackup = new File(fp.toString() + backupext);
                         }
                         // rename original file and append ".backup" as extension
                         fp.renameTo(checkbackup);
@@ -8860,19 +9091,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         backupfile.renameTo(settings.getFilePath());
                         // tell user that the backup-file has been loaded and the old original file backuped
                         JOptionPane.showMessageDialog(getFrame(),
-                                                      getResourceMap().getString("backupLoadedMsg",
-                                                                                 "\""+checkbackup.getName()+"\"",
-                                                                                 System.lineSeparator()+
-                                                                                 System.lineSeparator()+
-                                                                                 "\""+fp.toString().substring(0, fp.toString().lastIndexOf(File.separatorChar))+"\""+
-                                                                                 System.lineSeparator()+
-                                                                                 System.lineSeparator(),
-                                                                                 "\""+fp.getName()+"\""),
-                                                      getResourceMap().getString("backupLoadedTitle"),
-                                                      JOptionPane.PLAIN_MESSAGE);
-                    }
-                    catch(SecurityException | NullPointerException e) {
-                        Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+                                getResourceMap().getString("backupLoadedMsg",
+                                        "\"" + checkbackup.getName() + "\"",
+                                        System.lineSeparator()
+                                        + System.lineSeparator()
+                                        + "\"" + fp.toString().substring(0, fp.toString().lastIndexOf(File.separatorChar)) + "\""
+                                        + System.lineSeparator()
+                                        + System.lineSeparator(),
+                                        "\"" + fp.getName() + "\""),
+                                getResourceMap().getString("backupLoadedTitle"),
+                                JOptionPane.PLAIN_MESSAGE);
+                    } catch (SecurityException | NullPointerException e) {
+                        Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                     }
                 }
             }
@@ -8884,7 +9114,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // if dialog window isn't already created, do this now
         if (null == taskDlg) {
             // get parent und init window
-            taskDlg = new TaskProgressDialog(getFrame(),TaskProgressDialog.TASK_LOAD,data,bookmarks,searchrequests,desktop,synonyms,settings,bibtex);
+            taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_LOAD, data, bookmarks, searchrequests, desktop, synonyms, settings, bibtex);
             // center window
             taskDlg.setLocationRelativeTo(getFrame());
         }
@@ -8902,9 +9132,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // check whether we have a new file-version of the data-format. if yes, do conversion now...
         if (data.isNewVersion()) {
             // tell user that the data file is being updated...
-            JOptionPane.showMessageDialog(getFrame(), 
-                    getResourceMap().getString("updateDataMsg"), 
-                    getResourceMap().getString("updateDataTitle"), 
+            JOptionPane.showMessageDialog(getFrame(),
+                    getResourceMap().getString("updateDataMsg"),
+                    getResourceMap().getString("updateDataTitle"),
                     JOptionPane.PLAIN_MESSAGE);
             // if dialog window isn't already created, do this now
             if (null == taskDlg) {
@@ -8919,16 +9149,21 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             taskDlg = null;
         }
         // which entry should be shown at startup?
-        int shownr=1;
+        int shownr = 1;
         // get the setting what we want to show at startup
-        int getstarttupvalue=settings.getShowAtStartup();
+        int getstarttupvalue = settings.getShowAtStartup();
         int paramentry = settings.getInitialParamZettel();
         // and set the related entrynumber
         // in case we have retrieved an entry-number as parameter, set this entry number right now
-        if (paramentry!=-1 && paramentry<=data.getCount(Daten.ZKNCOUNT)) shownr = paramentry;
-        else if (Settings.SHOWATSTARTUP_FIRST==getstarttupvalue) shownr=1;
-        else if (Settings.SHOWATSTARTUP_LAST==getstarttupvalue) shownr=settings.getStartupEntry();
-        else if (Settings.SHOWATSTARTUP_RANDOM==getstarttupvalue) shownr=(int)(Math.random()*data.getCount(Daten.ZKNCOUNT))+1;
+        if (paramentry != -1 && paramentry <= data.getCount(Daten.ZKNCOUNT)) {
+            shownr = paramentry;
+        } else if (Settings.SHOWATSTARTUP_FIRST == getstarttupvalue) {
+            shownr = 1;
+        } else if (Settings.SHOWATSTARTUP_LAST == getstarttupvalue) {
+            shownr = settings.getStartupEntry();
+        } else if (Settings.SHOWATSTARTUP_RANDOM == getstarttupvalue) {
+            shownr = (int) (Math.random() * data.getCount(Daten.ZKNCOUNT)) + 1;
+        }
         // set the first entry that should be displayed as current zettelpos and history-pos...
         data.setCurrentZettelPos(shownr);
         data.setInitialHistoryPos(shownr);
@@ -8940,12 +9175,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // return success
         return true;
     }
-    
-    
+
     /**
-     * Saves the document. Opens a file dialog and then calls a method the the CLoadSave-class
-     * to save the data in the default file format (zkn3)
-     * 
+     * Saves the document. Opens a file dialog and then calls a method the the
+     * CLoadSave-class to save the data in the default file format (zkn3)
+     *
      * @return {@code true} if save was successful, {@code false} otherwise
      */
     @Action(enabledProperty = "saveEnabled")
@@ -8959,7 +9193,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // check for valid filepath
         File fp = settings.getFilePath();
         // if no valid filepath exists, open the file-chooser to retrieve a new filepath
-        if (null==fp || !fp.exists()) {
+        if (null == fp || !fp.exists()) {
             // save the document under a new filepath
             // and leave this method, as all relevant saving was made in
             // the above called method
@@ -8974,7 +9208,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // if dialog window isn't already created, do this now
         if (null == taskDlg) {
             // get parent und init window
-            taskDlg = new TaskProgressDialog(getFrame(),TaskProgressDialog.TASK_SAVE,data,bookmarks,searchrequests,desktop,synonyms,settings,bibtex);
+            taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SAVE, data, bookmarks, searchrequests, desktop, synonyms, settings, bibtex);
             // center window
             taskDlg.setLocationRelativeTo(getFrame());
         }
@@ -8997,12 +9231,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         return true;
     }
 
-    
     /**
-     * This method saves the data under a new filename. This method will always be
-     * called when no filepath is set in the dataobject.
-     * 
-     * @return {@code true}, when a valid filename was given. false otherwise, or when cancelled
+     * This method saves the data under a new filename. This method will always
+     * be called when no filepath is set in the dataobject.
+     *
+     * @return {@code true}, when a valid filename was given. false otherwise,
+     * or when cancelled
      */
     @Action(enabledProperty = "entriesAvailable")
     public boolean saveDocumentAs() {
@@ -9013,32 +9247,35 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             return false;
         }
         File filepath = FileOperationsUtil.chooseFile(getFrame(),
-                                                  (settings.isMacAqua())?FileDialog.SAVE:JFileChooser.SAVE_DIALOG,
-                                                  JFileChooser.FILES_ONLY,
-                                                  null,
-                                                  null,
-                                                  getResourceMap().getString("fileDialogTitleSave"),
-                                                  new String[] {Constants.ZKN_FILEEXTENSION},
-                                                  getResourceMap().getString("fileDescription1"),
-                                                  settings);
-        if (filepath!=null) {
+                (settings.isMacAqua()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG,
+                JFileChooser.FILES_ONLY,
+                null,
+                null,
+                getResourceMap().getString("fileDialogTitleSave"),
+                new String[]{Constants.ZKN_FILEEXTENSION},
+                getResourceMap().getString("fileDescription1"),
+                settings);
+        if (filepath != null) {
             // check whether the user entered a file extension. if not,
             // add ".zkn3" as extension
-            if (!filepath.getName().toLowerCase().endsWith(Constants.ZKN_FILEEXTENSION)) filepath = new File(filepath.getPath()+Constants.ZKN_FILEEXTENSION);
+            if (!filepath.getName().toLowerCase().endsWith(Constants.ZKN_FILEEXTENSION)) {
+                filepath = new File(filepath.getPath() + Constants.ZKN_FILEEXTENSION);
+            }
             // if file does not exist, create it - otherwise the getFilePath-method of
             // the settings-class would return "null" as filepath, if file doesn't exist
             if (!filepath.exists()) {
                 try {
                     filepath.createNewFile();
                 } catch (IOException ex) {
-                    Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
+                    Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
                 }
-            }
-            else {
+            } else {
                 // file exists, ask user to overwrite it...
                 int optionDocExists = JOptionPane.showConfirmDialog(getFrame(), getResourceMap().getString("askForOverwriteFileMsg"), getResourceMap().getString("askForOverwriteFileTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
                 // if the user does *not* choose to overwrite, quit...
-                if (optionDocExists!=JOptionPane.YES_OPTION) return false;
+                if (optionDocExists != JOptionPane.YES_OPTION) {
+                    return false;
+                }
             }
             // store the filepath in the data class
             settings.setFilePath(filepath);
@@ -9051,7 +9288,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // if dialog window isn't already created, do this now
             if (null == taskDlg) {
                 // get parent und init window
-                taskDlg = new TaskProgressDialog(getFrame(),TaskProgressDialog.TASK_SAVE,data,bookmarks,searchrequests,desktop,synonyms,settings,bibtex);
+                taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SAVE, data, bookmarks, searchrequests, desktop, synonyms, settings, bibtex);
                 // center window
                 taskDlg.setLocationRelativeTo(getFrame());
             }
@@ -9078,80 +9315,83 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         return false;
     }
 
-
     /**
      * This method exports all bookmarks of the data-file to a file.<br><br>
-     * This method fills a LinkedList with the export-data (i.e. the bookmarks).<br><br>
+     * This method fills a LinkedList with the export-data (i.e. the
+     * bookmarks).<br><br>
      * Then the method
      * {@link #exportList(java.util.LinkedList, java.lang.String) exportList(LinkedList,String)}
-     * is called, which is responsible for saving the data of this linked list to a file.
+     * is called, which is responsible for saving the data of this linked list
+     * to a file.
      */
     @Action(enabledProperty = "exportPossible")
     public void exportBookmarks() {
         exportEntries(createExportBookmarks());
     }
 
-
     /**
-     * This method opens the bookmarks as new "search-request" in the search-results-window.
+     * This method opens the bookmarks as new "search-request" in the
+     * search-results-window.
      */
     @Action(enabledProperty = "exportPossible")
     public void exportBookmarksToSearch() {
         // create array with export entries
         int[] entries = createExportBookmarks();
         // copy all bookmarked entry-numbers to that array
-        for (int cnt=0; cnt<entries.length; cnt++) entries[cnt] = bookmarks.getBookmarkEntry(cnt);
+        for (int cnt = 0; cnt < entries.length; cnt++) {
+            entries[cnt] = bookmarks.getBookmarkEntry(cnt);
+        }
         // append a time-string to description, so we always have a unique search-description,
         // even if the user searches twice for the same searchterms
         DateFormat df = new SimpleDateFormat("kkmmss");
         // add search
         searchrequests.addSearch(new String[]{getResourceMap().getString("exportBookmarksSearch")},
-                                 Constants.SEARCH_BOOKMARKS,
-                                 Constants.LOG_OR,
-                                 false,
-                                 false,
-                                 false,
-                                 false,
-                                 entries,
-                                 getResourceMap().getString("exportBookmarksSearchDesc")+" ("+df.format(new Date())+")",
-                                 getResourceMap().getString("exportBookmarksSearchDesc"));
+                Constants.SEARCH_BOOKMARKS,
+                Constants.LOG_OR,
+                false,
+                false,
+                false,
+                false,
+                entries,
+                getResourceMap().getString("exportBookmarksSearchDesc") + " (" + df.format(new Date()) + ")",
+                getResourceMap().getString("exportBookmarksSearchDesc"));
         // if dialog window isn't already created, do this now
-        if (null == searchResultsDlg) searchResultsDlg = new SearchResultsFrame(this,data,searchrequests,desktop,settings,acceleratorKeys,synonyms,bibtex);
+        if (null == searchResultsDlg) {
+            searchResultsDlg = new SearchResultsFrame(this, data, searchrequests, desktop, settings, acceleratorKeys, synonyms, bibtex);
+        }
         // show search results window
         ZettelkastenApp.getApplication().show(searchResultsDlg);
         // show latest search results by auto-selecting the last item in the combo-box
         searchResultsDlg.showLatestSearchResult();
         // enable window-menu-item, if we have loaded search results
-        setSearchResultsAvailable(searchrequests.getCount()>0);
+        setSearchResultsAvailable(searchrequests.getCount() > 0);
     }
-
 
     private int[] createExportBookmarks() {
         // create array with all bookmark-categories
-        String[] bookmarkCategories = new String[bookmarks.getCategoryCount()+1];
+        String[] bookmarkCategories = new String[bookmarks.getCategoryCount() + 1];
         // first field is always "all"
         bookmarkCategories[0] = getResourceMap().getString("exportBookmarkCatAll");
         // retrieve bookmark-categories
-        for (int cnt=0; cnt<bookmarks.getCategoryCount(); cnt++) {
-            bookmarkCategories[cnt+1] = bookmarks.getCategory(cnt);
+        for (int cnt = 0; cnt < bookmarks.getCategoryCount(); cnt++) {
+            bookmarkCategories[cnt + 1] = bookmarks.getCategory(cnt);
         }
         Object expo = JOptionPane.showInputDialog(getFrame(),
-                        getResourceMap().getString("exportBookmarkCatMsg"),
-                        getResourceMap().getString("exportBookmarkCatTitle"),
-                        JOptionPane.PLAIN_MESSAGE,
-                        null,
-                        bookmarkCategories,
-                        null);
+                getResourceMap().getString("exportBookmarkCatMsg"),
+                getResourceMap().getString("exportBookmarkCatTitle"),
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                bookmarkCategories,
+                null);
         // init variable
         int[] entries = null;
         // check for valid return value
-        if (expo!=null) {
+        if (expo != null) {
             // selection was: all categories should be exported
             if (expo.toString().equals(getResourceMap().getString("exportBookmarkCatAll"))) {
                 // copy all bookmarked entry-numbers to that array
                 entries = bookmarks.getAllBookmarkedEntries();
-            }
-            // selection was a certain category
+            } // selection was a certain category
             else {
                 entries = bookmarks.getBookmarkedEntriesFromCat(expo.toString());
             }
@@ -9159,13 +9399,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         return entries;
     }
 
-
     /**
      * This method exports all keywords of the data-file to a file.<br><br>
-     * This method fills a LinkedList with the export-data (i.e. the keywords).<br><br>
+     * This method fills a LinkedList with the export-data (i.e. the
+     * keywords).<br><br>
      * Then the method
      * {@link #exportList(java.util.LinkedList, java.lang.String) exportList(LinkedList,String)}
-     * is called, which is responsible for saving the data of this linked list to a file.
+     * is called, which is responsible for saving the data of this linked list
+     * to a file.
      */
     @Action(enabledProperty = "exportPossible")
     public void exportKeywords() {
@@ -9174,32 +9415,38 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // create linked list that will contain all keywords
         LinkedList<String> keywords = new LinkedList<>();
         // copy all keywords to a linked list
-        for (int cnt=0; cnt<len; cnt++) keywords.add(data.getKeyword(cnt+1));
+        for (int cnt = 0; cnt < len; cnt++) {
+            keywords.add(data.getKeyword(cnt + 1));
+        }
         // call export-method
-        exportList(keywords,Daten.ELEMENT_KEYWORD);
+        exportList(keywords, Daten.ELEMENT_KEYWORD);
     }
 
-
     /**
-     * This method imports literatur-entries from a given bibtex-file and adds the
-     * literatur as author-entries to the authorFile.xml-file of the data-file.
+     * This method imports literatur-entries from a given bibtex-file and adds
+     * the literatur as author-entries to the authorFile.xml-file of the
+     * data-file.
      * <br><br>
-     * A new dialog is opened (see {@code CImportBibTex.java} fore more details) where
-     * the user can choose a bibtex-file to open, and a file-format (which corresponds to
-     * the literatur-program that is used, e.g. Citavi, JabRef, Zotero...) of that bibtex-file.
+     * A new dialog is opened (see {@code CImportBibTex.java} fore more details)
+     * where the user can choose a bibtex-file to open, and a file-format (which
+     * corresponds to the literatur-program that is used, e.g. Citavi, JabRef,
+     * Zotero...) of that bibtex-file.
      * <br><br>
-     * All bibtex-entries of that file are displayed in a table where the user can select those
-     * entries that should be imported. Entries that have already previously beeing imported are
-     * <i>not</i> listed in that tables (these entries are identified by their bibkeys, i.e. if an existing
-     * author-value has the same bibkey like an entry of that bibtex-file).
+     * All bibtex-entries of that file are displayed in a table where the user
+     * can select those entries that should be imported. Entries that have
+     * already previously beeing imported are
+     * <i>not</i> listed in that tables (these entries are identified by their
+     * bibkeys, i.e. if an existing author-value has the same bibkey like an
+     * entry of that bibtex-file).
      * <br><br>
-     * Beside importing the author-values, the user can optionally choose to create an entry for each
-     * imported bibtex-entry, in case the bibtex-entry has an abstract.
+     * Beside importing the author-values, the user can optionally choose to
+     * create an entry for each imported bibtex-entry, in case the bibtex-entry
+     * has an abstract.
      */
     @Action
     public void importAuthors() {
         // if dialog window isn't already created, do this now
-        if (importBibTexDlg!=null) {
+        if (importBibTexDlg != null) {
             // free memory and release all allocated components
             importBibTexDlg.dispose();
             importBibTexDlg = null;
@@ -9209,20 +9456,21 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // if dialog window isn't already created, do this now
         if (null == importBibTexDlg) {
             // create a new dialog window
-            importBibTexDlg = new CImportBibTex(getFrame(),this,data,bibtex,settings);
+            importBibTexDlg = new CImportBibTex(getFrame(), this, data, bibtex, settings);
             // center window
             importBibTexDlg.setLocationRelativeTo(getFrame());
         }
         ZettelkastenApp.getApplication().show(importBibTexDlg);
     }
 
-
     /**
      * This method exports all authors of the data-file to a file.<br><br>
-     * This method fills a LinkedList with the export-data (i.e. the author-value).<br><br>
+     * This method fills a LinkedList with the export-data (i.e. the
+     * author-value).<br><br>
      * Then the method
      * {@link #exportList(java.util.LinkedList, java.lang.String) exportList(LinkedList,String)}
-     * is called, which is responsible for saving the data of this linked list to a file.
+     * is called, which is responsible for saving the data of this linked list
+     * to a file.
      */
     @Action(enabledProperty = "exportPossible")
     public void exportAuthors() {
@@ -9231,40 +9479,43 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // create linked list that will contain all authors
         LinkedList<String> authors = new LinkedList<>();
         // copy all authors to a linked list
-        for (int cnt=0; cnt<len; cnt++) authors.add(data.getAuthor(cnt+1));
+        for (int cnt = 0; cnt < len; cnt++) {
+            authors.add(data.getAuthor(cnt + 1));
+        }
         // call export-method
-        exportList(authors,"authors");
+        exportList(authors, "authors");
     }
-
 
     @Action
     public void attachBibtexFile() {
         // retrieve attached bibtex-file
         File selectedfile = bibtex.getCurrentlyAttachedFile();
         // if we have no attached file, set last used file as filepath
-        if (null==selectedfile || !selectedfile.exists()) selectedfile = bibtex.getFilePath();
+        if (null == selectedfile || !selectedfile.exists()) {
+            selectedfile = bibtex.getFilePath();
+        }
         selectedfile = FileOperationsUtil.chooseFile(getFrame(),
-                                          (settings.isMacAqua())?FileDialog.LOAD:JFileChooser.OPEN_DIALOG,
-                                          JFileChooser.FILES_ONLY,
-                                          (null==selectedfile)?null:selectedfile.toString(),
-                                          (null==selectedfile)?null:selectedfile.getName(),
-                                          getResourceMap().getString("bibTextFileChooserTitle"),
-                                          new String[] {".bib",".txt"},
-                                          getResourceMap().getString("bibTexDesc"),
-                                          settings);
-        if (selectedfile!=null) {
+                (settings.isMacAqua()) ? FileDialog.LOAD : JFileChooser.OPEN_DIALOG,
+                JFileChooser.FILES_ONLY,
+                (null == selectedfile) ? null : selectedfile.toString(),
+                (null == selectedfile) ? null : selectedfile.getName(),
+                getResourceMap().getString("bibTextFileChooserTitle"),
+                new String[]{".bib", ".txt"},
+                getResourceMap().getString("bibTexDesc"),
+                settings);
+        if (selectedfile != null) {
             // set new bibtex-filepath
             bibtex.setFilePath(selectedfile);
             // detach current bibtex file
             bibtex.detachCurrentlyAttachedFile();
             // show input-dialog offering the choice of bibtex-encoding
-            Object encodingchoice = JOptionPane.showInputDialog(getFrame(), getResourceMap().getString("bibtexEncodingsMsg"), getResourceMap().getString("bibtexEncodingsTitle"),JOptionPane.PLAIN_MESSAGE, null, Constants.BIBTEX_DESCRIPTIONS, Constants.BIBTEX_DESCRIPTIONS[settings.getLastUsedBibtexFormat()]);
+            Object encodingchoice = JOptionPane.showInputDialog(getFrame(), getResourceMap().getString("bibtexEncodingsMsg"), getResourceMap().getString("bibtexEncodingsTitle"), JOptionPane.PLAIN_MESSAGE, null, Constants.BIBTEX_DESCRIPTIONS, Constants.BIBTEX_DESCRIPTIONS[settings.getLastUsedBibtexFormat()]);
             // if user did not cancel the operation, go on and open the bibtex-file
-            if (encodingchoice!=null) {
+            if (encodingchoice != null) {
                 // iterate all availabe bibtex-encodings.
                 // if the appropriate encoding that matched the user's choice was found,
                 // use that index-number to open the bibtex-file
-                for (int enc=0; enc<Constants.BIBTEX_DESCRIPTIONS.length; enc++) {
+                for (int enc = 0; enc < Constants.BIBTEX_DESCRIPTIONS.length; enc++) {
                     if (encodingchoice.toString().equals(Constants.BIBTEX_DESCRIPTIONS[enc])) {
                         settings.setLastUsedBibtexFormat(enc);
                         break;
@@ -9274,51 +9525,62 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // the programme that has exported the bib-tex-file).
                 if (bibtex.openAttachedFile(Constants.BIBTEX_ENCODINGS[settings.getLastUsedBibtexFormat()], false)) {
                     // tell about success
-                    Constants.zknlogger.log(Level.INFO,"BibTex-File was successfully attached.");
+                    Constants.zknlogger.log(Level.INFO, "BibTex-File was successfully attached.");
                     // tell user about success
                     JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("bibtexAttachOkMsg"), getResourceMap().getString("bibtexAttachOkTitle"), JOptionPane.PLAIN_MESSAGE);
-                }
-                else {
+                } else {
                     // tell about fail
-                    Constants.zknlogger.log(Level.INFO,"BibTex-File could not be found nor attached.");
+                    Constants.zknlogger.log(Level.INFO, "BibTex-File could not be found nor attached.");
                 }
             }
         }
     }
+
     /**
-     * 
+     *
      */
     @Action(enabledProperty = "bibtexFileLoaded")
     public void refreshBibTexFile() {
         // retrieve current filepath of bibtex file
         File bibfile = bibtex.getFilePath();
         // check whether file already exists
-        if (bibfile!=null && bibfile.exists()) {
+        if (bibfile != null && bibfile.exists()) {
             // detach current bibtex file
             bibtex.detachCurrentlyAttachedFile();
             // open selected file, using the character encoding of the related reference-manager (i.e.
             // the programme that has exported the bib-tex-file).
-            if (bibtex.refreshBibTexFile(settings, data)) {
+            if (bibtex.refreshBibTexFile(settings)) {
+                // if dialog window isn't already created, do this now
+                if (null == taskDlg) {
+                    // get parent und init window
+                    taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_REFRESHBIBTEX, taskinfo, data, bibtex);
+                    // center window
+                    taskDlg.setLocationRelativeTo(getFrame());
+                }
+                ZettelkastenApp.getApplication().show(taskDlg);
+                // dispose the window and clear the object
+                taskDlg.dispose();
+                taskDlg = null;
                 // update author list
-                data.setAuthorlistUpToDate(false);
                 showAuthors();
                 // tell about success
-                Constants.zknlogger.log(Level.INFO,"BibTex-File was successfully refreshed.");
-            }
-            else {
+                Constants.zknlogger.log(Level.INFO, "BibTex-File was successfully refreshed.");
+                // Constants.zknlogger.log(Level.INFO, "{0}{1}", new Object[]{System.lineSeparator(), taskinfo.getUpdatedAuthors()});
+            } else {
                 // tell about fail
-                Constants.zknlogger.log(Level.INFO,"BibTex-File could not be found nor refreshed.");
+                Constants.zknlogger.log(Level.INFO, "BibTex-File could not be found nor refreshed.");
             }
         }
     }
 
-    
     /**
      * This method exports all attachments of the data-file to a file.<br><br>
-     * This method fills a LinkedList with the export-data (i.e. the attachment-values).<br><br>
+     * This method fills a LinkedList with the export-data (i.e. the
+     * attachment-values).<br><br>
      * Then the method
      * {@link #exportList(java.util.LinkedList, java.lang.String) exportList(LinkedList,String)}
-     * is called, which is responsible for saving the data of this linked list to a file.
+     * is called, which is responsible for saving the data of this linked list
+     * to a file.
      */
     @Action(enabledProperty = "exportPossible")
     public void exportAttachments() {
@@ -9328,71 +9590,87 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // create linked list that will contain all attachments
         LinkedList<String> attachments = new LinkedList<>();
         // copy all attachments to a linked list
-        for (int cnt=0; cnt<len; cnt++) attachments.add(jTableAttachments.getValueAt(cnt, 0).toString());
+        for (int cnt = 0; cnt < len; cnt++) {
+            attachments.add(jTableAttachments.getValueAt(cnt, 0).toString());
+        }
         // call export-method
-        exportList(attachments,"attachments");
+        exportList(attachments, "attachments");
     }
 
-
     /**
-     * 
+     *
      * @param exportlist
      * @param type
      */
     private void exportList(LinkedList<String> exportlist, String type) {
-        String formats = getResourceMap().getString("exportListFormat1") + "," +
-                         getResourceMap().getString("exportListFormat2") + "," +
-                         getResourceMap().getString("exportListFormat3");
-        if (type.equalsIgnoreCase("authors")) formats = formats + "," + getResourceMap().getString("exportListFormat4");
+        String formats = getResourceMap().getString("exportListFormat1") + ","
+                + getResourceMap().getString("exportListFormat2") + ","
+                + getResourceMap().getString("exportListFormat3");
+        if (type.equalsIgnoreCase("authors")) {
+            formats = formats + "," + getResourceMap().getString("exportListFormat4");
+        }
         Object[] choice = formats.split(",");
         Object expo = JOptionPane.showInputDialog(getFrame(),
-                                getResourceMap().getString("exportListFormatMsg"),
-                                getResourceMap().getString("exportListFormatTitle"),
-                                JOptionPane.PLAIN_MESSAGE,
-                                null,
-                                choice,
-                                null);
+                getResourceMap().getString("exportListFormatMsg"),
+                getResourceMap().getString("exportListFormatTitle"),
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                choice,
+                null);
         // check for valid return value or cancel-operation of user
         if (expo != null) {
             // convert object to string
             String exportformat = expo.toString();
             // check for valid file extenstion
-            if (exportformat.equalsIgnoreCase(getResourceMap().getString("exportListFormat4"))) exportformat = "bib";
+            if (exportformat.equalsIgnoreCase(getResourceMap().getString("exportListFormat4"))) {
+                exportformat = "bib";
+            }
             // here we open a swing filechooser, in case the os ist no mac aqua
             File filepath = FileOperationsUtil.chooseFile(getFrame(),
-                                                      (settings.isMacAqua())?FileDialog.SAVE:JFileChooser.SAVE_DIALOG,
-                                                      JFileChooser.FILES_ONLY,
-                                                      null,
-                                                      null,
-                                                      getResourceMap().getString("exportListFormatTitle"),
-                                                      new String[] {"."+exportformat.toLowerCase()},
-                                                      expo.toString(),
-                                                      settings);
+                    (settings.isMacAqua()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG,
+                    JFileChooser.FILES_ONLY,
+                    null,
+                    null,
+                    getResourceMap().getString("exportListFormatTitle"),
+                    new String[]{"." + exportformat.toLowerCase()},
+                    expo.toString(),
+                    settings);
             // if we have any valid
-            if (filepath!=null) {
+            if (filepath != null) {
                 // init extension-string
                 String ext = null;
                 // retrieve fileextension, in case the user does not enter a fileextension later...
-                if (exportformat.equals(getResourceMap().getString("exportListFormat1"))) ext = "."+getResourceMap().getString("exportListFormat1").toLowerCase();
-                if (exportformat.equals(getResourceMap().getString("exportListFormat2"))) ext = "."+getResourceMap().getString("exportListFormat2").toLowerCase();
-                if (exportformat.equals(getResourceMap().getString("exportListFormat3"))) ext = "."+getResourceMap().getString("exportListFormat3").toLowerCase();
-                if (exportformat.equals("bib")) ext = ".bib";
+                if (exportformat.equals(getResourceMap().getString("exportListFormat1"))) {
+                    ext = "." + getResourceMap().getString("exportListFormat1").toLowerCase();
+                }
+                if (exportformat.equals(getResourceMap().getString("exportListFormat2"))) {
+                    ext = "." + getResourceMap().getString("exportListFormat2").toLowerCase();
+                }
+                if (exportformat.equals(getResourceMap().getString("exportListFormat3"))) {
+                    ext = "." + getResourceMap().getString("exportListFormat3").toLowerCase();
+                }
+                if (exportformat.equals("bib")) {
+                    ext = ".bib";
+                }
                 // check whether the user entered a file extension. if not, add "ext" as extension
-                if (!filepath.getName().toLowerCase().endsWith(ext)) filepath = new File(filepath.getPath()+ext);
+                if (!filepath.getName().toLowerCase().endsWith(ext)) {
+                    filepath = new File(filepath.getPath() + ext);
+                }
                 // if file does not exist, create it - otherwise the getFilePath-method of
                 // the settings-class would return "null" as filepath, if file doesn't exist
                 if (!filepath.exists()) {
                     try {
                         filepath.createNewFile();
                     } catch (IOException ex) {
-                        Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
+                        Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
                     }
-                }
-                else {
+                } else {
                     // file exists, ask user to overwrite it...
                     int optionDocExists = JOptionPane.showConfirmDialog(getFrame(), getResourceMap().getString("askForOverwriteFileMsg"), getResourceMap().getString("askForOverwriteFileTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
                     // if the user does *not* choose to overwrite, quit...
-                    if (optionDocExists!=JOptionPane.YES_OPTION) return;
+                    if (optionDocExists != JOptionPane.YES_OPTION) {
+                        return;
+                    }
                 }
 
                 // create variable that indicates errors...
@@ -9426,24 +9704,21 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                             out.output(exportfile, fos);
                             // close the output stream
                             fos.close();
-                        }
-                        catch (IOException e) {
+                        } catch (IOException e) {
                             // log error-message
-                            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+                            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                             errorOccured = true;
                             // show error message
                             JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("errorSavingMsg"), getResourceMap().getString("errorSavingTitle"), JOptionPane.PLAIN_MESSAGE);
                         }
-                    }
-                    catch (FileNotFoundException ex) {
+                    } catch (FileNotFoundException ex) {
                         // log error-message
-                        Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
+                        Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
                         errorOccured = true;
                         // show error message
                         JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("errorSavingMsg"), getResourceMap().getString("errorSavingTitle"), JOptionPane.PLAIN_MESSAGE);
                     }
-                }
-                else if (exportformat.equals("bib")) {
+                } else if (exportformat.equals("bib")) {
                     ByteArrayOutputStream bout = null;
                     OutputStream exportfile = null;
                     try {
@@ -9454,29 +9729,29 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         String bibdata = bout.toString("UTF-8");
                         // write content
                         exportfile.write(bibdata.getBytes(Charset.forName("UTF-8")));
-                    }
-                    catch (FileNotFoundException ex) {
+                    } catch (FileNotFoundException ex) {
                         // log error-message
-                        Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
+                        Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
                         errorOccured = true;
-                    }
-                    catch (IOException ex) {
+                    } catch (IOException ex) {
                         // log error-message
-                        Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
+                        Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
                         errorOccured = true;
                     } finally {
                         try {
-                            if (bout!=null) bout.close();
-                            if (exportfile!=null) exportfile.close();
-                        }
-                        catch (IOException ex) {
+                            if (bout != null) {
+                                bout.close();
+                            }
+                            if (exportfile != null) {
+                                exportfile.close();
+                            }
+                        } catch (IOException ex) {
                             // log error-message
-                            Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
+                            Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
                             errorOccured = true;
                         }
                     }
-                }
-                else {
+                } else {
                     // create stringbuilder for the final content
                     StringBuilder finalcontent = new StringBuilder("");
                     // create list-iterator
@@ -9484,9 +9759,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     // here startes the export of txt-data
                     if (exportformat.equals(getResourceMap().getString("exportListFormat2"))) {
                         // iterate exportlist and copy each list-element to the string, separated by new lines
-                        while (i.hasNext()) finalcontent.append(i.next()).append(System.lineSeparator());
-                    }
-                    // here startes the export of html-data
+                        while (i.hasNext()) {
+                            finalcontent.append(i.next()).append(System.lineSeparator());
+                        }
+                    } // here startes the export of html-data
                     else if (exportformat.equals(getResourceMap().getString("exportListFormat3"))) {
                         // init html-page
                         finalcontent.append("<html><head></head><body><ol>").append(System.lineSeparator());
@@ -9519,19 +9795,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         exportfile.write(finalcontent.toString());
                     } catch (IOException ex) {
                         // log error-message
-                        Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
+                        Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
                         errorOccured = true;
                         // show error message
                         JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("errorSavingMsg"), getResourceMap().getString("errorSavingTitle"), JOptionPane.PLAIN_MESSAGE);
                     } finally {
                         try {
                             // finally, close filewrite
-                            if (exportfile!=null) {
+                            if (exportfile != null) {
                                 exportfile.close();
                             }
                         } catch (IOException ex) {
                             // log error-message
-                            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
+                            Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
                             errorOccured = true;
                             // show error message
                             JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("errorSavingMsg"), getResourceMap().getString("errorSavingTitle"), JOptionPane.PLAIN_MESSAGE);
@@ -9541,18 +9817,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // if an errors occured, show error-log
                 if (errorOccured) {
                     showErrorIcon();
-                }
-                else {
+                } else {
                     JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("exportOkMsg"), getResourceMap().getString("exportOkTitle"), JOptionPane.PLAIN_MESSAGE);
                 }
             }
         }
     }
 
-
     /**
-     * This methods goes back through the history and sets the current entry
-     * to the related entry in the history...
+     * This methods goes back through the history and sets the current entry to
+     * the related entry in the history...
      */
     @Action(enabledProperty = "historyBackAvailable")
     public void historyBack() {
@@ -9562,10 +9836,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         updateDisplay();
     }
 
-    
     /**
-     * This methods goes fore through the history and sets the current entry
-     * to the related entry in the history...
+     * This methods goes fore through the history and sets the current entry to
+     * the related entry in the history...
      */
     @Action(enabledProperty = "historyForAvailable")
     public void historyFor() {
@@ -9576,31 +9849,45 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     /**
-     * Copies the current selection, or the whole text if no selection
-     * is made, of the textfield which currently has the focus to the clipboard.
-     * If no textfield is the focus owner, the selected values of the list or table
+     * Copies the current selection, or the whole text if no selection is made,
+     * of the textfield which currently has the focus to the clipboard. If no
+     * textfield is the focus owner, the selected values of the list or table
      * which has the focus is copied to the clipboard.
      */
     @Action
     public void selectAllText() {
         // look for the component which has the focus and copy the (selected) text
-        if (jEditorPaneEntry.isFocusOwner()) jEditorPaneEntry.selectAll();
-        if (jListEntryKeywords.isFocusOwner()) jListEntryKeywords.setSelectionInterval(0, keywordListModel.size()-1);
-        if (jTableKeywords.isFocusOwner()) jTableKeywords.selectAll();
-        if (jTableAuthors.isFocusOwner()) jTableAuthors.selectAll();
-        if (jTableTitles.isFocusOwner()) jTableTitles.selectAll();
-        if (jTableAttachments.isFocusOwner()) jTableAttachments.selectAll();
+        if (jEditorPaneEntry.isFocusOwner()) {
+            jEditorPaneEntry.selectAll();
+        }
+        if (jListEntryKeywords.isFocusOwner()) {
+            jListEntryKeywords.setSelectionInterval(0, keywordListModel.size() - 1);
+        }
+        if (jTableKeywords.isFocusOwner()) {
+            jTableKeywords.selectAll();
+        }
+        if (jTableAuthors.isFocusOwner()) {
+            jTableAuthors.selectAll();
+        }
+        if (jTableTitles.isFocusOwner()) {
+            jTableTitles.selectAll();
+        }
+        if (jTableAttachments.isFocusOwner()) {
+            jTableAttachments.selectAll();
+        }
     }
 
-
     /**
-     * Shows the search results window. If it hasn't been created yet, a new instance will be created.
+     * Shows the search results window. If it hasn't been created yet, a new
+     * instance will be created.
      * <br><br>
      * The window is modal, thus we don't wait for reactions here.
      */
     @Action(enabledProperty = "searchResultsAvailable")
     public void showSearchResultWindow() {
-        if (null == searchResultsDlg) searchResultsDlg = new SearchResultsFrame(this,data,searchrequests,desktop,settings,acceleratorKeys,synonyms,bibtex);
+        if (null == searchResultsDlg) {
+            searchResultsDlg = new SearchResultsFrame(this, data, searchrequests, desktop, settings, acceleratorKeys, synonyms, bibtex);
+        }
         ZettelkastenApp.getApplication().show(searchResultsDlg);
     }
     

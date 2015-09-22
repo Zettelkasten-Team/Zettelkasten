@@ -55,6 +55,10 @@ public class TasksData {
     /**
      *
      */
+    private String updatedAuthors = "";
+    /**
+     *
+     */
     private boolean isImportOk = false;
     /**
      *
@@ -68,7 +72,6 @@ public class TasksData {
      * 
      */
     private LinkedList<Object[]> linkedvalues = null;
-    private String webcontent = "";
     /**
      * Need to store global information, given from the {@code KeywordSuggestionsTask}. See {@code NewEntry} frame for
      * further information.
@@ -210,5 +213,11 @@ public class TasksData {
             case NEW_KW: retval = newKeywords; break;
         }
         return retval;
+    }
+    public void setUpdatedAuthors(String s) {
+        updatedAuthors = s;
+    }
+    public String getUpdatedAuthors() {
+        return updatedAuthors;
     }
 }

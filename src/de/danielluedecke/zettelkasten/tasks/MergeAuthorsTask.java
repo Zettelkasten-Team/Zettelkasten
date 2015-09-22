@@ -46,20 +46,20 @@ public class MergeAuthorsTask extends org.jdesktop.application.Task<Object, Void
     /**
      * Reference to the main data class
      */
-    private Daten dataObj;
-    private TasksData tasksdata;
-    private String oldau;
-    private String newau;
-    private String newbibkey;
-    private JTable autable;
-    private int selectedrow;
-    private LinkedList<Object[]> linkedauthors;
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final Daten dataObj;
+    private final TasksData tasksdata;
+    private final String oldau;
+    private final String newau;
+    private final String newbibkey;
+    private final JTable autable;
+    private final int selectedrow;
+    private final LinkedList<Object[]> linkedauthors;
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(MergeAuthorsTask.class);
 

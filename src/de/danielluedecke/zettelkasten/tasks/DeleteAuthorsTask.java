@@ -43,14 +43,14 @@ public class DeleteAuthorsTask extends org.jdesktop.application.Task<Object, Voi
     /**
      * Reference to the main data class
      */
-    private Daten dataObj;
-    private String[] authors;
-    private javax.swing.JDialog parentDialog;
-    private javax.swing.JLabel msgLabel;
+    private final Daten dataObj;
+    private final String[] authors;
+    private final javax.swing.JDialog parentDialog;
+    private final javax.swing.JLabel msgLabel;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(DeleteAuthorsTask.class);
 

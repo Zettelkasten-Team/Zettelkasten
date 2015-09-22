@@ -74,16 +74,22 @@ public class FindDoubleEntriesTask extends javax.swing.JDialog {
     /**
      * 
      */
-    private Daten dataObj;
-    private Settings settingsObj;
+    private final Daten dataObj;
+    private final Settings settingsObj;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
+    private final org.jdesktop.application.ResourceMap resourceMap =
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(FindDoubleEntriesTask.class);
 
-    /** Creates new form CFindDoubleEntries */
+    /**
+     * 
+     * @param parent
+     * @param zkn
+     * @param data
+     * @param set 
+     */
     public FindDoubleEntriesTask(java.awt.Frame parent, ZettelkastenView zkn, Daten data, Settings set) {
         super(parent);
         dataObj = data;
@@ -124,7 +130,7 @@ public class FindDoubleEntriesTask extends javax.swing.JDialog {
         jTable1.setAutoCreateRowSorter(false);
         jTable1.setGridColor(settingsObj.getTableGridColor());
         // make extra table-sorter for itunes-tables
-        if (settingsObj.isMacStyle()) {
+        if (settingsObj.isMacAqua()) {
             TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
                 @Override
                 public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
@@ -221,7 +227,7 @@ public class FindDoubleEntriesTask extends javax.swing.JDialog {
     @SuppressWarnings("LeakingThisInConstructor")
     private class FindDoubleEntryTask extends org.jdesktop.application.Task<Object, Void> {
         // create list that will contain all double entries
-        private ArrayList<Integer[]> doubleentries = new ArrayList<Integer[]>();
+        private final ArrayList<Integer[]> doubleentries = new ArrayList<>();
         
         FindDoubleEntryTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
@@ -246,7 +252,7 @@ public class FindDoubleEntriesTask extends javax.swing.JDialog {
             }
             // create array list that will contain possible multiple occurences of
             // the entry with the index-number "entrynr"
-            ArrayList<Integer> founddoubles = new ArrayList<Integer>();
+            ArrayList<Integer> founddoubles = new ArrayList<>();
             // go through all entries. We have the entry-numbers saves in an array. each
             // previously found double entry's index-number will be replaced with a "-1",
             // so already found double entries will not appear multiple times in the final list
