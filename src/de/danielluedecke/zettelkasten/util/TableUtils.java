@@ -46,8 +46,8 @@ import javax.swing.table.DefaultTableModel;
 public class TableUtils {
 
     /**
-     * This method selects a certain row that contains the value {@code value} in the
-     * column {@code column} in the jTable {@code table}.
+     * This method selects a certain row that contains the value {@code value}
+     * in the column {@code column} in the jTable {@code table}.
      *
      * @param table the table where the row should be selected
      * @param value the value that should be selected
@@ -112,15 +112,16 @@ public class TableUtils {
     }
 
     /**
-     * This message retrieve selected values from a jTable and copies them into a line-separated string,
-     * where each line contains the cell-data of each row. each cell is tab-separated, each row is
-     * newline-separated.<br><br>
+     * This message retrieve selected values from a jTable and copies them into
+     * a line-separated string, where each line contains the cell-data of each
+     * row. each cell is tab-separated, each row is newline-separated.<br><br>
      * Thus, a return value might look like this:<br>
-     * {@code 3   This is the third entry}<br>
-     * {@code 6   This is number six}<br>
+     * {@code 3   This is the third entry}<br> {@code 6   This is number six}<br>
      * {@code 9   My last entry}
+     *
      * @param table the table where the data was dragged (drag-source)
-     * @return a prepared string that contains the copied data in proper "clipboard"-format.
+     * @return a prepared string that contains the copied data in proper
+     * "clipboard"-format.
      */
     public static String prepareStringForTransferHandler(JTable table) {
         int[] rows = table.getSelectedRows();
@@ -135,12 +136,13 @@ public class TableUtils {
     }
 
     /**
-     * This method retrieves the key-code {@code keyCode} of a released key in the
-     * JTable {@code table} and checks whether this key was a navigation key (i.e.
-     * cursor up/down/left/right or home/end). If so, the method tries to select the next
-     * related entry of that JTable, according to the pressed key.<br><br>
-     * Furthermore, the related content is made visible (scroll rect to visible or ensure
-     * index is visible).
+     * This method retrieves the key-code {@code keyCode} of a released key in
+     * the JTable {@code table} and checks whether this key was a navigation key
+     * (i.e. cursor up/down/left/right or home/end). If so, the method tries to
+     * select the next related entry of that JTable, according to the pressed
+     * key.<br><br>
+     * Furthermore, the related content is made visible (scroll rect to visible
+     * or ensure index is visible).
      *
      * @param table a reference to the JTable where the related key was released
      * @param keyCode the keycode of the released key
@@ -176,13 +178,15 @@ public class TableUtils {
     }
 
     /**
-     * This method selects the first entry in the JTable {@code table} that start with the
-     * text that is entered in the filter-textfield {@code textfield}.
+     * This method selects the first entry in the JTable {@code table} that
+     * start with the text that is entered in the filter-textfield
+     * {@code textfield}.
      *
      * @param table the jTable where the item should be selected
      * @param textfield the related filtertextfield that contains the user-input
-     * @param column the column where the filtering-comparison should be applied to. in most cases, the relevant
-     * information (i.e. the string/text) is in column 0, but sometimes also in column 1
+     * @param column the column where the filtering-comparison should be applied
+     * to. in most cases, the relevant information (i.e. the string/text) is in
+     * column 0, but sometimes also in column 1
      */
     public static void selectByTyping(JTable table, javax.swing.JTextField textfield, int column) {
         String text = textfield.getText().toLowerCase();

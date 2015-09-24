@@ -687,6 +687,7 @@ public class Settings {
         genericElementInit(SETTING_SEARCHALWAYSSYNONYMS, "1");
         genericElementInit(SETTING_SHOWSYNONYMSINTABLE, "0");
         genericElementInit(SETTING_SHOWICONS, "1");
+        genericElementInit(SETTING_SHOWALLICONS, "1");
         genericElementInit(SETTING_SHOWENTRYHEADLINE, "1");
         genericElementInit(SETTING_ICONTHEME, "0");
         genericElementInit(SETTING_SHOWUPDATEHINTVERSION, "0");

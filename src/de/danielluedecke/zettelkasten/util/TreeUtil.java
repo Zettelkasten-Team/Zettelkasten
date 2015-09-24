@@ -53,18 +53,20 @@ public class TreeUtil {
     private static final List<String> collapsedNodes = new ArrayList<>();
 
     private static int expandLevel = -1;
+
     /**
      * Sets the level to which sub branches a tree will be expanded.
-     * 
+     *
      * @param level the "depth" of the tree expansion.
      */
     public static void setExpandLevel(int level) {
         expandLevel = level;
     }
+
     public static int getExpandLevel() {
         return expandLevel;
     }
-    
+
     /**
      * This method extracts a node's ID.
      *
@@ -128,26 +130,6 @@ public class TreeUtil {
         return null;
     }
 
-    /**
-     * This method extracts an entry's number from a node's text (userobject)
-     * and returns it as integer-value
-     *
-     * @param node the node from which the entry-number should be extracted
-     * @return the entry-number, or -1 if an error occured.
-     */
-//    public static int extractEntryNumberFromNodeText(DefaultMutableTreeNode node) {
-//        String entrynumber = node.toString();
-//        int pos = entrynumber.indexOf(":");
-//        if (-1 == pos) {
-//            pos = entrynumber.length();
-//        }
-//        entrynumber = entrynumber.substring(0, pos).trim();
-//        try {
-//            return Integer.parseInt(entrynumber);
-//        } catch (NumberFormatException e) {
-//            return -1;
-//        }
-//    }
     /**
      * This method extracts an entry's number from a node's text (userobject)
      * and returns it as integer-value
@@ -299,7 +281,7 @@ public class TreeUtil {
         // clear collapsed nodes
         collapsedNodes.clear();
     }
-    
+
     /**
      * This method selects the first entry in a jTree that start with the text
      * that is entered in the filter-textfield.

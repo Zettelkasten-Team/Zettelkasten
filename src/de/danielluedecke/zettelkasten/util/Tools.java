@@ -30,7 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 package de.danielluedecke.zettelkasten.util;
 
 import de.danielluedecke.zettelkasten.ToolbarIcons;
@@ -81,6 +80,7 @@ import org.jdom2.output.XMLOutputter;
  * @author danielludecke
  */
 public class Tools {
+
     public static final int UBB2MARKDOWN = 1;
     public static final int MARKDOWN2UBB = 2;
 
@@ -88,28 +88,29 @@ public class Tools {
     public static final String SEGMENT_POSITION_MIDDLE = "middle";
     public static final String SEGMENT_POSITION_LAST = "last";
     public static final String SEGMENT_POSITION_ONLY = "only";
-    
+
     /**
      * get the strings for file descriptions from the resource map
      */
-    private final static org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(ZettelkastenView.class);
+    private final static org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(ZettelkastenView.class);
     /**
      * get the strings for file descriptions from the resource map
      */
-    private final static org.jdesktop.application.ResourceMap toolbarResourceMap = 
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(ToolbarIcons.class);
+    private final static org.jdesktop.application.ResourceMap toolbarResourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(ToolbarIcons.class);
     /**
      *
      */
     private static boolean validhtml;
 
-
     /**
-     * This method retrieves system information like the operating system and version, the architecture,
-     * the used java runtime environment and the official vendor of the jre, and the java home directory.
+     * This method retrieves system information like the operating system and
+     * version, the architecture, the used java runtime environment and the
+     * official vendor of the jre, and the java home directory.
+     *
      * @return a string with the above described system information
      */
     public static String getSystemInformation() {
@@ -120,107 +121,117 @@ public class Tools {
         return sysinfo.toString();
     }
 
-
     /**
-     * This method converts Zettelkasten ubb-format-chars like {@code [br]} or {@code &#9;} into
-     * UTF-chars for a regular input in a text field (like \n or \t).
+     * This method converts Zettelkasten ubb-format-chars like {@code [br]} or
+     * {@code &#9;} into UTF-chars for a regular input in a text field (like \n
+     * or \t).
      *
-     * @param text the text that contains UBB-tags like {@code [br]} or {@code &#9;}
-     * @return a string with converted UTF-chars (line separators, tabs) used in a regular text field
+     * @param text the text that contains UBB-tags like {@code [br]} or
+     * {@code &#9;}
+     * @return a string with converted UTF-chars (line separators, tabs) used in
+     * a regular text field
      */
     public static String replaceUbbToUnicode(String text) {
-        if (text!=null && !text.isEmpty()) {
+        if (text != null && !text.isEmpty()) {
             // replace all "br" with "real" new lines
             text = text.replace("[br]", System.lineSeparator());
             // replace all "tabs" with "real" tabs
             text = text.replace("&#9;", "\t");
             // replace all bullet-codes with "real" bullets
-            text = text.replace("&#8226;", String.valueOf((char)8226));
+            text = text.replace("&#8226;", String.valueOf((char) 8226));
         }
         return text;
     }
 
-
     /**
-     * This method converts UTF-chars from a regular input or text field (like \n or \t)
-     * into its Zettelkasten ubb-format.
+     * This method converts UTF-chars from a regular input or text field (like
+     * \n or \t) into its Zettelkasten ubb-format.
      * <br><br>
-     * Use this method if you want to make the content of {@code text} compatible with
-     * the Zettelkasten's UBB-tags, i.e. if you need the content of {@code text} for
-     * creating a new entry.
+     * Use this method if you want to make the content of {@code text}
+     * compatible with the Zettelkasten's UBB-tags, i.e. if you need the content
+     * of {@code text} for creating a new entry.
      *
      * @param text the text that contains UTF chars like line separators or tabs
-     * @return a string with converted ubb-chars (line separators become {@code [br]}, tabs
-     * {@code &#9;} etc.
+     * @return a string with converted ubb-chars (line separators become
+     * {@code [br]}, tabs {@code &#9;} etc.
      */
     public static String replaceUnicodeToUbb(String text) {
-        if (text!=null && !text.isEmpty()) {
+        if (text != null && !text.isEmpty()) {
             // check whether the line-seperator has 2 chars. if so, remove first char...
             if (System.lineSeparator().contains("\r")) {
                 text = text.replace("\r", "");
             }
             // ...only then this replacement will work
-            text = text.replace("\n","[br]");
+            text = text.replace("\n", "[br]");
             // replace all "tabs" with "real" tabs
             text = text.replace("\t", "&#9;");
             // replace all bullet-codes with "real" bullets
-            text = text.replace(String.valueOf((char)8226),"&#8226;");
+            text = text.replace(String.valueOf((char) 8226), "&#8226;");
         }
         return text;
     }
 
-    
     /**
-     * 
+     *
      * @param linktype
      * @param data
      * @param displayedZettel
-     * @return 
+     * @return
      */
     public static boolean removeHyperlink(String linktype, Daten data, int displayedZettel) {
         // here we have a cross reference to another entry
         if (linktype.startsWith("#cr_")) {
             // only remove manual links from activated entry!
-            if (displayedZettel!=data.getCurrentZettelPos()) return false;
+            if (displayedZettel != data.getCurrentZettelPos()) {
+                return false;
+            }
             try {
                 // if we have just a single selection, use phrasing for that message
                 String msg = resourceMap.getString("askForDeleteManLinksMsgSingle");
                 // ask whether author really should be deleted
                 int option = JOptionPane.showConfirmDialog(null, msg, resourceMap.getString("askForDeleteManLinksTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
                 // if yes, do so
-                if (JOptionPane.YES_OPTION == option ) {
+                if (JOptionPane.YES_OPTION == option) {
                     // remove manual link
                     data.deleteManualLinks(new String[]{linktype.substring(4)});
                     return true;
-                }                
-            }
-            catch (IndexOutOfBoundsException e) {
-                Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+                }
+            } catch (IndexOutOfBoundsException e) {
+                Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
             }
         }
         return false;
     }
-    
 
     /**
-     * This method opens a file or URL either from within a clicked link inside the jEditorPane (see
+     * This method opens a file or URL either from within a clicked link inside
+     * the jEditorPane (see
      * {@link #eventHyperlinkActivated(javax.swing.event.HyperlinkEvent) eventHyperlinkActivated(javax.swing.event.HyperlinkEvent)}
-     * or from the attachment-list (see {@link #openAttachment() openAttachment()}.
+     * or from the attachment-list (see
+     * {@link #openAttachment() openAttachment()}.
      *
-     * This method is called from the ZettelkastenView.class, the CDesktop.class and the CSearchResults.class.
+     * This method is called from the ZettelkastenView.class, the CDesktop.class
+     * and the CSearchResults.class.
      *
-     * @param linktype a String value containing the URL of the clicked hyperlink
-     * @param frame the frame which was the source from the editor pane that contained the hyperlink
-     * @param sourceframe a reference to the frame from where this function call came. needed for
-     * the html-formatting, since entries are differently formatted in the search window.
+     * @param linktype a String value containing the URL of the clicked
+     * hyperlink
+     * @param frame the frame which was the source from the editor pane that
+     * contained the hyperlink
+     * @param sourceframe a reference to the frame from where this function call
+     * came. needed for the html-formatting, since entries are differently
+     * formatted in the search window.
      * @param data a reference to the CDaten class
      * @param bibtexObj
      * @param settings a reference to the CSettings class
-     * @param mainpane a reference to the JEditorPane that was the source of the hyperlink-event
-     * @param displayedZettel the currently displayed entry. does not apply to the CDesktop.class
+     * @param mainpane a reference to the JEditorPane that was the source of the
+     * hyperlink-event
+     * @param displayedZettel the currently displayed entry. does not apply to
+     * the CDesktop.class
      * @return <ul>
-     * <li>in case a literatur footnote was clicked, the related author-value is returned as string value.</li>>
-     * <li>in case a rating-star was clicked, the value {@code #rateentry} with appended entry-number is returned.</li>
+     * <li>in case a literatur footnote was clicked, the related author-value is
+     * returned as string value.</li>>
+     * <li>in case a rating-star was clicked, the value {@code #rateentry} with
+     * appended entry-number is returned.</li>
      * <li>in all other cases, {@code null} is returned.</li>
      * </ul>
      */
@@ -231,24 +242,22 @@ public class Tools {
         // end of an entry
         if (linktype.equals("#hyperjump")) {
             mainpane.scrollToReference("hyperjump");
-        }
-        else if (linktype.equals("#activatedEntry")) {
+        } else if (linktype.equals("#activatedEntry")) {
             return linktype;
-        }
-        // here we have a literature footnote. if this link is activated, we want
+        } // here we have a literature footnote. if this link is activated, we want
         // to display the related author in the tabbed pane
         // otherwise try to open the file with the associated application
         else if (linktype.startsWith("#fn_")) {
             try {
                 String au = "";
                 // check sourceframe
-                if (sourceframe!=Constants.FRAME_DESKTOP) {
+                if (sourceframe != Constants.FRAME_DESKTOP) {
                     // get and convert number
                     int aunr = Integer.parseInt(linktype.substring(4));
                     // get author from author-xml-file
                     au = data.getAuthor(aunr);
                     // create a new instance of the CHtml-class for highlighting
-                    HtmlUbbUtil.setHighlighTerms(new String[] {Pattern.quote(au)}, HtmlUbbUtil.HIGHLIGHT_STYLE_LIVESEARCH,false);
+                    HtmlUbbUtil.setHighlighTerms(new String[]{Pattern.quote(au)}, HtmlUbbUtil.HIGHLIGHT_STYLE_LIVESEARCH, false);
                     // get the authors with new highlighted author that was selected from the footnote
                     String text = HtmlUbbUtil.getEntryAsHTML(settings, data, bibtexObj, displayedZettel, null, sourceframe);
                     // set new text
@@ -261,12 +270,10 @@ public class Tools {
                 if (settings.getJumpFootnote()) {
                     return au;
                 }
+            } catch (NumberFormatException e) {
+                Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
             }
-            catch (NumberFormatException e) {
-                Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
-            }
-        }
-        // here we have a reference to another entry
+        } // here we have a reference to another entry
         else if (linktype.startsWith("#z_")) {
             try {
                 // get and convert number
@@ -277,12 +284,10 @@ public class Tools {
                 }
                 // return String
                 return linktype;
+            } catch (NumberFormatException e) {
+                Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
             }
-            catch (NumberFormatException e) {
-                Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
-            }
-        }
-        // here we have a cross reference to another entry
+        } // here we have a cross reference to another entry
         else if (linktype.startsWith("#cr_")) {
             try {
                 // get and convert number
@@ -293,38 +298,32 @@ public class Tools {
                 }
                 // return String
                 return linktype;
+            } catch (NumberFormatException e) {
+                Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
             }
-            catch (NumberFormatException e) {
-                Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
-            }
-        }
-        // here we have a rating-request, i.e. the user clicked on the rating stars
+        } // here we have a rating-request, i.e. the user clicked on the rating stars
         // and wants to rate the entry
         else if (linktype.startsWith("#rateentry")) {
             return linktype;
-        }
-        // here we have a edit cross reference
+        } // here we have a edit cross reference
         else if (linktype.equalsIgnoreCase("#crt")) {
             return linktype;
-        }
-        // here we have a request for editing the timestamp
+        } // here we have a request for editing the timestamp
         else if (linktype.startsWith("#tstamp")) {
             return linktype;
-        }
-// TODO enable if movie-player is installed/possible.
-// here we have a movie-url. if this link is activated, we want
-// to play a moview in the hud-control-window (see CMoviePlayer).
-// else if (linktype.startsWith("#mov")) {
-// CMoviePlayer movplay = new CMoviePlayer(linktype.substring(4));
-// movplay.showPlayer();
-// }
+        } // TODO enable if movie-player is installed/possible.
+        // here we have a movie-url. if this link is activated, we want
+        // to play a moview in the hud-control-window (see CMoviePlayer).
+        // else if (linktype.startsWith("#mov")) {
+        // CMoviePlayer movplay = new CMoviePlayer(linktype.substring(4));
+        // movplay.showPlayer();
+        // }
         // here comes the part which depends on the desktop-api
         else {
             launchFile(linktype, frame, data, settings);
         }
         return null;
     }
-
 
     /**
      *
@@ -462,32 +461,35 @@ public class Tools {
             }
         }
     }
-    
-    
+
     /**
-     * This method checks the content of {@code content} for valid HTML and returns {@code true}
-     * if the content could be parsed t HTML. With this, we check whether an entry makes use of correct
-     * or irregular nested tags.
+     * This method checks the content of {@code content} for valid HTML and
+     * returns {@code true} if the content could be parsed t HTML. With this, we
+     * check whether an entry makes use of correct or irregular nested tags.
      *
-     * @param content the html-page which should be checked for correctly nested tags, usually an entry's content
-     * @param zettelnummer the number of the entry that is checked for valid html-tags
-     * @return {@code true} when the content could be successfully parsed to HTML, false otherwise
+     * @param content the html-page which should be checked for correctly nested
+     * tags, usually an entry's content
+     * @param zettelnummer the number of the entry that is checked for valid
+     * html-tags
+     * @return {@code true} when the content could be successfully parsed to
+     * HTML, false otherwise
      */
     public static boolean isValidHTML(String content, final int zettelnummer) {
         // check for valid html
         validhtml = true;
         // first, we parse the created web-page to catch errors that might occure when parsing
         // the entry-content. this might happen when tags are not properly used.
-        HTMLEditorKit.ParserCallback callback = new HTMLEditorKit.ParserCallback () {
+        HTMLEditorKit.ParserCallback callback = new HTMLEditorKit.ParserCallback() {
             // in case the parsing was not succssful, log that error message.
-            @Override public void handleError(String errorMsg, int pos) {
+            @Override
+            public void handleError(String errorMsg, int pos) {
                 if (errorMsg.toLowerCase().contains("unmatched") || errorMsg.toLowerCase().contains("missing")) {
                     // if body tag is missing (which is true for all entries), don't log that message
                     if (!errorMsg.toLowerCase().contains("body")) {
                         // tell function that HTML is invalid.
                         validhtml = false;
-                        errorMsg = System.lineSeparator()+"Error when parsing the entry "+String.valueOf(zettelnummer)+"!"+System.lineSeparator()+errorMsg+System.lineSeparator();
-                        Constants.zknlogger.log(Level.SEVERE,errorMsg);
+                        errorMsg = System.lineSeparator() + "Error when parsing the entry " + String.valueOf(zettelnummer) + "!" + System.lineSeparator() + errorMsg + System.lineSeparator();
+                        Constants.zknlogger.log(Level.SEVERE, errorMsg);
                     }
                 }
             }
@@ -497,16 +499,16 @@ public class Tools {
         // try to parse the html-page
         try {
             new ParserDelegator().parse(reader, callback, false);
-        }
-        catch (IOException ex) {
-            Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
+        } catch (IOException ex) {
+            Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
         }
         return validhtml;
     }
 
-
     /**
-     * This method cleans an HTML-entry from irregular nested tags by removing all [c] and [m] formatting tags.
+     * This method cleans an HTML-entry from irregular nested tags by removing
+     * all [c] and [m] formatting tags.
+     *
      * @param dummy the entry's content that should be cleaned
      * @return the cleaned HTML-content for that entry.
      */
@@ -517,11 +519,10 @@ public class Tools {
         return dummy;
     }
 
-
-
     /**
-     * This method converts the timestamp-date into a readable format. The timestamp
-     * of entries is provided as "yymmddhhmm", e.g. "0811051810" stands for "5th November 2008, 10:18 am"
+     * This method converts the timestamp-date into a readable format. The
+     * timestamp of entries is provided as "yymmddhhmm", e.g. "0811051810"
+     * stands for "5th November 2008, 10:18 am"
      *
      * @param d the timestamp in original format
      * @param shortdate
@@ -542,8 +543,7 @@ public class Tools {
             resourceMap.getString("monthSep"),
             resourceMap.getString("monthOct"),
             resourceMap.getString("monthNov"),
-            resourceMap.getString("monthDec"),
-        };
+            resourceMap.getString("monthDec"),};
         // prepare the return-value
         StringBuilder retval = new StringBuilder("");
         // first, set the day. the day starts at position 4 within the string, always two digits
@@ -554,7 +554,7 @@ public class Tools {
         //
         // to check whether we are inside the boundaries when looking for the substring
         // we check for the length of the string
-        if (d.length()>=6) {
+        if (d.length() >= 6) {
             try {
                 // get the day from the timestamp
                 int day = Integer.parseInt(d.substring(4, 6));
@@ -562,35 +562,38 @@ public class Tools {
                 // now convert the month
                 // therefore, retrieve the substring, convert it to an int-value and use this value
                 // as index for the month array
-                String mon = months[Integer.parseInt(d.substring(2,4))-1];
+                String mon = months[Integer.parseInt(d.substring(2, 4)) - 1];
                 if (shortdate) {
-                    mon = mon.substring(0,3);
+                    mon = mon.substring(0, 3);
                 }
                 retval.append(mon).append(" ");
                 // now the year, assuming that we will have the 21st century
                 // fix this, when the new century 2100 begins :-)
-                if (!shortdate) retval.append("20");
-                retval.append(d.substring(0,2));
-                if (!shortdate) retval.append(", ");
-            }
-            catch (NumberFormatException | IndexOutOfBoundsException ex) {
-                Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
+                if (!shortdate) {
+                    retval.append("20");
+                }
+                retval.append(d.substring(0, 2));
+                if (!shortdate) {
+                    retval.append(", ");
+                }
+            } catch (NumberFormatException | IndexOutOfBoundsException ex) {
+                Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
             }
         }
         // to check whether we are inside the boundaries when looking for the substring
         // we check for the length of the string
         // and finally the time
-        if (d.length()>=10 && !shortdate) {
-            retval.append(d.substring(6,8)).append(":").append(d.substring(8,10));
+        if (d.length() >= 10 && !shortdate) {
+            retval.append(d.substring(6, 8)).append(":").append(d.substring(8, 10));
         }
         // return the final string
         return retval.toString();
     }
 
-
     /**
-     * This method converts the timestamp-date into a readable short format. The timestamp
-     * of entries is provided as "yymmddhhmm", e.g. "0811051810" stands for "05.11.2008" 18:10
+     * This method converts the timestamp-date into a readable short format. The
+     * timestamp of entries is provided as "yymmddhhmm", e.g. "0811051810"
+     * stands for "05.11.2008" 18:10
      *
      * @param d the timestamp in original format
      * @return the timestamp in a "readable" format
@@ -606,48 +609,49 @@ public class Tools {
         //
         // to check whether we are inside the boundaries when looking for the substring
         // we check for the length of the string
-        if (d.length()>=6) {
+        if (d.length() >= 6) {
             try {
                 // get the day from the timestamp
-                int day = Integer.parseInt(d.substring(4,6));
+                int day = Integer.parseInt(d.substring(4, 6));
                 retval.append(String.format("%02d", day)).append(".");
                 // now convert the month
                 // therefore, retrieve the substring, convert it to an int-value and use this value
                 // as index for the month array
-                int mon = Integer.parseInt(d.substring(2,4));
+                int mon = Integer.parseInt(d.substring(2, 4));
                 retval.append(String.format("%02d", mon)).append(".");
                 // now the year, assuming that we will have the 21st century
                 // fix this, when the new century 2100 begins :-)
-                retval.append("20").append(d.substring(0,2)).append(" ");
+                retval.append("20").append(d.substring(0, 2)).append(" ");
                 // check for valid length
-                if (d.length()>=10) {
+                if (d.length() >= 10) {
                     // get the hour from the timestamp
-                    int hour = Integer.parseInt(d.substring(6,8));
+                    int hour = Integer.parseInt(d.substring(6, 8));
                     retval.append(String.format("%02d", hour)).append(":");
                     // get the minutes from the timestamp
-                    int min = Integer.parseInt(d.substring(8,10));
+                    int min = Integer.parseInt(d.substring(8, 10));
                     retval.append(String.format("%02d", min));
                 }
-            }
-            catch (NumberFormatException | IndexOutOfBoundsException ex) {
-                Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
+            } catch (NumberFormatException | IndexOutOfBoundsException ex) {
+                Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
             }
         }
         // return the final string
         return retval.toString();
     }
 
-
     /**
-     * This methods retrieves entry-numbers from an input-field, where the user can enter certain entry-numbers,
-     * comma-separated, including ranges.<br><br>
-     * E.g. if the user enters following: "3,5,7-9", then this method would return an integer-array containing
-     * the values 3,5,7,8,9.
+     * This methods retrieves entry-numbers from an input-field, where the user
+     * can enter certain entry-numbers, comma-separated, including
+     * ranges.<br><br>
+     * E.g. if the user enters following: "3,5,7-9", then this method would
+     * return an integer-array containing the values 3,5,7,8,9.
      *
      * @param input the user-input from a textfield, given as string
-     * @param len the length of the dataset, so we don't have any entry-numbers out of bounds
-     * @return an integer-array with the converted entry-numbers from the user input, or null if an error occured or
-     * the input contained invalid numbers.
+     * @param len the length of the dataset, so we don't have any entry-numbers
+     * out of bounds
+     * @return an integer-array with the converted entry-numbers from the user
+     * input, or null if an error occured or the input contained invalid
+     * numbers.
      */
     public static int[] retrieveEntryNumbersFromInput(String input, int len) {
         // parse input at each comma
@@ -662,51 +666,47 @@ public class Tools {
             if (e.contains("-")) {
                 // find the position of the divider
                 int pos = e.indexOf("-");
-                if (pos!=-1) {
+                if (pos != -1) {
                     try {
                         // get the value befor that divider
                         String lowerS = e.substring(0, pos).trim();
                         // and get the value behind that divider
-                        String upperS = e.substring(pos+1).trim();
+                        String upperS = e.substring(pos + 1).trim();
                         // convert strings to integer
                         int from = Integer.parseInt(lowerS);
                         int to = Integer.parseInt(upperS);
                         // only proceed, when lower range is smaller than upper range
-                        if ((from<to) && (from>0) && (to<=len)) {
+                        if ((from < to) && (from > 0) && (to <= len)) {
                             // now add all entries from lower to higher to the bullet
-                            for (int cnt=from; cnt<=to; cnt++) {
+                            for (int cnt = from; cnt <= to; cnt++) {
                                 finalentries.add(cnt);
                             }
-                        }
-                        else {
+                        } else {
                             // tell user about invalid value
-                            JOptionPane.showMessageDialog(null,resourceMap.getString("errInvalidValueMsg"),resourceMap.getString("errInvalidValueTitle"),JOptionPane.PLAIN_MESSAGE);
+                            JOptionPane.showMessageDialog(null, resourceMap.getString("errInvalidValueMsg"), resourceMap.getString("errInvalidValueTitle"), JOptionPane.PLAIN_MESSAGE);
                             return null;
                         }
-                    }
-                    catch (NumberFormatException | IndexOutOfBoundsException ex) {
+                    } catch (NumberFormatException | IndexOutOfBoundsException ex) {
                         // tell user about invalid value
-                        JOptionPane.showMessageDialog(null,resourceMap.getString("errInvalidValueMsg"),resourceMap.getString("errInvalidValueTitle"),JOptionPane.PLAIN_MESSAGE);
+                        JOptionPane.showMessageDialog(null, resourceMap.getString("errInvalidValueMsg"), resourceMap.getString("errInvalidValueTitle"), JOptionPane.PLAIN_MESSAGE);
                         return null;
                     }
                 }
-            }
-            else {
+            } else {
                 try {
                     // convert string to integer
                     int nr = Integer.parseInt(e);
                     // check for valid entry...
-                    if (nr<0 || nr>len) {
+                    if (nr < 0 || nr > len) {
                         // tell user about invalid value
-                        JOptionPane.showMessageDialog(null,resourceMap.getString("errInvalidValueMsg"),resourceMap.getString("errInvalidValueTitle"),JOptionPane.PLAIN_MESSAGE);
+                        JOptionPane.showMessageDialog(null, resourceMap.getString("errInvalidValueMsg"), resourceMap.getString("errInvalidValueTitle"), JOptionPane.PLAIN_MESSAGE);
                         return null;
                     }
                     // else add nr
                     finalentries.add(nr);
-                }
-                catch (NumberFormatException ex) {
+                } catch (NumberFormatException ex) {
                     // tell user about invalid value
-                    JOptionPane.showMessageDialog(null,resourceMap.getString("errInvalidValueMsg"),resourceMap.getString("errInvalidValueTitle"),JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(null, resourceMap.getString("errInvalidValueMsg"), resourceMap.getString("errInvalidValueTitle"), JOptionPane.PLAIN_MESSAGE);
                     return null;
                 }
             }
@@ -714,11 +714,11 @@ public class Tools {
         // create return value
         int[] retval = null;
         // check whether we have any entries
-        if (finalentries.size()>0) {
+        if (finalentries.size() > 0) {
             // init return value
             retval = new int[finalentries.size()];
             // copy entries from list to array
-            for (int cnt=0; cnt<retval.length;cnt++) {
+            for (int cnt = 0; cnt < retval.length; cnt++) {
                 retval[cnt] = finalentries.get(cnt);
             }
         }
@@ -726,25 +726,25 @@ public class Tools {
         return retval;
     }
 
-
     /**
-     * This methods checks whether a string contains transfer-data from a table, and if so, extracts
-     * the entry-numbers from this string.<br><br>
-     * A string copied or dragged from a jTable may consist of several lines, where each line has
-     * an entrynumber (first cell), a tab as separator char and a title (as 2nd cell).<br><br>
+     * This methods checks whether a string contains transfer-data from a table,
+     * and if so, extracts the entry-numbers from this string.<br><br>
+     * A string copied or dragged from a jTable may consist of several lines,
+     * where each line has an entrynumber (first cell), a tab as separator char
+     * and a title (as 2nd cell).<br><br>
      * Thus, a dropped string might look like this:<br>
-     * {@code 3   This is the third entry}<br>
-     * {@code 6   This is number six}<br>
+     * {@code 3   This is the third entry}<br> {@code 6   This is number six}<br>
      * {@code 9   My last entry}
      *
-     * @param str the string that was dropped or pasted, i.e. received by the transfer handler
+     * @param str the string that was dropped or pasted, i.e. received by the
+     * transfer handler
      * @param maxcount
-     * @return an integer-array with all entry-numbers that could be extracted, or {@code null}
-     * if the string did not contain any entrynumbers.
+     * @return an integer-array with all entry-numbers that could be extracted,
+     * or {@code null} if the string did not contain any entrynumbers.
      */
     public static int[] retrieveEntryNumbersFromTransferHandler(String str, int maxcount) {
         // check whether we have any valid string
-        if (str!=null) {
+        if (str != null) {
             // create integer list for entry numbers
             ArrayList<Integer> entries = new ArrayList<>();
             // split drop-string at each new line
@@ -756,26 +756,25 @@ public class Tools {
                     // retrieve cell-data
                     String[] cells = line.split("\t");
                     // if we have any cells, go on
-                    if (cells.length>0) {
+                    if (cells.length > 0) {
                         try {
                             // try to convert data of each first cell into an integer
                             int e = Integer.parseInt(cells[0]);
                             // if succeeded, and entry is within valid range,
                             // add it to list
-                            if (e>0 && e<=maxcount) {
+                            if (e > 0 && e <= maxcount) {
                                 entries.add(e);
                             }
-                        }
-                        catch (NumberFormatException ex) {
+                        } catch (NumberFormatException ex) {
 
                         }
                     }
                 }
             }
             // if there were any entries in the drop-data, copy them to an int-array
-            if (entries.size()>0) {
+            if (entries.size() > 0) {
                 int[] retval = new int[entries.size()];
-                for (int cnt=0; cnt<entries.size(); cnt++) {
+                for (int cnt = 0; cnt < entries.size(); cnt++) {
                     retval[cnt] = entries.get(cnt);
                 }
                 return retval;
@@ -784,17 +783,18 @@ public class Tools {
         return null;
     }
 
-
     /**
-     * This method retrieves multiple occurences of the entries that are passed in the linked list
-     * {@code addedEntries} and puts them together to a linked list of type {@code Object []}.
+     * This method retrieves multiple occurences of the entries that are passed
+     * in the linked list {@code addedEntries} and puts them together to a
+     * linked list of type {@code Object []}.
      *
      * @param desktopObj the reference to the CDesktopData-class
-     * @param addedEntries a linked list of integer values, containing all entry-numbers that should be
-     * looked after for multiple occurences
-     * @return a linked list of {@code Object []}, where each object-array has the 2 fields: {@code Object[0]}
-     * containing the desktop-name as string, and {@code Object[1]} a linked list of type {@code Element} that
-     * contains all found entries as Element-values.
+     * @param addedEntries a linked list of integer values, containing all
+     * entry-numbers that should be looked after for multiple occurences
+     * @return a linked list of {@code Object []}, where each object-array has
+     * the 2 fields: {@code Object[0]} containing the desktop-name as string,
+     * and {@code Object[1]} a linked list of type {@code Element} that contains
+     * all found entries as Element-values.
      */
     public static List<Object[]> retrieveDoubleEntries(DesktopData desktopObj, List<Integer> addedEntries) {
         // create a linked list that will scan for multiple occurences of the added entries
@@ -806,7 +806,7 @@ public class Tools {
         // below we can than inform the user about multiple occurences of entries,
         // their location in the desktops and the timestamp when that entry was
         // added in the past
-        for (int me=0; me<desktopObj.getCount(); me++) {
+        for (int me = 0; me < desktopObj.getCount(); me++) {
             // create a new object array for the relevant data
             Object[] o = new Object[2];
             // store the desktopname
@@ -833,7 +833,7 @@ public class Tools {
                 // retrieve all found entries within the desktop
                 List<Element> lle = desktopObj.searchForEntry(me, it.next());
                 // check whether we have any returned entries...
-                if (lle!=null && lle.size()>0) {
+                if (lle != null && lle.size() > 0) {
                     // create a new iterator for the found results
                     Iterator<Element> prepare = lle.iterator();
                     // iterate them
@@ -841,28 +841,31 @@ public class Tools {
                         // get each single entry as element
                         Element e = prepare.next();
                         // and add it to the final list
-                        if (e!=null) {
+                        if (e != null) {
                             finallist.add(e);
                         }
                     }
                 }
             }
-            o[1] = (finallist.size()>0) ? finallist : null;
+            o[1] = (finallist.size() > 0) ? finallist : null;
             // add the object to our linked list, so this list will contain the desktop-name
             // and the possible double entries als elements.
             multipleentries.add(o);
         }
         return multipleentries;
     }
+
     /**
-     * This method prepares a message that tells the user which entries already appear in the desktop, and
-     * at which position. the complete message is returned as string.
+     * This method prepares a message that tells the user which entries already
+     * appear in the desktop, and at which position. the complete message is
+     * returned as string.
      *
      * @param list a linked list which contains the multiple-entry-data. see
      * {@link #retrieveDoubleEntries(zettelkasten.CDesktopData, java.util.LinkedList) retrieveDoubleEntries(zettelkasten.CDesktopData, java.util.LinkedList)}
-     * for more details on how this parameter is created. use the return result of this method as this parameter
-     * @return a string with the message which entries are at which position in the desktop-data, or {@code null}
-     * if no occurences appear.
+     * for more details on how this parameter is created. use the return result
+     * of this method as this parameter
+     * @return a string with the message which entries are at which position in
+     * the desktop-data, or {@code null} if no occurences appear.
      */
     public static String prepareDoubleEntriesMessage(List<Object[]> list) {
         // retrieve system's line-separator
@@ -882,17 +885,19 @@ public class Tools {
             // if second element in array is not null, we have a match. now retrieve
             // the entry's data, so we can inform the user about the
             // entry's details...
-            if (desktopdata[1]!=null) {
+            if (desktopdata[1] != null) {
                 // retrieve desktop name
-                String dn = resourceMap.getString("multipleOccurencesDesktop")+" "+(String)desktopdata[0];
+                String dn = resourceMap.getString("multipleOccurencesDesktop") + " " + (String) desktopdata[0];
                 StringBuilder dnsl = new StringBuilder("");
                 // now we add a separator line, so check length of string
-                for (int dnl=0; dnl<dn.length(); dnl++) dnsl.append("-");
+                for (int dnl = 0; dnl < dn.length(); dnl++) {
+                    dnsl.append("-");
+                }
                 // first, append desktop-name
                 multipleOccurencesMessage.append(dn).append(lineseparator);
                 multipleOccurencesMessage.append(dnsl.toString()).append(lineseparator);
                 // now retrieve the elements...
-                List<Element> elements = (ArrayList<Element>)desktopdata[1];
+                List<Element> elements = (ArrayList<Element>) desktopdata[1];
                 // create iterator for each found element
                 Iterator<Element> entryIterator = elements.iterator();
                 // go through the found entries in that desktop
@@ -907,7 +912,7 @@ public class Tools {
                     List<String> path = new ArrayList<>();
                     // as long as the found element has parents, we have path-elements/information
                     // to add...
-                    while(entry.getParentElement()!=null) {
+                    while (entry.getParentElement() != null) {
                         // retrieve parent-element
                         entry = entry.getParentElement();
                         // if it's a bullet, add the path-name to our path-list
@@ -916,15 +921,15 @@ public class Tools {
                         }
                     }
                     // now we can prepare the output string...
-                    multipleOccurencesMessage.append(resourceMap.getString("multipleOccurencesMsg", id, getProperDate(timestamp,false)));
+                    multipleOccurencesMessage.append(resourceMap.getString("multipleOccurencesMsg", id, getProperDate(timestamp, false)));
                     multipleOccurencesMessage.append(lineseparator).append(resourceMap.getString("multipleOccurencesLevel")).append(" ");
                     // go through the path-list and append all path-elements, so the user
                     // knows where to find the entry
-                    for (int cnt=0; cnt<path.size(); cnt++) {
+                    for (int cnt = 0; cnt < path.size(); cnt++) {
                         // add path
                         multipleOccurencesMessage.append(path.get(cnt));
                         // as long as we have a path-element left, append a separating comma
-                        if (cnt<path.size()-1) {
+                        if (cnt < path.size() - 1) {
                             multipleOccurencesMessage.append(" >>> ");
                         }
                     }
@@ -934,27 +939,30 @@ public class Tools {
             }
         }
         // delete the last two trailing lineseparators
-        if (multipleOccurencesMessage.length()>0) {
-            multipleOccurencesMessage.setLength(multipleOccurencesMessage.length()-2*lineseparator.length());
+        if (multipleOccurencesMessage.length() > 0) {
+            multipleOccurencesMessage.setLength(multipleOccurencesMessage.length() - 2 * lineseparator.length());
         }
         // if we have any content, return string. else return null
-        return (multipleOccurencesMessage.length()>0) ? multipleOccurencesMessage.toString() : null;
+        return (multipleOccurencesMessage.length() > 0) ? multipleOccurencesMessage.toString() : null;
     }
 
-
     /**
-     * This method checks whether a list of {@code keywords} contains values that matches a synonym in
-     * the synonyms-datafile, where the keyword-value is a synonym, but <i>no</i> index-word. If synonyms in the
-     * {@code keywords}-array have been found, the user is asked whether he wants to replace these synonyms
-     * by their index-words (which is recommended to do so, because keywords in general should be the
+     * This method checks whether a list of {@code keywords} contains values
+     * that matches a synonym in the synonyms-datafile, where the keyword-value
+     * is a synonym, but <i>no</i> index-word. If synonyms in the
+     * {@code keywords}-array have been found, the user is asked whether he
+     * wants to replace these synonyms by their index-words (which is
+     * recommended to do so, because keywords in general should be the
      * index-word of a synonym-line).
      *
-     * @param synonymsObj a reference to the synonyms-data-class {@code CSynonyms}
-     * @param keywords an array of keywords that should be checked, whether one or more elements of this
-     * array are synonyms, but no index-word
-     * @return if the user agrees, a "cleaned" array containing only keywords which appear as index-words of
-     * synonyms only, or the original array which was passed as parameter if the user does not agree to
-     * do the replacement. In case the user <i>cancelled</i> the action, {@code null} is returned.
+     * @param synonymsObj a reference to the synonyms-data-class
+     * {@code CSynonyms}
+     * @param keywords an array of keywords that should be checked, whether one
+     * or more elements of this array are synonyms, but no index-word
+     * @return if the user agrees, a "cleaned" array containing only keywords
+     * which appear as index-words of synonyms only, or the original array which
+     * was passed as parameter if the user does not agree to do the replacement.
+     * In case the user <i>cancelled</i> the action, {@code null} is returned.
      */
     public static String[] replaceSynonymsWithKeywords(Synonyms synonymsObj, String[] keywords) {
         // create linked list that will hold the keywords which have been recognized as synonyms, but not
@@ -962,21 +970,21 @@ public class Tools {
         List<String> synkeywords = new ArrayList<>();
         // check keywords whether they appear as synonyms, but not index-word
         for (String skw : keywords) {
-            if ((synonymsObj.findSynonym(skw, true)!=-1) && !synonymsObj.isIndexWord(skw, true)) {
+            if ((synonymsObj.findSynonym(skw, true) != -1) && !synonymsObj.isIndexWord(skw, true)) {
                 synkeywords.add(skw);
             }
         }
         // if we have any matches, go on here
-        if (synkeywords.size()>0) {
+        if (synkeywords.size() > 0) {
             // prepare option-message
             StringBuilder msg = new StringBuilder("");
             for (String synkeyword : synkeywords) {
                 msg.append("<br>" + "- <b>").append(synkeyword).append("</b> <i>(Index-Synonym: ").append(synonymsObj.getIndexWord(synkeyword, true)).append(")</i>");
             }
             // show option pane
-            int option = JOptionPane.showConfirmDialog(null, resourceMap.getString("replaceSynonymsWithKeywordsMsg",msg.toString()), resourceMap.getString("replaceSynonymsWithKeywordsTitle"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            int option = JOptionPane.showConfirmDialog(null, resourceMap.getString("replaceSynonymsWithKeywordsMsg", msg.toString()), resourceMap.getString("replaceSynonymsWithKeywordsTitle"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
             // if the user wants to replace the keyword-synonyms by their index-word, do this now
-            if (JOptionPane.YES_OPTION==option) {
+            if (JOptionPane.YES_OPTION == option) {
                 // create new list for return value
                 ArrayList<String> newkeywords = new ArrayList<>();
                 for (String keyword : keywords) {
@@ -998,28 +1006,27 @@ public class Tools {
                 }
                 // copy list to array
                 keywords = newkeywords.toArray(new String[newkeywords.size()]);
-            }
-            else if (JOptionPane.CANCEL_OPTION==option || JOptionPane.CLOSED_OPTION==option /*User pressed cancel key*/) {
+            } else if (JOptionPane.CANCEL_OPTION == option || JOptionPane.CLOSED_OPTION == option /*User pressed cancel key*/) {
                 return null;
             }
         }
         return keywords;
     }
 
-    
     /**
-     * This method sets the locale descriptions for the standard-actions cut, copy and paste -
-     * which are in English by default.
+     * This method sets the locale descriptions for the standard-actions cut,
+     * copy and paste - which are in English by default.
+     *
      * @param actionMap the class's actionmap
      */
     public static void initLocaleForDefaultActions(javax.swing.ActionMap actionMap) {
-        String[] actions = new String[] {"cut", "copy", "paste"};
+        String[] actions = new String[]{"cut", "copy", "paste"};
         for (String ac : actions) {
             // get the action's name
             AbstractAction aac = (AbstractAction) actionMap.get(ac);
             // and put them together :-)
-            aac.putValue(AbstractAction.NAME, toolbarResourceMap.getString(ac+".Action.text"));
-            aac.putValue(AbstractAction.SHORT_DESCRIPTION, toolbarResourceMap.getString(ac+".Action.shortDescription"));
+            aac.putValue(AbstractAction.NAME, toolbarResourceMap.getString(ac + ".Action.text"));
+            aac.putValue(AbstractAction.SHORT_DESCRIPTION, toolbarResourceMap.getString(ac + ".Action.shortDescription"));
 //            // get the new icon-path from the resource-map
 //            URL imgURL = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass().getResource(resourceMap.getString(ac+".Action.largeIcon"));
 //            // create icon
@@ -1029,28 +1036,29 @@ public class Tools {
         }
     }
 
-
     /**
-     * This method retrieves a string-array of keywords and separates them at certain delimiter-chars
-     * like comma, slash, minus, plus and space. Then, from all keyword-parts particular words are
-     * removed, like "and", "the", "one" etc. The remaining parts of the keyword(s) are copied to a
-     * string array and returned.
+     * This method retrieves a string-array of keywords and separates them at
+     * certain delimiter-chars like comma, slash, minus, plus and space. Then,
+     * from all keyword-parts particular words are removed, like "and", "the",
+     * "one" etc. The remaining parts of the keyword(s) are copied to a string
+     * array and returned.
      *
      * @param keywords a string-array with keywords that should be separated
-     * @param matchcase {@code true} if the case should not be changed, {@code false} if case should
-     * be ignored and keyword-parts should be transformed to lower case.
-     * @return a string array that contains the separated parts of the keywords, or null if no
-     * keyword-parts have been found...
+     * @param matchcase {@code true} if the case should not be changed,
+     * {@code false} if case should be ignored and keyword-parts should be
+     * transformed to lower case.
+     * @return a string array that contains the separated parts of the keywords,
+     * or null if no keyword-parts have been found...
      */
     public static String[] retrieveSeparatedKeywords(String[] keywords, boolean matchcase) {
         // when we receive an empty array, return null
-        if (null==keywords || 0==keywords.length) {
+        if (null == keywords || 0 == keywords.length) {
             return null;
         }
         // create new arraylist for retirn values
         List<String> separatedkws = new ArrayList<>();
         // first, add original keywords
-        separatedkws.addAll(Arrays.asList(keywords));        
+        separatedkws.addAll(Arrays.asList(keywords));
         // go through all found keywords
         for (String k : keywords) {
             // check, whether a keyword consists of more than one word, separated by , / - or +.
@@ -1066,53 +1074,55 @@ public class Tools {
                 }
                 // check whether the keyword-part has at least three chars and does
                 // not equal typical words like "and", "or" etc...
-                if (sp.length()>2 && (!sp.equalsIgnoreCase("und")
-                                  && !sp.equalsIgnoreCase("der")
-                                  && !sp.equalsIgnoreCase("die")
-                                  && !sp.equalsIgnoreCase("das")
-                                  && !sp.equalsIgnoreCase("des")
-                                  && !sp.equalsIgnoreCase("den")
-                                  && !sp.equalsIgnoreCase("dem")
-                                  && !sp.equalsIgnoreCase("von")
-                                  && !sp.equalsIgnoreCase("als")
-                                  && !sp.equalsIgnoreCase("aus")
-                                  && !sp.equalsIgnoreCase("auf")
-                                  && !sp.equalsIgnoreCase("ein")
-                                  && !sp.equalsIgnoreCase("eine")
-                                  && !sp.equalsIgnoreCase("einer")
-                                  && !sp.equalsIgnoreCase("eines")
-                                  && !sp.equalsIgnoreCase("oder")
-                                  && !sp.equalsIgnoreCase("the")
-                                  && !sp.equalsIgnoreCase("why")
-                                  && !sp.equalsIgnoreCase("one")
-                                  && !sp.equalsIgnoreCase("and")
-                    )) {
+                if (sp.length() > 2 && (!sp.equalsIgnoreCase("und")
+                        && !sp.equalsIgnoreCase("der")
+                        && !sp.equalsIgnoreCase("die")
+                        && !sp.equalsIgnoreCase("das")
+                        && !sp.equalsIgnoreCase("des")
+                        && !sp.equalsIgnoreCase("den")
+                        && !sp.equalsIgnoreCase("dem")
+                        && !sp.equalsIgnoreCase("von")
+                        && !sp.equalsIgnoreCase("als")
+                        && !sp.equalsIgnoreCase("aus")
+                        && !sp.equalsIgnoreCase("auf")
+                        && !sp.equalsIgnoreCase("ein")
+                        && !sp.equalsIgnoreCase("eine")
+                        && !sp.equalsIgnoreCase("einer")
+                        && !sp.equalsIgnoreCase("eines")
+                        && !sp.equalsIgnoreCase("oder")
+                        && !sp.equalsIgnoreCase("the")
+                        && !sp.equalsIgnoreCase("why")
+                        && !sp.equalsIgnoreCase("one")
+                        && !sp.equalsIgnoreCase("and"))) {
                     separatedkws.add(sp);
                 }
             }
         }
         // return linked list as array...
-        return (separatedkws.size()>0) ? separatedkws.toArray(new String[separatedkws.size()]) : null;
+        return (separatedkws.size() > 0) ? separatedkws.toArray(new String[separatedkws.size()]) : null;
     }
 
-
     /**
-     * This method "splits" a single <i>term</i> into its single word-parts. For example, a keyword
-     * <i>Niklas, Luhmann - Zettelkasten</i> which is stored as a single keyword-entry, consists
-     * of three parts (words). For creating the quick input keyword list (see CNewEntry), in some cases
-     * we need the single parts of a keyword.
+     * This method "splits" a single <i>term</i> into its single word-parts. For
+     * example, a keyword
+     * <i>Niklas, Luhmann - Zettelkasten</i> which is stored as a single
+     * keyword-entry, consists of three parts (words). For creating the quick
+     * input keyword list (see CNewEntry), in some cases we need the single
+     * parts of a keyword.
      *
      * @param settingsObj A reference to the CSettings-class
      * @param synonymsObj A reference to the CSynonyms-class
      * @param keyword the keyword, which should be split into its parts
-     * @param matchcase {@code true} if the case should not be changed, {@code false} if case should
-     * be ignored and keyword-parts should be transformed to lower case.
-     * @return a string-array containing all splitted parts of the keywords, and spit-parts of the keyword-
-     * related synonyms, if the keyword has any related synonyms.
+     * @param matchcase {@code true} if the case should not be changed,
+     * {@code false} if case should be ignored and keyword-parts should be
+     * transformed to lower case.
+     * @return a string-array containing all splitted parts of the keywords, and
+     * spit-parts of the keyword- related synonyms, if the keyword has any
+     * related synonyms.
      */
     public static String[] getKeywordsAndSynonymsParts(Settings settingsObj, Synonyms synonymsObj, String keyword, boolean matchcase) {
         // first, get the separated parts from the selected value
-        String[] kwparts = retrieveSeparatedKeywords(new String[] {keyword}, matchcase);
+        String[] kwparts = retrieveSeparatedKeywords(new String[]{keyword}, matchcase);
         // create array with keywords, and - if necessary - related synonyms
         String[] synline = null;
         // retrieve synonyms if option is set
@@ -1120,11 +1130,10 @@ public class Tools {
             synline = retrieveSeparatedKeywords(synonymsObj.getSynonymLine(keyword, matchcase), matchcase);
         }
         // if we don't have any synonyms, put only keywords in the array
-        if (null==synline) {
+        if (null == synline) {
             // we here copy our separated keywords to our find-array
             synline = kwparts;
-        }
-        else {
+        } else {
             // here we now have findterms in our array "textparts" and "findterms".
             // we need to put these arrays together. We do this by creating an array list
             // and adding all elements of both array to that list. Then we copy the final
@@ -1148,18 +1157,20 @@ public class Tools {
         return synline;
     }
 
-
     /**
-     * This method checks the string {@code expression} for occurences of regular-expression
-     * meta-characters, that usually have to be escaped.
-     * @param expression the string that should be checked for occurences of reg-ex-meta-characters
-     * @return {@code true} if {@code expression} contains reg-ex-meta-chars, {@code false} otherwise
+     * This method checks the string {@code expression} for occurences of
+     * regular-expression meta-characters, that usually have to be escaped.
+     *
+     * @param expression the string that should be checked for occurences of
+     * reg-ex-meta-characters
+     * @return {@code true} if {@code expression} contains reg-ex-meta-chars,
+     * {@code false} otherwise
      */
     public static boolean hasRegExChars(String expression) {
         // we assume having a regular expression only when we find certain meta-characters
         // to check for meta characters, we create an array with those chars and check whether
         // our searchterm "highlighterms" contains at least one of these chars...
-        String[] allowedsigns = new String[] {"\\","+","{","}","(",")","[","]","$","*","?",".","|","<",">","^"};
+        String[] allowedsigns = new String[]{"\\", "+", "{", "}", "(", ")", "[", "]", "$", "*", "?", ".", "|", "<", ">", "^"};
         // init found-indicator
         boolean signfound = false;
         // iterate array
@@ -1171,13 +1182,15 @@ public class Tools {
         return signfound;
     }
 
-
     /**
-     * This method converts all known markdown syntax into the application's "UBB"-format tags.
+     * This method converts all known markdown syntax into the application's
+     * "UBB"-format tags.
      *
-     * @param dummy the entry content as string where Markdown should be converted to the common format tags
-     * @return a string with "UBB"-format tags and no more Markdown syntax. Markdown has been replaced with
-     * the common format tags of the Zettelkasten.
+     * @param dummy the entry content as string where Markdown should be
+     * converted to the common format tags
+     * @return a string with "UBB"-format tags and no more Markdown syntax.
+     * Markdown has been replaced with the common format tags of the
+     * Zettelkasten.
      */
     public static String convertMarkDown2UBB(String dummy) {
         dummy = dummy.replace("[br]", "\n");
@@ -1209,10 +1222,9 @@ public class Tools {
         dummy = dummy.replaceAll("---(.*?)---", "[d]$1[/d]");
         // images
         dummy = dummy.replaceAll("[!]{1}\\[([^\\[]+)\\]\\(([^\\)]+)\\)", "[img]$2[/img]");
-        dummy = dummy.replace("\n","[br]");
+        dummy = dummy.replace("\n", "[br]");
         return dummy;
     }
-
 
     public static String convertUBB2MarkDown(String dummy) {
         // bold formatting: [f] becomes <b>
@@ -1234,21 +1246,21 @@ public class Tools {
         // strike-through formatting: [d] becomes <strike>
         dummy = dummy.replaceAll("\\[d\\](.*?)\\[/d\\]", "---$1---");
         /*
-        try {
-            // unordered list: [l] becomes <ul>
-            Pattern p = Pattern.compile("\\[l\\](.*?)\\[/l\\]");
-            // find all list-bullets inside
-            Matcher m = p.matcher(dummy);
-            while (m.find()) {
-                String tmp = "[br]"+dummy.substring(m.start(), m.end());
-                tmp = tmp.replace("[*]", "* [br]");
-                dummy = dummy.substring(0, m.start())+tmp+dummy.substring(m.end());
-            }
-        }
-        catch (IndexOutOfBoundsException ex) {
+         try {
+         // unordered list: [l] becomes <ul>
+         Pattern p = Pattern.compile("\\[l\\](.*?)\\[/l\\]");
+         // find all list-bullets inside
+         Matcher m = p.matcher(dummy);
+         while (m.find()) {
+         String tmp = "[br]"+dummy.substring(m.start(), m.end());
+         tmp = tmp.replace("[*]", "* [br]");
+         dummy = dummy.substring(0, m.start())+tmp+dummy.substring(m.end());
+         }
+         }
+         catch (IndexOutOfBoundsException ex) {
 
-        }
-        */
+         }
+         */
         dummy = dummy.replaceAll("\\[l\\](.*?)\\[/l\\]", "$1");
         // ordered list: [n] becomes <ol>
         dummy = dummy.replaceAll("\\[n\\](.*?)\\[/n\\]", "$1");
@@ -1258,7 +1270,6 @@ public class Tools {
         dummy = dummy.replaceAll("\\[img\\](.*?)\\[/img\\]", "![Bild]($1)");
         return dummy;
     }
-
 
     public static List<Integer> getImageResizeValues(String content) {
         // create image pattern
@@ -1280,53 +1291,55 @@ public class Tools {
                 String resizeval = m.group(maxcount).substring(1);
                 reval = Integer.parseInt(resizeval);
                 resizevalues.add(reval);
-            }
-            catch (NumberFormatException | IndexOutOfBoundsException ex) {
+            } catch (NumberFormatException | IndexOutOfBoundsException ex) {
             }
         }
         return resizevalues;
     }
 
-
     /**
-     * This method removes all UBB-format-tag from an entry and returns a "cleaned" string
-     * of that entry's content that does no longer contain any UBB-Format-tags.
+     * This method removes all UBB-format-tag from an entry and returns a
+     * "cleaned" string of that entry's content that does no longer contain any
+     * UBB-Format-tags.
      *
-     * @param content the entry's content that should be cleaned from UBB-format-tags
-     * @param includeMarkdown if {@code true}, Markdown syntax will also be removed. If {@code false},
-     * Markdown syntax will remain in the string. This is needed when exporting content into Markdown
-     * format and only not supported UBB tags should be removed, but not Markdown.
-     * @return a cleaned string of that entry's content that does no longer contain any UBB-Format-tags
+     * @param content the entry's content that should be cleaned from
+     * UBB-format-tags
+     * @param includeMarkdown if {@code true}, Markdown syntax will also be
+     * removed. If {@code false}, Markdown syntax will remain in the string.
+     * This is needed when exporting content into Markdown format and only not
+     * supported UBB tags should be removed, but not Markdown.
+     * @return a cleaned string of that entry's content that does no longer
+     * contain any UBB-Format-tags
      */
     public static String removeUbbFromString(String content, boolean includeMarkdown) {
         String dummy = "";
-        if (content!=null && !content.isEmpty()) {
+        if (content != null && !content.isEmpty()) {
             dummy = content.replaceAll("\\[k\\]", "")
-                           .replaceAll("\\[f\\]", "")
-                           .replaceAll("\\[u\\]", "")
-                           .replaceAll("\\[h1\\]", "")
-                           .replaceAll("\\[h2\\]", "")
-                           .replaceAll("\\[h3\\]", "")
-                           .replaceAll("\\[h4\\]", "")
-                           .replaceAll("\\[q\\]", "")
-                           .replaceAll("\\[d\\]", "")
-                           .replaceAll("\\[c\\]", "")
-                           .replaceAll("\\[code\\]", "")
-                           .replaceAll("\\[sup\\]", "")
-                           .replaceAll("\\[sub\\]", "")
-                           .replaceAll("\\[/k\\]", "")
-                           .replaceAll("\\[/f\\]", "")
-                           .replaceAll("\\[/u\\]", "")
-                           .replaceAll("\\[/h1\\]", "")
-                           .replaceAll("\\[/h2\\]", "")
-                           .replaceAll("\\[/h3\\]", "")
-                           .replaceAll("\\[/h4\\]", "")
-                           .replaceAll("\\[/q\\]", "")
-                           .replaceAll("\\[/d\\]", "")
-                           .replaceAll("\\[/c\\]", "")
-                           .replaceAll("\\[/code\\]", "")
-                           .replaceAll("\\[/sup\\]", "")
-                           .replaceAll("\\[/sub\\]", "");
+                    .replaceAll("\\[f\\]", "")
+                    .replaceAll("\\[u\\]", "")
+                    .replaceAll("\\[h1\\]", "")
+                    .replaceAll("\\[h2\\]", "")
+                    .replaceAll("\\[h3\\]", "")
+                    .replaceAll("\\[h4\\]", "")
+                    .replaceAll("\\[q\\]", "")
+                    .replaceAll("\\[d\\]", "")
+                    .replaceAll("\\[c\\]", "")
+                    .replaceAll("\\[code\\]", "")
+                    .replaceAll("\\[sup\\]", "")
+                    .replaceAll("\\[sub\\]", "")
+                    .replaceAll("\\[/k\\]", "")
+                    .replaceAll("\\[/f\\]", "")
+                    .replaceAll("\\[/u\\]", "")
+                    .replaceAll("\\[/h1\\]", "")
+                    .replaceAll("\\[/h2\\]", "")
+                    .replaceAll("\\[/h3\\]", "")
+                    .replaceAll("\\[/h4\\]", "")
+                    .replaceAll("\\[/q\\]", "")
+                    .replaceAll("\\[/d\\]", "")
+                    .replaceAll("\\[/c\\]", "")
+                    .replaceAll("\\[/code\\]", "")
+                    .replaceAll("\\[/sup\\]", "")
+                    .replaceAll("\\[/sub\\]", "");
             dummy = dummy.replaceAll("\\[img\\](.*?)\\[/img\\]", "");
             dummy = dummy.replaceAll("\\[fn ([^\\[]*)\\]", "[FN $1]");
             dummy = dummy.replaceAll("\\[form ([^\\[]*)\\]", "$1");
@@ -1363,7 +1376,7 @@ public class Tools {
                 // images
                 dummy = dummy.replaceAll("[!]{1}\\[([^\\[]+)\\]\\(([^\\)]+)\\)", "");
                 // hyperlinks
-                dummy = dummy.replaceAll("\\[([^\\[]+)\\]\\(([^\\)]+)\\)","$1 ($2)");
+                dummy = dummy.replaceAll("\\[([^\\[]+)\\]\\(([^\\)]+)\\)", "$1 ($2)");
                 // bullets
                 dummy = dummy.replaceAll("(^|\\n)(\\d\\. )(.*)", "- $3");
                 dummy = dummy.replaceAll("(^|\\n)(\\* )(.*)", "- $3");
@@ -1374,28 +1387,26 @@ public class Tools {
             int pos = 0;
             int end;
             // go and find all table-tages
-            while (pos!=-1) {
+            while (pos != -1) {
                 // find occurence of opening-tag
                 pos = dummy.indexOf("[table]", pos);
                 // when open-tag was found, go on and find end of table-tag
-                if (pos!=-1) {
+                if (pos != -1) {
                     // find closing-tag
                     end = dummy.indexOf("[/table]", pos);
                     // if closing-tag also found, convert content to table
-                    if (end!=-1) {
+                    if (end != -1) {
                         try {
                             // get table-content
-                            String tablecontent = dummy.substring(pos+7, end).replaceAll("\\|", "\t").replaceAll("\\^", "\t");
-                            dummy = dummy.substring(0, pos)+tablecontent+dummy.substring(end+8);
+                            String tablecontent = dummy.substring(pos + 7, end).replaceAll("\\|", "\t").replaceAll("\\^", "\t");
+                            dummy = dummy.substring(0, pos) + tablecontent + dummy.substring(end + 8);
                             pos = 0;
+                        } catch (IndexOutOfBoundsException ex) {
                         }
-                        catch (IndexOutOfBoundsException ex) {
-                        }
-                    }
-                    // if no valid end-tag was found, try to find possible
+                    } // if no valid end-tag was found, try to find possible
                     // next table tage
                     else {
-                        pos = pos+7;
+                        pos = pos + 7;
                     }
                 }
             }
@@ -1404,28 +1415,28 @@ public class Tools {
         return dummy;
     }
 
-
     /**
-     * Checks a given keyCode-value, usually passed from the {@code KeyEvent-getKeyCode()}-method,
-     * and checks whether it is a "navigation" key like arrows, page up/down, home etc.
+     * Checks a given keyCode-value, usually passed from the
+     * {@code KeyEvent-getKeyCode()}-method, and checks whether it is a
+     * "navigation" key like arrows, page up/down, home etc.
      *
      * @param keyCode the keycode of the pressed or releases key
      * @return {@code true} if it is a navigation key, false otherwise.
      */
     public static boolean isNavigationKey(int keyCode) {
-        return (KeyEvent.VK_HOME==keyCode ||
-                KeyEvent.VK_END==keyCode ||
-                KeyEvent.VK_UP==keyCode ||
-                KeyEvent.VK_DOWN==keyCode ||
-                KeyEvent.VK_LEFT==keyCode ||
-                KeyEvent.VK_RIGHT==keyCode);
+        return (KeyEvent.VK_HOME == keyCode
+                || KeyEvent.VK_END == keyCode
+                || KeyEvent.VK_UP == keyCode
+                || KeyEvent.VK_DOWN == keyCode
+                || KeyEvent.VK_LEFT == keyCode
+                || KeyEvent.VK_RIGHT == keyCode);
     }
-
 
     /**
      * This method copies selected text in plain format into the clipboard.
      *
-     * @param dataObj a reference to the CDaten class. Needed to retrieve the enty's content
+     * @param dataObj a reference to the CDaten class. Needed to retrieve the
+     * enty's content
      * @param displayedZettel the currently displayed entry
      * @param editorPane the editor pane which is the copy source
      */
@@ -1435,7 +1446,7 @@ public class Tools {
         // retrieve entry's title
         String title = dataObj.getZettelTitle(displayedZettel);
         // check whether entry has any title
-        if (title!=null && !title.isEmpty()) {
+        if (title != null && !title.isEmpty()) {
             // if yes, add title and line separator to string builder
             plainEntry.append(title);
             plainEntry.append(System.lineSeparator());
@@ -1444,16 +1455,16 @@ public class Tools {
         // to our string builder
         plainEntry.append(dataObj.getCleanZettelContent(displayedZettel));
         // get start and end of selection
-        int selstart = editorPane.getSelectionStart()-1;
-        int selend = editorPane.getSelectionEnd()-1;
+        int selstart = editorPane.getSelectionStart() - 1;
+        int selend = editorPane.getSelectionEnd() - 1;
         // fix value if necessary
-        if (selstart<0) {
+        if (selstart < 0) {
             selstart = 0;
         }
         // check whether end exceeds the string builders length - this is the case
         // e.g. if the user also selectes the time stamp...
-        if (selend>=plainEntry.length()) {
-            selend = plainEntry.length()-1;
+        if (selend >= plainEntry.length()) {
+            selend = plainEntry.length() - 1;
         }
         // copy selection to string
         String selectedText = plainEntry.toString().substring(selstart, selend).trim();
@@ -1465,14 +1476,13 @@ public class Tools {
         StringSelection stringSelection = new StringSelection(selectedText);
         // and copy string to clipboard
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.setContents(stringSelection,null);
+        clipboard.setContents(stringSelection, null);
     }
 
-
     /**
-     * This method returns the current date as string in the following format: yymmddhhmm
-     * (e.g. <i>0811271548</i> for the 27th Nov. 2008, 15:48 (3:48pm). Used to create
-     * an entry's timestamp.
+     * This method returns the current date as string in the following format:
+     * yymmddhhmm (e.g. <i>0811271548</i> for the 27th Nov. 2008, 15:48
+     * (3:48pm). Used to create an entry's timestamp.
      *
      * @return the current date as string, for use as timestamp.
      */
@@ -1484,11 +1494,11 @@ public class Tools {
         return df.format(new Date());
     }
 
-
     /**
-     * This method returns the current date as string in the following format: yymmddhhmmssms
-     * (e.g. <i>081127154853157</i> for the 27th Nov. 2008, 15:48 (3:48pm) and 53 seconds and
-     * 157 milliseconds. Used to create an entry's timestamp for the desktop-database.
+     * This method returns the current date as string in the following format:
+     * yymmddhhmmssms (e.g. <i>081127154853157</i> for the 27th Nov. 2008, 15:48
+     * (3:48pm) and 53 seconds and 157 milliseconds. Used to create an entry's
+     * timestamp for the desktop-database.
      *
      * @return the current date as string, for use as timestamp.
      */
@@ -1500,10 +1510,9 @@ public class Tools {
         return df.format(new Date());
     }
 
-
     /**
-     * This method creates a unique ID for each entry. This ID is returned as string
-     * and stored in the XML-structure.
+     * This method creates a unique ID for each entry. This ID is returned as
+     * string and stored in the XML-structure.
      *
      * @param filename
      * @return a unique ID for an entry as String value
@@ -1511,22 +1520,23 @@ public class Tools {
     public static String createZknID(String filename) {
         StringBuilder ts = new StringBuilder(getTimeStampWithMilliseconds());
         ts.append(filename);
-        int randomnumber = (int)(Math.random()*99999);
+        int randomnumber = (int) (Math.random() * 99999);
         ts.append(String.valueOf(randomnumber));
         return ts.toString();
     }
 
-
     /**
-     * This method accepts a single-line string {@code s} and returns it as line-separated
-     * text, with each line having a maximum length of {@code len} chars.<br><br>
-     * If the line wrapped text should have a prefix at the beginning of each line,
-     * this can be passed as parameter {@code prefix}.
+     * This method accepts a single-line string {@code s} and returns it as
+     * line-separated text, with each line having a maximum length of
+     * {@code len} chars.<br><br>
+     * If the line wrapped text should have a prefix at the beginning of each
+     * line, this can be passed as parameter {@code prefix}.
      *
      * @param s the single-lined string
      * @param len the length of each line from the returned string
      * @param prefix an optional string that is inserted infront of each line.
-     * @return the string {@code s} with separated lines, with a line wrap after max. {@code len} chars.
+     * @return the string {@code s} with separated lines, with a line wrap after
+     * max. {@code len} chars.
      */
     public static String lineWrapText(String s, int len, String prefix) {
         // create tokenizer
@@ -1534,7 +1544,7 @@ public class Tools {
         // dummy string
         String word;
         // string builder for return value
-        StringBuilder sb = new StringBuilder((prefix!=null&&!prefix.isEmpty())?prefix+" ":"");
+        StringBuilder sb = new StringBuilder((prefix != null && !prefix.isEmpty()) ? prefix + " " : "");
         // line length counter
         int currentLineLen = 0;
         // iterate string
@@ -1553,7 +1563,7 @@ public class Tools {
                 // append new line
                 sb.append(System.lineSeparator());
                 // append prefix, if we have any
-                sb.append((prefix!=null&&!prefix.isEmpty())?prefix+" ":"");
+                sb.append((prefix != null && !prefix.isEmpty()) ? prefix + " " : "");
                 // append word resp. nothing, if first char is space
                 sb.append((firstIsSpace ? "" : word));
                 // reset line length counter
@@ -1564,7 +1574,6 @@ public class Tools {
         return sb.toString();
     }
 
-
     /**
      * This method converts separator chars of attachment- or image-paths into
      * the correct os-separator-char. This is needed, when the user uses the
@@ -1572,12 +1581,12 @@ public class Tools {
      *
      * @param csc the path to the attachment or image, as string.
      * @param settings a reference to the {@code CSettings} class.
-     * @return the string {@code csc} with converted seperator chars, so the string
-     * is usable for the current OS.
+     * @return the string {@code csc} with converted seperator chars, so the
+     * string is usable for the current OS.
      */
     public static String convertSeparatorChars(String csc, Settings settings) {
         // check for valid parameter
-        if (null==csc || csc.isEmpty()) {
+        if (null == csc || csc.isEmpty()) {
             return "";
         }
         String retval = csc;
@@ -1587,17 +1596,17 @@ public class Tools {
             // check for os, and replace / with \ or \ with / (file separator-chars).
             // we do this since users can use their data on e.g. windows and linux, and therefor,
             // the separator-chars of images have to be switched.
-            retval = (PlatformUtil.isWindows()) ? csc.replace("/","\\") : csc.replace("\\","/");
+            retval = (PlatformUtil.isWindows()) ? csc.replace("/", "\\") : csc.replace("\\", "/");
         }
         return retval;
     }
 
-
     /**
-     * This method either merges two synonym-lines from those synonyms that are associated with
-     * the keywords {@code oldKw} and {@code newKw}. Or, if no synonyms are associated with the
-     * new keyword {@code newKw}, the index-word from the old synonyms-line, which should equal the
-     * value {@code oldKw}, is renamed to the new index-word {@code newKw}.
+     * This method either merges two synonym-lines from those synonyms that are
+     * associated with the keywords {@code oldKw} and {@code newKw}. Or, if no
+     * synonyms are associated with the new keyword {@code newKw}, the
+     * index-word from the old synonyms-line, which should equal the value
+     * {@code oldKw}, is renamed to the new index-word {@code newKw}.
      *
      * @param synonymsObj
      * @param oldKw
@@ -1608,10 +1617,10 @@ public class Tools {
         int oldsynpos = synonymsObj.getSynonymPosition(oldKw);
         int newsynpos = synonymsObj.getSynonymPosition(newKw);
         // only proceed, if old keyword was an index-synonym...
-        if (oldsynpos!=-1) {
+        if (oldsynpos != -1) {
             // either the new keyword does not exist as synonym, than simply
             // ask to rename the old index-word into the new keyword
-            if (-1==newsynpos) {
+            if (-1 == newsynpos) {
                 // create a JOptionPane with yes/no/cancel options
                 int option = JOptionPane.showConfirmDialog(null, resourceMap.getString("renameIndexSynonymMsg"), resourceMap.getString("renameIndexSynonymTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
                 // proceed, if user wants to rename
@@ -1620,7 +1629,7 @@ public class Tools {
                     synonymsObj.setIndexWord(oldsynpos, newKw);
                     // now ask the user whether he wants to keep the old keyword-name as additional synonym
                     // create a JOptionPane with yes/no options
-                    option = JOptionPane.showConfirmDialog(null, resourceMap.getString("appendOldIndexSynonymMsg",newKw,oldKw,newKw), resourceMap.getString("appendOldIndexSynonymTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    option = JOptionPane.showConfirmDialog(null, resourceMap.getString("appendOldIndexSynonymMsg", newKw, oldKw, newKw), resourceMap.getString("appendOldIndexSynonymTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
                     // proceed, if user wants to append
                     if (JOptionPane.YES_OPTION == option) {
                         // append the former synonym, which was renamed, as additional synonym
@@ -1628,10 +1637,9 @@ public class Tools {
                         synonymsObj.appendSingleSynonym(oldsynpos, oldKw);
                     }
                 }
-            }
-            // the new keyword is also a synonym... now offer to merge both the old
+            } // the new keyword is also a synonym... now offer to merge both the old
             // and the new synonyms-line
-            else if (oldsynpos!=newsynpos) {
+            else if (oldsynpos != newsynpos) {
                 // create a JOptionPane with yes/no/cancel options
                 int option = JOptionPane.showConfirmDialog(null, resourceMap.getString("mergeSynonymsMsg"), resourceMap.getString("mergeSynonymsTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
                 // proceed, if user wants to rename
@@ -1639,13 +1647,12 @@ public class Tools {
                     // rename index-word
                     if (!synonymsObj.mergeSynonymLines(newsynpos, oldsynpos)) {
                         // display error message box
-                        JOptionPane.showMessageDialog(null,resourceMap.getString("errorMergeSynonymsMsg"),resourceMap.getString("errorMergeSynonymsTitle"),JOptionPane.PLAIN_MESSAGE);
+                        JOptionPane.showMessageDialog(null, resourceMap.getString("errorMergeSynonymsMsg"), resourceMap.getString("errorMergeSynonymsTitle"), JOptionPane.PLAIN_MESSAGE);
                     }
                 }
             }
         }
     }
-
 
     /**
      *
@@ -1659,10 +1666,9 @@ public class Tools {
         }
     }
 
-
     /**
-     * This method checks asciil-chars which were tread by an inputstream whether they are valid xml-chars
-     * or not.
+     * This method checks asciil-chars which were tread by an inputstream
+     * whether they are valid xml-chars or not.
      *
      * @param zeichen the ascii-char we want to check
      * @return {@code true} if it is a valid char, {@code false} otherwise
@@ -1670,16 +1676,19 @@ public class Tools {
     public static boolean isLegalJDOMChar(int zeichen) {
         // every character beginning from 0x20 is a legal xml-char
         // below 0x20 (space-char), the tab-char (0x09), carriage return (0x0A) and new line (0x0D) are valid onky
-        return zeichen>=32 || 9==zeichen || 10==zeichen || 13==zeichen;
+        return zeichen >= 32 || 9 == zeichen || 10 == zeichen || 13 == zeichen;
     }
 
-
     /**
-     * This method checks whether a string contains legal JDOM chars, so the string can be added
-     * as entry-content to the XML-data file. Every non-legal-JDOM-char is replaced by a space-char.
-     * @param content the content-string that should be checked for valid JDOM-chars. typically use the input
-     * from a user made in the CNewEntry-dialog.
-     * @return a "cleaned" string without any illegal JDOM-chars. Illegal chars are replaced by space-chars
+     * This method checks whether a string contains legal JDOM chars, so the
+     * string can be added as entry-content to the XML-data file. Every
+     * non-legal-JDOM-char is replaced by a space-char.
+     *
+     * @param content the content-string that should be checked for valid
+     * JDOM-chars. typically use the input from a user made in the
+     * CNewEntry-dialog.
+     * @return a "cleaned" string without any illegal JDOM-chars. Illegal chars
+     * are replaced by space-chars
      */
     public static String isValidJDOMChars(String content) {
         // copy content to char-array
@@ -1689,23 +1698,24 @@ public class Tools {
         // iterate char-array and check for valid JDOM chars
         for (char c : contentchars) {
             // is char legal JDOM-char? then append it to string builder else append space char
-            retval.append((isLegalJDOMChar(c))?c:" ");
+            retval.append((isLegalJDOMChar(c)) ? c : " ");
         }
         // return cleaned string
         return retval.toString();
     }
+
     /**
      * This method extracts all occurences of possible form-tags (Laws of Form)
-     * from an entry-string, which content is stored in {@code content}. The found
-     * form-tags will be returned as an array list of strings.
+     * from an entry-string, which content is stored in {@code content}. The
+     * found form-tags will be returned as an array list of strings.
      *
      * @param content a string with zettel content, which may contain form-tags
-     * @return an array list with all form-tags of that entry as strings, or {@code null}
-     * if no form tag was found.
+     * @return an array list with all form-tags of that entry as strings, or
+     * {@code null} if no form tag was found.
      */
     public static ArrayList<String> getFormsFromString(String content) {
         // check for valid param
-        if (null==content || content.isEmpty()) {
+        if (null == content || content.isEmpty()) {
             return null;
         }
         // create new array list
@@ -1715,19 +1725,18 @@ public class Tools {
         int pos = 0;
         int end;
         // go and find all form-tages
-        while (pos!=-1) {
+        while (pos != -1) {
             // find occurence of opening-tag
             pos = content.indexOf(Constants.FORMAT_FORM_TAG, pos);
             // when open-tag was found, go on and find end of table-tag
-            if (pos!=-1) {
+            if (pos != -1) {
                 // find closing-tag
                 end = content.indexOf("]", pos);
                 // if closing-tag also found, add form to arraylist
-                if (end!=-1) {
+                if (end != -1) {
                     try {
-                        forms.add(content.substring(pos, end+1));
-                    }
-                    catch (IndexOutOfBoundsException ex) {
+                        forms.add(content.substring(pos, end + 1));
+                    } catch (IndexOutOfBoundsException ex) {
                     }
                 }
                 pos = end;
@@ -1736,9 +1745,10 @@ public class Tools {
         return forms;
     }
 
-
     /**
-     * This method returns the XML database as string. just for testing purposes.
+     * This method returns the XML database as string. just for testing
+     * purposes.
+     *
      * @param dataObj
      * @return
      */
@@ -1750,19 +1760,17 @@ public class Tools {
         return out.outputString(dataObj.getZknData());
     }
 
-    
     public static boolean isPandocExportType(int exportType) {
         // check if export to pandoc format is requested
-        return (Constants.EXP_TYPE_DESKTOP_DOCX==exportType ||
-                Constants.EXP_TYPE_DESKTOP_ODT==exportType ||
-                Constants.EXP_TYPE_DESKTOP_EPUB==exportType ||
-                Constants.EXP_TYPE_DESKTOP_RTF==exportType ||
-                Constants.EXP_TYPE_DOCX==exportType ||
-                Constants.EXP_TYPE_ODT==exportType ||
-                Constants.EXP_TYPE_EPUB==exportType ||
-                Constants.EXP_TYPE_RTF==exportType);
+        return (Constants.EXP_TYPE_DESKTOP_DOCX == exportType
+                || Constants.EXP_TYPE_DESKTOP_ODT == exportType
+                || Constants.EXP_TYPE_DESKTOP_EPUB == exportType
+                || Constants.EXP_TYPE_DESKTOP_RTF == exportType
+                || Constants.EXP_TYPE_DOCX == exportType
+                || Constants.EXP_TYPE_ODT == exportType
+                || Constants.EXP_TYPE_EPUB == exportType
+                || Constants.EXP_TYPE_RTF == exportType);
     }
-    
 
     public static boolean isPandocMissing(Settings settings, int exportType) {
         // start pandoc for conversion
@@ -1772,26 +1780,25 @@ public class Tools {
         // check if export to pandoc format is requested
         if (isPandocExportType(exportType)) {
             try {
-                pr = rt.exec(settings.getPandocPath()+" --version");
+                pr = rt.exec(settings.getPandocPath() + " --version");
                 pr.waitFor();
             } catch (IOException | InterruptedException ex) {
-                Constants.zknlogger.log(Level.WARNING,"Could not find Pandoc under specified path {0}.", settings.getPandocPath());
+                Constants.zknlogger.log(Level.WARNING, "Could not find Pandoc under specified path {0}.", settings.getPandocPath());
                 pandocmissing = true;
             }
             // destroy process
-            if (pr!=null) {
-                Constants.zknlogger.log(Level.INFO,"Process exit code: {0}", String.valueOf(pr.exitValue()));
+            if (pr != null) {
+                Constants.zknlogger.log(Level.INFO, "Process exit code: {0}", String.valueOf(pr.exitValue()));
                 pr.destroy();
             }
             // check whether pandoc is available
             if (pandocmissing) {
                 // if not, show error message and leave
-                JOptionPane.showMessageDialog(null,resourceMap.getString("noPandocInstalledMsg"),resourceMap.getString("noPandocInstalledTitle"),JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(null, resourceMap.getString("noPandocInstalledMsg"), resourceMap.getString("noPandocInstalledTitle"), JOptionPane.PLAIN_MESSAGE);
             }
         }
         return pandocmissing;
     }
-
 
     public static LinkedList extractFootnotesFromContent(String content) {
         // now prepare a reference list from possible footnotes
@@ -1799,35 +1806,37 @@ public class Tools {
         // position index for finding the footnotes
         int pos = 0;
         // do search as long as pos is not -1 (not-found)
-        while (pos!=-1) {
+        while (pos != -1) {
             // find the html-tag for the footnote
             pos = content.indexOf(Constants.footnoteHtmlTag, pos);
             // if we found something...
-            if (pos!=-1) {
+            if (pos != -1) {
                 // find the closing quotes
-                int end = content.indexOf("\"", pos+Constants.footnoteHtmlTag.length());
+                int end = content.indexOf("\"", pos + Constants.footnoteHtmlTag.length());
                 // if we found that as well...
-                if (end!=-1) {
+                if (end != -1) {
                     // extract footnote-number
-                    String fn = content.substring(pos+Constants.footnoteHtmlTag.length(), end);
+                    String fn = content.substring(pos + Constants.footnoteHtmlTag.length(), end);
                     // and add it to the linked list, if it doesn't already exist
-                    if (-1==footnotes.indexOf(fn)) footnotes.add(fn);
+                    if (-1 == footnotes.indexOf(fn)) {
+                        footnotes.add(fn);
+                    }
                     // set pos to new position
                     pos = end;
+                } else {
+                    pos = pos + Constants.footnoteHtmlTag.length();
                 }
-                else pos = pos+Constants.footnoteHtmlTag.length();
             }
         }
         return footnotes;
     }
 
     public static AbstractButton makeTexturedToolBarButton(AbstractButton button, String segmentPosition) {
-        if (null==segmentPosition || segmentPosition.isEmpty() || segmentPosition.equals(SEGMENT_POSITION_ONLY)) {
-            button.putClientProperty("JButton.buttonType","textured");
-        }
-        else {
-            button.putClientProperty("JButton.buttonType","segmentedTextured");
-            button.putClientProperty("JButton.segmentPosition",segmentPosition);
+        if (null == segmentPosition || segmentPosition.isEmpty() || segmentPosition.equals(SEGMENT_POSITION_ONLY)) {
+            button.putClientProperty("JButton.buttonType", "textured");
+        } else {
+            button.putClientProperty("JButton.buttonType", "segmentedTextured");
+            button.putClientProperty("JButton.segmentPosition", segmentPosition);
         }
         button.setText(null);
         button.setBorderPainted(true);

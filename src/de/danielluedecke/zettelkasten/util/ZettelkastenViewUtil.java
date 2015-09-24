@@ -30,7 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 package de.danielluedecke.zettelkasten.util;
 
 import de.danielluedecke.zettelkasten.CBiggerEditField;
@@ -60,16 +59,20 @@ import javax.swing.table.DefaultTableModel;
  * @author Luedeke
  */
 public class ZettelkastenViewUtil {
+
     private static TaskProgressDialog taskDlg = null;
     private static CBiggerEditField biggerEditDlg = null;
+
     /**
-     * This method opens files or folders (attchments). Typically used when opening attachments.
-     * First, this method tries to open a file using the {@code Desktop} api from Java. If this
-     * fails, on Windows and Linux the {@code Runtime}.
-     * 
+     * This method opens files or folders (attchments). Typically used when
+     * opening attachments. First, this method tries to open a file using the
+     * {@code Desktop} api from Java. If this fails, on Windows and Linux the
+     * {@code Runtime}.
+     *
      * @param path The path to the file that should be opened
      * @param settings a reference to the Settings class
-     * @return {@code true} if opening the file was successfull, {@code false} otherwise.
+     * @return {@code true} if opening the file was successfull, {@code false}
+     * otherwise.
      */
     public static boolean openFilePath(String path, Settings settings) {
         File linuxpath = new File(path);
@@ -105,22 +108,26 @@ public class ZettelkastenViewUtil {
             }
         }
         return true;
-    }    
+    }
 
     /**
-     * This method updates a jTable and a possible linked list which holds filtered values from
-     * the jTables, by increasing ({@code diff} must be 1) or decreasing ({@code diff} must be -1)
-     * an entry's occurences or frequencies from the tablemodel and the linked list.
+     * This method updates a jTable and a possible linked list which holds
+     * filtered values from the jTables, by increasing ({@code diff} must be 1)
+     * or decreasing ({@code diff} must be -1) an entry's occurences or
+     * frequencies from the tablemodel and the linked list.
      * <br><br>
-     * If no increase or decrease of frequencies (occurences) is requested, but a complete removal, call
+     * If no increase or decrease of frequencies (occurences) is requested, but
+     * a complete removal, call
      * {@link #updateTableFrequencyRemove(javax.swing.JTable, java.util.LinkedList) updateTableFrequencyRemove(javax.swing.JTable, java.util.LinkedList)}
      * instead.
      *
      * @param table the table were we have to add a new value with frequency
-     * @param list the possible linked list were we have to add a new value with frequency
-     * @param value the new value, for instance the author-string or keyword-value
-     * @param diff either +1, if a value was added, so frequency is increased by 1. or -1, if a value
-     * was removed, so frequency is decreaded.
+     * @param list the possible linked list were we have to add a new value with
+     * frequency
+     * @param value the new value, for instance the author-string or
+     * keyword-value
+     * @param diff either +1, if a value was added, so frequency is increased by
+     * 1. or -1, if a value was removed, so frequency is decreaded.
      * @return an updated linked list that was passed as parameter {@code list}
      */
     public static LinkedList<Object[]> updateTableFrequencyChange(JTable table, LinkedList<Object[]> list, String value, int diff) {
@@ -154,13 +161,17 @@ public class ZettelkastenViewUtil {
         }
         return list;
     }
+
     /**
-     * This method updates a jTable and a possible linked list which holds filtered values from
-     * the jTable, by adding new values to the table and list. this method is called when
-     * new e.g. authors were edited (see {@link #newAuthor() newAuthor()} or {@link #finishedEditing() finishedEditing()}).
+     * This method updates a jTable and a possible linked list which holds
+     * filtered values from the jTable, by adding new values to the table and
+     * list. this method is called when new e.g. authors were edited (see
+     * {@link #newAuthor() newAuthor()} or
+     * {@link #finishedEditing() finishedEditing()}).
      *
      * @param table the table were we have to add a new value with frequency
-     * @param list the possible linked list were we have to add a new value with frequency
+     * @param list the possible linked list were we have to add a new value with
+     * frequency
      * @param val the new value, for instance the author-string or keyword-value
      * @param occurences the frequency of the value {@code val}.
      * @return an updated linked list that was passed as parameter {@code list}
@@ -183,15 +194,18 @@ public class ZettelkastenViewUtil {
     }
 
     /**
-     * This method updates a jTable and a possible linked list which holds filtered values from
-     * the jTables, by completely removing an entry/value from the tablemodel and the linked list.
+     * This method updates a jTable and a possible linked list which holds
+     * filtered values from the jTables, by completely removing an entry/value
+     * from the tablemodel and the linked list.
      * <br><br>
-     * If no complete removal is requested, but a decrease in the frequencies, call
+     * If no complete removal is requested, but a decrease in the frequencies,
+     * call
      * {@link #updateTableFrequencyDelete(javax.swing.JTable, java.util.LinkedList) updateTableFrequencyDelete(javax.swing.JTable, java.util.LinkedList)}
      * instead.
      *
      * @param table the table were we have to add a new value with frequency
-     * @param list the possible linked list were we have to add a new value with frequency
+     * @param list the possible linked list were we have to add a new value with
+     * frequency
      * @param zettelkastenView
      * @return an updated linked list that was passed as parameter {@code list}
      */
@@ -219,100 +233,114 @@ public class ZettelkastenViewUtil {
         }
         return list;
     }
+
     private static int findInLinkedList(LinkedList<Object[]> list, Object[] val) {
         // iterate list
-        for (int pos=0; pos<list.size(); pos++) {
+        for (int pos = 0; pos < list.size(); pos++) {
             // get each element
             Object[] o = list.get(pos);
             // if element equals requested value, change frequency
-            if (val[0].toString().equals(o[0].toString()) && val[1].toString().equals(o[1].toString())) return pos;
+            if (val[0].toString().equals(o[0].toString()) && val[1].toString().equals(o[1].toString())) {
+                return pos;
+            }
         }
         return -1;
     }
+
     /**
-     * This method retrieves the entry-number of the first selected entry in the tabbed pane
-     * with the a jTable
+     * This method retrieves the entry-number of the first selected entry in the
+     * tabbed pane with the a jTable
      *
      * @param data
-     * @param table a reference to the swing-table, from which we want to retrieve the entry
-     * @param column the column which holds the entry-numbers. in most cases this is column 0, but some
-     * tables store the entry-numbers in column 1
-     * @return the entry number of the selected entry in a table (<i>not</i> the number of the
-     * selected table row!), or -1 if nothing is selected
+     * @param table a reference to the swing-table, from which we want to
+     * retrieve the entry
+     * @param column the column which holds the entry-numbers. in most cases
+     * this is column 0, but some tables store the entry-numbers in column 1
+     * @return the entry number of the selected entry in a table (<i>not</i> the
+     * number of the selected table row!), or -1 if nothing is selected
      */
     public static int retrieveSelectedEntryFromTable(Daten data, javax.swing.JTable table, int column) {
         // if no data available, leave method
-        if (data.getCount(Daten.ZKNCOUNT)<1) return -1;
+        if (data.getCount(Daten.ZKNCOUNT) < 1) {
+            return -1;
+        }
         // get the amount of selected rows
         int rowcount = table.getSelectedRowCount();
         // if we have no selected values, leave method
-        if (rowcount<1) return -1;
+        if (rowcount < 1) {
+            return -1;
+        }
         int entrynr;
         // get the selected row
         int rows = table.getSelectedRow();
         try {
             // iterate all selected values and copy all values to array
             entrynr = Integer.parseInt(table.getValueAt(rows, column).toString());
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return -1;
         }
         // and return the array
         return entrynr;
     }
+
     /**
-     * This method retrieves the entry-numbers of all selected entries in the tabbed pane
-     * with the a jTable
+     * This method retrieves the entry-numbers of all selected entries in the
+     * tabbed pane with the a jTable
      *
      * @param data
-     * @param table a reference to the swing-table, from which we want to retrieve the entry
-     * @param column the column which holds the entry-numbers. in most cases this is column 0, but some
-     * tables store the entry-numbers in column 1
-     * @return the entry numbers of all selected entries in a table (<i>not</i> the number of the
-     * selected table row!), or {@code null} if nothing is selected
+     * @param table a reference to the swing-table, from which we want to
+     * retrieve the entry
+     * @param column the column which holds the entry-numbers. in most cases
+     * this is column 0, but some tables store the entry-numbers in column 1
+     * @return the entry numbers of all selected entries in a table (<i>not</i>
+     * the number of the selected table row!), or {@code null} if nothing is
+     * selected
      */
     public static int[] retrieveSelectedEntriesFromTable(Daten data, javax.swing.JTable table, int column) {
         // if no data available, leave method
-        if (data.getCount(Daten.ZKNCOUNT)<1) return null;
+        if (data.getCount(Daten.ZKNCOUNT) < 1) {
+            return null;
+        }
         // get the amount of selected rows
         int rowcount = table.getSelectedRowCount();
         // if we have no selected values, leave method
-        if (rowcount<1) return null;
+        if (rowcount < 1) {
+            return null;
+        }
         // get the selected rows
         int[] rows = table.getSelectedRows();
         // create string array as parameter
         int[] selectedValues = new int[rows.length];
         try {
             // iterate all selected values and copy all values to array
-            for (int cnt=0; cnt<rows.length; cnt++) {
+            for (int cnt = 0; cnt < rows.length; cnt++) {
                 selectedValues[cnt] = Integer.parseInt(table.getValueAt(rows[cnt], column).toString());
             }
             // and return the array
             return selectedValues;
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return null;
         }
     }
+
     /**
-     * This method retrieves the input from the entry-number-textfield and checks whether
-     * the user activated any "hidden feature".<br><br>
+     * This method retrieves the input from the entry-number-textfield and
+     * checks whether the user activated any "hidden feature".<br><br>
      * Use following input to activate feature:<br>
-     * - Entrynumber: Displays the related entry<br>
-     * - {@code ?}: displays a random entry<br>
-     * - {@code m}: toggles the memory-usage-label and logs memory usage<br>
-     * - {@code e}: displays the (error-)logfile<br>
-     * - {@code s}: displays the directory with the settings-file<br>
-     * - {@code cs}: clears the search-request-data<br>
-     * - {@code cd}: clears the desktop-data<br>
-     * - {@code rs}: resets the settings-file<br>
-     * - {@code ra}: resets the accelerator-keys-file, i.e. the menu-shortcuts<br>
-     * - {@code rf}: resets the keywords- and author-frequencies<br>
-     * - {@code xml}: shows the current XML database in a new window. just for testing purposes<br>
-     * - {@code usb}: copies the settings-files to the current application's directory. this
-     * is helpful when the user wants a portable version, so the settings-files can be copied
-     * to the usb-flash-device.
-     * 
+     * - Entrynumber: Displays the related entry<br> - {@code ?}: displays a
+     * random entry<br> - {@code m}: toggles the memory-usage-label and logs
+     * memory usage<br> - {@code e}: displays the (error-)logfile<br> -
+     * {@code s}: displays the directory with the settings-file<br> -
+     * {@code cs}: clears the search-request-data<br> - {@code cd}: clears the
+     * desktop-data<br> - {@code rs}: resets the settings-file<br> - {@code ra}:
+     * resets the accelerator-keys-file, i.e. the menu-shortcuts<br> -
+     * {@code rf}: resets the keywords- and author-frequencies<br> -
+     * {@code xml}: shows the current XML database in a new window. just for
+     * testing purposes<br> - {@code usb}: copies the settings-files to the
+     * current application's directory. this is helpful when the user wants a
+     * portable version, so the settings-files can be copied to the
+     * usb-flash-device.
+     *
      * @param mainframe
      * @param jTextFieldEntryNumber
      * @param data
@@ -321,7 +349,7 @@ public class ZettelkastenViewUtil {
      * @param settings
      * @param acceleratorKeys
      * @param bibtex
-     * @param displayedZettel 
+     * @param displayedZettel
      */
     public static void hiddenFeatures(ZettelkastenView mainframe, javax.swing.JTextField jTextFieldEntryNumber, Daten data, SearchRequests searchrequests, DesktopData desktop, Settings settings, AcceleratorKeys acceleratorKeys, BibTex bibtex, int displayedZettel) {
         // here we have some "hidden features".
@@ -531,9 +559,9 @@ public class ZettelkastenViewUtil {
                 // open an input-dialog, setting the selected value as default-value
                 if (null == biggerEditDlg) {
                     // create a new dialog with the bigger edit-field, passing some initial values
-                    biggerEditDlg = new CBiggerEditField(mainframe.getFrame(), 
-                            settings, "HTML code of entry", 
-                            data.getEntryAsHtml(displayedZettel, null, Constants.FRAME_MAIN), 
+                    biggerEditDlg = new CBiggerEditField(mainframe.getFrame(),
+                            settings, "HTML code of entry",
+                            data.getEntryAsHtml(displayedZettel, null, Constants.FRAME_MAIN),
                             "", Constants.EDIT_OTHER);
                     // center window
                     biggerEditDlg.setLocationRelativeTo(mainframe.getFrame());
@@ -597,13 +625,14 @@ public class ZettelkastenViewUtil {
     }
 
     /**
-     * This method retrieves the selected values of a table in the tabbed pane and returns them in a
-     * string-array
+     * This method retrieves the selected values of a table in the tabbed pane
+     * and returns them in a string-array
      *
-     * @param table a reference to the swing-table, from which we want to retrieve the entry
+     * @param table a reference to the swing-table, from which we want to
+     * retrieve the entry
      * @param column the column which holds the requested values.
-     * @return an string-array with all values of the selected table-entries, or null if nothing is
-     * selected
+     * @return an string-array with all values of the selected table-entries, or
+     * null if nothing is selected
      */
     public static String[] retrieveSelectedValuesFromTable(JTable table, int column) {
         int[] rows = table.getSelectedRows();

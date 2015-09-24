@@ -30,7 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 package de.danielluedecke.zettelkasten;
 
 import com.explodingpixels.macwidgets.BottomBar;
@@ -127,7 +126,7 @@ import org.jdom2.output.XMLOutputter;
 
 /**
  *
- * @author  danielludecke
+ * @author danielludecke
  */
 public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 
@@ -136,7 +135,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      */
     private final Daten dataObj;
     /**
-     * 
+     *
      */
     private final TasksData taskdata;
     /**
@@ -164,16 +163,17 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      */
     private final StenoData stenoObj;
     /**
-     * CAccelerator object, which contains the XML data of the accelerator table for the menus
+     * CAccelerator object, which contains the XML data of the accelerator table
+     * for the menus
      */
     private final AcceleratorKeys accKeys;
     /**
-     * 
+     *
      */
     private createDisplayTask cDisplayTask = null;
     /**
-     * This variable indicates whether the task that updates the display is already
-     * running or not...
+     * This variable indicates whether the task that updates the display is
+     * already running or not...
      */
     private boolean cDisplayTaskIsRunning = false;
     /**
@@ -196,8 +196,8 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      */
     private int displayentrynr = -1;
     /**
-     * Flag that indicates whether the message box warning when adding multiple entries
-     * should only pop up once and not for each multiple entry
+     * Flag that indicates whether the message box warning when adding multiple
+     * entries should only pop up once and not for each multiple entry
      */
     private boolean showMultipleEntryMsg;
     /**
@@ -209,26 +209,31 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      */
     private StringBuilder luhmannnumbers;
     /**
-     * This value stores entries that can be inserted using the {@link #pasteNode() pasteNode()}.
+     * This value stores entries that can be inserted using the
+     * {@link #pasteNode() pasteNode()}.
      */
     public int[] clipEntries;
     /**
-     * This variable indicates whether the entry in the clipboard is a bullet (true) or a child-entry (false)
+     * This variable indicates whether the entry in the clipboard is a bullet
+     * (true) or a child-entry (false)
      */
     private boolean clipBullet = false;
     /**
-     * This variable stores the name of the bullet that was copied or cut to the clipboard. we need
-     * this information when inserting the bullet, so we can avoid double bullet-entries (double names).
+     * This variable stores the name of the bullet that was copied or cut to the
+     * clipboard. we need this information when inserting the bullet, so we can
+     * avoid double bullet-entries (double names).
      */
     private String clipBulletName;
     /**
-     * This variable stores modifications from entries that are cut or copied within the jTree.
-     * Since cutting out an entry will delete it, the timestamp reference to possible modifications
-     * is lost. To avoid this, we store the modifications in this variable.
+     * This variable stores modifications from entries that are cut or copied
+     * within the jTree. Since cutting out an entry will delete it, the
+     * timestamp reference to possible modifications is lost. To avoid this, we
+     * store the modifications in this variable.
      */
     private String clipModifiedEntryContent = null;
     /**
-     * This variable stores the treepath when a node was dragged&dropped within the jtreedesktop
+     * This variable stores the treepath when a node was dragged&dropped within
+     * the jtreedesktop
      */
     private DefaultMutableTreeNode movedNodeToRemove = null;
     /**
@@ -250,10 +255,10 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      *
      */
-    private int findlivemax=1;
+    private int findlivemax = 1;
     /**
-     * create a new stringbuilder that will contain the plain text of
-     * entries in the editorpane, so we can count the words
+     * create a new stringbuilder that will contain the plain text of entries in
+     * the editorpane, so we can count the words
      */
     private final StringBuilder sbWordCountDisplayTask = new StringBuilder("");
     /**
@@ -261,8 +266,9 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      */
     private String completePage = "";
     /**
-     * This variable gets the graphic device and ist needed for full-screen-functionality. see
-     * {@link #viewFullScreen() viewFullScreen()} for more details.
+     * This variable gets the graphic device and ist needed for
+     * full-screen-functionality. see {@link #viewFullScreen() viewFullScreen()}
+     * for more details.
      */
     private final GraphicsDevice graphicdevice = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     /**
@@ -272,16 +278,15 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private final org.jdesktop.application.ResourceMap resourceMap = 
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(DesktopFrame.class);
+    private final org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(DesktopFrame.class);
     /**
      * get the strings for file descriptions from the resource map
      */
-    private final org.jdesktop.application.ResourceMap toolbarResourceMap = 
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(ToolbarIcons.class);
-
+    private final org.jdesktop.application.ResourceMap toolbarResourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(ToolbarIcons.class);
 
     /**
      *
@@ -584,7 +589,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 }
             }
         });
-        
+
         jTextFieldLiveSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -1782,8 +1787,8 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                     // also cleaned text for wordcounter
                     sbWordCountDisplayTask.append(Tools.removeUbbFromString(text, true)).append(" ");
                     // get the html-text for an entry which content is passed as parameter...
-                    text = HtmlUbbUtil.getHtmlContentForDesktop(dataObj, 
-                            bibtexObj, settingsObj, text, nr, isHeadingVisible, 
+                    text = HtmlUbbUtil.getHtmlContentForDesktop(dataObj,
+                            bibtexObj, settingsObj, text, nr, isHeadingVisible,
                             isEntryNumberVisible, false, false);
                 }
                 // new table row
@@ -3822,6 +3827,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 // if we found a match, leave function and don't iterate any further elements
                 if (ts != null && ts.equals(timestamp)) {
                     return node; /* else return null; */
+
                 }
             }
         }
@@ -4006,7 +4012,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 
         // create a new stringbuilder that will contain the final string, i.e.
         // the html-page which we set to the jeditorpane
-
         StringBuilder sbDisplayTask = new StringBuilder("");
 
         createDisplayTask(org.jdesktop.application.Application app) {
@@ -4206,12 +4211,11 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             cDisplayTask = null;
         }
     }
-    
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -5159,23 +5163,28 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-
     /**
-     * This variable indicates whether the selection in the jtree is a bullet-point
-     * or not, and no root-element
+     * This variable indicates whether the selection in the jtree is a
+     * bullet-point or not, and no root-element
      */
     private boolean bulletSelected = false;
+
     /**
-     * This variable indicates whether the selection in the jtree is a bullet-point
-     * or not, and no root-element
-     * @return Returns true, if a bullet-point (except root element) is selected in the tree view.
+     * This variable indicates whether the selection in the jtree is a
+     * bullet-point or not, and no root-element
+     *
+     * @return Returns true, if a bullet-point (except root element) is selected
+     * in the tree view.
      */
     public boolean isBulletSelected() {
         return bulletSelected;
     }
+
     /**
-     * This variable indicates whether the selection in the jtree is a bullet-point
-     * or not, and no root-element. Triggers a property change to (de-)activate menu items.
+     * This variable indicates whether the selection in the jtree is a
+     * bullet-point or not, and no root-element. Triggers a property change to
+     * (de-)activate menu items.
+     *
      * @param b true, if a bullet point is selected.
      */
     public void setBulletSelected(boolean b) {
@@ -5188,18 +5197,22 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * child-note (entry), i.e. no bullet and no root-element
      */
     private boolean entryNodeSelected = false;
+
     /**
      * This variable indicates whether the selection in the jtree is a
      * child-note (entry), i.e. no bullet and no root-element
-     * @return 
+     *
+     * @return
      */
     public boolean isEntryNodeSelected() {
         return entryNodeSelected;
     }
+
     /**
      * This variable indicates whether the selection in the jtree is a
-     * child-note (entry), i.e. no bullet and no root-element.
-     * Triggers a property change to (de-)activate menu items.
+     * child-note (entry), i.e. no bullet and no root-element. Triggers a
+     * property change to (de-)activate menu items.
+     *
      * @param b
      */
     public void setEntryNodeSelected(boolean b) {
@@ -5208,21 +5221,25 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         firePropertyChange("entryNodeSelected", old, isEntryNodeSelected());
     }
     /**
-     * This variable indicates whether the selection in the jtree is a 
+     * This variable indicates whether the selection in the jtree is a
      * child-note (entry), i.e. no bullet and no root-element
      */
     private boolean nodeSelected = false;
+
     /**
      * This variable indicates whether the selection in the jtree is a
      * child-note (entry), i.e. no bullet and no root-element
-     * @return 
+     *
+     * @return
      */
     public boolean isNodeSelected() {
         return nodeSelected;
-    }    
+    }
+
     /**
      * This variable indicates whether the selection in the jtree is a
      * child-note (entry), i.e. no bullet and no root-element
+     *
      * @param b
      */
     public void setNodeSelected(boolean b) {
@@ -5235,17 +5252,21 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * i.e. a bullet, a child-node or a root-element
      */
     private boolean anyNodeSelected = false;
+
     /**
      * This variable indicates whether the we have any selection in the jtree,
      * i.e. a bullet, a child-node or a root-element
-     * @return 
+     *
+     * @return
      */
     public boolean isAnyNodeSelected() {
         return anyNodeSelected;
     }
+
     /**
      * This variable indicates whether the we have any selection in the jtree,
      * i.e. a bullet, a child-node or a root-element
+     *
      * @param b
      */
     public void setAnyNodeSelected(boolean b) {
@@ -5257,15 +5278,19 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * This variable indicates whether the selected entry was modified or not.
      */
     private boolean modifiedEntryNode = false;
+
     /**
      * This variable indicates whether the selected entry was modified or not.
-     * @return 
+     *
+     * @return
      */
     public boolean isModifiedEntryNode() {
         return modifiedEntryNode;
     }
+
     /**
      * This variable indicates whether the selected entry was modified or not.
+     *
      * @param b
      */
     public void setModifiedEntryNode(boolean b) {
@@ -5278,17 +5303,21 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * and also has luhmann-numbers (followers)
      */
     private boolean luhmannNodeSelected = false;
+
     /**
      * This variable indicates whether the selected node is a child-note (entry)
      * and also has luhmann-numbers (followers)
-     * @return 
+     *
+     * @return
      */
     public boolean isLuhmannNodeSelected() {
         return luhmannNodeSelected;
     }
+
     /**
      * This variable indicates whether the selected node is a child-note (entry)
      * and also has luhmann-numbers (followers)
+     *
      * @param b
      */
     public void setLuhmannNodeSelected(boolean b) {
@@ -5297,18 +5326,25 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         firePropertyChange("luhmannNodeSelected", old, isLuhmannNodeSelected());
     }
     /**
-     * This variable indicates whether we have any entries or bullets in the clipboard
+     * This variable indicates whether we have any entries or bullets in the
+     * clipboard
      */
     private boolean clipFilled = false;
+
     /**
-     * This variable indicates whether we have any entries or bullets in the clipboard
-     * @return 
+     * This variable indicates whether we have any entries or bullets in the
+     * clipboard
+     *
+     * @return
      */
     public boolean isClipFilled() {
         return clipFilled;
     }
+
     /**
-     * This variable indicates whether we have any entries or bullets in the clipboard
+     * This variable indicates whether we have any entries or bullets in the
+     * clipboard
+     *
      * @param b
      */
     public void setClipFilled(boolean b) {
@@ -5317,53 +5353,67 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         firePropertyChange("clipFilled", old, isClipFilled());
     }
     /**
-     * This variable indicates whether we have a non-updated display of the entries, where
-     * the changes were made when this window was invisible. this for instance happen when initiating
-     * the desktop after program-startup: the desktop is initiated, but the jEditorPane should not be
-     * filled with entries at that moment, because it might take too long for the startup. instead,
-     * we will do the update of the isplay later, when the window becomes visible.
+     * This variable indicates whether we have a non-updated display of the
+     * entries, where the changes were made when this window was invisible. this
+     * for instance happen when initiating the desktop after program-startup:
+     * the desktop is initiated, but the jEditorPane should not be filled with
+     * entries at that moment, because it might take too long for the startup.
+     * instead, we will do the update of the isplay later, when the window
+     * becomes visible.
      */
     private boolean needsUpdate = false;
+
     /**
-     * This variable indicates whether we have a non-updated display of the entries, where
-     * the changes were made when this window was invisible. this for instance happen when initiating
-     * the desktop after program-startup: the desktop is initiated, but the jEditorPane should not be
-     * filled with entries at that moment, because it might take too long for the startup. instead,
-     * we will do the update of the isplay later, when the window becomes visible.
-     * @return 
+     * This variable indicates whether we have a non-updated display of the
+     * entries, where the changes were made when this window was invisible. this
+     * for instance happen when initiating the desktop after program-startup:
+     * the desktop is initiated, but the jEditorPane should not be filled with
+     * entries at that moment, because it might take too long for the startup.
+     * instead, we will do the update of the isplay later, when the window
+     * becomes visible.
+     *
+     * @return
      */
     public boolean isNeedsUpdate() {
         return needsUpdate;
     }
+
     /**
-     * This variable indicates whether we have a non-updated display of the entries, where
-     * the changes were made when this window was invisible. this for instance happen when initiating
-     * the desktop after program-startup: the desktop is initiated, but the jEditorPane should not be
-     * filled with entries at that moment, because it might take too long for the startup. instead,
-     * we will do the update of the isplay later, when the window becomes visible.
+     * This variable indicates whether we have a non-updated display of the
+     * entries, where the changes were made when this window was invisible. this
+     * for instance happen when initiating the desktop after program-startup:
+     * the desktop is initiated, but the jEditorPane should not be filled with
+     * entries at that moment, because it might take too long for the startup.
+     * instead, we will do the update of the isplay later, when the window
+     * becomes visible.
+     *
      * @param b
      */
     public void setNeedsUpdate(boolean b) {
         boolean old = isNeedsUpdate();
         this.needsUpdate = b;
         firePropertyChange("needsUpdate", old, isNeedsUpdate());
-    }    
+    }
     /**
      * This variable indicates whether or not the fullscreen mode is supportet
      * on the current system. if not, disable related icons...
      */
     private boolean fullScreenSupp = false;
+
     /**
      * This variable indicates whether or not the fullscreen mode is supportet
      * on the current system. if not, disable related icons...
-     * @return 
+     *
+     * @return
      */
     public boolean isFullScreenSupp() {
         return fullScreenSupp;
     }
+
     /**
      * This variable indicates whether or not the fullscreen mode is supportet
      * on the current system. if not, disable related icons...
+     *
      * @param b
      */
     public void setFullScreenSupp(boolean b) {
@@ -5372,21 +5422,28 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         firePropertyChange("fullScreenSupp", old, isFullScreenSupp());
     }
     /**
-     * This variable indicates whether the user has selected a node at the very first position.
-     * depending on this, the action to move an entry/bullet up is en-/disabled.
+     * This variable indicates whether the user has selected a node at the very
+     * first position. depending on this, the action to move an entry/bullet up
+     * is en-/disabled.
      */
     private boolean moveUpEnabled = false;
+
     /**
-     * This variable indicates whether the user has selected a node at the very first position.
-     * depending on this, the action to move an entry/bullet up is en-/disabled.
-     * @return 
+     * This variable indicates whether the user has selected a node at the very
+     * first position. depending on this, the action to move an entry/bullet up
+     * is en-/disabled.
+     *
+     * @return
      */
     public boolean isMoveUpEnabled() {
         return moveUpEnabled;
     }
+
     /**
-     * This variable indicates whether the user has selected a node at the very first position.
-     * depending on this, the action to move an entry/bullet up is en-/disabled.
+     * This variable indicates whether the user has selected a node at the very
+     * first position. depending on this, the action to move an entry/bullet up
+     * is en-/disabled.
+     *
      * @param b
      */
     public void setMoveUpEnabled(boolean b) {
@@ -5395,21 +5452,28 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         firePropertyChange("moveUpEnabled", old, isMoveUpEnabled());
     }
     /**
-     * This variable indicates whether the user has selected a node at the very last position.
-     * depending on this, the action to move an entry/bullet down is en-/disabled.
+     * This variable indicates whether the user has selected a node at the very
+     * last position. depending on this, the action to move an entry/bullet down
+     * is en-/disabled.
      */
     private boolean moveDownEnabled = false;
+
     /**
-     * This variable indicates whether the user has selected a node at the very last position.
-     * depending on this, the action to move an entry/bullet down is en-/disabled.
-     * @return 
+     * This variable indicates whether the user has selected a node at the very
+     * last position. depending on this, the action to move an entry/bullet down
+     * is en-/disabled.
+     *
+     * @return
      */
     public boolean isMoveDownEnabled() {
         return moveDownEnabled;
     }
+
     /**
-     * This variable indicates whether the user has selected a node at the very last position.
-     * depending on this, the action to move an entry/bullet down is en-/disabled.
+     * This variable indicates whether the user has selected a node at the very
+     * last position. depending on this, the action to move an entry/bullet down
+     * is en-/disabled.
+     *
      * @param b
      */
     public void setMoveDownEnabled(boolean b) {
