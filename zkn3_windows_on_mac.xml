@@ -23,7 +23,7 @@
     <jdkPreference>preferJre</jdkPreference>
     <runtimeBits>64/32</runtimeBits>
     <initialHeapSize>128</initialHeapSize>
-    <maxHeapSize>768</maxHeapSize>
+    <maxHeapSize>896</maxHeapSize>
   </jre>
   <splash>
     <file>/Users/danielludecke/Dropbox/NetBeans/Zettelkasten/splash.bmp</file>

@@ -953,7 +953,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         dummy = dummy.replaceAll(Pattern.quote("↓"), Matcher.quoteReplacement("\\textdownarrow"));
         dummy = dummy.replaceAll(Pattern.quote("<"), Matcher.quoteReplacement("\\langle"));
         
-        // XXX Hack: ">" should only be convered if Markdown is not enabled, otherwise, it will be
+        // TODO XXX Hack: ">" should only be convered if Markdown is not enabled, otherwise, it will be
         // taken as a quotation by subsequent components. (fixes bug reproduced by
         // "testBugMarkdownZitatWirdNichtKorrektNachLatexExportiert")  
         if (!settingsObj.getMarkdownActivated()) 
