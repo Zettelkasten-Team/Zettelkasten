@@ -690,7 +690,7 @@ public class HtmlUbbUtil {
             // Wikipedia links e.g. would not be converted correctly.
             // String groupEndOfURL = "[^ \"\\]\\)\\(\\[\\|\\t\\n\\r<]";
             // if no hyperlinks have been found yet, do autoconvert
-            String groupEndOfURL = "[^ \"\\|\\t\\n\\r<]";
+            String groupEndOfURL = "[^ \"\\[\\]\\|\\t\\n\\r<]";
             dummy = dummy.replaceAll("([\\w]+?://"+groupEndOfURL+"*)","<a href=\"$1\">$1</a>");
             dummy = dummy.replaceAll("([^://])(www\\."+groupEndOfURL+"*)", "$1<a href=\"http://$2\">$2</a>");
             dummy = dummy.replaceAll("(mailto:)("+groupEndOfURL+"*)", "$1<a href=\"mailto:$2\">$2</a>");

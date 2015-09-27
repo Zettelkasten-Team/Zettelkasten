@@ -3028,17 +3028,23 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                         }
                     }
                 }
+                boolean skip = false;
                 // continue here if we have dropped an URLs from the webbrowser
                 if (tr.isDataFlavorSupported(urlFlavor)) {
                     // retrieve url
                     URL url = (URL) tr.getTransferData(urlFlavor);
-                    // else add the text to the keyword-list (JList)
-                    linkListModel.addElement(url.toString());
-                    // scroll jList down, so the new added links become visible
-                    jListLinks.scrollRectToVisible(jListLinks.getCellBounds(linkListModel.size() - 1, linkListModel.size()));
-                    // set the modified state
-                    setModified(true);
-                } else {
+                    // do we have a hyperlink?
+                    if (FileOperationsUtil.isHyperlink(url.toString())) {
+                        // else add the text to the keyword-list (JList)
+                        linkListModel.addElement(url.toString());
+                        // scroll jList down, so the new added links become visible
+                        jListLinks.scrollRectToVisible(jListLinks.getCellBounds(linkListModel.size() - 1, linkListModel.size()));
+                        // set the modified state
+                        setModified(true);
+                        skip = true;
+                    }
+                } 
+                if (!skip) {
                     // retrieve list of dropped files
                     java.util.List files = (java.util.List) tr.getTransferData(DataFlavor.javaFileListFlavor);
                     // check for valid values
