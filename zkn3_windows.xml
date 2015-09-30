@@ -1,7 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\Luedeke\Desktop\Zettelkasten.jar</jar>
+  <jar>C:\Users\Luedeke\Dropbox\NetBeans\Zettelkasten\store\Zettelkasten.jar</jar>
   <outfile>C:\Users\Luedeke\Desktop\Zettelkasten.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
@@ -10,29 +11,32 @@
   <downloadUrl>http://java.com/download</downloadUrl>
   <supportUrl></supportUrl>
   <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon>C:\Users\Luedeke\Documents\NetBeansProjects\Zettelkasten\zkn.ico</icon>
+  <icon>C:\Users\Luedeke\Dropbox\NetBeans\Zettelkasten\zkn2.ico</icon>
   <jre>
     <path></path>
     <bundledJre64Bit>false</bundledJre64Bit>
-    <minVersion>1.6.0</minVersion>
+    <bundledJreAsFallback>false</bundledJreAsFallback>
+    <minVersion>1.7.0</minVersion>
     <maxVersion></maxVersion>
     <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
     <initialHeapSize>128</initialHeapSize>
-    <maxHeapSize>768</maxHeapSize>
+    <maxHeapSize>896</maxHeapSize>
   </jre>
   <splash>
-    <file>C:\Users\Luedeke\Documents\NetBeansProjects\Zettelkasten\splash.bmp</file>
+    <file>C:\Users\Luedeke\Dropbox\NetBeans\Zettelkasten\splash.bmp</file>
     <waitForWindow>true</waitForWindow>
     <timeout>60</timeout>
     <timeoutErr>true</timeoutErr>
   </splash>
   <versionInfo>
-    <fileVersion>3.2.2.0</fileVersion>
+    <fileVersion>3.2.6.1</fileVersion>
     <txtFileVersion>Zettelkasten 3</txtFileVersion>
     <fileDescription>Zettelkasten - nach Niklas Luhmann</fileDescription>
     <copyright>Daniel Luedecke</copyright>
-    <productVersion>3.2.2.0</productVersion>
+    <productVersion>3.2.6.1</productVersion>
     <txtProductVersion>Zettelkasten 3</txtProductVersion>
     <productName>Zettelkasten</productName>
     <companyName>Daniel Luedecke</companyName>

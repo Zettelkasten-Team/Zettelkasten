@@ -11,6 +11,7 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 ### Changelog der aktuellen Entwicklerversion
 
 #### Neue Funktionen und Änderungen
+* Im englischen Interface wurden _trails_ in _note sequences_ umbenannt.
 
 #### Behobene Fehler
 * Bei Dateien, die im Neueingabefenster per Drag'n'Drop ins Textfeld gezogen wurden, kam keine Abfrage zum Verschieben oder Kopieren der Dateien.
