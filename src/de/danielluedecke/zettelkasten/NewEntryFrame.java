@@ -232,12 +232,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      */
     public int entryNumber;
     /**
-     * This variable stores the number of that entry after which the new entry
-     * should be inserted. does only affect the prev/next attributes of an
-     * entry.
-     */
-    public int insertAfterEntry;
-    /**
      * Indicates whether the user made changes, i.e. edited data
      */
     private boolean modified;
@@ -337,13 +331,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      * @param en
      * @param l
      * @param isdel
-     * @param insaftent This variable stores the number of that entry after
-     * which the new entry should be inserted. does only affect the prev/next
-     * attributes of an entry. Use {code -1} to add entry to the end of entry
-     * order.
      */
     @SuppressWarnings("LeakingThisInConstructor")
-    public NewEntryFrame(ZettelkastenView zkn, Daten d, TasksData td, AcceleratorKeys ak, Settings s, AutoKorrektur ac, Synonyms syn, StenoData stn, String content, boolean em, int en, boolean l, boolean isdel, int insaftent) {
+    public NewEntryFrame(ZettelkastenView zkn, Daten d, TasksData td, AcceleratorKeys ak, Settings s, AutoKorrektur ac, Synonyms syn, StenoData stn, String content, boolean em, int en, boolean l, boolean isdel) {
         mainframe = zkn;
 
         // init the variables from the parameters
@@ -356,7 +346,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         spellObj = ac;
         isDeleted = isdel;
         lastSelectefFont = new Font("Courier", Font.PLAIN, 12);
-        insertAfterEntry = insaftent;
         editmode = em;
         // check whether memory usage is logged. if so, tell logger that new entry windows was opened
         if (settingsObj.isMemoryUsageLogged) {
@@ -4060,10 +4049,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         } else {
             // here we have the user editing an "deleted" entry (empty place in the XML-document),
             // so the variable "entryNumber" indicates where in the *database* the entry should be stored.
-            // the variable "insertAfterEntry" however, affects the order of entries. That means, an entry's
-            // data can be stored at position 100 in the XML-document, while the entry itself visually 
-            // appears after entry 50. The order of entry is achieved by the prev/next attributes of 
-            // the zettel element.
             if (isDeleted) {
                 // add entry, and fetch result
                 int result = dataObj.addEntry(title,
@@ -4075,8 +4060,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                         Tools.getTimeStamp(),
                         -1,
                         true,
-                        entryNumber,
-                        insertAfterEntry);
+                        entryNumber);
                 // check whether result was an error when adding a follower-entry (trailing entry(
                 if (result == Daten.ADD_LUHMANNENTRY_ERR) {
                     JOptionPane.showMessageDialog(this,
@@ -4095,10 +4079,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                 }
             } // here we have the user adding a new entry at the end of the XML-document.
             // In this case, the variable "entryNumber" indicates whether we have a trailing entry or not.
-            // The variable "insertAfterEntry" however, affects the order of entries. That means, the entry's
-            // will be added to the end of the XML-document, while the entry itself visually 
-            // appears e.g. after entry 50. The order of entry is achieved by the prev/next attributes of 
-            // the zettel element.
             else {
                 // if we don't have to insert an entry here, indicate that by setting the
                 // entryNumber of the current entry to -1;
@@ -4115,8 +4095,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                         remarks,
                         links,
                         Tools.getTimeStamp(),
-                        entryNumber,
-                        insertAfterEntry);
+                        entryNumber);
                 // check whether result was an error when adding a follower-entry (trailing entry(
                 if (result == Daten.ADD_LUHMANNENTRY_ERR) {
                     JOptionPane.showMessageDialog(this,

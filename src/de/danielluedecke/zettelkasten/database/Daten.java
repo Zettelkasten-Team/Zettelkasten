@@ -2796,9 +2796,6 @@ public class Daten {
      * @param editDeletedEntryPosition the position of the currently displayed
      * entry that is deleted and should be overwritten with a new entry
      * ({@code editDeletedEntry} is set to true).
-     * @param insertAfterEntry indicates the position, after which existing
-     * entry the new added entry should be inserted. Use {@code -1} to add the
-     * new entry to the end of the database.
      * @return one of the following constants:<br>
      * {@link #ADD_ENTRY_OK ADD_ENTRY_OK} if a normal entry was successfully
      * added<br> {@link #ADD_LUHMANNENTRY_OK ADD_LUHMANNENTRY_OK} if a
@@ -2807,7 +2804,7 @@ public class Daten {
      * normal entry<br> {@link #ADD_LUHMANNENTRY_ERR ADD_LUHMANNENTRY_ERR} if an
      * error occured when adding a follower-entry (trailing entry)
      */
-    public int addEntry(String title, String content, String[] authors, String[] keywords, String remarks, String[] links, String timestamp, int luhmann, boolean editDeletedEntry, int editDeletedEntryPosition, int insertAfterEntry) {
+    public int addEntry(String title, String content, String[] authors, String[] keywords, String remarks, String[] links, String timestamp, int luhmann, boolean editDeletedEntry, int editDeletedEntryPosition) {
         // init return value
         int retval = ADD_ENTRY_OK;
         List<Integer> manlinks;
@@ -3007,8 +3004,6 @@ public class Daten {
                 // if it was successfull, we can insert this entry
                 // after the "parent" entry
                 retval = ADD_LUHMANNENTRY_OK;
-                // to do this, we need to change the "insertAfter" value
-                insertAfterEntry = luhmann;
             } else {
                 retval = ADD_LUHMANNENTRY_ERR;
             }
@@ -3056,9 +3051,6 @@ public class Daten {
      * index-number and adds it to its luhmann-tag (which indicates follower-
      * and sub-entries). use {@code -1} if no luhmann-number is needed (i.e. no
      * follower-entry is added).
-     * @param insertAfterEntry indicates the position, after which existing
-     * entry the new added entry should be inserted. Use {@code -1} to add the
-     * new entry to the end of the database.
      * @return one of the following constants:<br>
      * {@link #ADD_ENTRY_OK ADD_ENTRY_OK} if a normal entry was successfully
      * added<br> {@link #ADD_LUHMANNENTRY_OK ADD_LUHMANNENTRY_OK} if a
@@ -3067,8 +3059,8 @@ public class Daten {
      * normal entry<br> {@link #ADD_LUHMANNENTRY_ERR ADD_LUHMANNENTRY_ERR} if an
      * error occured when adding a follower-entry (trailing entry)
      */
-    public int addEntry(String title, String content, String[] authors, String[] keywords, String remarks, String[] links, String timestamp, int luhmann, int insertAfterEntry) {
-        return addEntry(title, content, authors, keywords, remarks, links, timestamp, luhmann, false, -1, insertAfterEntry);
+    public int addEntry(String title, String content, String[] authors, String[] keywords, String remarks, String[] links, String timestamp, int luhmann) {
+        return addEntry(title, content, authors, keywords, remarks, links, timestamp, luhmann, false, -1);
     }
 
     /**
@@ -3106,7 +3098,7 @@ public class Daten {
      */
     public int addEntryFromBibTex(String title, String content, String[] authors, String[] keywords, String timestamp) {
         // add entry
-        int succeeded = addEntry(title, content, authors, keywords, "", null, timestamp, -1, false, -1, -1);
+        int succeeded = addEntry(title, content, authors, keywords, "", null, timestamp, -1, false, -1);
         // if operation was successful...
         if (succeeded == ADD_ENTRY_OK || succeeded == ADD_LUHMANNENTRY_OK) {
             // ... set a remark to that entry that it was added from a bibtex-file

@@ -1519,14 +1519,6 @@
                 <Property name="name" type="java.lang.String" value="insertEntryMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="insertEntryAtMenuItem">
-              <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="insertEntryAt" methodName="insertEntryAt"/>
-                </Property>
-                <Property name="name" type="java.lang.String" value="insertEntryAtMenuItem" noResource="true"/>
-              </Properties>
-            </MenuItem>
             <MenuItem class="javax.swing.JSeparator" name="jSeparator104">
               <Properties>
                 <Property name="name" type="java.lang.String" value="jSeparator104" noResource="true"/>
@@ -4423,19 +4415,6 @@
         <Component class="javax.swing.JPopupMenu$Separator" name="jSeparator114">
           <Properties>
             <Property name="name" type="java.lang.String" value="jSeparator114" noResource="true"/>
-          </Properties>
-        </Component>
-        <MenuItem class="javax.swing.JMenuItem" name="popupTitleMoveEntry">
-          <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="moveEntry" methodName="moveEntry"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="popupTitleMoveEntry" noResource="true"/>
-          </Properties>
-        </MenuItem>
-        <Component class="javax.swing.JSeparator" name="jSeparator106">
-          <Properties>
-            <Property name="name" type="java.lang.String" value="jSeparator106" noResource="true"/>
           </Properties>
         </Component>
         <MenuItem class="javax.swing.JMenuItem" name="popupTitlesAutomaticTitle">

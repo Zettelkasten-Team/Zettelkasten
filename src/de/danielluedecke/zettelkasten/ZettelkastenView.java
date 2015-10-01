@@ -6208,7 +6208,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     text = text.substring(sepval.length());
                 }
                 // add text as new entry
-                data.addEntry("", text, null, null, "", null, Tools.getTimeStamp(), -1, -1);
+                data.addEntry("", text, null, null, "", null, Tools.getTimeStamp(), -1);
                 // and titles might be out of date now as well...
                 data.setTitlelistUpToDate(false);
                 // tell about success
@@ -6282,7 +6282,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 //                    }
 //                }
                 // add text as new entry
-                data.addEntry(title, text, null, null, "", null, Tools.getTimeStamp(), -1, -1);
+                data.addEntry(title, text, null, null, "", null, Tools.getTimeStamp(), -1);
                 // and titles might be out of date now as well...
                 data.setTitlelistUpToDate(false);
                 // tell about success
@@ -8333,7 +8333,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             newEntryDlg.toFront();
         } // else create a new window and display it.
         else {
-            newEntryDlg = new NewEntryFrame(this, data, taskinfo, acceleratorKeys, settings, autoKorrekt, synonyms, steno, content, isEditing, entrynumber, isLuhmann, isDeleted, insertAfterEntry);
+            newEntryDlg = new NewEntryFrame(this, data, taskinfo, acceleratorKeys, settings, autoKorrekt, synonyms, steno, content, isEditing, entrynumber, isLuhmann, isDeleted);
             newEntryDlg.setLocationRelativeTo(getFrame());
             ZettelkastenApp.getApplication().show(newEntryDlg);
             // edit window was initialized
@@ -8617,20 +8617,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     @Action(enabledProperty = "entriesAvailable")
     public void insertEntry() {
         openEditWindow(false, displayedZettel, true, false, displayedZettel);
-    }
-
-    /**
-     * This method opens the window for inserting new entries as "followers" or
-     * "sub-entries". These entries are inserted at the end of the data set, but
-     * are indicated as "followers" (i.e.: sub-entries) of the current visible
-     * entry. All the stuff like saving the data to the main-data-object is done
-     * within the class "CNewEntry.java". We than additionally set the
-     * "luhmann"-tag here (see CDaten.java for more detaiks), which is used in
-     * the "showLuhmann" method here.
-     */
-    @Action(enabledProperty = "entriesAvailable")
-    public void insertEntryAt() {
-        openEditWindow(false, displayedZettel, false, false, displayedZettel);
     }
 
     /**
@@ -11769,7 +11755,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             fileMenu = new javax.swing.JMenu();
             newEntryMenuItem = new javax.swing.JMenuItem();
             insertEntryMenuItem = new javax.swing.JMenuItem();
-            insertEntryAtMenuItem = new javax.swing.JMenuItem();
             jSeparator104 = new javax.swing.JSeparator();
             quickNewEntryMenuItem = new javax.swing.JMenuItem();
             quickNewTitleEntryMenuItem = new javax.swing.JMenuItem();
@@ -12146,8 +12131,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jSeparator103 = new javax.swing.JSeparator();
             popupTitlesDelete = new javax.swing.JMenuItem();
             jSeparator114 = new javax.swing.JPopupMenu.Separator();
-            popupTitleMoveEntry = new javax.swing.JMenuItem();
-            jSeparator106 = new javax.swing.JSeparator();
             popupTitlesAutomaticTitle = new javax.swing.JMenuItem();
             jSeparator21 = new javax.swing.JSeparator();
             popupTitlesManLinks = new javax.swing.JMenuItem();
@@ -13059,10 +13042,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             insertEntryMenuItem.setAction(actionMap.get("insertEntry")); // NOI18N
             insertEntryMenuItem.setName("insertEntryMenuItem"); // NOI18N
             fileMenu.add(insertEntryMenuItem);
-
-            insertEntryAtMenuItem.setAction(actionMap.get("insertEntryAt")); // NOI18N
-            insertEntryAtMenuItem.setName("insertEntryAtMenuItem"); // NOI18N
-            fileMenu.add(insertEntryAtMenuItem);
 
             jSeparator104.setName("jSeparator104"); // NOI18N
             fileMenu.add(jSeparator104);
@@ -14647,13 +14626,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jSeparator114.setName("jSeparator114"); // NOI18N
             jPopupMenuTitles.add(jSeparator114);
 
-            popupTitleMoveEntry.setAction(actionMap.get("moveEntry")); // NOI18N
-            popupTitleMoveEntry.setName("popupTitleMoveEntry"); // NOI18N
-            jPopupMenuTitles.add(popupTitleMoveEntry);
-
-            jSeparator106.setName("jSeparator106"); // NOI18N
-            jPopupMenuTitles.add(jSeparator106);
-
             popupTitlesAutomaticTitle.setAction(actionMap.get("automaticFirstLineAsTitle")); // NOI18N
             popupTitlesAutomaticTitle.setName("popupTitlesAutomaticTitle"); // NOI18N
             jPopupMenuTitles.add(popupTitlesAutomaticTitle);
@@ -14899,7 +14871,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JMenuItem histroyBackMenuItem;
     private javax.swing.JMenuItem homeMenuItem;
     private javax.swing.JMenuItem importMenuItem;
-    private javax.swing.JMenuItem insertEntryAtMenuItem;
     private javax.swing.JMenuItem insertEntryMenuItem;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonRefreshAttachments;
@@ -14970,7 +14941,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JSeparator jSeparator103;
     private javax.swing.JSeparator jSeparator104;
     private javax.swing.JSeparator jSeparator105;
-    private javax.swing.JSeparator jSeparator106;
     private javax.swing.JSeparator jSeparator107;
     private javax.swing.JPopupMenu.Separator jSeparator108;
     private javax.swing.JSeparator jSeparator109;
@@ -15200,7 +15170,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JMenuItem popupMainFind;
     private javax.swing.JMenuItem popupMainSetFirstLineAsTitle;
     private javax.swing.JMenuItem popupMainSetSelectionAsTitle;
-    private javax.swing.JMenuItem popupTitleMoveEntry;
     private javax.swing.JMenuItem popupTitlesAutomaticTitle;
     private javax.swing.JMenuItem popupTitlesBookmarks;
     private javax.swing.JMenuItem popupTitlesCopy;
