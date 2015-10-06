@@ -11,11 +11,12 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 ### Changelog der aktuellen Entwicklerversion
 
 #### Neue Funktionen und Änderungen
-* Im englischen Interface wurden _trails_ in _note sequences_ umbenannt.
+* Im englischen Interface wurden _trails_ in _note sequences_ und _entry_ in _note_ umbenannt.
 
 #### Behobene Fehler
 * Bei Dateien, die im Neueingabefenster per Drag'n'Drop ins Textfeld gezogen wurden, kam keine Abfrage zum Verschieben oder Kopieren der Dateien.
 * Änderung [#82](https://github.com/sjPlot/Zettelkasten/issues/82) wurde rückgängig gemacht, da es Probleme mit URLs in BibTex-Autorenangaben gab.
+* In der Registerkarte _Literatur_ wurden _Buchkapitel_ und _Artikel in Büchern_ bei der Filterfunktion vertauscht [#90](https://github.com/sjPlot/Zettelkasten/issues/90).
 
 ### Screenshots
 Aktuelle Screenshots [gibt es hier](http://zettelkasten.danielluedecke.de/gallery.php).

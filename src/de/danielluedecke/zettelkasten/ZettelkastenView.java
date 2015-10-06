@@ -5715,7 +5715,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // if dialog window isn't already created, do this now
         if (null == taskDlg) {
             // get parent und init window
-            taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWAUTHORS, data, null /*only needed for keywords*/, bibtex, null /*only needed for attachments*/, false /*only needed for keywords*/, jComboBoxAuthorType.getSelectedIndex(), (DefaultTableModel) jTableAuthors.getModel());
+            taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWAUTHORS, data, 
+                    null /*only needed for keywords*/, bibtex, 
+                    null /*only needed for attachments*/, 
+                    false /*only needed for keywords*/, 
+                    jComboBoxAuthorType.getSelectedIndex(), 
+                    (DefaultTableModel) jTableAuthors.getModel());
             // center window
             taskDlg.setLocationRelativeTo(getFrame());
         }

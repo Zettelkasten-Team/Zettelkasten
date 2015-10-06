@@ -1195,9 +1195,9 @@ public class BibTex {
         } else if (entrytype.equalsIgnoreCase("article")) {
             return Constants.BIBTEX_ENTRYTYPE_ARTICLE;
         } else if (entrytype.equalsIgnoreCase("incollection")) {
-            return Constants.BIBTEX_ENTRYTYPE_CHAPTER;
-        } else if (entrytype.equalsIgnoreCase("inbook")) {
             return Constants.BIBTEX_ENTRYTYPE_BOOKARTICLE;
+        } else if (entrytype.equalsIgnoreCase("inbook")) {
+            return Constants.BIBTEX_ENTRYTYPE_CHAPTER;
         } else if (entrytype.equalsIgnoreCase("mastersthesis")) {
             return Constants.BIBTEX_ENTRYTYPE_THESIS;
         } else if (entrytype.equalsIgnoreCase("phdthesis")) {

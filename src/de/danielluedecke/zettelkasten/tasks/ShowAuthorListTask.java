@@ -30,7 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 package de.danielluedecke.zettelkasten.tasks;
 
 import de.danielluedecke.zettelkasten.database.BibTex;
@@ -69,9 +68,9 @@ public class ShowAuthorListTask extends org.jdesktop.application.Task<Object, Vo
     /**
      * get the strings for file descriptions from the resource map
      */
-    private final org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(ShowAuthorListTask.class);
+    private final org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(ShowAuthorListTask.class);
 
     ShowAuthorListTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, BibTex bt, int et, DefaultTableModel dtm) {
         // Runs on the EDT.  Copy GUI state that
@@ -89,7 +88,8 @@ public class ShowAuthorListTask extends org.jdesktop.application.Task<Object, Vo
         msgLabel.setText(resourceMap.getString("msg1"));
     }
 
-    @Override protected Object doInBackground() {
+    @Override
+    protected Object doInBackground() {
         // Your Task's code here.  This method runs
         // on a background thread, so don't reference
         // the Swing GUI from here.
@@ -97,7 +97,7 @@ public class ShowAuthorListTask extends org.jdesktop.application.Task<Object, Vo
         // get the amount of authors
         int count = dataObj.getCount(Daten.AUCOUNT);
         // check whether we have any keywords at all
-        if (count<1) {
+        if (count < 1) {
             // reset list
             list = null;
             // leave thread
@@ -110,36 +110,34 @@ public class ShowAuthorListTask extends org.jdesktop.application.Task<Object, Vo
 
         LinkedList<String> authorlist = new LinkedList<>();
         // go through all author-elements of the author datafile
-        for (cnt=0; cnt<count; cnt++) {
+        for (cnt = 0; cnt < count; cnt++) {
             // get the authors as string
-            String au = dataObj.getAuthor(cnt+1);
+            String au = dataObj.getAuthor(cnt + 1);
             // if the author-string is not empty, check for further filtering (entrytype)
             if (!au.isEmpty()) {
                 // if the entrytype is not -1 or not 0, we have to filter all authors accoding
                 // to their type, i.e. article, book, incollection etc.
-                if (entrytype>0) {
+                if (entrytype > 0) {
                     // retrieve authors bibkey so we can retrieve the entrytype
-                    String bibkey = dataObj.getAuthorBibKey(cnt+1);
+                    String bibkey = dataObj.getAuthorBibKey(cnt + 1);
                     // if we have no bibkey and look for entries w/o bibkey...
-                    if ((null==bibkey || bibkey.isEmpty()) && Constants.BIBTEX_ENTRYTYPE_NOBIBKEY==entrytype) {
+                    if ((null == bibkey || bibkey.isEmpty()) && Constants.BIBTEX_ENTRYTYPE_NOBIBKEY == entrytype) {
                         // add author to list
                         authorlist.add(au);
-                    }
-                    // if we have any bibkey, goon
+                    } // if we have any bibkey, goon
                     else {
                         // check whether entrytype of author equals the requested entrytype
-                        if (entrytype==bibtexObj.getEntryType(bibkey)) {
+                        if (entrytype == bibtexObj.getEntryType(bibkey)) {
                             // add author to list
                             authorlist.add(au);
                         }
                     }
-                }
-                else {
+                } else {
                     authorlist.add(au);
                 }
             }
             // update progressbar
-            setProgress(cnt,0,count);
+            setProgress(cnt, 0, count);
         }
         // sort list
         Collections.sort(authorlist, new Comparer());
@@ -148,7 +146,7 @@ public class ShowAuthorListTask extends org.jdesktop.application.Task<Object, Vo
         // get list size
         int ausize = authorlist.size();
         // go through all authors of the author-array
-        for (cnt=0; cnt<ausize; cnt++) {
+        for (cnt = 0; cnt < ausize; cnt++) {
             // get author string
             String au = authorlist.get(cnt);
             // retrieve the frequency of that author, i.e. the amount of usage in
@@ -164,25 +162,27 @@ public class ShowAuthorListTask extends org.jdesktop.application.Task<Object, Vo
             // add data to linked list
             list.add(ob);
             // update progressbar
-            setProgress(cnt,0,ausize);
+            setProgress(cnt, 0, ausize);
         }
         return null;
     }
 
-    @Override protected void succeeded(Object result) {
+    @Override
+    protected void succeeded(Object result) {
         // Runs on the EDT.  Update the GUI based on
         // the result computed by doInBackground().
         // reset the table
         tableModel.setRowCount(0);
         // check whether we have any entries at all...
-        if (list!=null) {
+        if (list != null) {
             // create iterator for linked list
             Iterator<Object[]> i = list.iterator();
             // go through linked list and add all objects to the table model
             try {
-                while (i.hasNext()) tableModel.addRow(i.next());
-            }
-            catch (ConcurrentModificationException e) {
+                while (i.hasNext()) {
+                    tableModel.addRow(i.next());
+                }
+            } catch (ConcurrentModificationException e) {
                 // reset the table when we have overlappings threads
                 tableModel.setRowCount(0);
             }
