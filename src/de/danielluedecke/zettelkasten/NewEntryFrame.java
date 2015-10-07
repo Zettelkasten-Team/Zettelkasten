@@ -2930,6 +2930,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         List<String> o = jListQuickInputAuthor.getSelectedValuesList();
         // if we have selections, go on
         if (!o.isEmpty()) {
+            // check whether to insert braces around footnotes
+            String fnbraceopen = settingsObj.getFootnoteBraces() ? "(" : "";
+            String fnbraceclose = settingsObj.getFootnoteBraces() ? ")" : "";
             // create stringbuilder for footnote-tags
             StringBuilder fn = new StringBuilder("");
             // create list iterator
@@ -2964,7 +2967,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             }
             // insert the string into the textfield
             if (fn.length() > 0) {
-                jTextAreaEntry.replaceSelection("(" + fn.toString() + ")");
+                jTextAreaEntry.replaceSelection(fnbraceopen + fn.toString() + fnbraceclose);
             }
         }
     }

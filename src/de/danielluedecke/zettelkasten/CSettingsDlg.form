@@ -347,9 +347,10 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jCheckBoxFootnoteBraces" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="29" pref="29" max="29" attributes="0"/>
                                   <Component id="jCheckBoxShowAllIcons" min="-2" max="-2" attributes="0"/>
@@ -452,7 +453,9 @@
                           <Component id="jCheckBoxShowTableBorder" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jCheckBoxFootnote" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jCheckBoxFootnoteBraces" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="jCheckBoxJumpToTab" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -593,6 +596,12 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="jCheckBoxUseMacBackgroundColor.text"/>
                     <Property name="name" type="java.lang.String" value="jCheckBoxUseMacBackgroundColor" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="jCheckBoxFootnoteBraces">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="jCheckBoxFootnoteBraces.text"/>
+                    <Property name="name" type="java.lang.String" value="jCheckBoxFootnoteBraces" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>

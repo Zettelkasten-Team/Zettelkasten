@@ -30,7 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 package de.danielluedecke.zettelkasten;
 
 import at.jta.Key;
@@ -67,12 +66,12 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.jdesktop.application.Action;
 
-
 /**
  *
- * @author  danielludecke
+ * @author danielludecke
  */
 public class CSettingsDlg extends javax.swing.JDialog {
+
     /**
      * Reference to the settings-class
      */
@@ -90,7 +89,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
      */
     private final StenoData stenoObj;
     /**
-     * 
+     *
      */
     private final Synonyms synonyms;
     /**
@@ -100,9 +99,9 @@ public class CSettingsDlg extends javax.swing.JDialog {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private final org.jdesktop.application.ResourceMap resourceMap = 
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(CSettingsDlg.class);
+    private final org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(CSettingsDlg.class);
     /**
      * The different fonts, used to retrieve the font settings and for the
      * font-chooser-dialog
@@ -157,15 +156,18 @@ public class CSettingsDlg extends javax.swing.JDialog {
      */
     private int lafselection;
     /**
-     * return value for the main window so we know whether we have to update the display
+     * return value for the main window so we know whether we have to update the
+     * display
      */
     private boolean needsupdate = false;
     /**
-     * return value for the main window so we know whether we have to update the display
+     * return value for the main window so we know whether we have to update the
+     * display
      */
     private boolean displayupdate = false;
     /**
-     * return value for the main window so we know whether we have to update the laf
+     * return value for the main window so we know whether we have to update the
+     * laf
      */
     private boolean lafupdate = false;
     /**
@@ -173,7 +175,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
      */
     private boolean savesettingok = true;
     /**
-     * 
+     *
      */
     private boolean registryChanges = false;
     /**
@@ -183,13 +185,13 @@ public class CSettingsDlg extends javax.swing.JDialog {
     private boolean pandocPathChanges = false;
 
     /**
-     * 
+     *
      * @param parent
      * @param s
      * @param d
      * @param ac
      * @param sy
-     * @param stn 
+     * @param stn
      */
     public CSettingsDlg(java.awt.Frame parent, Settings s, Daten d, AutoKorrektur ac, Synonyms sy, StenoData stn) {
         super(parent);
@@ -200,7 +202,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         dataObj = d;
         autokorrekt = ac;
         synonyms = sy;
-        stenoObj=stn;
+        stenoObj = stn;
         initComponents();
         // make extra style for combo-boxes
         if (settings.isSeaGlass()) {
@@ -224,11 +226,10 @@ public class CSettingsDlg extends javax.swing.JDialog {
             jButtonSynonymEdit.putClientProperty("JComponent.sizeVariant", "small");
         }
         if (!SystemTray.isSupported() || PlatformUtil.isMacOS()) {
-            jCheckBoxSystray.setText(jCheckBoxSystray.getText()+resourceMap.getString("systrayNotSupported"));
+            jCheckBoxSystray.setText(jCheckBoxSystray.getText() + resourceMap.getString("systrayNotSupported"));
             jCheckBoxSystray.setEnabled(false);
             jCheckBoxSystray.setSelected(false);
-        }
-        else {
+        } else {
             jCheckBoxSystray.setSelected(settings.getMinimizeToTray());
         }
         // en- and disable checkboxes depending on the os
@@ -306,7 +307,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jCheckBoxFillNewEntries.setSelected(settings.getInsertNewEntryAtEmpty());
         jCheckBoxExtraBackup.setSelected(settings.getExtraBackup());
         jCheckBoxAllToHist.setSelected(settings.getAddAllToHistory());
-        jTextFieldBackupPath.setText((settings.getExtraBackupPath()!=null)?settings.getExtraBackupPath().toString():"");
+        jTextFieldBackupPath.setText((settings.getExtraBackupPath() != null) ? settings.getExtraBackupPath().toString() : "");
         jTextFieldBackupPath.setEnabled(settings.getExtraBackup());
         jTextFieldPandoc.setText(settings.getPandocPath());
         jButtonBrowseBackup.setEnabled(settings.getExtraBackup());
@@ -320,11 +321,16 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jCheckBoxUseMarkdown.setSelected(settings.getMarkdownActivated());
         jCheckBoxShowTableBorder.setSelected(settings.getShowTableBorder());
         jCheckBoxShowEntryHeadline.setSelected(settings.getShowEntryHeadline());
+        jCheckBoxFootnoteBraces.setSelected(settings.getFootnoteBraces());
         // get user attachment and image paths
         File attpath = dataObj.getUserAttachmentPath();
-        if (attpath!=null) jTextFieldAttachmentPath.setText(attpath.toString());
+        if (attpath != null) {
+            jTextFieldAttachmentPath.setText(attpath.toString());
+        }
         File imgpath = dataObj.getUserImagePath();
-        if (imgpath!=null) jTextFieldImagePath.setText(imgpath.toString());
+        if (imgpath != null) {
+            jTextFieldImagePath.setText(imgpath.toString());
+        }
         // init formatted textfields with resize-preferences
         jFormattedTextFieldImgWidth.setValue(settings.getImageResizeWidth());
         jFormattedTextFieldImgHeight.setValue(settings.getImageResizeHeight());
@@ -340,13 +346,16 @@ public class CSettingsDlg extends javax.swing.JDialog {
         // set language setting
         String lang = settings.getLanguage();
         try {
-            if (lang.equalsIgnoreCase("de")) jComboBoxLocale.setSelectedIndex(1);
-            else if (lang.equalsIgnoreCase("es")) jComboBoxLocale.setSelectedIndex(2);
-            else jComboBoxLocale.setSelectedIndex(0);
-        }
-        catch(IllegalArgumentException e) {
+            if (lang.equalsIgnoreCase("de")) {
+                jComboBoxLocale.setSelectedIndex(1);
+            } else if (lang.equalsIgnoreCase("es")) {
+                jComboBoxLocale.setSelectedIndex(2);
+            } else {
+                jComboBoxLocale.setSelectedIndex(0);
+            }
+        } catch (IllegalArgumentException e) {
             // log error
-            Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
         }
         // set all look'n'feels to the combobox
         initComboboxLAF();
@@ -382,7 +391,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jComboBoxShowAtStartup.setSelectedIndex(settings.getShowAtStartup());
         // add listener for combobox-showatstartup
         jComboBoxShowAtStartup.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 // whenever the user changes something, set "modifedLook" state to true
                 // so the apply-button becomes enabled (this variable is connected to
                 // the button's action)
@@ -391,7 +401,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
         });
         // add listener for combobox-showatstartup
         jComboBoxIconTheme.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 // whenever the user changes something, set "modifedLook" state to true
                 // so the apply-button becomes enabled (this variable is connected to
                 // the button's action)
@@ -401,27 +412,30 @@ public class CSettingsDlg extends javax.swing.JDialog {
         });
         // add listener for combobox-locale
         jComboBoxLocale.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 // whenever the user changes something, set "modifedLook" state to true
                 // so the apply-button becomes enabled (this variable is connected to
                 // the button's action)
                 setModified(true);
-                lafupdate=true;
+                lafupdate = true;
             }
         });
         // add action listener to combo box
         jComboBoxLAF.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 // whenever the user changes something, set "modifedLook" state to true
                 // so the apply-button becomes enabled (this variable is connected to
                 // the button's action)
                 setModified(true);
-                lafupdate=true;
+                lafupdate = true;
             }
         });
         // add listener for combobox-showatstartup
         jComboBoxManualTimestamp.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 // whenever the user changes something, set "modifedLook" state to true
                 // so the apply-button becomes enabled (this variable is connected to
                 // the button's action)
@@ -430,7 +444,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
         });
         // add action listener to combo box
         jComboBoxFonts.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 // whenever the user changes something, set "modifedLook" state to true
                 // so the apply-button becomes enabled (this variable is connected to
                 // the button's action)
@@ -440,7 +455,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jComboBoxFonts.setSelectedIndex(0);
         // add action listener to combo box
         jComboBoxBackgroundColors.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 // whenever the user changes something, set "modifedLook" state to true
                 // so the apply-button becomes enabled (this variable is connected to
                 // the button's action)
@@ -449,257 +465,335 @@ public class CSettingsDlg extends javax.swing.JDialog {
         });
         jComboBoxBackgroundColors.setSelectedIndex(0);
         jTextFieldAttachmentPath.getDocument().addDocumentListener(new DocumentListener() {
-            @Override public void changedUpdate(DocumentEvent e) { checkPath(jTextFieldAttachmentPath); }
-            @Override public void insertUpdate(DocumentEvent e) { checkPath(jTextFieldAttachmentPath); }
-            @Override public void removeUpdate(DocumentEvent e) { checkPath(jTextFieldAttachmentPath); }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                checkPath(jTextFieldAttachmentPath);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                checkPath(jTextFieldAttachmentPath);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                checkPath(jTextFieldAttachmentPath);
+            }
         });
         jTextFieldImagePath.getDocument().addDocumentListener(new DocumentListener() {
-            @Override public void changedUpdate(DocumentEvent e) { checkPath(jTextFieldImagePath); }
-            @Override public void insertUpdate(DocumentEvent e) { checkPath(jTextFieldImagePath); }
-            @Override public void removeUpdate(DocumentEvent e) { checkPath(jTextFieldImagePath); }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                checkPath(jTextFieldImagePath);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                checkPath(jTextFieldImagePath);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                checkPath(jTextFieldImagePath);
+            }
         });
         jTextFieldPandoc.getDocument().addDocumentListener(new DocumentListener() {
-            @Override public void changedUpdate(DocumentEvent e) { pandocPathChanges = true; setModified(true); }
-            @Override public void insertUpdate(DocumentEvent e) { pandocPathChanges = true; setModified(true); }
-            @Override public void removeUpdate(DocumentEvent e) { pandocPathChanges = true; setModified(true); }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                pandocPathChanges = true;
+                setModified(true);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                pandocPathChanges = true;
+                setModified(true);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                pandocPathChanges = true;
+                setModified(true);
+            }
         });
         jCheckBoxAutobackup.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
             }
         });
         jCheckBoxShowTableBorder.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
-                displayupdate=true;
+                displayupdate = true;
             }
         });
         jCheckBoxAutocorrect.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
             }
         });
         jCheckBoxSteno.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
             }
         });
         jCheckBoxShowEntryHeadline.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
                 displayupdate = true;
             }
         });
         jCheckBoxSynonym.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
             }
         });
         jCheckBoxSystray.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
             }
         });
         jCheckBoxFillNewEntries.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
             }
         });
         jCheckBoxAutoUpdate.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
                 jCheckBoxCheckNightly.setEnabled(jCheckBoxAutoUpdate.isSelected());
             }
         });
         jCheckBoxCheckNightly.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
             }
         });
         jCheckBoxJumpToTab.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
             }
         });
         jCheckBoxUseMarkdown.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
-                displayupdate=true;
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                displayupdate = true;
                 setModified(true);
             }
         });
         jCheckBoxUseMacBackgroundColor.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
-                displayupdate=true;
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                displayupdate = true;
                 setModified(true);
             }
         });
         jCheckBoxShowHorGrid.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
             }
         });
         jCheckBoxShowVerGrid.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
             }
         });
         jCheckBoxAllToHist.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
             }
         });
         jSpinnerDistHor.addChangeListener(new javax.swing.event.ChangeListener() {
-            @Override public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                needsupdate=true;
+            @Override
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                needsupdate = true;
                 setModified(true);
             }
         });
         jSpinnerDistVer.addChangeListener(new javax.swing.event.ChangeListener() {
-            @Override public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                needsupdate=true;
+            @Override
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                needsupdate = true;
                 setModified(true);
             }
         });
         jSliderFontSize.addChangeListener(new javax.swing.event.ChangeListener() {
-            @Override public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                needsupdate=true;
+            @Override
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                needsupdate = true;
                 setModified(true);
                 lafupdate = true;
             }
         });
         jSliderDesktopFontSize.addChangeListener(new javax.swing.event.ChangeListener() {
-            @Override public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                needsupdate=true;
+            @Override
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                needsupdate = true;
                 setModified(true);
                 lafupdate = true;
             }
         });
         jFormattedTextFieldImgWidth.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override public void keyReleased(java.awt.event.KeyEvent evt) {
-                displayupdate=true;
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                displayupdate = true;
                 setModified(true);
             }
         });
         jFormattedTextFieldImgHeight.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override public void keyReleased(java.awt.event.KeyEvent evt) {
-                displayupdate=true;
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                displayupdate = true;
                 setModified(true);
             }
         });
         jCheckBoxFootnote.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
-                displayupdate=true;
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                displayupdate = true;
+                setModified(true);
+            }
+        });
+        jCheckBoxFootnoteBraces.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
             }
         });
         jCheckBoxUseXDGOpen.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
             }
         });
         jCheckBoxAutoCompleteTags.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
             }
         });
         jCheckBoxIconText.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
-                needsupdate=true;
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                needsupdate = true;
                 setModified(true);
             }
         });
         jCheckBoxShowToolbar.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 needsupdate = true;
                 setModified(true);
                 jCheckBoxShowAllIcons.setEnabled(jCheckBoxShowToolbar.isSelected());
             }
         });
         jCheckBoxShowAllIcons.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 needsupdate = true;
                 setModified(true);
             }
         });
         jCheckBoxEntryCSS.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 lafupdate = true;
                 setModified(true);
             }
         });
         jCheckBoxDesktopCSS.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 lafupdate = true;
                 setModified(true);
             }
         });
         jButtonEditAutokorrekt.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 // the button for editing the spellchecking-words was pressed,
                 // so open the window for edting them...
                 if (null == autoKorrektEdit) {
                     // get parent und init window
-                    autoKorrektEdit = new CAutoKorrekturEdit(null,autokorrekt,settings);
+                    autoKorrektEdit = new CAutoKorrekturEdit(null, autokorrekt, settings);
                     // center window
                     autoKorrektEdit.setLocationRelativeTo(null);
                 }
                 ZettelkastenApp.getApplication().show(autoKorrektEdit);
                 // change modified state and enable apply-button
-                if (autoKorrektEdit.isModified()) setModified(true);
+                if (autoKorrektEdit.isModified()) {
+                    setModified(true);
+                }
                 autoKorrektEdit.dispose();
                 autoKorrektEdit = null;
             }
         });
         jButtonListFont.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 // get the selected font
                 Font f = tablefont;
                 // create font-chooser dialog
                 if (null == fontDlg) {
-                    fontDlg = new CFontChooser(null,f);
+                    fontDlg = new CFontChooser(null, f);
                     fontDlg.setLocationRelativeTo(null);
                 }
                 ZettelkastenApp.getApplication().show(fontDlg);
                 // if the user has chosen a font, set it
-                if (fontDlg.selectedFont!=null) {
+                if (fontDlg.selectedFont != null) {
                     tablefont = fontDlg.selectedFont;
                     // whenever the user changes something, set "modifedLook" state to true
                     // so the apply-button becomes enabled (this variable is connected to
                     // the button's action)
                     setModified(true);
-                    lafupdate=true;
+                    lafupdate = true;
                 }
                 // close and dispose the font-dialog
                 fontDlg.dispose();
-                fontDlg=null;
+                fontDlg = null;
             }
         });
         jButtonDesktopFont.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 // get the selected font
                 Font f = desktopfont;
                 // create font-chooser dialog
                 if (null == fontDlg) {
-                    fontDlg = new CFontChooser(null,f);
+                    fontDlg = new CFontChooser(null, f);
                     fontDlg.setLocationRelativeTo(null);
                 }
                 ZettelkastenApp.getApplication().show(fontDlg);
                 // if the user has chosen a font, set it
-                if (fontDlg.selectedFont!=null) {
+                if (fontDlg.selectedFont != null) {
                     desktopfont = fontDlg.selectedFont;
                     // whenever the user changes something, set "modifedLook" state to true
                     // so the apply-button becomes enabled (this variable is connected to
                     // the button's action)
                     setModified(true);
-                    lafupdate=true;
+                    lafupdate = true;
                 }
                 // close and dispose the font-dialog
                 fontDlg.dispose();
-                fontDlg=null;
+                fontDlg = null;
             }
         });
         jButtonBrowseBackup.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 JFileChooser fc = new JFileChooser();
                 // set dialog's title
                 fc.setDialogTitle(resourceMap.getString("fileChooserTitle"));
@@ -717,7 +811,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
             }
         });
         jButtonBrowseAttachmentPath.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 JFileChooser fc = new JFileChooser();
                 // set dialog's title
                 fc.setDialogTitle(resourceMap.getString("fileChooserTitle"));
@@ -735,7 +830,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
             }
         });
         jButtonBrowsePandoc.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 JFileChooser fc = new JFileChooser();
                 // set dialog's title
                 fc.setDialogTitle(resourceMap.getString("fileChooserTitle"));
@@ -753,7 +849,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
             }
         });
         jButtonBrowseImagePath.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 JFileChooser fc = new JFileChooser();
                 // set dialog's title
                 fc.setDialogTitle(resourceMap.getString("fileChooserTitle"));
@@ -771,115 +868,132 @@ public class CSettingsDlg extends javax.swing.JDialog {
             }
         });
         jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 cancelWindow();
             }
         });
         jButtonEntryCss.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 editCSS(Settings.CUSTOM_CSS_ENTRY);
             }
         });
         jButtonDesktopCSS.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 editCSS(Settings.CUSTOM_CSS_DESKTOP);
             }
         });
         jButtonResetEntryCSS.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 resetCSS(Settings.CUSTOM_CSS_ENTRY);
             }
         });
         jButtonResetDesktopCSS.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 resetCSS(Settings.CUSTOM_CSS_DESKTOP);
             }
         });
         jCheckBoxImgResize.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 setModified(true);
-                displayupdate=true;
+                displayupdate = true;
                 jFormattedTextFieldImgWidth.setEnabled(jCheckBoxImgResize.isSelected());
-                jFormattedTextFieldImgHeight.setEnabled(jCheckBoxImgResize.isSelected());            }
+                jFormattedTextFieldImgHeight.setEnabled(jCheckBoxImgResize.isSelected());
+            }
         });
         jCheckBoxExtraBackup.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 jTextFieldBackupPath.setEnabled(jCheckBoxExtraBackup.isSelected());
                 jButtonBrowseBackup.setEnabled(jCheckBoxExtraBackup.isSelected());
-                setModified(true);            }
+                setModified(true);
+            }
         });
         jCheckBoxRegistry.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 setModified(true);
                 registryChanges = true;
             }
         });
         jButtonEditSteno.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 // the button for editing the spellchecking-words was pressed,
                 // so open the window for edting them...
                 if (null == stenoEdit) {
                     // get parent und init window
-                    stenoEdit = new CStenoEdit(null,stenoObj,settings);
+                    stenoEdit = new CStenoEdit(null, stenoObj, settings);
                     // center window
                     stenoEdit.setLocationRelativeTo(null);
                 }
                 ZettelkastenApp.getApplication().show(stenoEdit);
                 // change modified state and enable apply-button
-                if (stenoEdit.isModified()) setModified(true);
+                if (stenoEdit.isModified()) {
+                    setModified(true);
+                }
                 stenoEdit.dispose();
                 stenoEdit = null;
             }
         });
         jButtonHighlightStyle.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 if (null == highlightSettingsDlg) {
-                    highlightSettingsDlg = new CHighlightSearchSettings(null,settings, HtmlUbbUtil.HIGHLIGHT_STYLE_SEARCHRESULTS);
+                    highlightSettingsDlg = new CHighlightSearchSettings(null, settings, HtmlUbbUtil.HIGHLIGHT_STYLE_SEARCHRESULTS);
                     highlightSettingsDlg.setLocationRelativeTo(null);
                 }
                 ZettelkastenApp.getApplication().show(highlightSettingsDlg);
                 if (!highlightSettingsDlg.isCancelled()) {
                     setModified(true);
-                    lafupdate=true;
+                    lafupdate = true;
                 }
                 highlightSettingsDlg.dispose();
-                highlightSettingsDlg=null;
+                highlightSettingsDlg = null;
             }
         });
         jButtonHighlightKeywordStyle.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 if (null == highlightSettingsDlg) {
-                    highlightSettingsDlg = new CHighlightSearchSettings(null,settings, HtmlUbbUtil.HIGHLIGHT_STYLE_KEYWORDS);
+                    highlightSettingsDlg = new CHighlightSearchSettings(null, settings, HtmlUbbUtil.HIGHLIGHT_STYLE_KEYWORDS);
                     highlightSettingsDlg.setLocationRelativeTo(null);
                 }
                 ZettelkastenApp.getApplication().show(highlightSettingsDlg);
                 if (!highlightSettingsDlg.isCancelled()) {
                     setModified(true);
-                    lafupdate=true;
+                    lafupdate = true;
                 }
                 highlightSettingsDlg.dispose();
-                highlightSettingsDlg=null;
+                highlightSettingsDlg = null;
             }
         });
         jButtonHighlightLivesearchStyle.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 if (null == highlightSettingsDlg) {
-                    highlightSettingsDlg = new CHighlightSearchSettings(null,settings, HtmlUbbUtil.HIGHLIGHT_STYLE_LIVESEARCH);
+                    highlightSettingsDlg = new CHighlightSearchSettings(null, settings, HtmlUbbUtil.HIGHLIGHT_STYLE_LIVESEARCH);
                     highlightSettingsDlg.setLocationRelativeTo(null);
                 }
                 ZettelkastenApp.getApplication().show(highlightSettingsDlg);
                 if (!highlightSettingsDlg.isCancelled()) {
                     setModified(true);
-                    lafupdate=true;
+                    lafupdate = true;
                 }
                 highlightSettingsDlg.dispose();
-                highlightSettingsDlg=null;
+                highlightSettingsDlg = null;
             }
         });
         jButtonSynonymEdit.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 if (null == synonymsDlg) {
-                    synonymsDlg = new CSynonymsEdit(null,synonyms,settings,dataObj);
+                    synonymsDlg = new CSynonymsEdit(null, synonyms, settings, dataObj);
                     synonymsDlg.setLocationRelativeTo(null);
                 }
                 ZettelkastenApp.getApplication().show(synonymsDlg);
@@ -889,11 +1003,10 @@ public class CSettingsDlg extends javax.swing.JDialog {
                     setSynModified(true);
                 }
                 synonymsDlg.dispose();
-                synonymsDlg=null;
+                synonymsDlg = null;
             }
         });
     }
-
 
     /**
      * This method inits the combobox. all items are removed and then all
@@ -907,20 +1020,23 @@ public class CSettingsDlg extends javax.swing.JDialog {
         // retrieve all available look'n'feels
         installed_laf = UIManager.getInstalledLookAndFeels();
         // and add them to the combobox
-        for(int cnt=0; cnt<installed_laf.length; cnt++) {
+        for (int cnt = 0; cnt < installed_laf.length; cnt++) {
             jComboBoxLAF.addItem((installed_laf[cnt].getName()));
-            if (installed_laf[cnt].getClassName().equals(settings.getLookAndFeel())) lafselection = cnt;
+            if (installed_laf[cnt].getClassName().equals(settings.getLookAndFeel())) {
+                lafselection = cnt;
+            }
         }
         jComboBoxLAF.addItem(Constants.seaGlassLookAndFeelClassName);
-        if (settings.isSeaGlass()) lafselection = installed_laf.length;
+        if (settings.isSeaGlass()) {
+            lafselection = installed_laf.length;
+        }
         // select the last active look and feel
         jComboBoxLAF.setSelectedIndex(lafselection);
     }
 
-
     /**
-     * Initiates the combo-box that hold the values for the manual timestamps that can be
-     * inserted when editing new entries (CNewEntry-dialog).
+     * Initiates the combo-box that hold the values for the manual timestamps
+     * that can be inserted when editing new entries (CNewEntry-dialog).
      */
     private void initComboboxManualTimestamp() {
         // remove all items from the combobox
@@ -947,12 +1063,10 @@ public class CSettingsDlg extends javax.swing.JDialog {
         }
         jComboBoxIconTheme.setSelectedIndex(settings.getIconTheme());
     }
-    
-    
+
     /**
-     * 
-     * @param what 
-     * Use one of 
+     *
+     * @param what Use one of
      * <ul>
      * <li>Settings.CUSTOM_CSS_ENTRY</li>
      * <li>Settings.CUSTOM_CSS_DESKTOP</li>
@@ -963,19 +1077,25 @@ public class CSettingsDlg extends javax.swing.JDialog {
         String css = settings.getCustomCSS(what);
         switch (what) {
             case Settings.CUSTOM_CSS_ENTRY:
-                if (null==css || css.isEmpty()) css = HtmlUbbUtil.getCommonStyleDefinition(settings, false, false, false);
+                if (null == css || css.isEmpty()) {
+                    css = HtmlUbbUtil.getCommonStyleDefinition(settings, false, false, false);
+                }
                 break;
             case Settings.CUSTOM_CSS_DESKTOP:
-                if (null==css || css.isEmpty()) css = HtmlUbbUtil.getCommonStyleDefinition(settings, true, false, false);
+                if (null == css || css.isEmpty()) {
+                    css = HtmlUbbUtil.getCommonStyleDefinition(settings, true, false, false);
+                }
                 break;
             default:
-                if (null==css || css.isEmpty()) css = HtmlUbbUtil.getCommonStyleDefinition(settings, false, false, false);
+                if (null == css || css.isEmpty()) {
+                    css = HtmlUbbUtil.getCommonStyleDefinition(settings, false, false, false);
+                }
                 break;
         }
         // open an input-dialog, setting the selected value as default-value
         if (null == biggerEditDlg) {
             // create a new dialog with the bigger edit-field, passing some initial values
-            biggerEditDlg = new CBiggerEditField(null,settings,resourceMap.getString("editCSS.text"),css, "", Constants.EDIT_STYLESHEET);
+            biggerEditDlg = new CBiggerEditField(null, settings, resourceMap.getString("editCSS.text"), css, "", Constants.EDIT_STYLESHEET);
             // center window
             biggerEditDlg.setLocationRelativeTo(this);
         }
@@ -985,21 +1105,19 @@ public class CSettingsDlg extends javax.swing.JDialog {
         String newCss = biggerEditDlg.getNewValue();
         // delete the input-dialog
         biggerEditDlg.dispose();
-        biggerEditDlg=null;
+        biggerEditDlg = null;
         // check for valid value
-        if (newCss!=null && !newCss.isEmpty()) {
+        if (newCss != null && !newCss.isEmpty()) {
             // set custom style sheet
             settings.setCustomCSS(what, newCss);
             lafupdate = true;
             setModified(true);
         }
     }
-    
-    
+
     /**
-     * 
-     * @param what 
-     * Use one of 
+     *
+     * @param what Use one of
      * <ul>
      * <li>Settings.CUSTOM_CSS_ENTRY</li>
      * <li>Settings.CUSTOM_CSS_DESKTOP</li>
@@ -1031,8 +1149,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         lafupdate = true;
         setModified(true);
     }
-    
-    
+
     private void initComboBoxBackgroundColors() {
         jComboBoxBackgroundColors.removeAllItems();
         jComboBoxBackgroundColors.addItem(resourceMap.getString("bgCol1"));
@@ -1049,31 +1166,30 @@ public class CSettingsDlg extends javax.swing.JDialog {
         // make all items visible
         jComboBoxBackgroundColors.setMaximumRowCount(jComboBoxBackgroundColors.getItemCount());
     }
-    
-    
+
     /**
-     * This method initiates the combobox with the font settings. here the user can
-     * choose which type of font (main-font, font for authors, for lists, for tables etc.)
-     * he or she wants to change.
+     * This method initiates the combobox with the font settings. here the user
+     * can choose which type of font (main-font, font for authors, for lists,
+     * for tables etc.) he or she wants to change.
      */
     private void initComboboxFonts() {
         // clear combobox
         jComboBoxFonts.removeAllItems();
         // add all font-items
-        jComboBoxFonts.addItem(resourceMap.getString("mainfontText")+": "+getFontDataForCombobox(mainfont));
-        jComboBoxFonts.addItem(resourceMap.getString("authorfontText")+": "+getFontDataForCombobox(authorfont));
-        jComboBoxFonts.addItem(resourceMap.getString("remarksfontText")+": "+getFontDataForCombobox(remarksfont));
-        jComboBoxFonts.addItem(resourceMap.getString("titlefontText")+": "+getFontDataForCombobox(titlefont));
-        jComboBoxFonts.addItem(resourceMap.getString("headerfont1Text")+": "+getFontDataForCombobox(headerfont1));
-        jComboBoxFonts.addItem(resourceMap.getString("headerfont2Text")+": "+getFontDataForCombobox(headerfont2));
-        jComboBoxFonts.addItem(resourceMap.getString("desktopheaderfontText")+": "+getFontDataForCombobox(desktopheaderfont));
-        jComboBoxFonts.addItem(resourceMap.getString("desktopcommentfontText")+": "+getFontDataForCombobox(desktopcommentfont));
-        jComboBoxFonts.addItem(resourceMap.getString("desktopitemheaderfontText")+": "+getFontDataForCombobox(desktopitemheaderfont));
-        jComboBoxFonts.addItem(resourceMap.getString("desktopitemfontText")+": "+getFontDataForCombobox(desktopitemfont));
-        jComboBoxFonts.addItem(resourceMap.getString("quotefontText")+": "+getFontDataForCombobox(quotefont));
-        jComboBoxFonts.addItem(resourceMap.getString("entryheaderfontText")+": "+getFontDataForCombobox(entryheaderfont));
-        jComboBoxFonts.addItem(resourceMap.getString("appendixheaderfontText")+": "+getFontDataForCombobox(appendixheaderfont));
-        jComboBoxFonts.addItem(resourceMap.getString("codefontText")+": "+getFontDataForCombobox(codefont));
+        jComboBoxFonts.addItem(resourceMap.getString("mainfontText") + ": " + getFontDataForCombobox(mainfont));
+        jComboBoxFonts.addItem(resourceMap.getString("authorfontText") + ": " + getFontDataForCombobox(authorfont));
+        jComboBoxFonts.addItem(resourceMap.getString("remarksfontText") + ": " + getFontDataForCombobox(remarksfont));
+        jComboBoxFonts.addItem(resourceMap.getString("titlefontText") + ": " + getFontDataForCombobox(titlefont));
+        jComboBoxFonts.addItem(resourceMap.getString("headerfont1Text") + ": " + getFontDataForCombobox(headerfont1));
+        jComboBoxFonts.addItem(resourceMap.getString("headerfont2Text") + ": " + getFontDataForCombobox(headerfont2));
+        jComboBoxFonts.addItem(resourceMap.getString("desktopheaderfontText") + ": " + getFontDataForCombobox(desktopheaderfont));
+        jComboBoxFonts.addItem(resourceMap.getString("desktopcommentfontText") + ": " + getFontDataForCombobox(desktopcommentfont));
+        jComboBoxFonts.addItem(resourceMap.getString("desktopitemheaderfontText") + ": " + getFontDataForCombobox(desktopitemheaderfont));
+        jComboBoxFonts.addItem(resourceMap.getString("desktopitemfontText") + ": " + getFontDataForCombobox(desktopitemfont));
+        jComboBoxFonts.addItem(resourceMap.getString("quotefontText") + ": " + getFontDataForCombobox(quotefont));
+        jComboBoxFonts.addItem(resourceMap.getString("entryheaderfontText") + ": " + getFontDataForCombobox(entryheaderfont));
+        jComboBoxFonts.addItem(resourceMap.getString("appendixheaderfontText") + ": " + getFontDataForCombobox(appendixheaderfont));
+        jComboBoxFonts.addItem(resourceMap.getString("codefontText") + ": " + getFontDataForCombobox(codefont));
         // make all items visible
         jComboBoxFonts.setMaximumRowCount(jComboBoxFonts.getItemCount());
     }
@@ -1084,8 +1200,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jComboBoxShowAtStartup.addItem(resourceMap.getString("cbStartup2.text"));
         jComboBoxShowAtStartup.addItem(resourceMap.getString("cbStartup3.text"));
     }
-    
-    
+
     private void checkPath(javax.swing.JTextField tf) {
         // retrieve file path from textfield
         String fps = tf.getText();
@@ -1094,9 +1209,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
             // create file-variable
             File fp = new File(fps);
             // check for existence
-            tf.setForeground((fp.exists())?Color.black:Color.red);
-        }
-        else {
+            tf.setForeground((fp.exists()) ? Color.black : Color.red);
+        } else {
             // indicate that path is OK
             tf.setForeground(Color.black);
         }
@@ -1106,17 +1220,14 @@ public class CSettingsDlg extends javax.swing.JDialog {
         userPathChanges = true;
     }
 
-
     private boolean initRegCheckBox() {
         try {
             Regor winreg = new Regor();
-            return (winreg.openKey(Regor.HKEY_CLASSES_ROOT, ".zkn3")!=null && winreg.openKey(Regor.HKEY_CLASSES_ROOT, "zkn3_auto_file\\shell\\Open\\command")!=null);
-        }
-        catch (RegistryErrorException e) {
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
-        }
-        catch (NotSupportedOSException e) {
-            Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+            return (winreg.openKey(Regor.HKEY_CLASSES_ROOT, ".zkn3") != null && winreg.openKey(Regor.HKEY_CLASSES_ROOT, "zkn3_auto_file\\shell\\Open\\command") != null);
+        } catch (RegistryErrorException e) {
+            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+        } catch (NotSupportedOSException e) {
+            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
         }
         return false;
     }
@@ -1126,47 +1237,43 @@ public class CSettingsDlg extends javax.swing.JDialog {
             Regor winreg = new Regor();
             if (jCheckBoxRegistry.isSelected()) {
                 Key regkey = winreg.openKey(Regor.HKEY_CLASSES_ROOT, ".zkn3");
-                if (null==regkey) {
+                if (null == regkey) {
                     regkey = winreg.createKey(Regor.HKEY_CLASSES_ROOT, ".zkn3");
                     winreg.closeKey(regkey);
                     regkey = winreg.openKey(Regor.HKEY_CLASSES_ROOT, ".zkn3");
 
                 }
-                if (regkey!=null) {
+                if (regkey != null) {
                     winreg.setValue(regkey, "", "zkn3_auto_file");
                     winreg.closeKey(regkey);
                     regkey = winreg.openKey(Regor.HKEY_CLASSES_ROOT, "zkn3_auto_file\\shell\\Open\\command");
-                    if (null==regkey) {
+                    if (null == regkey) {
                         regkey = winreg.createKey(Regor.HKEY_CLASSES_ROOT, "zkn3_auto_file\\shell\\Open\\command");
                         winreg.closeKey(regkey);
                         regkey = winreg.openKey(Regor.HKEY_CLASSES_ROOT, "zkn3_auto_file\\shell\\Open\\command");
                     }
-                    if (regkey!=null) {
-                        winreg.setValue(regkey, "", "\""+System.getProperty("java.class.path")+"\" \"%1\"");
+                    if (regkey != null) {
+                        winreg.setValue(regkey, "", "\"" + System.getProperty("java.class.path") + "\" \"%1\"");
                         winreg.closeKey(regkey);
                     }
                 }
-            }
-            else {
+            } else {
                 winreg.delKey(Regor.HKEY_CLASSES_ROOT, ".zkn3");
                 winreg.delKey(Regor.HKEY_CLASSES_ROOT, "zkn3_auto_file\\shell\\Open\\command");
             }
-        }
-        catch (RegistryErrorException e) {
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+        } catch (RegistryErrorException e) {
+            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             // show warning message box
             JOptionPane.showMessageDialog(null, resourceMap.getString("errorRegistryMsg"), resourceMap.getString("errorRegistryTitle"), JOptionPane.PLAIN_MESSAGE);
-        }
-        catch (NotSupportedOSException e) {
-            Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+        } catch (NotSupportedOSException e) {
+            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
         }
     }
 
-    
     /**
-     * This method creates a string-description for the font-settings, which are used
-     * for the font's combobox.
-     * 
+     * This method creates a string-description for the font-settings, which are
+     * used for the font's combobox.
+     *
      * @param name
      * @param size
      * @param style
@@ -1181,25 +1288,35 @@ public class CSettingsDlg extends javax.swing.JDialog {
         // add the font-size
         item.append(f.getSize());
         item.append("px, ");
-        
+
         // get the style-information
         switch (f.getStyle()) {
-            case Font.PLAIN: item.append(resourceMap.getString("fontStylePlain")); break;
-            case Font.BOLD: item.append(resourceMap.getString("fontStyleBold")); break;
-            case Font.ITALIC: item.append(resourceMap.getString("fontStyleItalic")); break;
-            case Font.BOLD+Font.ITALIC: item.append(resourceMap.getString("fontStyleBoldItalic")); break;
-            default: item.append(resourceMap.getString("fontStylePlain")); break;
+            case Font.PLAIN:
+                item.append(resourceMap.getString("fontStylePlain"));
+                break;
+            case Font.BOLD:
+                item.append(resourceMap.getString("fontStyleBold"));
+                break;
+            case Font.ITALIC:
+                item.append(resourceMap.getString("fontStyleItalic"));
+                break;
+            case Font.BOLD + Font.ITALIC:
+                item.append(resourceMap.getString("fontStyleBoldItalic"));
+                break;
+            default:
+                item.append(resourceMap.getString("fontStylePlain"));
+                break;
         }
         item.append(")");
-        
+
         return item.toString();
     }
-    
-    
+
     /**
-     * This methods gets the color-value of the selected font. while the original
-     * value is stored as string, this method converts the hex-string into a rgb-Color-value.
-     * 
+     * This methods gets the color-value of the selected font. while the
+     * original value is stored as string, this method converts the hex-string
+     * into a rgb-Color-value.
+     *
      * @return the font-color, converted to Color-format
      */
     private Color getFontColor() {
@@ -1207,35 +1324,65 @@ public class CSettingsDlg extends javax.swing.JDialog {
         String c;
         // get the color-value from the selectet font
         switch (jComboBoxFonts.getSelectedIndex()) {
-            case 0: c=mainfontcolor; break;
-            case 1: c=authorfontcolor; break;
-            case 2: c=remarksfontcolor; break;
-            case 3: c=titlefontcolor; break;
-            case 4: c=headerfont1color; break;
-            case 5: c=headerfont2color; break;
-            case 6: c=desktopheaderfontcolor; break;
-            case 7: c=desktopcommentfontcolor; break;
-            case 8: c=desktopitemheaderfontcolor; break;
-            case 9: c=desktopitemfontcolor; break;
-            case 10: c=quotefontcolor; break;
-            case 11: c=entryheaderfontcolor; break;
-            case 12: c=appendixheaderfontcolor; break;
-            case 13: c=codefontcolor; break;
-            default: c=mainfontcolor; break;
+            case 0:
+                c = mainfontcolor;
+                break;
+            case 1:
+                c = authorfontcolor;
+                break;
+            case 2:
+                c = remarksfontcolor;
+                break;
+            case 3:
+                c = titlefontcolor;
+                break;
+            case 4:
+                c = headerfont1color;
+                break;
+            case 5:
+                c = headerfont2color;
+                break;
+            case 6:
+                c = desktopheaderfontcolor;
+                break;
+            case 7:
+                c = desktopcommentfontcolor;
+                break;
+            case 8:
+                c = desktopitemheaderfontcolor;
+                break;
+            case 9:
+                c = desktopitemfontcolor;
+                break;
+            case 10:
+                c = quotefontcolor;
+                break;
+            case 11:
+                c = entryheaderfontcolor;
+                break;
+            case 12:
+                c = appendixheaderfontcolor;
+                break;
+            case 13:
+                c = codefontcolor;
+                break;
+            default:
+                c = mainfontcolor;
+                break;
         }
         // if we found a color value, go on...
-        if (c!=null) {
+        if (c != null) {
             return new Color(Integer.parseInt(c, 16));
         }
-        
+
         return Color.BLACK;
     }
-    
-    
+
     /**
-     * This methods gets the color-value of the selected font. while the original
-     * value is stored as string, this method converts the hex-string into a rgb-Color-value.
-     * 
+     * This methods gets the color-value of the selected font. while the
+     * original value is stored as string, this method converts the hex-string
+     * into a rgb-Color-value.
+     *
      * @return the font-color, converted to Color-format
      */
     private Color getBackgroundColor() {
@@ -1243,104 +1390,178 @@ public class CSettingsDlg extends javax.swing.JDialog {
         String c;
         // get the color-value from the selectet font
         switch (jComboBoxBackgroundColors.getSelectedIndex()) {
-            case 0: c=tableheadercolor; break;
-            case 1: c=tablerowevencolor; break;
-            case 2: c=tablerowoddcolor; break;
-            case 3: c=entryheadingscolor; break;
-            case 4: c=quotecolor; break;
-            case 5: c=reflistbgcolor; break;
-            case 6: c=mainbgcolor; break;
-            case 7: c=contentbgcolor; break;
-            case 8: c=linkscolor; break;
-            case 9: c=manlinkscolor; break;
-            case 10: c=fnlinkscolor; break;
-            default: c=tableheadercolor; break;
+            case 0:
+                c = tableheadercolor;
+                break;
+            case 1:
+                c = tablerowevencolor;
+                break;
+            case 2:
+                c = tablerowoddcolor;
+                break;
+            case 3:
+                c = entryheadingscolor;
+                break;
+            case 4:
+                c = quotecolor;
+                break;
+            case 5:
+                c = reflistbgcolor;
+                break;
+            case 6:
+                c = mainbgcolor;
+                break;
+            case 7:
+                c = contentbgcolor;
+                break;
+            case 8:
+                c = linkscolor;
+                break;
+            case 9:
+                c = manlinkscolor;
+                break;
+            case 10:
+                c = fnlinkscolor;
+                break;
+            default:
+                c = tableheadercolor;
+                break;
         }
         // if we found a color value, go on...
-        if (c!=null) {
+        if (c != null) {
             return new Color(Integer.parseInt(c, 16));
         }
-        
+
         return Color.BLACK;
     }
-    
-    
+
     /**
      * Sets the font color for the chosen font
-     * 
-     * @param c the new color value, received from the color-chooser and converted to a hex-string
+     *
+     * @param c the new color value, received from the color-chooser and
+     * converted to a hex-string
      */
     private void setFontColor(String c) {
         // get the color-value from the selectet font
         switch (jComboBoxFonts.getSelectedIndex()) {
-            case 0: mainfontcolor=c; break;
-            case 1: authorfontcolor=c; break;
-            case 2: remarksfontcolor=c; break;
-            case 3: titlefontcolor=c; break;
-            case 4: headerfont1color=c; break;
-            case 5: headerfont2color=c; break;
-            case 6: desktopheaderfontcolor=c; break;
-            case 7: desktopcommentfontcolor=c; break;
-            case 8: desktopitemheaderfontcolor=c; break;
-            case 9: desktopitemfontcolor=c; break;
-            case 10: quotefontcolor=c; break;
-            case 11: entryheaderfontcolor=c; break;
-            case 12: appendixheaderfontcolor=c; break;
-            case 13: codefontcolor=c; break;
-            default: mainfontcolor=c; break;
+            case 0:
+                mainfontcolor = c;
+                break;
+            case 1:
+                authorfontcolor = c;
+                break;
+            case 2:
+                remarksfontcolor = c;
+                break;
+            case 3:
+                titlefontcolor = c;
+                break;
+            case 4:
+                headerfont1color = c;
+                break;
+            case 5:
+                headerfont2color = c;
+                break;
+            case 6:
+                desktopheaderfontcolor = c;
+                break;
+            case 7:
+                desktopcommentfontcolor = c;
+                break;
+            case 8:
+                desktopitemheaderfontcolor = c;
+                break;
+            case 9:
+                desktopitemfontcolor = c;
+                break;
+            case 10:
+                quotefontcolor = c;
+                break;
+            case 11:
+                entryheaderfontcolor = c;
+                break;
+            case 12:
+                appendixheaderfontcolor = c;
+                break;
+            case 13:
+                codefontcolor = c;
+                break;
+            default:
+                mainfontcolor = c;
+                break;
         }
         setModified(true);
-        displayupdate=true;
+        displayupdate = true;
     }
-    
-    
+
     /**
      * Sets the font color for the chosen font
-     * 
-     * @param c the new color value, received from the color-chooser and converted to a hex-string
+     *
+     * @param c the new color value, received from the color-chooser and
+     * converted to a hex-string
      */
     private void setBackgroundColor(String c) {
         // get the color-value from the selectet font
         switch (jComboBoxBackgroundColors.getSelectedIndex()) {
-            case 0: tableheadercolor=c; break;
-            case 1: tablerowevencolor=c; break;
-            case 2: tablerowoddcolor=c; break;
-            case 3: entryheadingscolor=c; break;
-            case 4: quotecolor=c; break;
-            case 5: reflistbgcolor=c; break;
-            case 6: mainbgcolor=c; break;
-            case 7: contentbgcolor=c; break;
-            case 8: linkscolor=c; break;
-            case 9: manlinkscolor=c; break;
-            case 10: fnlinkscolor=c; break;
-            default: tableheadercolor=c; break;
+            case 0:
+                tableheadercolor = c;
+                break;
+            case 1:
+                tablerowevencolor = c;
+                break;
+            case 2:
+                tablerowoddcolor = c;
+                break;
+            case 3:
+                entryheadingscolor = c;
+                break;
+            case 4:
+                quotecolor = c;
+                break;
+            case 5:
+                reflistbgcolor = c;
+                break;
+            case 6:
+                mainbgcolor = c;
+                break;
+            case 7:
+                contentbgcolor = c;
+                break;
+            case 8:
+                linkscolor = c;
+                break;
+            case 9:
+                manlinkscolor = c;
+                break;
+            case 10:
+                fnlinkscolor = c;
+                break;
+            default:
+                tableheadercolor = c;
+                break;
         }
         setModified(true);
-        displayupdate=true;
+        displayupdate = true;
     }
-    
-    
+
     /**
      * When the user presses the cancel button, no update needed, close window
      */
     private void cancelWindow() {
-        needsupdate=false;
-        displayupdate=false;
+        needsupdate = false;
+        displayupdate = false;
         closeWindow();
     }
 
-    
     /**
-     * Occurs when the user closes the window or presses the
-     * ok button. the settings-file is then saved and the window
-     * disposed.
+     * Occurs when the user closes the window or presses the ok button. the
+     * settings-file is then saved and the window disposed.
      */
     private void closeWindow() {
         dispose();
         setVisible(false);
     }
 
-    
     /**
      * This method opens the font-choose-dialog, passing the selected font from
      * the combobox as parameter to set as initial values.
@@ -1351,48 +1572,108 @@ public class CSettingsDlg extends javax.swing.JDialog {
         Font f;
         // the order depends on the item-order of the jcombobox
         switch (jComboBoxFonts.getSelectedIndex()) {
-            case 0: f=mainfont; break;
-            case 1: f=authorfont; break;
-            case 2: f=remarksfont; break;
-            case 3: f=titlefont; break;
-            case 4: f=headerfont1; break;
-            case 5: f=headerfont2; break;
-            case 6: f=desktopheaderfont; break;
-            case 7: f=desktopcommentfont; break;
-            case 8: f=desktopitemheaderfont; break;
-            case 9: f=desktopitemfont; break;
-            case 10: f=quotefont; break;
-            case 11: f=entryheaderfont; break;
-            case 12: f=appendixheaderfont; break;
-            case 13: f=codefont; break;
-            default: f=mainfont; break;
+            case 0:
+                f = mainfont;
+                break;
+            case 1:
+                f = authorfont;
+                break;
+            case 2:
+                f = remarksfont;
+                break;
+            case 3:
+                f = titlefont;
+                break;
+            case 4:
+                f = headerfont1;
+                break;
+            case 5:
+                f = headerfont2;
+                break;
+            case 6:
+                f = desktopheaderfont;
+                break;
+            case 7:
+                f = desktopcommentfont;
+                break;
+            case 8:
+                f = desktopitemheaderfont;
+                break;
+            case 9:
+                f = desktopitemfont;
+                break;
+            case 10:
+                f = quotefont;
+                break;
+            case 11:
+                f = entryheaderfont;
+                break;
+            case 12:
+                f = appendixheaderfont;
+                break;
+            case 13:
+                f = codefont;
+                break;
+            default:
+                f = mainfont;
+                break;
         }
         // create font-chooser dialog
         if (null == fontDlg) {
-            fontDlg = new CFontChooser(null,f);
+            fontDlg = new CFontChooser(null, f);
             fontDlg.setLocationRelativeTo(this);
         }
         ZettelkastenApp.getApplication().show(fontDlg);
-    
+
         // if the user has chosen a font, set it
-        if (fontDlg.selectedFont!=null) {
+        if (fontDlg.selectedFont != null) {
             // the order depends on the item-order of the jcombobox
             switch (jComboBoxFonts.getSelectedIndex()) {
-                case 0: mainfont=fontDlg.selectedFont; break;
-                case 1: authorfont=fontDlg.selectedFont; break;
-                case 2: remarksfont=fontDlg.selectedFont; break;
-                case 3: titlefont=fontDlg.selectedFont; break;
-                case 4: headerfont1=fontDlg.selectedFont; break;
-                case 5: headerfont2=fontDlg.selectedFont; break;
-                case 6: desktopheaderfont=fontDlg.selectedFont; break;
-                case 7: desktopcommentfont=fontDlg.selectedFont; break;
-                case 8: desktopitemheaderfont=fontDlg.selectedFont; break;
-                case 9: desktopitemfont=fontDlg.selectedFont; break;
-                case 10: quotefont=fontDlg.selectedFont; break;
-                case 11: entryheaderfont=fontDlg.selectedFont; break;
-                case 12: appendixheaderfont=fontDlg.selectedFont; break;
-                case 13: codefont=fontDlg.selectedFont; break;
-                default: mainfont=fontDlg.selectedFont; break;
+                case 0:
+                    mainfont = fontDlg.selectedFont;
+                    break;
+                case 1:
+                    authorfont = fontDlg.selectedFont;
+                    break;
+                case 2:
+                    remarksfont = fontDlg.selectedFont;
+                    break;
+                case 3:
+                    titlefont = fontDlg.selectedFont;
+                    break;
+                case 4:
+                    headerfont1 = fontDlg.selectedFont;
+                    break;
+                case 5:
+                    headerfont2 = fontDlg.selectedFont;
+                    break;
+                case 6:
+                    desktopheaderfont = fontDlg.selectedFont;
+                    break;
+                case 7:
+                    desktopcommentfont = fontDlg.selectedFont;
+                    break;
+                case 8:
+                    desktopitemheaderfont = fontDlg.selectedFont;
+                    break;
+                case 9:
+                    desktopitemfont = fontDlg.selectedFont;
+                    break;
+                case 10:
+                    quotefont = fontDlg.selectedFont;
+                    break;
+                case 11:
+                    entryheaderfont = fontDlg.selectedFont;
+                    break;
+                case 12:
+                    appendixheaderfont = fontDlg.selectedFont;
+                    break;
+                case 13:
+                    codefont = fontDlg.selectedFont;
+                    break;
+                default:
+                    mainfont = fontDlg.selectedFont;
+                    break;
             }
             // and show new item-texts in combobox
             initComboboxFonts();
@@ -1400,25 +1681,24 @@ public class CSettingsDlg extends javax.swing.JDialog {
             // so the apply-button becomes enabled (this variable is connected to
             // the button's action)
             setModified(true);
-            displayupdate=true;
+            displayupdate = true;
         }
 
         // close and dispose the font-dialog
         fontDlg.dispose();
-        fontDlg=null;
+        fontDlg = null;
     }
-    
-    
+
     /**
-     * This method opens a color-chooser-dialog and let's the user choose a
-     * font color for the selected font...
+     * This method opens a color-chooser-dialog and let's the user choose a font
+     * color for the selected font...
      */
     @Action
     public void chooseMainfontColor() {
         // first, show an color-chooser-dialog and let the user choose the color
         Color color = JColorChooser.showDialog(this, resourceMap.getString("chooseColorMsg"), getFontColor());
         // if the user chose a color, proceed
-        if (color!=null) {
+        if (color != null) {
             // set color to jLabel
             jLabelColor.setBackground(color);
             // convert the color-rgb-values into a hexa-decimal-string
@@ -1433,18 +1713,17 @@ public class CSettingsDlg extends javax.swing.JDialog {
             setFontColor(output.toString());
         }
     }
-    
-    
+
     /**
-     * This method opens a color-chooser-dialog and let's the user choose a
-     * font color for the selected font...
+     * This method opens a color-chooser-dialog and let's the user choose a font
+     * color for the selected font...
      */
     @Action
     public void chooseBackgroundColor() {
         // first, show an color-chooser-dialog and let the user choose the color
         Color color = JColorChooser.showDialog(this, resourceMap.getString("chooseColorMsg"), getBackgroundColor());
         // if the user chose a color, proceed
-        if (color!=null) {
+        if (color != null) {
             // set color to jLabel
             jLabelTableColor.setBackground(color);
             // convert the color-rgb-values into a hexa-decimal-string
@@ -1459,11 +1738,11 @@ public class CSettingsDlg extends javax.swing.JDialog {
             setBackgroundColor(output.toString());
         }
     }
-    
-    
+
     /**
-     * Finally, when the user presses the apply-button, all settings are saved. this is done
-     * in this method. when all changes have been saved, the window will be closed and disposed.
+     * Finally, when the user presses the apply-button, all settings are saved.
+     * this is done in this method. when all changes have been saved, the window
+     * will be closed and disposed.
      */
     @Action(enabledProperty = "modified")
     public void applyChanges() {
@@ -1480,17 +1759,17 @@ public class CSettingsDlg extends javax.swing.JDialog {
             imgresizewidth = Integer.parseInt(val_x);
             imgresizeheight = Integer.parseInt(val_y);
             // check whether values are inside valid boundaries...
-            if ((imgresizewidth<5)||(imgresizewidth>9999)||(imgresizeheight<5)||(imgresizeheight>9999)) {
+            if ((imgresizewidth < 5) || (imgresizewidth > 9999) || (imgresizeheight < 5) || (imgresizeheight > 9999)) {
                 // tell the user which setting is wrong
-                JOptionPane.showMessageDialog(null,resourceMap.getString("errImgSizeMsg"),resourceMap.getString("errImgSizeTitle"),JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(null, resourceMap.getString("errImgSizeMsg"), resourceMap.getString("errImgSizeTitle"), JOptionPane.PLAIN_MESSAGE);
                 // select the appropriate tabbed pane
                 jTabbedPane1.setSelectedIndex(1);
                 // and set input focus to textfield
                 jFormattedTextFieldImgWidth.requestFocusInWindow();
                 return;
             }
+        } catch (NumberFormatException e) {
         }
-        catch (NumberFormatException e) { }
         // get the value for the cell spacing and check for valid input
         val_x = jSpinnerDistHor.getValue().toString();
         // get the value for the cell spacing and check for valid input
@@ -1503,22 +1782,24 @@ public class CSettingsDlg extends javax.swing.JDialog {
             spacinghor = Integer.parseInt(val_x);
             spacingver = Integer.parseInt(val_y);
             // check whether values are inside valid boundaries...
-            if ((spacinghor<0)||(spacinghor>25)||(spacingver<0)||(spacingver>25)) {
+            if ((spacinghor < 0) || (spacinghor > 25) || (spacingver < 0) || (spacingver > 25)) {
                 // tell the user which setting is wrong
-                JOptionPane.showMessageDialog(null,resourceMap.getString("errSpacingSizeMsg"),resourceMap.getString("errSpacingSizeTitle"),JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(null, resourceMap.getString("errSpacingSizeMsg"), resourceMap.getString("errSpacingSizeTitle"), JOptionPane.PLAIN_MESSAGE);
                 // select the appropriate tabbed pane
                 jTabbedPane1.setSelectedIndex(1);
                 // and set input focus to textfield
                 jSpinnerDistHor.requestFocusInWindow();
                 return;
             }
+        } catch (NumberFormatException e) {
         }
-        catch (NumberFormatException e) { }
         // check whether changes to winreg have been made
-        if (registryChanges) registerFileExtension();
+        if (registryChanges) {
+            registerFileExtension();
+        }
         // save all the settings
         int selectedlaf = jComboBoxLAF.getSelectedIndex();
-        String laf = (selectedlaf>=installed_laf.length) ? Constants.seaGlassLookAndFeelClassName : installed_laf[jComboBoxLAF.getSelectedIndex()].getClassName();
+        String laf = (selectedlaf >= installed_laf.length) ? Constants.seaGlassLookAndFeelClassName : installed_laf[jComboBoxLAF.getSelectedIndex()].getClassName();
         settings.setLookAndFeel(laf);
         settings.setShowAtStartup(jComboBoxShowAtStartup.getSelectedIndex());
         settings.setManualTimestamp(jComboBoxManualTimestamp.getSelectedIndex());
@@ -1535,6 +1816,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         settings.setTextfieldFontSize(jSliderTextfields.getValue());
         settings.setAutoBackup(jCheckBoxAutobackup.isSelected());
         settings.setSupFootnote(jCheckBoxFootnote.isSelected());
+        settings.setFootnoteBraces(jCheckBoxFootnoteBraces.isSelected());
         settings.setJumpFootnote(jCheckBoxJumpToTab.isSelected());
         settings.setUseCustomCSS(Settings.CUSTOM_CSS_ENTRY, jCheckBoxEntryCSS.isSelected());
         settings.setUseCustomCSS(Settings.CUSTOM_CSS_DESKTOP, jCheckBoxDesktopCSS.isSelected());
@@ -1566,7 +1848,9 @@ public class CSettingsDlg extends javax.swing.JDialog {
         settings.setTableRowOddColor(tablerowoddcolor);
         settings.setContentBackgroundColor(contentbgcolor);
         settings.setMainBackgroundColor(mainbgcolor);
-        if (jCheckBoxExtraBackup.isSelected()) settings.setExtraBackupPath(jTextFieldBackupPath.getText());
+        if (jCheckBoxExtraBackup.isSelected()) {
+            settings.setExtraBackupPath(jTextFieldBackupPath.getText());
+        }
         // only save settings to user paths if changes have been made
         if (userPathChanges) {
             dataObj.setUserAttachmentPath(jTextFieldAttachmentPath.getText());
@@ -1576,10 +1860,18 @@ public class CSettingsDlg extends javax.swing.JDialog {
             settings.setPandocPath(jTextFieldPandoc.getText());
         }
         switch (jComboBoxLocale.getSelectedIndex()) {
-            case 0: settings.setLanguage("en"); break;
-            case 1: settings.setLanguage("de"); break;
-            case 2: settings.setLanguage("es"); break;
-            default: settings.setLanguage("en"); break;
+            case 0:
+                settings.setLanguage("en");
+                break;
+            case 1:
+                settings.setLanguage("de");
+                break;
+            case 2:
+                settings.setLanguage("es");
+                break;
+            default:
+                settings.setLanguage("en");
+                break;
         }
         // save listview font
         settings.setTableFont(tablefont.getFamily());
@@ -1588,8 +1880,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
         String[] styleandweight = getStyleAndWeight(mainfont);
         settings.setMainfont(mainfont.getFamily(), Settings.FONTNAME);
         settings.setMainfont(String.valueOf(mainfont.getSize()), Settings.FONTSIZE);
-        settings.setMainfont(styleandweight[0],Settings.FONTSTYLE);
-        settings.setMainfont(styleandweight[1],Settings.FONTWEIGHT);
+        settings.setMainfont(styleandweight[0], Settings.FONTSTYLE);
+        settings.setMainfont(styleandweight[1], Settings.FONTWEIGHT);
         settings.setMainfont(mainfontcolor, Settings.FONTCOLOR);
         // save quotefont
         settings.setQuoteFont(quotefont.getFamily(), Settings.FONTNAME);
@@ -1603,78 +1895,78 @@ public class CSettingsDlg extends javax.swing.JDialog {
         styleandweight = getStyleAndWeight(authorfont);
         settings.setAuthorFont(authorfont.getFamily(), Settings.FONTNAME);
         settings.setAuthorFont(String.valueOf(authorfont.getSize()), Settings.FONTSIZE);
-        settings.setAuthorFont(styleandweight[0],Settings.FONTSTYLE);
-        settings.setAuthorFont(styleandweight[1],Settings.FONTWEIGHT);
+        settings.setAuthorFont(styleandweight[0], Settings.FONTSTYLE);
+        settings.setAuthorFont(styleandweight[1], Settings.FONTWEIGHT);
         settings.setAuthorFont(authorfontcolor, Settings.FONTCOLOR);
         // save codefont
         styleandweight = getStyleAndWeight(codefont);
         settings.setCodeFont(codefont.getFamily(), Settings.FONTNAME);
         settings.setCodeFont(String.valueOf(codefont.getSize()), Settings.FONTSIZE);
-        settings.setCodeFont(styleandweight[0],Settings.FONTSTYLE);
-        settings.setCodeFont(styleandweight[1],Settings.FONTWEIGHT);
+        settings.setCodeFont(styleandweight[0], Settings.FONTSTYLE);
+        settings.setCodeFont(styleandweight[1], Settings.FONTWEIGHT);
         settings.setCodeFont(codefontcolor, Settings.FONTCOLOR);
         // save remarksfont
         styleandweight = getStyleAndWeight(remarksfont);
         settings.setRemarksFont(remarksfont.getFamily(), Settings.FONTNAME);
         settings.setRemarksFont(String.valueOf(remarksfont.getSize()), Settings.FONTSIZE);
-        settings.setRemarksFont(styleandweight[0],Settings.FONTSTYLE);
-        settings.setRemarksFont(styleandweight[1],Settings.FONTWEIGHT);
+        settings.setRemarksFont(styleandweight[0], Settings.FONTSTYLE);
+        settings.setRemarksFont(styleandweight[1], Settings.FONTWEIGHT);
         settings.setRemarksFont(remarksfontcolor, Settings.FONTCOLOR);
         // save titlefont
         styleandweight = getStyleAndWeight(titlefont);
         settings.setTitleFont(titlefont.getFamily(), Settings.FONTNAME);
         settings.setTitleFont(String.valueOf(titlefont.getSize()), Settings.FONTSIZE);
-        settings.setTitleFont(styleandweight[0],Settings.FONTSTYLE);
-        settings.setTitleFont(styleandweight[1],Settings.FONTWEIGHT);
+        settings.setTitleFont(styleandweight[0], Settings.FONTSTYLE);
+        settings.setTitleFont(styleandweight[1], Settings.FONTWEIGHT);
         settings.setTitleFont(titlefontcolor, Settings.FONTCOLOR);
         // save titlefont
         styleandweight = getStyleAndWeight(appendixheaderfont);
         settings.setAppendixHeaderFont(appendixheaderfont.getFamily(), Settings.FONTNAME);
         settings.setAppendixHeaderFont(String.valueOf(appendixheaderfont.getSize()), Settings.FONTSIZE);
-        settings.setAppendixHeaderFont(styleandweight[0],Settings.FONTSTYLE);
-        settings.setAppendixHeaderFont(styleandweight[1],Settings.FONTWEIGHT);
+        settings.setAppendixHeaderFont(styleandweight[0], Settings.FONTSTYLE);
+        settings.setAppendixHeaderFont(styleandweight[1], Settings.FONTWEIGHT);
         settings.setAppendixHeaderFont(appendixheaderfontcolor, Settings.FONTCOLOR);
         // save header1-font
         styleandweight = getStyleAndWeight(headerfont1);
         settings.setHeaderfont1(headerfont1.getFamily(), Settings.FONTNAME);
         settings.setHeaderfont1(String.valueOf(headerfont1.getSize()), Settings.FONTSIZE);
-        settings.setHeaderfont1(styleandweight[0],Settings.FONTSTYLE);
-        settings.setHeaderfont1(styleandweight[1],Settings.FONTWEIGHT);
+        settings.setHeaderfont1(styleandweight[0], Settings.FONTSTYLE);
+        settings.setHeaderfont1(styleandweight[1], Settings.FONTWEIGHT);
         settings.setHeaderfont1(headerfont1color, Settings.FONTCOLOR);
         // save header2-font
         styleandweight = getStyleAndWeight(headerfont2);
         settings.setHeaderfont2(headerfont2.getFamily(), Settings.FONTNAME);
         settings.setHeaderfont2(String.valueOf(headerfont2.getSize()), Settings.FONTSIZE);
-        settings.setHeaderfont2(styleandweight[0],Settings.FONTSTYLE);
-        settings.setHeaderfont2(styleandweight[1],Settings.FONTWEIGHT);
+        settings.setHeaderfont2(styleandweight[0], Settings.FONTSTYLE);
+        settings.setHeaderfont2(styleandweight[1], Settings.FONTWEIGHT);
         settings.setHeaderfont2(headerfont2color, Settings.FONTCOLOR);
         // save desktopheader-font
         styleandweight = getStyleAndWeight(desktopheaderfont);
         settings.setDesktopHeaderfont(desktopheaderfont.getFamily(), Settings.FONTNAME);
         settings.setDesktopHeaderfont(String.valueOf(desktopheaderfont.getSize()), Settings.FONTSIZE);
-        settings.setDesktopHeaderfont(styleandweight[0],Settings.FONTSTYLE);
-        settings.setDesktopHeaderfont(styleandweight[1],Settings.FONTWEIGHT);
+        settings.setDesktopHeaderfont(styleandweight[0], Settings.FONTSTYLE);
+        settings.setDesktopHeaderfont(styleandweight[1], Settings.FONTWEIGHT);
         settings.setDesktopHeaderfont(desktopheaderfontcolor, Settings.FONTCOLOR);
         // save desktopcomment-font
         styleandweight = getStyleAndWeight(desktopcommentfont);
         settings.setDesktopCommentfont(desktopcommentfont.getFamily(), Settings.FONTNAME);
         settings.setDesktopCommentfont(String.valueOf(desktopcommentfont.getSize()), Settings.FONTSIZE);
-        settings.setDesktopCommentfont(styleandweight[0],Settings.FONTSTYLE);
-        settings.setDesktopCommentfont(styleandweight[1],Settings.FONTWEIGHT);
+        settings.setDesktopCommentfont(styleandweight[0], Settings.FONTSTYLE);
+        settings.setDesktopCommentfont(styleandweight[1], Settings.FONTWEIGHT);
         settings.setDesktopCommentfont(desktopcommentfontcolor, Settings.FONTCOLOR);
         // save desktopitemheader-font
         styleandweight = getStyleAndWeight(desktopitemheaderfont);
         settings.setDesktopItemHeaderfont(desktopitemheaderfont.getFamily(), Settings.FONTNAME);
         settings.setDesktopItemHeaderfont(String.valueOf(desktopitemheaderfont.getSize()), Settings.FONTSIZE);
-        settings.setDesktopItemHeaderfont(styleandweight[0],Settings.FONTSTYLE);
-        settings.setDesktopItemHeaderfont(styleandweight[1],Settings.FONTWEIGHT);
+        settings.setDesktopItemHeaderfont(styleandweight[0], Settings.FONTSTYLE);
+        settings.setDesktopItemHeaderfont(styleandweight[1], Settings.FONTWEIGHT);
         settings.setDesktopItemHeaderfont(desktopitemheaderfontcolor, Settings.FONTCOLOR);
         // save desktopitem-font
         styleandweight = getStyleAndWeight(desktopitemfont);
         settings.setDesktopItemfont(desktopitemfont.getFamily(), Settings.FONTNAME);
         settings.setDesktopItemfont(String.valueOf(desktopitemfont.getSize()), Settings.FONTSIZE);
-        settings.setDesktopItemfont(styleandweight[0],Settings.FONTSTYLE);
-        settings.setDesktopItemfont(styleandweight[1],Settings.FONTWEIGHT);
+        settings.setDesktopItemfont(styleandweight[0], Settings.FONTSTYLE);
+        settings.setDesktopItemfont(styleandweight[1], Settings.FONTWEIGHT);
         settings.setDesktopItemfont(desktopitemfontcolor, Settings.FONTCOLOR);
         // save the changes to the settings-file
         savesettingok = settings.saveSettings();
@@ -1683,42 +1975,41 @@ public class CSettingsDlg extends javax.swing.JDialog {
         // and close window
         closeWindow();
     }
-    
 
     /**
-     * Since the font-properties like plain, bold etc. are different in CSS-definitions,
-     * we convert the Font-properties to CSS-properties here. We need this for setting
-     * up the HTML-page that displays entries. The formatting is done via style-tags and CSS,
-     * so we need the CSS-definitions...
-     * 
-     * @param f the font from which we want to retrieve the style-properties in CSS-values
-     * @return a string array with two fields: field one holding the css-font-style-property,
-     * and the second field holding the the css-font-weight-property.
+     * Since the font-properties like plain, bold etc. are different in
+     * CSS-definitions, we convert the Font-properties to CSS-properties here.
+     * We need this for setting up the HTML-page that displays entries. The
+     * formatting is done via style-tags and CSS, so we need the
+     * CSS-definitions...
+     *
+     * @param f the font from which we want to retrieve the style-properties in
+     * CSS-values
+     * @return a string array with two fields: field one holding the
+     * css-font-style-property, and the second field holding the the
+     * css-font-weight-property.
      */
     private String[] getStyleAndWeight(Font f) {
-        String style="normal";
-        String weight="normal";
-        if (Font.PLAIN==f.getStyle()) {
-            style="normal";
-            weight="normal";
-        }
-        else if (Font.BOLD==f.getStyle()) {
-            style="normal";
-            weight="bold";
-        }
-        else if (Font.ITALIC==f.getStyle()) {
-            style="italic";
-            weight="normal";
-        }
-        else if ((Font.BOLD+Font.ITALIC)==f.getStyle()) {
-            style="italic";
-            weight="bold";
+        String style = "normal";
+        String weight = "normal";
+        if (Font.PLAIN == f.getStyle()) {
+            style = "normal";
+            weight = "normal";
+        } else if (Font.BOLD == f.getStyle()) {
+            style = "normal";
+            weight = "bold";
+        } else if (Font.ITALIC == f.getStyle()) {
+            style = "italic";
+            weight = "normal";
+        } else if ((Font.BOLD + Font.ITALIC) == f.getStyle()) {
+            style = "italic";
+            weight = "bold";
         }
         // prepare return value
         String[] retval = new String[2];
         retval[0] = style;
         retval[1] = weight;
-        
+
         return retval;
     }
     
@@ -1777,6 +2068,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jCheckBoxShowTableBorder = new javax.swing.JCheckBox();
         jCheckBoxShowEntryHeadline = new javax.swing.JCheckBox();
         jCheckBoxUseMacBackgroundColor = new javax.swing.JCheckBox();
+        jCheckBoxFootnoteBraces = new javax.swing.JCheckBox();
         jPanel5 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jComboBoxFonts = new javax.swing.JComboBox();
@@ -2058,6 +2350,9 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jCheckBoxUseMacBackgroundColor.setText(resourceMap.getString("jCheckBoxUseMacBackgroundColor.text")); // NOI18N
         jCheckBoxUseMacBackgroundColor.setName("jCheckBoxUseMacBackgroundColor"); // NOI18N
 
+        jCheckBoxFootnoteBraces.setText(resourceMap.getString("jCheckBoxFootnoteBraces.text")); // NOI18N
+        jCheckBoxFootnoteBraces.setName("jCheckBoxFootnoteBraces"); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -2065,6 +2360,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBoxFootnoteBraces)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(29, 29, 29)
                         .addComponent(jCheckBoxShowAllIcons))
@@ -2148,6 +2444,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
                 .addComponent(jCheckBoxShowTableBorder)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBoxFootnote)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxFootnoteBraces)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBoxJumpToTab)
                 .addContainerGap())
@@ -2694,6 +2992,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
     private javax.swing.JCheckBox jCheckBoxExtraBackup;
     private javax.swing.JCheckBox jCheckBoxFillNewEntries;
     private javax.swing.JCheckBox jCheckBoxFootnote;
+    private javax.swing.JCheckBox jCheckBoxFootnoteBraces;
     private javax.swing.JCheckBox jCheckBoxIconText;
     private javax.swing.JCheckBox jCheckBoxImgResize;
     private javax.swing.JCheckBox jCheckBoxJumpToTab;

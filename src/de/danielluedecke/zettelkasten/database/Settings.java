@@ -248,6 +248,7 @@ public class Settings {
     private static final String SETTING_SEARCHCOMBOTIME = "searchcombotime";
     private static final String SETTING_SEARCHDATETIME = "searchdatetime";
     private static final String SETTING_SUPFOOTNOTE = "supfootnote";
+    private static final String SETTING_FOOTNOTEBRACES = "footnotebraces";
     private static final String SETTING_JUMPFOOTNOTE = "jumpfootnote";
     private static final String SETTING_AUTOUPDATE = "autoupdate";
     private static final String SETTING_AUTONIGHTLYUPDATE = "autonightlyupdate";
@@ -690,6 +691,7 @@ public class Settings {
         genericElementInit(SETTING_SHOWALLICONS, "1");
         genericElementInit(SETTING_SHOWENTRYHEADLINE, "1");
         genericElementInit(SETTING_ICONTHEME, "0");
+        genericElementInit(SETTING_FOOTNOTEBRACES, "1");
         genericElementInit(SETTING_SHOWUPDATEHINTVERSION, "0");
         genericElementInit(SETTING_USECUSTOMCSSENTRY, "0");
         genericElementInit(SETTING_USECUSTOMCSSDESKTOP, "0");
@@ -2868,11 +2870,7 @@ public class Settings {
      * @return {@code true} if footnote should be superscripted
      */
     public boolean getSupFootnote() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SUPFOOTNOTE);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_SUPFOOTNOTE);
     }
 
     /**
@@ -2882,14 +2880,17 @@ public class Settings {
      * @param val use true, if footnote should be superscripted
      */
     public void setSupFootnote(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SUPFOOTNOTE);
-        if (null == el) {
-            el = new Element(SETTING_SUPFOOTNOTE);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_SUPFOOTNOTE, val);
     }
 
+    public boolean getFootnoteBraces() {
+        return genericBooleanGetter(SETTING_FOOTNOTEBRACES);
+    }
+
+    public void setFootnoteBraces(boolean val) {
+        genericBooleanSetter(SETTING_FOOTNOTEBRACES, val);
+    }
+    
     /**
      * Gets the setting whether a click on the footnotes should open the tab with the authorlist and
      * select the related author or not.
@@ -2897,11 +2898,7 @@ public class Settings {
      * @return {@code true} if footnote should show the related author in the tabbed pane
      */
     public boolean getJumpFootnote() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_JUMPFOOTNOTE);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_JUMPFOOTNOTE);
     }
 
     /**
@@ -2911,12 +2908,7 @@ public class Settings {
      * @param val {@code true} if footnote should show the related author in the tabbed pane
      */
     public void setJumpFootnote(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_JUMPFOOTNOTE);
-        if (null == el) {
-            el = new Element(SETTING_JUMPFOOTNOTE);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_JUMPFOOTNOTE, val);
     }
 
     /**
@@ -2926,11 +2918,7 @@ public class Settings {
      * @return {@code true} if search should look for entries with a certain date (timestamp)
      */
     public boolean getSearchTime() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHTIME);
-        if (el != null) {
-            return el.getText().equals("1");
-        }
-        return false;
+        return genericBooleanGetter(SETTING_SEARCHTIME);
     }
 
     /**
@@ -2940,12 +2928,7 @@ public class Settings {
      * @param val {@code true} if search should look for entries with a certain date (timestamp)
      */
     public void setSearchTime(boolean val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHTIME);
-        if (null == el) {
-            el = new Element(SETTING_SEARCHTIME);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText((val) ? "1" : "0");
+        genericBooleanSetter(SETTING_SEARCHTIME, val);
     }
 
     /**
