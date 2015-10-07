@@ -55,13 +55,14 @@ import org.jdom2.output.XMLOutputter;
  * @author Luedeke
  */
 public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void> {
+
     /**
-     * Reference to the CDaten object, which contains the XML data of the Zettelkasten
-     * will be passed as parameter in the constructor, see below
+     * Reference to the CDaten object, which contains the XML data of the
+     * Zettelkasten will be passed as parameter in the constructor, see below
      */
     private final Daten dataObj;
     /**
-     * 
+     *
      */
     private final Bookmarks bookmarksObj;
     private final BibTex bibtexObj;
@@ -83,7 +84,7 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
     private boolean exportOk;
     private final boolean exportbibtex;
     /**
-     * 
+     *
      */
     private boolean showOkMessage = true;
     /**
@@ -94,15 +95,15 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
     /**
      * get the strings for file descriptions from the resource map
      */
-    private final org.jdesktop.application.ResourceMap resourceMap = 
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(ExportTask.class);
+    private final org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(ExportTask.class);
 
     public ExportToZknTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label,
             TasksData td, Daten d, Bookmarks bm, BibTex bib, boolean exportBib, File fp, ArrayList<Object> ee) {
         super(app);
         dataObj = d;
-        bookmarksObj =bm;
+        bookmarksObj = bm;
         bibtexObj = bib;
         filepath = fp;
         exportentries = ee;
@@ -111,31 +112,32 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
         parentDialog = parent;
         msgLabel = label;
         exportbibtex = exportBib;
-        
+
         // the variable "exportentries" stores all entry-numbers of those entries that should be exported.
         // if this array is null, we assume that *all* entries have to be exported. thus, insert
         // all entry-numbers here
-        if (null==exportentries) {
+        if (null == exportentries) {
             exportentries = new ArrayList<>();
             // copy all entry-numbers to array. remember that the entrynumbers range from 1 to site of file.
-            for (int cnt=0; cnt<dataObj.getCount(Daten.ZKNCOUNT); cnt++) {
+            for (int cnt = 0; cnt < dataObj.getCount(Daten.ZKNCOUNT); cnt++) {
                 // only add entries that are not empty
-                if (!dataObj.isEmpty(cnt+1)) {
-                    exportentries.add(cnt+1);
+                if (!dataObj.isEmpty(cnt + 1)) {
+                    exportentries.add(cnt + 1);
                 }
             }
         }
-        
+
         // show status text
         msgLabel.setText(resourceMap.getString("msg1"));
     }
+
     @Override
     protected Object doInBackground() {
         // Your Task's code here.  This method runs
         // on a background thread, so don't reference
         // the Swing GUI from here.
         // prevent task from processing when the file path is incorrect
-        
+
         // if no file exists, exit task
         if (null == filepath) {
             showOkMessage = false;
@@ -144,9 +146,9 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
         // check whether file already exists
         if (filepath.exists()) {
             // file exists, ask user to overwrite it...
-            int optionDocExists = JOptionPane.showConfirmDialog(null, resourceMap.getString("askForOverwriteFileMsg","",filepath.getName()), resourceMap.getString("askForOverwriteFileTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+            int optionDocExists = JOptionPane.showConfirmDialog(null, resourceMap.getString("askForOverwriteFileMsg", "", filepath.getName()), resourceMap.getString("askForOverwriteFileTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
             // if the user does *not* choose to overwrite, quit...
-            if (optionDocExists!=JOptionPane.YES_OPTION) {
+            if (optionDocExists != JOptionPane.YES_OPTION) {
                 // don't show "export was OK" message in main frame
                 showOkMessage = false;
                 return null;
@@ -163,7 +165,8 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
                 int zettelnummer = Integer.parseInt(exportentrie.toString());
                 // and add it to list.
                 entrylist.add(zettelnummer);
-            }catch (NumberFormatException e) {}
+            } catch (NumberFormatException e) {
+            }
         }
         // sort array
         Collections.sort(entrylist);
@@ -172,7 +175,7 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
         // create export-XML-file for bookmarks
         Document bookmarks = new Document(new Element("bookmarks"));
         // iterate all bookmarks
-        for (int cnt=0; cnt<bookmarksObj.getCount(); cnt++) {
+        for (int cnt = 0; cnt < bookmarksObj.getCount(); cnt++) {
             // retrieve each bookmarked entry number
             int bookmarkpos = bookmarksObj.getBookmarkEntry(cnt);
             // check whether bookmarked entry is in export list
@@ -189,13 +192,14 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
                 bookmarks.getRootElement().addContent(bookmark);
             }
         }
-        
+
         // TODO suchergebnisse nummern in id's umwandeln und mitexportieren
         // TODO schreibtisch-Daten: zettel-nummern in id's umwandeln und mitexportieren
-        
         // export data to zkn3-file
+        ZipOutputStream zip = null;
         // open the outputstream
-        try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(filepath))) {
+        try {
+            zip = new ZipOutputStream(new FileOutputStream(filepath));
             // I first wanted to use a pretty output format, so advanced users who
             // extract the data file can better watch the xml-files. but somehow, this
             // lead to an error within the method "retrieveElement" in the class "CDaten.java",
@@ -220,12 +224,22 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
             zip.putNextEntry(new ZipEntry(Constants.bookmarksFileName));
             out.output(bookmarks, zip);
             // close zip-stream
-        }
-        catch (IOException | SecurityException e) {
+        } catch (IOException | SecurityException e) {
             // log error-message
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             // change error-indicator
             exportOk = false;
+        } finally {
+            try {
+                if (zip != null) {
+                    zip.close();
+                }
+            } catch (IOException e) {
+                // log error-message
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+                // change error-indicator
+                exportOk = false;
+            }
         }
         // if the user requested a bibtex-export, do this now
         if (exportbibtex) {
@@ -234,14 +248,16 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
             // write bibtex file
             ExportTools.writeBibTexFile(dataObj, bibtexObj, exportentries, filepath, resourceMap);
         }
-        
+
         return null;  // return your result
     }
+
     @Override
     protected void succeeded(Object result) {
         // Runs on the EDT.  Update the GUI based on
         // the result computed by doInBackground().
     }
+
     @Override
     protected void finished() {
         super.finished();

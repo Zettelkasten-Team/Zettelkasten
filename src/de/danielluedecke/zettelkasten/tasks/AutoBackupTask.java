@@ -95,6 +95,8 @@ public class AutoBackupTask extends org.jdesktop.application.Task<Object, Void> 
         }
         // create backup-file, with new extension
         File backup = new File(newfp.substring(0, lastDot) + ".zkb3");
+        // create additional backup directory
+        File backup_dir = new File(newfp.substring(0, lastDot) + "_zkb3");
         // and copy original file to backupfile
         // if the user did not cancel and the destination file does not already exist, go on here
         // tell programm that task is running
@@ -112,54 +114,53 @@ public class AutoBackupTask extends org.jdesktop.application.Task<Object, Void> 
                 Constants.zknlogger.log(Level.SEVERE, "Autobackup-file is write-protected. Write protection could not be removed!");
             }
         }
+        ByteArrayOutputStream bout = null;
+        ZipOutputStream zip = null;
+        // open the outputstream
         try {
-            ByteArrayOutputStream bout;
-            // open the outputstream
-            try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(backup))) {
-                // I first wanted to use a pretty output format, so advanced users who
-                // extract the data file can better watch the xml-files. but somehow, this
-                // lead to an error within the method "retrieveElement" in the class "CDaten.java",
-                // saying the a org.jdom.text cannot be converted to org.jdom.element?!?
-                // XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
-                XMLOutputter out = new XMLOutputter();
-                // save old statustext
-                oldmsg = statusMsgLabel.getText();
-                // show status text
-                statusMsgLabel.setText(rm.getString("createAutoBackupMsg"));
-                // save metainformation
-                zip.putNextEntry(new ZipEntry(Constants.metainfFileName));
-                out.output(dataObj.getMetaInformationData(), zip);
-                // save main data.
-                zip.putNextEntry(new ZipEntry(Constants.zknFileName));
-                out.output(dataObj.getZknData(), zip);
-                // save authors
-                zip.putNextEntry(new ZipEntry(Constants.authorFileName));
-                out.output(dataObj.getAuthorData(), zip);
-                // save keywords
-                zip.putNextEntry(new ZipEntry(Constants.keywordFileName));
-                out.output(dataObj.getKeywordData(), zip);
-                // save bookmarks
-                zip.putNextEntry(new ZipEntry(Constants.bookmarksFileName));
-                out.output(bookmarksObj.getBookmarkData(), zip);
-                // save searchrequests
-                zip.putNextEntry(new ZipEntry(Constants.searchrequestsFileName));
-                out.output(searchObj.getSearchData(), zip);
-                // save synonyms
-                zip.putNextEntry(new ZipEntry(Constants.synonymsFileName));
-                out.output(synonymsObj.getDocument(), zip);
-                // save bibtex file
-                zip.putNextEntry(new ZipEntry(Constants.bibTexFileName));
-                bout = bibtexObj.saveFile();
-                bout.writeTo(zip);
-                // save desktops
-                zip.putNextEntry(new ZipEntry(Constants.desktopFileName));
-                out.output(desktopObj.getDesktopData(), zip);
-                zip.putNextEntry(new ZipEntry(Constants.desktopModifiedEntriesFileName));
-                out.output(desktopObj.getDesktopModifiedEntriesData(), zip);
-                zip.putNextEntry(new ZipEntry(Constants.desktopNotesFileName));
-                out.output(desktopObj.getDesktopNotesData(), zip);
-            }
-            bout.close();
+            zip = new ZipOutputStream(new FileOutputStream(backup));
+            // I first wanted to use a pretty output format, so advanced users who
+            // extract the data file can better watch the xml-files. but somehow, this
+            // lead to an error within the method "retrieveElement" in the class "CDaten.java",
+            // saying the a org.jdom.text cannot be converted to org.jdom.element?!?
+            // XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
+            XMLOutputter out = new XMLOutputter();
+            // save old statustext
+            oldmsg = statusMsgLabel.getText();
+            // show status text
+            statusMsgLabel.setText(rm.getString("createAutoBackupMsg"));
+            // save metainformation
+            zip.putNextEntry(new ZipEntry(Constants.metainfFileName));
+            out.output(dataObj.getMetaInformationData(), zip);
+            // save main data.
+            zip.putNextEntry(new ZipEntry(Constants.zknFileName));
+            out.output(dataObj.getZknData(), zip);
+            // save authors
+            zip.putNextEntry(new ZipEntry(Constants.authorFileName));
+            out.output(dataObj.getAuthorData(), zip);
+            // save keywords
+            zip.putNextEntry(new ZipEntry(Constants.keywordFileName));
+            out.output(dataObj.getKeywordData(), zip);
+            // save bookmarks
+            zip.putNextEntry(new ZipEntry(Constants.bookmarksFileName));
+            out.output(bookmarksObj.getBookmarkData(), zip);
+            // save searchrequests
+            zip.putNextEntry(new ZipEntry(Constants.searchrequestsFileName));
+            out.output(searchObj.getSearchData(), zip);
+            // save synonyms
+            zip.putNextEntry(new ZipEntry(Constants.synonymsFileName));
+            out.output(synonymsObj.getDocument(), zip);
+            // save bibtex file
+            zip.putNextEntry(new ZipEntry(Constants.bibTexFileName));
+            bout = bibtexObj.saveFile();
+            bout.writeTo(zip);
+            // save desktops
+            zip.putNextEntry(new ZipEntry(Constants.desktopFileName));
+            out.output(desktopObj.getDesktopData(), zip);
+            zip.putNextEntry(new ZipEntry(Constants.desktopModifiedEntriesFileName));
+            out.output(desktopObj.getDesktopModifiedEntriesData(), zip);
+            zip.putNextEntry(new ZipEntry(Constants.desktopNotesFileName));
+            out.output(desktopObj.getDesktopNotesData(), zip);
         } catch (IOException e) {
             // log error message
             Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
@@ -210,6 +211,17 @@ public class AutoBackupTask extends org.jdesktop.application.Task<Object, Void> 
                 } catch (IOException e2) {
                     Constants.zknlogger.log(Level.SEVERE, e2.getLocalizedMessage());
                 }
+            }
+        } finally {
+            try {
+                if (bout != null) {
+                    bout.close();
+                }
+                if (zip != null) {
+                    zip.close();
+                }
+            } catch (IOException e) {
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             }
         }
 

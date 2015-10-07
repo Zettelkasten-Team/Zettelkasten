@@ -44,7 +44,7 @@ public class CheckForUpdateTask extends org.jdesktop.application.Task<Object, Vo
 
     protected String accessUpdateFile(URL updatetext) {
         // input stream that will read the update text
-        InputStream is;
+        InputStream is = null;
         // stringbuilder that will contain the content of the update-file
         StringBuilder updateinfo = new StringBuilder("");
         try {
@@ -64,6 +64,14 @@ public class CheckForUpdateTask extends org.jdesktop.application.Task<Object, Vo
             Constants.zknlogger.log(Level.INFO, "No access to Zettelkasten-Website. Automatic update-check failed.");
             updateavailable = false;
             return null;
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                } 
+            }catch(IOException e) {
+                Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
+            }
         }
         return updateinfo.toString();
     }

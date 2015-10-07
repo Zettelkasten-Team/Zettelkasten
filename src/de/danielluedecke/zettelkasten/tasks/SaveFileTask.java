@@ -55,6 +55,7 @@ import java.io.ByteArrayOutputStream;
  * @author danielludecke
  */
 public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
+
     /**
      * Daten object, which contains the XML data of the Zettelkasten
      */
@@ -70,12 +71,13 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
     private final Synonyms synonymsObj;
     private final BibTex bibtexObj;
     /**
-     * Settings object, which contains the setting, for instance the file paths etc...
+     * Settings object, which contains the setting, for instance the file paths
+     * etc...
      */
     private final Settings settingsObj;
     /**
-     * SearchRequests object, which contains the XML data of the searchrequests and -result
-     * that are related with this data file
+     * SearchRequests object, which contains the XML data of the searchrequests
+     * and -result that are related with this data file
      */
     private final SearchRequests searchrequestsObj;
 
@@ -86,9 +88,9 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private final org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(SaveFileTask.class);
+    private final org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(SaveFileTask.class);
 
     SaveFileTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, Bookmarks bm, SearchRequests sr, DesktopData dk, Synonyms sy, Settings s, BibTex bib) {
         // Runs on the EDT.  Copy GUI state that
@@ -99,7 +101,7 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
         bibtexObj = bib;
         synonymsObj = sy;
         bookmarkObj = bm;
-        searchrequestsObj=sr;
+        searchrequestsObj = sr;
         desktopObj = dk;
         settingsObj = s;
         parentDialog = parent;
@@ -107,6 +109,7 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
         // show status text
         msgLabel.setText(resourceMap.getString("msg1"));
     }
+
     @Override
     protected Object doInBackground() {
         // Your Task's code here.  This method runs
@@ -126,17 +129,16 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
             // ask whether write protection should be removed
             int option = JOptionPane.showConfirmDialog(null, resourceMap.getString("removeWriteProtectMsg"), resourceMap.getString("removeWriteProtectTitle"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
             // user cancelled dialog
-            if (JOptionPane.CANCEL_OPTION==option || JOptionPane.CLOSED_OPTION==option || JOptionPane.NO_OPTION==option) {
+            if (JOptionPane.CANCEL_OPTION == option || JOptionPane.CLOSED_OPTION == option || JOptionPane.NO_OPTION == option) {
                 saveOk = false;
                 return null;
             }
             // check return result
-            if (JOptionPane.YES_OPTION==option) {
+            if (JOptionPane.YES_OPTION == option) {
                 try {
                     // try to remove write protection
                     fp.setWritable(true);
-                }
-                catch (SecurityException ex) {
+                } catch (SecurityException ex) {
                     // log error-message
                     Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
                     Constants.zknlogger.log(Level.SEVERE, "File is write-protected. Write protection could not be removed!");
@@ -147,9 +149,11 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
         }
         // log file path
         Constants.zknlogger.log(Level.INFO, "Saving file to {0}", fp.toString());
-        ByteArrayOutputStream bout;
-         // open the outputstream
-        try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(fp))) {
+        ByteArrayOutputStream bout = null;
+        ZipOutputStream zip = null;
+        // open the outputstream
+        try {
+            zip = new ZipOutputStream(new FileOutputStream(fp));
             // I first wanted to use a pretty output format, so advanced users who
             // extract the data file can better watch the xml-files. but somehow, this
             // lead to an error within the method "retrieveElement" in the class "Daten.java",
@@ -202,36 +206,43 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
             out.output(desktopObj.getDesktopModifiedEntriesData(), zip);
             zip.putNextEntry(new ZipEntry(Constants.desktopNotesFileName));
             out.output(desktopObj.getDesktopNotesData(), zip);
-            // close zip-stream
-            bout.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             // log error-message
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             // check whether file is write protected
             if (!fp.canWrite()) {
                 // log error-message
                 Constants.zknlogger.log(Level.SEVERE, "Save failed. The file is write-protected.");
                 // show error message
                 JOptionPane.showMessageDialog(null, resourceMap.getString("errorSavingWriteProtectedMsg"), resourceMap.getString("errorSavingTitle"), JOptionPane.PLAIN_MESSAGE);
-            }
-            else {
+            } else {
                 // show error message
                 JOptionPane.showMessageDialog(null, resourceMap.getString("errorSavingMsg"), resourceMap.getString("errorSavingTitle"), JOptionPane.PLAIN_MESSAGE);
             }
             // change error-indicator
             saveOk = false;
-        }
-        catch (SecurityException e) {
+        } catch (SecurityException e) {
             // log error-message
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             // show error message
             JOptionPane.showMessageDialog(null, resourceMap.getString("errorNoAccessMsg"), resourceMap.getString("errorNoAccessTitle"), JOptionPane.PLAIN_MESSAGE);
             // change error-indicator
             saveOk = false;
+        } finally {
+            try {
+                if (bout != null) {
+                    bout.close();
+                }
+                if (zip != null) {
+                    zip.close();
+                }
+            } catch (IOException e) {
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+            }
         }
         return null;  // return your result
     }
+
     @Override
     protected void succeeded(Object result) {
         // Runs on the EDT.  Update the GUI based on
@@ -245,13 +256,16 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
         synonymsObj.setModified(!saveOk);
         bibtexObj.setModified(!saveOk);
     }
+
     @Override
     protected void finished() {
         super.finished();
         // save error-flag
         dataObj.setSaveOk(saveOk);
         // and log info message
-        if (saveOk) Constants.zknlogger.log(Level.INFO, "The data file has been successfully saved to {0}", settingsObj.getFilePath().toString());
+        if (saveOk) {
+            Constants.zknlogger.log(Level.INFO, "The data file has been successfully saved to {0}", settingsObj.getFilePath().toString());
+        }
         // and close window
         parentDialog.dispose();
         parentDialog.setVisible(false);
