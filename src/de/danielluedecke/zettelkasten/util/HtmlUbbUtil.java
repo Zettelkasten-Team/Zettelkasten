@@ -30,7 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 package de.danielluedecke.zettelkasten.util;
 
 import de.danielluedecke.zettelkasten.database.BibTex;
@@ -56,9 +55,9 @@ import javax.swing.ImageIcon;
 import org.jdom2.Element;
 
 /**
- * This class is responsible for the creation of a html page of an zettelkasten entry
- * which is then displayed in the main window's JEditorPane.
- * 
+ * This class is responsible for the creation of a html page of an zettelkasten
+ * entry which is then displayed in the main window's JEditorPane.
+ *
  * @author danielludecke
  */
 public class HtmlUbbUtil {
@@ -66,9 +65,9 @@ public class HtmlUbbUtil {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private static final org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(HtmlUbbUtil.class);
+    private static final org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(HtmlUbbUtil.class);
 
     private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().startsWith("windows");
 
@@ -81,17 +80,17 @@ public class HtmlUbbUtil {
     public static final int HIGHLIGHT_STYLE_LIVESEARCH = 3;
 
     private static boolean highlightWholeWord;
-    
+
     private static final int RATING_VALUE_NONE = 1;
     private static final int RATING_VALUE_HALF = 2;
     private static final int RATING_VALUE_FULL = 3;
 
-    
     /**
      * This method creates the image-tag for a rating-point
      *
-     * @param ratingvalue the ratingvalue, i.e. whether the image-tag should contain a full, half or no value-point-image.
-     * use following constants:<br>
+     * @param ratingvalue the ratingvalue, i.e. whether the image-tag should
+     * contain a full, half or no value-point-image. use following
+     * constants:<br>
      * <ul>
      * <li>{@link #RATING_VALUE_FULL RATING_VALUE_FULL}</li>
      * <li>{@link #RATING_VALUE_FULL RATING_VALUE_HALF}</li>
@@ -107,11 +106,17 @@ public class HtmlUbbUtil {
         // check which image to choose
         switch (ratingvalue) {
             // no rating point
-            case RATING_VALUE_NONE: imgURL = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/bullet_black.png"); break;
+            case RATING_VALUE_NONE:
+                imgURL = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/bullet_black.png");
+                break;
             // half rating point
-            case RATING_VALUE_HALF: imgURL = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/bullet_yellow.png"); break;
+            case RATING_VALUE_HALF:
+                imgURL = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/bullet_yellow.png");
+                break;
             // full rating point
-            case RATING_VALUE_FULL: imgURL = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/bullet_green.png"); break;
+            case RATING_VALUE_FULL:
+                imgURL = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/bullet_green.png");
+                break;
         }
         // append image-src
         imgtag.append(imgURL);
@@ -121,13 +126,14 @@ public class HtmlUbbUtil {
         return imgtag.toString();
     }
 
-
     /**
-     * This method creates and returns a string which contains the CSS-style-definition for
-     * highlighting text / words / keywords / live-search results in a jEditorPane.
+     * This method creates and returns a string which contains the
+     * CSS-style-definition for highlighting text / words / keywords /
+     * live-search results in a jEditorPane.
      *
      * @param settingsObj a reference to the CSettings-class
-     * @return a string which contains the CSS-style-definition for highlighting keywords
+     * @return a string which contains the CSS-style-definition for highlighting
+     * keywords
      */
     private static String getHighlightCSS(Settings settingsObj) {
         StringBuilder highlightCss = new StringBuilder("");
@@ -136,15 +142,16 @@ public class HtmlUbbUtil {
         highlightCss.append(getHighlightCSS(settingsObj, HIGHLIGHT_STYLE_LIVESEARCH));
         return highlightCss.toString();
     }
-    
-    
+
     /**
-     * This method creates and returns a string which contains the CSS-style-definition for
-     * highlighting text / words / keywords / live-search results in a jEditorPane.
+     * This method creates and returns a string which contains the
+     * CSS-style-definition for highlighting text / words / keywords /
+     * live-search results in a jEditorPane.
      *
      * @param settingsObj a reference to the CSettings-class
      * @param style
-     * @return a string which contains the CSS-style-definition for highlighting keywords
+     * @return a string which contains the CSS-style-definition for highlighting
+     * keywords
      */
     private static String getHighlightCSS(Settings settingsObj, int style) {
         // prepare antoher string builder for this css-style, because we need
@@ -153,10 +160,18 @@ public class HtmlUbbUtil {
         String css;
         // select css-style
         switch (style) {
-            case HIGHLIGHT_STYLE_KEYWORDS: css="kw"; break;
-            case HIGHLIGHT_STYLE_SEARCHRESULTS: css="sr"; break;
-            case HIGHLIGHT_STYLE_LIVESEARCH: css="ls"; break;
-            default: css="kw"; break;
+            case HIGHLIGHT_STYLE_KEYWORDS:
+                css = "kw";
+                break;
+            case HIGHLIGHT_STYLE_SEARCHRESULTS:
+                css = "sr";
+                break;
+            case HIGHLIGHT_STYLE_LIVESEARCH:
+                css = "ls";
+                break;
+            default:
+                css = "kw";
+                break;
         }
         // prepare the style for highlighting the search terms in
         // the search results window
@@ -191,18 +206,21 @@ public class HtmlUbbUtil {
         return highlightsb.toString();
     }
 
-
     /**
-     * This method creates a HTML-layer ({@code div}-tag) which contains the graphical elements
-     * for the rating of an entry. This methods returns a HTML-snippet as string which can be
-     * inserted anywhere inside a {@code body}-element.
+     * This method creates a HTML-layer ({@code div}-tag) which contains the
+     * graphical elements for the rating of an entry. This methods returns a
+     * HTML-snippet as string which can be inserted anywhere inside a
+     * {@code body}-element.
      *
-     * @param dataObj a reference to the {@code CDaten}-class, needed for accessing the methods
-     * that retrieve the rating-values from entries.
-     * @param entrynr the entry-number of the requested entry which rating should be created.
-     * @param sourceframe a reference to the frame from where this function call came. needed for
-     * the html-formatting, since entries are differently formatted in the search window.
-     * @return a HTML-snippet as string which can be inserted anywhere inside a {@code body}-element.
+     * @param dataObj a reference to the {@code CDaten}-class, needed for
+     * accessing the methods that retrieve the rating-values from entries.
+     * @param entrynr the entry-number of the requested entry which rating
+     * should be created.
+     * @param sourceframe a reference to the frame from where this function call
+     * came. needed for the html-formatting, since entries are differently
+     * formatted in the search window.
+     * @return a HTML-snippet as string which can be inserted anywhere inside a
+     * {@code body}-element.
      */
     private static String getEntryHeadline(Daten dataObj, int entrynr, int sourceframe) {
         // retrieve rating value
@@ -213,16 +231,16 @@ public class HtmlUbbUtil {
         // count total words of entry
         // ***********************************************
         // get complete entry-content, i.e. title and content
-        String wordcoutnstring = dataObj.getZettelTitle(entrynr)+" "+dataObj.getCleanZettelContent(entrynr);
+        String wordcoutnstring = dataObj.getZettelTitle(entrynr) + " " + dataObj.getCleanZettelContent(entrynr);
         // split complete content at each word
         String[] words = wordcoutnstring.toLowerCase().
-                                        replace("ä","ae").
-                                        replace("ö","oe").
-                                        replace("ü","ue").
-                                        replace("ß","ss").
-                                        split("\\W");
+                replace("ä", "ae").
+                replace("ö", "oe").
+                replace("ü", "ue").
+                replace("ß", "ss").
+                split("\\W");
         // init wordcounter
-        int wordcount=0;
+        int wordcount = 0;
         // iterate all words of the entry
         for (String word : words) {
             // remove all non-letter-chars
@@ -239,22 +257,23 @@ public class HtmlUbbUtil {
         // ***********************************************
         htmlrating.append(System.lineSeparator()).append("<div class=\"entryrating\">");
         htmlrating.append("<table ");
-        if (PlatformUtil.isJava7OnMac() || PlatformUtil.isJava7OnWindows()) htmlrating.append("cellspacing=\"0\" ");
+        if (PlatformUtil.isJava7OnMac() || PlatformUtil.isJava7OnWindows()) {
+            htmlrating.append("cellspacing=\"0\" ");
+        }
         htmlrating.append("class=\"tabentryrating\"><tr>").append(System.lineSeparator());
         // ***********************************************
         // init entry heading with entry nr and word count
         // ***********************************************
         htmlrating.append("<td colspan=\"2\" class=\"leftcellentryrating\">");
         // when the displayed entry differs from the current activated, show this to the user
-        if (entrynr!=dataObj.getCurrentZettelPos() && sourceframe != Constants.FRAME_SEARCH) {
+        if (entrynr != dataObj.getCurrentZettelPos() && sourceframe != Constants.FRAME_SEARCH) {
             htmlrating.append(resourceMap.getString("zettelDesc"));
             htmlrating.append("<a class=\"elink\" href=\"#activatedEntry\">");
             htmlrating.append(" ").append(String.valueOf(dataObj.getCurrentZettelPos())).append("&nbsp;</a>&raquo;");
             htmlrating.append("&nbsp;<a class=\"elink\" href=\"#cr_");
             htmlrating.append(String.valueOf(entrynr)).append("\">").append(String.valueOf(entrynr));
             htmlrating.append("&nbsp;</a>(").append(String.valueOf(wordcount)).append(" ").append(resourceMap.getString("activatedZettelWordCount")).append(")");
-        }
-        // else show usual entry nr
+        } // else show usual entry nr
         else {
             htmlrating.append(resourceMap.getString("zettelDesc"));
             htmlrating.append(" ");
@@ -276,16 +295,14 @@ public class HtmlUbbUtil {
         // count down 5 steps, so we have a maximum of five images
         int cnt = 5;
         // loop
-        while (cnt-->0) {
+        while (cnt-- > 0) {
             // add image. therefore, check whether the rating has at least one star
-            if (ratingvalue>=1.0) {
+            if (ratingvalue >= 1.0) {
                 htmlrating.append(getRatingSymbol(RATING_VALUE_FULL));
-            }
-            // if not, check whether at least a half point is needed
-            else if (ratingvalue>=0.5) {
+            } // if not, check whether at least a half point is needed
+            else if (ratingvalue >= 0.5) {
                 htmlrating.append(getRatingSymbol(RATING_VALUE_HALF));
-            }
-            // or, finally, use the image for no rating-points
+            } // or, finally, use the image for no rating-points
             else {
                 htmlrating.append(getRatingSymbol(RATING_VALUE_NONE));
             }
@@ -298,7 +315,7 @@ public class HtmlUbbUtil {
         htmlrating.append("</td></tr>").append(System.lineSeparator());
         // check whether entry has manual links
         String[] manlinks = dataObj.getManualLinksAsString(entrynr);
-        if (manlinks!=null && manlinks.length>0) {
+        if (manlinks != null && manlinks.length > 0) {
             // append manual links
             htmlrating.append("<tr><td class=\"crtitle\" valign=\"top\"><a href=\"#crt\">");
             htmlrating.append(resourceMap.getString("crossRefText")).append(":</a>&nbsp;</td><td class=\"mlink\" colspan=\"3\">");
@@ -311,14 +328,13 @@ public class HtmlUbbUtil {
                     title = dataObj.getZettelTitle(Integer.parseInt(ml));
                     title = title.replace("\"", "").replace("'", "");
                     title = title.trim();
-                }
-                catch (NumberFormatException ex) {
+                } catch (NumberFormatException ex) {
                 }
                 crossrefs.append("<a href=\"#cr_").append(ml).append("\" title=\"").append(title).append("\" alt=\"").append(title).append("\">").append(ml).append("</a>");
                 crossrefs.append(" &middot; ");
             }
             // append string, but delete last 10 chars, which are " &middot; "
-            htmlrating.append(crossrefs.toString().substring(0, crossrefs.length()-10));
+            htmlrating.append(crossrefs.toString().substring(0, crossrefs.length() - 10));
             htmlrating.append("</td></tr>").append(System.lineSeparator());
         }
         htmlrating.append("</table></div>").append(System.lineSeparator());
@@ -326,23 +342,22 @@ public class HtmlUbbUtil {
         return htmlrating.toString();
     }
 
-    
     /**
-     * 
+     *
      * @param dataObj
      * @param entrynr
-     * @return 
+     * @return
      */
     private static String getEntryAuthors(Daten dataObj, int entrynr, String content, int sourceframe) {
         StringBuilder retval = new StringBuilder("");
         // ***********************************************
         // get authors
         // ***********************************************
-        String [] authors = dataObj.getAuthors(entrynr);
+        String[] authors = dataObj.getAuthors(entrynr);
         // separate authors from content
         retval.append("<h1>").append(resourceMap.getString("authorsText")).append("</h1>").append(System.lineSeparator());
         // check if we have any values
-        if (authors!=null && authors.length>0) {
+        if (authors != null && authors.length > 0) {
             // copy all authors to linked list, so we can remove those authors that have been added
             // as footnotes
             LinkedList<String> remainingAuthors = new LinkedList<>();
@@ -351,7 +366,7 @@ public class HtmlUbbUtil {
             LinkedList<String> footnotes = Tools.extractFootnotesFromContent(content);
             // now we have all footnotes, i.e. the author-index-numbers, in the linked
             // list. now we can create a reference list
-            if (footnotes.size()>0) {
+            if (footnotes.size() > 0) {
                 // iterator for the linked list
                 Iterator<String> i = footnotes.iterator();
                 while (i.hasNext()) {
@@ -364,25 +379,23 @@ public class HtmlUbbUtil {
                         remainingAuthors.remove(aus);
                         // if parameters in the string array highlight-terms have been passed, we assume that
                         // these terms should be highlighted...
-                        if (Constants.FRAME_SEARCH==sourceframe) {
-                            aus = highlightSearchTerms(aus,HIGHLIGHT_STYLE_SEARCHRESULTS);
-                        }
-                        else {
-                            aus = highlightSearchTerms(aus,HIGHLIGHT_STYLE_LIVESEARCH);
-                            aus = highlightSearchTerms(aus,HIGHLIGHT_STYLE_KEYWORDS);
+                        if (Constants.FRAME_SEARCH == sourceframe) {
+                            aus = highlightSearchTerms(aus, HIGHLIGHT_STYLE_SEARCHRESULTS);
+                        } else {
+                            aus = highlightSearchTerms(aus, HIGHLIGHT_STYLE_LIVESEARCH);
+                            aus = highlightSearchTerms(aus, HIGHLIGHT_STYLE_KEYWORDS);
                         }
                         // autoconvert url's to hyperlinks
                         // aus = convertHyperlinks(aus.replace("<", "&lt;").replace(">", "&gt;"));
                         aus = convertHyperlinks(aus);
                         retval.append(aus);
                         retval.append("</p>").append(System.lineSeparator());
-                    }
-                    catch (NumberFormatException e) {
-                        Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
+                    } catch (NumberFormatException e) {
+                        Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
                     }
                 }
                 // check whether we have any remaining authors that did not appear in footnotes
-                if (remainingAuthors.size()>0) {
+                if (remainingAuthors.size() > 0) {
                     // iterator for the linked list
                     Iterator<String> ri = remainingAuthors.iterator();
                     while (ri.hasNext()) {
@@ -390,12 +403,11 @@ public class HtmlUbbUtil {
                         retval.append("<p class=\"reflist\">");
                         // if parameters in the string array highlight-terms have been passed, we assume that
                         // these terms should be highlighted...
-                        if (Constants.FRAME_SEARCH==sourceframe) {
-                            aus = highlightSearchTerms(aus,HIGHLIGHT_STYLE_SEARCHRESULTS);
-                        }
-                        else {
-                            aus = highlightSearchTerms(aus,HIGHLIGHT_STYLE_LIVESEARCH);
-                            aus = highlightSearchTerms(aus,HIGHLIGHT_STYLE_KEYWORDS);
+                        if (Constants.FRAME_SEARCH == sourceframe) {
+                            aus = highlightSearchTerms(aus, HIGHLIGHT_STYLE_SEARCHRESULTS);
+                        } else {
+                            aus = highlightSearchTerms(aus, HIGHLIGHT_STYLE_LIVESEARCH);
+                            aus = highlightSearchTerms(aus, HIGHLIGHT_STYLE_KEYWORDS);
                         }
                         // autoconvert url's to hyperlinks
                         // aus = convertHyperlinks(aus.replace("<", "&lt;").replace(">", "&gt;"));
@@ -404,38 +416,34 @@ public class HtmlUbbUtil {
                         retval.append("</p>").append(System.lineSeparator());
                     }
                 }
-            }
-            else {
+            } else {
                 for (String au : authors) {
                     // if parameters in the string array highlight-terms have been passed, we assume that
                     // these terms should be highlighted...
-                    if (Constants.FRAME_SEARCH==sourceframe) {
-                        au = highlightSearchTerms(au,HIGHLIGHT_STYLE_SEARCHRESULTS);
-                    }
-                    else {
-                        au = highlightSearchTerms(au,HIGHLIGHT_STYLE_LIVESEARCH);
-                        au = highlightSearchTerms(au,HIGHLIGHT_STYLE_KEYWORDS);
+                    if (Constants.FRAME_SEARCH == sourceframe) {
+                        au = highlightSearchTerms(au, HIGHLIGHT_STYLE_SEARCHRESULTS);
+                    } else {
+                        au = highlightSearchTerms(au, HIGHLIGHT_STYLE_LIVESEARCH);
+                        au = highlightSearchTerms(au, HIGHLIGHT_STYLE_KEYWORDS);
                     }
                     // autoconvert url's to hyperlinks
                     au = convertHyperlinks(au);
                     retval.append("<p class=\"reflist\">").append(au).append("</p>").append(System.lineSeparator());
                 }
             }
-        }
-        else {
+        } else {
             retval.append("<p class=\"reflist\"><i>").append(resourceMap.getString("NoAuthor")).append("</i></p>");
         }
         retval.append("<p></p>");
         return retval.toString();
     }
-    
-    
+
     /**
-     * 
+     *
      * @param dataObj
      * @param settings
      * @param entrynr
-     * @return 
+     * @return
      */
     private static String getEntryRemarks(Daten dataObj, Settings settings, int entrynr, int sourceframe) {
         StringBuilder retval = new StringBuilder("");
@@ -450,12 +458,11 @@ public class HtmlUbbUtil {
             remarks = convertHyperlinks(remarks);
             // if parameters in the string array highlight-terms have been passed, we assume that
             // these terms should be highlighted...
-            if (Constants.FRAME_SEARCH==sourceframe) {
-                remarks = highlightSearchTerms(remarks,HIGHLIGHT_STYLE_SEARCHRESULTS);
-            }
-            else {
-                remarks = highlightSearchTerms(remarks,HIGHLIGHT_STYLE_LIVESEARCH);
-                remarks = highlightSearchTerms(remarks,HIGHLIGHT_STYLE_KEYWORDS);
+            if (Constants.FRAME_SEARCH == sourceframe) {
+                remarks = highlightSearchTerms(remarks, HIGHLIGHT_STYLE_SEARCHRESULTS);
+            } else {
+                remarks = highlightSearchTerms(remarks, HIGHLIGHT_STYLE_LIVESEARCH);
+                remarks = highlightSearchTerms(remarks, HIGHLIGHT_STYLE_KEYWORDS);
             }
             // after the conversion is done, append the content to the resulting return string
             retval.append("<h1>").append(resourceMap.getString("remarksText")).append("</h1>").append(System.lineSeparator());
@@ -464,17 +471,16 @@ public class HtmlUbbUtil {
         return retval.toString();
     }
 
-    
     /**
-     * 
+     *
      * @param dataObj
      * @param entrynr
-     * @return 
+     * @return
      */
     private static String getEntryAttachments(Daten dataObj, int entrynr, int sourceframe) {
         StringBuilder retval = new StringBuilder("");
         String[] attachments = dataObj.getAttachmentsAsString(entrynr, false);
-        if ((attachments!=null)&&(attachments.length>0)) {
+        if ((attachments != null) && (attachments.length > 0)) {
             // we need a temporary buffer again
             StringBuilder dummylink = new StringBuilder("");
             // iterare all attachments
@@ -484,12 +490,11 @@ public class HtmlUbbUtil {
                     dummylink.append("<li><a href=\"").append(att).append("\">");
                     // if parameters in the string array highlight-terms have been passed, we assume that
                     // these terms should be highlighted...
-                    if (Constants.FRAME_SEARCH==sourceframe) {
-                        att = highlightSearchTerms(att,HIGHLIGHT_STYLE_SEARCHRESULTS);
-                    }
-                    else {
-                        att = highlightSearchTerms(att,HIGHLIGHT_STYLE_LIVESEARCH);
-                        att = highlightSearchTerms(att,HIGHLIGHT_STYLE_KEYWORDS);
+                    if (Constants.FRAME_SEARCH == sourceframe) {
+                        att = highlightSearchTerms(att, HIGHLIGHT_STYLE_SEARCHRESULTS);
+                    } else {
+                        att = highlightSearchTerms(att, HIGHLIGHT_STYLE_LIVESEARCH);
+                        att = highlightSearchTerms(att, HIGHLIGHT_STYLE_KEYWORDS);
                     }
                     dummylink.append(att);
                     dummylink.append("</a></li>").append(System.lineSeparator());
@@ -497,7 +502,7 @@ public class HtmlUbbUtil {
             }
             // if there have been attachments, they must be stored in the stringbuffer now
             // so, if the string buffer has content, append it to the resulting return string
-            if (dummylink.length()>0) {
+            if (dummylink.length() > 0) {
                 // apply a class attribute to the attachments, so we can have certain styles
                 // and formatting for the links as well
                 retval.append("<div class=\"attachments\"><h1>").append(resourceMap.getString("HyperlinksHeader")).append("</h1>").append(System.lineSeparator()).append("<ul>");
@@ -507,25 +512,24 @@ public class HtmlUbbUtil {
         }
         return retval.toString();
     }
-    
-    
+
     /**
-     * 
+     *
      * @param dataObj
      * @param entrynr
-     * @return 
+     * @return
      */
     private static String getEntryTimestamp(Daten dataObj, int entrynr) {
         StringBuilder retval = new StringBuilder("");
         String created = dataObj.getTimestampCreated(entrynr);
         String edited = dataObj.getTimestampEdited(entrynr);
         // check whether we have a timestamp at all
-        if ((created!=null) && (!created.isEmpty())) {
+        if ((created != null) && (!created.isEmpty())) {
             // and add the created-timestamp
             retval.append("<a class=\"tslink\" href=\"#tstampc\">").append(resourceMap.getString("timestampCreated")).append(" ").append(Tools.getProperDate(created, true)).append("</a>");
             // check whether we have a modified-timestamp
             // if we have a modified-stamp, add it...
-            if ((edited!=null) && (!edited.isEmpty())) {
+            if ((edited != null) && (!edited.isEmpty())) {
                 retval.append("&nbsp;&middot;&nbsp").append("<a class=\"tslink\" href=\"#tstampe\">").append(resourceMap.getString("timestampEdited")).append(" ").append(Tools.getProperDate(edited, true)).append("</a>");
             }
             // and close the tags of the html-part
@@ -533,30 +537,31 @@ public class HtmlUbbUtil {
         }
         return retval.toString();
     }
-    
-    
+
     /**
-     * This method creates a html page of the parameters passed to this class constructor
-     * It is easier to keep the overview over the layout style when the html page, which is
-     * responsible for the "look'n'feel" of an entry, is being created in a separate class
-     * rather than in the CDaten class
+     * This method creates a html page of the parameters passed to this class
+     * constructor It is easier to keep the overview over the layout style when
+     * the html page, which is responsible for the "look'n'feel" of an entry, is
+     * being created in a separate class rather than in the CDaten class
      *
      * @param settings a reference to the CSettings-class
      * @param dataObj a reference to the CDaten-class
      * @param bibtexObj
-     * @param entrynr the entry-number of the entry that should be converted into HTML
-     * @param segmentKeywords the keywords of the entry, separated at each word, used for highlighting
-     * keywords in the content.
-     * @param sourceframe a reference to the frame from where this function call came. needed for
-     * the html-formatting, since entries are differently formatted in the search window.
+     * @param entrynr the entry-number of the entry that should be converted
+     * into HTML
+     * @param segmentKeywords the keywords of the entry, separated at each word,
+     * used for highlighting keywords in the content.
+     * @param sourceframe a reference to the frame from where this function call
+     * came. needed for the html-formatting, since entries are differently
+     * formatted in the search window.
      * @return a string with the html-page-content
      */
     public static String getEntryAsHTML(Settings settings,
-                                        Daten dataObj,
-                                        BibTex bibtexObj,
-                                        int entrynr,
-                                        String[] segmentKeywords,
-                                        int sourceframe) {
+            Daten dataObj,
+            BibTex bibtexObj,
+            int entrynr,
+            String[] segmentKeywords,
+            int sourceframe) {
         // create an empty string buffer. this buffer contains the html-string
         // which is being display in the main window's "entry textfield"
         StringBuilder retval = new StringBuilder("");
@@ -567,7 +572,7 @@ public class HtmlUbbUtil {
         // first of all, prepare the header and style information of the main content
         retval.append("<style>").append(System.lineSeparator());
         // get the common style definition for the basic-tags
-        retval.append(getCommonStyleDefinition(settings,segmentKeywords,dataObj.getKeywords(entrynr),false,false));
+        retval.append(getCommonStyleDefinition(settings, segmentKeywords, dataObj.getKeywords(entrynr), false, false));
         // close style definition
         retval.append("</style>").append(System.lineSeparator());
         // close header and open body
@@ -575,7 +580,9 @@ public class HtmlUbbUtil {
         // ***********************************************
         // init headline
         // ***********************************************
-        if (settings.getShowEntryHeadline()) retval.append(getEntryHeadline(dataObj, entrynr, sourceframe));
+        if (settings.getShowEntryHeadline()) {
+            retval.append(getEntryHeadline(dataObj, entrynr, sourceframe));
+        }
         // now start with the html content itself
         retval.append("<div class=\"content\">");
         // ***********************************************
@@ -586,12 +593,11 @@ public class HtmlUbbUtil {
         if (!title.isEmpty()) {
             // if parameters in the string array highlight-terms have been passed, we assume that
             // these terms should be highlighted...
-            if (Constants.FRAME_SEARCH==sourceframe) {
-                title = highlightSearchTerms(title,HIGHLIGHT_STYLE_SEARCHRESULTS);
-            }
-            else {
-                title = highlightSearchTerms(title,HIGHLIGHT_STYLE_LIVESEARCH);
-                title = highlightSearchTerms(title,HIGHLIGHT_STYLE_KEYWORDS);
+            if (Constants.FRAME_SEARCH == sourceframe) {
+                title = highlightSearchTerms(title, HIGHLIGHT_STYLE_SEARCHRESULTS);
+            } else {
+                title = highlightSearchTerms(title, HIGHLIGHT_STYLE_LIVESEARCH);
+                title = highlightSearchTerms(title, HIGHLIGHT_STYLE_KEYWORDS);
             }
             retval.append("<h1>");
             retval.append(title);
@@ -609,8 +615,7 @@ public class HtmlUbbUtil {
             String dummy = convertUbbToHtml(settings, dataObj, bibtexObj, content, sourceframe, false, false);
             // after the conversion is done, append the content to the resulting return string
             retval.append(dummy);
-        }
-        else {
+        } else {
             retval.append("<i>").append(resourceMap.getString("deletedEntry")).append("</i>");
         }
         // close all tags properly
@@ -630,7 +635,7 @@ public class HtmlUbbUtil {
             // ***********************************************
             // get authors
             // ***********************************************
-            retval.append(getEntryAuthors(dataObj, entrynr, retval.toString(),sourceframe));
+            retval.append(getEntryAuthors(dataObj, entrynr, retval.toString(), sourceframe));
             // ***********************************************
             // now look for attachments
             // ***********************************************
@@ -642,11 +647,10 @@ public class HtmlUbbUtil {
         return retval.toString();
     }
 
-
     /**
      * This method creates the style-definition for author-values in CSS-format,
-     * so it can be used in HTML-editorpanes for formatting the "page" (i.e., the
-     * html-content)
+     * so it can be used in HTML-editorpanes for formatting the "page" (i.e.,
+     * the html-content)
      *
      * @param settingsObj a reference to the CSettings-class.
      * @return a string containing the CSS-definition of the authors.
@@ -678,89 +682,97 @@ public class HtmlUbbUtil {
         return retval.toString();
     }
 
-     /**
+    /**
      * This method converts url's to html-hyperlinks.
+     *
      * @param dummy the string where url's should be converted to hyperlinks
      * @return the converted string with link-tags around the url's
      */
     public static String convertHyperlinks(String dummy) {
         // check whether we already found links
-        if (-1==dummy.indexOf("<a href=")) {
+        if (-1 == dummy.indexOf("<a href=")) {
             // this group also considered ( and ) as end of hyperlink, but
             // Wikipedia links e.g. would not be converted correctly.
             // String groupEndOfURL = "[^ \"\\]\\)\\(\\[\\|\\t\\n\\r<]";
             // if no hyperlinks have been found yet, do autoconvert
-             String groupEndOfURL = "[^ \"\\[\\]\\|\\t\\n\\r<]";
-             dummy = dummy.replaceAll("([\\w]+?://"+groupEndOfURL+"*)","<a href=\"$1\">$1</a>");
-             dummy = dummy.replaceAll("([^://])(www\\."+groupEndOfURL+"*)", "$1<a href=\"http://$2\">$2</a>");
-             dummy = dummy.replaceAll("(mailto:)("+groupEndOfURL+"*)", "$1<a href=\"mailto:$2\">$2</a>");
+            String groupEndOfURL = "[^ \"\\[\\]\\|\\t\\n\\r<]";
+            dummy = dummy.replaceAll("([\\w]+?://" + groupEndOfURL + "*)", "<a href=\"$1\">$1</a>");
+            dummy = dummy.replaceAll("([^://])(www\\." + groupEndOfURL + "*)", "$1<a href=\"http://$2\">$2</a>");
+            dummy = dummy.replaceAll("(mailto:)(" + groupEndOfURL + "*)", "$1<a href=\"mailto:$2\">$2</a>");
         }
         return dummy;
     }
 
-
     /**
-     * This method highlights searchterms, i.e. it replaces (or: surrounds) all occurences of each string-element of
-     * the global array {@code highlighterms} inside the given string {@code dummy} with HTML-Tags
-     * that assign a style to this HTML-Tags that it looks highlighted.
+     * This method highlights searchterms, i.e. it replaces (or: surrounds) all
+     * occurences of each string-element of the global array
+     * {@code highlighterms} inside the given string {@code dummy} with
+     * HTML-Tags that assign a style to this HTML-Tags that it looks
+     * highlighted.
      *
      * @param dummy the string where the searchterms should be highlighted
      * @param style
-     * @return a "converted" string with highlight-HTML-tags surrounding the searchterms
+     * @return a "converted" string with highlight-HTML-tags surrounding the
+     * searchterms
      */
     public static String highlightSearchTerms(String dummy, int style) {
         return highlightSearchTerms(dummy, style, false);
     }
 
-
     /**
-     * This method highlights searchterms, i.e. it replaces (or: surrounds) all occurences of each string-element of
-     * the global array {@code highlighterms} inside the given string {@code dummy} with HTML-Tags
-     * that assign a style to this HTML-Tags that it looks highlighted.
+     * This method highlights searchterms, i.e. it replaces (or: surrounds) all
+     * occurences of each string-element of the global array
+     * {@code highlighterms} inside the given string {@code dummy} with
+     * HTML-Tags that assign a style to this HTML-Tags that it looks
+     * highlighted.
      *
      * @param dummy the string where the searchterms should be highlighted
      * @param style
-     * @return a "converted" string with highlight-HTML-tags surrounding the searchterms
+     * @return a "converted" string with highlight-HTML-tags surrounding the
+     * searchterms
      */
     public static String highlightSearchTermsInUBB(String dummy, int style) {
         return highlightSearchTerms(dummy, style, true);
     }
 
-
     /**
-     * This method highlights searchterms, i.e. it replaces (or: surrounds) all occurences of each string-element of
-     * the global array {@code highlighterms} inside the given string {@code dummy} with HTML-Tags
-     * that assign a style to this HTML-Tags that it looks highlighted.
+     * This method highlights searchterms, i.e. it replaces (or: surrounds) all
+     * occurences of each string-element of the global array
+     * {@code highlighterms} inside the given string {@code dummy} with
+     * HTML-Tags that assign a style to this HTML-Tags that it looks
+     * highlighted.
      *
      * @param dummy the string where the searchterms should be highlighted
-     * @param cssclass either {@code null} if this method is a usual call, or a style-attribute for
-     * the span-tag. the latter is necessary when calling this method when exporting entries to PDF,
-     * since the PDF-HTML-Parser cannot handle class-attributes, so instead we directly put the
+     * @param cssclass either {@code null} if this method is a usual call, or a
+     * style-attribute for the span-tag. the latter is necessary when calling
+     * this method when exporting entries to PDF, since the PDF-HTML-Parser
+     * cannot handle class-attributes, so instead we directly put the
      * style-information into the HTML-tag.
-     * @param isUBB {@code true} if an UBB-string should be converted, {@code false} when an already
-     * converted HTML-Page should be converted.
-     * @return a "converted" string with highlight-HTML-tags surrounding the searchterms
+     * @param isUBB {@code true} if an UBB-string should be converted,
+     * {@code false} when an already converted HTML-Page should be converted.
+     * @return a "converted" string with highlight-HTML-tags surrounding the
+     * searchterms
      */
     private static String highlightSearchTerms(String dummy, int style, boolean isUBB) {
         String cssclass = "class=\"hs_kw\"";
         String[] highlightterms = null;
         switch (style) {
             case HIGHLIGHT_STYLE_KEYWORDS:
-                cssclass="class=\"hs_kw\"";
-                highlightterms=highlightTermsKeywords;
+                cssclass = "class=\"hs_kw\"";
+                highlightterms = highlightTermsKeywords;
                 break;
             case HIGHLIGHT_STYLE_SEARCHRESULTS:
-                cssclass="class=\"hs_sr\"";
-                highlightterms=highlightTermsSearch;
+                cssclass = "class=\"hs_sr\"";
+                highlightterms = highlightTermsSearch;
                 break;
             case HIGHLIGHT_STYLE_LIVESEARCH:
-                cssclass="class=\"hs_ls\"";
-                highlightterms=highlightTermsLivesearch;
+                cssclass = "class=\"hs_ls\"";
+                highlightterms = highlightTermsLivesearch;
                 break;
         }
         // if parameters in the string array highlight-terms have been passed, we assume that
         // these terms should be highlighted...
-        if ((highlightterms!=null) && (highlightterms.length>0)) {
+        if ((highlightterms != null) && (highlightterms.length > 0)) {
             // create a new string-array containing the highlightterms.
             // the highlightterms might be regular expressions, so we check for this
             // here. if we find a valid pattern, we assume the searchterm is just a one-string-array,
@@ -793,14 +805,12 @@ public class HtmlUbbUtil {
                     }
                     // finally, copy contenr of the array list to the findterms.
                     findterms = founds.toArray(new String[founds.size()]);
-                }
-                catch (PatternSyntaxException e) {
+                } catch (PatternSyntaxException e) {
                     // when the pattern could not be compiles, we have a "usual" expression
                     // as search term
                     findterms = highlightterms;
                 }
-            }
-            // if we could not find any meta-character, we assume having a "normal" expression
+            } // if we could not find any meta-character, we assume having a "normal" expression
             // as search term
             else {
                 findterms = highlightterms;
@@ -809,20 +819,21 @@ public class HtmlUbbUtil {
             // and surround all search terms with a html-tag to highlight the search term
             for (String st : findterms) {
                 // but only if the search term is longer than 1 char...
-                if (st.length()>1) {
+                if (st.length() > 1) {
                     // st = st.toLowerCase();
                     // escape all relevant regex-chars in
                     // the search term, that could appear
                     st = Pattern.quote(st);
                     // check for whole word
-                    if (highlightWholeWord) st = "\\b"+st+"\\b";
+                    if (highlightWholeWord) {
+                        st = "\\b" + st + "\\b";
+                    }
                     // now replace the searchterm with itself and surrounding html-tags. use
                     // regex-lookahead to avoid a replacement within existing html-tags
                     if (!isUBB) {
-                        dummy = dummy.replaceAll("(?i)"+st+"(?![^<>]*>)", "<span "+cssclass+">$0</span>");
-                    }
-                    else {
-                        dummy = dummy.replaceAll("(?<![\\[img\\](.*?)\\[/img\\]])"+st, "<span "+cssclass+">$0</span>");
+                        dummy = dummy.replaceAll("(?i)" + st + "(?![^<>]*>)", "<span " + cssclass + ">$0</span>");
+                    } else {
+                        dummy = dummy.replaceAll("(?<![\\[img\\](.*?)\\[/img\\]])" + st, "<span " + cssclass + ">$0</span>");
                     }
                 }
             }
@@ -831,10 +842,13 @@ public class HtmlUbbUtil {
     }
 
     /**
-     * Sets the terms that will be highlighted when preparing the entry for display. in case
-     * no highlighting is requested, use {@code null} as parameter.
-     * @param ht the highlighterms as string-array. These terms will be highlighted in the display.
-     * USe {@code null} when no highlight is requested.
+     * Sets the terms that will be highlighted when preparing the entry for
+     * display. in case no highlighting is requested, use {@code null} as
+     * parameter.
+     *
+     * @param ht the highlighterms as string-array. These terms will be
+     * highlighted in the display. USe {@code null} when no highlight is
+     * requested.
      * @param style
      * @param wholeword
      */
@@ -846,42 +860,50 @@ public class HtmlUbbUtil {
 //        }
         highlightWholeWord = wholeword;
         switch (style) {
-            case HIGHLIGHT_STYLE_KEYWORDS: highlightTermsKeywords=ht; break;
-            case HIGHLIGHT_STYLE_SEARCHRESULTS: highlightTermsSearch=ht; break;
-            case HIGHLIGHT_STYLE_LIVESEARCH: highlightTermsLivesearch=ht; highlightWholeWord = false; break;
+            case HIGHLIGHT_STYLE_KEYWORDS:
+                highlightTermsKeywords = ht;
+                break;
+            case HIGHLIGHT_STYLE_SEARCHRESULTS:
+                highlightTermsSearch = ht;
+                break;
+            case HIGHLIGHT_STYLE_LIVESEARCH:
+                highlightTermsLivesearch = ht;
+                highlightWholeWord = false;
+                break;
         }
     }
 
-
     /**
-     * This method converts all ubb-tags of an entry, that are used to indicate formatting,
-     * into html-tags. We use this to set up an html-page with the entries content that is
-     * displayed in a jEditorPane.
+     * This method converts all ubb-tags of an entry, that are used to indicate
+     * formatting, into html-tags. We use this to set up an html-page with the
+     * entries content that is displayed in a jEditorPane.
      *
      * @param settings a reference to the CSettings-class
      * @param dataObj a reference to the CDaten-class
      * @param bibtexObj
-     * @param c the content of the entry in "raw" format (i.e. as it is stored in the xml-file)
+     * @param c the content of the entry in "raw" format (i.e. as it is stored
+     * in the xml-file)
      * @param sourceframe
-     * @param isExport {@code true} if this method is called from the CExportDlg-dialog, where we
-     * can create tooltips for literatur-footnotes in HTML-format. {@code false} otherwise.
+     * @param isExport {@code true} if this method is called from the
+     * CExportDlg-dialog, where we can create tooltips for literatur-footnotes
+     * in HTML-format. {@code false} otherwise.
      * @param createHTMLFootnotes
      * @return a converted string with html-tags instead of ubb-tags
      */
     public static String convertUbbToHtml(Settings settings, Daten dataObj, BibTex bibtexObj, String c, int sourceframe, boolean isExport, boolean createHTMLFootnotes) {
         // create new string
-        String dummy = replaceUbbToHtml(c, settings.getMarkdownActivated(), (Constants.FRAME_DESKTOP==sourceframe), isExport);
+        String dummy = replaceUbbToHtml(c, settings.getMarkdownActivated(), (Constants.FRAME_DESKTOP == sourceframe), isExport);
         // add title attributes to manual links
         int pos = 0;
-        while (pos!=-1) {
+        while (pos != -1) {
             // find manual link tag
             pos = dummy.indexOf("href=\"#z_", pos);
-            if (pos!=-1) {
+            if (pos != -1) {
                 try {
                     // find close
-                    int end = dummy.indexOf("\"", pos+9);
+                    int end = dummy.indexOf("\"", pos + 9);
                     // get and convert number
-                    int znr = Integer.parseInt(dummy.substring(pos+9, end));
+                    int znr = Integer.parseInt(dummy.substring(pos + 9, end));
                     // retrieve title
                     String title = dataObj.getZettelTitle(znr);
                     // if we have title, add it
@@ -890,12 +912,11 @@ public class HtmlUbbUtil {
                         title = title.replace("\"", "").replace("'", "");
                         title = title.trim();
                         // insert alt text
-                        dummy = dummy.substring(0, end+1) + " alt=\"" + title + "\"" + " title=\"" + title + "\"" + dummy.substring(end+1);
+                        dummy = dummy.substring(0, end + 1) + " alt=\"" + title + "\"" + " title=\"" + title + "\"" + dummy.substring(end + 1);
                     }
                     // increase pos counter
                     pos = end + 10;
-                }
-                catch (NumberFormatException ex) {
+                } catch (NumberFormatException ex) {
                     pos = pos + 10;
                 }
             }
@@ -920,41 +941,39 @@ public class HtmlUbbUtil {
         // if parameters in the string array highlight-terms have been passed, we assume that
         // these terms should be highlighted... but don't highlight search terms on desktop!
         // desktop has its own live search function...
-        if (Constants.FRAME_DESKTOP!=sourceframe) {
-            if (Constants.FRAME_SEARCH==sourceframe) {
-                dummy = highlightSearchTerms(dummy,HIGHLIGHT_STYLE_SEARCHRESULTS);
-            }
-            else {
-                dummy = highlightSearchTerms(dummy,HIGHLIGHT_STYLE_LIVESEARCH);
-                dummy = highlightSearchTerms(dummy,HIGHLIGHT_STYLE_KEYWORDS);
+        if (Constants.FRAME_DESKTOP != sourceframe) {
+            if (Constants.FRAME_SEARCH == sourceframe) {
+                dummy = highlightSearchTerms(dummy, HIGHLIGHT_STYLE_SEARCHRESULTS);
+            } else {
+                dummy = highlightSearchTerms(dummy, HIGHLIGHT_STYLE_LIVESEARCH);
+                dummy = highlightSearchTerms(dummy, HIGHLIGHT_STYLE_KEYWORDS);
             }
         }
         // when we exort data to HTML-format, we can create tooltips for the footnotes...
         if (isExport && createHTMLFootnotes) {
             // create tooltips for the footnotes.
             pos = 0;
-            while (pos!=-1) {
+            while (pos != -1) {
                 // search for link-tag which has a footnote-ankh
-                pos = dummy.indexOf(Constants.footnoteHtmlTag,pos);
+                pos = dummy.indexOf(Constants.footnoteHtmlTag, pos);
                 // if something was found, go on...
-                if (pos!=-1) {
+                if (pos != -1) {
                     // find end of href-attribute, so we can exract the author-number
-                    int numpos = dummy.indexOf("\"", pos+Constants.footnoteHtmlTag.length());
-                    if (numpos!=-1) {
+                    int numpos = dummy.indexOf("\"", pos + Constants.footnoteHtmlTag.length());
+                    if (numpos != -1) {
                         // now extract author-number
                         try {
                             // convert substring to integer
-                            int authornr = Integer.parseInt(dummy.substring(pos+Constants.footnoteHtmlTag.length(), numpos));
+                            int authornr = Integer.parseInt(dummy.substring(pos + Constants.footnoteHtmlTag.length(), numpos));
                             // retrieve author-value and remove all quote-signs
                             String authorval = dataObj.getAuthor(authornr).replace("\"", "").replace("'", "");
                             // determine close-bracket of a-tag
-                            int closebracket = dummy.indexOf(">", pos+Constants.footnoteHtmlTag.length());
+                            int closebracket = dummy.indexOf(">", pos + Constants.footnoteHtmlTag.length());
                             if (closebracket != -1) {
                                 // insert title-tag inside of footnote-link
-                                dummy = dummy.substring(0,closebracket)+" title=\""+authorval+"\""+dummy.substring(closebracket);
+                                dummy = dummy.substring(0, closebracket) + " title=\"" + authorval + "\"" + dummy.substring(closebracket);
                             }
-                        }
-                        catch (NumberFormatException e) {
+                        } catch (NumberFormatException e) {
                         }
                     }
                     // increae pos-counter to avoid endless while-loops...
@@ -967,9 +986,8 @@ public class HtmlUbbUtil {
 
     private static String convertFootnotes(Daten data, BibTex bibtexObj, Settings settings, String dummy, boolean isLatex) {
         if (isLatex) {
-            dummy = dummy.replaceAll("\\[fn ([^\\[]*)\\]", "(FN $1)");            
-        }
-        else {
+            dummy = dummy.replaceAll("\\[fn ([^\\[]*)\\]", "(FN $1)");
+        } else {
             // save find-position
             List<Integer> start = new ArrayList<>();
             List<Integer> end = new ArrayList<>();
@@ -985,9 +1003,9 @@ public class HtmlUbbUtil {
                     end.add(m.end());
                 }
                 // iterate found positions
-                for (int i=start.size()-1; i>=0; i--) {
+                for (int i = start.size() - 1; i >= 0; i--) {
                     // get footnote
-                    String fn = dummy.substring(start.get(i)+Constants.FORMAT_FOOTNOTE_OPEN.length(), end.get(i)-1);
+                    String fn = dummy.substring(start.get(i) + Constants.FORMAT_FOOTNOTE_OPEN.length(), end.get(i) - 1);
                     // do we have a colon? this indicates a page separator
                     String[] fnpagenr = fn.split(Pattern.quote(":"));
                     String pagenr = null;
@@ -997,16 +1015,29 @@ public class HtmlUbbUtil {
                         fn = fnpagenr[0];
                         pagenr = fnpagenr[1];
                     }
+                    // check whether footnote is a bibkey, or reference number
+                    int fnnr;
+                    try {
+                        // try to parse token inside footnote tage
+                        // and check whether it is an integer number
+                        // (i.e. a reference to an author)
+                        fnnr = Integer.parseInt(fn);
+                    } catch (NumberFormatException ex) {
+                        // if it is no integer value, check whether
+                        // token is a bibkey
+                        fnnr = data.getAuthorBibKeyPosition(fn);
+                        fn = String.valueOf(fnnr);
+                    }
                     // retrieve author value's bibkey
-                    String bibkey = data.getAuthorBibKey(Integer.parseInt(fn));
+                    String bibkey = data.getAuthorBibKey(fnnr);
                     // check whether we have any bibkey-value
-                    if (bibkey!=null && !bibkey.isEmpty()) {
+                    if (bibkey != null && !bibkey.isEmpty()) {
                         // get formatted author value
                         String formattedAuthor = bibtexObj.getFormattedAuthor(bibkey);
                         //
                         StringBuilder ref = new StringBuilder("");
                         // check for valid value. if we have formatted author, use this
-                        if (formattedAuthor!=null && !formattedAuthor.isEmpty()) {
+                        if (formattedAuthor != null && !formattedAuthor.isEmpty()) {
                             ref.append(Constants.footnoteHtmlTag).append(fn).append("\">");
                             ref.append(formattedAuthor);
                             // add page number, if we have any
@@ -1014,8 +1045,7 @@ public class HtmlUbbUtil {
                                 ref.append(", ").append(resourceMap.getString("footnotePage")).append(pagenr);
                             }
                             ref.append("</a>");
-                        }
-                        // else use footnote number
+                        } // else use footnote number
                         else {
                             if (settings.getSupFootnote()) {
                                 ref.append("<sup>");
@@ -1028,27 +1058,24 @@ public class HtmlUbbUtil {
                             }
                         }
                         // now that we have the bibkey, replace footnote with cite-tag
-                        dummy = dummy.substring(0,start.get(i))+ref.toString()+dummy.substring(end.get(i));
+                        dummy = dummy.substring(0, start.get(i)) + ref.toString() + dummy.substring(end.get(i));
                     }
                 }
-            }
-            catch (PatternSyntaxException | IndexOutOfBoundsException ex) {
-            }
-            catch (NumberFormatException ex) {
-                Constants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-                Constants.zknlogger.log(Level.WARNING,"Could not convert author ID into author number!");
+            } catch (PatternSyntaxException | IndexOutOfBoundsException ex) {
+            } catch (NumberFormatException ex) {
+                Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
+                Constants.zknlogger.log(Level.WARNING, "Could not convert author ID into author number!");
             }
             // footnote: [fn 102] becomes <sup>[102]</sup> (or just [102], if no superscription is set)
             if (settings.getSupFootnote()) {
-                dummy = dummy.replaceAll("\\[fn ([^\\[]*)\\]", "<sup>["+Constants.footnoteHtmlTag+"$1\">$1</a>]</sup>");
-            }
-            else {
-                dummy = dummy.replaceAll("\\[fn ([^\\[]*)\\]", "["+Constants.footnoteHtmlTag+"$1\">$1</a>]");
+                dummy = dummy.replaceAll("\\[fn ([^\\[]*)\\]", "<sup>[" + Constants.footnoteHtmlTag + "$1\">$1</a>]</sup>");
+            } else {
+                dummy = dummy.replaceAll("\\[fn ([^\\[]*)\\]", "[" + Constants.footnoteHtmlTag + "$1\">$1</a>]");
             }
         }
         return dummy;
     }
-    
+
     private static String fixImageTags(String dummy) {
         // init position counter
         int pos = 0;
@@ -1057,17 +1084,17 @@ public class HtmlUbbUtil {
         // not be resized, we have to insert this char in order to let the regex-replace-all function
         // work correctly. Thus, each image-tag without "|" inside will get an additional "|"
         // just befor the closing tag
-        while (pos!=-1) {
+        while (pos != -1) {
             // check whether img-tag exists
             pos = dummy.indexOf("[img]", pos);
             // if yes, go on...
-            if (pos!=-1) {
+            if (pos != -1) {
                 // ... and check for closing tag
                 pos2 = dummy.indexOf("[/img]", pos);
                 // if found, go on...
-                if (pos2!=-1) {
+                if (pos2 != -1) {
                     // ...and check whether image tag has an "|"
-                    if (-1==dummy.substring(pos, pos2).indexOf("|")) {
+                    if (-1 == dummy.substring(pos, pos2).indexOf("|")) {
                         // if not, insert such a resize-indicator char
                         dummy = dummy.substring(0, pos2) + "|" + dummy.substring(pos2);
                     }
@@ -1078,14 +1105,13 @@ public class HtmlUbbUtil {
         }
         return dummy;
     }
-    
-    
+
     private static String fixImagePaths(String dummy, String imgpath) {
         // if we have a windows operating system, we have to add an additonal
         // separator char, so the link to the image starts with "file:///" instead of only "file://"
         String sep = "";
         if (IS_WINDOWS) {
-            imgpath = File.separatorChar+imgpath;
+            imgpath = File.separatorChar + imgpath;
             sep = String.valueOf(File.separatorChar);
         }
         // init position counter
@@ -1095,30 +1121,28 @@ public class HtmlUbbUtil {
         // not be resized, we have to insert this char in order to let the regex-replace-all function
         // work correctly. Thus, each image-tag without "|" inside will get an additional "|"
         // just befor the closing tag
-        while (pos!=-1) {
+        while (pos != -1) {
             // check whether img-tag exists
             pos = dummy.indexOf("[img]", pos);
             // if yes, go on...
-            if (pos!=-1) {
+            if (pos != -1) {
                 // ... and check for closing tag
                 pos2 = dummy.indexOf("[/img]", pos);
                 // if found, go on...
-                if (pos2!=-1) {
+                if (pos2 != -1) {
                     try {
-                        String path = dummy.substring(pos+5, pos2);
+                        String path = dummy.substring(pos + 5, pos2);
                         File imgfile = new File(path.substring(0, path.indexOf("|")));
                         if (!imgfile.exists()) {
                             // image tag: [img]img/gfx.png[/img] becomes <img src="/img/gfx.png">
                             // first insert the path to the image folder inside the img-src.
-                            dummy = dummy.substring(0, pos)+"[img]file://"+imgpath+dummy.substring(pos+5);
-                        }
-                        else {
+                            dummy = dummy.substring(0, pos) + "[img]file://" + imgpath + dummy.substring(pos + 5);
+                        } else {
                             // image tag: [img]img/gfx.png[/img] becomes <img src="/img/gfx.png">
                             // first insert the path to the image folder inside the img-src.
-                            dummy = dummy.substring(0, pos)+"[img]file://"+sep+dummy.substring(pos+5);
+                            dummy = dummy.substring(0, pos) + "[img]file://" + sep + dummy.substring(pos + 5);
                         }
-                    }
-                    catch (IndexOutOfBoundsException ex) {
+                    } catch (IndexOutOfBoundsException ex) {
                     }
                 }
                 // and change pos-counter
@@ -1127,8 +1151,7 @@ public class HtmlUbbUtil {
         }
         return dummy;
     }
-    
-    
+
     private static String convertImages(Daten dataObj, Settings settings, String dummy, boolean isExport) {
         // fix image tags, needed due to manual resizing with "|".,
         // so the regex below works
@@ -1142,12 +1165,12 @@ public class HtmlUbbUtil {
         // image tag: [img]img/gfx.png[/img] becomes <img src="/img/gfx.png">
         // first insert the path to the image folder inside the img-src.
 //        dummy = dummy.replace("[img]", "[img]file://"+imgpath);
-        dummy = fixImagePaths(dummy, settings.getImagePath(dataObj.getUserImagePath(),true));
+        dummy = fixImagePaths(dummy, settings.getImagePath(dataObj.getUserImagePath(), true));
         // dummy = dummy.replaceAll("\\[img\\](.*?)\\[/img\\]", "<img src=\"$1\">");
         dummy = dummy.replaceAll("\\[img\\]([^|]*)(.*?)\\[/img\\]", "<img src=\"$1\">");
         // check whether the user likes to resize large images to smaller
         // thumbnails
-        if (settings.getImageResize() || resizevalues.size()>0) {
+        if (settings.getImageResize() || resizevalues.size() > 0) {
             // find index that searches for img-tags
             int pos = 0;
             int valcnt = 0;
@@ -1155,18 +1178,18 @@ public class HtmlUbbUtil {
             // has an additional "/", this value is different in windows and other systems...
             int addvalue = (IS_WINDOWS) ? 18 : 17;
             // find occurences of mage tags
-            while (pos!=-1) {
+            while (pos != -1) {
                 pos = dummy.indexOf("<img src=", pos);
                 // if we found an image, go on
-                if (pos!=-1) {
+                if (pos != -1) {
                     // find the end of the src-tag, so we know where to find the filename
-                    int end = dummy.indexOf("\"", pos+10);
+                    int end = dummy.indexOf("\"", pos + 10);
                     // check for valid value
-                    if (end!=-1) {
+                    if (end != -1) {
                         try {
                             int width, height, rw, rh;
                             // create a new file from the imagepath
-                            File imageFile = new File(dummy.substring(pos+addvalue, end));
+                            File imageFile = new File(dummy.substring(pos + addvalue, end));
                             try {
                                 // try to read the image
                                 Image image = new ImageIcon(ImageIO.read(imageFile)).getImage();
@@ -1174,11 +1197,10 @@ public class HtmlUbbUtil {
                                 width = image.getWidth(null);
                                 height = image.getHeight(null);
                                 // check whether we have predifined resize values...
-                                if (resizevalues.size()>0) {
+                                if (resizevalues.size() > 0) {
                                     rw = rh = resizevalues.get(valcnt);
                                     valcnt++;
-                                }
-                                // ...or automatic recaling
+                                } // ...or automatic recaling
                                 else {
                                     // get the preferred maximum width and height
                                     rw = settings.getImageResizeWidth();
@@ -1186,15 +1208,15 @@ public class HtmlUbbUtil {
                                 }
                                 // if the image is larger than the preffered thumbnail-size, resize
                                 // width and heigh (proportionally)
-                                if (width>rw) {
-                                    float faktor = (float)width/rw;
-                                    width = (int) (width/faktor);
-                                    height = (int) (height/faktor);
+                                if (width > rw) {
+                                    float faktor = (float) width / rw;
+                                    width = (int) (width / faktor);
+                                    height = (int) (height / faktor);
                                 }
-                                if (height>rh) {
-                                    float faktor = (float)height/rh;
-                                    width = (int) (width/faktor);
-                                    height = (int) (height/faktor);
+                                if (height > rh) {
+                                    float faktor = (float) height / rh;
+                                    width = (int) (width / faktor);
+                                    height = (int) (height / faktor);
                                 }
                                 // create a new string builder
                                 StringBuilder resize = new StringBuilder("");
@@ -1203,28 +1225,29 @@ public class HtmlUbbUtil {
                                 // surrounded by a hyperlink-tag that referrs to the original image
                                 if (!isExport) {
                                     resize.append("<a href=\"");
-                                    resize.append(dummy.substring(pos+addvalue, end));
+                                    resize.append(dummy.substring(pos + addvalue, end));
                                     resize.append("\">");
                                 }
-                                resize.append(dummy.substring(pos, end+1));
+                                resize.append(dummy.substring(pos, end + 1));
                                 resize.append(" width=\"");
                                 resize.append(String.valueOf(width));
                                 resize.append("\" height=\"");
                                 resize.append(String.valueOf(height));
                                 resize.append("\" border=\"0\">");
-                                if (!isExport) resize.append("</a>");
+                                if (!isExport) {
+                                    resize.append("</a>");
+                                }
                                 // replace old img-tag with new one
                                 // we have to do this between-step because we need to know where
                                 // the search has to coninute (pos).
-                                String newdummy = dummy.substring(0, pos)+resize.toString();
+                                String newdummy = dummy.substring(0, pos) + resize.toString();
                                 // set search-position indicator
                                 pos = newdummy.length();
-                                dummy = newdummy+dummy.substring(end+2);
+                                dummy = newdummy + dummy.substring(end + 2);
                             } catch (IOException | IndexOutOfBoundsException ex) {
-                                pos = end+1;
+                                pos = end + 1;
                             }
-                        }
-                        catch (IndexOutOfBoundsException ex) {
+                        } catch (IndexOutOfBoundsException ex) {
                         }
                     }
                 }
@@ -1232,8 +1255,6 @@ public class HtmlUbbUtil {
         }
         return dummy;
     }
-    
-    
 
     private static String replaceUbbToHtml(String dummy, boolean isMarkdownActivated, boolean isDesktop, boolean isExport) {
         // replace headlines
@@ -1248,8 +1269,7 @@ public class HtmlUbbUtil {
             head2md = "$1<h4>$2</h4>";
             head3md = "$1<h5>$2</h5>";
             head4md = "$1<h6>$2</h6>";
-        }
-        else {
+        } else {
             head1 = "<h2>$1</h2>";
             head2 = "<h3>$1</h3>";
             head3 = "<h4>$1</h4>";
@@ -1266,7 +1286,9 @@ public class HtmlUbbUtil {
             // quotes
             dummy = dummy.replaceAll("(^|\\n)(\\> )(.*)", "[q]$3[/q]");
             // after quotes have been replaced, replace < and > signs
-            if (!isExport) dummy = dummy.replace(">", "&gt;").replace("<", "&lt;");
+            if (!isExport) {
+                dummy = dummy.replace(">", "&gt;").replace("<", "&lt;");
+            }
             // bullets
             dummy = dummy.replaceAll("(^|\\n)(\\d\\. )(.*)", "<ol><li>$3</li></ol>");
             dummy = dummy.replace("</ol><ol>", "");
@@ -1290,19 +1312,20 @@ public class HtmlUbbUtil {
             dummy = dummy.replaceAll("---(.*?)---", "<strike>$1</strike>");
             // images
             dummy = dummy.replaceAll("[!]{1}\\[([^\\[]+)\\]\\(([^\\)]+)\\)", "[img]$2[/img]");
-            dummy = dummy.replace("\n","[br]");
-        }
-        else {
+            dummy = dummy.replace("\n", "[br]");
+        } else {
             // if we don't have markdown, and thus no quotes-syntax with "> ...",
             // we need to replace non-tag-< and > here
-            if (!isExport) dummy = dummy.replace(">", "&gt;").replace("<", "&lt;");
+            if (!isExport) {
+                dummy = dummy.replace(">", "&gt;").replace("<", "&lt;");
+            }
         }
         // inline-code blocks formatting
         dummy = dummy.replaceAll("\\`(.*?)\\`", "<code>$1</code>");
         // new line
         dummy = dummy.replace("[br]", "<br>");
         // hyperlinks
-        dummy = dummy.replaceAll("\\[([^\\[]+)\\]\\(http([^\\)]+)\\)","<a href=\"http$2\" title=\"http$2\">$1</a>");
+        dummy = dummy.replaceAll("\\[([^\\[]+)\\]\\(http([^\\)]+)\\)", "<a href=\"http$2\" title=\"http$2\">$1</a>");
         // bold formatting: [f] becomes <b>
         dummy = dummy.replaceAll("\\[f\\](.*?)\\[/f\\]", "<b>$1</b>");
         // italic formatting: [k] becomes <i>
@@ -1322,8 +1345,7 @@ public class HtmlUbbUtil {
             dummy = dummy.replaceAll("\\[q\\](.*?)\\[/q\\]", "<blockquote>$1</blockquote>");
             // quotation marks
             dummy = dummy.replaceAll("\\[qm\\](.*?)\\[/qm\\]", "<q>$1</q>");
-        }
-        else {
+        } else {
             dummy = dummy.replaceAll("\\[q\\](.*?)\\[/q\\]", "<div class=\"zitat\">$1</div>");
             // quotation marks
             dummy = dummy.replace("[qm]", "&ldquo;");
@@ -1366,8 +1388,7 @@ public class HtmlUbbUtil {
         dummy = dummy.replaceAll("\\</h([^\\<]*)\\>\\<br\\>", "</h$1>");
         return dummy;
     }
-    
-    
+
     public static String replaceHtmlToUbb(String dummy) {
         // new line
         dummy = dummy.replace("<br>", "[br]");
@@ -1393,16 +1414,17 @@ public class HtmlUbbUtil {
         dummy = dummy.replaceAll("\\<li\\>(.*?)\\</li\\>", "[*]$1[/*]");
         return dummy;
     }
-    
-    
+
     /**
-     * This method converts special chars of highlighted segments keywords into chars which
-     * can be read by a CSS-style-sheet. If, for instance, the user has assigned a text segement
-     * with a keyword that contains umlauts, spaces or other special chars, these chars cannot
-     * be used to declare a CSS-class. In this case, all these chars are replaced by a "_".
+     * This method converts special chars of highlighted segments keywords into
+     * chars which can be read by a CSS-style-sheet. If, for instance, the user
+     * has assigned a text segement with a keyword that contains umlauts, spaces
+     * or other special chars, these chars cannot be used to declare a
+     * CSS-class. In this case, all these chars are replaced by a "_".
      *
      * @param content the entry's content
-     * @return the entry's content with all appearing highlight-segment-keywords converted
+     * @return the entry's content with all appearing highlight-segment-keywords
+     * converted
      */
     private static String convertUbbHighlightSegments(String content) {
         try {
@@ -1413,37 +1435,35 @@ public class HtmlUbbUtil {
             // we now can easily retrieve the found terms and their positions via this
             // array, thus navigation with find-next and find-prev-buttons is simple
             while (m.find()) {
-                for (int cnt=0;cnt<m.groupCount(); cnt++) {
+                for (int cnt = 0; cnt < m.groupCount(); cnt++) {
                     String segword = m.group(cnt);
                     String segpart = segword.substring(3);
                     segpart = segpart.replace(" ", "_")
-                                     .replace(":", "_")
-                                     .replace("/", "_")
-                                     .replace("ß", "ss")
-                                     .replace("ä", "ae")
-                                     .replace("ö", "oe")
-                                     .replace("ü", "ue")
-                                     .replace("Ä", "Ae")
-                                     .replace("Ö", "Oe")
-                                     .replace("Ü", "Ue")
-                                     .replace("\\", "_");
-                    content = content.replace(segword, "[s "+segpart);
+                            .replace(":", "_")
+                            .replace("/", "_")
+                            .replace("ß", "ss")
+                            .replace("ä", "ae")
+                            .replace("ö", "oe")
+                            .replace("ü", "ue")
+                            .replace("Ä", "Ae")
+                            .replace("Ö", "Oe")
+                            .replace("Ü", "Ue")
+                            .replace("\\", "_");
+                    content = content.replace(segword, "[s " + segpart);
                 }
             }
-        }
-        catch (PatternSyntaxException | IndexOutOfBoundsException e) {
+        } catch (PatternSyntaxException | IndexOutOfBoundsException e) {
             // and leave method
             return content;
         }
         return content;
     }
 
-
-
     /**
      * Since tables cannot be converted using regular expressions (in the
      * {@link #convertUbbToHtml(zettelkasten.CSettings, java.lang.String) convertUbbToHtml()}-method),
-     * we do this in an extra method. This, this method converts table-tags into HTML-tables.
+     * we do this in an extra method. This, this method converts table-tags into
+     * HTML-tables.
      *
      * @param dummy the entry's content
      * @return the entry's content, with table-tags converted to HTML
@@ -1454,18 +1474,18 @@ public class HtmlUbbUtil {
         int pos = 0;
         int end;
         // go and find all table-tages
-        while (pos!=-1) {
+        while (pos != -1) {
             // find occurence of opening-tag
             pos = dummy.indexOf("[table]", pos);
             // when open-tag was found, go on and find end of table-tag
-            if (pos!=-1) {
+            if (pos != -1) {
                 // find closing-tag
                 end = dummy.indexOf("[/table]", pos);
                 // if closing-tag also found, convert content to table
-                if (end!=-1) {
+                if (end != -1) {
                     StringBuilder tabelle = new StringBuilder();
                     // get table-content
-                    String tablecontent = dummy.substring(pos+7, end);
+                    String tablecontent = dummy.substring(pos + 7, end);
                     // get table rows
                     String[] tablerows = tablecontent.split(Pattern.quote("<br>"));
                     // init rowcounter
@@ -1483,20 +1503,18 @@ public class HtmlUbbUtil {
                                 row = row.replace(Constants.FORMAT_TABLECAPTION_CLOSE, "</caption>");
                                 // close row--tags
                                 tabelle.append(row).append(System.lineSeparator());
-                            }
-                            else {
+                            } else {
                                 // check whether row is table header or a simple data-row. therefore,
                                 // look for occurences of "|", which is a cell-separator, or for "^",
                                 // whih is the separator for the tableheader
                                 boolean isheader = row.contains("^");
                                 // use approprate split-char: | for cells, ^ for header-rows
-                                String[] tablecells = row.split((isheader)?"\\^":"\\|");
+                                String[] tablecells = row.split((isheader) ? "\\^" : "\\|");
                                 // check whether we have header line
                                 if (isheader) {
                                     // append opening tag for tablerow
                                     tabelle.append("<tr class=\"rowhead\">");
-                                }
-                                else {
+                                } else {
                                     String rowclass = ((rowcnt % 2 == 0) ? "rowodd" : "roweven");
                                     rowcnt++;
                                     tabelle.append("<tr class=\"").append(rowclass).append("\">");
@@ -1510,9 +1528,9 @@ public class HtmlUbbUtil {
                                     String colclass = (firstcol) ? "class=\"tfirstcol\"" : "class=\"tothercol\"";
                                     firstcol = false;
                                     // append td/th-tags with table-data
-                                    tabelle.append((isheader)?("<th "+colclass+">"):("<td "+colclass+"valign=\"top\">"));
+                                    tabelle.append((isheader) ? ("<th " + colclass + ">") : ("<td " + colclass + "valign=\"top\">"));
                                     tabelle.append(cell.trim());
-                                    tabelle.append((isheader)?"</th>":"</td>");
+                                    tabelle.append((isheader) ? "</th>" : "</td>");
                                 }
                                 // close row--tags
                                 tabelle.append("</tr>").append(System.lineSeparator());
@@ -1521,10 +1539,9 @@ public class HtmlUbbUtil {
                     }
                     // dummy = dummy.substring(0, pos)+"<table border=\"1\">"+tabelle.toString().replace("\\\\", "<br>")+"</table>"+dummy.substring(end+8);
                     String tableString = (PlatformUtil.isJava7OnMac() || PlatformUtil.isJava7OnWindows()) ? "<table cellspacing=\"0\">" : "<table>";
-                    dummy = dummy.substring(0, pos)+ tableString +tabelle.toString().replace("\\\\", "<br>")+"</table>"+dummy.substring(end+8);
+                    dummy = dummy.substring(0, pos) + tableString + tabelle.toString().replace("\\\\", "<br>") + "</table>" + dummy.substring(end + 8);
                     pos = pos + tabelle.toString().length();
-                }
-                // if no valid end-tag was found, try to find possible
+                } // if no valid end-tag was found, try to find possible
                 // next table tage
                 else {
                     pos += 7;
@@ -1533,15 +1550,16 @@ public class HtmlUbbUtil {
         }
         return dummy;
     }
+
     /**
-     * 
+     *
      * @param settings
      * @param dataObj
      * @param dummy
      * @param format
      * @param createFormTag
      * @param isExport
-     * @return 
+     * @return
      */
     private static String convertForms(Settings settings, Daten dataObj, String dummy, int format, boolean createFormTag, boolean isExport) {
         // TODO weitere formate einfügen, bspw. text?
@@ -1550,15 +1568,15 @@ public class HtmlUbbUtil {
         int pos = 0;
         int end;
         // go and find all form-tages
-        while (pos!=-1) {
+        while (pos != -1) {
             // find occurence of opening-tag
             pos = dummy.indexOf(Constants.FORMAT_FORM_TAG, pos);
             // when open-tag was found, go on and find end of table-tag
-            if (pos!=-1) {
+            if (pos != -1) {
                 // find closing-tag
                 end = dummy.indexOf("]", pos);
                 // if closing-tag also found, convert content to table
-                if (end!=-1) {
+                if (end != -1) {
                     // check whether the user wants to create a form tag. if so, no graphic is inserted
                     // into the source-code, but for instance a LaTex-macro for creating forms, or
                     // plain text in text files.
@@ -1568,28 +1586,31 @@ public class HtmlUbbUtil {
                         // create replace string
                         String replace = "";
                         // now convert forms to the correct export-format
-                        switch(format) {
-                            case Constants.EXP_TYPE_TEX: replace = convertFormsToTex(extractedforms.getDescription(), extractedforms.getDistinctions(), extractedforms.getUnmarkedSpace(), extractedforms.hasReentry()); break;
-                            case Constants.EXP_TYPE_HTML: replace = convertFormsToHtml(extractedforms.getDescription(), extractedforms.getDistinctions(), extractedforms.getUnmarkedSpace(), extractedforms.hasReentry()); break;
+                        switch (format) {
+                            case Constants.EXP_TYPE_TEX:
+                                replace = convertFormsToTex(extractedforms.getDescription(), extractedforms.getDistinctions(), extractedforms.getUnmarkedSpace(), extractedforms.hasReentry());
+                                break;
+                            case Constants.EXP_TYPE_HTML:
+                                replace = convertFormsToHtml(extractedforms.getDescription(), extractedforms.getDistinctions(), extractedforms.getUnmarkedSpace(), extractedforms.hasReentry());
+                                break;
                         }
                         // and replace form-tag with converted string
-                        dummy = dummy.substring(0, pos)+replace+dummy.substring(end+1);
-                    }
-                    // here we have no creation of form-tag, so we will insert an image instead. the 
+                        dummy = dummy.substring(0, pos) + replace + dummy.substring(end + 1);
+                    } // here we have no creation of form-tag, so we will insert an image instead. the 
                     // form-tags will be replaced by the related form-image.
                     else {
                         // here we create a path to our form-image folder. this is needed for
                         // converting form-image tags, since the image ae copied to an own local folder,
                         // but the source-information only stores the file name, not the path information.
-                        String imgpath = settings.getFormImagePath(dataObj.getUserImagePath(),true);
+                        String imgpath = settings.getFormImagePath(dataObj.getUserImagePath(), true);
                         // create replace-string
                         StringBuilder replace = new StringBuilder("");
                         // now convert forms to the correct export-format
-                        switch(format) {
+                        switch (format) {
                             case Constants.EXP_TYPE_TEX:
                                 replace.append("\\includegraphics[scale=0.35]{");
                                 replace.append(imgpath);
-                                replace.append(FileOperationsUtil.convertFormtagToImagepath(dummy.substring(pos, end+1), true, true));
+                                replace.append(FileOperationsUtil.convertFormtagToImagepath(dummy.substring(pos, end + 1), true, true));
                                 replace.append("}");
                                 break;
                             case Constants.EXP_TYPE_HTML:
@@ -1599,7 +1620,7 @@ public class HtmlUbbUtil {
                                 // if we have a windows operating system, we have to add an additonal
                                 // separator char, so the link to the image starts with "file:///" instead of only "file://"
                                 if (IS_WINDOWS) {
-                                    imgpath = File.separatorChar+imgpath;
+                                    imgpath = File.separatorChar + imgpath;
                                 }
                                 // now create html-snippet
                                 replace.append("<img ");
@@ -1607,7 +1628,7 @@ public class HtmlUbbUtil {
                                 // but we rescale them. the higher resolution means better printing results.
                                 if (isExport) {
                                     // create a new file from the imagepath
-                                    File imageFile = new File(imgpath+FileOperationsUtil.convertFormtagToImagepath(dummy.substring(pos, end+1), true, isExport));
+                                    File imageFile = new File(imgpath + FileOperationsUtil.convertFormtagToImagepath(dummy.substring(pos, end + 1), true, isExport));
                                     try {
                                         // try to read the image
                                         Image image = new ImageIcon(ImageIO.read(imageFile)).getImage();
@@ -1615,7 +1636,7 @@ public class HtmlUbbUtil {
                                         int width = image.getWidth(null);
                                         int height = image.getHeight(null);
                                         // and resize image by 50%
-                                        replace.append("width=\"").append(String.valueOf(width/2)).append("\" height=\"").append(String.valueOf(height/2)).append("\" ");
+                                        replace.append("width=\"").append(String.valueOf(width / 2)).append("\" height=\"").append(String.valueOf(height / 2)).append("\" ");
                                     } catch (IOException ex) {
                                     }
                                 }
@@ -1624,34 +1645,35 @@ public class HtmlUbbUtil {
                                     replace.append("file://");
                                 }
                                 replace.append(imgpath);
-                                replace.append(FileOperationsUtil.convertFormtagToImagepath(dummy.substring(pos, end+1), true, isExport));
+                                replace.append(FileOperationsUtil.convertFormtagToImagepath(dummy.substring(pos, end + 1), true, isExport));
                                 replace.append("\">");
                                 break;
                         }
                         // and replace form-tag with converted string
-                        dummy = dummy.substring(0, pos)+replace.toString()+dummy.substring(end+1);
+                        dummy = dummy.substring(0, pos) + replace.toString() + dummy.substring(end + 1);
                     }
                 }
-                pos+=3;
+                pos += 3;
             }
         }
         return dummy;
     }
+
     /**
-     * 
+     *
      * @param desc
      * @param distinctions
      * @param reentry
-     * @return 
+     * @return
      */
     private static String convertFormsToTex(String desc, String[] distinctions, String unmarkedSpace, boolean reentry) {
         StringBuilder sb = new StringBuilder("");
         // check for valid parameter
-        if (distinctions!=null && distinctions.length>0) {
+        if (distinctions != null && distinctions.length > 0) {
             // create distance from form to text
             sb.append("\\FormAbstand{");
             // get description
-            if (desc!=null && !desc.isEmpty()) {
+            if (desc != null && !desc.isEmpty()) {
                 sb.append(desc).append(" =");
             }
             // check whether we have a reentry
@@ -1660,7 +1682,7 @@ public class HtmlUbbUtil {
                 sb.append("\\ReEntry{");
             }
             // count distinctions
-            for (int cnt=0; cnt<distinctions.length-1; cnt++) {
+            for (int cnt = 0; cnt < distinctions.length - 1; cnt++) {
                 // and add crosses
                 sb.append("\\cross{");
             }
@@ -1670,7 +1692,7 @@ public class HtmlUbbUtil {
                 sb.append(d).append("}");
             }
             // append unmarked space
-            if (unmarkedSpace!=null && !unmarkedSpace.isEmpty()) {
+            if (unmarkedSpace != null && !unmarkedSpace.isEmpty()) {
                 sb.append(unmarkedSpace);
             }
             // close reentry, if necessary
@@ -1680,18 +1702,19 @@ public class HtmlUbbUtil {
         }
         return sb.toString();
     }
+
     /**
-     * 
+     *
      * @param desc
      * @param distinctions
      * @param reentry
-     * @return 
+     * @return
      */
-     private static String convertFormsToHtml(String desc, String[] distinctions, String unmarkedSpace, boolean reentry) {
+    private static String convertFormsToHtml(String desc, String[] distinctions, String unmarkedSpace, boolean reentry) {
         // create string builder
         StringBuilder sb = new StringBuilder("");
         // check whether we have a description
-        if (desc!=null && !desc.isEmpty()) {
+        if (desc != null && !desc.isEmpty()) {
             // if yes, append it
             sb.append(desc).append(" = ");
         }
@@ -1700,22 +1723,22 @@ public class HtmlUbbUtil {
         // append second distincion
         sb.append(distinctions[1]);
         // check whether we have two marks (=3 distinctions)
-        if (3==distinctions.length) {
+        if (3 == distinctions.length) {
             // and if so, append third dist.
             sb.append(" | ").append(distinctions[2]);
         }
         // check whether we have an unmarked space
-        if (unmarkedSpace!=null && !unmarkedSpace.isEmpty()) {
-             sb.append(" || ").append(unmarkedSpace);
-         }
+        if (unmarkedSpace != null && !unmarkedSpace.isEmpty()) {
+            sb.append(" || ").append(unmarkedSpace);
+        }
         return sb.toString();
     }
 
-    
     /**
      * Since tables cannot be converted using regular expressions (in the
      * {@link #convertUbbToHtml(zettelkasten.CSettings, java.lang.String) convertUbbToHtml()}-method),
-     * we do this in an extra method. This, this method converts table-tags into HTML-tables.
+     * we do this in an extra method. This, this method converts table-tags into
+     * HTML-tables.
      *
      * @param dummy the entry's content
      * @return the entry's content, with table-tags converted to HTML
@@ -1728,7 +1751,7 @@ public class HtmlUbbUtil {
         // if we have statistical table style, don't use vertical column lines / grid
         String grid = (settingsObj.getLatexExportStatisticTableStyle()) ? "" : "|";
         // if we have statistical table style, center table
-        String centertable = (settingsObj.getLatexExportStatisticTableStyle()) ? "\\centering"+System.lineSeparator() : "";
+        String centertable = (settingsObj.getLatexExportStatisticTableStyle()) ? "\\centering" + System.lineSeparator() : "";
         // if we have statistical table style, don't use vertical column lines / grid
         String tablestart = (settingsObj.getLatexExportStatisticTableStyle()) ? "\\begin{tabular}" : "\\begin{tabularx}{\\textwidth}";
         // if we have statistical table style, don't use vertical column lines / grid
@@ -1736,24 +1759,24 @@ public class HtmlUbbUtil {
         // caption string
         String caption = "";
         // go and find all table-tages
-        while (pos!=-1) {
+        while (pos != -1) {
             // find occurence of opening-tag
             pos = dummy.indexOf("[table]", pos);
             // when open-tag was found, go on and find end of table-tag
-            if (pos!=-1) {
+            if (pos != -1) {
                 // find closing-tag
                 end = dummy.indexOf("[/table]", pos);
                 // if closing-tag also found, convert content to table
-                if (end!=-1) {
+                if (end != -1) {
                     StringBuilder tabelle = new StringBuilder();
                     // init header-row-index
                     int headerrow = 0;
                     // get table-content
-                    String tablecontent = dummy.substring(pos+7, end);
+                    String tablecontent = dummy.substring(pos + 7, end);
                     // get table rows
                     String[] tablerows = tablecontent.split(System.lineSeparator());
                     // check for valid values
-                    if (tablerows!=null && tablerows.length>0) {
+                    if (tablerows != null && tablerows.length > 0) {
                         // check whether we have a caption
                         if (tablerows[headerrow].startsWith(Constants.FORMAT_TABLECAPTION_OPEN)) {
                             // replace tags with caption
@@ -1761,9 +1784,9 @@ public class HtmlUbbUtil {
                             tablerows[headerrow] = tablerows[headerrow].replace(Constants.FORMAT_TABLECAPTION_CLOSE, "}");
                             // copy row data
                             caption = tablerows[headerrow];
-                            caption = caption+System.lineSeparator();
+                            caption = caption + System.lineSeparator();
                             // increase header row counter
-                            if (tablerows.length>1) {
+                            if (tablerows.length > 1) {
                                 headerrow = 1;
                             }
                         }
@@ -1772,7 +1795,7 @@ public class HtmlUbbUtil {
                         // whih is the separator for the tableheader
                         boolean isheader = tablerows[headerrow].contains("^");
                         // use approprate split-char: | for cells, ^ for header-rows
-                        String[] tablecells = tablerows[headerrow].split((isheader)?"\\^":"\\|");
+                        String[] tablecells = tablerows[headerrow].split((isheader) ? "\\^" : "\\|");
                         // if we have a table header, make each cell text bold, if we have
                         // not statistical table style
                         if (isheader && !settingsObj.getLatexExportStatisticTableStyle()) {
@@ -1783,26 +1806,25 @@ public class HtmlUbbUtil {
                                 tablecell.append("\\textbf{").append(tablecell1).append("}^");
                             }
                             // delete last ^
-                            if (tablecell.length()>1) {
-                                tablecell.setLength(tablecell.length()-1);
+                            if (tablecell.length() > 1) {
+                                tablecell.setLength(tablecell.length() - 1);
                             }
                             // set back result to table rows array
                             tablerows[headerrow] = tablecell.toString();
                         }
                         // now check how many columns we have...
-                        for (int col = 0; col<tablecells.length; col++) {
+                        for (int col = 0; col < tablecells.length; col++) {
                             // append a latex-column
                             if (settingsObj.getLatexExportStatisticTableStyle()) {
                                 // align cell content right, if we have
                                 // a statistic like table style
                                 tabelle.append("r");
-                            }
-                            // else, if we have "usual" table style, go on here...
+                            } // else, if we have "usual" table style, go on here...
                             else {
                                 // only for first columns (labels), choose left alignment
                                 // tabelle.append((0==col)?"l":"c");
                                 // new! X stands for variable column widht
-                                tabelle.append((0==col)?"l":"X");
+                                tabelle.append((0 == col) ? "l" : "X");
                             }
                         }
                         // close latex-column-count
@@ -1826,22 +1848,20 @@ public class HtmlUbbUtil {
                                 // whih is the separator for the tableheader
                                 isheader = row.contains("^");
                                 // use approprate split-char: | for cells, ^ for header-rows
-                                row = row.replaceAll((isheader)?"\\^":"\\|", " \\& ");
+                                row = row.replaceAll((isheader) ? "\\^" : "\\|", " \\& ");
                                 // only colorize table cells if we have non-statistical style
                                 if (!settingsObj.getLatexExportStatisticTableStyle()) {
                                     // check whether we have a header-row
                                     if (isheader) {
                                         // apply dark gray cell color
                                         tabelle.append("\\rowcolor{DarkGray}").append(System.lineSeparator());
-                                    }
-                                    else {
+                                    } else {
                                         // check whether we have odd row
                                         if (colorrow) {
                                             // apply light gray cell color
                                             tabelle.append("\\rowcolor{LightGray}").append(System.lineSeparator());
                                             colorrow = false;
-                                        }
-                                        else {
+                                        } else {
                                             // apply white cell color
                                             tabelle.append("\\rowcolor{white}").append(System.lineSeparator());
                                             colorrow = true;
@@ -1851,7 +1871,7 @@ public class HtmlUbbUtil {
                                 // close row--tags
                                 tabelle.append(row).append(" \\\\ ").append(System.lineSeparator());
                                 // check whether we have first row
-                                if (0==rowscounted) {
+                                if (0 == rowscounted) {
                                     // increase counter, only needed to find first row
                                     rowscounted++;
                                     // now check whether we have statistical table style
@@ -1862,19 +1882,18 @@ public class HtmlUbbUtil {
                                 }
                             }
                         }
-                        
+
                         // create final tex-table-tempplate
-                        dummy = dummy.substring(0, pos)+"\\begin{table}[htp]"+System.lineSeparator()+
-                                                        centertable+caption+
-                                                        tablestart+"{"+grid+
-                                                        tabelle.toString()+
-                                                        "\\hline"+System.lineSeparator()+
-                                                        tableend+System.lineSeparator()+
-                                                        "\\end{table}"+dummy.substring(end+8);
+                        dummy = dummy.substring(0, pos) + "\\begin{table}[htp]" + System.lineSeparator()
+                                + centertable + caption
+                                + tablestart + "{" + grid
+                                + tabelle.toString()
+                                + "\\hline" + System.lineSeparator()
+                                + tableend + System.lineSeparator()
+                                + "\\end{table}" + dummy.substring(end + 8);
                         pos = pos + tabelle.toString().length();
                     }
-                }
-                // if no valid end-tag was found, try to find possible
+                } // if no valid end-tag was found, try to find possible
                 // next table tage
                 else {
                     pos += 7;
@@ -1884,16 +1903,16 @@ public class HtmlUbbUtil {
         return dummy;
     }
 
-
     /**
-     * This method converts all ubb-tags of an entry, that are used to indicate formatting,
-     * into html-tags. We use this to set up an html-page with the entries content that is
-     * displayed in a jEditorPane.
+     * This method converts all ubb-tags of an entry, that are used to indicate
+     * formatting, into html-tags. We use this to set up an html-page with the
+     * entries content that is displayed in a jEditorPane.
      *
      * @param settings
      * @param dataObj
      * @param bibtexObj
-     * @param c the content of the entry in "raw" format (i.e. as it is stored in the xml-file)
+     * @param c the content of the entry in "raw" format (i.e. as it is stored
+     * in the xml-file)
      * @param useFootnoteRef
      * @param createFormTag
      * @param isDesktop
@@ -1905,7 +1924,7 @@ public class HtmlUbbUtil {
         // converting image tags, since the image ae copied to an own local folder,
         // but the source-information only stores the file name, not the path information.
         // see CNewEntry.java, method "insertImage" for more details
-        String imgpath = settings.getImagePath(dataObj.getUserImagePath(),true);
+        String imgpath = settings.getImagePath(dataObj.getUserImagePath(), true);
         // for latex, we need / instead of \ as separator char
         imgpath = imgpath.replace("\\", "/");
         // if we have a windows operating system, we have to add an additonal
@@ -1915,46 +1934,44 @@ public class HtmlUbbUtil {
         // new line
         dummy = dummy.replace("[br]", System.lineSeparator());
         // italic formatting: [k] becomes <i>
-        dummy = dummy.replaceAll("\\[k\\](.*?)\\[/k\\]", Matcher.quoteReplacement("\\emph{")+"$1"+"}");
+        dummy = dummy.replaceAll("\\[k\\](.*?)\\[/k\\]", Matcher.quoteReplacement("\\emph{") + "$1" + "}");
         // bold formatting: [f] becomes <b>
-        dummy = dummy.replaceAll("\\[f\\](.*?)\\[/f\\]", Matcher.quoteReplacement("\\textbf{")+"$1"+"}");
+        dummy = dummy.replaceAll("\\[f\\](.*?)\\[/f\\]", Matcher.quoteReplacement("\\textbf{") + "$1" + "}");
         // underline formatting: [u] becomes <u>
-        dummy = dummy.replaceAll("\\[u\\](.*?)\\[/u\\]", Matcher.quoteReplacement("\\underline{")+"$1"+"}");
+        dummy = dummy.replaceAll("\\[u\\](.*?)\\[/u\\]", Matcher.quoteReplacement("\\underline{") + "$1" + "}");
         if (isDesktop) {
             // headline: [h1] becomes <h2>
-            dummy = dummy.replaceAll("\\[h1\\](.*?)\\[/h1\\]", Matcher.quoteReplacement("\\paragraph{")+"$1"+"}");
+            dummy = dummy.replaceAll("\\[h1\\](.*?)\\[/h1\\]", Matcher.quoteReplacement("\\paragraph{") + "$1" + "}");
             // headline: [h2] becomes <h3>
-            dummy = dummy.replaceAll("\\[h2\\](.*?)\\[/h2\\]", Matcher.quoteReplacement("\\subparagraph{")+"$1"+"}");
-        }
-        else {
+            dummy = dummy.replaceAll("\\[h2\\](.*?)\\[/h2\\]", Matcher.quoteReplacement("\\subparagraph{") + "$1" + "}");
+        } else {
             // headline: [h1] becomes <h2>
-            dummy = dummy.replaceAll("\\[h1\\](.*?)\\[/h1\\]", Matcher.quoteReplacement("\\subsection{")+"$1"+"}");
+            dummy = dummy.replaceAll("\\[h1\\](.*?)\\[/h1\\]", Matcher.quoteReplacement("\\subsection{") + "$1" + "}");
             // headline: [h2] becomes <h3>
-            dummy = dummy.replaceAll("\\[h2\\](.*?)\\[/h2\\]", Matcher.quoteReplacement("\\subsubsection{")+"$1"+"}");
+            dummy = dummy.replaceAll("\\[h2\\](.*?)\\[/h2\\]", Matcher.quoteReplacement("\\subsubsection{") + "$1" + "}");
         }
         // cite formatting: [q] becomes <q>
-        dummy = dummy.replaceAll("\\[q\\](.*?)\\[/q\\]", Matcher.quoteReplacement("\\begin{quotation}")+"$1"+Matcher.quoteReplacement("\\end{quotation}"));
+        dummy = dummy.replaceAll("\\[q\\](.*?)\\[/q\\]", Matcher.quoteReplacement("\\begin{quotation}") + "$1" + Matcher.quoteReplacement("\\end{quotation}"));
         // strike-through formatting: [d] becomes <strike>
-        dummy = dummy.replaceAll("\\[d\\](.*?)\\[/d\\]", Matcher.quoteReplacement("\\sout{")+"$1"+"}");
+        dummy = dummy.replaceAll("\\[d\\](.*?)\\[/d\\]", Matcher.quoteReplacement("\\sout{") + "$1" + "}");
         // superscript: [sup] becomes <sup>
-        dummy = dummy.replaceAll("\\[sup\\](.*?)\\[/sup\\]", Matcher.quoteReplacement("\\textsuperscript{")+"$1"+"}");
+        dummy = dummy.replaceAll("\\[sup\\](.*?)\\[/sup\\]", Matcher.quoteReplacement("\\textsuperscript{") + "$1" + "}");
         // subscript: [sub] becomes <sub>
-        dummy = dummy.replaceAll("\\[sub\\](.*?)\\[/sub\\]", Matcher.quoteReplacement("\\textsubscript{")+"$1"+"}");
+        dummy = dummy.replaceAll("\\[sub\\](.*?)\\[/sub\\]", Matcher.quoteReplacement("\\textsubscript{") + "$1" + "}");
         // center alignment: [c] becomes <center>
-        dummy = dummy.replaceAll("\\[c\\](.*?)\\[/c\\]", Matcher.quoteReplacement("\\begin{center}")+"$1"+Matcher.quoteReplacement("\\end{center}"));
+        dummy = dummy.replaceAll("\\[c\\](.*?)\\[/c\\]", Matcher.quoteReplacement("\\begin{center}") + "$1" + Matcher.quoteReplacement("\\end{center}"));
         // left alignment
-        dummy = dummy.replaceAll("\\[al\\](.*?)\\[/al\\]", Matcher.quoteReplacement("\\begin{flushleft}")+"$1"+Matcher.quoteReplacement("\\end{flushleft}"));
+        dummy = dummy.replaceAll("\\[al\\](.*?)\\[/al\\]", Matcher.quoteReplacement("\\begin{flushleft}") + "$1" + Matcher.quoteReplacement("\\end{flushleft}"));
         // right alignment
-        dummy = dummy.replaceAll("\\[ar\\](.*?)\\[/ar\\]", Matcher.quoteReplacement("\\begin{flushright}")+"$1"+Matcher.quoteReplacement("\\end{flushright}"));
+        dummy = dummy.replaceAll("\\[ar\\](.*?)\\[/ar\\]", Matcher.quoteReplacement("\\begin{flushright}") + "$1" + Matcher.quoteReplacement("\\end{flushright}"));
         // justify alignment
         dummy = dummy.replaceAll("\\[ab\\](.*?)\\[/ab\\]", "$1");
         // color formatting: [color #rrggbb] becomes <span style="color:#rrggbb"> ([^\\[]*)
         if (!removeNonStandardTags) {
-            dummy = dummy.replaceAll("\\[color ([^\\[]*)\\](.*?)\\[/color\\]", Matcher.quoteReplacement("\\textcolor{[rgb]{$1}")+"$2"+"}");
-        }
-        // in case the user does not want extra packages, use emph instead of color-tags
+            dummy = dummy.replaceAll("\\[color ([^\\[]*)\\](.*?)\\[/color\\]", Matcher.quoteReplacement("\\textcolor{[rgb]{$1}") + "$2" + "}");
+        } // in case the user does not want extra packages, use emph instead of color-tags
         else {
-            dummy = dummy.replaceAll("\\[color ([^\\[]*)\\](.*?)\\[/color\\]", Matcher.quoteReplacement("\\emph{")+"$2"+"}");
+            dummy = dummy.replaceAll("\\[color ([^\\[]*)\\](.*?)\\[/color\\]", Matcher.quoteReplacement("\\emph{") + "$2" + "}");
         }
         dummy = dummy.replaceAll("\\[font ([^\\[]*)\\](.*?)\\[/font\\]", "{\\fontfamily{$1}\\selectfont\n$2}");
         // background-color formatting: [h #rrggbb] becomes <span style="background-color:#rrggbb">
@@ -1967,14 +1984,14 @@ public class HtmlUbbUtil {
         dummy = fixImageTags(dummy);
         // image tag: [img]img/gfx.png[/img] becomes <img src="/img/gfx.png">
         // first insert the path to the image folder inside the img-src.
-        dummy = dummy.replace("[img]", "[img]"+imgpath);
-        dummy = dummy.replaceAll("\\[img\\]([^|]*)(.*?)\\[/img\\]", Matcher.quoteReplacement("\\includegraphics{")+"$1"+"}");
+        dummy = dummy.replace("[img]", "[img]" + imgpath);
+        dummy = dummy.replaceAll("\\[img\\]([^|]*)(.*?)\\[/img\\]", Matcher.quoteReplacement("\\includegraphics{") + "$1" + "}");
         // unordered list: [l] becomes <ul>
-        dummy = dummy.replaceAll("\\[l\\](.*?)\\[/l\\]", Matcher.quoteReplacement("\\begin{itemize}")+System.lineSeparator()+"$1"+Matcher.quoteReplacement("\\end{itemize}"));
+        dummy = dummy.replaceAll("\\[l\\](.*?)\\[/l\\]", Matcher.quoteReplacement("\\begin{itemize}") + System.lineSeparator() + "$1" + Matcher.quoteReplacement("\\end{itemize}"));
         // ordered list: [ol] becomes <ol>
-        dummy = dummy.replaceAll("\\[n\\](.*?)\\[/n\\]", Matcher.quoteReplacement("\\begin{enumerate}")+System.lineSeparator()+"$1"+Matcher.quoteReplacement("\\end{enumerate}"));
+        dummy = dummy.replaceAll("\\[n\\](.*?)\\[/n\\]", Matcher.quoteReplacement("\\begin{enumerate}") + System.lineSeparator() + "$1" + Matcher.quoteReplacement("\\end{enumerate}"));
         // bullet points: [*] becomes <li>
-        dummy = dummy.replaceAll("\\[\\*\\](.*?)\\[/\\*\\]", Matcher.quoteReplacement("\\item ")+"$1"+System.lineSeparator());
+        dummy = dummy.replaceAll("\\[\\*\\](.*?)\\[/\\*\\]", Matcher.quoteReplacement("\\item ") + "$1" + System.lineSeparator());
         // konvertierung von sonderzeichen
         dummy = dummy.replace("...", "\\dots");
         // here we convert all author-footnotes to latex-cite-tags
@@ -1985,20 +2002,21 @@ public class HtmlUbbUtil {
         dummy = convertTablesToTex(dummy, settings);
         // convert form-tags
         dummy = convertForms(settings, dataObj, dummy, Constants.EXP_TYPE_TEX, createFormTag, true);
-        
+
         // Convert [qm] ("inline quotes") to \enquote{} (fixes bug reproduced by "testBugMarkdownZitatWirdNichtKorrektNachLatexExportiert")
-        dummy = dummy.replaceAll("\\[qm\\](.*?)\\[/qm\\]", Matcher.quoteReplacement("\\enquote{")+"$1"+"}");
-        
+        dummy = dummy.replaceAll("\\[qm\\](.*?)\\[/qm\\]", Matcher.quoteReplacement("\\enquote{") + "$1" + "}");
+
         return dummy;
     }
 
     /**
-     * This method returns the remarks of a current entry in HTML-format, so it is ready to use
-     * for displaying in a jEditorPane.
+     * This method returns the remarks of a current entry in HTML-format, so it
+     * is ready to use for displaying in a jEditorPane.
      *
      * @param settings a reference to the CSettings-class
      * @param text the remarks-text, i.e. the entry's remark
-     * @return the entry's remark-text converted into HTML, for displaying in a jEditorPane
+     * @return the entry's remark-text converted into HTML, for displaying in a
+     * jEditorPane
      */
     public static String getHtmlBookmarksComment(Settings settings, String text) {
         // create an empty string buffer. this buffer contains the html-string
@@ -2026,7 +2044,7 @@ public class HtmlUbbUtil {
         retval.append("a{color:#003399;text-decoration:none}").append(System.lineSeparator());
         retval.append("</style>");
         // now start with the html content itself
-        retval.append("<div class=\"content\">");        
+        retval.append("<div class=\"content\">");
         // if we have remarks, replace all return-ubb-tags into html-tags
         if (!text.isEmpty()) {
             // now copy the content of the entry to a dummy string. here we convert
@@ -2035,8 +2053,8 @@ public class HtmlUbbUtil {
             String dummy = text.replace("<", "&lt;").replace(">", "&gt;").replace("[br]", "<br>");
             // if parameters in the string array highlight-terms have been passed, we assume that
             // these terms should be highlighted...
-            dummy = highlightSearchTerms(dummy,HIGHLIGHT_STYLE_LIVESEARCH);
-            dummy = highlightSearchTerms(dummy,HIGHLIGHT_STYLE_LIVESEARCH);
+            dummy = highlightSearchTerms(dummy, HIGHLIGHT_STYLE_LIVESEARCH);
+            dummy = highlightSearchTerms(dummy, HIGHLIGHT_STYLE_LIVESEARCH);
             // autoconvert url's to hyperlinks
             dummy = convertHyperlinks(dummy);
             // after the conversion is done, append the content to the resulting return string
@@ -2044,7 +2062,7 @@ public class HtmlUbbUtil {
         }
         // close all tags properly
         retval.append("</div>").append(System.lineSeparator());
-        
+
         return retval.toString();
     }
 
@@ -2075,10 +2093,10 @@ public class HtmlUbbUtil {
         retval.append("<td width=\"1%\" valign=\"top\">");
         retval.append(resourceMap.getString(resmapstring));
         retval.append("</td><td valign=\"top\">");
-        if (entries!=null && !entries.isEmpty()) {
+        if (entries != null && !entries.isEmpty()) {
             StringBuilder entrysb = new StringBuilder("");
             Iterator<String> i = entries.iterator();
-            while(i.hasNext()) {
+            while (i.hasNext()) {
                 String entry = i.next();
                 try {
                     int entrynr = Integer.parseInt(entry);
@@ -2086,55 +2104,58 @@ public class HtmlUbbUtil {
                     // check if title has quotes, and if so, escape them
                     title = title.replace("\"", "").replace("'", "");
                     entrysb.append("<a href=\"#cr_").append(entry).append("\" alt=\"").append(title).append("\" title=\"").append(title).append("\">").append(entry).append("</a>").append(" &middot; ");
-                }
-                catch (NumberFormatException ex) {
+                } catch (NumberFormatException ex) {
                 }
             }
             // append string, but delete last 10 chars, which are " &middot; "
-            retval.append(entrysb.toString().substring(0, entrysb.length()-10));
+            retval.append(entrysb.toString().substring(0, entrysb.length() - 10));
         }
         // close all tags properly
         retval.append("</td></tr></table>").append(System.lineSeparator());
-        
+
         return retval.toString();
     }
-    
+
     /**
-     * This method creates a common style-sheet for the basic tags, mainly the different
-     * font-settings. since we use this style-definition for several purposes (desktop, main
-     * window...), we have "outsourced" this part to this method. it is called from "getEntryAsHTML"
-     * and "getHtmlContentForDesktop".
+     * This method creates a common style-sheet for the basic tags, mainly the
+     * different font-settings. since we use this style-definition for several
+     * purposes (desktop, main window...), we have "outsourced" this part to
+     * this method. it is called from "getEntryAsHTML" and
+     * "getHtmlContentForDesktop".
      *
      * @param settings a reference to the CSettings-class
-     * @param segmentKeywords a String-Array containing keywords that have been assigned to text segements. These
-     * text segements or paragraphs will be highlighted in case a keyword is selected.
+     * @param segmentKeywords a String-Array containing keywords that have been
+     * assigned to text segements. These text segements or paragraphs will be
+     * highlighted in case a keyword is selected.
      * @param entrykeywords
-     * @param isDesktop true, when the style-definition is used for the CDesktop-frame, false otherwise
-     * @param isExport true, when the style-definition is used for exporting data, false otherwise
+     * @param isDesktop true, when the style-definition is used for the
+     * CDesktop-frame, false otherwise
+     * @param isExport true, when the style-definition is used for exporting
+     * data, false otherwise
      * @return the style-definitions for the basic-tags in HTML-CSS-Format
      */
     private static String getCommonStyleDefinition(Settings settings, String[] segmentKeywords, String[] entrykeywords, boolean isDesktop, boolean isExport) {
-        StringBuilder retval = new StringBuilder(getCommonStyleDefinition(settings,isDesktop,isExport,false));
-        if (segmentKeywords!=null && segmentKeywords.length>0) {
+        StringBuilder retval = new StringBuilder(getCommonStyleDefinition(settings, isDesktop, isExport, false));
+        if (segmentKeywords != null && segmentKeywords.length > 0) {
             for (String sk : segmentKeywords) {
                 sk = sk.replace(" ", "_")
-                       .replace(":", "_")
-                       .replace("/", "_")
-                       .replace("ß", "ss")
-                       .replace("ä", "ae")
-                       .replace("ö", "oe")
-                       .replace("ü", "ue")
-                       .replace("Ä", "Ae")
-                       .replace("Ö", "Oe")
-                       .replace("Ü", "Ue")
-                       .replace("\\", "_");
+                        .replace(":", "_")
+                        .replace("/", "_")
+                        .replace("ß", "ss")
+                        .replace("ä", "ae")
+                        .replace("ö", "oe")
+                        .replace("ü", "ue")
+                        .replace("Ä", "Ae")
+                        .replace("Ö", "Oe")
+                        .replace("Ü", "Ue")
+                        .replace("\\", "_");
 
                 retval.append(".highlight_").append(sk).append("{");
                 retval.append("background-color:#").append(settings.getHighlightBackgroundColor(HIGHLIGHT_STYLE_KEYWORDS)).append("}");
                 retval.append(System.lineSeparator());
             }
 
-            if (entrykeywords!=null && entrykeywords.length>0) {
+            if (entrykeywords != null && entrykeywords.length > 0) {
                 LinkedList<String> eks = new LinkedList<>();
                 eks.addAll(Arrays.asList(entrykeywords));
                 for (String sk : segmentKeywords) {
@@ -2145,16 +2166,16 @@ public class HtmlUbbUtil {
                 while (eki.hasNext()) {
                     String ek = eki.next();
                     ek = ek.replace(" ", "_")
-                           .replace(":", "_")
-                           .replace("/", "_")
-                           .replace("ß", "ss")
-                           .replace("ä", "ae")
-                           .replace("ö", "oe")
-                           .replace("ü", "ue")
-                           .replace("Ä", "Ae")
-                           .replace("Ö", "Oe")
-                           .replace("Ü", "Ue")
-                           .replace("\\", "_");
+                            .replace(":", "_")
+                            .replace("/", "_")
+                            .replace("ß", "ss")
+                            .replace("ä", "ae")
+                            .replace("ö", "oe")
+                            .replace("ü", "ue")
+                            .replace("Ä", "Ae")
+                            .replace("Ö", "Oe")
+                            .replace("Ü", "Ue")
+                            .replace("\\", "_");
 
                     retval.append(".highlight_").append(ek).append("{");
                     retval.append("background-color:#ffffff}");
@@ -2165,26 +2186,30 @@ public class HtmlUbbUtil {
         return retval.toString();
     }
 
-
     /**
-     * This method creates a common style-sheet for the basic tags, mainly the different
-     * font-settings. since we use this style-definition for several purposes (desktop, main
-     * window...), we have "outsourced" this part to this method. it is called from "getEntryAsHTML"
-     * and "getHtmlContentForDesktop".
-     * 
+     * This method creates a common style-sheet for the basic tags, mainly the
+     * different font-settings. since we use this style-definition for several
+     * purposes (desktop, main window...), we have "outsourced" this part to
+     * this method. it is called from "getEntryAsHTML" and
+     * "getHtmlContentForDesktop".
+     *
      * @param settings a reference to the CSettings-class
-     * @param isDesktop true, when the style-definition is used for the CDesktop-frame, false otherwise
-     * @param isExport true, when the style-definition is used for exporting data, false otherwise
+     * @param isDesktop true, when the style-definition is used for the
+     * CDesktop-frame, false otherwise
+     * @param isExport true, when the style-definition is used for exporting
+     * data, false otherwise
      * @param isPrint
      * @return the style-definitions for the basic-tags in HTML-CSS-Format
      */
     public static String getCommonStyleDefinition(Settings settings, boolean isDesktop, boolean isExport, boolean isPrint) {
         // check whether we have custom css settings
-        if (settings.getUseCustomCSS((isDesktop)?Settings.CUSTOM_CSS_DESKTOP:Settings.CUSTOM_CSS_ENTRY)) {
+        if (settings.getUseCustomCSS((isDesktop) ? Settings.CUSTOM_CSS_DESKTOP : Settings.CUSTOM_CSS_ENTRY)) {
             // retrieve custom style sheet
-            String customCss = settings.getCustomCSS((isDesktop)?Settings.CUSTOM_CSS_DESKTOP:Settings.CUSTOM_CSS_ENTRY);
+            String customCss = settings.getCustomCSS((isDesktop) ? Settings.CUSTOM_CSS_DESKTOP : Settings.CUSTOM_CSS_ENTRY);
             // check for valid value
-            if (customCss!=null && !customCss.isEmpty()) return customCss;
+            if (customCss != null && !customCss.isEmpty()) {
+                return customCss;
+            }
         }
         // constant defining the padding for all content
         final String contentpadding = (PlatformUtil.isMacOS()) ? "padding:8px" : "padding:5px";
@@ -2194,20 +2219,19 @@ public class HtmlUbbUtil {
         // remember, since the desktop has bullets, that these bullets are now
         // the html-tag "h1", so each title/header of this entries moves one level deeper, i,e,
         // h1 becomes h2, h2 becomes h3 and so on...
-        String h1 = (isDesktop)?"h2":"h1";
-        String h2 = (isDesktop)?"h3":"h2";
-        String h3 = (isDesktop)?"h4":"h3";
-        String fontunit = (isExport || isPrint)?"pt":"px";
+        String h1 = (isDesktop) ? "h2" : "h1";
+        String h2 = (isDesktop) ? "h3" : "h2";
+        String h3 = (isDesktop) ? "h4" : "h3";
+        String fontunit = (isExport || isPrint) ? "pt" : "px";
         /*
          * CSS for the body
-         */ 
+         */
         retval.append("body{font-family:");
         // if we print content, use times / serif fonts
         // body-tag with main font settings
         if (isPrint) {
             retval.append("Times New Roman,serif");
-        }
-        else {
+        } else {
             retval.append(settings.getMainfont(Settings.FONTNAME));
         }
         retval.append(";font-size:");
@@ -2223,12 +2247,11 @@ public class HtmlUbbUtil {
         retval.append("}").append(System.lineSeparator());
         /*
          * table formatting
-         */ 
+         */
         if (settings.getShowTableBorder()) {
             retval.append("table{border-collapse:collapse;border-top:1px solid black;border-bottom:1px solid black;padding:0px}").append(System.lineSeparator());
             retval.append(".rowhead{border-top:1px solid black;border-bottom:1px solid black;background-color:#").append(settings.getTableHeaderColor()).append("}").append(System.lineSeparator());
-        }
-        else {
+        } else {
             retval.append("table{border-collapse:collapse;border:none}").append(System.lineSeparator());
             retval.append(".rowhead{background-color:#").append(settings.getTableHeaderColor()).append("}").append(System.lineSeparator());
         }
@@ -2242,7 +2265,7 @@ public class HtmlUbbUtil {
         retval.append("caption{font-style:italic}").append(System.lineSeparator());
         /*
          * header tags formatting
-         */ 
+         */
         retval.append(h1);
         retval.append("{font-family:");
         retval.append(settings.getTitleFont(Settings.FONTNAME));
@@ -2283,7 +2306,7 @@ public class HtmlUbbUtil {
         retval.append("}").append(System.lineSeparator());
         /*
          * append style-definition for lists
-         */ 
+         */
         retval.append("ul{margin-left:10px}").append(System.lineSeparator());
         retval.append("ol{margin-left:10px}").append(System.lineSeparator());
         // append style-definition for lists
@@ -2292,10 +2315,10 @@ public class HtmlUbbUtil {
         // by dividing the font-size by 1.5, which is the margin-distance from
         // each list-point
         int s = Integer.parseInt(settings.getMainfont(Settings.FONTSIZE));
-        retval.append(String.valueOf((s/2))).append(fontunit).append("}").append(System.lineSeparator());
+        retval.append(String.valueOf((s / 2))).append(fontunit).append("}").append(System.lineSeparator());
         /*
          * css for links, usually only footnotes.
-         */ 
+         */
         retval.append("a{color:#");
         retval.append(settings.getLinkColor());
         retval.append(";text-decoration:none}").append(System.lineSeparator());
@@ -2307,15 +2330,14 @@ public class HtmlUbbUtil {
         retval.append(";text-decoration:none}").append(System.lineSeparator());
         /*
          * css for different character formattings
-         */ 
+         */
         // make footnotes a bit smaller
         retval.append("sup{font-size:0.9em}").append(System.lineSeparator());
         retval.append("sub{font-size:0.9em}").append(System.lineSeparator());
         // create style for quotes
         if (isExport) {
             retval.append("blockquote");
-        }
-        else {
+        } else {
             retval.append(".zitat");
         }
         retval.append("{padding:0.2cm;margin-left:0.2cm;margin-right:0.2cm;background-color:#").append(settings.getQuoteBackgroundColor()).append(";");
@@ -2335,7 +2357,7 @@ public class HtmlUbbUtil {
         retval.append(settings.getCodeFont(Settings.FONTCOLOR)).append("}").append(System.lineSeparator());
         /*
          * css style for reference list fonts
-         */ 
+         */
         retval.append(".reflist{font-family:");
         retval.append(settings.getAuthorFont(Settings.FONTNAME));
         retval.append(";font-size:");
@@ -2355,11 +2377,13 @@ public class HtmlUbbUtil {
         retval.append(String.valueOf((int) Math.ceil(f))).append("px}").append(System.lineSeparator());
         /*
          * css style for search term highlighting
-         */ 
+         */
         retval.append(getHighlightCSS(settings));
-        /***************************************************************
+        /**
+         * *************************************************************
          * css style desktop display
-         ***************************************************************/ 
+         **************************************************************
+         */
         if (isDesktop) {
             retval.append("table.maintable{border-collapse:collapse;border:none}").append(System.lineSeparator());
             retval.append(".content{").append(contentpadding).append("}").append(System.lineSeparator());
@@ -2418,14 +2442,15 @@ public class HtmlUbbUtil {
             retval.append(settings.getDesktopItemfont(Settings.FONTWEIGHT));
             retval.append(";margin-top:3px;margin-bottom:3px");
             retval.append("}").append(System.lineSeparator());
-        }
-        /***************************************************************
+        } /**
+         * *************************************************************
          * css style entry display
-         ***************************************************************/ 
+         **************************************************************
+         */
         else {
             /*
              * css style for rating-area
-             */ 
+             */
             retval.append(".entryrating{background-color:#").append(settings.getEntryHeadingBackgroundColor()).append(";");
             retval.append(contentpadding).append(";font-family:");
             retval.append(settings.getEntryHeaderFont(Settings.FONTNAME));
@@ -2450,7 +2475,7 @@ public class HtmlUbbUtil {
             retval.append(contentpadding).append(";padding-bottom:20px}").append(System.lineSeparator());
             /*
              * css style for appendix
-             */ 
+             */
             retval.append(".appendixcontent{background-color:#");
             retval.append(settings.getAppendixBackgroundColor()).append(";");
             retval.append(contentpadding).append("}").append(System.lineSeparator());
@@ -2476,7 +2501,7 @@ public class HtmlUbbUtil {
             retval.append(";text-decoration:none}").append(System.lineSeparator());
             /*
              * css style for remarks-area in appendix
-             */ 
+             */
             retval.append(".remarks{font-family:");
             retval.append(settings.getRemarksFont(Settings.FONTNAME));
             retval.append(";font-size:");
@@ -2494,16 +2519,16 @@ public class HtmlUbbUtil {
         }
         return retval.toString();
     }
-    
-    
+
     /**
-     * This method return the html-header, i.e. the style-definitions, for the desktop-
-     * window. in contrary to the main window, where each entry gets its own header, because
-     * the html-page in the editorpane consists of just one entry, we have many entries in
-     * one editorpane in the desktop-window - but we need the style-definition only once.
-     * Thus, this method is seperated from the other method, which creates the html-content
-     * of an entry (see "getHtmlContentForDesktop" for further details).
-     * 
+     * This method return the html-header, i.e. the style-definitions, for the
+     * desktop- window. in contrary to the main window, where each entry gets
+     * its own header, because the html-page in the editorpane consists of just
+     * one entry, we have many entries in one editorpane in the desktop-window -
+     * but we need the style-definition only once. Thus, this method is
+     * seperated from the other method, which creates the html-content of an
+     * entry (see "getHtmlContentForDesktop" for further details).
+     *
      * @param settings
      * @param print
      * @return The style definition for the html-page from the desktop window
@@ -2515,20 +2540,20 @@ public class HtmlUbbUtil {
         // first of all, prepare the header and style information of the main content
         retval.append("<style>").append(System.lineSeparator());
         // get the common style definition for the basic-tags
-        retval.append(getCommonStyleDefinition(settings,true,false,print));
+        retval.append(getCommonStyleDefinition(settings, true, false, print));
         retval.append("</style>");
-        
+
         return retval.toString();
     }
-    
-    
+
     /**
-     * This method return the html-header, i.e. the style-definitions, for the export-
-     * html-page. in contrary to the main window, where each entry gets its own header, because
-     * the html-page in the editorpane consists of just one entry, we have many entries in
-     * one editorpane in the desktop-window - but we need the style-definition only once.
-     * Thus, this method is seperated from the other method, which creates the html-content
-     * of an entry.
+     * This method return the html-header, i.e. the style-definitions, for the
+     * export- html-page. in contrary to the main window, where each entry gets
+     * its own header, because the html-page in the editorpane consists of just
+     * one entry, we have many entries in one editorpane in the desktop-window -
+     * but we need the style-definition only once. Thus, this method is
+     * seperated from the other method, which creates the html-content of an
+     * entry.
      *
      * @param settings
      * @return The style definition for the html-page from the desktop window
@@ -2540,7 +2565,7 @@ public class HtmlUbbUtil {
         // first of all, prepare the header and style information of the main content
         retval.append("<style>").append(System.lineSeparator());
         // get the common style definition for the basic-tags
-        retval.append(getCommonStyleDefinition(settings,false,true,false));
+        retval.append(getCommonStyleDefinition(settings, false, true, false));
         // body-tag with main font settings
         retval.append(".deskhead{font-family:");
         retval.append(settings.getDesktopHeaderfont(Settings.FONTNAME));
@@ -2569,18 +2594,18 @@ public class HtmlUbbUtil {
         return retval.toString();
     }
 
-
     /**
-     * This method return the html-header, i.e. the style-definitions, for the export-
-     * html-page. in contrary to the main window, where each entry gets its own header, because
-     * the html-page in the editorpane consists of just one entry, we have many entries in
-     * one editorpane in the desktop-window - but we need the style-definition only once.
-     * Thus, this method is seperated from the other method, which creates the html-content
-     * of an entry.
+     * This method return the html-header, i.e. the style-definitions, for the
+     * export- html-page. in contrary to the main window, where each entry gets
+     * its own header, because the html-page in the editorpane consists of just
+     * one entry, we have many entries in one editorpane in the desktop-window -
+     * but we need the style-definition only once. Thus, this method is
+     * seperated from the other method, which creates the html-content of an
+     * entry.
      * <br><br>
-     * Since we use a different export-approach when exporting the desktop-data (we pass
-     * a complete html-page as parameter), we need to add html, head, and body-tags within
-     * this method here!
+     * Since we use a different export-approach when exporting the desktop-data
+     * (we pass a complete html-page as parameter), we need to add html, head,
+     * and body-tags within this method here!
      *
      * @param settings
      * @return The style definition for the html-page from the desktop window
@@ -2592,7 +2617,7 @@ public class HtmlUbbUtil {
         // first of all, prepare the header and style information of the main content
         retval.append("<html><head><style>").append(System.lineSeparator());
         // get the common style definition for the basic-tags
-        retval.append(getCommonStyleDefinition(settings,true,true,false));
+        retval.append(getCommonStyleDefinition(settings, true, true, false));
         // body-tag with main font settings
         retval.append(".tocheader1 {margin-left:0.5em;}").append(System.lineSeparator());
         retval.append(".tocentry1 {margin-left:1em;}").append(System.lineSeparator());
@@ -2631,12 +2656,11 @@ public class HtmlUbbUtil {
         return retval.toString();
     }
 
-
     /**
-     * This method creates a html page of the parameters passed to this class constructor
-     * It is easier to keep the overview over the layout style when the html page, which is
-     * responsible for the "look'n'feel" of an entry, is being created in a separate class
-     * rather than in the CDaten class.
+     * This method creates a html page of the parameters passed to this class
+     * constructor It is easier to keep the overview over the layout style when
+     * the html page, which is responsible for the "look'n'feel" of an entry, is
+     * being created in a separate class rather than in the CDaten class.
      * <br><br>
      * This method creates the html-content of entries for the desktop window.
      *
@@ -2653,27 +2677,26 @@ public class HtmlUbbUtil {
     public static String getHtmlContentForDesktop(Daten dataObj, BibTex bibtexObj, Settings settings, int nr, boolean isHeadingVisible, boolean isEntryNumberVisible, boolean isExport, boolean createHtmlFootnotes) {
         // get the zettelcontent
         return getHtmlContentForDesktop(dataObj,
-                                        bibtexObj,
-                                        settings,
-                                        dataObj.getZettelContent(nr),
-                                        nr,
-                                        isHeadingVisible,
-                                        isEntryNumberVisible,
-                                        isExport,
-                                        createHtmlFootnotes);
+                bibtexObj,
+                settings,
+                dataObj.getZettelContent(nr),
+                nr,
+                isHeadingVisible,
+                isEntryNumberVisible,
+                isExport,
+                createHtmlFootnotes);
                                        // and replace header-tags, since they change
-                                       // order when they are put on the desktop
-                                       // .replace("h3","h4").replace("h2","h3");
+        // order when they are put on the desktop
+        // .replace("h3","h4").replace("h2","h3");
 
     }
 
-    
     /**
-     * 
+     *
      * @param dataObj
      * @param nr
      * @param isEntryNumberVisible
-     * @return 
+     * @return
      */
     public static String getZettelTitleForDesktop(Daten dataObj, int nr, boolean isEntryNumberVisible) {
         StringBuilder retval = new StringBuilder("");
@@ -2709,16 +2732,15 @@ public class HtmlUbbUtil {
         retval.append("</strong></p>").append(System.lineSeparator());
         return retval.toString();
     }
-    
-    
+
     /**
-     * This method creates a html page of the parameters passed to this class constructor
-     * It is easier to keep the overview over the layout style when the html page, which is
-     * responsible for the "look'n'feel" of an entry, is being created in a separate class
-     * rather than in the CDaten class.
+     * This method creates a html page of the parameters passed to this class
+     * constructor It is easier to keep the overview over the layout style when
+     * the html page, which is responsible for the "look'n'feel" of an entry, is
+     * being created in a separate class rather than in the CDaten class.
      * <br><br>
      * This method creates the html-content of entries for the desktop window.
-     * 
+     *
      * @param dataObj
      * @param bibtexObj
      * @param settings
@@ -2746,15 +2768,14 @@ public class HtmlUbbUtil {
             String dummy = convertUbbToHtml(settings, dataObj, bibtexObj, zettelcontent, Constants.FRAME_DESKTOP, isExport, createHtmlFootnotes);
             // after the conversion is done, append the content to the resulting return string
             retval.append("<p>").append(dummy).append("</p>");
-        }
-        else {
+        } else {
             retval.append("<p><i>").append(resourceMap.getString("deletedEntry")).append("</i></p>");
         }
         //
         // here we setup the remarks
         //
         // if the user wants to display authors, display them now...
-        if ((settings.getDesktopDisplayItems()&Constants.DESKTOP_SHOW_REMARKS)!=0) {
+        if ((settings.getDesktopDisplayItems() & Constants.DESKTOP_SHOW_REMARKS) != 0) {
             // get entries remarks
             String rem = dataObj.getRemarks(nr);
             // if the entry has remarks, add them to the content
@@ -2776,11 +2797,11 @@ public class HtmlUbbUtil {
         // here we setup the authors
         //
         // if the user wants to display authors, display them now...
-        if ((settings.getDesktopDisplayItems()&Constants.DESKTOP_SHOW_AUTHORS)!=0) {
+        if ((settings.getDesktopDisplayItems() & Constants.DESKTOP_SHOW_AUTHORS) != 0) {
             // get entry's authors
             String[] zettelauthors = dataObj.getAuthors(nr);
             // if there is no author information, tell this the user
-            if ((zettelauthors!=null)&&(zettelauthors.length>0)) {
+            if ((zettelauthors != null) && (zettelauthors.length > 0)) {
                 // set title
                 retval.append(System.lineSeparator()).append("<p class=\"items\">");
                 retval.append(resourceMap.getString("authorsText"));
@@ -2799,11 +2820,11 @@ public class HtmlUbbUtil {
         // here we setup the attachments
         //
         // if the user wants to display authors, display them now...
-        if ((settings.getDesktopDisplayItems()&Constants.DESKTOP_SHOW_ATTACHMENTS)!=0) {
+        if ((settings.getDesktopDisplayItems() & Constants.DESKTOP_SHOW_ATTACHMENTS) != 0) {
             // get entry's attachments
             List<Element> links = dataObj.getAttachments(nr);
             // if there is no author information, tell this the user
-            if ((links!=null)&&(!links.isEmpty())) {
+            if ((links != null) && (!links.isEmpty())) {
                 // set title
                 retval.append(System.lineSeparator()).append("<p class=\"items\">");
                 retval.append(resourceMap.getString("attachmentsText"));
@@ -2823,29 +2844,29 @@ public class HtmlUbbUtil {
         // here we setup the keywords
         //
         // if the user wants to display authors, display them now...
-        if ((settings.getDesktopDisplayItems()&Constants.DESKTOP_SHOW_KEYWORDS)!=0) {
+        if ((settings.getDesktopDisplayItems() & Constants.DESKTOP_SHOW_KEYWORDS) != 0) {
             // get entry's keywords
             String[] kws = dataObj.getKeywords(nr);
             // if there is no author information, tell this the user
-            if ((kws!=null)&&(kws.length>0)) {
+            if ((kws != null) && (kws.length > 0)) {
                 // set title
                 retval.append(System.lineSeparator()).append("<p class=\"items\">");
                 retval.append(resourceMap.getString("keywordsText"));
                 retval.append("</p>").append(System.lineSeparator()).append("<p class=\"itemfont\">");
                 // sort array
-                Arrays.sort(kws,new Comparer());
+                Arrays.sort(kws, new Comparer());
                 // iterate the string arryy
                 // and append each keyword
                 for (String k : kws) {
                     retval.append(k).append(", ");
                 }
                 // truncate last comma and space
-                retval.setLength(retval.length()-2);
+                retval.setLength(retval.length() - 2);
                 // close tag
                 retval.append("</p>").append(System.lineSeparator());
             }
         }
         // return finished entry
         return retval.toString();
-    }    
+    }
 }

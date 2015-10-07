@@ -12,6 +12,7 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 
 #### Neue Funktionen und Änderungen
 * Im englischen Interface wurden _trails_ in _note sequences_ und _entry_ in _note_ umbenannt.
+* Literaturfußnoten können jetzt auch den Bibkey statt der Nummer des Literatureintrags enthalten (`[fn luhsozsys:123]` würde z.B. umgewandelt in `Luhmann 1984: 123`).
 
 #### Behobene Fehler
 * Bei Dateien, die im Neueingabefenster per Drag'n'Drop ins Textfeld gezogen wurden, kam keine Abfrage zum Verschieben oder Kopieren der Dateien.

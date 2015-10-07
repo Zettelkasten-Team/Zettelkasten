@@ -444,8 +444,20 @@ public class ExportTools {
                 } else {
                     pagenr = "[" + resourceMap.getString("footnotePage") + pagenr + "]{";
                 }
+                // check whether footnote is a bibkey, or reference number
+                int fnnr;
+                try {
+                    // try to parse token inside footnote tage
+                    // and check whether it is an integer number
+                    // (i.e. a reference to an author)
+                    fnnr = Integer.parseInt(fn);
+                } catch (NumberFormatException ex) {
+                    // if it is no integer value, check whether
+                    // token is a bibkey
+                    fnnr = dataObj.getAuthorBibKeyPosition(fn);
+                }
                 // retrieve author value's bibkey
-                String bibkey = dataObj.getAuthorBibKey(Integer.parseInt(fn));
+                String bibkey = dataObj.getAuthorBibKey(fnnr);
                 // check whether we have any bibkey-value
                 if (bibkey != null && !bibkey.isEmpty()) {
                     // if we have footnote cite and braces around footnote,
