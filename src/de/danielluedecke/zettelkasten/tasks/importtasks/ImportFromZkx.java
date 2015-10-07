@@ -157,196 +157,208 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
         Document desktop3Doc = new Document(new Element("desktops"));
         Document desktopModifiedEntries3Doc = new Document(new Element("modifiedEntries"));
         Document meta3Doc = new Document(new Element("metainformation"));
-        try {
-            // it looks like the SAXBuilder is closing an input stream. So we have to
-            // re-open the ZIP-file each time we want to retrieve an XML-file from it
-            // this is necessary, because we want tot retrieve the zipped xml-files
-            // *without* temporarily saving them to harddisk
-            for (int cnt = 0; cnt < dataObj.getFilesToLoadCount(); cnt++) {
-                // open the zip-file
-                try (ZipInputStream zip = new ZipInputStream(new FileInputStream(filepath))) {
-                    ZipEntry zentry;
-                    // now iterate the zip-file, searching for the requested file in it
-                    while ((zentry = zip.getNextEntry()) != null) {
-                        String entryname = zentry.getName();
-                        // if the found file matches the requested one, start the SAXBuilder
-                        if (entryname.equals(dataObj.getFileToLoad(cnt))) {
-                            try {
-                                SAXBuilder builder = new SAXBuilder();
-                                Document doc = builder.build(zip);
-                                // compare, which file we have retrieved, so we store the data
-                                // correctly on our data-object
-                                if (entryname.equals(Constants.metainfFileName)) {
-                                    meta3Doc = doc;
-                                }
-                                if (entryname.equals(Constants.zknFileName)) {
-                                    zkn3Doc = doc;
-                                }
-                                if (entryname.equals(Constants.authorFileName)) {
-                                    author3Doc = doc;
-                                }
-                                if (entryname.equals(Constants.keywordFileName)) {
-                                    keyword3Doc = doc;
-                                }
-                                if (entryname.equals(Constants.bookmarksFileName)) {
-                                    bookmark3Doc = doc;
-                                }
-                                if (entryname.equals(Constants.searchrequestsFileName)) {
-                                    search3Doc = doc;
-                                }
-                                if (entryname.equals(Constants.desktopFileName)) {
-                                    desktop3Doc = doc;
-                                }
-                                if (entryname.equals(Constants.desktopModifiedEntriesFileName)) {
-                                    desktopModifiedEntries3Doc = doc;
-                                }
-                                break;
-                            } catch (JDOMException e) {
-                                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+        // it looks like the SAXBuilder is closing an input stream. So we have to
+        // re-open the ZIP-file each time we want to retrieve an XML-file from it
+        // this is necessary, because we want tot retrieve the zipped xml-files
+        // *without* temporarily saving them to harddisk
+        for (int cnt = 0; cnt < dataObj.getFilesToLoadCount(); cnt++) {
+            // open the zip-file
+            ZipInputStream zip = null;
+            try {
+                zip = new ZipInputStream(new FileInputStream(filepath));                    
+                ZipEntry zentry;
+                // now iterate the zip-file, searching for the requested file in it
+                while ((zentry = zip.getNextEntry()) != null) {
+                    String entryname = zentry.getName();
+                    // if the found file matches the requested one, start the SAXBuilder
+                    if (entryname.equals(dataObj.getFileToLoad(cnt))) {
+                        try {
+                            SAXBuilder builder = new SAXBuilder();
+                            Document doc = builder.build(zip);
+                            // compare, which file we have retrieved, so we store the data
+                            // correctly on our data-object
+                            if (entryname.equals(Constants.metainfFileName)) {
+                                meta3Doc = doc;
                             }
+                            if (entryname.equals(Constants.zknFileName)) {
+                                zkn3Doc = doc;
+                            }
+                            if (entryname.equals(Constants.authorFileName)) {
+                                author3Doc = doc;
+                            }
+                            if (entryname.equals(Constants.keywordFileName)) {
+                                keyword3Doc = doc;
+                            }
+                            if (entryname.equals(Constants.bookmarksFileName)) {
+                                bookmark3Doc = doc;
+                            }
+                            if (entryname.equals(Constants.searchrequestsFileName)) {
+                                search3Doc = doc;
+                            }
+                            if (entryname.equals(Constants.desktopFileName)) {
+                                desktop3Doc = doc;
+                            }
+                            if (entryname.equals(Constants.desktopModifiedEntriesFileName)) {
+                                desktopModifiedEntries3Doc = doc;
+                            }
+                            break;
+                        } catch (JDOMException e) {
+                            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                         }
                     }
                 }
-            }
-            // retrieve version-element
-            Element ver_el = meta3Doc.getRootElement().getChild("version");
-            // store fileformat-information
-            String importedFileFormat = "";
-            // check whether it's null or not
-            if (null == ver_el) {
+            } catch (IOException e) {
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                 taskinfo.setImportOk(false);
-            } else {
-                // get data-version of imported file
-                importedFileFormat = ver_el.getAttributeValue("id");
-                float lv = Float.parseFloat(importedFileFormat);
-                // get fileversion of backward compatibility
-                // float cv = Float.parseFloat(currentFileFormat);
-                float cv = Float.parseFloat(Daten.backwardCompatibleVersion);
-                // check whether the current data-version is newer than the loaded one
-                taskinfo.setImportOk(lv >= cv);
-            }
-            // if we have not the right file-format, tell this the user...
-            if (!taskinfo.isImportOk()) {
-                // log error-message
-                Constants.zknlogger.log(Level.WARNING,
-                        "Failed when importing Zettelkasten-data. Import-Fileversion: {0} Requested Fileversion: {1}",
-                        new Object[]{importedFileFormat, Daten.backwardCompatibleVersion});
-                // display error message box
-                JOptionPane.showMessageDialog(null,
-                        resourceMap.getString("importDlgErrWrongFileFormat", Daten.backwardCompatibleVersion, importedFileFormat),
-                        resourceMap.getString("importDglErrTitle"),
-                        JOptionPane.PLAIN_MESSAGE);
-                // leave thread
                 return null;
-            }
-            // remove all entries with identical ID, because we can't have these entries twice
-            // in the database. if the user wants to update entries (with same IDs), the synch feature
-            // can be used.
-            removeDoubleEntries(zkn3Doc);
-            // get the length of the data
-            final int len = zkn3Doc.getRootElement().getContentSize();
-            // reset the progressbar
-            setProgress(0, 0, len);
-            msgLabel.setText(resourceMap.getString("importDlgMsgEdit"));
-            //
-            // at first, add the description of the new importet zettelkasten
-            //
-            // get the child element
-            Element el = meta3Doc.getRootElement().getChild(Daten.ELEMEMT_DESCRIPTION);
-            // if we have any element, add description
-            if (el != null) {
-                dataObj.addZknDescription(el.getText());
-            }
-            //
-            // now, convert the old index-numbers of the authors and keywords
-            // to the new numbers and add the entries to the existing data file
-            //
-            // go through all entries and prepare them and add them to the
-            // main data file. especially the new author- and keyword-index-numbers
-            // have to be prepared
-            for (int cnt = 0; cnt < len; cnt++) {
-                // get each child
-                Element z = (Element) zkn3Doc.getRootElement().getContent(cnt);
-                // we only need to convert the author- and keyword-index-numbers.
-                // first we start with the author-index-numbers...
-                // if the author-element is not empty...
-                if (!z.getChild(Daten.ELEMENT_AUTHOR).getText().isEmpty()) {
-                    // ...get the autors indexnumbers
-                    String[] aun = z.getChild(Daten.ELEMENT_AUTHOR).getText().split(",");
-                    // create new stringbuilder that will contain the new index-numbers
-                    StringBuilder sb = new StringBuilder("");
-                    // iterate the array
-                    for (String aun1 : aun) {
-                        // get the related author-element from the author-file.
-                        // the needed author-index-number is stored as integer (string-value)
-                        // in the author-indexnumbers-array "aun".
-                        Element dummyauthor = (Element) author3Doc.getRootElement().getContent(Integer.parseInt(aun1) - 1);
-                        // get the string value for that author
-                        String authorstring = dummyauthor.getText();
-                        // if we have any author, go on..
-                        if (!authorstring.isEmpty()) {
-                            // add author to the data file
-                            // and store the position of the new added author in the
-                            // variable authorPos
-                            int authorPos = dataObj.addAuthor(authorstring, 1);
-                            // store author position as string value
-                            sb.append(String.valueOf(authorPos));
-                            sb.append(",");
-                        }
+            } finally {
+                try {
+                    if (zip != null) {
+                        zip.close();
                     }
-                    // truncate last comma
-                    if (sb.length() > 1) {
-                        sb.setLength(sb.length() - 1);
-                    }
-                    // set new author-index-numbers
-                    z.getChild(Daten.ELEMENT_AUTHOR).setText(sb.toString());
+                } catch (IOException e) {
+                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+                    taskinfo.setImportOk(false);
+                    return null;
                 }
-                // now that the authors are converted, we need to convert
-                // the keyword-index-numbers
-                // if the keyword-element is not empty...
-                if (!z.getChild(Daten.ELEMENT_KEYWORD).getText().isEmpty()) {
-                    // ...get the keywords-index-numbers
-                    String[] kwn = z.getChild(Daten.ELEMENT_KEYWORD).getText().split(",");
-                    // create new stringbuilder that will contain the new index-numbers
-                    StringBuilder sb = new StringBuilder("");
-                    // iterate the array
-                    for (String kwn1 : kwn) {
-                        // get the related keyword-element from the keyword-file.
-                        // the needed keyword-index-number is stored as integer (string-value)
-                        // in the keyword-indexnumbers-array "kwn".
-                        Element dummykeyword = (Element) keyword3Doc.getRootElement().getContent(Integer.parseInt(kwn1) - 1);
-                        // get the string value for that keyword
-                        String keywordstring = dummykeyword.getText();
-                        // if we have any keywords, go on..
-                        if (!keywordstring.isEmpty()) {
-                            // add it to the data file
-                            // and store the position of the new added keyword in the
-                            // variable keywordPos
-                            int keywordPos = dataObj.addKeyword(keywordstring, 1);
-                            // store author position as string value
-                            sb.append(String.valueOf(keywordPos));
-                            sb.append(",");
-                        }
-                    }
-                    // truncate last comma
-                    if (sb.length() > 1) {
-                        sb.setLength(sb.length() - 1);
-                    }
-                    // set new keyword-index-numbers
-                    z.getChild(Daten.ELEMENT_KEYWORD).setText(sb.toString());
-                }
-                // update progressbar
-                setProgress(cnt, 0, len);
             }
-            // now that all entries are converted, append the data to the existing file
-            dataObj.appendZknData(zkn3Doc);
-            // TODO append desktop-data
-            // TODO append search-data                        
-            // append bookmarks
-            bookmarksObj.appendBookmarks(dataObj, bookmark3Doc);
-        } catch (IOException e) {
-            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
         }
+        // retrieve version-element
+        Element ver_el = meta3Doc.getRootElement().getChild("version");
+        // store fileformat-information
+        String importedFileFormat = "";
+        // check whether it's null or not
+        if (null == ver_el) {
+            taskinfo.setImportOk(false);
+        } else {
+            // get data-version of imported file
+            importedFileFormat = ver_el.getAttributeValue("id");
+            float lv = Float.parseFloat(importedFileFormat);
+            // get fileversion of backward compatibility
+            // float cv = Float.parseFloat(currentFileFormat);
+            float cv = Float.parseFloat(Daten.backwardCompatibleVersion);
+            // check whether the current data-version is newer than the loaded one
+            taskinfo.setImportOk(lv >= cv);
+        }
+        // if we have not the right file-format, tell this the user...
+        if (!taskinfo.isImportOk()) {
+            // log error-message
+            Constants.zknlogger.log(Level.WARNING,
+                    "Failed when importing Zettelkasten-data. Import-Fileversion: {0} Requested Fileversion: {1}",
+                    new Object[]{importedFileFormat, Daten.backwardCompatibleVersion});
+            // display error message box
+            JOptionPane.showMessageDialog(null,
+                    resourceMap.getString("importDlgErrWrongFileFormat", Daten.backwardCompatibleVersion, importedFileFormat),
+                    resourceMap.getString("importDglErrTitle"),
+                    JOptionPane.PLAIN_MESSAGE);
+            // leave thread
+            return null;
+        }
+        // remove all entries with identical ID, because we can't have these entries twice
+        // in the database. if the user wants to update entries (with same IDs), the synch feature
+        // can be used.
+        removeDoubleEntries(zkn3Doc);
+        // get the length of the data
+        final int len = zkn3Doc.getRootElement().getContentSize();
+        // reset the progressbar
+        setProgress(0, 0, len);
+        msgLabel.setText(resourceMap.getString("importDlgMsgEdit"));
+        //
+        // at first, add the description of the new importet zettelkasten
+        //
+        // get the child element
+        Element el = meta3Doc.getRootElement().getChild(Daten.ELEMEMT_DESCRIPTION);
+        // if we have any element, add description
+        if (el != null) {
+            dataObj.addZknDescription(el.getText());
+        }
+        //
+        // now, convert the old index-numbers of the authors and keywords
+        // to the new numbers and add the entries to the existing data file
+        //
+        // go through all entries and prepare them and add them to the
+        // main data file. especially the new author- and keyword-index-numbers
+        // have to be prepared
+        for (int cnt = 0; cnt < len; cnt++) {
+            // get each child
+            Element z = (Element) zkn3Doc.getRootElement().getContent(cnt);
+            // we only need to convert the author- and keyword-index-numbers.
+            // first we start with the author-index-numbers...
+            // if the author-element is not empty...
+            if (!z.getChild(Daten.ELEMENT_AUTHOR).getText().isEmpty()) {
+                // ...get the autors indexnumbers
+                String[] aun = z.getChild(Daten.ELEMENT_AUTHOR).getText().split(",");
+                // create new stringbuilder that will contain the new index-numbers
+                StringBuilder sb = new StringBuilder("");
+                // iterate the array
+                for (String aun1 : aun) {
+                    // get the related author-element from the author-file.
+                    // the needed author-index-number is stored as integer (string-value)
+                    // in the author-indexnumbers-array "aun".
+                    Element dummyauthor = (Element) author3Doc.getRootElement().getContent(Integer.parseInt(aun1) - 1);
+                    // get the string value for that author
+                    String authorstring = dummyauthor.getText();
+                    // if we have any author, go on..
+                    if (!authorstring.isEmpty()) {
+                        // add author to the data file
+                        // and store the position of the new added author in the
+                        // variable authorPos
+                        int authorPos = dataObj.addAuthor(authorstring, 1);
+                        // store author position as string value
+                        sb.append(String.valueOf(authorPos));
+                        sb.append(",");
+                    }
+                }
+                // truncate last comma
+                if (sb.length() > 1) {
+                    sb.setLength(sb.length() - 1);
+                }
+                // set new author-index-numbers
+                z.getChild(Daten.ELEMENT_AUTHOR).setText(sb.toString());
+            }
+            // now that the authors are converted, we need to convert
+            // the keyword-index-numbers
+            // if the keyword-element is not empty...
+            if (!z.getChild(Daten.ELEMENT_KEYWORD).getText().isEmpty()) {
+                // ...get the keywords-index-numbers
+                String[] kwn = z.getChild(Daten.ELEMENT_KEYWORD).getText().split(",");
+                // create new stringbuilder that will contain the new index-numbers
+                StringBuilder sb = new StringBuilder("");
+                // iterate the array
+                for (String kwn1 : kwn) {
+                    // get the related keyword-element from the keyword-file.
+                    // the needed keyword-index-number is stored as integer (string-value)
+                    // in the keyword-indexnumbers-array "kwn".
+                    Element dummykeyword = (Element) keyword3Doc.getRootElement().getContent(Integer.parseInt(kwn1) - 1);
+                    // get the string value for that keyword
+                    String keywordstring = dummykeyword.getText();
+                    // if we have any keywords, go on..
+                    if (!keywordstring.isEmpty()) {
+                        // add it to the data file
+                        // and store the position of the new added keyword in the
+                        // variable keywordPos
+                        int keywordPos = dataObj.addKeyword(keywordstring, 1);
+                        // store author position as string value
+                        sb.append(String.valueOf(keywordPos));
+                        sb.append(",");
+                    }
+                }
+                // truncate last comma
+                if (sb.length() > 1) {
+                    sb.setLength(sb.length() - 1);
+                }
+                // set new keyword-index-numbers
+                z.getChild(Daten.ELEMENT_KEYWORD).setText(sb.toString());
+            }
+            // update progressbar
+            setProgress(cnt, 0, len);
+        }
+        // now that all entries are converted, append the data to the existing file
+        dataObj.appendZknData(zkn3Doc);
+        // TODO append desktop-data
+        // TODO append search-data                        
+        // append bookmarks
+        bookmarksObj.appendBookmarks(dataObj, bookmark3Doc);
         return null;  // return your result
     }
 

@@ -193,7 +193,6 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
                             if (entryname.equals(Constants.bibTexFileName)) {
                                 bibtexObj.openFile(zip, "UTF-8");
                                 Constants.zknlogger.log(Level.INFO, "{0} data successfully opened.", entryname);
-                                zip.close();
                                 break;
                             } else {
                                 try {
