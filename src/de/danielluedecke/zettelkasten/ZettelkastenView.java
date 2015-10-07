@@ -59,6 +59,8 @@ import de.danielluedecke.zettelkasten.mac.MacSourceList;
 import de.danielluedecke.zettelkasten.mac.MacSourceTree;
 import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
 import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
+import de.danielluedecke.zettelkasten.tasks.AutoBackupTask;
+import de.danielluedecke.zettelkasten.tasks.CheckForUpdateTask;
 import de.danielluedecke.zettelkasten.tasks.FindDoubleEntriesTask;
 import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
 import de.danielluedecke.zettelkasten.tasks.export.ExportTools;
@@ -107,7 +109,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.lang.reflect.InvocationHandler;
@@ -138,8 +139,6 @@ import java.util.logging.SimpleFormatter;
 import java.util.logging.StreamHandler;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -334,7 +333,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     /**
      *
      */
-    private boolean isbackupnecessary = false;
+    private boolean isbnc = false;
+    public boolean isBackupNecessary() { return isbnc; }
+    public void setBackupNecessary(boolean val) { isbnc = val; }
     /**
      *
      */
@@ -351,6 +352,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      *
      */
     private String updateURI = Constants.UPDATE_URI;
+    public void setUpdateURI(String uri) { updateURI = uri; }
     /**
      * This string contains an added keyword that was added to the
      * jTableKeywords, so the new added value can be selected immediatley after
@@ -454,7 +456,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     /**
      * Indicates whether the thread "createAutoBackupTask" is running or not...
      */
-    private boolean createAutoBackupIsRunning = false;
+    private boolean cabir = false;
+    public boolean isAutoBackupRunning() { return cabir; }
+    public void setAutoBackupRunning(boolean val) { cabir = val; }
     /**
      * Since the window for editing new entries is a modeless frame, we need to
      * have an indicator which tells us whether the an entry is currently being
@@ -3688,7 +3692,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         System.gc();
     }
 
-    private void updateZettelkasten(String updateBuildNr) {
+    public void updateZettelkasten(String updateBuildNr) {
         // if dialog window isn't already created, do this now
         if (null == updateInfoDlg) {
             // get parent und init window
@@ -6860,188 +6864,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     @Action
     public Task autoBackupTask() {
-        return new createAutoBackupTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
-    }
-
-    private class createAutoBackupTask extends org.jdesktop.application.Task<Object, Void> {
-
-        /**
-         * Store old value of status-label, so we can restore it after task is
-         * finished
-         */
-        String oldmsg;
-        org.jdesktop.application.ResourceMap rm
-                = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-                getContext().getResourceMap(ZettelkastenView.class);
-
-        createAutoBackupTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to ImportFileTask fields, here.
-            super(app);
-        }
-
-        @Override
-        protected Object doInBackground() throws IOException {
-            // Your Task's code here.  This method runs
-            // on a background thread, so don't reference
-            // the Swing GUI from here.
-            // prevent task from processing when the file path is incorrect
-
-            // get filepath
-            File fp = settings.getFilePath();
-            // copy current filepath to string
-            String newfp = fp.toString();
-            // look for last occurence of the extension-period. this
-            // is needed to set another extension for the backup-file
-            int lastDot = newfp.lastIndexOf(".");
-            // if extension was found...
-            if (-1 == lastDot) {
-                // log error
-                Constants.zknlogger.log(Level.WARNING, "Couldn't find file-extension! Auto-backup was not created!");
-                return null;
-            }
-            // create backup-file, with new extension
-            File backup = new File(newfp.substring(0, lastDot) + ".zkb3");
-            // and copy original file to backupfile
-            // if the user did not cancel and the destination file does not already exist, go on here
-            // tell programm that task is running
-            createAutoBackupIsRunning = true;
-            // check whether file is write protected
-            if (!backup.canWrite()) {
-                // log error-message
-                Constants.zknlogger.log(Level.WARNING, "Autobackup-file is write-protected. Removing write protection...");
-                try {
-                    // try to remove write protection
-                    backup.setWritable(true);
-                } catch (SecurityException ex) {
-                    // log error-message
-                    Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
-                    Constants.zknlogger.log(Level.SEVERE, "Autobackup-file is write-protected. Write protection could not be removed!");
-                }
-            }
-            try {
-                ByteArrayOutputStream bout;
-                // open the outputstream
-                try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(backup))) {
-                    // I first wanted to use a pretty output format, so advanced users who
-                    // extract the data file can better watch the xml-files. but somehow, this
-                    // lead to an error within the method "retrieveElement" in the class "CDaten.java",
-                    // saying the a org.jdom.text cannot be converted to org.jdom.element?!?
-                    // XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
-                    XMLOutputter out = new XMLOutputter();
-                    // save old statustext
-                    oldmsg = statusMsgLabel.getText();
-                    // show status text
-                    statusMsgLabel.setText(rm.getString("createAutoBackupMsg"));
-                    // save metainformation
-                    zip.putNextEntry(new ZipEntry(Constants.metainfFileName));
-                    out.output(data.getMetaInformationData(), zip);
-                    // save main data.
-                    zip.putNextEntry(new ZipEntry(Constants.zknFileName));
-                    out.output(data.getZknData(), zip);
-                    // save authors
-                    zip.putNextEntry(new ZipEntry(Constants.authorFileName));
-                    out.output(data.getAuthorData(), zip);
-                    // save keywords
-                    zip.putNextEntry(new ZipEntry(Constants.keywordFileName));
-                    out.output(data.getKeywordData(), zip);
-                    // save bookmarks
-                    zip.putNextEntry(new ZipEntry(Constants.bookmarksFileName));
-                    out.output(bookmarks.getBookmarkData(), zip);
-                    // save searchrequests
-                    zip.putNextEntry(new ZipEntry(Constants.searchrequestsFileName));
-                    out.output(searchrequests.getSearchData(), zip);
-                    // save synonyms
-                    zip.putNextEntry(new ZipEntry(Constants.synonymsFileName));
-                    out.output(synonyms.getDocument(), zip);
-                    // save bibtex file
-                    zip.putNextEntry(new ZipEntry(Constants.bibTexFileName));
-                    bout = bibtex.saveFile();
-                    bout.writeTo(zip);
-                    // save desktops
-                    zip.putNextEntry(new ZipEntry(Constants.desktopFileName));
-                    out.output(desktop.getDesktopData(), zip);
-                    zip.putNextEntry(new ZipEntry(Constants.desktopModifiedEntriesFileName));
-                    out.output(desktop.getDesktopModifiedEntriesData(), zip);
-                    zip.putNextEntry(new ZipEntry(Constants.desktopNotesFileName));
-                    out.output(desktop.getDesktopNotesData(), zip);
-                }
-                bout.close();
-            } catch (IOException e) {
-                // log error message
-                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-                // create a copy of the data file in case we have problems creating the auto-backup
-                File datafiledummy = settings.getFilePath();
-                // check for valid value
-                if (datafiledummy != null && datafiledummy.exists()) {
-                    try {
-                        // first, create basic backup-file
-                        File checkbackup = FileOperationsUtil.getBackupFilePath(datafiledummy);
-                        // copy data file as backup-file
-                        FileOperationsUtil.copyFile(datafiledummy, checkbackup, 1024);
-                        // log path.
-                        Constants.zknlogger.log(Level.INFO, "A backup of the data file was saved to {0}", checkbackup.toString());
-                        // check whether file is write protected
-                        if (!backup.canWrite()) {
-                            // log error-message
-                            Constants.zknlogger.log(Level.SEVERE, "Autobackup failed. The file is write-protected.");
-                            // show error message
-                            JOptionPane.showMessageDialog(getFrame(), rm.getString("errorSavingWriteProtectedMsg"), rm.getString("autobackupSaveErrTitle"), JOptionPane.PLAIN_MESSAGE);
-                        }
-                        // tell user that an error occured
-                        JOptionPane.showMessageDialog(getFrame(), rm.getString("autobackupSaveErrMsg", "\"" + checkbackup.getName() + "\""),
-                                rm.getString("autobackupSaveErrTitle"),
-                                JOptionPane.PLAIN_MESSAGE);
-                    } catch (IOException e2) {
-                        Constants.zknlogger.log(Level.SEVERE, e2.getLocalizedMessage());
-                    }
-                }
-            } catch (SecurityException e) {
-                // log error message
-                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-                // create a copy of the data file in case we have problems creating the auto-backup
-                File datafiledummy = settings.getFilePath();
-                // check for valid value
-                if (datafiledummy != null && datafiledummy.exists()) {
-                    try {
-                        // first, create basic backup-file
-                        File checkbackup = FileOperationsUtil.getBackupFilePath(datafiledummy);
-                        // copy data file as backup-file
-                        FileOperationsUtil.copyFile(datafiledummy, checkbackup, 1024);
-                        // log path.
-                        Constants.zknlogger.log(Level.INFO, "A backup of the data file was saved to {0}", checkbackup.toString());
-                        // tell user that an error occured
-                        JOptionPane.showMessageDialog(getFrame(), rm.getString("autobackupSaveErrMsg", "\"" + checkbackup.getName() + "\""),
-                                rm.getString("autobackupSaveErrTitle"),
-                                JOptionPane.PLAIN_MESSAGE);
-                    } catch (IOException e2) {
-                        Constants.zknlogger.log(Level.SEVERE, e2.getLocalizedMessage());
-                    }
-                }
-            }
-
-            return null;  // return your result
-        }
-
-        @Override
-        protected void succeeded(Object result) {
-            // Runs on the EDT.  Update the GUI based on
-            // the result computed by doInBackground().
-        }
-
-        @Override
-        protected void finished() {
-            super.finished();
-            // restore old status message
-            statusMsgLabel.setText(oldmsg);
-            // tell programm that task has finished
-            createAutoBackupIsRunning = false;
-            // no autoback necessary at the moment
-            isbackupnecessary = false;
-            // and log info message
-            Constants.zknlogger.log(Level.INFO, "Automatic backup was successfully created.");
-        }
+        return new AutoBackupTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
+                this, statusMsgLabel, data, desktop, settings, searchrequests, synonyms, bookmarks, bibtex);
     }
 
     /**
@@ -7051,115 +6875,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     @Action
     public final Task checkForUpdate() {
-        return new checkForUpdateTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
+        return new CheckForUpdateTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class), this, settings);
     }
-
-    private class checkForUpdateTask extends org.jdesktop.application.Task<Object, Void> {
-
-        // indicates whether the zettelkasten has updates or not.
-
-        boolean updateavailable = false;
-        boolean showUpdateMsg = true;
-        String updateBuildNr = "0";
-
-        checkForUpdateTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to ImportFileTask fields, here.
-            super(app);
-        }
-
-        protected String accessUpdateFile(URL updatetext) {
-            // input stream that will read the update text
-            InputStream is;
-            // stringbuilder that will contain the content of the update-file
-            StringBuilder updateinfo = new StringBuilder("");
-            try {
-                // open update-file on server
-                is = updatetext.openStream();
-                // buffer for stream
-                int buff = 0;
-                // read update-file and copy content to string builder
-                while (buff != -1) {
-                    buff = is.read();
-                    if (buff != -1) {
-                        updateinfo.append((char) buff);
-                    }
-                }
-            } catch (IOException e) {
-                // tell about fail
-                Constants.zknlogger.log(Level.INFO, "No access to Zettelkasten-Website. Automatic update-check failed.");
-                updateavailable = false;
-                return null;
-            }
-            return updateinfo.toString();
-        }
-
-        @Override
-        protected Object doInBackground() throws IOException {
-            // Your Task's code here.  This method runs
-            // on a background thread, so don't reference
-            // the Swing GUI from here.
-            String updateinfo = accessUpdateFile(new URL(Constants.UPDATE_INFO_URI));
-            // check for valid access
-            if (null == updateinfo || updateinfo.isEmpty()) {
-                return null;
-            }
-            // retrieve update info and split them into an array. this array will hold the latest
-            // build-version-number in the first field, and the type of update in the 2. field.
-            String[] updateversion = updateinfo.split("\n");
-            // check whether we have a valid array with content
-            if (updateversion != null && updateversion.length > 0) {
-                // retrieve start-index of the build-number within the version-string.
-                int substringindex = Constants.BUILD_VERSION.indexOf("(Build") + 7;
-                // only copy buildinfo into string, other information of version-info are not needed
-                String curversion = Constants.BUILD_VERSION.substring(substringindex, substringindex + 8);
-                // store build number of update
-                updateBuildNr = updateversion[0];
-                // check whether there's a newer version online
-                updateavailable = (curversion.compareTo(updateBuildNr) < 0);
-                // check whether update hint should be shown for this version or not
-                showUpdateMsg = (updateBuildNr.compareTo(settings.getShowUpdateHintVersion()) != 0);
-                // if no update available and user wants to check for nightly versions,
-                // check this now
-                if (!updateavailable && settings.getAutoNightlyUpdate()) {
-                    updateinfo = accessUpdateFile(new URL(Constants.UPDATE_NIGHTLY_INFO_URI));
-                    // check for valid access
-                    if (null == updateinfo || updateinfo.isEmpty()) {
-                        return null;
-                    }
-                    // retrieve update info and split them into an array. this array will hold the latest
-                    // build-version-number in the first field, and the type of update in the 2. field.
-                    updateversion = updateinfo.split("\n");
-                    if (updateversion != null && updateversion.length > 0) {
-                        updateavailable = (curversion.compareTo(updateversion[0]) < 0);
-                        if (updateavailable) {
-                            updateURI = Constants.UPDATE_NIGHTLY_URI;
-                        }
-                    }
-                }
-            }
-            return null;  // return your result
-        }
-
-        @Override
-        protected void succeeded(Object result) {
-            // Runs on the EDT.  Update the GUI based on
-            // the result computed by doInBackground().
-        }
-
-        @Override
-        protected void finished() {
-            if (updateavailable) {
-                //log info
-                Constants.zknlogger.log(Level.INFO, "A new version of the Zettelkasten is available!");
-                if (showUpdateMsg) {
-                    updateZettelkasten(updateBuildNr);
-                }
-            }
-        }
-    }
-
     /**
      * This task creates the related (clustered) keywords from the current
      * entry. Therefore, the current entry's keywords are retrieved. Then, in
@@ -7429,7 +7146,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // check for changes to synonyms
         if (settingsDlg.isSynModified()) {
             // update indicator for autobackup
-            isbackupnecessary = true;
+            setBackupNecessary(true);
             setSaveEnabled(true);
             // check whether we have to update tabbed pane
             if (!data.isKeywordlistUpToDate()) {
@@ -8445,7 +8162,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // - no backup necessary
         // - or an save-operation is in progress...
         // ...then do nothing.
-        if (createAutoBackupIsRunning || !isbackupnecessary || isSaving) {
+        if (isAutoBackupRunning() || !isBackupNecessary() || isSaving) {
             return;
         }
         // check for autobackup
@@ -9176,7 +8893,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     @Action(enabledProperty = "saveEnabled")
     public boolean saveDocument() {
         // when autobackup is running, prevent saving and tell user to wait a moment...
-        if (createAutoBackupIsRunning) {
+        if (isAutoBackupRunning()) {
             // show message
             JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("waitForAutobackupMsg"), getResourceMap().getString("waitForAutobackupTitle"), JOptionPane.PLAIN_MESSAGE);
             return false;
@@ -9232,7 +8949,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     @Action(enabledProperty = "entriesAvailable")
     public boolean saveDocumentAs() {
         // when autobackup is running, prevent saving and tell user to wait a moment...
-        if (createAutoBackupIsRunning) {
+        if (isAutoBackupRunning()) {
             // show message
             JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("waitForAutobackupMsg"), getResourceMap().getString("waitForAutobackupTitle"), JOptionPane.PLAIN_MESSAGE);
             return false;
@@ -11004,14 +10721,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 
     public void setBackupNecessary() {
-        isbackupnecessary = bibtex.isModified() | synonyms.isModified() | data.isMetaModified() | data.isModified() | searchrequests.isModified() | bookmarks.isModified() | desktop.isModified();
+        setBackupNecessary(bibtex.isModified() | synonyms.isModified() | data.isMetaModified() | data.isModified() | searchrequests.isModified() | bookmarks.isModified() | desktop.isModified());
         // update mainframe's toolbar and enable save-function
-        if (isbackupnecessary) {
+        if (isBackupNecessary()) {
             setSaveEnabled(true);
         }
     }
     public void resetBackupNecessary() {
-        isbackupnecessary = false;
+        setBackupNecessary(false);
     }    
 
     /**
@@ -11096,7 +10813,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // and don't exit...
                 return false;
             }
-            if (createAutoBackupIsRunning) {
+            if (isAutoBackupRunning()) {
                 // show message box
                 JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("cannotExitAutobackMsg"),getResourceMap().getString("cannotExitAutobackTitle"),JOptionPane.PLAIN_MESSAGE);
                 // and don't exit...
