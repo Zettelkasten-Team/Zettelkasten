@@ -7891,7 +7891,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     // get parent und init window
                     taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_EXPORTDATA, taskinfo, data, bookmarks, desktop, settings, bibtex, synonyms,
                             exportWindow.getFilePath(), entries, exportWindow.getExportType(), exportWindow.getExportParts(),
-                            exportWindow.getCSVSeparator(), null, exportWindow.isAllInOneFile(), exportWindow.getFormatTagsRemoved(),
+                            exportWindow.getCSVSeparator(), null, exportWindow.isSeparateFileForNotes(), exportWindow.getFormatTagsRemoved(),
                             exportWindow.getExportBibTex(), exportWindow.getKeywordsHighlighted(), false, false, exportWindow.hasTitlePrefix());
                     // center window
                     taskDlg.setLocationRelativeTo(getFrame());

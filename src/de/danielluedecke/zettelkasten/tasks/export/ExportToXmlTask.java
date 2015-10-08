@@ -37,7 +37,6 @@ import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.util.Constants;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,14 +65,6 @@ public class ExportToXmlTask extends org.jdesktop.application.Task<Object, Void>
      *
      */
     private final TasksData taskinfo;
-    /**
-     * This variable indicates whether the author- and keyword-file should be
-     * exported as separate files (just like the typical storage-system we use)
-     * or whether the author- and keyword-index-numbers should be replaced with
-     * the related string-values, so the author- and keyword-information are all
-     * in one file
-     */
-    private final boolean allinone;
     /**
      * This variable stores the parts which should be exported. It's a mix of
      * ORed constants, see below
@@ -117,7 +108,7 @@ public class ExportToXmlTask extends org.jdesktop.application.Task<Object, Void>
             getContext().getResourceMap(ExportTask.class);
 
     public ExportToXmlTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label,
-            TasksData td, Daten d, BibTex bib, File fp, ArrayList<Object> ee, int part, boolean bibtex, boolean allio, boolean rft) {
+            TasksData td, Daten d, BibTex bib, File fp, ArrayList<Object> ee, int part, boolean bibtex, boolean rft) {
         super(app);
         dataObj = d;
         bibtexObj = bib;
@@ -125,7 +116,6 @@ public class ExportToXmlTask extends org.jdesktop.application.Task<Object, Void>
         filepath = fp;
         exportparts = part;
         exportentries = ee;
-        allinone = allio;
         removeformattags = rft;
         exportOk = true;
         taskinfo = td;
@@ -229,106 +219,6 @@ public class ExportToXmlTask extends org.jdesktop.application.Task<Object, Void>
                 exportOk = false;
             }
         }
-
-        // if the user chose to export the keywords and authors as separate
-        // file, do so
-        if (!allinone) {
-            try {
-                //
-                // first we export the keyword file
-                //
-                // prepare the filepath
-                StringBuilder fp = new StringBuilder(filepath.toString());
-                // get position of file extension
-                int ext = fp.lastIndexOf(".");
-                // insert an appendix befor the file extenstion
-                fp.insert(ext, "_keywords");
-                // create a new file
-                File file_keywords = new File(fp.toString());
-                // open the outputstream
-                fos = new FileOutputStream(file_keywords);
-                // create a new XML-outputter with the pretty output format,
-                // so the xml-file looks nicer
-                XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
-                // save the main-export-file
-                out.output(dataObj.getKeywordData(), fos);
-            } catch (FileNotFoundException e) {
-                // log error-message
-                Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-                // show warning message
-                JOptionPane.showMessageDialog(null, resourceMap.getString("errorExportMsg"), resourceMap.getString("errorExportTitle"), JOptionPane.PLAIN_MESSAGE);
-                // and change indicator
-                exportOk = false;
-            } catch (IOException e) {
-                // log error-message
-                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-                // and change indicator
-                exportOk = false;
-            } catch (SecurityException e) {
-                // log error-message
-                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-                // show warning message
-                JOptionPane.showMessageDialog(null, resourceMap.getString("errorNoAccessMsg"), resourceMap.getString("errorNoAccessTitle"), JOptionPane.PLAIN_MESSAGE);
-                // and change indicator
-                exportOk = false;
-            } finally {
-                try {
-                    // close the output stream
-                    if (fos != null) {
-                        fos.close();
-                    }
-                } catch (IOException e) {
-                    // log error-message
-                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-                    // and change indicator
-                    exportOk = false;
-                }
-            }
-            try {
-                //
-                // now we export the author file
-                //
-                // prepare the filepath
-                StringBuilder fp = new StringBuilder(filepath.toString());
-                // get position of file extension
-                int ext = fp.lastIndexOf(".");
-                // insert an appendix befor the file extenstion
-                fp.insert(ext, "_authors");
-                // create a new file
-                File file_authors = new File(fp.toString());
-                // open the outputstream
-                fos = new FileOutputStream(file_authors);
-                // create a new XML-outputter with the pretty output format,
-                // so the xml-file looks nicer
-                XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
-                out.output(dataObj.getAuthorData(), fos);
-            } catch (FileNotFoundException e) {
-                // log error-message
-                Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-                // show warning message
-                JOptionPane.showMessageDialog(null, resourceMap.getString("errorExportMsg"), resourceMap.getString("errorExportTitle"), JOptionPane.PLAIN_MESSAGE);
-                // and change indicator
-                exportOk = false;
-            } catch (IOException e) {
-                // log error-message
-                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-                // and change indicator
-                exportOk = false;
-            } finally {
-                try {
-                    // close the output stream
-                    if (fos != null) {
-                        fos.close();
-                    }
-                } catch (IOException e) {
-                    // log error-message
-                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-                    // and change indicator
-                    exportOk = false;
-                }
-            }
-        }
-
         // if the user requested a bibtex-export, do this now
         if (exportbibtex) {
             // show status text
@@ -395,35 +285,28 @@ public class ExportToXmlTask extends org.jdesktop.application.Task<Object, Void>
             if ((exportparts & Constants.EXPORT_AUTHOR) != 0) {
                 // create new content element
                 Element el = new Element(Daten.ELEMENT_AUTHORS);
-                // if the user wants all data in one file, get the
-                // author string and replace the index-number with the string value
-                if (allinone) {
-                    // first check, whether we have any keywords at all
-                    if (zettel.getChild(Daten.ELEMENT_AUTHOR).getText().isEmpty()) {
-                        // if not, set empty string
-                        el.setText("");
-                    } else {
-                        // get the author string
-                        String[] aus = zettel.getChild(Daten.ELEMENT_AUTHOR).getText().split(",");
-                        // if we have any author, go on
-                        if (aus != null && aus.length > 0) {
-                            // iterate array
-                            for (String a : aus) {
-                                // create new child-element
-                                Element au = new Element(Daten.ELEMENT_AUTHOR);
-                                // set the text from the data-file
-                                au.setText(dataObj.getAuthor(Integer.parseInt(a)));
-                                // add child-element
-                                el.addContent(au);
-                            }
-                        } else {
-                            // else set empty string
-                            el.setText("");
-                        }
-                    }
+                // first check, whether we have any keywords at all
+                if (zettel.getChild(Daten.ELEMENT_AUTHOR).getText().isEmpty()) {
+                    // if not, set empty string
+                    el.setText("");
                 } else {
-                    // set the text from the data-file
-                    el.setText(zettel.getChild(Daten.ELEMENT_AUTHOR).getText());
+                    // get the author string
+                    String[] aus = zettel.getChild(Daten.ELEMENT_AUTHOR).getText().split(",");
+                    // if we have any author, go on
+                    if (aus != null && aus.length > 0) {
+                        // iterate array
+                        for (String a : aus) {
+                            // create new child-element
+                            Element au = new Element(Daten.ELEMENT_AUTHOR);
+                            // set the text from the data-file
+                            au.setText(dataObj.getAuthor(Integer.parseInt(a)));
+                            // add child-element
+                            el.addContent(au);
+                        }
+                    } else {
+                        // else set empty string
+                        el.setText("");
+                    }
                 }
                 // and add it to our final document
                 el_zettel.addContent(el);
@@ -433,37 +316,30 @@ public class ExportToXmlTask extends org.jdesktop.application.Task<Object, Void>
             if ((exportparts & Constants.EXPORT_KEYWORDS) != 0) {
                 // create new content element
                 Element el = new Element(Daten.ELEMENT_KEYWORD);
-                // if the user wants all data in one file, get the
-                // keyword string and replace the index-number with the string value
-                if (allinone) {
-                    // first check, whether we have any keywords at all
-                    if (zettel.getChild(Daten.ELEMENT_KEYWORD).getText().isEmpty()) {
-                        // if not, set empty string
-                        el.setText("");
-                    } else {
-                        // get the index numbers. we now have all keyword-index-numbers
-                        // as a string array. these numbers reference to the keyword-string-values
-                        // in the keyword-xml-file
-                        String[] nrs = zettel.getChild(Daten.ELEMENT_KEYWORD).getText().split(",");
-                        // if we have any author, go on
-                        if (nrs != null && nrs.length > 0) {
-                            // iterate the array
-                            for (String n : nrs) {
-                                // create new child element
-                                Element kw = new Element("keyword");
-                                // now get the keyword string from the keyword-xml-file
-                                kw.setText(dataObj.getKeyword(Integer.parseInt(n)));
-                                // and add this subchild
-                                el.addContent(kw);
-                            }
-                        } else {
-                            // else set empty string
-                            el.setText("");
-                        }
-                    }
+                // first check, whether we have any keywords at all
+                if (zettel.getChild(Daten.ELEMENT_KEYWORD).getText().isEmpty()) {
+                    // if not, set empty string
+                    el.setText("");
                 } else {
-                    // set the text from the data-file
-                    el.setText(zettel.getChild(Daten.ELEMENT_KEYWORD).getText());
+                    // get the index numbers. we now have all keyword-index-numbers
+                    // as a string array. these numbers reference to the keyword-string-values
+                    // in the keyword-xml-file
+                    String[] nrs = zettel.getChild(Daten.ELEMENT_KEYWORD).getText().split(",");
+                    // if we have any author, go on
+                    if (nrs != null && nrs.length > 0) {
+                        // iterate the array
+                        for (String n : nrs) {
+                            // create new child element
+                            Element kw = new Element("keyword");
+                            // now get the keyword string from the keyword-xml-file
+                            kw.setText(dataObj.getKeyword(Integer.parseInt(n)));
+                            // and add this subchild
+                            el.addContent(kw);
+                        }
+                    } else {
+                        // else set empty string
+                        el.setText("");
+                    }
                 }
                 // and add it to our final document
                 el_zettel.addContent(el);

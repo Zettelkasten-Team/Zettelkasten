@@ -38,6 +38,7 @@ import de.danielluedecke.zettelkasten.database.DesktopData;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.util.Constants;
+import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.TreeUtil;
 import java.io.File;
@@ -121,6 +122,7 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
      *
      */
     private boolean showOkMessage = true;
+    private final boolean separateFiles;
     /**
      *
      */
@@ -170,10 +172,11 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
      * applies when entries are exported from the DesktopFrame</b>
      * @param numberprefix indicates whether entries' titles should have their
      * entry-number included or not.
+     * @param sf whether each note should be saved as separate file
      */
     public ExportToMdTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label,
             TasksData td, Daten d, DesktopData dt, Settings s, BibTex bto, File fp, ArrayList<Object> ee, int type, int part,
-            DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix) {
+            DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix, boolean sf) {
         super(app);
         dataObj = d;
         settingsObj = s;
@@ -189,6 +192,7 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
         exportOk = true;
         taskinfo = td;
         treenode = n;
+        separateFiles = sf;
         parentDialog = parent;
         msgLabel = label;
 
@@ -220,8 +224,20 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
             showOkMessage = false;
             return null;
         }
+        // get destination directory for separate files
+        String separateFileDir = "";
+        // if separate file for each note, check whether we have a slash at the end
+        if (separateFiles) {
+            if (filepath.isDirectory() && !filepath.toString().endsWith(String.valueOf(java.io.File.separatorChar))) {
+                // if not, add slash
+                separateFileDir = filepath.toString() + String.valueOf(java.io.File.separatorChar);
+            } else {
+                // else get file path
+                separateFileDir = FileOperationsUtil.getFilePath(filepath);
+            }
+        }
         // check whether file already exists
-        if (filepath.exists()) {
+        if (!filepath.isDirectory() && filepath.exists()) {
             // file exists, ask user to overwrite it...
             int optionDocExists = JOptionPane.showConfirmDialog(null, resourceMap.getString("askForOverwriteFileMsg", "", filepath.getName()), resourceMap.getString("askForOverwriteFileTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
             // if the user does *not* choose to overwrite, quit...
@@ -245,10 +261,11 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
                     try {
                         // retrieve zettelnumber
                         int zettelnummer = Integer.parseInt(exportentries.get(counter).toString());
+                        String zetteltitle = "";
                         // check whether the user wants to export titles.
                         if ((exportparts & Constants.EXPORT_TITLE) != 0) {
                             // first check whether we have a title or not
-                            String zetteltitle = dataObj.getZettelTitle(zettelnummer);
+                            zetteltitle = dataObj.getZettelTitle(zettelnummer);
                             // only prepare a title when we want to have the entry's number as title-prefix,
                             // or if we have a title.
                             if (!zetteltitle.isEmpty() || zettelNumberAsPrefix) {
@@ -327,6 +344,19 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
                         if ((exportparts & Constants.EXPORT_LUHMANN) != 0 && dataObj.hasLuhmannNumbers(zettelnummer)) {
                             exportPage.append(ExportTools.createPlainCommaList(dataObj.getLuhmannNumbersAsString(zettelnummer), resourceMap.getString("NoLuhmann"), resourceMap.getString("luhmannHeader"), "* ", ""));
                         }
+                        // separate files for each note?
+                        if (separateFiles) {
+                            // create reference list
+                            exportPage.append(ExportTools.createReferenceList(dataObj, settingsObj, exportPage.toString(), "[FN ", "]", System.lineSeparator(), System.lineSeparator(), Constants.REFERENCE_LIST_TXT));
+                            // get note number and title for filepath
+                            String fname = String.valueOf(zettelnummer) + " " + zetteltitle.replaceAll("[^a-zA-Z0-9.-]", "_");
+                            // create file path
+                            File fp = new File(separateFileDir + fname.trim() + ".md");
+                            // write export file
+                            ExportTools.writeExportData(exportPage.toString(), fp);
+                            // reset string builder
+                            exportPage = new StringBuilder("");
+                        }
                     } catch (NumberFormatException e) {
                         // leave out first char, which is always a "H", set by the method
                         // "createExportEntries()".
@@ -353,20 +383,22 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
                 }
                 break;
         }
-        // show status text
-        msgLabel.setText(resourceMap.getString("msg4"));
-        // create reference list
-        exportPage.append(ExportTools.createReferenceList(dataObj, settingsObj, exportPage.toString(), "[FN ", "]", System.lineSeparator(), System.lineSeparator(), Constants.REFERENCE_LIST_TXT));
-        // show status text
-        msgLabel.setText(resourceMap.getString("msg2"));
-        // write export file
-        exportOk = ExportTools.writeExportData(exportPage.toString(), filepath);
-        // if the user requested a bibtex-export, do this now
-        if (exportbibtex) {
+        if (!separateFiles) {
             // show status text
-            msgLabel.setText(resourceMap.getString("msgBibtextExport"));
-            // write bibtex file
-            ExportTools.writeBibTexFile(dataObj, bibtexObj, exportentries, filepath, resourceMap);
+            msgLabel.setText(resourceMap.getString("msg4"));
+            // create reference list
+            exportPage.append(ExportTools.createReferenceList(dataObj, settingsObj, exportPage.toString(), "[FN ", "]", System.lineSeparator(), System.lineSeparator(), Constants.REFERENCE_LIST_TXT));
+            // show status text
+            msgLabel.setText(resourceMap.getString("msg2"));
+            // write export file
+            exportOk = ExportTools.writeExportData(exportPage.toString(), filepath);
+            // if the user requested a bibtex-export, do this now
+            if (exportbibtex) {
+                // show status text
+                msgLabel.setText(resourceMap.getString("msgBibtextExport"));
+                // write bibtex file
+                ExportTools.writeBibTexFile(dataObj, bibtexObj, exportentries, filepath, resourceMap);
+            }
         }
         return null;  // return your result
     }

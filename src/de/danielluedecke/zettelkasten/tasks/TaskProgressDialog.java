@@ -712,10 +712,8 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @param n the treenode of a selected node (entry) within the DesktopFrame.
      * This indicates, which part of the Desktop-Entries should be exportet,
      * i.e. at which node and related children the export of entries starts.
-     * @param all whether authors, keywords and entries should be exported to a
-     * single file {@code true}, or whether the author- and keywordlist should
-     * be exported as separated files {@code false}. <b>Does not apply for
-     * exporting Desktop-Entries.</b>
+     * @param separateFiles whether a new, separate file should be created for each
+     * note
      * @param notag whether formatting-tags should be removed {@code true} or
      * not {@code false}
      * @param bibtex whether a separate Bibtex-file containing a bibtex-styles
@@ -736,7 +734,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, TasksData td, Daten d, Bookmarks bm, DesktopData dt, Settings s, BibTex bto, Synonyms syn,
             File fp, ArrayList<Object> ee, int type, int part, char csep, DefaultMutableTreeNode n,
-            boolean all, boolean notag, boolean bibtex, boolean highlightkws, boolean ct, boolean ihv, boolean numberprefix) {
+            boolean separateFiles, boolean notag, boolean bibtex, boolean highlightkws, boolean ct, boolean ihv, boolean numberprefix) {
         super(parent);
         // store parameters
         dataObj = d;
@@ -762,15 +760,15 @@ public class TaskProgressDialog extends javax.swing.JDialog {
                 switch (type) {
                     case Constants.EXP_TYPE_TXT:
                     case Constants.EXP_TYPE_DESKTOP_TXT:
-                        foregroundTask = exportDataToTxt(fp, ee, type, part, n, bibtex, ihv, numberprefix);
+                        foregroundTask = exportDataToTxt(fp, ee, type, part, n, bibtex, ihv, numberprefix, separateFiles);
                         break;
                     case Constants.EXP_TYPE_MD:
                     case Constants.EXP_TYPE_DESKTOP_MD:
-                        foregroundTask = exportDataToMd(fp, ee, type, part, n, bibtex, ihv, numberprefix);
+                        foregroundTask = exportDataToMd(fp, ee, type, part, n, bibtex, ihv, numberprefix, separateFiles);
                         break;
                     case Constants.EXP_TYPE_TEX:
                     case Constants.EXP_TYPE_DESKTOP_TEX:
-                        foregroundTask = exportDataToTex(fp, ee, type, part, n, bibtex, ihv, numberprefix, ct);
+                        foregroundTask = exportDataToTex(fp, ee, type, part, n, bibtex, ihv, numberprefix, ct, separateFiles);
                         break;
                     case Constants.EXP_TYPE_HTML:
                     case Constants.EXP_TYPE_RTF:
@@ -785,7 +783,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
                         foregroundTask = exportDataToHtml(fp, ee, type, part, n, bibtex, ihv, highlightkws, numberprefix, ct);
                         break;
                     case Constants.EXP_TYPE_XML:
-                        foregroundTask = exportDataToXml(fp, ee, part, bibtex, all, notag);
+                        foregroundTask = exportDataToXml(fp, ee, part, bibtex, notag);
                         break;
                     case Constants.EXP_TYPE_CSV:
                         foregroundTask = exportDataToCsv(fp, ee, part, csep, notag, bibtex);
@@ -870,16 +868,16 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @param numberprefix
      * @return
      */
-    private Task exportDataToTxt(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix) {
+    private Task exportDataToTxt(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix, boolean separateFile) {
         return new ExportToTxtTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
                 this, msgLabel, taskinfo, dataObj, desktopObj, settingsObj, bibtexObj,
-                fp, ee, type, part, n, bibtex, ihv, numberprefix);
+                fp, ee, type, part, n, bibtex, ihv, numberprefix, separateFile);
     }
 
-    private Task exportDataToMd(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix) {
+    private Task exportDataToMd(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix, boolean separateFile) {
         return new ExportToMdTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
                 this, msgLabel, taskinfo, dataObj, desktopObj, settingsObj, bibtexObj,
-                fp, ee, type, part, n, bibtex, ihv, numberprefix);
+                fp, ee, type, part, n, bibtex, ihv, numberprefix, separateFile);
     }
 
     /**
@@ -894,10 +892,10 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @param numberprefix
      * @return
      */
-    private Task exportDataToTex(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix, boolean contenttable) {
+    private Task exportDataToTex(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix, boolean contenttable, boolean separateFile) {
         return new ExportToTexTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
                 this, msgLabel, taskinfo, dataObj, desktopObj, settingsObj, bibtexObj,
-                fp, ee, type, part, n, bibtex, ihv, numberprefix, contenttable);
+                fp, ee, type, part, n, bibtex, ihv, numberprefix, contenttable, separateFile);
     }
 
     /**
@@ -929,9 +927,9 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @param removeformattags
      * @return
      */
-    private Task exportDataToXml(File fp, ArrayList<Object> ee, int part, boolean bibtex, boolean allinone, boolean removeformattags) {
+    private Task exportDataToXml(File fp, ArrayList<Object> ee, int part, boolean bibtex, boolean removeformattags) {
         return new ExportToXmlTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, taskinfo, dataObj, bibtexObj, fp, ee, part, bibtex, allinone, removeformattags);
+                this, msgLabel, taskinfo, dataObj, bibtexObj, fp, ee, part, bibtex, removeformattags);
     }
 
     /**

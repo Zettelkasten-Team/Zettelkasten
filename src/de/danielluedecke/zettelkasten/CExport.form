@@ -57,7 +57,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="1"/>
-                      <Component id="jCheckBoxAllInOne" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jCheckBoxSeparateFile" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="jCheckBoxRemoveFormatTags" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="jComboBox_exportType" alignment="0" min="-2" max="-2" attributes="1"/>
                       <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
@@ -95,7 +95,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jComboBox_exportType" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jCheckBoxAllInOne" min="-2" max="-2" attributes="0"/>
+                  <Component id="jCheckBoxSeparateFile" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jCheckBoxRemoveFormatTags" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -136,11 +136,11 @@
             <Property name="name" type="java.lang.String" value="jComboBox_exportType" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="jCheckBoxAllInOne">
+        <Component class="javax.swing.JCheckBox" name="jCheckBoxSeparateFile">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="jCheckBoxAllInOne.text"/>
-            <Property name="toolTipText" type="java.lang.String" resourceKey="jCheckBoxAllInOne.toolTipText"/>
-            <Property name="name" type="java.lang.String" value="jCheckBoxAllInOne" noResource="true"/>
+            <Property name="text" type="java.lang.String" resourceKey="jCheckBoxSeparateFile.text"/>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="jCheckBoxSeparateFile.toolTipText"/>
+            <Property name="name" type="java.lang.String" value="jCheckBoxSeparateFile" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelBrowseDir">
