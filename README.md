@@ -11,7 +11,7 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 ### Changelog der aktuellen Entwicklerversion
 
 #### Neue Funktionen und Änderungen
-* Der Export von Zetteln ins Markdown-, Text- und LaTex-Format kann jetzt auch jeden Zettel als einzelene Datei exportieren ([#13](https://github.com/sjPlot/Zettelkasten/issues/13) und [#77](https://github.com/sjPlot/Zettelkasten/issues/77)).
+* Der Export von Zetteln ins Markdown-, Text- und LaTex-Format kann jetzt auch jeden Zettel als einzelne Datei exportieren ([#13](https://github.com/sjPlot/Zettelkasten/issues/13) und [#77](https://github.com/sjPlot/Zettelkasten/issues/77)).
 * Im englischen Interface wurden _trails_ in _note sequences_ und _entry_ in _note_ umbenannt.
 * Literaturfußnoten können jetzt auch den Bibkey statt der Nummer des Literatureintrags enthalten (`[fn luhsozsys:123]` würde z.B. umgewandelt in `Luhmann 1984: 123`).
 * Das automatische Einklammern von Literaturfußnoten kann in den Einstellungen abgestellt werden ([#91](https://github.com/sjPlot/Zettelkasten/issues/91)).
@@ -22,7 +22,7 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 * Änderung [#82](https://github.com/sjPlot/Zettelkasten/issues/82) wurde rückgängig gemacht, da es Probleme mit URLs in BibTex-Autorenangaben gab.
 * In der Registerkarte _Literatur_ wurden _Buchkapitel_ und _Artikel in Büchern_ bei der Filterfunktion vertauscht ([#90](https://github.com/sjPlot/Zettelkasten/issues/90)).
 * Dateinamen mit Unterstrichen kollidierten mit Markdowninterpretation ([#26](https://github.com/sjPlot/Zettelkasten/issues/26)).
-* Schreibtischexport ins Markdown deklariertr keine Überschriften ([#56](https://github.com/sjPlot/Zettelkasten/issues/56)).
+* Schreibtischexport ins Markdown deklarierte keine Überschriften ([#56](https://github.com/sjPlot/Zettelkasten/issues/56)).
 
 ### Screenshots
 Aktuelle Screenshots [gibt es hier](http://zettelkasten.danielluedecke.de/gallery.php).
