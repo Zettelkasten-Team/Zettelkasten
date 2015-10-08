@@ -53,7 +53,7 @@ public class TestExportToTexTask {
 
 		exportToTexTask = new ExportToTexTask(app, parent, label, td, daten,
 				dt, settings.settings, bto, fp, ee, type, part, n, bibtex, ihv,
-				numberprefix, contenttable);
+				numberprefix, contenttable, false);
 	}
 
 	@Test
