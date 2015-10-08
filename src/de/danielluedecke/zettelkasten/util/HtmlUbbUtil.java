@@ -1312,6 +1312,11 @@ public class HtmlUbbUtil {
             dummy = dummy.replaceAll("---(.*?)---", "<strike>$1</strike>");
             // images
             dummy = dummy.replaceAll("[!]{1}\\[([^\\[]+)\\]\\(([^\\)]+)\\)", "[img]$2[/img]");
+            // we need to fix emphasing in image tags. if image file path has
+            // underscores, these have been replaced to italic / bold etc.
+            dummy = fixBrokenTags(dummy, "\\[img\\]([^|]*)(.*?)\\[/img\\]");
+            dummy = fixBrokenTags(dummy, "\\(http://([^\\)]+)\\)");
+
             dummy = dummy.replace("\n", "[br]");
         } else {
             // if we don't have markdown, and thus no quotes-syntax with "> ...",
@@ -1389,6 +1394,44 @@ public class HtmlUbbUtil {
         return dummy;
     }
 
+    private static String fixBrokenTags(String content, String regexpattern) {
+        try {
+            // we need to fix emphasing in image tags. if image file path has
+            // underscores, these have been replaced to italic / bold etc.
+            Pattern p = Pattern.compile(regexpattern);
+            // create matcher
+            Matcher m = p.matcher(content);
+            // save find-position
+            List<Integer> start = new ArrayList<>();
+            List<Integer> end = new ArrayList<>();
+            List<String> itag = new ArrayList<>();
+            // check for occurences
+            while (m.find()) {
+                // save grouping-positions
+                start.add(m.start());
+                end.add(m.end());
+                itag.add(m.group());
+            }
+            // have any image tags?
+            if (!start.isEmpty()) {
+                for (int i = start.size() - 1; i >= 0; i--) {
+                    // get image tag
+                    String imtag = itag.get(i).
+                            replaceAll(Pattern.quote("<b>"), "__").
+                            replaceAll(Pattern.quote("</b>"), "__").
+                            replaceAll(Pattern.quote("<i>"), "_").
+                            replaceAll(Pattern.quote("</i>"), "_");
+                    content = content.substring(0, start.get(i)) + 
+                            imtag +
+                            content.substring(end.get(i), content.length());
+                }
+            }
+        } catch (PatternSyntaxException e) {
+        }
+        return content;
+    }
+    
+    
     public static String replaceHtmlToUbb(String dummy) {
         // new line
         dummy = dummy.replace("<br>", "[br]");
