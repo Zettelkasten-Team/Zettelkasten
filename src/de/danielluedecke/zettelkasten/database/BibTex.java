@@ -593,8 +593,8 @@ public class BibTex {
         // create a new bibtex-parser for parsing the bibtex-file
         BibtexParser bp = new BibtexParser(false);
         // create stream-readers for reading the file
-        InputStreamReader isr;
-        InputStream is;
+        InputStreamReader isr = null;
+        InputStream is = null;
         try {
             // create fileinput-stream
             is = new FileInputStream(getFilePath());
@@ -624,16 +624,21 @@ public class BibTex {
             // set new attached filepath, so we can figure out whether we have any
             // attached file or not...
             currentlyattachedfile = getFilePath();
+        } catch (ParseException | IOException e) {
+            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+            return false;
+        } finally {
             try {
-                isr.close();
-                is.close();
+                if (isr != null) {
+                    isr.close();
+                }
+                if (is != null) {
+                    is.close();
+                }
             } catch (IOException e) {
                 Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                 return false;
             }
-        } catch (ParseException | IOException e) {
-            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-            return false;
         }
         // check whether missing entries should be added
         if (!updateExistingEntries && !suppressNewEntryImport) {
@@ -686,7 +691,7 @@ public class BibTex {
         // create a new bibtex-parser for parsing the bibtex-file
         BibtexParser bp = new BibtexParser(false);
         // create stream-readers for reading the file
-        InputStreamReader isr;
+        InputStreamReader isr = null;
         try {
             // read the stream, using the related character encoding
             isr = new InputStreamReader(is, encoding);
@@ -710,16 +715,19 @@ public class BibTex {
                     // single bibtex-entry via the list "bibtexentries"
                 }
             }
+        } catch (ParseException | IOException e) {
+            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+            return false;
+        } finally {
             try {
-                isr.close();
+                if (isr != null) {
+                    isr.close();
+                }
                 is.close();
             } catch (IOException e) {
                 Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                 return false;
             }
-        } catch (ParseException | IOException e) {
-            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-            return false;
         }
         return true;
     }
@@ -732,7 +740,7 @@ public class BibTex {
         // create a new bibtex-parser for parsing the bibtex-file
         BibtexParser bp = new BibtexParser(false);
         // create stream-readers for reading the file
-        InputStreamReader isr;
+        InputStreamReader isr = null;
         try {
             // read the stream, using the related character encoding
             isr = new InputStreamReader(is, encoding);
@@ -754,16 +762,19 @@ public class BibTex {
                     // single bibtex-entry via the list "bibtexentries"
                 }
             }
+        } catch (ParseException | IOException e) {
+            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+            return false;
+        } finally {
             try {
-                isr.close();
+                if (isr != null) {
+                    isr.close();
+                }
                 is.close();
             } catch (IOException e) {
                 Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                 return false;
             }
-        } catch (ParseException | IOException e) {
-            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-            return false;
         }
         return true;
     }

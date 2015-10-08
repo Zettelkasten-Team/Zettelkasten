@@ -430,15 +430,25 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
                 try {
                     // start process
                     Process p = pb.start();
+                    Scanner sc = null;
                     // catch error stream
                     StringBuilder errstr = new StringBuilder("");
                     // create scanner to receive compiler messages
                     try {
-                        Scanner sc = new Scanner(p.getInputStream()).useDelimiter(System.lineSeparator());
+                        sc = new Scanner(p.getInputStream()).useDelimiter(System.lineSeparator());
                         // write output to text area
                         while (sc.hasNextLine()) {
                             errstr.append(System.lineSeparator()).append(sc.nextLine());
                         }
+                    } catch (IllegalStateException ex) {
+                        // log error stream
+                        Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
+                    } finally {
+                        if (sc != null) {
+                            sc.close();
+                        }
+                    }
+                    try {
                         // write output to text area
                         // create scanner to receive compiler messages
                         sc = new Scanner(p.getErrorStream()).useDelimiter(System.lineSeparator());
@@ -449,6 +459,10 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
                     } catch (IllegalStateException ex) {
                         // log error stream
                         Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
+                    } finally {
+                        if (sc != null) {
+                            sc.close();
+                        }
                     }
                     // log error stream
                     Constants.zknlogger.log(Level.INFO, "Pandoc-Process-Log:" + System.lineSeparator() + "{0}", errstr.toString());

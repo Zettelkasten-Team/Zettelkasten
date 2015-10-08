@@ -410,15 +410,16 @@ public class FileOperationsUtil {
                 }
                 out.write(buffer, 0, read);
             }
+        } catch (IOException | NullPointerException e) {
         } finally {
-            if (in != null) {
-                try {
+            try {
+                if (in != null) {
                     in.close();
-                } finally {
-                    if (out != null) {
-                        out.close();
-                    }
                 }
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException e) {
             }
         }
     }

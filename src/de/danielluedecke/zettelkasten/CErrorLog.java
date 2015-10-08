@@ -30,7 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 package de.danielluedecke.zettelkasten;
 
 import de.danielluedecke.zettelkasten.database.Settings;
@@ -44,7 +43,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -64,20 +62,19 @@ public class CErrorLog extends javax.swing.JDialog {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(CErrorLog.class);
+    private org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(CErrorLog.class);
     /**
      * Reference to the main frame.
      */
     private ZettelkastenView mainframe;
 
-
     /**
-     * 
+     *
      * @param parent
      * @param zkn
-     * @param settingsObj 
+     * @param settingsObj
      */
     public CErrorLog(java.awt.Frame parent, ZettelkastenView zkn, Settings settingsObj) {
         super(parent);
@@ -91,7 +88,8 @@ public class CErrorLog extends javax.swing.JDialog {
         // presses the cancel button...
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
         ActionListener cancelAction = new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 cancel();
             }
         };
@@ -102,29 +100,31 @@ public class CErrorLog extends javax.swing.JDialog {
         }
         // add change listener to tabbed pane
         jTabbedPane1.addChangeListener(new javax.swing.event.ChangeListener() {
-            @Override public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                if (1==jTabbedPane1.getSelectedIndex()) {
+            @Override
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                if (1 == jTabbedPane1.getSelectedIndex()) {
                     // set internal session-log-text to 2. textarea
                     Tools.flushSessionLog();
-                    jTextArea2.setText("------------------------------"+
-                                        System.lineSeparator()+
-                                        "Zettelkasten-Version: "+Constants.BUILD_VERSION+
-                                        System.lineSeparator()+
-                                        System.lineSeparator()+
-                                        Tools.getSystemInformation()+
-                                        System.lineSeparator()+
-                                        "------------------------------"+
-                                        System.lineSeparator()+
-                                        System.lineSeparator()+
-                                        mainframe.baos_log.toString());
+                    jTextArea2.setText("------------------------------"
+                            + System.lineSeparator()
+                            + "Zettelkasten-Version: " + Constants.BUILD_VERSION
+                            + System.lineSeparator()
+                            + System.lineSeparator()
+                            + Tools.getSystemInformation()
+                            + System.lineSeparator()
+                            + "------------------------------"
+                            + System.lineSeparator()
+                            + System.lineSeparator()
+                            + mainframe.baos_log.toString());
                     jTextArea2.setCaretPosition(0);
                 }
             }
         });
+        InputStream is = null;
+        // now we load the error log and display it to the user. but first, we put some useful
+        // information in front of the log
+        StringBuilder sb = new StringBuilder("");
         try {
-            // now we load the error log and display it to the user. but first, we put some useful
-            // information in front of the log
-            StringBuilder sb = new StringBuilder("");
             // some text for the user
             sb.append(resourceMap.getString("errorMsg")).append(System.lineSeparator()).append(System.lineSeparator());
             // a separator line for a better overview
@@ -139,68 +139,73 @@ public class CErrorLog extends javax.swing.JDialog {
             // header for log 1
             sb.append("Log 1").append(System.lineSeparator()).append("-----").append(System.lineSeparator());
             // now, load the log-file and append it to the final error message as well
-            InputStream is = new FileInputStream(new File(FileOperationsUtil.getZettelkastenHomeDir()+"zknerror0.log"));
-            while (c!=-1) {
+            is = new FileInputStream(new File(FileOperationsUtil.getZettelkastenHomeDir() + "zknerror0.log"));
+            while (c != -1) {
                 c = is.read();
-                if (c!=-1) sb.append((char)c);
+                if (c != -1) {
+                    sb.append((char) c);
+                }
             }
-            // close stream
-            is.close();
-            c = 0;
+        } catch (IOException e) {
+            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
+            }
+        }
+        try {
+            int c = 0;
             // header for log 2
             sb.append(System.lineSeparator()).append(System.lineSeparator()).append("Log 2").append(System.lineSeparator()).append("-----").append(System.lineSeparator());
             // now, load the log-file and append it to the final error message as well
-            is = new FileInputStream(new File(FileOperationsUtil.getZettelkastenHomeDir()+"zknerror1.log"));
-            while (c!=-1) {
+            is = new FileInputStream(new File(FileOperationsUtil.getZettelkastenHomeDir() + "zknerror1.log"));
+            while (c != -1) {
                 c = is.read();
-                if (c!=-1) sb.append((char)c);
+                if (c != -1) {
+                    sb.append((char) c);
+                }
             }
-            // close stream
-            is.close();
-            c = 0;
+        } catch (IOException e) {
+            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
+            }
+        }
+        try {
+            int c = 0;
             // header for log 3
             sb.append(System.lineSeparator()).append(System.lineSeparator()).append("Log 3").append(System.lineSeparator()).append("-----").append(System.lineSeparator());
             // now, load the log-file and append it to the final error message as well
-            is = new FileInputStream(new File(FileOperationsUtil.getZettelkastenHomeDir()+"zknerror2.log"));
-            while (c!=-1) {
+            is = new FileInputStream(new File(FileOperationsUtil.getZettelkastenHomeDir() + "zknerror2.log"));
+            while (c != -1) {
                 c = is.read();
-                if (c!=-1) sb.append((char)c);
+                if (c != -1) {
+                    sb.append((char) c);
+                }
             }
-            // close stream
-            is.close();
-/*
-            // create a new buffer for the log
-            byte[] buffer = new byte[1024];
-            // header for log 1
-            sb.append("Log 1"+System.lineSeparator()+"-----"+System.lineSeparator());
-            // now, load the log-file and append it to the final error message as well
-            InputStream is = new FileInputStream(new File(FileOperationsUtil.getZettelkastenHomeDir()+"zknerror0.log"));
-            while(is.read(buffer)!=-1) sb.append(new String(buffer));
-            // close stream
-            is.close();
-            // header for log 2
-            sb.append(System.lineSeparator()+System.lineSeparator()+"Log 2"+System.lineSeparator()+"-----"+System.lineSeparator());
-            // now, load the log-file and append it to the final error message as well
-            is = new FileInputStream(new File(FileOperationsUtil.getZettelkastenHomeDir()+"zknerror1.log"));
-            while(is.read(buffer)!=-1) sb.append(new String(buffer));
-            // close stream
-            is.close();
-            // header for log 3
-            sb.append(System.lineSeparator()+System.lineSeparator()+"Log 3"+System.lineSeparator()+"-----"+System.lineSeparator());
-            // now, load the log-file and append it to the final error message as well
-            is = new FileInputStream(new File(FileOperationsUtil.getZettelkastenHomeDir()+"zknerror2.log"));
-            while(is.read(buffer)!=-1) sb.append(new String(buffer));
-            // close stream
-            is.close();
-*/
-            // finally, set the text to the text area
-            jTextArea1.setText(sb.toString());
-            jTextArea1.setCaretPosition(0);
-        } catch (FileNotFoundException e) {
-            Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
         } catch (IOException e) {
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
+            }
         }
+        // finally, set the text to the text area
+        jTextArea1.setText(sb.toString());
+        jTextArea1.setCaretPosition(0);
         // focus on button
         jButton1.requestFocusInWindow();
     }
@@ -213,7 +218,7 @@ public class CErrorLog extends javax.swing.JDialog {
         jScrollPane1.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
         jScrollPane2.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
     }
-    
+
     private void cancel() {
         dispose();
         setVisible(false);

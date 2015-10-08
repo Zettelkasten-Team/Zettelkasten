@@ -987,8 +987,10 @@ public class Settings {
             // it is better to have them separated, in the base-zkn-directory (zkn-path) if possible,
             // so whenever the user removes the program directory, the other data is still there.
             for (String filesToLoad1 : filesToLoad) {
+                ZipInputStream zip = null;
                 // open the zip-file
-                try (ZipInputStream zip = new ZipInputStream(new FileInputStream(filepath))) {
+                try {
+                    zip = new ZipInputStream(new FileInputStream(filepath));
                     ZipEntry entry;
                     // now iterate the zip-file, searching for the requested file in it
                     while ((entry = zip.getNextEntry()) != null) {
@@ -1024,6 +1026,14 @@ public class Settings {
                     }
                 } catch (IOException e) {
                     Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+                } finally {
+                    try {
+                        if (zip != null) {
+                            zip.close();
+                        }
+                    } catch (IOException e) {
+                        Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+                    }
                 }
                 // now fill/create all child-elements that do not already exist
                 fillElements();
@@ -1033,44 +1043,52 @@ public class Settings {
 
         if (datafilepath != null && datafilepath.exists()) {
             // now we load the meta-data. see comment above for more information...
-            try {
-                for (String dataFilesToLoad1 : dataFilesToLoad) {
-                    // open the zip-file
-                    try (ZipInputStream zip = new ZipInputStream(new FileInputStream(datafilepath))) {
-                        ZipEntry entry;
-                        // now iterate the zip-file, searching for the requested file in it
-                        while ((entry = zip.getNextEntry()) != null) {
-                            String entryname = entry.getName();
-                            // if the found file matches the requested one, start the SAXBuilder
-                            if (entryname.equals(dataFilesToLoad1)) {
-                                try {
-                                    SAXBuilder builder = new SAXBuilder();
-                                    // Document doc = new Document();
-                                    Document doc = builder.build(zip);
-                                    // compare, which file we have retrieved, so we store the data
-                                    // correctly on our data-object
-                                    if (entryname.equals(Constants.foreignWordsName)) {
-                                        foreignWordsFile = doc;
-                                    }
-                                    if (entryname.equals(Constants.synonymsFileName)) {
-                                        synonyms.setDocument(doc);
-                                    }
-                                    if (entryname.equals(Constants.autoKorrekturFileName)) {
-                                        autoKorrekt.setDocument(doc);
-                                    }
-                                    if (entryname.equals(Constants.stenoFileName)) {
-                                        steno.setDocument(doc);
-                                    }
-                                    break;
-                                } catch (JDOMException e) {
-                                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+            for (String dataFilesToLoad1 : dataFilesToLoad) {
+                ZipInputStream zip = null;
+                // open the zip-file
+                try {
+                    zip = new ZipInputStream(new FileInputStream(datafilepath));
+                    ZipEntry entry;
+                    // now iterate the zip-file, searching for the requested file in it
+                    while ((entry = zip.getNextEntry()) != null) {
+                        String entryname = entry.getName();
+                        // if the found file matches the requested one, start the SAXBuilder
+                        if (entryname.equals(dataFilesToLoad1)) {
+                            try {
+                                SAXBuilder builder = new SAXBuilder();
+                                // Document doc = new Document();
+                                Document doc = builder.build(zip);
+                                // compare, which file we have retrieved, so we store the data
+                                // correctly on our data-object
+                                if (entryname.equals(Constants.foreignWordsName)) {
+                                    foreignWordsFile = doc;
                                 }
+                                if (entryname.equals(Constants.synonymsFileName)) {
+                                    synonyms.setDocument(doc);
+                                }
+                                if (entryname.equals(Constants.autoKorrekturFileName)) {
+                                    autoKorrekt.setDocument(doc);
+                                }
+                                if (entryname.equals(Constants.stenoFileName)) {
+                                    steno.setDocument(doc);
+                                }
+                                break;
+                            } catch (JDOMException e) {
+                                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                             }
                         }
                     }
+                } catch (IOException e) {
+                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+                } finally {
+                    try {
+                        if (zip != null) {
+                            zip.close();
+                        }
+                    } catch (IOException e) {
+                        Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+                    }
                 }
-            } catch (IOException e) {
-                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             }
         }
     }
@@ -1083,8 +1101,10 @@ public class Settings {
     public boolean saveSettings() {
         // initial value
         boolean saveok = true;
+        ZipOutputStream zip = null;
         // open the outputstream
-        try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(filepath))) {
+        try {
+            zip = new ZipOutputStream(new FileOutputStream(filepath));
             // I first wanted to use a pretty output format, so advanced users who
             // extract the data file can better watch the xml-files. but somehow, this
             // lead to an error within the method "retrieveElement" in the class "CDaten.java",
@@ -1116,6 +1136,14 @@ public class Settings {
             Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             // change return value
             saveok = false;
+        } finally {
+            try {
+                if (zip != null) {
+                    zip.close();
+                }
+            } catch (IOException e) {
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+            }
         }
         // first, create temporary backup of data-file
         // therefor, create tmp-file-path
@@ -1140,7 +1168,8 @@ public class Settings {
         // save original data-file. in case we get an error here, we can copy
         // back the temporary saved file...
         // open the outputstream
-        try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(datafilepath))) {
+        try {
+            zip = new ZipOutputStream(new FileOutputStream(datafilepath));
             // I first wanted to use a pretty output format, so advanced users who
             // extract the data file can better watch the xml-files. but somehow, this
             // lead to an error within the method "retrieveElement" in the class "CDaten.java",
@@ -1175,6 +1204,14 @@ public class Settings {
             JOptionPane.showMessageDialog(null, resourceMap.getString("metadataSaveErrMsg", "\"" + checkbackup.getName() + "\""),
                     resourceMap.getString("metadataSaveErrTitle"),
                     JOptionPane.PLAIN_MESSAGE);
+        } finally {
+            try {
+                if (zip != null) {
+                    zip.close();
+                }
+            } catch (IOException e) {
+                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+            }
         }
         // finally, delete temp-file
         tmpdatafp = new File(datafilepath.toString() + ".tmp");

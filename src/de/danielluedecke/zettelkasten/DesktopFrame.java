@@ -3006,8 +3006,10 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 settingsObj);
         // if we have a valid file, go on
         if (filepath != null && filepath.exists()) {
+            ZipInputStream zip = null;
             // open the zip-file
-            try (ZipInputStream zip = new ZipInputStream(new FileInputStream(filepath))) {
+            try {
+                zip = new ZipInputStream(new FileInputStream(filepath));
                 ZipEntry entry;
                 // now iterate the zip-file, searching for the requested file in it
                 while ((entry = zip.getNextEntry()) != null) {
@@ -3033,6 +3035,14 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 // and show error log
                 zknframe.showErrorIcon();
                 return;
+            } finally {
+                try {
+                    if (zip != null) {
+                        zip.close();
+                    }
+                } catch (IOException e) {
+                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+                }
             }
             // init variables that indicate the success of the import-progress
             boolean finished = false;
@@ -3131,8 +3141,10 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 return;
             }
             // export and zip file
+            ZipOutputStream zip = null;
             // open the outputstream
-            try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(filepath))) {
+            try {
+                zip = new ZipOutputStream(new FileOutputStream(filepath));
                 // I first wanted to use a pretty output format, so advanced users who
                 // extract the data file can better watch the xml-files. but somehow, this
                 // lead to an error within the method "retrieveElement" in the class "CDaten.java",
@@ -3147,6 +3159,14 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 JOptionPane.showMessageDialog(this, resourceMap.getString("archiveErrMsg"), resourceMap.getString("archiveErrTitle"), JOptionPane.PLAIN_MESSAGE);
                 zknframe.showErrorIcon();
                 return;
+            } finally {
+                try {
+                    if (zip != null) {
+                        zip.close();
+                    }
+                } catch (IOException e) {
+                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+                }
             }
             JOptionPane.showMessageDialog(this, resourceMap.getString("archiveOkMsg"), resourceMap.getString("archiveOkTitle"), JOptionPane.PLAIN_MESSAGE);
         }

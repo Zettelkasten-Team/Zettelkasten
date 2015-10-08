@@ -9410,14 +9410,21 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         try {
                             // save the main-export-file
                             out.output(exportfile, fos);
-                            // close the output stream
-                            fos.close();
                         } catch (IOException e) {
                             // log error-message
                             Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                             errorOccured = true;
                             // show error message
                             JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("errorSavingMsg"), getResourceMap().getString("errorSavingTitle"), JOptionPane.PLAIN_MESSAGE);
+                        } finally {
+                            try {
+                                // close the output stream
+                                fos.close();
+                            } catch (IOException e) {
+                                // log error-message
+                                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+                                errorOccured = true;
+                            }
                         }
                     } catch (FileNotFoundException ex) {
                         // log error-message
@@ -10830,6 +10837,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             saveSettings();
             // and create an additional backup, when option is activated.
             makeExtraBackup();
+            try {
+                if (baos_log != null) {
+                    baos_log.close();
+                }
+            } catch (IOException ex) {
+            }
         }
     }
 
