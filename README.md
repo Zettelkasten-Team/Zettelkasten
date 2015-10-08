@@ -21,6 +21,7 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 * Änderung [#82](https://github.com/sjPlot/Zettelkasten/issues/82) wurde rückgängig gemacht, da es Probleme mit URLs in BibTex-Autorenangaben gab.
 * In der Registerkarte _Literatur_ wurden _Buchkapitel_ und _Artikel in Büchern_ bei der Filterfunktion vertauscht ([#90](https://github.com/sjPlot/Zettelkasten/issues/90)).
 * Dateinamen mit Unterstrichen kollidierten mit Markdowninterpretation ([#26](https://github.com/sjPlot/Zettelkasten/issues/26)).
+* Schreibtischexport ins Markdown deklariertr keine Überschriften ([#56](https://github.com/sjPlot/Zettelkasten/issues/56)).
 
 ### Screenshots
 Aktuelle Screenshots [gibt es hier](http://zettelkasten.danielluedecke.de/gallery.php).

@@ -30,7 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 package de.danielluedecke.zettelkasten.tasks.export;
 
 import de.danielluedecke.zettelkasten.database.BibTex;
@@ -52,17 +51,18 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * @author Luedeke
  */
 public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> {
+
     /**
-     * Reference to the CDaten object, which contains the XML data of the Zettelkasten
-     * will be passed as parameter in the constructor, see below
+     * Reference to the CDaten object, which contains the XML data of the
+     * Zettelkasten will be passed as parameter in the constructor, see below
      */
     private final Daten dataObj;
     /**
-     * 
+     *
      */
     private final BibTex bibtexObj;
     /**
-     * 
+     *
      */
     private final DesktopData desktopObj;
     /**
@@ -74,14 +74,15 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
      */
     private final Settings settingsObj;
     /**
-     * Indicates whether or not a bibtex-file from the exported entries should be created or not
+     * Indicates whether or not a bibtex-file from the exported entries should
+     * be created or not
      */
     private final boolean exportbibtex;
     /**
-     * Defines whether each headline of any entry has its entry-number as prefix. If
-     * set to {@code true}, each entry's title will appear as <i>Entry XY: entry title</i>,
-     * if set to {@code false}, a title will just appear as <i>entry title</i>, or left out
-     * if title is empty.
+     * Defines whether each headline of any entry has its entry-number as
+     * prefix. If set to {@code true}, each entry's title will appear as
+     * <i>Entry XY: entry title</i>, if set to {@code false}, a title will just
+     * appear as <i>entry title</i>, or left out if title is empty.
      */
     private final boolean zettelNumberAsPrefix;
     /**
@@ -90,9 +91,9 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
      */
     private final int exportparts;
     /**
-     * indicates which type of data format should be exported to.
-     * refer to the Zettelkasten.view properties file (resources) to see
-     * which number is which file type.
+     * indicates which type of data format should be exported to. refer to the
+     * Zettelkasten.view properties file (resources) to see which number is
+     * which file type.
      */
     private final int exporttype;
     private final boolean isHeadingVisible;
@@ -117,7 +118,7 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
      */
     private boolean exportOk;
     /**
-     * 
+     *
      */
     private boolean showOkMessage = true;
     /**
@@ -128,12 +129,12 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
     /**
      * get the strings for file descriptions from the resource map
      */
-    private final org.jdesktop.application.ResourceMap resourceMap = 
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(ExportTask.class);
-    
+    private final org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(ExportTask.class);
+
     /**
-     * 
+     *
      * @param app
      * @param parent the dialog's parent frame
      * @param label
@@ -143,8 +144,10 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
      * @param s a reference to the Settings-class
      * @param bto a refrence to the BibTex-class
      * @param fp the filepath and -name of the export-file
-     * @param ee an integer-array of those entries that should be exported. use {@null} to export all entries
-     * @param type the exporttype, i.e. whether the entries should be exported to XML, RTF, PDF, TXT etc.<br>
+     * @param ee an integer-array of those entries that should be exported. use {
+     * @null} to export all entries
+     * @param type the exporttype, i.e. whether the entries should be exported
+     * to XML, RTF, PDF, TXT etc.<br>
      * use following constants:<br>
      * - CConstants.EXP_TYPE_PDF<br>
      * - CConstants.EXP_TYPE_RTF<br>
@@ -153,19 +156,23 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
      * - CConstants.EXP_TYPE_HTML<br>
      * - CConstants.EXP_TYPE_TXT<br>
      * - CConstants.EXP_TYPE_TEX (for LaTex-files)
-     * @param part which parts of an entry (content, authors, keywords, attachments...) should be exported.
-     * @param n the treenode of a selected node (entry) within the DesktopFrame. This indicates, which part
-     * of the Desktop-Entries should be exportet, i.e. at which node and related children the export of entries starts.
-     * @param bibtex whether a separate Bibtex-file containing a bibtex-styles reference list should
-     * be created {@code true} or not {@code false}. This file will be created depending on available
-     * Bibkeys as attributes of the author-values.
-     * @param ihv indicates whether the headings (titles) of exported entries should be visible (use {@code true})
-     * or not ({@code false}). <b>Only applies
-     * when entries are exported from the DesktopFrame</b>
-     * @param numberprefix indicates whether entries' titles should have their entry-number included or not.
+     * @param part which parts of an entry (content, authors, keywords,
+     * attachments...) should be exported.
+     * @param n the treenode of a selected node (entry) within the DesktopFrame.
+     * This indicates, which part of the Desktop-Entries should be exportet,
+     * i.e. at which node and related children the export of entries starts.
+     * @param bibtex whether a separate Bibtex-file containing a bibtex-styles
+     * reference list should be created {@code true} or not {@code false}. This
+     * file will be created depending on available Bibkeys as attributes of the
+     * author-values.
+     * @param ihv indicates whether the headings (titles) of exported entries
+     * should be visible (use {@code true}) or not ({@code false}). <b>Only
+     * applies when entries are exported from the DesktopFrame</b>
+     * @param numberprefix indicates whether entries' titles should have their
+     * entry-number included or not.
      */
     public ExportToMdTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label,
-            TasksData td, Daten d, DesktopData dt, Settings s, BibTex bto, File fp, ArrayList<Object> ee, int type, int part, 
+            TasksData td, Daten d, DesktopData dt, Settings s, BibTex bto, File fp, ArrayList<Object> ee, int type, int part,
             DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix) {
         super(app);
         dataObj = d;
@@ -175,7 +182,7 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
         filepath = fp;
         isHeadingVisible = ihv;
         exporttype = type;
-        exportparts=part;
+        exportparts = part;
         exportbibtex = bibtex;
         exportentries = ee;
         zettelNumberAsPrefix = numberprefix;
@@ -184,23 +191,24 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
         treenode = n;
         parentDialog = parent;
         msgLabel = label;
-        
+
         // the variable "exportentries" stores all entry-numbers of those entries that should be exported.
         // if this array is null, we assume that *all* entries have to be exported. thus, insert
         // all entry-numbers here
-        if (null==exportentries) {
+        if (null == exportentries) {
             exportentries = new ArrayList<>();
             // copy all entry-numbers to array. remember that the entrynumbers range from 1 to site of file.
-            for (int cnt=0; cnt<dataObj.getCount(Daten.ZKNCOUNT); cnt++) {
+            for (int cnt = 0; cnt < dataObj.getCount(Daten.ZKNCOUNT); cnt++) {
                 // only add entries that are not empty
-                if (!dataObj.isEmpty(cnt+1)) {
-                    exportentries.add(cnt+1);
+                if (!dataObj.isEmpty(cnt + 1)) {
+                    exportentries.add(cnt + 1);
                 }
             }
         }
         // show status text
         msgLabel.setText(resourceMap.getString("msg1"));
     }
+
     @Override
     protected Object doInBackground() {
         // Your Task's code here.  This method runs
@@ -215,9 +223,9 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
         // check whether file already exists
         if (filepath.exists()) {
             // file exists, ask user to overwrite it...
-            int optionDocExists = JOptionPane.showConfirmDialog(null, resourceMap.getString("askForOverwriteFileMsg","",filepath.getName()), resourceMap.getString("askForOverwriteFileTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+            int optionDocExists = JOptionPane.showConfirmDialog(null, resourceMap.getString("askForOverwriteFileMsg", "", filepath.getName()), resourceMap.getString("askForOverwriteFileTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
             // if the user does *not* choose to overwrite, quit...
-            if (optionDocExists!=JOptionPane.YES_OPTION) {
+            if (optionDocExists != JOptionPane.YES_OPTION) {
                 // don't show "export was OK" message in main frame
                 showOkMessage = false;
                 return null;
@@ -233,12 +241,12 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
         switch (exporttype) {
             case Constants.EXP_TYPE_MD:
                 // go through all elements of the data file
-                for (counter=0; counter<exportentries.size(); counter++) {
+                for (counter = 0; counter < exportentries.size(); counter++) {
                     try {
                         // retrieve zettelnumber
                         int zettelnummer = Integer.parseInt(exportentries.get(counter).toString());
                         // check whether the user wants to export titles.
-                        if ((exportparts & Constants.EXPORT_TITLE)!=0) {
+                        if ((exportparts & Constants.EXPORT_TITLE) != 0) {
                             // first check whether we have a title or not
                             String zetteltitle = dataObj.getZettelTitle(zettelnummer);
                             // only prepare a title when we want to have the entry's number as title-prefix,
@@ -263,21 +271,20 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
                             }
                         }
                         // check whether the user wants to export content
-                        if ((exportparts & Constants.EXPORT_CONTENT)!=0) {
+                        if ((exportparts & Constants.EXPORT_CONTENT) != 0) {
                             // get the zettelcontent
                             String zettelcontent = Tools.removeUbbFromString(Tools.convertUBB2MarkDown(dataObj.getZettelContent(zettelnummer)), false);
                             // if we have content, add it.
                             if (!zettelcontent.isEmpty()) {
                                 exportPage.append(zettelcontent);
-                            }
-                            else {
+                            } else {
                                 // else add remark that entry is deleted
                                 exportPage.append(resourceMap.getString("deletedEntry"));
                             }
                             exportPage.append(System.lineSeparator()).append(System.lineSeparator());
                         }
                         // if the user wants to export remarks, do this here.
-                        if ((exportparts & Constants.EXPORT_REMARKS)!=0) {
+                        if ((exportparts & Constants.EXPORT_REMARKS) != 0) {
                             // get entry's remarks
                             String remarks = dataObj.getCleanRemarks(zettelnummer);
                             // check whether we have any
@@ -288,15 +295,15 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
                                 exportPage.append(remarks).append(System.lineSeparator()).append(System.lineSeparator());
                             }
                         }
-                        if ((exportparts & Constants.EXPORT_TIMESTAMP)!=0) {
+                        if ((exportparts & Constants.EXPORT_TIMESTAMP) != 0) {
                             String[] timestamp = dataObj.getTimestamp(zettelnummer);
                             // check whether we have a timestamp at all
-                            if (timestamp!=null && !timestamp[0].isEmpty()) {
+                            if (timestamp != null && !timestamp[0].isEmpty()) {
                                 // and add the created-timestamp
                                 exportPage.append(resourceMap.getString("timestampCreated")).append(" ").append(Tools.getProperDate(timestamp[0], false));
                                 // check whether we have a modified-timestamp
                                 // if we have a modified-stamp, add it...
-                                if (timestamp.length>1 && !timestamp[1].isEmpty()) {
+                                if (timestamp.length > 1 && !timestamp[1].isEmpty()) {
                                     exportPage.append(System.lineSeparator()).append(resourceMap.getString("timestampEdited")).append(" ").append(Tools.getProperDate(timestamp[1], false));
                                 }
                                 // and close the tags of the html-part
@@ -304,30 +311,29 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
                             }
                         }
                         // check whether the user wants to export authors
-                        if ((exportparts & Constants.EXPORT_AUTHOR)!=0 && dataObj.hasAuthors(zettelnummer)) {
-                            exportPage.append(ExportTools.createPlainList(dataObj.getAuthors(zettelnummer),resourceMap.getString("NoAuthor"),resourceMap.getString("authorHeader"),"* ",""));
+                        if ((exportparts & Constants.EXPORT_AUTHOR) != 0 && dataObj.hasAuthors(zettelnummer)) {
+                            exportPage.append(ExportTools.createPlainList(dataObj.getAuthors(zettelnummer), resourceMap.getString("NoAuthor"), resourceMap.getString("authorHeader"), "* ", ""));
                         }
                         // check whether user wants to export keywords.
-                        if ((exportparts & Constants.EXPORT_KEYWORDS)!=0 && dataObj.hasKeywords(zettelnummer)) {
-                            exportPage.append(ExportTools.createPlainList(dataObj.getKeywords(zettelnummer,true),resourceMap.getString("NoKeyword"),resourceMap.getString("keywordHeader"),"* ",""));
+                        if ((exportparts & Constants.EXPORT_KEYWORDS) != 0 && dataObj.hasKeywords(zettelnummer)) {
+                            exportPage.append(ExportTools.createPlainList(dataObj.getKeywords(zettelnummer, true), resourceMap.getString("NoKeyword"), resourceMap.getString("keywordHeader"), "* ", ""));
                         }
-                        if ((exportparts & Constants.EXPORT_LINKS)!=0 && dataObj.hasAttachments(zettelnummer)) {
-                            exportPage.append(ExportTools.createPlainList(dataObj.getAttachmentsAsString(zettelnummer,false),resourceMap.getString("NoAttachment"),resourceMap.getString("attachmentHeader"),"* ",""));
+                        if ((exportparts & Constants.EXPORT_LINKS) != 0 && dataObj.hasAttachments(zettelnummer)) {
+                            exportPage.append(ExportTools.createPlainList(dataObj.getAttachmentsAsString(zettelnummer, false), resourceMap.getString("NoAttachment"), resourceMap.getString("attachmentHeader"), "* ", ""));
                         }
-                        if ((exportparts & Constants.EXPORT_MANLINKS)!=0 && dataObj.hasManLinks(zettelnummer)) {
-                            exportPage.append(ExportTools.createPlainCommaList(dataObj.getManualLinksAsString(zettelnummer),resourceMap.getString("NoManLinks"),resourceMap.getString("manlinksHeader"),"* ",""));
+                        if ((exportparts & Constants.EXPORT_MANLINKS) != 0 && dataObj.hasManLinks(zettelnummer)) {
+                            exportPage.append(ExportTools.createPlainCommaList(dataObj.getManualLinksAsString(zettelnummer), resourceMap.getString("NoManLinks"), resourceMap.getString("manlinksHeader"), "* ", ""));
                         }
-                        if ((exportparts & Constants.EXPORT_LUHMANN)!=0 && dataObj.hasLuhmannNumbers(zettelnummer)) {
-                            exportPage.append(ExportTools.createPlainCommaList(dataObj.getLuhmannNumbersAsString(zettelnummer),resourceMap.getString("NoLuhmann"),resourceMap.getString("luhmannHeader"),"* ",""));
+                        if ((exportparts & Constants.EXPORT_LUHMANN) != 0 && dataObj.hasLuhmannNumbers(zettelnummer)) {
+                            exportPage.append(ExportTools.createPlainCommaList(dataObj.getLuhmannNumbersAsString(zettelnummer), resourceMap.getString("NoLuhmann"), resourceMap.getString("luhmannHeader"), "* ", ""));
                         }
-                    }
-                    catch (NumberFormatException e) {
+                    } catch (NumberFormatException e) {
                         // leave out first char, which is always a "H", set by the method
                         // "createExportEntries()".
                         exportPage.append(System.lineSeparator()).append(exportentries.get(counter).toString().substring(2)).append(System.lineSeparator()).append(System.lineSeparator());
                     }
                     // update progress bar
-                    setProgress(counter,0,contentsize);
+                    setProgress(counter, 0, contentsize);
                 }
                 break;
             case Constants.EXP_TYPE_DESKTOP_MD:
@@ -335,16 +341,22 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
                 // get comment-export-options
                 int commentExport = settingsObj.getDesktopCommentExport();
                 switch (commentExport) {
-                    case Constants.EXP_COMMENTS_NO: exportEntriesWithComments(treenode, false); break;
-                    case Constants.EXP_COMMENTS_YES: exportEntriesWithComments(treenode, true); break;
-                    case Constants.EXP_COMMENTS_ONLY: exportEntriesWithCommentsOnly(treenode); break;
+                    case Constants.EXP_COMMENTS_NO:
+                        exportEntriesWithComments(treenode, false);
+                        break;
+                    case Constants.EXP_COMMENTS_YES:
+                        exportEntriesWithComments(treenode, true);
+                        break;
+                    case Constants.EXP_COMMENTS_ONLY:
+                        exportEntriesWithCommentsOnly(treenode);
+                        break;
                 }
                 break;
         }
         // show status text
         msgLabel.setText(resourceMap.getString("msg4"));
         // create reference list
-        exportPage.append(ExportTools.createReferenceList(dataObj,settingsObj,exportPage.toString(),"[FN ","]",System.lineSeparator(),System.lineSeparator(),Constants.REFERENCE_LIST_TXT));
+        exportPage.append(ExportTools.createReferenceList(dataObj, settingsObj, exportPage.toString(), "[FN ", "]", System.lineSeparator(), System.lineSeparator(), Constants.REFERENCE_LIST_TXT));
         // show status text
         msgLabel.setText(resourceMap.getString("msg2"));
         // write export file
@@ -358,11 +370,13 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
         }
         return null;  // return your result
     }
+
     @Override
     protected void succeeded(Object result) {
         // Runs on the EDT.  Update the GUI based on
         // the result computed by doInBackground().
     }
+
     @Override
     protected void finished() {
         super.finished();
@@ -372,17 +386,20 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
         parentDialog.setVisible(false);
         parentDialog.dispose();
     }
+
     /**
-     * This method creates a HTML-page that contains all the desktop-data (i.e. all entries
-     * or modified entries on the desktop), where the output of the HTML-page is identical to
-     * the view of the desktop. I.e. if the user turned off entry-titles, these are also
-     * not exportet to the output file.
+     * This method creates a HTML-page that contains all the desktop-data (i.e.
+     * all entries or modified entries on the desktop), where the output of the
+     * HTML-page is identical to the view of the desktop. I.e. if the user
+     * turned off entry-titles, these are also not exportet to the output file.
      *
-     * @param node the starting point for the jTree-enumeration, either the root node or a bullet (if only
-     * a bullet should be exported, see {@link #exportDesktopBullet() exportDesktopBullet()}).
-     * @param sb the stringbuilder which finally will contain all content in html-format
-     * @param exportcomments {@code true} if comments should also be exported, {@code false} if comments
-     * should not be exported.
+     * @param node the starting point for the jTree-enumeration, either the root
+     * node or a bullet (if only a bullet should be exported, see
+     * {@link #exportDesktopBullet() exportDesktopBullet()}).
+     * @param sb the stringbuilder which finally will contain all content in
+     * html-format
+     * @param exportcomments {@code true} if comments should also be exported,
+     * {@code false} if comments should not be exported.
      */
     private void exportEntriesWithComments(DefaultMutableTreeNode node, boolean exportcomments) {
         // get a list with all children of the node
@@ -395,30 +412,32 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
             if (node.getAllowsChildren()) {
                 // get bullet-text
                 exportPage.append(createExportBullet(node, exportcomments));
-            }
-            // now we know we have an entry. so get the entry number...
+            } // now we know we have an entry. so get the entry number...
             else {
                 // add entry
                 exportPage.append(createExportEntry(node, exportcomments));
             }
             // when the new node also has children, call this method again,
             // so we go through the strucuture recursively...
-            if (node.getChildCount()>0) {
-                exportEntriesWithComments(node,exportcomments);
+            if (node.getChildCount() > 0) {
+                exportEntriesWithComments(node, exportcomments);
             }
         }
     }
+
     /**
-     * This method creates a HTML-page that contains all the desktop-data (i.e. all entries
-     * or modified entries on the desktop), where the output of the HTML-page is identical to
-     * the view of the desktop. I.e. if the user turned off entry-titles, these are also
-     * not exportet to the output file.
+     * This method creates a HTML-page that contains all the desktop-data (i.e.
+     * all entries or modified entries on the desktop), where the output of the
+     * HTML-page is identical to the view of the desktop. I.e. if the user
+     * turned off entry-titles, these are also not exportet to the output file.
      *
-     * @param node the starting point for the jTree-enumeration, either the root node or a bullet (if only
-     * a bullet should be exported, see {@link #exportDesktopBullet() exportDesktopBullet()}).
-     * @param sb the stringbuilder which finally will contain all content in html-format
-     * @param exportcomments {@code true} if comments should also be exported, {@code false} if comments
-     * should not be exported.
+     * @param node the starting point for the jTree-enumeration, either the root
+     * node or a bullet (if only a bullet should be exported, see
+     * {@link #exportDesktopBullet() exportDesktopBullet()}).
+     * @param sb the stringbuilder which finally will contain all content in
+     * html-format
+     * @param exportcomments {@code true} if comments should also be exported,
+     * {@code false} if comments should not be exported.
      */
     private void exportEntriesWithCommentsOnly(DefaultMutableTreeNode node) {
         // get a list with all children of the node
@@ -428,15 +447,14 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
             // get the child
             node = (DefaultMutableTreeNode) en.nextElement();
             // retrieve comment
-            String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node),System.lineSeparator());
+            String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node), System.lineSeparator());
             // check for valid comment
-            if (com!=null && !com.isEmpty()) {
+            if (com != null && !com.isEmpty()) {
                 // if the child is a bullet...
                 if (node.getAllowsChildren()) {
                     // get bullet-text
                     exportPage.append(createExportBullet(node, true));
-                }
-                // now we know we have an entry. so get the entry number...
+                } // now we know we have an entry. so get the entry number...
                 else {
                     // add entry
                     exportPage.append(createExportEntry(node, true));
@@ -444,29 +462,40 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
             }
             // when the new node also has children, call this method again,
             // so we go through the strucuture recursively...
-            if (node.getChildCount()>0) {
+            if (node.getChildCount() > 0) {
                 exportEntriesWithCommentsOnly(node);
             }
         }
     }
+
     /**
-     * This method prepares the html-content for an exported bullet-point. this method is
-     * used by {@link #exportEntriesWithCommentsToPDF(javax.swing.tree.DefaultMutableTreeNode, java.lang.StringBuilder, boolean) exportEntriesWithCommentsToPDF() }
-     * and {@link #exportEntriesWithCommentsOnlyToPDF(javax.swing.tree.DefaultMutableTreeNode, java.lang.StringBuilder) exportEntriesWithCommentsOnlyToPDF()}.
+     * This method prepares the html-content for an exported bullet-point. this
+     * method is used by {@link #exportEntriesWithCommentsToPDF(javax.swing.tree.DefaultMutableTreeNode, java.lang.StringBuilder, boolean) exportEntriesWithCommentsToPDF()
+     * }
+     * and
+     * {@link #exportEntriesWithCommentsOnlyToPDF(javax.swing.tree.DefaultMutableTreeNode, java.lang.StringBuilder) exportEntriesWithCommentsOnlyToPDF()}.
      *
      * @param node the bullet-node, needed for timestamp and title-text
      * @return a html-snippet with the bullet as headline
      */
     private String createExportBullet(DefaultMutableTreeNode node, boolean exportcomments) {
         StringBuilder sb = new StringBuilder("");
+        // retrieve bullet-level, so we can use subsections according to the bullet-level
+        int bulletlevel = node.getLevel();
+        while(bulletlevel-- > 0) {
+            sb.append("#");
+        }
         // append text
-        sb.append(TreeUtil.getNodeText(node)).append(System.lineSeparator()).append(System.lineSeparator());
+        sb.append(" ").
+                append(TreeUtil.getNodeText(node)).
+                append(System.lineSeparator()).
+                append(System.lineSeparator());
         // check whether comments should be exported as well
         if (exportcomments) {
             // retrieve comment
-            String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node),System.lineSeparator());
+            String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node), System.lineSeparator());
             // check for valid comment
-            if (com!=null && !com.isEmpty()) {
+            if (com != null && !com.isEmpty()) {
                 // append comment-text
                 sb.append(resourceMap.getString("comment")).append(System.lineSeparator());
                 // append comment
@@ -475,10 +504,13 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
         }
         return sb.toString();
     }
+
     /**
-     * This method prepares the plain-text-content for an exported entry. this method is
-     * used by {@link #exportEntriesWithCommentsToText(javax.swing.tree.DefaultMutableTreeNode, java.lang.StringBuilder, boolean) exportEntriesWithCommentsToText()}
-     * and {@link #exportEntriesWithCommentsOnlyToText(javax.swing.tree.DefaultMutableTreeNode, java.lang.StringBuilder) exportEntriesWithCommentsOnlyToText()}.
+     * This method prepares the plain-text-content for an exported entry. this
+     * method is used by
+     * {@link #exportEntriesWithCommentsToText(javax.swing.tree.DefaultMutableTreeNode, java.lang.StringBuilder, boolean) exportEntriesWithCommentsToText()}
+     * and
+     * {@link #exportEntriesWithCommentsOnlyToText(javax.swing.tree.DefaultMutableTreeNode, java.lang.StringBuilder) exportEntriesWithCommentsOnlyToText()}.
      *
      * @param node the entry-node, needed for timestamp and entry-text
      * @return a html-snippet with the entry as content
@@ -502,11 +534,10 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
         // if nothing found, retrieve regular entry
         // that means, if the entry with the unique-timestamp has no or an empty content-element, the
         // entry was not modified - thus we retrieve the "original" entry.
-        if (null==text||text.isEmpty()) {
+        if (null == text || text.isEmpty()) {
             // get cleanded content, for plain text without any ubb-tags
             text = Tools.removeUbbFromString(Tools.convertUBB2MarkDown(dataObj.getZettelContent(nr)), false);
-        }
-        else {
+        } else {
             // else clean text from ubb-tags
             text = Tools.removeUbbFromString(text, false);
         }
@@ -537,8 +568,7 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
         // if we have content, add it.
         if (!text.isEmpty()) {
             sb.append(text);
-        }
-        else {
+        } else {
             // else add remark that entry is deleted
             sb.append(resourceMap.getString("deletedEntry"));
         }
@@ -548,12 +578,12 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
             // retrieve current content
             text = sb.toString();
             // remove double line separaters
-            text = text.replace(System.lineSeparator()+System.lineSeparator(),System.lineSeparator());
+            text = text.replace(System.lineSeparator() + System.lineSeparator(), System.lineSeparator());
             // set back content
             sb = new StringBuilder(text);
         }
         // if the user wants to export remarks, do this here.
-        if ((settingsObj.getDesktopDisplayItems()&Constants.DESKTOP_SHOW_REMARKS)!=0) {
+        if ((settingsObj.getDesktopDisplayItems() & Constants.DESKTOP_SHOW_REMARKS) != 0) {
             // get entry's remarks
             String remarks = dataObj.getCleanRemarks(nr);
             // check whether we have any
@@ -567,9 +597,9 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
         // check whether comments should be exported as well
         if (exportcomments) {
             // retrieve comment
-            String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node),System.lineSeparator());
+            String com = desktopObj.getComment(TreeUtil.getNodeTimestamp(node), System.lineSeparator());
             // check for valid comment
-            if (com!=null && !com.isEmpty()) {
+            if (com != null && !com.isEmpty()) {
                 // append comment-text
                 sb.append(resourceMap.getString("comment")).append(System.lineSeparator());
                 // append comment
@@ -577,12 +607,12 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
             }
         }
         // check whether the user wants to export authors
-        if ((settingsObj.getDesktopDisplayItems()&Constants.DESKTOP_SHOW_AUTHORS)!=0) {
-            sb.append(ExportTools.createPlainList(dataObj.getAuthors(nr),resourceMap.getString("NoAuthor"),resourceMap.getString("authorHeader"),"* ",""));
+        if ((settingsObj.getDesktopDisplayItems() & Constants.DESKTOP_SHOW_AUTHORS) != 0) {
+            sb.append(ExportTools.createPlainList(dataObj.getAuthors(nr), resourceMap.getString("NoAuthor"), resourceMap.getString("authorHeader"), "* ", ""));
         }
         // check whether user wants to export keywords.
-        if ((settingsObj.getDesktopDisplayItems()&Constants.DESKTOP_SHOW_KEYWORDS)!=0) {
-            sb.append(ExportTools.createPlainList(dataObj.getKeywords(nr,true),resourceMap.getString("NoKeyword"),resourceMap.getString("keywordHeader"),"* ",""));
+        if ((settingsObj.getDesktopDisplayItems() & Constants.DESKTOP_SHOW_KEYWORDS) != 0) {
+            sb.append(ExportTools.createPlainList(dataObj.getKeywords(nr, true), resourceMap.getString("NoKeyword"), resourceMap.getString("keywordHeader"), "* ", ""));
         }
 
         return sb.toString();

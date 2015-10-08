@@ -1316,7 +1316,7 @@ public class HtmlUbbUtil {
             // underscores, these have been replaced to italic / bold etc.
             dummy = fixBrokenTags(dummy, "\\[img\\]([^|]*)(.*?)\\[/img\\]");
             dummy = fixBrokenTags(dummy, "\\(http://([^\\)]+)\\)");
-
+            // replace line breaks
             dummy = dummy.replace("\n", "[br]");
         } else {
             // if we don't have markdown, and thus no quotes-syntax with "> ...",
