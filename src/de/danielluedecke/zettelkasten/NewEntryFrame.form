@@ -1976,7 +1976,7 @@
                                   <Component id="jScrollPane6" pref="406" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="jButtonRefreshAuthorlist" pref="24" max="32767" attributes="1"/>
+                                      <Component id="jButtonRefreshAuthorlist" max="32767" attributes="1"/>
                                       <Component id="jTextFieldFilterAuthorlist" alignment="1" min="-2" max="-2" attributes="1"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
@@ -2090,7 +2090,7 @@
                                   <Component id="jScrollPane7" pref="344" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="jButtonRefreshKeywordlist" pref="24" max="32767" attributes="1"/>
+                                      <Component id="jButtonRefreshKeywordlist" max="32767" attributes="1"/>
                                       <Component id="jTextFieldFilterKeywordlist" alignment="1" min="-2" max="-2" attributes="1"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>

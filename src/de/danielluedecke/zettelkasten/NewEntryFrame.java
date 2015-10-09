@@ -4008,15 +4008,40 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // retrieve the authors
         String authordummy = jTextAreaAuthor.getText();
         // create string array for authors
-        String[] authors = null;
+        ArrayList<String> authors = new ArrayList<>(); 
         // if we have any authors...
         if (!authordummy.isEmpty()) {
             // see comment above for this line...
             if (linesep.contains("\r")) {
                 authordummy = authordummy.replace("\r", "");
             }
-            // ...parse them to an array
-            authors = authordummy.split("\n");
+            // ...parse them to an string array
+            authors.addAll(Arrays.asList(authordummy.split("\n")));
+        }
+        // get all know author index numbers
+        LinkedList<Integer> knownauthors = new LinkedList<>();
+        for (String a : authors) {
+            // find author position
+            int ap = dataObj.getAuthorPosition(a);
+            if (ap != -1) {
+                knownauthors.add(ap);
+            }
+        }
+        // find all authos that have been referenced by footnotes
+        LinkedList<Integer> referredauthors = Tools.getFootnoteIDs(dataObj, content);
+        // now match given authors with referred authors. if user has referenced authors
+        // with footnotes, but did not add these authors to the reference list,
+        // we now add them automatically
+        for (int rai : referredauthors) {
+            // no match?
+            if (-1 == knownauthors.indexOf(rai)) {
+                // get author
+                String au = dataObj.getAuthor(rai);
+                // add to authors
+                if (au != null && !au.isEmpty()) {
+                    authors.add(au);
+                }
+            }
         }
         // retrieve the remarks
         String remarks = jTextAreaRemarks.getText();
@@ -4040,7 +4065,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
 
         if (isEditMode()) {
             // change entry and fetch result
-            if (!dataObj.changeEntry(title, content, authors, keywords, remarks, links, Tools.getTimeStamp(), entryNumber)) {
+            if (!dataObj.changeEntry(title, content, authors.toArray(new String[authors.size()]), keywords, remarks, links, Tools.getTimeStamp(), entryNumber)) {
                 JOptionPane.showMessageDialog(this,
                         resourceMap.getString("errMsgChangeEntry"),
                         resourceMap.getString("errMsgChangeEntryTitle"),
@@ -4056,7 +4081,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                 // add entry, and fetch result
                 int result = dataObj.addEntry(title,
                         content,
-                        authors,
+                        authors.toArray(new String[authors.size()]),
                         keywords,
                         remarks,
                         links,
@@ -4093,7 +4118,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                 // included in the entry "entryNumber" luhmann-tag (that indicates follower- and sub-entrties).
                 int result = dataObj.addEntry(title,
                         content,
-                        authors,
+                        authors.toArray(new String[authors.size()]),
                         keywords,
                         remarks,
                         links,

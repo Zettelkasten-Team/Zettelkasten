@@ -65,6 +65,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.JEditorPane;
@@ -1800,6 +1801,15 @@ public class Tools {
         return pandocmissing;
     }
 
+    /**
+     * This method extracts all author IDs of footnotes in a HTML formatted entry.
+     * This method is used when displaying an entry in the main window, to
+     * show all authors of an entry, including those authors which appear
+     * in footnotes, but are not assigned as author value.
+     * 
+     * @param content the HTML-formatted content of an entry.
+     * @return all author IDs inside footnotes
+     */
     public static LinkedList extractFootnotesFromContent(String content) {
         // now prepare a reference list from possible footnotes
         LinkedList<String> footnotes = new LinkedList<>();
@@ -1842,5 +1852,55 @@ public class Tools {
         button.setBorderPainted(true);
         button.setPreferredSize(Constants.seaGlassButtonDimension);
         return button;
+    }
+    
+    /**
+     * This method extracts all footnote IDs from an entry.
+     *
+     * @param dataObj
+     * @param content the entry's content, so the footnote-tags can be extracted
+     * and possible bibkey-values retrieved.
+     * @return all footnote IDs from an entry as linked integer list.
+     */
+    public static LinkedList<Integer> getFootnoteIDs(Daten dataObj, String content) {
+        LinkedList<Integer> footnoteid = new LinkedList<>();
+        try {
+            // create foot note patterm
+            Pattern p = Pattern.compile("\\[fn ([^\\[]*)\\]");
+            // create matcher
+            Matcher m = p.matcher(content);
+            // check for occurences
+            while (m.find()) {
+                // get footnote ID
+                String fn = content.substring(m.start() + Constants.FORMAT_FOOTNOTE_OPEN.length(), m.end() - 1);
+                // do we have a colon? this indicates a page separator
+                String[] fnpagenr = fn.split(Pattern.quote(":"));
+                // more than 1 value means, we have a page numner after colon
+                if (fnpagenr.length > 1) {
+                    // we assume reference index number at first position
+                    fn = fnpagenr[0];
+                }
+                int fnnr;
+                try {
+                    // try to parse token inside footnote tage
+                    // and check whether it is an integer number
+                    // (i.e. a reference to an author)
+                    fnnr = Integer.parseInt(fn);
+                } catch (NumberFormatException ex) {
+                    // if it is no integer value, check whether
+                    // token is a bibkey
+                    fnnr = dataObj.getAuthorBibKeyPosition(fn);
+                }
+                if (fnnr != -1) {
+                    footnoteid.add(fnnr);
+                }
+            }
+        } catch (PatternSyntaxException | IndexOutOfBoundsException ex) {
+        } catch (NumberFormatException ex) {
+            Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
+        }
+        // return content. this string now has converted footnotes, where the referenced
+        // author value contains a bibkey.
+        return footnoteid;
     }
 }
