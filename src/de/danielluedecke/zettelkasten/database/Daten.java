@@ -5244,6 +5244,55 @@ public class Daten {
     }
 
     /**
+     * This method retrieves all authors of a given entry, including a suffix
+     * with author ID and author bibkey value.
+     *
+     * <b>Caution!</b> The position {@code pos} is a value <i>from 1 to (size of
+     * zknfile)</i> - in contrary to usual array handling where the range is
+     * from 0 to (size-1) - so we can directly use the index number which are
+     * displayed in the jTable of the main window. However, the access to the
+     * xml files are ranged between 0 and size-1, but this is achieved in the
+     * retrieveElement-method, where we use "pos-1" to locate the correct entry
+     *
+     * @param pos a value from 1 to (size of zknfile), indicating the
+     * entrynumber of the entry which authors are requested
+     * @return a string array with all authors (including ID and bibkey) of the requested entry, or
+     * <i>null</i> if no author was found
+     */
+    public String[] getAuthorsWithIDandBibKey(int pos) {
+        // first retrieve the current "zettel" element
+        Element au = retrieveElement(zknFile, pos);
+        // if no element exist, return failed value
+        if (null == au) {
+            return null;
+        }
+        // if no author index numbers exist, return failed value
+        if (au.getChild(ELEMENT_AUTHOR).getText().isEmpty()) {
+            return null;
+        }
+        // then get the author indexnumbers
+        String[] aunr = au.getChild(ELEMENT_AUTHOR).getText().split(",");
+        // create a new string array return value, which will contain the author strings
+        String[] retval = new String[aunr.length];
+        // iterate the array
+        // convert each authorindex number into an integer value
+        // and get the related keyword string from the author data file
+        // (this is achieved by the getAuthor-Method)
+        for (int cnt = 0; cnt < aunr.length; cnt++) {
+            // get author ID
+            int auid = Integer.parseInt(aunr[cnt]);
+            // add author value
+            retval[cnt] = getAuthor(auid);
+            // prepare suffix
+            String bibkey = getAuthorBibKeyValue(auid);
+            String suffix = " [ID " + String.valueOf(auid) + ((bibkey != null && !bibkey.isEmpty()) ? ", bibkey: " + bibkey : "") + "]";
+            // append suffix
+            retval[cnt] = retval[cnt] + suffix;
+        }
+        return retval;
+    }
+
+    /**
      * This method returns the size of one of the xml data files. Following
      * constants should be used as parameters:<br>
      * ZKNCOUNT<br>

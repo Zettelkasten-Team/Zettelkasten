@@ -39,6 +39,7 @@ import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
+import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.TreeUtil;
 import java.io.File;
@@ -287,7 +288,12 @@ public class ExportToTxtTask extends org.jdesktop.application.Task<Object, Void>
                         // check whether the user wants to export content
                         if ((exportparts & Constants.EXPORT_CONTENT) != 0) {
                             // get the zettelcontent
-                            String zettelcontent = dataObj.getCleanZettelContent(zettelnummer);
+                            // get the zettelcontent, UBB converted to Markdown
+                            String zettelcontent = dataObj.getZettelContent(zettelnummer);
+                            // convert footnotes
+                            zettelcontent = HtmlUbbUtil.convertFootnotesToPlain(dataObj, bibtexObj, settingsObj, zettelcontent);
+                            // remove any non-compatible UBB tags
+                            zettelcontent = Tools.removeUbbFromString(zettelcontent, true);
                             // if we have content, add it.
                             if (!zettelcontent.isEmpty()) {
                                 // replace tab-chars for text
@@ -337,7 +343,7 @@ public class ExportToTxtTask extends org.jdesktop.application.Task<Object, Void>
                         }
                         // check whether the user wants to export authors
                         if ((exportparts & Constants.EXPORT_AUTHOR) != 0 && dataObj.hasAuthors(zettelnummer)) {
-                            exportPage.append(ExportTools.createPlainList(dataObj.getAuthors(zettelnummer), resourceMap.getString("NoAuthor"), resourceMap.getString("authorHeader"), "", ""));
+                            exportPage.append(ExportTools.createPlainList(dataObj.getAuthorsWithIDandBibKey(zettelnummer), resourceMap.getString("NoAuthor"), resourceMap.getString("authorHeader"), "", ""));
                         }
                         // check whether user wants to export keywords.
                         if ((exportparts & Constants.EXPORT_KEYWORDS) != 0 && dataObj.hasKeywords(zettelnummer)) {
@@ -354,10 +360,8 @@ public class ExportToTxtTask extends org.jdesktop.application.Task<Object, Void>
                         }
                         // separate files for each note?
                         if (separateFiles) {
-                            // create reference list
-                            exportPage.append(ExportTools.createReferenceList(dataObj, settingsObj, exportPage.toString(), "[FN ", "]", System.lineSeparator(), System.lineSeparator(), Constants.REFERENCE_LIST_TXT));
                             // get note number and title for filepath
-                            String fname = String.valueOf(zettelnummer) + " " + zetteltitle.replaceAll("[^a-zA-Z0-9.-]", "_");
+                            String fname = String.valueOf(zettelnummer) + " " + FileOperationsUtil.getCleanFilePath(zetteltitle);
                             // create file path
                             File fp = new File(separateFileDir + fname.trim() + ".txt");
                             // write export file

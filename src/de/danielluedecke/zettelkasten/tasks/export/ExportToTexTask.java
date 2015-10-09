@@ -355,9 +355,10 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                         }
                         // separate files for each note?
                         if (separateFiles) {
-                            exportPage = new StringBuilder(HtmlUbbUtil.convertUbbToTex(settingsObj, dataObj, bibtexObj, exportPage.toString(), settingsObj.getLatexExportFootnoteRef(), settingsObj.getLatexExportCreateFormTags(), Constants.EXP_TYPE_DESKTOP_TEX == exporttype, settingsObj.getLatexExportRemoveNonStandardTags()));                            
+                            // conver tags to tex
+                            exportPage = new StringBuilder(HtmlUbbUtil.convertUbbToTex(settingsObj, dataObj, bibtexObj, exportPage.toString(), settingsObj.getLatexExportFootnoteRef(), settingsObj.getLatexExportCreateFormTags(), Constants.EXP_TYPE_DESKTOP_TEX == exporttype, settingsObj.getLatexExportRemoveNonStandardTags()));
                             // get note number and title for filepath
-                            String fname = String.valueOf(zettelnummer) + " " + zetteltitle.replaceAll("[^a-zA-Z0-9.-]", "_");
+                            String fname = String.valueOf(zettelnummer) + " " + FileOperationsUtil.getCleanFilePath(zetteltitle);
                             // create file path
                             File fp = new File(separateFileDir + fname.trim() + ".tex");
                             // write export file

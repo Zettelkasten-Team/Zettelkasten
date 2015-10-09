@@ -39,6 +39,7 @@ import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
+import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.TreeUtil;
 import java.io.File;
@@ -289,8 +290,12 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
                         }
                         // check whether the user wants to export content
                         if ((exportparts & Constants.EXPORT_CONTENT) != 0) {
-                            // get the zettelcontent
-                            String zettelcontent = Tools.removeUbbFromString(Tools.convertUBB2MarkDown(dataObj.getZettelContent(zettelnummer)), false);
+                            // get the zettelcontent, UBB converted to Markdown
+                            String zc = Tools.convertUBB2MarkDown(dataObj.getZettelContent(zettelnummer));
+                            // convert footnotes
+                            zc = HtmlUbbUtil.convertFootnotesToPlain(dataObj, bibtexObj, settingsObj, zc);
+                            // remove any non-compatible UBB tags
+                            String zettelcontent = Tools.removeUbbFromString(zc, false);
                             // if we have content, add it.
                             if (!zettelcontent.isEmpty()) {
                                 exportPage.append(zettelcontent);
@@ -329,27 +334,25 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
                         }
                         // check whether the user wants to export authors
                         if ((exportparts & Constants.EXPORT_AUTHOR) != 0 && dataObj.hasAuthors(zettelnummer)) {
-                            exportPage.append(ExportTools.createPlainList(dataObj.getAuthors(zettelnummer), resourceMap.getString("NoAuthor"), resourceMap.getString("authorHeader"), "* ", ""));
+                            exportPage.append(ExportTools.createPlainList(dataObj.getAuthorsWithIDandBibKey(zettelnummer), resourceMap.getString("NoAuthor"), resourceMap.getString("authorHeader"), "## ", ""));
                         }
                         // check whether user wants to export keywords.
                         if ((exportparts & Constants.EXPORT_KEYWORDS) != 0 && dataObj.hasKeywords(zettelnummer)) {
-                            exportPage.append(ExportTools.createPlainList(dataObj.getKeywords(zettelnummer, true), resourceMap.getString("NoKeyword"), resourceMap.getString("keywordHeader"), "* ", ""));
+                            exportPage.append(ExportTools.createPlainList(dataObj.getKeywords(zettelnummer, true), resourceMap.getString("NoKeyword"), resourceMap.getString("keywordHeader"), "## ", ""));
                         }
                         if ((exportparts & Constants.EXPORT_LINKS) != 0 && dataObj.hasAttachments(zettelnummer)) {
-                            exportPage.append(ExportTools.createPlainList(dataObj.getAttachmentsAsString(zettelnummer, false), resourceMap.getString("NoAttachment"), resourceMap.getString("attachmentHeader"), "* ", ""));
+                            exportPage.append(ExportTools.createPlainList(dataObj.getAttachmentsAsString(zettelnummer, false), resourceMap.getString("NoAttachment"), resourceMap.getString("attachmentHeader"), "## ", ""));
                         }
                         if ((exportparts & Constants.EXPORT_MANLINKS) != 0 && dataObj.hasManLinks(zettelnummer)) {
-                            exportPage.append(ExportTools.createPlainCommaList(dataObj.getManualLinksAsString(zettelnummer), resourceMap.getString("NoManLinks"), resourceMap.getString("manlinksHeader"), "* ", ""));
+                            exportPage.append(ExportTools.createPlainCommaList(dataObj.getManualLinksAsString(zettelnummer), resourceMap.getString("NoManLinks"), resourceMap.getString("manlinksHeader"), "## ", ""));
                         }
                         if ((exportparts & Constants.EXPORT_LUHMANN) != 0 && dataObj.hasLuhmannNumbers(zettelnummer)) {
-                            exportPage.append(ExportTools.createPlainCommaList(dataObj.getLuhmannNumbersAsString(zettelnummer), resourceMap.getString("NoLuhmann"), resourceMap.getString("luhmannHeader"), "* ", ""));
+                            exportPage.append(ExportTools.createPlainCommaList(dataObj.getLuhmannNumbersAsString(zettelnummer), resourceMap.getString("NoLuhmann"), resourceMap.getString("luhmannHeader"), "## ", ""));
                         }
                         // separate files for each note?
                         if (separateFiles) {
-                            // create reference list
-                            exportPage.append(ExportTools.createReferenceList(dataObj, settingsObj, exportPage.toString(), "[FN ", "]", System.lineSeparator(), System.lineSeparator(), Constants.REFERENCE_LIST_TXT));
                             // get note number and title for filepath
-                            String fname = String.valueOf(zettelnummer) + " " + zetteltitle.replaceAll("[^a-zA-Z0-9.-]", "_");
+                            String fname = String.valueOf(zettelnummer) + " " + FileOperationsUtil.getCleanFilePath(zetteltitle);
                             // create file path
                             File fp = new File(separateFileDir + fname.trim() + ".md");
                             // write export file

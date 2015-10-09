@@ -922,7 +922,7 @@ public class HtmlUbbUtil {
             }
         }
         // convert footnotes
-        dummy = convertFootnotes(dataObj, bibtexObj, settings, dummy, false);
+        dummy = convertFootnotes(dataObj, bibtexObj, settings, dummy, false, true);
         // convert movie-tags
         // dummy = dummy.replaceAll("\\[mov ([^\\[]*)\\]", "<a href=\"#mov$1\">Film</a>");
         // highlight text segemtns
@@ -984,9 +984,24 @@ public class HtmlUbbUtil {
         return dummy;
     }
 
-    private static String convertFootnotes(Daten data, BibTex bibtexObj, Settings settings, String dummy, boolean isLatex) {
+    /**
+     * This method replaces footnote tags with the associated authors, thus returning well formatted
+     * author values instead of cryptic footnote tags. The formatted author value is returned
+     * in plain text w/o any Markdown, Tex or HTML-formatting.
+     * 
+     * @param data
+     * @param bibtexObj
+     * @param settings
+     * @param content
+     * @return 
+     */
+    public static String convertFootnotesToPlain(Daten data, BibTex bibtexObj, Settings settings, String content) {
+        return convertFootnotes(data, bibtexObj, settings, content, false, false);
+    }
+    
+    private static String convertFootnotes(Daten data, BibTex bibtexObj, Settings settings, String content, boolean isLatex, boolean asHtml) {
         if (isLatex) {
-            dummy = dummy.replaceAll("\\[fn ([^\\[]*)\\]", "(FN $1)");
+            content = content.replaceAll("\\[fn ([^\\[]*)\\]", "(FN $1)");
         } else {
             // save find-position
             List<Integer> start = new ArrayList<>();
@@ -995,7 +1010,7 @@ public class HtmlUbbUtil {
                 // create foot note patterm
                 Pattern p = Pattern.compile("\\[fn ([^\\[]*)\\]");
                 // create matcher
-                Matcher m = p.matcher(dummy);
+                Matcher m = p.matcher(content);
                 // check for occurences
                 while (m.find()) {
                     // save grouping-positions
@@ -1005,7 +1020,7 @@ public class HtmlUbbUtil {
                 // iterate found positions
                 for (int i = start.size() - 1; i >= 0; i--) {
                     // get footnote
-                    String fn = dummy.substring(start.get(i) + Constants.FORMAT_FOOTNOTE_OPEN.length(), end.get(i) - 1);
+                    String fn = content.substring(start.get(i) + Constants.FORMAT_FOOTNOTE_OPEN.length(), end.get(i) - 1);
                     // do we have a colon? this indicates a page separator
                     String[] fnpagenr = fn.split(Pattern.quote(":"));
                     String pagenr = null;
@@ -1038,27 +1053,40 @@ public class HtmlUbbUtil {
                         StringBuilder ref = new StringBuilder("");
                         // check for valid value. if we have formatted author, use this
                         if (formattedAuthor != null && !formattedAuthor.isEmpty()) {
-                            ref.append(Constants.footnoteHtmlTag).append(fn).append("\">");
-                            ref.append(formattedAuthor);
-                            // add page number, if we have any
-                            if (pagenr != null && !pagenr.isEmpty()) {
-                                ref.append(", ").append(resourceMap.getString("footnotePage")).append(pagenr);
+                            // replace footnote as HTML?
+                            if (asHtml) {
+                                ref.append(Constants.footnoteHtmlTag).append(fn).append("\">");
+                                ref.append(formattedAuthor);
+                                // add page number, if we have any
+                                if (pagenr != null && !pagenr.isEmpty()) {
+                                    ref.append(", ").append(resourceMap.getString("footnotePage")).append(pagenr);
+                                }
+                                ref.append("</a>");
+                            } else {
+                                ref.append(formattedAuthor);
+                                // add page number, if we have any
+                                if (pagenr != null && !pagenr.isEmpty()) {
+                                    ref.append(", ").append(resourceMap.getString("footnotePage")).append(pagenr);
+                                }
                             }
-                            ref.append("</a>");
-                        } // else use footnote number
-                        else {
-                            if (settings.getSupFootnote()) {
-                                ref.append("<sup>");
-                            }
-                            ref.append("[").append(Constants.footnoteHtmlTag).append(fn).append("\">");
-                            ref.append(fn);
-                            ref.append("</a>]");
-                            if (settings.getSupFootnote()) {
-                                ref.append("</sup>");
+                        } else {
+                            if (asHtml) {
+                                // else use footnote number
+                                if (settings.getSupFootnote()) {
+                                    ref.append("<sup>");
+                                }
+                                ref.append("[").append(Constants.footnoteHtmlTag).append(fn).append("\">");
+                                ref.append(fn);
+                                ref.append("</a>]");
+                                if (settings.getSupFootnote()) {
+                                    ref.append("</sup>");
+                                }
+                            } else {
+                                ref.append("[").append(fn).append("]");
                             }
                         }
                         // now that we have the bibkey, replace footnote with cite-tag
-                        dummy = dummy.substring(0, start.get(i)) + ref.toString() + dummy.substring(end.get(i));
+                        content = content.substring(0, start.get(i)) + ref.toString() + content.substring(end.get(i));
                     }
                 }
             } catch (PatternSyntaxException | IndexOutOfBoundsException ex) {
@@ -1066,14 +1094,16 @@ public class HtmlUbbUtil {
                 Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
                 Constants.zknlogger.log(Level.WARNING, "Could not convert author ID into author number!");
             }
-            // footnote: [fn 102] becomes <sup>[102]</sup> (or just [102], if no superscription is set)
-            if (settings.getSupFootnote()) {
-                dummy = dummy.replaceAll("\\[fn ([^\\[]*)\\]", "<sup>[" + Constants.footnoteHtmlTag + "$1\">$1</a>]</sup>");
-            } else {
-                dummy = dummy.replaceAll("\\[fn ([^\\[]*)\\]", "[" + Constants.footnoteHtmlTag + "$1\">$1</a>]");
+            if (asHtml) {
+                // footnote: [fn 102] becomes <sup>[102]</sup> (or just [102], if no superscription is set)
+                if (settings.getSupFootnote()) {
+                    content = content.replaceAll("\\[fn ([^\\[]*)\\]", "<sup>[" + Constants.footnoteHtmlTag + "$1\">$1</a>]</sup>");
+                } else {
+                    content = content.replaceAll("\\[fn ([^\\[]*)\\]", "[" + Constants.footnoteHtmlTag + "$1\">$1</a>]");
+                }
             }
         }
-        return dummy;
+        return content;
     }
 
     private static String fixImageTags(String dummy) {
@@ -2040,7 +2070,7 @@ public class HtmlUbbUtil {
         // here we convert all author-footnotes to latex-cite-tags
         dummy = ExportTools.createLatexFootnotes(dataObj, dummy, useFootnoteRef);
         // replace all remaining footnotes without bibkey: [fn 102] becomes (FN xx)
-        dummy = convertFootnotes(dataObj, bibtexObj, settings, dummy, true);
+        dummy = convertFootnotes(dataObj, bibtexObj, settings, dummy, true, false);
         // convert tables in tex-format
         dummy = convertTablesToTex(dummy, settings);
         // convert form-tags

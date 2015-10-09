@@ -936,4 +936,14 @@ public class FileOperationsUtil {
         }
         return fp;
     }
+    
+    /**
+     * This method removes invalid characters from a file path.
+     * 
+     * @param path the (uncleaned) file path, which might contain illegal characters.
+     * @return a cleaned path as {@code String} value, with illegal characters removed.
+     */
+    public static String getCleanFilePath(String path) {
+        return path.replaceAll("[^a-zA-ZäöüÄÖÜß0-9.-]", "_");
+    }
 }
