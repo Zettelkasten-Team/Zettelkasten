@@ -320,22 +320,6 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                                 exportPage.append(remarks).append(System.lineSeparator()).append(System.lineSeparator());
                             }
                         }
-                        if ((exportparts & Constants.EXPORT_TIMESTAMP) != 0) {
-                            String timestamp = dataObj.getTimestampCreated(zettelnummer);
-                            // check whether we have a timestamp at all
-                            if (timestamp != null && !timestamp.isEmpty()) {
-                                // and add the created-timestamp
-                                exportPage.append(resourceMap.getString("timestampCreated")).append(" ").append(Tools.getProperDate(timestamp, false));
-                            }
-                            // check whether we have a modified-timestamp
-                            timestamp = dataObj.getTimestampEdited(zettelnummer);
-                            // check whether we have a timestamp at all
-                            if (timestamp != null && !timestamp.isEmpty()) {
-                                exportPage.append(System.lineSeparator()).append(resourceMap.getString("timestampEdited")).append(" ").append(Tools.getProperDate(timestamp, false));
-                            }
-                            // and close the tags of the html-part
-                            exportPage.append(System.lineSeparator());
-                        }
                         // check whether the user wants to export authors
                         if ((exportparts & Constants.EXPORT_AUTHOR) != 0 && dataObj.hasAuthors(zettelnummer)) {
                             exportPage.append(ExportTools.createPlainList(dataObj.getAuthors(zettelnummer), resourceMap.getString("NoAuthor"), resourceMap.getString("authorHeader"), "\\subsection{", "}"));
@@ -352,6 +336,22 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                         }
                         if ((exportparts & Constants.EXPORT_LUHMANN) != 0 && dataObj.hasLuhmannNumbers(zettelnummer)) {
                             exportPage.append(ExportTools.createPlainCommaList(dataObj.getLuhmannNumbersAsString(zettelnummer), resourceMap.getString("NoLuhmann"), resourceMap.getString("luhmannHeader"), "\\subsection{", "}"));
+                        }
+                        if ((exportparts & Constants.EXPORT_TIMESTAMP) != 0) {
+                            String timestamp = dataObj.getTimestampCreated(zettelnummer);
+                            // check whether we have a timestamp at all
+                            if (timestamp != null && !timestamp.isEmpty()) {
+                                // and add the created-timestamp
+                                exportPage.append(resourceMap.getString("timestampCreated")).append(" ").append(Tools.getProperDate(timestamp, false));
+                            }
+                            // check whether we have a modified-timestamp
+                            timestamp = dataObj.getTimestampEdited(zettelnummer);
+                            // check whether we have a timestamp at all
+                            if (timestamp != null && !timestamp.isEmpty()) {
+                                exportPage.append(System.lineSeparator()).append(resourceMap.getString("timestampEdited")).append(" ").append(Tools.getProperDate(timestamp, false));
+                            }
+                            // and close the tags of the html-part
+                            exportPage.append(System.lineSeparator()).append(System.lineSeparator());
                         }
                         // separate files for each note?
                         if (separateFiles) {
