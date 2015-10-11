@@ -27,6 +27,7 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 * Dateinamen mit Unterstrichen kollidierten mit Markdowninterpretation ([#26](https://github.com/sjPlot/Zettelkasten/issues/26)).
 * Schreibtischexport ins Markdown deklarierte keine Überschriften ([#56](https://github.com/sjPlot/Zettelkasten/issues/56)).
 * Im Exportfenster konnten beim Export ins Textformat keine Zettelelemente ausgewählt werden.
+* Bei Fußnoten ohne Bibkey wurde die Seitenzahl nicht angezeigt ([#74](https://github.com/sjPlot/Zettelkasten/issues/74)).
 
 ### Screenshots
 Aktuelle Screenshots [gibt es hier](http://zettelkasten.danielluedecke.de/gallery.php).

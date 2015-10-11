@@ -1024,6 +1024,8 @@ public class HtmlUbbUtil {
                     // do we have a colon? this indicates a page separator
                     String[] fnpagenr = fn.split(Pattern.quote(":"));
                     String pagenr = null;
+                    // final author string
+                    String replaceValue;
                     // more than 1 value means, we have a page numner after colon
                     if (fnpagenr.length > 1) {
                         // we assume reference index number at first position
@@ -1049,19 +1051,21 @@ public class HtmlUbbUtil {
                     if (bibkey != null && !bibkey.isEmpty()) {
                         // get formatted author value
                         String formattedAuthor = bibtexObj.getFormattedAuthor(bibkey);
-                        //
-                        StringBuilder ref = new StringBuilder("");
                         // check for valid value. if we have formatted author, use this
                         if (formattedAuthor != null && !formattedAuthor.isEmpty()) {
+                            //
+                            StringBuilder ref = new StringBuilder("");
                             // replace footnote as HTML?
                             if (asHtml) {
-                                ref.append(Constants.footnoteHtmlTag).append(fn).append("\">");
-                                ref.append(formattedAuthor);
+                                ref.append(Constants.footnoteHtmlTag)
+                                        .append(fn)
+                                        .append("\">")
+                                        .append(formattedAuthor)
+                                        .append("</a>");
                                 // add page number, if we have any
                                 if (pagenr != null && !pagenr.isEmpty()) {
                                     ref.append(", ").append(resourceMap.getString("footnotePage")).append(pagenr);
                                 }
-                                ref.append("</a>");
                             } else {
                                 ref.append(formattedAuthor);
                                 // add page number, if we have any
@@ -1069,24 +1073,17 @@ public class HtmlUbbUtil {
                                     ref.append(", ").append(resourceMap.getString("footnotePage")).append(pagenr);
                                 }
                             }
+                            // copy to string
+                            replaceValue = ref.toString();
                         } else {
-                            if (asHtml) {
-                                // else use footnote number
-                                if (settings.getSupFootnote()) {
-                                    ref.append("<sup>");
-                                }
-                                ref.append("[").append(Constants.footnoteHtmlTag).append(fn).append("\">");
-                                ref.append(fn);
-                                ref.append("</a>]");
-                                if (settings.getSupFootnote()) {
-                                    ref.append("</sup>");
-                                }
-                            } else {
-                                ref.append("[").append(fn).append("]");
-                            }
+                            replaceValue = getNonFormattedFootnote(settings, fn, pagenr, asHtml);
                         }
                         // now that we have the bibkey, replace footnote with cite-tag
-                        content = content.substring(0, start.get(i)) + ref.toString() + content.substring(end.get(i));
+                        content = content.substring(0, start.get(i)) + replaceValue + content.substring(end.get(i));
+                    } else {
+                        replaceValue = getNonFormattedFootnote(settings, fn, pagenr, asHtml);
+                        // now that we have the bibkey, replace footnote with cite-tag
+                        content = content.substring(0, start.get(i)) + replaceValue + content.substring(end.get(i));
                     }
                 }
             } catch (PatternSyntaxException | IndexOutOfBoundsException ex) {
@@ -1104,6 +1101,38 @@ public class HtmlUbbUtil {
             }
         }
         return content;
+    }
+    
+    private static String getNonFormattedFootnote(Settings settings, String fn, String pagenr, boolean asHtml) {
+        StringBuilder ref = new StringBuilder("");
+        if (asHtml) {
+            // else use footnote number
+            if (settings.getSupFootnote()) {
+                ref.append("<sup>");
+            }
+            ref.append("[")
+                    .append(Constants.footnoteHtmlTag)
+                    .append(fn)
+                    .append("\">")
+                    .append(fn)
+                    .append("</a>");
+            // add page number, if we have any
+            if (pagenr != null && !pagenr.isEmpty()) {
+                ref.append(", ").append(resourceMap.getString("footnotePage")).append(pagenr);
+            }
+            ref.append("]");
+            if (settings.getSupFootnote()) {
+                ref.append("</sup>");
+            }
+        } else {
+            ref.append("[").append(fn);
+            // add page number, if we have any
+            if (pagenr != null && !pagenr.isEmpty()) {
+                ref.append(", ").append(resourceMap.getString("footnotePage")).append(pagenr);
+            }
+            ref.append("]");
+        }
+        return ref.toString();
     }
 
     private static String fixImageTags(String dummy) {
