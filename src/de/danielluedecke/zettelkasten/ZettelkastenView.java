@@ -335,7 +335,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private boolean isbnc = false;
     public boolean isBackupNecessary() { return isbnc; }
-    public void setBackupNecessary(boolean val) { isbnc = val; }
+    public void backupNecessary(boolean val) { isbnc = val; }
     /**
      *
      */
@@ -7146,7 +7146,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // check for changes to synonyms
         if (settingsDlg.isSynModified()) {
             // update indicator for autobackup
-            setBackupNecessary(true);
+            backupNecessary(true);
             setSaveEnabled(true);
             // check whether we have to update tabbed pane
             if (!data.isKeywordlistUpToDate()) {
@@ -8177,6 +8177,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // i.e. making the animated progressbar and busy icon visible
             tS.execute(cabT);
             tM.setForegroundTask(cabT);
+        } else {
+            setAutoBackupRunning(false);
         }
     }
 
@@ -10728,14 +10730,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 
     public void setBackupNecessary() {
-        setBackupNecessary(bibtex.isModified() | synonyms.isModified() | data.isMetaModified() | data.isModified() | searchrequests.isModified() | bookmarks.isModified() | desktop.isModified());
+        backupNecessary(bibtex.isModified() | synonyms.isModified() | data.isMetaModified() | data.isModified() | searchrequests.isModified() | bookmarks.isModified() | desktop.isModified());
         // update mainframe's toolbar and enable save-function
         if (isBackupNecessary()) {
             setSaveEnabled(true);
         }
     }
     public void resetBackupNecessary() {
-        setBackupNecessary(false);
+        backupNecessary(false);
     }    
 
     /**

@@ -242,7 +242,7 @@ public class AutoBackupTask extends org.jdesktop.application.Task<Object, Void> 
         // tell programm that task has finished
         zknframe.setAutoBackupRunning(false);
         // no autoback necessary at the moment
-        zknframe.setBackupNecessary(false);
+        zknframe.backupNecessary(false);
         // and log info message
         Constants.zknlogger.log(Level.INFO, "Automatic backup was successfully created.");
     }
