@@ -30,7 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 package de.danielluedecke.zettelkasten;
 
 import de.danielluedecke.zettelkasten.database.Settings;
@@ -73,38 +72,38 @@ public class CSynonymsEdit extends javax.swing.JDialog {
      */
     private final DefaultTableModel tm;
     /**
-     * 
+     *
      */
     private boolean modified = false;
+
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean isModified() {
         return modified;
     }
     /**
-     * 
+     *
      */
     private int findrow = 0;
     /**
-     * 
+     *
      */
     private int findcol = 0;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private final org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(CSynonymsEdit.class);
+    private final org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(CSynonymsEdit.class);
 
-    
     /**
-     * 
+     *
      * @param parent
      * @param sy
-     * @param st 
-     * @param dat 
+     * @param st
+     * @param dat
      */
     public CSynonymsEdit(java.awt.Frame parent, Synonyms sy, Settings st, Daten dat) {
         super(parent);
@@ -134,8 +133,8 @@ public class CSynonymsEdit extends javax.swing.JDialog {
         getRootPane().registerKeyboardAction(cancelAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
         // when we have aqua-style, change scrollbars
         if (settingsObj.isMacAqua() || settingsObj.isSeaGlass()) {
-            jButtonFindNext.putClientProperty("JButton.buttonType","segmentedRoundRect");
-            jButtonFindNext.putClientProperty("JButton.segmentPosition","only");
+            jButtonFindNext.putClientProperty("JButton.buttonType", "segmentedRoundRect");
+            jButtonFindNext.putClientProperty("JButton.segmentPosition", "only");
             jTextFieldFind.putClientProperty("JTextField.variant", "search");
             if (settingsObj.isSeaGlass()) {
                 jButtonCancel.putClientProperty("JComponent.sizeVariant", "small");
@@ -145,11 +144,11 @@ public class CSynonymsEdit extends javax.swing.JDialog {
         // get the default fontsize for tables and lists
         int defaultsize = settingsObj.getTableFontSize();
         // only set new fonts, when fontsize differs from the initial value
-        if (defaultsize>0) {
+        if (defaultsize > 0) {
             // get current font
             Font f = jTable1.getFont();
             // create new font, add fontsize-value
-            f = new Font(f.getName(), f.getStyle(), f.getSize()+defaultsize);
+            f = new Font(f.getName(), f.getStyle(), f.getSize() + defaultsize);
             // set new font
             jTable1.setFont(f);
         }
@@ -158,35 +157,42 @@ public class CSynonymsEdit extends javax.swing.JDialog {
         jTable1.setGridColor(settingsObj.getTableGridColor());
         // init the table, i.e. fill it with all existing data
         // therefor retrieve the table model
-        tm = (DefaultTableModel)jTable1.getModel();
+        tm = (DefaultTableModel) jTable1.getModel();
         // and delete all rows and columns
         tm.setRowCount(0);
         tm.setColumnCount(0);
         // add a initial column
         tm.addColumn(resourceMap.getString("synonymText"));
         // go through al synomyms...
-        for (int cnt=0; cnt<synonymsObj.getCount(); cnt++) {
+        for (int cnt = 0; cnt < synonymsObj.getCount(); cnt++) {
             // get each synonym-line. a synonym-line is a string array that contains the index-word
             // in the first place of the array, and all synonyms in the following fields of the array
-            Object[] rowdata = synonymsObj.getSynonymLine(cnt,true);
+            Object[] rowdata = synonymsObj.getSynonymLine(cnt, true);
             // if we have more values in the synonym-line to add than columns, exists, add new columns
-            while (tm.getColumnCount()<rowdata.length) tm.addColumn(String.valueOf(tm.getColumnCount()));
+            while (tm.getColumnCount() < rowdata.length) {
+                tm.addColumn(String.valueOf(tm.getColumnCount()));
+            }
             // finally, add the data to the table model
             tm.addRow(rowdata);
         }
         // add one row and column for editing...
-        tm.setRowCount(tm.getRowCount()+1);
+        tm.setRowCount(tm.getRowCount() + 1);
         tm.addColumn(String.valueOf(tm.getColumnCount()));
         // add table model listener. in case we have edited a new value at the last
         // column or row, automatically add a new column/row
         tm.addTableModelListener(new TableModelListener() {
-            @Override public void tableChanged(TableModelEvent e) {
+            @Override
+            public void tableChanged(TableModelEvent e) {
                 // only react on updates, i.e. the user edited/inserted/changed new values
                 if (TableModelEvent.UPDATE == e.getType()) {
                     // if edited row was last row, add one row
-                    if (e.getLastRow()==(tm.getRowCount()-1)) tm.setRowCount(tm.getRowCount()+1);
+                    if (e.getLastRow() == (tm.getRowCount() - 1)) {
+                        tm.setRowCount(tm.getRowCount() + 1);
+                    }
                     // if edited column was last column, add one column
-                    if (e.getColumn()==(tm.getColumnCount()-1)) tm.addColumn(String.valueOf(tm.getColumnCount()));
+                    if (e.getColumn() == (tm.getColumnCount() - 1)) {
+                        tm.addColumn(String.valueOf(tm.getColumnCount()));
+                    }
                 }
                 // enable apply-button
                 jButtonApply.setEnabled(true);
@@ -194,15 +200,18 @@ public class CSynonymsEdit extends javax.swing.JDialog {
         });
         // create action which should be executed when the user presses
         // the delete/backspace-key
-        AbstractAction a_delete = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
+        AbstractAction a_delete = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 // retrieve selected row and column
                 int row = jTable1.getSelectedRow();
                 int col = jTable1.getSelectedColumn();
                 // remove row
                 tm.removeRow(row);
                 // adjust row if last row was selected
-                if (row>=tm.getRowCount()) row--;
+                if (row >= tm.getRowCount()) {
+                    row--;
+                }
                 // select new cell
                 jTable1.setColumnSelectionInterval(col, col);
                 jTable1.setRowSelectionInterval(row, row);
@@ -210,37 +219,37 @@ public class CSynonymsEdit extends javax.swing.JDialog {
                 jButtonApply.setEnabled(true);
             }
         };
-        jTable1.getActionMap().put("DeleteKeyPressed",a_delete);
+        jTable1.getActionMap().put("DeleteKeyPressed", a_delete);
         // check for os, and use appropriate controlKey
-        KeyStroke ks = KeyStroke.getKeyStroke((System.getProperty("os.name").toLowerCase().startsWith("mac os"))?"meta BACK_SPACE":"ctrl DELETE");
+        KeyStroke ks = KeyStroke.getKeyStroke((System.getProperty("os.name").toLowerCase().startsWith("mac os")) ? "meta BACK_SPACE" : "ctrl DELETE");
         jTable1.getInputMap().put(ks, "DeleteKeyPressed");
         // create action which should be executed when the user presses
         // the delete/backspace-key
-        AbstractAction a_enter = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
+        AbstractAction a_enter = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 findrow = 0;
                 findcol = 0;
-                jTextFieldFind.setForeground((find())?Color.BLACK:Color.RED);
+                jTextFieldFind.setForeground((find()) ? Color.BLACK : Color.RED);
             }
         };
-        jTextFieldFind.getActionMap().put("EnterKeyPressed",a_enter);
+        jTextFieldFind.getActionMap().put("EnterKeyPressed", a_enter);
         // check for os, and use appropriate controlKey
         ks = KeyStroke.getKeyStroke("ENTER");
         jTextFieldFind.getInputMap().put(ks, "EnterKeyPressed");
     }
 
-
     private boolean find() {
         // get find-text
         String text = jTextFieldFind.getText().toLowerCase();
         // as long as last row is not reached, go on...
-        while (findrow<tm.getRowCount()) {
+        while (findrow < tm.getRowCount()) {
             // as long as last columns is not reached, go on...
-            while (findcol<tm.getColumnCount()) {
+            while (findcol < tm.getColumnCount()) {
                 // get cell-value
                 Object o = tm.getValueAt(findrow, findcol);
                 // check whether we had data in that cell
-                if (o!=null) {
+                if (o != null) {
                     // convert value to lowercase string
                     String s = o.toString().toLowerCase();
                     // check whether findtext occurs in the cell-value
@@ -265,21 +274,19 @@ public class CSynonymsEdit extends javax.swing.JDialog {
         return false;
     }
 
-    
     private void findNext() {
         // go to next cell
         findcol++;
         // if last column is reached...
-        if (findcol>=(tm.getColumnCount()-1)) {
+        if (findcol >= (tm.getColumnCount() - 1)) {
             // reset column-counter
             findcol = 0;
             // increase rowcounter
             findrow++;
         }
         // call find-method
-        jTextFieldFind.setForeground((find())?Color.BLACK:Color.RED);
+        jTextFieldFind.setForeground((find()) ? Color.BLACK : Color.RED);
     }
-
 
     @Action
     public void cancel() {
@@ -293,43 +300,48 @@ public class CSynonymsEdit extends javax.swing.JDialog {
         // clear all synonyms
         synonymsObj.clear();
         // create linked list
-        LinkedList<String> synline = new LinkedList<String>();
+        LinkedList<String> synline = new LinkedList<>();
         // retrieve all table rows
-        for (int row=0; row<tm.getRowCount(); row++) {
+        for (int row = 0; row < tm.getRowCount(); row++) {
             // clear list
             synline.clear();
             // go through all columns
-            for (int col=0; col<tm.getColumnCount(); col++) {
+            for (int col = 0; col < tm.getColumnCount(); col++) {
                 // get data from each cell
                 Object o = tm.getValueAt(row, col);
                 // check whether we had any data in that cell
-                if (o!=null) {
+                if (o != null) {
                     // convert object to string
                     String val = o.toString();
                     // if it's not null and not empty, add it to the rowdata-variable "synline
-                    if (val!=null && !val.isEmpty()) synline.add(val);
+                    if (val != null && !val.isEmpty()) {
+                        synline.add(val);
+                    }
                 }
             }
             // if we have a data-row, add it to the datafile
-            if (synline.size()>1) synonymsObj.addSynonym(synline.toArray(new String[synline.size()]));
+            if (synline.size() > 1) {
+                synonymsObj.addSynonym(synline.toArray(new String[synline.size()]));
+            }
         }
         // now check whether everything is ok
         if (!synonymsObj.isDocumentOK()) {
             // log error
-            Constants.zknlogger.log(Level.WARNING,"Warning! Could not save synonyms data! The original XML document has been restored!");
+            Constants.zknlogger.log(Level.WARNING, "Warning! Could not save synonyms data! The original XML document has been restored!");
             // if not, restore document and tell user about problem
             synonymsObj.restoreDocument();
             // tell user about problem
-            JOptionPane.showMessageDialog(null,resourceMap.getString("errSavingDataMsg"),
-                                          resourceMap.getString("errSavingDataTitle"),
-                                          JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null, resourceMap.getString("errSavingDataMsg"),
+                    resourceMap.getString("errSavingDataTitle"),
+                    JOptionPane.PLAIN_MESSAGE);
             // no modifications have been made
             modified = false;
-        }
-        else {
+        } else {
             modified = true;
             // if synonyms are displayed in table, set table no longer up to date
-            if (settingsObj.getShowSynonymsInTable()) dataObj.setKeywordlistUpToDate(false);
+            if (settingsObj.getShowSynonymsInTable()) {
+                dataObj.setKeywordlistUpToDate(false);
+            }
         }
         dispose();
         setVisible(false);

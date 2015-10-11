@@ -2244,16 +2244,18 @@ public class Daten {
         }
         // get the keyword position (i.e. the index-number) of the passed parameter-string
         int pos = getKeywordPosition(kw, matchcase);
-        // prepare return value
-        boolean retval = false;
+        // check if we found anything
+        if (-1 == pos) {
+            return false;
+        }
         // iterate the array of keyword-index-numbers of the target-entry
         // if the keyword we are looking for already exists, set return value to true
         for (int loop : kwnr) {
             if (loop == pos) {
-                retval = true;
+                return true;
             }
         }
-        return retval;
+        return false;
     }
 
     /**

@@ -1903,4 +1903,39 @@ public class Tools {
         // author value contains a bibkey.
         return footnoteid;
     }
+    
+    /**
+     * Performant case-insensitive string search. Based on an example from StackOverflow.
+     * 
+     * @see http://stackoverflow.com/a/25379180
+     * 
+     * @param text the source text
+     * @param pattern the find pattern
+     * @return {@code true} if {@code pattern} was found in {@code text}, {@code false}
+     * otherwise. Matching ignores case.
+     */
+    public static boolean containsIgnoreCase(String text, String pattern) {
+        // get string length
+        final int length = pattern.length();
+        if (length == 0) {
+            // Empty string is contained
+            return true; 
+        }
+        // get lower and upper case char
+        final char firstLo = Character.toLowerCase(pattern.charAt(0));
+        final char firstUp = Character.toUpperCase(pattern.charAt(0));
+        // iterate text
+        for (int i = text.length() - length; i >= 0; i--) {
+            // Quick check before calling the more expensive regionMatches() method:
+            final char ch = text.charAt(i);
+            if (ch != firstLo && ch != firstUp) {
+                continue;
+            }
+            // check if region matches
+            if (text.regionMatches(true, i, pattern, 0, length)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

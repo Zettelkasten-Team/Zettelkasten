@@ -48,6 +48,7 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import org.apache.commons.lang3.StringUtils;
 import org.jdom2.Element;
 
 /**
@@ -293,6 +294,33 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
         }
         // save search time
         long nt = System.nanoTime();
+        // here starts the typical search for search terms
+        // the search for regular expressions can be found below...
+        if (!regex) {
+            // copy the original search-terms-array to a dummy-array. we do this
+            // because we want to remove found items from the array by setting that value
+            // to an empty string, so we avoid multiple found-results. if a searchterm "hello"
+            // has already been found in the keywords, and we have another searchterm "friend" to find
+            // (both together, i.e. logical-and), the search should not count another occurence of "hello"
+            // as second match.
+            dummysearchterms = new String[searchTerms.length];
+            // copy the values to the array...
+            for (int z = 0; z < searchTerms.length; z++) {
+                // check for case-sensitive search
+                if (matchcase) {
+                    dummysearchterms[z] = searchTerms[z];
+                } // if not case-sensitive, transform to lower case
+                else {
+                    dummysearchterms[z] = searchTerms[z].toLowerCase();
+                }
+            }
+        } else {
+            // if we have a regular expression, we do not split the search term after each comma,
+            // but keep the whole expression as one search term... Thus, we only need the
+            // first index of that array, because usually the array should only contain one field
+            dummysearchterms = new String[searchTerms.length];
+            dummysearchterms[0] = searchTerms[0];
+        }
         switch (typeOfSearch) {
             //
             // here starts a usual search request
@@ -317,23 +345,6 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     // here starts the typical search for search terms
                     // the search for regular expressions can be found below...
                     if (!regex) {
-                        // copy the original search-terms-array to a dummy-array. we do this
-                        // because we want to remove found items from the array by setting that value
-                        // to an empty string, so we avoid multiple found-results. if a searchterm "hello"
-                        // has already been found in the keywords, and we have another searchterm "friend" to find
-                        // (both together, i.e. logical-and), the search should not count another occurence of "hello"
-                        // as second match.
-                        dummysearchterms = new String[searchTerms.length];
-                        // copy the values to the array...
-                        for (int z = 0; z < searchTerms.length; z++) {
-                            // check for case-sensitive search
-                            if (matchcase) {
-                                dummysearchterms[z] = searchTerms[z];
-                            } // if not case-sensitive, transform to lower case
-                            else {
-                                dummysearchterms[z] = searchTerms[z].toLowerCase();
-                            }
-                        }
                         //
                         // here we want to search in keywords...
                         //
@@ -400,11 +411,6 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         }
                     } // here we have the procedure when we search for regular expressions...
                     else {
-                        // if we have a regular expression, we do not split the search term after each comma,
-                        // but keep the whole expression as one search term... Thus, we only need the
-                        // first index of that array, because usually the array should only contain one field
-                        dummysearchterms = new String[searchTerms.length];
-                        dummysearchterms[0] = searchTerms[0];
                         //
                         // here we want to search in keywords...
                         //
@@ -679,7 +685,11 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                     searchLabel = desc.toString();
                     longdesc = ldesc.toString();
                     // log search time
-                    Constants.zknlogger.log(Level.INFO, "Search Request: {0}; Duration: {1} seconds.", new Object[]{anonymsearchtext.toString(), String.format("%.03f", searchseconds)});
+                    Constants.zknlogger.log(Level.INFO, "Search Request: {0}; Duration: {1} seconds (avg. {2} seconds per note).", 
+                            new Object[]{anonymsearchtext.toString(), 
+                                String.format("%.03f", searchseconds),
+                                String.format("%.03f", searchseconds / searchEntries.length)
+                            });
                     // add all search request data and search results to our search-request-class
                     // but only, if we don't want to add the data to the desktop instead of having
                     // a searchrequest
@@ -1158,9 +1168,9 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
      */
     private void findTerm(int searchnr, int type) {
         // go through all search terms
-        for (int count = 0; count < dummysearchterms.length; count++) {
+        for (String dummysearchterm : dummysearchterms) {
             // first check, whether the searchterm is not empty
-            if (!dummysearchterms[count].isEmpty()) {
+            if (!dummysearchterm.isEmpty()) {
                 // init variable
                 String[] synline = null;
                 // when we have synonyms included in the search, prepare the searchterm
@@ -1168,11 +1178,11 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                 if (synonyms) {
                     // retrieve the synonymline, where the current searchterm might be an
                     // index-word or any related synonym
-                    synline = synonymsObj.getSynonymLineFromAny(dummysearchterms[count], matchcase);
+                    synline = synonymsObj.getSynonymLineFromAny(dummysearchterm, matchcase);
                 }
                 // if there are synonyms for the current searchterm...
                 if (null == synline) {
-                    synline = new String[]{dummysearchterms[count]};
+                    synline = new String[]{dummysearchterm};
                 }
                 // go through all searchterms, including synonyms for the search term
                 for (String synline1 : synline) {
@@ -1195,7 +1205,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                                 content = dataObj.getZettelTitle(searchnr);
                             }
                             if (Constants.SEARCH_CONTENT == type) {
-                                content = dataObj.getCleanZettelContent(searchnr);
+                                content = cleanZettelContent(searchnr);
                             }
                             if (Constants.SEARCH_REMARKS == type) {
                                 content = dataObj.getRemarks(searchnr);
@@ -1213,42 +1223,28 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                                     }
                                 }
                             }
-
-    //                        synline1 = "\\b"+synline1+"\\b";
-    //                        // when the find & replace is *not* case-sensitive, set regular expression
-    //                        // to ignore the case...
-    //                        if (!matchcase) synline1 = "(?i)"+synline1;
-    //                        // the final findterm now might look like this:
-    //                        // "(?i)\\b<findterm>\\b", in case we ignore case and have whole word search
-    //                        try {
-    //                            // create a pattern from the first search term. if it fails, go on
-    //                            // to the catch-block, else contiue here.
-    //                            Pattern p = Pattern.compile(synline1);
-    //                            // now we know we have a valid regular expression. we now want to
-    //                            // retrieve all matching groups
-    //                            Matcher m = p.matcher(content);
-    //                            somethingfound = m.find();
-    //                        }
-    //                        catch (PatternSyntaxException ex) {
-    //                            
-    //                        }
-
                             // split the content at each new word-boundary - i.e. we have a whole-word-search here
                             String[] sterms = content.split("\\b");
                             // when we are looking for title, content or remarks, the variable "sterms" is not null
                             // if we were looking for keywords or authors, sterms is null, so this part
                             // is ignored...
                             if (sterms != null) {
-                                // get search term
-                                String stsearch = synline1;
                                 // iterate the array of keyword- or author-strings of that entry
                                 for (String loop : sterms) {
+//                                    // if the search is not case-sensitive, convert to lowercase
+//                                    if (!matchcase) {
+//                                        // set found-indicator to true
+//                                        loop = loop.toLowerCase();
+//                                    }
                                     // if the search is not case-sensitive, convert to lowercase
-                                    if (!matchcase) {
-                                        loop = loop.toLowerCase();
+                                    if (!matchcase && StringUtils.equalsIgnoreCase(loop, synline1)) {
+                                        // set found-indicator to true
+                                        somethingfound = true;
+                                        // and leave loop
+                                        break;
                                     }
                                     // when we found something, tell that our found indicator
-                                    if (loop.equals(stsearch)) {
+                                    if (StringUtils.equals(loop, synline1)) {
                                         // set found-indicator to true
                                         somethingfound = true;
                                         // and leave loop
@@ -1263,8 +1259,6 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         if (somethingfound) {
                             // increase found counter
                             foundCounter++;
-                            // clear found search term
-                            dummysearchterms[count] = "";
                             // do we have logical OR or NOT? if yes, we
                             // can leave now
                             if (Constants.LOG_OR == logical || Constants.LOG_NOT == logical) {
@@ -1289,7 +1283,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                             content = dataObj.getZettelTitle(searchnr);
                         }
                         if (Constants.SEARCH_CONTENT == type) {
-                            content = dataObj.getCleanZettelContent(searchnr);
+                            content = cleanZettelContent(searchnr);
                         }
                         if (Constants.SEARCH_REMARKS == type) {
                             content = dataObj.getRemarks(searchnr);
@@ -1312,15 +1306,24 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         // is ignored...
                         if (content != null) {
                             // if the search is not case-sensitive, convert to lowercase
-                            if (!matchcase) {
-                                content = content.toLowerCase();
-                            }
-                            // if the content contains the searchterm, set foundindicator to true
-                            if (content.contains(synline1)) {
+//                            if (!matchcase) {
+//                                content = content.toLowerCase();
+//                            }
+                            if (!matchcase && StringUtils.containsIgnoreCase(content, synline1)) {
                                 // increase found counter
                                 foundCounter++;
-                                // clear found search term
-                                dummysearchterms[count] = "";
+                                // do we have logical OR or NOT? if yes, we
+                                // can leave now
+                                if (Constants.LOG_OR == logical || Constants.LOG_NOT == logical) {
+                                    return;
+                                }
+                                // leave loop, we don't need to look for further synomyns
+                                break;
+                            }
+                            // if the content contains the searchterm, set foundindicator to true
+                            if (StringUtils.contains(content, synline1)) {
+                                // increase found counter
+                                foundCounter++;
                                 // do we have logical OR or NOT? if yes, we
                                 // can leave now
                                 if (Constants.LOG_OR == logical || Constants.LOG_NOT == logical) {
@@ -1367,6 +1370,56 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
         if (!desktoponly) {
             searchrequest.addSearch(new String[]{""}, searchwhat, Constants.LOG_NOT, true, true, false, false, results, searchLabel, longdesc);
         }
+    }
+
+    public String cleanZettelContent(int nr) {
+        String content = dataObj.getZettelContent(nr);
+        String dummy = "";
+        if (content != null && !content.isEmpty()) {
+            dummy = content.replaceAll("\\[k\\]", "")
+                    .replaceAll("\\[f\\]", "")
+                    .replaceAll("\\[u\\]", "")
+                    .replaceAll("\\[q\\]", "")
+                    .replaceAll("\\[d\\]", "")
+                    .replaceAll("\\[c\\]", "")
+                    .replaceAll("\\[code\\]", "")
+                    .replaceAll("\\[sup\\]", "")
+                    .replaceAll("\\[sub\\]", "")
+                    .replaceAll("\\[/k\\]", "")
+                    .replaceAll("\\[/f\\]", "")
+                    .replaceAll("\\[/u\\]", "")
+                    .replaceAll("\\[/q\\]", "")
+                    .replaceAll("\\[/d\\]", "")
+                    .replaceAll("\\[/c\\]", "")
+                    .replaceAll("\\[/code\\]", "")
+                    .replaceAll("\\[/sup\\]", "")
+                    .replaceAll("\\[/sub\\]", "");
+            dummy = dummy.replaceAll("\\[color ([^\\[]*)\\](.*?)\\[/color\\]", "$2");
+            dummy = dummy.replaceAll("\\[font ([^\\[]*)\\](.*?)\\[/font\\]", "$2");
+            dummy = dummy.replaceAll("\\[h ([^\\[]*)\\](.*?)\\[/h\\]", "$2");
+            dummy = dummy.replaceAll("\\[m ([^\\[]*)\\](.*?)\\[/m\\]", "$2");
+            dummy = dummy.replaceAll("\\[n\\](.*?)\\[/n\\]", "$1");
+            dummy = dummy.replaceAll("\\[l\\](.*?)\\[/l\\]", "$1");
+            dummy = dummy.replaceAll("\\[\\*\\](.*?)\\[/\\*\\]", "- $1\n");
+            dummy = dummy.replaceAll("\\[tc\\](.*?)\\[/tc\\]", "$1");
+            // bold and italic formatting in markdown
+            dummy = dummy.replaceAll("\\*\\*\\*(.*?)\\*\\*\\*", "$1");
+            dummy = dummy.replaceAll("___(.*?)___", "$1");
+            // bold formatting
+            dummy = dummy.replaceAll("__(.*?)__", "$1");
+            dummy = dummy.replaceAll("\\*\\*(.*?)\\*\\*", "$1");
+            // italic formatting
+            dummy = dummy.replaceAll("_(.*?)_", "$1");
+            dummy = dummy.replaceAll("\\*(.*?)\\*", "$1");
+            // strike
+            dummy = dummy.replaceAll("---(.*?)---", "$1");
+            // code
+            dummy = dummy.replaceAll("\\`(.*?)\\`", "$1");
+            // bullets
+            dummy = dummy.replaceAll("(^|\\n)(\\d\\. )(.*)", "- $3");
+            dummy = dummy.replaceAll("(^|\\n)(\\* )(.*)", "- $3");
+        }
+        return dummy;
     }
 }
 

@@ -101,7 +101,7 @@ public class CExport extends javax.swing.JDialog {
     private static final int TYPE_MD = 7;
     private static final int TYPE_TXT = 8;
     private static final int TYPE_TEX = 9;
-    private static final int TYPE_ZKN = 10;
+    private static final int TYPE_ZKN3 = 10;
     /**
      * This variable indicates whether the author- and keyword-file should be exported as separate
      * files (just like the typical storage-system we use) or whether the author- and
@@ -229,7 +229,7 @@ public class CExport extends javax.swing.JDialog {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 // retrieve selected index of combobox
-                int selectedIndex = getSelectedExportType(jComboBox_exportType.getSelectedIndex());
+                int selectedIndex = jComboBox_exportType.getSelectedIndex();
                 // show next components, depending on valid choice
                 jLabelBrowseDir.setEnabled(selectedIndex > 0);
                 jCheckBoxExportBibTex.setEnabled(selectedIndex > 0);
@@ -249,52 +249,66 @@ public class CExport extends javax.swing.JDialog {
                 // en-/disable checkbox for "all-in-one-file" only if
                 // it applies. choosing the xml-format will automatically
                 // enable the checkbox. all other formats disable this checkbox
-                jCheckBoxSeparateFile.setEnabled(Constants.EXP_TYPE_MD == selectedIndex || Constants.EXP_TYPE_TXT == selectedIndex || Constants.EXP_TYPE_TEX == selectedIndex);
+                jCheckBoxSeparateFile.setEnabled(TYPE_MD == selectedIndex || TYPE_TXT == selectedIndex || TYPE_TEX == selectedIndex);
                 //
                 // here we enable/disbale components depending on the CSV-export-fomat
                 //
                 // csv-checkboxes only apply to csv-export-format
-                jLabelCSVSeparator.setEnabled(Constants.EXP_TYPE_CSV == selectedIndex);
-                jComboBoxCSVSeparator.setEnabled(Constants.EXP_TYPE_CSV == selectedIndex);
+                jLabelCSVSeparator.setEnabled(TYPE_CSV == selectedIndex);
+                jComboBoxCSVSeparator.setEnabled(TYPE_CSV == selectedIndex);
                 //
                 // here we enable/disbale components depending on the ZKN3-export-fomat
                 //
                 // when we export data to the zettelkasten format (.zkn3), we have do disable
                 // several components, since most options just don't apply to .zkn3-format
-                jCheckBoxExportBibTex.setEnabled(Constants.EXP_TYPE_ZKN3 != selectedIndex);
+                jCheckBoxExportBibTex.setEnabled(TYPE_ZKN3 != selectedIndex);
                 //
                 // here we go on with further stuff...
                 //
                 // format tags removable
-                if (Constants.EXP_TYPE_DOCX == selectedIndex || Constants.EXP_TYPE_ODT == selectedIndex || Constants.EXP_TYPE_TEX == selectedIndex
-                        || Constants.EXP_TYPE_ZKN3 == selectedIndex || Constants.EXP_TYPE_HTML == selectedIndex || Constants.EXP_TYPE_MD == selectedIndex
-                        || Constants.EXP_TYPE_RTF == selectedIndex) {
-                    jCheckBoxRemoveFormatTags.setEnabled(false);
-                    jCheckBoxRemoveFormatTags.setSelected(false);
-                } else {
-                    jCheckBoxRemoveFormatTags.setEnabled(true);
+                switch (selectedIndex) {
+                    case TYPE_DOCX:
+                    case TYPE_ODT:
+                    case TYPE_HTML:
+                    case TYPE_RTF:
+                    case TYPE_MD:
+                    case TYPE_TEX:
+                        jCheckBoxSetTitleNumber.setEnabled(true);
+                    case TYPE_ZKN3:
+                        jCheckBoxRemoveFormatTags.setEnabled(false);
+                        jCheckBoxRemoveFormatTags.setSelected(false);
+                        break;
+                    case TYPE_TXT:
+                        jCheckBoxRemoveFormatTags.setEnabled(true);
+                        jCheckBoxSetTitleNumber.setEnabled(true);
+                        break;
+                    case TYPE_CSV:
+                        jCheckBoxRemoveFormatTags.setEnabled(true);
+                        jCheckBoxSetTitleNumber.setSelected(false);
+                        jCheckBoxSetTitleNumber.setEnabled(false);
+                        break;
+                    case TYPE_XML:
+                        jCheckBoxRemoveFormatTags.setEnabled(true);
+                        jCheckBoxSetTitleNumber.setSelected(false);
+                        jCheckBoxSetTitleNumber.setEnabled(false);
+                        break;
+                    default:
+                        jCheckBoxRemoveFormatTags.setEnabled(true);
+                        jCheckBoxSetTitleNumber.setEnabled(true);
+                        break;
                 }
-                if (Constants.EXP_TYPE_DOCX == selectedIndex || Constants.EXP_TYPE_ODT == selectedIndex || Constants.EXP_TYPE_RTF == selectedIndex
-                        || Constants.EXP_TYPE_HTML == selectedIndex || Constants.EXP_TYPE_TXT == selectedIndex || Constants.EXP_TYPE_MD == selectedIndex
-                        || Constants.EXP_TYPE_TEX == selectedIndex) {
-                    jCheckBoxSetTitleNumber.setEnabled(true);
-                } else {
-                    jCheckBoxSetTitleNumber.setSelected(false);
-                    jCheckBoxSetTitleNumber.setEnabled(false);
-                }
-
-                if (Constants.EXP_TYPE_DOCX == selectedIndex || Constants.EXP_TYPE_ODT == selectedIndex || Constants.EXP_TYPE_HTML == selectedIndex) {
+                if (TYPE_DOCX == selectedIndex || TYPE_ODT == selectedIndex || TYPE_HTML == selectedIndex) {
                     jCheckBoxHighlightKeywords.setEnabled(jCheckBox5.isEnabled());
                 } else {
                     jCheckBoxHighlightKeywords.setEnabled(false);
                     jCheckBoxHighlightKeywords.setSelected(false);
                 }
                 // set keyboard focus input
-                if (Constants.EXP_TYPE_MD == selectedIndex || Constants.EXP_TYPE_TXT == selectedIndex || Constants.EXP_TYPE_TEX == selectedIndex) {
+                if (TYPE_MD == selectedIndex || TYPE_TXT == selectedIndex || TYPE_TEX == selectedIndex) {
                     jCheckBoxSeparateFile.requestFocusInWindow();
                 } // when the user selectes csv-format as export-type,
                 // enable the combobox for the csv-separator
-                else if (Constants.EXP_TYPE_CSV == selectedIndex) {
+                else if (TYPE_CSV == selectedIndex) {
                     jComboBoxCSVSeparator.requestFocusInWindow();
                 } else {
                     jButtonBrowse.requestFocusInWindow();
@@ -351,7 +365,7 @@ public class CExport extends javax.swing.JDialog {
                 showHideStartButton();
                 // retrieve selected index of combobox
                 int selectedIndex = jComboBox_exportType.getSelectedIndex();
-                if (Constants.EXP_TYPE_DOCX == selectedIndex || Constants.EXP_TYPE_ODT == selectedIndex || Constants.EXP_TYPE_HTML == selectedIndex) {
+                if (TYPE_DOCX == selectedIndex || TYPE_ODT == selectedIndex || TYPE_HTML == selectedIndex) {
                     jCheckBoxHighlightKeywords.setEnabled(jCheckBox5.isSelected());
                 }
             }
@@ -418,7 +432,7 @@ public class CExport extends javax.swing.JDialog {
         // retrieve selected index of combobox
         int selectedIndex = jComboBox_exportType.getSelectedIndex();
         // get enabled-status
-        boolean enabled = Constants.EXP_TYPE_ZKN3 != selectedIndex && selectedIndex > 0;
+        boolean enabled = TYPE_ZKN3 != selectedIndex && selectedIndex > 0;
         // enable the next components
         jCheckBox2.setEnabled(enabled);
         jCheckBox3.setEnabled(enabled);
@@ -429,7 +443,7 @@ public class CExport extends javax.swing.JDialog {
         jCheckBox8.setEnabled(enabled);
         jCheckBox9.setEnabled(enabled);
         jCheckBox10.setEnabled(enabled);
-        jCheckBoxHighlightKeywords.setEnabled(jCheckBox5.isSelected() && Constants.EXP_TYPE_ZKN3 != selectedIndex && enabled);
+        jCheckBoxHighlightKeywords.setEnabled(jCheckBox5.isSelected() && TYPE_ZKN3 != selectedIndex && enabled);
     }
 
     @Action
@@ -525,7 +539,7 @@ public class CExport extends javax.swing.JDialog {
             case TYPE_MD:
                 selt = Constants.EXP_TYPE_MD;
                 break;
-            case TYPE_ZKN:
+            case TYPE_ZKN3:
                 selt = Constants.EXP_TYPE_ZKN3;
                 break;
             case TYPE_XML:
