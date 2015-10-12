@@ -1120,6 +1120,8 @@ public class Constants {
      * desktop window
      */
     public static final ImageIcon iconDesktopLuhmann = new ImageIcon(Constants.class.getResource("/de/danielluedecke/zettelkasten/resources/icons/luhmann-number_desk.png"));
+    public static final ImageIcon iconTopLuhmann = new ImageIcon(Constants.class.getResource("/de/danielluedecke/zettelkasten/resources/icons/top_luhmann.png"));
+    public static final ImageIcon iconNoTopLuhmann = new ImageIcon(Constants.class.getResource("/de/danielluedecke/zettelkasten/resources/icons/no_top_luhmann.png"));
 
     /**
      * This is the constant for the application's icon

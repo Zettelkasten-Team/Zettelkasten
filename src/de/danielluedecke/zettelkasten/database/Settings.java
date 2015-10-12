@@ -328,6 +328,7 @@ public class Settings {
     private static final String SETTING_SHOWLUHMANNICONINDESK = "showluhmanniconindesk";
     private static final String SETTING_LUHMANNTREEEXPANDLEVEL = "luhmanntreeexpandlevel";
     private static final String SETTING_SEARCHWITHOUTFORMATTAGS = "searchwithoutformattags";
+    private static final String SETTING_MAKELUHMANNCOLUMNSORTABLE = "makeluhmanncolumnsortable";
 
     public static final String SETTING_LOGKEYWORDLIST_OR = "OR";
     public static final String SETTING_LOGKEYWORDLIST_AND = "AND";
@@ -705,6 +706,7 @@ public class Settings {
         genericElementInit(SETTING_TABLEEVENROWCOLOR, "eeeeee");
         genericElementInit(SETTING_ENTRYHEADERBACKGROUNDCOLOR, "555555");
         genericElementInit(SETTING_QUOTEBACKGROUNDCOLOR, "f2f2f2");
+        genericElementInit(SETTING_MAKELUHMANNCOLUMNSORTABLE, "0");
         genericElementInit(SETTING_MAINBACKGROUNDCOLOR, "ffffff");
         genericElementInit(SETTING_CONTENTBACKGROUNDCOLOR, "ffffff");
         genericElementInit(SETTING_TABLEODDROWCOLOR, "f8f8f8");
@@ -2068,6 +2070,14 @@ public class Settings {
      */
     public void setSearchAlwaysSynonyms(boolean val) {
         genericBooleanSetter(SETTING_SEARCHALWAYSSYNONYMS, val);
+    }
+
+    public boolean getMakeLuhmannColumnSortable() {
+        return genericBooleanGetter(SETTING_MAKELUHMANNCOLUMNSORTABLE);
+    }
+
+    public void setMakeLuhmannColumnSortable(boolean val) {
+        genericBooleanSetter(SETTING_MAKELUHMANNCOLUMNSORTABLE, val);
     }
 
     /**

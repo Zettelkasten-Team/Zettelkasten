@@ -30,7 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 package de.danielluedecke.zettelkasten.util.classes;
 
 import java.util.Comparator;
@@ -40,20 +39,21 @@ import java.util.Comparator;
  * @author danielludecke
  */
 public class DateComparer implements Comparator {
-    @Override public int compare(Object o1, Object o2) {
+
+    @Override
+    public int compare(Object o1, Object o2) {
 
         String s1 = o1.toString();
         String s2 = o2.toString();
 
         try {
-            if (s1.length()>7) {
-                s1 = s1.substring(6)+s1.substring(3, 5)+s1.substring(0, 2);
+            if (s1.length() > 7) {
+                s1 = s1.substring(6) + s1.substring(3, 5) + s1.substring(0, 2);
             }
-            if (s2.length()>7) {
-                s2 = s2.substring(6)+s2.substring(3, 5)+s2.substring(0, 2);
+            if (s2.length() > 7) {
+                s2 = s2.substring(6) + s2.substring(3, 5) + s2.substring(0, 2);
             }
-        }
-        catch (IndexOutOfBoundsException ex) {
+        } catch (IndexOutOfBoundsException ex) {
         }
 
         return s1.compareTo(s2);

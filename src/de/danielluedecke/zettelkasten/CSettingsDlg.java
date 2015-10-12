@@ -323,6 +323,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jCheckBoxShowEntryHeadline.setSelected(settings.getShowEntryHeadline());
         jCheckBoxFootnoteBraces.setSelected(settings.getFootnoteBraces());
         jCheckBoxSearchWithoutFormatTags.setSelected(!settings.getSearchRemovesFormatTags());
+        jCheckBoxLuhmannColSortable.setSelected(settings.getMakeLuhmannColumnSortable());
         // get user attachment and image paths
         File attpath = dataObj.getUserAttachmentPath();
         if (attpath != null) {
@@ -678,6 +679,13 @@ public class CSettingsDlg extends javax.swing.JDialog {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
+            }
+        });
+        jCheckBoxLuhmannColSortable.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setModified(true);
+                dataObj.setTitlelistUpToDate(false);
             }
         });
         jCheckBoxUseXDGOpen.addActionListener(new java.awt.event.ActionListener() {
@@ -1825,6 +1833,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         settings.setSupFootnote(jCheckBoxFootnote.isSelected());
         settings.setFootnoteBraces(jCheckBoxFootnoteBraces.isSelected());
         settings.setSearchRemovesFormatTags(!jCheckBoxSearchWithoutFormatTags.isSelected());
+        settings.setMakeLuhmannColumnSortable(jCheckBoxLuhmannColSortable.isSelected());
         settings.setJumpFootnote(jCheckBoxJumpToTab.isSelected());
         settings.setUseCustomCSS(Settings.CUSTOM_CSS_ENTRY, jCheckBoxEntryCSS.isSelected());
         settings.setUseCustomCSS(Settings.CUSTOM_CSS_DESKTOP, jCheckBoxDesktopCSS.isSelected());
@@ -2117,6 +2126,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jButtonDesktopFont = new javax.swing.JButton();
         jLabel23 = new javax.swing.JLabel();
         jSliderDesktopFontSize = new javax.swing.JSlider();
+        jCheckBoxLuhmannColSortable = new javax.swing.JCheckBox();
         jPanel7 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
         jTextFieldAttachmentPath = new javax.swing.JTextField();
@@ -2698,6 +2708,10 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jSliderDesktopFontSize.setSnapToTicks(true);
         jSliderDesktopFontSize.setName("jSliderDesktopFontSize"); // NOI18N
 
+        jCheckBoxLuhmannColSortable.setText(resourceMap.getString("jCheckBoxLuhmannColSortable.text")); // NOI18N
+        jCheckBoxLuhmannColSortable.setToolTipText(resourceMap.getString("jCheckBoxLuhmannColSortable.toolTipText")); // NOI18N
+        jCheckBoxLuhmannColSortable.setName("jCheckBoxLuhmannColSortable"); // NOI18N
+
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
         jPanel11Layout.setHorizontalGroup(
@@ -2728,7 +2742,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonDesktopFont))
                     .addComponent(jLabel11)
-                    .addComponent(jSliderDesktopFontSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSliderDesktopFontSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCheckBoxLuhmannColSortable))
                 .addContainerGap())
         );
         jPanel11Layout.setVerticalGroup(
@@ -2738,6 +2753,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
                 .addComponent(jCheckBoxShowHorGrid)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBoxShowVerGrid)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxLuhmannColSortable)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -2766,7 +2783,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel22)
                     .addComponent(jButtonDesktopFont))
-                .addContainerGap())
+                .addGap(17, 17, 17))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel11.TabConstraints.tabTitle"), jPanel11); // NOI18N
@@ -3012,6 +3029,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
     private javax.swing.JCheckBox jCheckBoxIconText;
     private javax.swing.JCheckBox jCheckBoxImgResize;
     private javax.swing.JCheckBox jCheckBoxJumpToTab;
+    private javax.swing.JCheckBox jCheckBoxLuhmannColSortable;
     private javax.swing.JCheckBox jCheckBoxRegistry;
     private javax.swing.JCheckBox jCheckBoxSearchWithoutFormatTags;
     private javax.swing.JCheckBox jCheckBoxShowAllIcons;

@@ -76,6 +76,7 @@ import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
 import de.danielluedecke.zettelkasten.util.PlatformUtil;
 import de.danielluedecke.zettelkasten.util.TreeUtil;
 import de.danielluedecke.zettelkasten.util.ZettelkastenViewUtil;
+import de.danielluedecke.zettelkasten.util.classes.TitleTableCellRenderer;
 import de.danielluedecke.zettelkasten.util.classes.TreeUserObject;
 import java.awt.AWTException;
 import java.awt.BorderLayout;
@@ -2138,7 +2139,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         setCustomTableRowSorter(jTableManLinks, 1);
         setCustomTableRowSorter(jTableBookmarks, 1);
         setCustomTableRowSorter(jTableAttachments, 0);
-
+        // 6th column in title table has icons
+        jTableTitles.getColumnModel().getColumn(5).setCellRenderer(new TitleTableCellRenderer(data));
         javax.swing.JTable[] tables = new javax.swing.JTable[]{jTableLinks, jTableManLinks, jTableKeywords,
             jTableAuthors, jTableTitles, jTableBookmarks,
             jTableAttachments
@@ -3669,7 +3671,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // if dialog window isn't already created, do this now
         if (null == taskDlg) {
             // get parent und init window
-            taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWKEYWORDS, data, synonyms, null /*only needed for authors*/, null /*only needed for attachments*/, settings.getShowSynonymsInTable(), 0 /*only need for authors*/, (DefaultTableModel) jTableKeywords.getModel());
+            taskDlg = new TaskProgressDialog(getFrame(), 
+                    TaskProgressDialog.TASK_SHOWKEYWORDS, 
+                    data, 
+                    synonyms, 
+                    null, /*only needed for authors*/
+                    null, /*only needed for attachments*/
+                    settings.getShowSynonymsInTable(),
+                    0, /*only need for authors*/
+                    (DefaultTableModel) jTableKeywords.getModel(),
+                    settings.getMakeLuhmannColumnSortable());
             // center window
             taskDlg.setLocationRelativeTo(getFrame());
         }
@@ -5593,7 +5604,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // if dialog window isn't already created, do this now
         if (null == taskDlg) {
             // get parent und init window
-            taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWATTACHMENTS, data, null /*only needed for authors*/, null /*only needed for authors*/, settings, false /*only need for keywords*/, 0 /*only need for authors*/, (DefaultTableModel) jTableAttachments.getModel());
+            taskDlg = new TaskProgressDialog(getFrame(), 
+                    TaskProgressDialog.TASK_SHOWATTACHMENTS, 
+                    data, 
+                    null, /*only needed for authors*/
+                    null, /*only needed for authors*/
+                    settings, 
+                    false, /*only need for keywords*/
+                    0, /*only need for authors*/
+                    (DefaultTableModel) jTableAttachments.getModel(),
+                    settings.getMakeLuhmannColumnSortable());
             // center window
             taskDlg.setLocationRelativeTo(getFrame());
         }
@@ -5719,12 +5739,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // if dialog window isn't already created, do this now
         if (null == taskDlg) {
             // get parent und init window
-            taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWAUTHORS, data, 
-                    null /*only needed for keywords*/, bibtex, 
-                    null /*only needed for attachments*/, 
-                    false /*only needed for keywords*/, 
+            taskDlg = new TaskProgressDialog(getFrame(), 
+                    TaskProgressDialog.TASK_SHOWAUTHORS, 
+                    data, 
+                    null, /*only needed for keywords*/
+                    bibtex, 
+                    null, /*only needed for attachments*/
+                    false, /*only needed for keywords*/
                     jComboBoxAuthorType.getSelectedIndex(), 
-                    (DefaultTableModel) jTableAuthors.getModel());
+                    (DefaultTableModel) jTableAuthors.getModel(),
+                    settings.getMakeLuhmannColumnSortable());
             // center window
             taskDlg.setLocationRelativeTo(getFrame());
         }
@@ -6161,7 +6185,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // if dialog window isn't already created, do this now
         if (null == taskDlg) {
             // get parent und init window
-            taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWTITLES, data, null /*only needed for keywords*/, null /*only needed for authors*/, null /*only needed for attachments*/, false /*only needed for keywords*/, 0 /*only needed for authors*/, (DefaultTableModel) jTableTitles.getModel());
+            taskDlg = new TaskProgressDialog(getFrame(), 
+                    TaskProgressDialog.TASK_SHOWTITLES, 
+                    data, 
+                    null, /*only needed for keywords*/
+                    null, /*only needed for authors*/
+                    null, /*only needed for attachments*/
+                    false, /*only needed for keywords*/
+                    0, /*only needed for authors*/
+                    (DefaultTableModel) jTableTitles.getModel(),
+                    settings.getMakeLuhmannColumnSortable());
             // center window
             taskDlg.setLocationRelativeTo(getFrame());
         }
@@ -12135,7 +12168,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             );
             jPanel1Layout.setVerticalGroup(
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jSplitPaneLinks, javax.swing.GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
+                .addComponent(jSplitPaneLinks)
             );
 
             jTabbedPaneMain.addTab(resourceMap.getString("jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
@@ -12416,7 +12449,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jPanel7Layout.setVerticalGroup(
                 jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                    .addComponent(jSplitPaneAuthors, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
+                    .addComponent(jSplitPaneAuthors)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jTextFieldFilterAuthors, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -12436,14 +12469,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
                 },
                 new String [] {
-                    "Zettel", "Überschrift", "Erstellt", "Geändert", "Bewertung"
+                    "Zettel", "Überschrift", "Erstellt", "Geändert", "Bewertung", "Folgezettel"
                 }
             ) {
                 Class[] types = new Class [] {
-                    java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class
+                    java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class
                 };
                 boolean[] canEdit = new boolean [] {
-                    false, false, false, false, false
+                    false, false, false, false, false, false
                 };
 
                 public Class getColumnClass(int columnIndex) {
@@ -12464,6 +12497,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 jTableTitles.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title2")); // NOI18N
                 jTableTitles.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title3")); // NOI18N
                 jTableTitles.getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title4")); // NOI18N
+                jTableTitles.getColumnModel().getColumn(5).setHeaderValue(resourceMap.getString("jTableTitles.columnModel.title5")); // NOI18N
             }
 
             jTextFieldFilterTitles.setToolTipText(resourceMap.getString("jTextFieldFilterTitles.toolTipText")); // NOI18N

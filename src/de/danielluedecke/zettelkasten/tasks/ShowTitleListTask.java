@@ -53,6 +53,9 @@ public class ShowTitleListTask extends org.jdesktop.application.Task<Object, Voi
      */
     private final DefaultTableModel tableModel;
     private LinkedList<Object[]> list;
+    
+    private final boolean makeLuhmannSortable;
+    
     /**
      * get the strings for file descriptions from the resource map
      */
@@ -63,12 +66,13 @@ public class ShowTitleListTask extends org.jdesktop.application.Task<Object, Voi
     private final javax.swing.JDialog parentDialog;
     private final javax.swing.JLabel msgLabel;
 
-    ShowTitleListTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, DefaultTableModel tm) {
+    ShowTitleListTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, DefaultTableModel tm, boolean mls) {
         // Runs on the EDT.  Copy GUI state that
         // doInBackground() depends on from parameters
         // to ImportFileTask fields, here.
         super(app);
         dataObj = d;
+        makeLuhmannSortable = mls;
         tableModel = tm;
         parentDialog = parent;
         msgLabel = label;
@@ -114,13 +118,23 @@ public class ShowTitleListTask extends org.jdesktop.application.Task<Object, Voi
             if (timestamp != null && !timestamp[1].isEmpty() && timestamp[1].length() >= 6) {
                 edited = timestamp[1].substring(4, 6) + "." + timestamp[1].substring(2, 4) + ".20" + timestamp[1].substring(0, 2);
             }
+            String luhmannindex = "0";
+            // does user wants to make note sequence column sortable?
+            if (makeLuhmannSortable) {
+                if (dataObj.isTopLevelLuhmann(cnt)) {
+                    luhmannindex = "2";
+                } else if (dataObj.findParentlLuhmann(cnt, true) != -1) {
+                    luhmannindex = "1";
+                }
+            }
             // create a new object with these data
-            Object[] ob = new Object[5];
+            Object[] ob = new Object[6];
             ob[0] = cnt; // ob[0] = String.valueOf(cnt);
             ob[1] = title;
             ob[2] = created;
             ob[3] = edited;
             ob[4] = dataObj.getZettelRating(cnt);
+            ob[5] = luhmannindex;
             // and add it to the table
             list.add(ob);
             // update progressbar

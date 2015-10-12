@@ -935,6 +935,7 @@
                               </Group>
                               <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="1"/>
                               <Component id="jSliderDesktopFontSize" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jCheckBoxLuhmannColSortable" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -947,6 +948,8 @@
                           <Component id="jCheckBoxShowHorGrid" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jCheckBoxShowVerGrid" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jCheckBoxLuhmannColSortable" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="jLabel7" alignment="0" max="32767" attributes="1"/>
@@ -979,7 +982,7 @@
                               <Component id="jLabel22" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jButtonDesktopFont" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1095,6 +1098,13 @@
                     <Property name="paintTicks" type="boolean" value="true"/>
                     <Property name="snapToTicks" type="boolean" value="true"/>
                     <Property name="name" type="java.lang.String" value="jSliderDesktopFontSize" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="jCheckBoxLuhmannColSortable">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="jCheckBoxLuhmannColSortable.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="jCheckBoxLuhmannColSortable.toolTipText"/>
+                    <Property name="name" type="java.lang.String" value="jCheckBoxLuhmannColSortable" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
