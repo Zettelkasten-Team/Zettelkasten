@@ -122,9 +122,13 @@ public class ShowTitleListTask extends org.jdesktop.application.Task<Object, Voi
             // does user wants to make note sequence column sortable?
             if (makeLuhmannSortable) {
                 if (dataObj.isTopLevelLuhmann(cnt)) {
-                    luhmannindex = "2";
+                    luhmannindex = "3";
                 } else if (dataObj.findParentlLuhmann(cnt, true) != -1) {
-                    luhmannindex = "1";
+                    if (dataObj.hasLuhmannNumbers(cnt)) {
+                        luhmannindex = "2";
+                    } else {
+                        luhmannindex = "1";
+                    }
                 }
             }
             // create a new object with these data

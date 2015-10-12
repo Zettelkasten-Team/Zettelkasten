@@ -50,7 +50,7 @@ public class Constants {
     /**
      * This variable stores the current programme and build version number
      */
-    public static final String BUILD_VERSION = "3.2.6.1 (Build 20151013)";
+    public static final String BUILD_VERSION = "3.2.6.1 (Build 20151014)";
     /**
      * This constants stores the website-address where the Zettelkasten can be
      * downloaded:<br><br>
@@ -1122,6 +1122,7 @@ public class Constants {
     public static final ImageIcon iconDesktopLuhmann = new ImageIcon(Constants.class.getResource("/de/danielluedecke/zettelkasten/resources/icons/luhmann-number_desk.png"));
     public static final ImageIcon iconTopLuhmann = new ImageIcon(Constants.class.getResource("/de/danielluedecke/zettelkasten/resources/icons/top_luhmann.png"));
     public static final ImageIcon iconNoTopLuhmann = new ImageIcon(Constants.class.getResource("/de/danielluedecke/zettelkasten/resources/icons/no_top_luhmann.png"));
+    public static final ImageIcon iconMiddleLuhmann = new ImageIcon(Constants.class.getResource("/de/danielluedecke/zettelkasten/resources/icons/middle_luhmann.png"));
 
     /**
      * This is the constant for the application's icon

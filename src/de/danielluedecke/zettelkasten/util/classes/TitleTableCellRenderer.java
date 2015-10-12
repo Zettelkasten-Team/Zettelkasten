@@ -21,7 +21,8 @@ public class TitleTableCellRenderer extends JLabel implements TableCellRenderer 
     
     // column which contains icons instead of text
     private final JLabel iconLabelParentLuhmann;
-    private final JLabel iconLabelAnyLuhmann;
+    private final JLabel iconLabelLastLuhmann;
+    private final JLabel iconLabelMiddleLuhmann;
     private final JLabel noIconLabel;
     private final Daten dataObj;
     private Color selectionBackground = javax.swing.UIManager.getColor("Table[Enabled+Selected].textBackground");
@@ -30,7 +31,8 @@ public class TitleTableCellRenderer extends JLabel implements TableCellRenderer 
     
     public TitleTableCellRenderer(Daten d) {
         this.iconLabelParentLuhmann = new JLabel(Constants.iconTopLuhmann);
-        this.iconLabelAnyLuhmann = new JLabel(Constants.iconNoTopLuhmann);
+        this.iconLabelLastLuhmann = new JLabel(Constants.iconNoTopLuhmann);
+        this.iconLabelMiddleLuhmann = new JLabel(Constants.iconMiddleLuhmann);
         this.noIconLabel = new JLabel("");
         if (null == tableRowAlternate) {
             tableRowAlternate = Color.WHITE;
@@ -63,7 +65,11 @@ public class TitleTableCellRenderer extends JLabel implements TableCellRenderer 
             if (dataObj.isTopLevelLuhmann(nr)) {
                 returnLabel = this.iconLabelParentLuhmann;
             } else if (dataObj.findParentlLuhmann(nr, true) != -1) {
-                returnLabel = this.iconLabelAnyLuhmann;
+                if (dataObj.hasLuhmannNumbers(nr)) {
+                    returnLabel = this.iconLabelMiddleLuhmann;
+                } else {
+                    returnLabel = this.iconLabelLastLuhmann;
+                }
             } else {
                 returnLabel = this.noIconLabel;
             }
