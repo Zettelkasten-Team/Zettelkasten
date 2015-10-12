@@ -311,38 +311,38 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
         }
         // save search time
         long nt = System.nanoTime();
-        // here starts the typical search for search terms
-        // the search for regular expressions can be found below...
-        if (!regex) {
-            // copy the original search-terms-array to a dummy-array. we do this
-            // because we want to remove found items from the array by setting that value
-            // to an empty string, so we avoid multiple found-results. if a searchterm "hello"
-            // has already been found in the keywords, and we have another searchterm "friend" to find
-            // (both together, i.e. logical-and), the search should not count another occurence of "hello"
-            // as second match.
-            dummysearchterms = new String[searchTerms.length];
-            // copy the values to the array...
-            for (int z = 0; z < searchTerms.length; z++) {
-                // check for case-sensitive search
-                if (matchcase) {
-                    dummysearchterms[z] = searchTerms[z];
-                } // if not case-sensitive, transform to lower case
-                else {
-                    dummysearchterms[z] = searchTerms[z].toLowerCase();
-                }
-            }
-        } else {
-            // if we have a regular expression, we do not split the search term after each comma,
-            // but keep the whole expression as one search term... Thus, we only need the
-            // first index of that array, because usually the array should only contain one field
-            dummysearchterms = new String[searchTerms.length];
-            dummysearchterms[0] = searchTerms[0];
-        }
         switch (typeOfSearch) {
             //
             // here starts a usual search request
             //
             case Constants.SEARCH_USUAL:
+                // here starts the typical search for search terms
+                // the search for regular expressions can be found below...
+                if (!regex) {
+                    // copy the original search-terms-array to a dummy-array. we do this
+                    // because we want to remove found items from the array by setting that value
+                    // to an empty string, so we avoid multiple found-results. if a searchterm "hello"
+                    // has already been found in the keywords, and we have another searchterm "friend" to find
+                    // (both together, i.e. logical-and), the search should not count another occurence of "hello"
+                    // as second match.
+                    dummysearchterms = new String[searchTerms.length];
+                    // copy the values to the array...
+                    for (int z = 0; z < searchTerms.length; z++) {
+                        // check for case-sensitive search
+                        if (matchcase) {
+                            dummysearchterms[z] = searchTerms[z];
+                        } // if not case-sensitive, transform to lower case
+                        else {
+                            dummysearchterms[z] = searchTerms[z].toLowerCase();
+                        }
+                    }
+                } else {
+                    // if we have a regular expression, we do not split the search term after each comma,
+                    // but keep the whole expression as one search term... Thus, we only need the
+                    // first index of that array, because usually the array should only contain one field
+                    dummysearchterms = new String[searchTerms.length];
+                    dummysearchterms[0] = searchTerms[0];
+                }
                 // get the amount of entries
                 int len = searchEntries.length;
                 // init a linked list that temporarily stores the found entry-numbers
@@ -751,7 +751,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
 
                 break;
 
-        //
+            //
             // here starts a search for entries without keywords
             //
             case Constants.SEARCH_NO_KEYWORDS:

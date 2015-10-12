@@ -5149,12 +5149,7 @@ public class Settings {
      * of the period the user wanted to search for entries.
      */
     public String getSearchDateTime() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHDATETIME);
-        String retval = "";
-        if (el != null) {
-            retval = el.getText();
-        }
-        return retval;
+        return genericStringGetter(SETTING_SEARCHDATETIME, "");
     }
 
     /**
@@ -5166,12 +5161,7 @@ public class Settings {
      * the formatted textfields in the CSearchDlg.
      */
     public void setSearchDateTime(String value) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHDATETIME);
-        if (null == el) {
-            el = new Element(SETTING_SEARCHDATETIME);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(value);
+        genericStringSetter(SETTING_SEARCHDATETIME, value);
     }
 
     /**
@@ -5217,16 +5207,7 @@ public class Settings {
      * 5: UTF-8 (Refworks)
      */
     public int getLastUsedBibtexFormat() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LASTUSEDBIBTEXFORMAT);
-        int retval = 0;
-        if (el != null) {
-            try {
-                retval = Integer.parseInt(el.getText());
-            } catch (NumberFormatException e) {
-                retval = 0;
-            }
-        }
-        return retval;
+        return genericIntGetter(SETTING_LASTUSEDBIBTEXFORMAT, 0);
     }
 
     /**
@@ -5242,12 +5223,7 @@ public class Settings {
      * 5: UTF-8 (Refworks)
      */
     public void setLastUsedBibtexFormat(int value) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LASTUSEDBIBTEXFORMAT);
-        if (null == el) {
-            el = new Element(SETTING_LASTUSEDBIBTEXFORMAT);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(String.valueOf(value));
+        genericIntSetter(SETTING_LASTUSEDBIBTEXFORMAT, value);
     }
 
     /**
@@ -5262,16 +5238,7 @@ public class Settings {
      * </ul>
      */
     public int getDesktopCommentDisplayOptions() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_DESKTOPSHOWCOMMENTS);
-        int retval = Constants.DESKTOP_WITH_COMMENTS;
-        if (el != null) {
-            try {
-                retval = Integer.parseInt(el.getText());
-            } catch (NumberFormatException e) {
-                retval = 0;
-            }
-        }
-        return retval;
+        return genericIntGetter(SETTING_DESKTOPSHOWCOMMENTS, 0);
     }
 
     /**
@@ -5286,33 +5253,15 @@ public class Settings {
      * </ul>
      */
     public void setDesktopCommentDisplayOptions(int value) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_DESKTOPSHOWCOMMENTS);
-        if (null == el) {
-            el = new Element(SETTING_DESKTOPSHOWCOMMENTS);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(String.valueOf(value));
+        genericIntSetter(SETTING_DESKTOPSHOWCOMMENTS, value);
     }
 
     public String getShowUpdateHintVersion() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SHOWUPDATEHINTVERSION);
-        if (el != null) {
-            return el.getText();
-        }
-        return "0";
+        return genericStringGetter(SETTING_SHOWUPDATEHINTVERSION, "0");
     }
 
     public void setShowUpdateHintVersion(String currentBuildNr) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_SHOWUPDATEHINTVERSION);
-        if (null == el) {
-            el = new Element(SETTING_SHOWUPDATEHINTVERSION);
-            settingsFile.getRootElement().addContent(el);
-        }
-        if (currentBuildNr != null && !currentBuildNr.isEmpty()) {
-            el.setText(currentBuildNr);
-        } else {
-            el.setText("0");
-        }
+        genericStringSetter(SETTING_SHOWUPDATEHINTVERSION, currentBuildNr);
     }
 
     public boolean getUseXDGOpen() {
@@ -5380,16 +5329,7 @@ public class Settings {
      * 1: Tango<br>
      */
     public int getIconTheme() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_ICONTHEME);
-        int retval = 0;
-        if (el != null) {
-            try {
-                retval = Integer.parseInt(el.getText());
-            } catch (NumberFormatException e) {
-                retval = 0;
-            }
-        }
-        return retval;
+        return genericIntGetter(SETTING_ICONTHEME, 0);
     }
 
     /**
@@ -5399,12 +5339,7 @@ public class Settings {
      * 1: Tango<br>
      */
     public void setIconTheme(int value) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_ICONTHEME);
-        if (null == el) {
-            el = new Element(SETTING_ICONTHEME);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(String.valueOf(value));
+        genericIntSetter(SETTING_ICONTHEME, value);
     }
 
     public String getIconThemePath() {
@@ -5465,16 +5400,7 @@ public class Settings {
      * @return
      */
     public int getLastUsedLatexBibStyle() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTLASTUSEDBIBSTYLE);
-        int retval = 0;
-        if (el != null) {
-            try {
-                retval = Integer.parseInt(el.getText());
-            } catch (NumberFormatException e) {
-                retval = 0;
-            }
-        }
-        return retval;
+        return genericIntGetter(SETTING_LATEXEXPORTLASTUSEDBIBSTYLE, 0);
     }
 
     /**
@@ -5482,12 +5408,7 @@ public class Settings {
      * @param value
      */
     public void setLastUsedLatexBibStyle(int value) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTLASTUSEDBIBSTYLE);
-        if (null == el) {
-            el = new Element(SETTING_LATEXEXPORTLASTUSEDBIBSTYLE);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(String.valueOf(value));
+        genericIntSetter(SETTING_LATEXEXPORTLASTUSEDBIBSTYLE, value);
     }
 
     /**
@@ -5495,16 +5416,7 @@ public class Settings {
      * @return
      */
     public int getLastUsedLatexDocClass() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTDOCUMENTCLASS);
-        int retval = 0;
-        if (el != null) {
-            try {
-                retval = Integer.parseInt(el.getText());
-            } catch (NumberFormatException e) {
-                retval = 0;
-            }
-        }
-        return retval;
+        return genericIntGetter(SETTING_LATEXEXPORTDOCUMENTCLASS, 0);
     }
 
     /**
@@ -5512,12 +5424,7 @@ public class Settings {
      * @param value
      */
     public void setLastUsedLatexDocClass(int value) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTDOCUMENTCLASS);
-        if (null == el) {
-            el = new Element(SETTING_LATEXEXPORTDOCUMENTCLASS);
-            settingsFile.getRootElement().addContent(el);
-        }
-        el.setText(String.valueOf(value));
+        genericIntSetter(SETTING_LATEXEXPORTDOCUMENTCLASS, value);
     }
 
     /**
@@ -5653,11 +5560,7 @@ public class Settings {
      * @return
      */
     public String getLatexExportAuthorValue() {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTAUTHORVALUE);
-        if (el != null) {
-            return el.getText();
-        }
-        return "";
+        return genericStringGetter(SETTING_LATEXEXPORTAUTHORVALUE, "");
     }
 
     /**
@@ -5665,16 +5568,7 @@ public class Settings {
      * @param val
      */
     public void setLatexExportAuthorValue(String val) {
-        Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTAUTHORVALUE);
-        if (null == el) {
-            el = new Element(SETTING_LATEXEXPORTAUTHORVALUE);
-            settingsFile.getRootElement().addContent(el);
-        }
-        if (val != null && !val.isEmpty()) {
-            el.setText(val);
-        } else {
-            el.setText("");
-        }
+        genericStringSetter(SETTING_LATEXEXPORTAUTHORVALUE, val);
     }
 
     /**
@@ -5794,6 +5688,10 @@ public class Settings {
             el = new Element(key);
             settingsFile.getRootElement().addContent(el);
         }
-        el.setText(val);
+        if (val != null && !val.isEmpty()) {
+            el.setText(val);
+        } else {
+            el.setText("");
+        }
     }
 }
