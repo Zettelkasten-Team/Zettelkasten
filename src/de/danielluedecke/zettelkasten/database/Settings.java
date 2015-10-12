@@ -327,6 +327,7 @@ public class Settings {
     private static final String SETTING_SHOWALLLUHMANN = "showallluhmann";
     private static final String SETTING_SHOWLUHMANNICONINDESK = "showluhmanniconindesk";
     private static final String SETTING_LUHMANNTREEEXPANDLEVEL = "luhmanntreeexpandlevel";
+    private static final String SETTING_SEARCHWITHOUTFORMATTAGS = "searchwithoutformattags";
 
     public static final String SETTING_LOGKEYWORDLIST_OR = "OR";
     public static final String SETTING_LOGKEYWORDLIST_AND = "AND";
@@ -708,6 +709,7 @@ public class Settings {
         genericElementInit(SETTING_CONTENTBACKGROUNDCOLOR, "ffffff");
         genericElementInit(SETTING_TABLEODDROWCOLOR, "f8f8f8");
         genericElementInit(SETTING_SHOWTABLEBORDER, "1");
+        genericElementInit(SETTING_SEARCHWITHOUTFORMATTAGS, "1");
         genericElementInit(SETTING_SHOWLUHMANNENTRYNUMBER, "0");
         genericElementInit(SETTING_SHOWDESKTOPENTRYNUMBER, "0");
         genericElementInit(SETTING_DESKTOPSHOWCOMMENTS, String.valueOf(Constants.DESKTOP_WITH_COMMENTS));
@@ -2926,6 +2928,14 @@ public class Settings {
 
     public void setFootnoteBraces(boolean val) {
         genericBooleanSetter(SETTING_FOOTNOTEBRACES, val);
+    }
+    
+    public boolean getSearchRemovesFormatTags() {
+        return genericBooleanGetter(SETTING_SEARCHWITHOUTFORMATTAGS);
+    }
+
+    public void setSearchRemovesFormatTags(boolean val) {
+        genericBooleanSetter(SETTING_SEARCHWITHOUTFORMATTAGS, val);
     }
     
     /**

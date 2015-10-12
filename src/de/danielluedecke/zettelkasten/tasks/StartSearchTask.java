@@ -76,11 +76,11 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(StartSearchTask.class);
     /**
-     * The search terms, passed as an array
+     * The search terms, passed as an array.
      */
     private String[] searchTerms = null;
     /**
-     * The entries which shall be searched...
+     * The entries which should be searched.
      */
     private int[] searchEntries = null;
     /**
@@ -100,7 +100,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
      */
     private final boolean wholeword;
     /**
-     * Indicates whether the search is case sensitive (true) or not (false)
+     * Indicates whether the search is case sensitive (true) or not (false).
      */
     private final boolean matchcase;
     /**
@@ -111,11 +111,23 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
      */
     private final boolean desktoponly;
     /**
-     * whether the search should include synonyms or not
+     * whether the search should include synonyms or not.
      */
     private boolean synonyms = false;
+    /**
+     * Reg ex search or not.
+     */
     private boolean regex = false;
+    /**
+     * Search for note created/edited within a specific time period.
+     */
     private boolean timesearch = false;
+    /**
+     * Whether tags should be removed from entry content before searching the
+     * entry. Increases speed, however, some words may not be found (which
+     * have tags inside a word to emphasize a word part, like <i>Zettel</i>kasten.
+     */
+    private boolean removeTags = true;
     private String datefrom = "";
     private String dateto = "";
     private int timestampindex = -1;
@@ -149,6 +161,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
      * @param parent the parent-window
      * @param d a reference to the Daten class
      * @param sr a reference to the CSearchRequesrs class
+     * @param tos Type of Search (in entries, entries w/o keywords etc.)
      * @param s a string-array containing search terms
      * @param se an integer array containing the entry-numbers of those entries where
      * the search should be applied to
@@ -166,10 +179,13 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
      * within a period of <i>creation</i> date (0), of <i>edited</i> date (1) or both (2).
      * @param donly whether the search should open the CSearchResults-frame (false), or whether the search-results
      * are used for other purposes, like e.g. putting the results to the desktop (true)
+     * @param rt Whether tags should be removed from entry content before searching the
+     * entry. Increases speed, however, some words may not be found (which
+     * have tags inside a word to emphasize a word part, like <i>Zettel</i>kasten.
      */
     StartSearchTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, SearchRequests sr, Synonyms sy,
                     int tos, String[] s, int[] se, int w, int l, boolean ww, boolean mc, boolean syn, boolean rex, boolean ts,
-                    String fr, String to, int tsi, boolean donly) {
+                    String fr, String to, int tsi, boolean donly, boolean rt) {
         // Runs on the EDT.  Copy GUI state that
         // doInBackground() depends on from parameters
         // to ImportFileTask fields, here.
@@ -191,6 +207,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
         dateto = to;
         synonymsObj = sy;
         regex = rex;
+        removeTags = rt;
 
         typeOfSearch = tos;
 
@@ -1374,52 +1391,46 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
 
     public String cleanZettelContent(int nr) {
         String content = dataObj.getZettelContent(nr);
-        String dummy = "";
-        if (content != null && !content.isEmpty()) {
-            dummy = content.replaceAll("\\[k\\]", "")
-                    .replaceAll("\\[f\\]", "")
-                    .replaceAll("\\[u\\]", "")
-                    .replaceAll("\\[q\\]", "")
-                    .replaceAll("\\[d\\]", "")
-                    .replaceAll("\\[c\\]", "")
-                    .replaceAll("\\[code\\]", "")
-                    .replaceAll("\\[sup\\]", "")
-                    .replaceAll("\\[sub\\]", "")
-                    .replaceAll("\\[/k\\]", "")
-                    .replaceAll("\\[/f\\]", "")
-                    .replaceAll("\\[/u\\]", "")
-                    .replaceAll("\\[/q\\]", "")
-                    .replaceAll("\\[/d\\]", "")
-                    .replaceAll("\\[/c\\]", "")
-                    .replaceAll("\\[/code\\]", "")
-                    .replaceAll("\\[/sup\\]", "")
-                    .replaceAll("\\[/sub\\]", "");
-            dummy = dummy.replaceAll("\\[color ([^\\[]*)\\](.*?)\\[/color\\]", "$2");
-            dummy = dummy.replaceAll("\\[font ([^\\[]*)\\](.*?)\\[/font\\]", "$2");
-            dummy = dummy.replaceAll("\\[h ([^\\[]*)\\](.*?)\\[/h\\]", "$2");
-            dummy = dummy.replaceAll("\\[m ([^\\[]*)\\](.*?)\\[/m\\]", "$2");
-            dummy = dummy.replaceAll("\\[n\\](.*?)\\[/n\\]", "$1");
-            dummy = dummy.replaceAll("\\[l\\](.*?)\\[/l\\]", "$1");
-            dummy = dummy.replaceAll("\\[\\*\\](.*?)\\[/\\*\\]", "- $1\n");
-            dummy = dummy.replaceAll("\\[tc\\](.*?)\\[/tc\\]", "$1");
-            // bold and italic formatting in markdown
-            dummy = dummy.replaceAll("\\*\\*\\*(.*?)\\*\\*\\*", "$1");
-            dummy = dummy.replaceAll("___(.*?)___", "$1");
-            // bold formatting
-            dummy = dummy.replaceAll("__(.*?)__", "$1");
-            dummy = dummy.replaceAll("\\*\\*(.*?)\\*\\*", "$1");
-            // italic formatting
-            dummy = dummy.replaceAll("_(.*?)_", "$1");
-            dummy = dummy.replaceAll("\\*(.*?)\\*", "$1");
-            // strike
-            dummy = dummy.replaceAll("---(.*?)---", "$1");
-            // code
-            dummy = dummy.replaceAll("\\`(.*?)\\`", "$1");
-            // bullets
-            dummy = dummy.replaceAll("(^|\\n)(\\d\\. )(.*)", "- $3");
-            dummy = dummy.replaceAll("(^|\\n)(\\* )(.*)", "- $3");
+        if (removeTags) {
+            String dummy = "";
+            if (content != null && !content.isEmpty()) {
+                dummy = content.replaceAll("\\[k\\]", "")
+                        .replaceAll("\\[f\\]", "")
+                        .replaceAll("\\[u\\]", "")
+                        .replaceAll("\\[q\\]", "")
+                        .replaceAll("\\[d\\]", "")
+                        .replaceAll("\\[c\\]", "")
+                        .replaceAll("\\[code\\]", "")
+                        .replaceAll("\\[sup\\]", "")
+                        .replaceAll("\\[sub\\]", "")
+                        .replaceAll("\\[/k\\]", "")
+                        .replaceAll("\\[/f\\]", "")
+                        .replaceAll("\\[/u\\]", "")
+                        .replaceAll("\\[/q\\]", "")
+                        .replaceAll("\\[/d\\]", "")
+                        .replaceAll("\\[/c\\]", "")
+                        .replaceAll("\\[/code\\]", "")
+                        .replaceAll("\\[/sup\\]", "")
+                        .replaceAll("\\[/sub\\]", "")
+                        .replaceAll("\\[color ([^\\[]*)\\](.*?)\\[/color\\]", "$2")
+                        .replaceAll("\\[font ([^\\[]*)\\](.*?)\\[/font\\]", "$2")
+                        .replaceAll("\\[h ([^\\[]*)\\](.*?)\\[/h\\]", "$2")
+                        .replaceAll("\\[m ([^\\[]*)\\](.*?)\\[/m\\]", "$2")
+                        .replaceAll("\\[n\\](.*?)\\[/n\\]", "$1")
+                        .replaceAll("\\[l\\](.*?)\\[/l\\]", "$1")
+                        .replaceAll("\\[\\*\\](.*?)\\[/\\*\\]", "- $1\n")
+                        .replaceAll("\\[tc\\](.*?)\\[/tc\\]", "$1")
+                        .replaceAll("\\*\\*\\*(.*?)\\*\\*\\*", "$1")
+                        .replaceAll("___(.*?)___", "$1")
+                        .replaceAll("__(.*?)__", "$1")
+                        .replaceAll("\\*\\*(.*?)\\*\\*", "$1")
+                        .replaceAll("_(.*?)_", "$1")
+                        .replaceAll("\\*(.*?)\\*", "$1")
+                        .replaceAll("---(.*?)---", "$1");
+            }
+            return dummy;
         }
-        return dummy;
+        return content;
     }
 }
 

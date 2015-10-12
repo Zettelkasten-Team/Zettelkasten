@@ -120,9 +120,11 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jCheckBoxSystray" min="-2" max="-2" attributes="0"/>
+                              <Component id="jCheckBoxRegistry" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jCheckBoxSteno" min="-2" max="-2" attributes="0"/>
@@ -153,14 +155,13 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jButtonSynonymEdit" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="jCheckBoxAllToHist" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jCheckBoxFillNewEntries" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="jCheckBoxRegistry" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="jCheckBoxSystray" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jCheckBoxSearchWithoutFormatTags" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jCheckBoxAllToHist" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jCheckBoxAutoCompleteTags" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jCheckBoxUseMarkdown" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -201,15 +202,17 @@
                               <Component id="jCheckBoxSynonym" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jButtonSynonymEdit" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jCheckBoxSearchWithoutFormatTags" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="jCheckBoxFillNewEntries" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jCheckBoxAllToHist" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="jCheckBoxRegistry" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jCheckBoxSystray" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -328,6 +331,13 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="jCheckBoxUseMarkdown.text"/>
                     <Property name="name" type="java.lang.String" value="jCheckBoxUseMarkdown" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="jCheckBoxSearchWithoutFormatTags">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="jCheckBoxSearchWithoutFormatTags.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="jCheckBoxSearchWithoutFormatTags.toolTipText"/>
+                    <Property name="name" type="java.lang.String" value="jCheckBoxSearchWithoutFormatTags" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>

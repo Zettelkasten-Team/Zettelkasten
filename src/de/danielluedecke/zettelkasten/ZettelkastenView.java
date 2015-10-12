@@ -9971,7 +9971,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // get parent und init window
             taskDlg = new TaskProgressDialog(getFrame(),TaskProgressDialog.TASK_SEARCH, data, searchrequests, synonyms,
                                              what, null, null, -1, Constants.LOG_OR, true, true, true,
-                                             false, false, null, null, 0, false);
+                                             false, false, null, null, 0, false, settings.getSearchRemovesFormatTags());
             // center window
             taskDlg.setLocationRelativeTo(getFrame());
         }
@@ -10093,7 +10093,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // get parent und init window
             taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SEARCH, data, searchrequests, synonyms,
                                              whichsearch, new String[] {stime,etime}, null, -1, Constants.LOG_OR, true, true, true,
-                                             false, true, starttime, endtime, whichstamp, false);
+                                             false, true, starttime, endtime, whichstamp, false, settings.getSearchRemovesFormatTags());
             // center window
             taskDlg.setLocationRelativeTo(getFrame());
         }
@@ -10203,7 +10203,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // get parent und init window
             taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SEARCH, data, searchrequests, synonyms,
                                              searchtype, searchterms, null, where, logical, wholeword, matchcase, syno,
-                                             regex, timesearch, datefrom, dateto, timestampindex, displayonly);
+                                             regex, timesearch, datefrom, dateto, timestampindex, displayonly,
+                                             settings.getSearchRemovesFormatTags());
             // center window
             taskDlg.setLocationRelativeTo(getFrame());
         }

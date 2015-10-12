@@ -1745,7 +1745,8 @@ public class SearchResultsFrame extends javax.swing.JFrame {
             // get parent und init window
             taskDlg = new TaskProgressDialog(this, TaskProgressDialog.TASK_SEARCH, dataObj, searchrequest, synonymsObj,
                                              searchtype, searchterms, searchin, where, logical, wholeword, matchcase, syno,
-                                             regex, timesearch, datefrom, dateto, timestampindex, false);
+                                             regex, timesearch, datefrom, dateto, timestampindex, false,
+                                             settingsObj.getSearchRemovesFormatTags());
             // center window
             taskDlg.setLocationRelativeTo(this);
         }

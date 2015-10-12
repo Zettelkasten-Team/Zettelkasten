@@ -614,10 +614,13 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @param donly whether the search should open the CSearchResults-frame
      * (false), or whether the search-results are used for other purposes, like
      * e.g. putting the results to the desktop (true)
+     * @param rt Whether tags should be removed from entry content before searching the
+     * entry. Increases speed, however, some words may not be found (which
+     * have tags inside a word to emphasize a word part, like <i>Zettel</i>kasten.
      */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, SearchRequests sr, Synonyms sy, int tos,
             String[] s, int[] se, int w, int l, boolean ww, boolean mc, boolean syn, boolean rex, boolean ts,
-            String fr, String to, int tsi, boolean donly) {
+            String fr, String to, int tsi, boolean donly, boolean rt) {
         super(parent);
 
         dataObj = d;
@@ -636,7 +639,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         // check which task was requested and start that task
         switch (task_id) {
             case TASK_SEARCH:
-                foregroundTask = startSearch(tos, s, se, w, l, ww, mc, syn, rex, ts, fr, to, tsi, donly);
+                foregroundTask = startSearch(tos, s, se, w, l, ww, mc, syn, rex, ts, fr, to, tsi, donly, rt);
                 break;
         }
         startTask();
@@ -1182,29 +1185,35 @@ public class TaskProgressDialog extends javax.swing.JDialog {
     }
 
     /**
-     *
-     * @param tos
-     * @param s
-     * @param se
-     * @param w
-     * @param l
-     * @param ww
-     * @param mc
-     * @param syn
-     * @param rex
-     * @param ts
-     * @param fr
-     * @param to
-     * @param tsi
-     * @param donly
+     * @param tos Type of Search (in entries, entries w/o keywords etc.)
+     * @param s a string-array containing search terms
+     * @param se an integer array containing the entry-numbers of those entries where
+     * the search should be applied to
+     * @param w where the search should be applied to, i.e. search within content, keywords, authors etc.
+     * @param l the logical-combination of the search
+     * @param ww pass true, if the search should find whole words only
+     * @param mc whether the search is case sensitive (true) or not (false)
+     * @param syn whether the search should include synonyms or not
+     * @param rex whether the search terms contain regular expressions or not
+     * @param ts whether the user requested a time-search, i.e. a search for entries that were created
+     * or changed within a certain period
+     * @param fr the start of the period, when a timesearch is requested. format: "yymmdd".
+     * @param to the end of the period, when a timesearch is requested. format: "yymmdd".
+     * @param tsi the timestampindex, which indicate whether the user wants to search only for entries
+     * within a period of <i>creation</i> date (0), of <i>edited</i> date (1) or both (2).
+     * @param donly whether the search should open the CSearchResults-frame (false), or whether the search-results
+     * are used for other purposes, like e.g. putting the results to the desktop (true)
+     * @param rt Whether tags should be removed from entry content before searching the
+     * entry. Increases speed, however, some words may not be found (which
+     * have tags inside a word to emphasize a word part, like <i>Zettel</i>kasten.
      * @return
      */
     private Task startSearch(int tos, String[] s, int[] se, int w, int l, boolean ww, boolean mc, boolean syn, boolean rex, boolean ts,
-            String fr, String to, int tsi, boolean donly) {
+            String fr, String to, int tsi, boolean donly, boolean rt) {
         // initiate the "statusbar" (the loading splash screen), giving visiual
         // feedback during open and save operations
         return new StartSearchTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, dataObj, searchrequestsObj, synonymsObj, tos, s, se, w, l, ww, mc, syn, rex, ts, fr, to, tsi, donly);
+                this, msgLabel, dataObj, searchrequestsObj, synonymsObj, tos, s, se, w, l, ww, mc, syn, rex, ts, fr, to, tsi, donly, rt);
     }
 
     /**

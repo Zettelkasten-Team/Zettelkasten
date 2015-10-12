@@ -322,6 +322,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jCheckBoxShowTableBorder.setSelected(settings.getShowTableBorder());
         jCheckBoxShowEntryHeadline.setSelected(settings.getShowEntryHeadline());
         jCheckBoxFootnoteBraces.setSelected(settings.getFootnoteBraces());
+        jCheckBoxSearchWithoutFormatTags.setSelected(!settings.getSearchRemovesFormatTags());
         // get user attachment and image paths
         File attpath = dataObj.getUserAttachmentPath();
         if (attpath != null) {
@@ -668,6 +669,12 @@ public class CSettingsDlg extends javax.swing.JDialog {
             }
         });
         jCheckBoxFootnoteBraces.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setModified(true);
+            }
+        });
+        jCheckBoxSearchWithoutFormatTags.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setModified(true);
@@ -1817,6 +1824,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         settings.setAutoBackup(jCheckBoxAutobackup.isSelected());
         settings.setSupFootnote(jCheckBoxFootnote.isSelected());
         settings.setFootnoteBraces(jCheckBoxFootnoteBraces.isSelected());
+        settings.setSearchRemovesFormatTags(!jCheckBoxSearchWithoutFormatTags.isSelected());
         settings.setJumpFootnote(jCheckBoxJumpToTab.isSelected());
         settings.setUseCustomCSS(Settings.CUSTOM_CSS_ENTRY, jCheckBoxEntryCSS.isSelected());
         settings.setUseCustomCSS(Settings.CUSTOM_CSS_DESKTOP, jCheckBoxDesktopCSS.isSelected());
@@ -2046,6 +2054,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jCheckBoxSystray = new javax.swing.JCheckBox();
         jCheckBoxAutoCompleteTags = new javax.swing.JCheckBox();
         jCheckBoxUseMarkdown = new javax.swing.JCheckBox();
+        jCheckBoxSearchWithoutFormatTags = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jComboBoxLAF = new javax.swing.JComboBox();
@@ -2202,6 +2211,10 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jCheckBoxUseMarkdown.setText(resourceMap.getString("jCheckBoxUseMarkdown.text")); // NOI18N
         jCheckBoxUseMarkdown.setName("jCheckBoxUseMarkdown"); // NOI18N
 
+        jCheckBoxSearchWithoutFormatTags.setText(resourceMap.getString("jCheckBoxSearchWithoutFormatTags.text")); // NOI18N
+        jCheckBoxSearchWithoutFormatTags.setToolTipText(resourceMap.getString("jCheckBoxSearchWithoutFormatTags.toolTipText")); // NOI18N
+        jCheckBoxSearchWithoutFormatTags.setName("jCheckBoxSearchWithoutFormatTags"); // NOI18N
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -2209,6 +2222,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBoxSystray)
+                    .addComponent(jCheckBoxRegistry)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jCheckBoxSteno)
@@ -2233,13 +2248,12 @@ public class CSettingsDlg extends javax.swing.JDialog {
                         .addComponent(jCheckBoxSynonym)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonSynonymEdit))
-                    .addComponent(jCheckBoxAllToHist)
                     .addComponent(jCheckBoxFillNewEntries)
-                    .addComponent(jCheckBoxRegistry)
-                    .addComponent(jCheckBoxSystray)
+                    .addComponent(jCheckBoxSearchWithoutFormatTags)
+                    .addComponent(jCheckBoxAllToHist)
                     .addComponent(jCheckBoxAutoCompleteTags)
                     .addComponent(jCheckBoxUseMarkdown))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2273,15 +2287,17 @@ public class CSettingsDlg extends javax.swing.JDialog {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCheckBoxSynonym)
                     .addComponent(jButtonSynonymEdit))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxSearchWithoutFormatTags)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBoxFillNewEntries)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBoxAllToHist)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBoxRegistry)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBoxSystray)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel3.TabConstraints.tabTitle"), jPanel3); // NOI18N
@@ -2997,6 +3013,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
     private javax.swing.JCheckBox jCheckBoxImgResize;
     private javax.swing.JCheckBox jCheckBoxJumpToTab;
     private javax.swing.JCheckBox jCheckBoxRegistry;
+    private javax.swing.JCheckBox jCheckBoxSearchWithoutFormatTags;
     private javax.swing.JCheckBox jCheckBoxShowAllIcons;
     private javax.swing.JCheckBox jCheckBoxShowEntryHeadline;
     private javax.swing.JCheckBox jCheckBoxShowHorGrid;
