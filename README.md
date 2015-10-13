@@ -14,12 +14,14 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 * In der Registerkarte _Überschriften_ werden jetzt Zettel als Ausgangsfolgezettel oder Folgezettel markiert ([#96](https://github.com/sjPlot/Zettelkasten/issues/96)). Die Sortierung der Spalte _Folgezettel_ in der Registerkarte _Überschriften_ ist per Voreinstellung deakitiviert, da der erstmalige Aufbau der Tabelle länger dauern kann. Die Sortierung kann in den Einstellungen _Tabellen und Listen_ aktiviert werden.
 * Der Export von Zetteln ins Markdown-, Text- und LaTex-Format kann jetzt auch jeden Zettel als einzelne Datei exportieren ([#13](https://github.com/sjPlot/Zettelkasten/issues/13) und [#77](https://github.com/sjPlot/Zettelkasten/issues/77)).
 * Beim Export ins Markdown-, Text- und LaTex-Format werden Fußnoten durch formatierte Autorenangaben ersetzt (sofern die Literatur mit Bibkey verknüpft ist).
-* Im englischen Interface wurden _trails_ in _note sequences_ und _entry_ in _note_ umbenannt.
 * Literaturfußnoten können jetzt auch den Bibkey statt der Nummer des Literatureintrags enthalten (`[fn luhsozsys:123]` würde z.B. umgewandelt in `Luhmann 1984: 123`).
 * Das automatische Einklammern von Literaturfußnoten kann in den Einstellungen abgestellt werden ([#91](https://github.com/sjPlot/Zettelkasten/issues/91)).
+* Über das Menü _Suchen_ (Untermenü _Zettel_) können jetzt Zettel gesucht werden, die Teil einer Folgezettelsequenz sind (entweder Ausgangs- oder Folgezettel).
+* Über das Menü _Suchen_ (Untermenü _Zettel_) können jetzt Zettel gesucht werden, die _keine_ Querverweise enthalten (und auf die nicht durch Querverweise verwiesen wird) ([#34](https://github.com/sjPlot/Zettelkasten/issues/34)).
 * Literatur, die während der Neueingabe oder Bearbeiten eines Zettels als Literaturfußnote im Text referenziert wird, wird beim Beenden der Eingabe automatisch als Autorenangabe zum Zettel hinzugefügt, falls dies noch nicht geschehen ist.
 * Verbesserte Stabilität aller Lese- und Schreib-Operationen von Daten (Import, Export, Laden, Speichern, Auto-Backup...).
 * Geschwindigkeitsverbesserungen der Suchfunktionen ([#95](https://github.com/sjPlot/Zettelkasten/issues/95)).
+* Im englischen Interface wurden _trails_ in _note sequences_ und _entry_ in _note_ umbenannt.
 * Neue Einstellung, um Formatierungs-Tags bei einer Suche _nicht_ zu entfernen. Dadurch wird die Suchgeschwindigkeit erhöht, jedoch werden Wörter, die durch Formatierungen unterbrochen werden, nicht gefunden (eine Suche nach `Zettelkasten` findet dann nicht `[f]Zettel[/f]kasten`).
 
 #### Behobene Fehler

@@ -862,6 +862,62 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                 break;
                 
             //
+            // here starts a search for follower (luhmann) entries, i.e.
+            // entries that do have a parent-trail entry
+            //
+            case Constants.SEARCH_IS_ANY_LUHMANN:
+                // retrieve all note sequence IDs
+                finalresults = dataObj.getAllLuhmannNumbers();
+                // finally, check whether we have any searchresults at all...
+                if (finalresults != null && finalresults.size() > 0) {
+                    // create search results array, create search description and
+                    // add search results to the search-data-class.
+                    prepareExtraSearchResults(finalresults, resourceMap.getString("searchInLuhmann"), Constants.SEARCH_LUHMANN);
+                } else {
+                    results = null;
+                }
+
+                break;
+                
+            //
+            // here starts a search for follower (luhmann) entries, i.e.
+            // entries that do have a parent-trail entry
+            //
+            case Constants.SEARCH_WITHOUT_MANUAL_LINKS:
+                // init result array
+                finalresults = new ArrayList<>();
+                // get all manual link IDs
+                List<Integer> alllinksresult = dataObj.getAllManualLinks();
+                // check if we have any values
+                if (alllinksresult != null && alllinksresult.size() > 0) {
+                    // if yes, we need to remove these from all search entries
+                    for (int i : searchEntries) {
+                        // is current note ID a manual link?
+                        if (!alllinksresult.contains(i)) {
+                            // if not, add it
+                            finalresults.add(i);
+                        }
+                    }
+                } else {
+                    // if we don't have any manual links, all notes are
+                    // part of the search result
+                    for (int i : searchEntries) {
+                        finalresults.add(i);
+                    }
+                }
+
+                // finally, check whether we have any searchresults at all...
+                if (finalresults.size() > 0) {
+                    // create search results array, create search description and
+                    // add search results to the search-data-class.
+                    prepareExtraSearchResults(finalresults, resourceMap.getString("searchNoManLinks"), Constants.SEARCH_LUHMANN);
+                } else {
+                    results = null;
+                }
+
+                break;
+                
+            //
             // here starts a search for entries without remarks
             //
             case Constants.SEARCH_NO_REMARKS:
@@ -894,7 +950,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
 
                 break;
 
-        //
+            //
             // here starts a search for entries *with* remarks
             //
             case Constants.SEARCH_WITH_REMARKS:
@@ -929,7 +985,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
 
                 break;
 
-        //
+            //
             // here starts a search for entries with attachments
             //
             case Constants.SEARCH_WITH_ATTACHMENTS:
@@ -962,7 +1018,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
 
                 break;
 
-        //
+            //
             // here starts a search for entries with/out ratings
             //
             case Constants.SEARCH_WITH_RATINGS:
@@ -1015,7 +1071,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
 
                 break;
 
-        //
+            //
             // here starts a search for entries with attachments
             //
             case Constants.SEARCH_WITH_CREATED_TIME:

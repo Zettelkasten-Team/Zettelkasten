@@ -1936,9 +1936,30 @@
                     <Property name="name" type="java.lang.String" value="findEntriesWithRemarks" noResource="true"/>
                   </Properties>
                 </MenuItem>
+                <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator106">
+                  <Properties>
+                    <Property name="name" type="java.lang.String" value="jSeparator106" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="findEntriesWithoutManualLinks">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="findWithoutManualLinks" methodName="findWithoutManualLinks"/>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="findEntriesWithoutManualLinks" noResource="true"/>
+                  </Properties>
+                </MenuItem>
                 <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator65">
                   <Properties>
                     <Property name="name" type="java.lang.String" value="jSeparator65" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="findEntriesAnyLuhmann">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="findLuhmannAny" methodName="findLuhmannAny"/>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="findEntriesAnyLuhmann" noResource="true"/>
                   </Properties>
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="findEntriesTopLevelLuhmann">

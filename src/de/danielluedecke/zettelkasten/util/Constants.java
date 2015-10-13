@@ -473,6 +473,17 @@ public class Constants {
      */
     public static final int SEARCH_IS_LUHMANN_PARENT = 12;
     /**
+     * indicates that user wants to search entries
+     * that are in a note sequence
+     * (trailing entries, Folgezettel)
+     */
+    public static final int SEARCH_IS_ANY_LUHMANN = 13;
+    /**
+     * indicates that user wants to search entries
+     * without any manual links
+     */
+    public static final int SEARCH_WITHOUT_MANUAL_LINKS = 14;
+    /**
      * Indicates a logical-and-combined search
      */
     public static final int LOG_AND = 1;

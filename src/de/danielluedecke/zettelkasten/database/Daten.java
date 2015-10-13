@@ -3942,7 +3942,7 @@ public class Daten {
      *
      * @param pos the position of the entry which manual links we want to have
      * @return an integer array containing the entry-numbers where the current
-     * entry refers to, or null if no entry-numbers exist...
+     * entry refers to, or {@code null} if no entry-numbers exist...
      */
     public int[] getManualLinks(int pos) {
         // get Manual Links as String Array
@@ -7624,6 +7624,77 @@ public class Daten {
         }
         // return result
         return arr;
+    }
+
+    /**
+     * This method retrieves all notes (resp. their ID) in the Zettelkasten that are part of a
+     * note sequence, i.e. which are top level notes in a note sequence or
+     * which have sub-ordinated notes, and returns the index numbers as integer array.
+     * <br/><b>Caution!</b> The position {@code zettelpos} is a value from
+     * <b>1</b> to {@link #getCount(int) getCount()} - in contrary to usual
+     * array handling where the range is from 0 to (size-1).
+     *
+     * @return all note-IDs in the Zettelkasten that are part of a note sequence,
+     * as integer array
+     */
+    public List<Integer> getAllLuhmannNumbers() {
+        List<Integer> luhmannNumbers = new ArrayList<>();
+        // iterate data base
+        for (int cnt = 1; cnt <= getCount(Daten.ZKNCOUNT); cnt++) {
+            // does entry have any followers / note sequences?
+            if (hasLuhmannNumbers(cnt)) {
+                // if yes, get all note sequences
+                int[] curnum = getLuhmannNumbersAsInteger(cnt);
+                // iterate all note sequence IDs
+                for (int cn : curnum) {
+                    // check if we already added that ID
+                    if (!luhmannNumbers.contains(cn)) {
+                        // if not, add it now
+                        luhmannNumbers.add(cn);
+                    }
+                }
+                // now add the current "parent" note as well
+                if (!luhmannNumbers.contains(cnt)) {
+                    // if not, add it now
+                    luhmannNumbers.add(cnt);
+                }
+            }
+        }
+        // return result
+        return luhmannNumbers;
+    }
+
+    /**
+     * This method retrieves all notes (resp. their ID) in the Zettelkasten that are part of a
+     * note sequence, i.e. which are top level notes in a note sequence or
+     * which have sub-ordinated notes, and returns the index numbers as integer array.
+     * <br/><b>Caution!</b> The position {@code zettelpos} is a value from
+     * <b>1</b> to {@link #getCount(int) getCount()} - in contrary to usual
+     * array handling where the range is from 0 to (size-1).
+     *
+     * @return all note-IDs in the Zettelkasten that are part of a note sequence,
+     * as integer array
+     */
+    public List<Integer> getAllManualLinks() {
+        List<Integer> manualLinkNumbers = new ArrayList<>();
+        // iterate data base
+        for (int cnt = 1; cnt <= getCount(Daten.ZKNCOUNT); cnt++) {
+            // get manual links
+            int[] curnum = getManualLinks(cnt);
+            // check if note has any manual links
+            if (curnum != null) {
+                // iterate all note sequence IDs
+                for (int cn : curnum) {
+                    // check if we already added that ID
+                    if (!manualLinkNumbers.contains(cn)) {
+                        // if not, add it now
+                        manualLinkNumbers.add(cn);
+                    }
+                }
+            }
+        }
+        // return result
+        return manualLinkNumbers;
     }
 
     /**
