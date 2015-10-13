@@ -18,6 +18,7 @@ Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](
 * Das automatische Einklammern von Literaturfußnoten kann in den Einstellungen abgestellt werden ([#91](https://github.com/sjPlot/Zettelkasten/issues/91)).
 * Über das Menü _Suchen_ (Untermenü _Zettel_) können jetzt Zettel gesucht werden, die Teil einer Folgezettelsequenz sind (entweder Ausgangs- oder Folgezettel).
 * Über das Menü _Suchen_ (Untermenü _Zettel_) können jetzt Zettel gesucht werden, die _keine_ Querverweise enthalten (und auf die nicht durch Querverweise verwiesen wird) ([#34](https://github.com/sjPlot/Zettelkasten/issues/34)).
+* Die Sortierung der Tabellenspalten wird gespeichert, sodass diese beim erneuten Programmstart wiederhergestellt wird ([#72](https://github.com/sjPlot/Zettelkasten/issues/72)).
 * Literatur, die während der Neueingabe oder Bearbeiten eines Zettels als Literaturfußnote im Text referenziert wird, wird beim Beenden der Eingabe automatisch als Autorenangabe zum Zettel hinzugefügt, falls dies noch nicht geschehen ist.
 * Verbesserte Stabilität aller Lese- und Schreib-Operationen von Daten (Import, Export, Laden, Speichern, Auto-Backup...).
 * Geschwindigkeitsverbesserungen der Suchfunktionen ([#95](https://github.com/sjPlot/Zettelkasten/issues/95)).

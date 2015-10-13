@@ -58,7 +58,10 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.UIManager;
+import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -329,6 +332,7 @@ public class Settings {
     private static final String SETTING_LUHMANNTREEEXPANDLEVEL = "luhmanntreeexpandlevel";
     private static final String SETTING_SEARCHWITHOUTFORMATTAGS = "searchwithoutformattags";
     private static final String SETTING_MAKELUHMANNCOLUMNSORTABLE = "makeluhmanncolumnsortable";
+    private static final String SETTING_TABLEROWSORTING = "tablerowsorting";
 
     public static final String SETTING_LOGKEYWORDLIST_OR = "OR";
     public static final String SETTING_LOGKEYWORDLIST_AND = "AND";
@@ -726,6 +730,7 @@ public class Settings {
         genericElementInit(SETTING_HIGHLIGHTKEYWORDS, "0");
         genericElementInit(SETTING_SHOWSEARCHENTRY, "0");
         genericElementInit(SETTING_SUPFOOTNOTE, "1");
+        genericElementInit(SETTING_TABLEROWSORTING, "");
         genericElementInit(SETTING_JUMPFOOTNOTE, "0");
         genericElementInit(SETTING_STARTUPENTRY, "1");
         genericElementInit(SETTING_SHOWATSTARTUP, "0");
@@ -1293,7 +1298,68 @@ public class Settings {
         return null;
     }
     
+    public void setTableSorting(javax.swing.JTable[] tables) {
+        Element el = settingsFile.getRootElement().getChild(SETTING_TABLEROWSORTING);
+        if (null == el) {
+            el = new Element(SETTING_TABLEROWSORTING);
+            settingsFile.getRootElement().addContent(el);
+        }
+        // iterate all tables
+        for (javax.swing.JTable t : tables) {
+            // check if table is valid
+            if (t != null) {
+                // get sorter for each table
+                javax.swing.DefaultRowSorter sorter = (javax.swing.DefaultRowSorter) t.getRowSorter();
+                // get sort keys (column, sort order)
+                List<RowSorter.SortKey> sk = sorter.getSortKeys();
+                if (sk != null && sk.size() > 0) {
+                    // get first element
+                    RowSorter.SortKey ssk = sk.get(0);
+                    // set sortcolumn and sort order
+                    String value = String.valueOf(ssk.getColumn()) + "," + ssk.getSortOrder().toString();
+                    el.setAttribute(t.getName(), value);
+                }
+            }
+        }
+    }
 
+    public RowSorter.SortKey getTableSorting(javax.swing.JTable table) {
+        if (table != null) {
+            Element el = settingsFile.getRootElement().getChild(SETTING_TABLEROWSORTING);
+            // get sorting attributes
+            List<Attribute> attr = el.getAttributes();
+            // check if we found any sorting attributes
+            if (!attr.isEmpty()) {
+                // find associated table attribute
+                for (Attribute a : attr) {
+                    // found table attribute?
+                    if (a.getName().equals(table.getName())) {
+                        // get attributes
+                        String[] values = a.getValue().split(",");
+                        // sorted column
+                        int col = Integer.parseInt(values[0]);
+                        SortOrder so;
+                        // sort direction
+                        switch (values[1]) {
+                            case "DESCENDING":
+                                so = SortOrder.DESCENDING;
+                                break;
+                            case "ASCENDING":
+                                so = SortOrder.ASCENDING;
+                                break;
+                            default:
+                                so = SortOrder.UNSORTED;
+                                break;
+                        }
+                        // create and return sortkey
+                        return new RowSorter.SortKey(col, so);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
     /**
      * Retrieves the filepath of the last used image path when inserting images to a new entry
      *

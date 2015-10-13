@@ -153,6 +153,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowSorter;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.MatteBorder;
@@ -2461,6 +2462,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             }
         } catch (IndexOutOfBoundsException e) {
             Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
+        }
+        // get last table sorting
+        RowSorter.SortKey sk = settings.getTableSorting(table);
+        // any sorting found?
+        if (sk != null) {
+            // create array with sort key
+            ArrayList l = new ArrayList();
+            l.add(sk);
+            // set sort key to table
+            sorter.setSortKeys(l);
+            // sort table
+            sorter.sort();
         }
     }
 
@@ -10689,6 +10702,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private void saveSettings() {
         // save zettel-position
         settings.setStartupEntry(data.getCurrentZettelPos());
+        // get table from search results window
+        JTable sft = null;
+        if (searchResultsDlg != null) {
+            sft = searchResultsDlg.getSearchFrameTable();
+        }
+        // svae table sorting
+        settings.setTableSorting(new javax.swing.JTable[]{
+            jTableLinks, jTableManLinks, jTableKeywords,
+            jTableAuthors, jTableTitles, jTableBookmarks,
+            jTableAttachments, sft
+        });
         // save settings
         if (!settings.saveSettings()) {
             // if any problems occur, show error log

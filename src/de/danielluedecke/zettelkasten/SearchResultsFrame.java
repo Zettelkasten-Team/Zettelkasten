@@ -71,6 +71,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -92,6 +93,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowSorter;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.ListSelectionEvent;
@@ -154,6 +156,13 @@ public class SearchResultsFrame extends javax.swing.JFrame {
      */
     private final GraphicsDevice graphicdevice = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();    
     private final JFrame searchframe;
+    /**
+     * Returns the table component of the search results window.
+     * @return the table component of the search results window.
+     */
+    public JTable getSearchFrameTable() {
+        return jTableResults;
+    }
     /**
      * get the strings for file descriptions from the resource map
      */
@@ -1083,8 +1092,20 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         catch (IndexOutOfBoundsException e) {
             Constants.zknlogger.log(Level.WARNING,e.getLocalizedMessage());
         }
+        // get last table sorting
+        RowSorter.SortKey sk = settingsObj.getTableSorting(jTableResults);
+        // any sorting found?
+        if (sk != null) {
+            // create array with sort key
+            ArrayList l = new ArrayList();
+            l.add(sk);
+            // set sort key to table
+            sorter.setSortKeys(l);
+            // sort table
+            sorter.sort();
+        }
         // make extra table-sorter for itunes-tables
-        if (settingsObj.isMacStyle()) {
+        if (settingsObj.isMacAqua()) {
             TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
                 @Override
                 public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
