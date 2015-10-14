@@ -83,8 +83,29 @@ public class PlatformUtil {
      * Indicates whether Mac OS X 10.8 (Mountain LION) is running...
      * @return {@code true} if current OS is mac os 10.8 (mountain lion)
      */
-    public boolean isMountainLion() {
+    public static boolean isMountainLion() {
         return isMacOS() & System.getProperty("os.version").startsWith("10.8");
+    }
+    /**
+     * Indicates whether Mac OS X 10.9 (Mavericks) is running...
+     * @return {@code true} if current OS is mac os 10.8 (mountain lion)
+     */
+    public static boolean isMavericks() {
+        return isMacOS() & System.getProperty("os.version").startsWith("10.9");
+    }
+    /**
+     * Indicates whether Mac OS X 10.10 (Yosemite) is running...
+     * @return {@code true} if current OS is mac os 10.8 (mountain lion)
+     */
+    public static boolean isYosemite() {
+        return isMacOS() & System.getProperty("os.version").startsWith("10.10");
+    }
+    /**
+     * Indicates whether Mac OS X 10.10 (El Capitan) is running...
+     * @return {@code true} if current OS is mac os 10.8 (mountain lion)
+     */
+    public static boolean isElCapitan() {
+        return isMacOS() & System.getProperty("os.version").startsWith("10.11");
     }
     /**
      * Indicates whether the OS is a windows OS

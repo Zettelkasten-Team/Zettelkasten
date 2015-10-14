@@ -69,7 +69,12 @@ public class ColorUtil {
      * Color value, needed for setting the snow-leopard-style on mac os x
      * new Color(218,218,218)
      */
-    public static final Color colorNormalsSowGray = new Color(218, 218, 218); //MacColorUtils.EMPTY_COLOR
+    public static final Color colorNormalSnowGray = new Color(218, 218, 218); //MacColorUtils.EMPTY_COLOR
+    /**
+     * Color value, needed for setting the snow-leopard-style on mac os x
+     * new Color(218,218,218)
+     */
+    public static final Color colorNormalElCapitanGray = new Color(236, 236, 236); //MacColorUtils.EMPTY_COLOR
     /**
      * Color value, needed for setting border-color of the matte-top and -bottom-border
      * Color(64,64,64);
@@ -161,8 +166,10 @@ public class ColorUtil {
     public static Color getMacBackgroundColor() {
         if (PlatformUtil.isLeopard()) {
             return colorNormalGray;
+//        } else if (PlatformUtil.isElCapitan() || PlatformUtil.isYosemite()) {
+//            return colorNormalElCapitanGray;
         } else if (PlatformUtil.isJava6OnMac()) {
-            return colorNormalsSowGray;
+            return colorNormalSnowGray;
         }
         return colorNormalJava7Gray;
     }

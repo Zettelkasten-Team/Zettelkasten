@@ -30,7 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 package de.danielluedecke.zettelkasten;
 
 import de.danielluedecke.zettelkasten.database.Settings;
@@ -46,11 +45,12 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
-import javax.swing.KeyStroke;import org.jdesktop.application.Action;
+import javax.swing.KeyStroke;
+import org.jdesktop.application.Action;
 
 /**
  *
- * @author  danielludecke
+ * @author danielludecke
  */
 public class CBiggerEditField extends javax.swing.JDialog {
 
@@ -65,13 +65,14 @@ public class CBiggerEditField extends javax.swing.JDialog {
 
     /**
      * Create a new bigger input dialog for editing new authors etc.
-     * 
+     *
      * @param parent the parent window
      * @param settings a reference to the settings class
      * @param title the dialog's title
      * @param val a default value which should be set to the textfield
-     * @param textfieldval an optional value that should be set to the bibkey-textfield. Usually only used
-     * when a new author is added / edited and the bibkey is set or changed
+     * @param textfieldval an optional value that should be set to the
+     * bibkey-textfield. Usually only used when a new author is added / edited
+     * and the bibkey is set or changed
      * @param edittype indicates which kind of data is being edited.
      */
     public CBiggerEditField(java.awt.Frame parent, Settings settings, String title, String val, String textfieldval, int edittype) {
@@ -89,12 +90,12 @@ public class CBiggerEditField extends javax.swing.JDialog {
         }
         // bind our new forward focus traversal keys
         Set<AWTKeyStroke> newForwardKeys = new HashSet<>(1);
-        newForwardKeys.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_TAB,0));
-        jTextAreaBigEdit.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,Collections.unmodifiableSet(newForwardKeys));
+        newForwardKeys.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_TAB, 0));
+        jTextAreaBigEdit.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.unmodifiableSet(newForwardKeys));
         // bind our new backward focus traversal keys
         Set<AWTKeyStroke> newBackwardKeys = new HashSet<>(1);
-        newBackwardKeys.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_TAB,KeyEvent.SHIFT_MASK+KeyEvent.SHIFT_DOWN_MASK));
-        jTextAreaBigEdit.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,Collections.unmodifiableSet(newBackwardKeys));
+        newBackwardKeys.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_TAB, KeyEvent.SHIFT_MASK + KeyEvent.SHIFT_DOWN_MASK));
+        jTextAreaBigEdit.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.unmodifiableSet(newBackwardKeys));
         // these codelines add an escape-listener to the dialog. so, when the user
         // presses the escape-key, the same action is performed as if the user
         // presses the cancel button...
@@ -107,21 +108,20 @@ public class CBiggerEditField extends javax.swing.JDialog {
         };
         getRootPane().registerKeyboardAction(cancelAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
         // reset return value
-        newValue=null;
-        newBibKey=null;
+        newValue = null;
+        newBibKey = null;
         // set dialog's title
         setTitle(title);
         // fill textarea with default value
-        if (val!=null) {
+        if (val != null) {
             jTextAreaBigEdit.setText(val);
         }
         switch (edittype) {
             case Constants.EDIT_AUTHOR:
                 jPanel1.setVisible(true);
-                if (textfieldval !=null) {
+                if (textfieldval != null) {
                     jTextFieldBibKey.setText(textfieldval);
-                }
-                else {
+                } else {
                     jTextFieldBibKey.setText("");
                 }
                 break;
@@ -130,7 +130,7 @@ public class CBiggerEditField extends javax.swing.JDialog {
                 jTextFieldBibKey.setText("");
                 break;
         }
-        
+
     }
 
     private void initBorders(Settings settingsObj) {
@@ -140,7 +140,7 @@ public class CBiggerEditField extends javax.swing.JDialog {
          */
         jScrollPane1.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
     }
-    
+
     @Action
     public void okButton() {
         // get the text and leave the dialog
@@ -149,24 +149,24 @@ public class CBiggerEditField extends javax.swing.JDialog {
         setVisible(false);
         dispose();
     }
-    
+
     @Action
     public void cancelButton() {
         // reset the value and leave dialog
-        newValue=null;
-        newBibKey=null;
+        newValue = null;
+        newBibKey = null;
         setVisible(false);
         dispose();
     }
-    
-    
+
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public String getNewValue() {
         return newValue;
     }
+
     public String getNewBibKey() {
         return newBibKey;
     }

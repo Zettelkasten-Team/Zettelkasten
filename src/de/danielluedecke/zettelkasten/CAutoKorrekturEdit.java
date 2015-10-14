@@ -30,7 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
 package de.danielluedecke.zettelkasten;
 
 import de.danielluedecke.zettelkasten.database.Settings;
@@ -57,7 +56,7 @@ import org.jdesktop.application.Action;
 
 /**
  *
- * @author  danielludecke
+ * @author danielludecke
  */
 public class CAutoKorrekturEdit extends javax.swing.JDialog {
 
@@ -66,7 +65,7 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
      */
     private final AutoKorrektur autoKorrekt;
     /**
-     * 
+     *
      */
     private final Settings settingsObj;
     /**
@@ -80,16 +79,15 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private final org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(CAutoKorrekturEdit.class);
+    private final org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(CAutoKorrekturEdit.class);
 
-    
     /**
-     * 
+     *
      * @param parent
      * @param ac
-     * @param st 
+     * @param st
      */
     public CAutoKorrekturEdit(java.awt.Frame parent, AutoKorrektur ac, Settings st) {
         super(parent);
@@ -99,13 +97,12 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
         initTheRest(null);
     }
 
-
     /**
-     * 
+     *
      * @param parent
      * @param ac
      * @param st
-     * @param wrongspelling 
+     * @param wrongspelling
      */
     public CAutoKorrekturEdit(java.awt.Frame parent, AutoKorrektur ac, Settings st, String wrongspelling) {
         super(parent);
@@ -114,7 +111,6 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
         initComponents();
         initTheRest(wrongspelling);
     }
-
 
     private void initTheRest(String initvalue) {
         /*
@@ -140,11 +136,11 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
         // get the default fontsize for tables and lists
         int defaultsize = settingsObj.getTableFontSize();
         // only set new fonts, when fontsize differs from the initial value
-        if (defaultsize>0) {
+        if (defaultsize > 0) {
             // get current font
             Font f = jTableAutoKorrektur.getFont();
             // create new font, add fontsize-value
-            f = new Font(f.getName(), f.getStyle(), f.getSize()+defaultsize);
+            f = new Font(f.getName(), f.getStyle(), f.getSize() + defaultsize);
             // set new font
             jTableAutoKorrektur.setFont(f);
         }
@@ -152,7 +148,7 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
         jTableAutoKorrektur.setAutoCreateRowSorter(true);
         jTableAutoKorrektur.setGridColor(settingsObj.getTableGridColor());
         // make extra table-sorter for itunes-tables
-        if (settingsObj.isMacStyle()) {
+        if (settingsObj.isMacAqua()) {
             TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
                 @Override
                 public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
@@ -164,21 +160,23 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
             jTableAutoKorrektur.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
         }
         // init the table, i.e. fill it with all existing data
-        tm = (DefaultTableModel)jTableAutoKorrektur.getModel();
+        tm = (DefaultTableModel) jTableAutoKorrektur.getModel();
         tm.setRowCount(0);
         // add all spellchecking-entries to linked list
-        for (int cnt=0; cnt<autoKorrekt.getCount(); cnt++) {
+        for (int cnt = 0; cnt < autoKorrekt.getCount(); cnt++) {
             String[] value = autoKorrekt.getElement(cnt);
-            if (value!=null) tm.addRow(value);
+            if (value != null) {
+                tm.addRow(value);
+            }
         }
         // add one row for editing...
-        tm.setRowCount(tm.getRowCount()+1);
+        tm.setRowCount(tm.getRowCount() + 1);
         // when we have a parameter, set this valus as initial value into the table
         // we do this before we init the change-event, so this does not trigger any changes
         // that will be tracked...
-        if (initvalue!=null) {
+        if (initvalue != null) {
             // get selected row...
-            int row = tm.getRowCount()-1;
+            int row = tm.getRowCount() - 1;
             // set initial value, which typically is a word that was spelled wrong...
             tm.setValueAt(initvalue, row, 0);
             // select the previous cell, so the user can start editing the correct spelling...
@@ -190,11 +188,14 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
         // add table model listener. in case we have edited a new value at the last
         // column or row, automatically add a new column/row
         tm.addTableModelListener(new TableModelListener() {
-            @Override public void tableChanged(TableModelEvent e) {
+            @Override
+            public void tableChanged(TableModelEvent e) {
                 // only react on updates, i.e. the user edited/inserted/changed new values
                 if (TableModelEvent.UPDATE == e.getType()) {
                     // if edited row was last row, add one row
-                    if (e.getLastRow()==(tm.getRowCount()-1)) tm.setRowCount(tm.getRowCount()+1);
+                    if (e.getLastRow() == (tm.getRowCount() - 1)) {
+                        tm.setRowCount(tm.getRowCount() + 1);
+                    }
                 }
                 // enable apply-button
                 jButtonApply.setEnabled(true);
@@ -202,15 +203,18 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
         });
         // create action which should be executed when the user presses
         // the delete/backspace-key
-        AbstractAction a_delete = new AbstractAction(){
-            @Override public void actionPerformed(ActionEvent e) {
+        AbstractAction a_delete = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 // retrieve selected row and column
                 int row = jTableAutoKorrektur.getSelectedRow();
                 int col = jTableAutoKorrektur.getSelectedColumn();
                 // remove row
                 tm.removeRow(row);
                 // adjust row if last row was selected
-                if (row>=tm.getRowCount()) row--;
+                if (row >= tm.getRowCount()) {
+                    row--;
+                }
                 // select new cell
                 jTableAutoKorrektur.setColumnSelectionInterval(col, col);
                 jTableAutoKorrektur.setRowSelectionInterval(row, row);
@@ -218,15 +222,14 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
                 jButtonApply.setEnabled(true);
             }
         };
-        jTableAutoKorrektur.getActionMap().put("DeleteKeyPressed",a_delete);
+        jTableAutoKorrektur.getActionMap().put("DeleteKeyPressed", a_delete);
         // check for os, and use appropriate controlKey
-        KeyStroke ks = KeyStroke.getKeyStroke((System.getProperty("os.name").toLowerCase().startsWith("mac os"))?"meta BACK_SPACE":"ctrl DELETE");
+        KeyStroke ks = KeyStroke.getKeyStroke((System.getProperty("os.name").toLowerCase().startsWith("mac os")) ? "meta BACK_SPACE" : "ctrl DELETE");
         jTableAutoKorrektur.getInputMap().put(ks, "DeleteKeyPressed");
         // disable reordering of columns
         jTableAutoKorrektur.getTableHeader().setReorderingAllowed(false);
     }
 
-    
     @Action
     public void cancel() {
         modified = false;
@@ -239,43 +242,43 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
         // clear all synonyms
         autoKorrekt.clear();
         // retrieve all table rows
-        for (int row=0; row<tm.getRowCount(); row++) {
+        for (int row = 0; row < tm.getRowCount(); row++) {
             // get table-cell-values
             Object o1 = tm.getValueAt(row, 0);
             Object o2 = tm.getValueAt(row, 1);
             // check whether we have any valid values...
-            if (o1!=null && o2!=null) {
+            if (o1 != null && o2 != null) {
                 // retrieve string-content of values
                 String falsch = tm.getValueAt(row, 0).toString();
                 String richtig = tm.getValueAt(row, 1).toString();
                 // if we have valid values, add them to the file
-                if (falsch!=null && !falsch.isEmpty() && richtig!=null && !richtig.isEmpty()) autoKorrekt.addElement(falsch, richtig);
+                if (falsch != null && !falsch.isEmpty() && richtig != null && !richtig.isEmpty()) {
+                    autoKorrekt.addElement(falsch, richtig);
+                }
             }
         }
         // now check whether everything is ok
         if (!autoKorrekt.isDocumentOK()) {
             // log error
-            Constants.zknlogger.log(Level.WARNING,"Warning! Could not save spell correction data! The original XML document has been restored!");
+            Constants.zknlogger.log(Level.WARNING, "Warning! Could not save spell correction data! The original XML document has been restored!");
             // if not, restore document and tell user about problem
             autoKorrekt.restoreDocument();
             // tell user about problem
-            JOptionPane.showMessageDialog(null,resourceMap.getString("errSavingDataMsg"),
-                                          resourceMap.getString("errSavingDataTitle"),
-                                          JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null, resourceMap.getString("errSavingDataMsg"),
+                    resourceMap.getString("errSavingDataTitle"),
+                    JOptionPane.PLAIN_MESSAGE);
             // no modifications have been made
             modified = false;
-        }
-        else {
+        } else {
             modified = true;
         }
         dispose();
         setVisible(false);
     }
 
-    
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean isModified() {
         return modified;

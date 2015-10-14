@@ -30,8 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-
-
 package de.danielluedecke.zettelkasten;
 
 import de.danielluedecke.zettelkasten.database.Settings;
@@ -45,17 +43,19 @@ import org.jdesktop.application.Action;
 
 /**
  *
- * @author  danielludecke
+ * @author danielludecke
  */
 public class CDesktopDisplayItems extends javax.swing.JDialog {
 
     /**
-     * return value for the main window so we know whether we have to update the display
+     * return value for the main window so we know whether we have to update the
+     * display
      */
     private boolean needsupdate = false;
+
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean isNeedsUpdate() {
         return needsupdate;
@@ -64,9 +64,10 @@ public class CDesktopDisplayItems extends javax.swing.JDialog {
      *
      */
     private boolean savesettingok = true;
+
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean isSaveSettingsOk() {
         return savesettingok;
@@ -75,18 +76,19 @@ public class CDesktopDisplayItems extends javax.swing.JDialog {
      * Reference to the settings class
      */
     private final Settings settingsObj;
-    
+
     /**
-     * wm, 
+     * wm,
+     *
      * @param parent
-     * @param s 
+     * @param s
      */
     public CDesktopDisplayItems(java.awt.Frame parent, Settings s) {
         super(parent);
         initComponents();
         // set application icon
         setIconImage(Constants.zknicon.getImage());
-        
+
         settingsObj = s;
         if (settingsObj.isSeaGlass()) {
             jButtonApply.putClientProperty("JComponent.sizeVariant", "small");
@@ -102,30 +104,38 @@ public class CDesktopDisplayItems extends javax.swing.JDialog {
                 cancelWindow();
             }
         };
-        getRootPane().registerKeyboardAction(cancelAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);        
-        
+        getRootPane().registerKeyboardAction(cancelAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+
         // init option-checkboxes
         int items = settingsObj.getDesktopDisplayItems();
-        jCheckBoxRemarks.setSelected((items&Constants.DESKTOP_SHOW_REMARKS)!=0);
-        jCheckBoxAuthors.setSelected((items&Constants.DESKTOP_SHOW_AUTHORS)!=0);
-        jCheckBoxAttachments.setSelected((items&Constants.DESKTOP_SHOW_ATTACHMENTS)!=0);
-        jCheckBoxKeywords.setSelected((items&Constants.DESKTOP_SHOW_KEYWORDS)!=0);
+        jCheckBoxRemarks.setSelected((items & Constants.DESKTOP_SHOW_REMARKS) != 0);
+        jCheckBoxAuthors.setSelected((items & Constants.DESKTOP_SHOW_AUTHORS) != 0);
+        jCheckBoxAttachments.setSelected((items & Constants.DESKTOP_SHOW_ATTACHMENTS) != 0);
+        jCheckBoxKeywords.setSelected((items & Constants.DESKTOP_SHOW_KEYWORDS) != 0);
     }
 
-    
     /**
-     * Finally, when the user presses the apply-button, all settings are saved. this is done
-     * in this method. when all changes have been saved, the window will be closed and disposed.
+     * Finally, when the user presses the apply-button, all settings are saved.
+     * this is done in this method. when all changes have been saved, the window
+     * will be closed and disposed.
      */
     @Action(enabledProperty = "modified")
     public void applyChanges() {
         // reset indicator
         int items = 0;
         // check which items should be displayed
-        if (jCheckBoxRemarks.isSelected()) items = items | Constants.DESKTOP_SHOW_REMARKS;
-        if (jCheckBoxAuthors.isSelected()) items = items | Constants.DESKTOP_SHOW_AUTHORS;
-        if (jCheckBoxAttachments.isSelected()) items = items | Constants.DESKTOP_SHOW_ATTACHMENTS;
-        if (jCheckBoxKeywords.isSelected()) items = items | Constants.DESKTOP_SHOW_KEYWORDS;
+        if (jCheckBoxRemarks.isSelected()) {
+            items = items | Constants.DESKTOP_SHOW_REMARKS;
+        }
+        if (jCheckBoxAuthors.isSelected()) {
+            items = items | Constants.DESKTOP_SHOW_AUTHORS;
+        }
+        if (jCheckBoxAttachments.isSelected()) {
+            items = items | Constants.DESKTOP_SHOW_ATTACHMENTS;
+        }
+        if (jCheckBoxKeywords.isSelected()) {
+            items = items | Constants.DESKTOP_SHOW_KEYWORDS;
+        }
         // save user settings
         settingsObj.setDesktopDisplayItems(items);
         // save the changes to the settings-file
@@ -134,30 +144,27 @@ public class CDesktopDisplayItems extends javax.swing.JDialog {
         needsupdate = true;
         // close window
         closeWindow();
-    }    
-    
-    
+    }
+
     /**
      * When the user presses the cancel button, no update needed, close window
      */
     @Action
     public void cancelWindow() {
-        needsupdate=false;
+        needsupdate = false;
         closeWindow();
     }
-    
-    
+
     /**
-     * Occurs when the user closes the window or presses the
-     * ok button. the settings-file is then saved and the window
-     * disposed.
+     * Occurs when the user closes the window or presses the ok button. the
+     * settings-file is then saved and the window disposed.
      */
     private void closeWindow() {
         dispose();
         setVisible(false);
     }
 
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is

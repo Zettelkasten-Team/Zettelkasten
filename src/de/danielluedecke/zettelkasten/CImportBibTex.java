@@ -276,7 +276,7 @@ public class CImportBibTex extends javax.swing.JDialog {
             jTableBibEntries.setFont(f);
         }
         // make extra table-sorter for itunes-tables
-        if (settingsObj.isMacStyle()) {
+        if (settingsObj.isMacAqua()) {
             // make extra table-sorter for itunes-tables
             TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
                 @Override
