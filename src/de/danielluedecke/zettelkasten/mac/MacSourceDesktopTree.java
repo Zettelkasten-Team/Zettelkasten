@@ -3,7 +3,6 @@
  * http://code.google.com/p/macwidgets/
  * which are licensed under the GNU Lesser GPL
  */
-
 package de.danielluedecke.zettelkasten.mac;
 
 import de.danielluedecke.zettelkasten.database.DesktopData;
@@ -65,7 +64,7 @@ public class MacSourceDesktopTree extends BasicTreeUI {
     private static final Font CATEGORY_FONT = UIManager.getFont("Label.font").deriveFont(Font.BOLD, 12.0f);
     private static final Font ITEM_FONT = UIManager.getFont("Label.font").deriveFont(12.0f);
     private static final Font ITEM_SELECTED_FONT = ITEM_FONT.deriveFont(Font.BOLD);
-   
+
     private static final Color TRANSPARENT_COLOR = new Color(0, 0, 0, 0);
 
     private SourceListColorScheme fColorScheme;
@@ -157,19 +156,22 @@ public class MacSourceDesktopTree extends BasicTreeUI {
     }
 
     /**
-     * Gets the {@link SourceListColorScheme} that this {@code SourceListTreeUI} uses to paint.
+     * Gets the {@link SourceListColorScheme} that this {@code SourceListTreeUI}
+     * uses to paint.
      *
-     * @return the {@link SourceListColorScheme} that this {@code SourceList} uses to paint.
+     * @return the {@link SourceListColorScheme} that this {@code SourceList}
+     * uses to paint.
      */
     public SourceListColorScheme getColorScheme() {
         return fColorScheme;
     }
 
     /**
-     * Sets the {@link SourceListColorScheme} that this {@code SourceListTreeUI} uses to paint.
+     * Sets the {@link SourceListColorScheme} that this {@code SourceListTreeUI}
+     * uses to paint.
      *
-     * @param colorScheme the {@link SourceListColorScheme} that this {@code SourceList} uses to
-     *                    paint.
+     * @param colorScheme the {@link SourceListColorScheme} that this
+     * {@code SourceList} uses to paint.
      */
     public void setColorScheme(SourceListColorScheme colorScheme) {
         checkColorSchemeNotNull(colorScheme);
@@ -203,8 +205,8 @@ public class MacSourceDesktopTree extends BasicTreeUI {
 
     @Override
     protected void paintExpandControl(Graphics g, Rectangle clipBounds, Insets insets,
-                                      Rectangle bounds, TreePath path, int row, boolean isExpanded,
-                                      boolean hasBeenExpanded, boolean isLeaf) {
+            Rectangle bounds, TreePath path, int row, boolean isExpanded,
+            boolean hasBeenExpanded, boolean isLeaf) {
         // if the given path is selected, then
         boolean isPathSelected = tree.getSelectionModel().isPathSelected(path);
 
@@ -213,8 +215,8 @@ public class MacSourceDesktopTree extends BasicTreeUI {
         Icon collapseIcon = isPathSelected ? fColorScheme.getSelectedCollapsedIcon()
                 : fColorScheme.getUnselectedCollapsedIcon();
 
-        Object categoryOrItem =
-                ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+        Object categoryOrItem
+                = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
         boolean setIcon = !(categoryOrItem instanceof SourceListCategory)
                 || ((SourceListCategory) categoryOrItem).isCollapsable();
 
@@ -287,7 +289,7 @@ public class MacSourceDesktopTree extends BasicTreeUI {
 
     @Override
     protected void paintVerticalPartOfLeg(Graphics g, Rectangle clipBounds, Insets insets,
-                                          TreePath path) {
+            TreePath path) {
         // do nothing - don't paint vertical lines.
     }
 
@@ -302,9 +304,7 @@ public class MacSourceDesktopTree extends BasicTreeUI {
         }
     }
 
-
     // Utility methods. ///////////////////////////////////////////////////////////////////////////
-
     private boolean isCategoryRow(int row) {
         return !isItemRow(row);
     }
@@ -316,7 +316,7 @@ public class MacSourceDesktopTree extends BasicTreeUI {
     private boolean isItemPath(TreePath path) {
         return path != null && path.getPathCount() > 2;
     }
-    
+
 //    private boolean isItemRow(int row) {
 //        TreePath path = tree.getPathForRow(row);
 //        if (path!=null) {
@@ -327,9 +327,8 @@ public class MacSourceDesktopTree extends BasicTreeUI {
 //        }
 //        return false;
 //    }
-
     private String getTextForNode(TreeNode node, boolean selected, boolean expanded, boolean leaf,
-                                  int row, boolean hasFocus) {
+            int row, boolean hasFocus) {
         String retVal;
 
         if (node instanceof DefaultMutableTreeNode
@@ -361,39 +360,48 @@ public class MacSourceDesktopTree extends BasicTreeUI {
 
     private boolean isCommentNode(Object value) {
         // if no value return
-        if (null==value) return false;
+        if (null == value) {
+            return false;
+        }
         // retrieve node
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
         // when root, return
-        if (node.isRoot()) return false;
-        return (!desktopObj.getComment(TreeUtil.getNodeTimestamp(node),"<br>").isEmpty());
+        if (node.isRoot()) {
+            return false;
+        }
+        return (!desktopObj.getComment(TreeUtil.getNodeTimestamp(node), "<br>").isEmpty());
     }
 
     /**
-     * This method checks whether an entry of a selected node 
-     * has follower numbers or not.
+     * This method checks whether an entry of a selected node has follower
+     * numbers or not.
      *
      * @param value the selected node
-     * @return {@code true} if the entry of the selected node has 
-     * followers, {@code false} otherwise.
+     * @return {@code true} if the entry of the selected node has followers,
+     * {@code false} otherwise.
      */
     protected boolean isLuhmannNode(Object value) {
         // if no value return
-        if (null == value || !settingsObj.getShowLuhmannIconInDesktop()) return false;
+        if (null == value || !settingsObj.getShowLuhmannIconInDesktop()) {
+            return false;
+        }
         // retrieve node
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
         // when root, return
-        if (node.isRoot()) return false;
+        if (node.isRoot()) {
+            return false;
+        }
         // else, get entry number of selected node
         int entry = TreeUtil.extractEntryNumberFromNode(node);
         // no entry selected? then return false
-        if (-1 == entry) return false;
+        if (-1 == entry) {
+            return false;
+        }
         // return, whether entry has followers
         return (dataObj.hasLuhmannNumbers(entry));
     }
-    
-    // Custom TreeModelListener. //////////////////////////////////////////////////////////////////
 
+    // Custom TreeModelListener. //////////////////////////////////////////////////////////////////
     private class CustomTreeModelListener implements TreeModelListener {
 
         @Override
@@ -404,9 +412,9 @@ public class MacSourceDesktopTree extends BasicTreeUI {
         @Override
         public void treeNodesInserted(TreeModelEvent e) {
             TreePath path = e.getTreePath();
-            if (tree!=null) {
+            if (tree != null) {
                 Object root = tree.getModel().getRoot();
-                if (root!=null) {
+                if (root != null) {
                     TreePath pathToRoot = new TreePath(root);
                     if (path != null && path.getParentPath() != null
                             && path.getParentPath().getLastPathComponent().equals(root)
@@ -429,7 +437,6 @@ public class MacSourceDesktopTree extends BasicTreeUI {
     }
 
     // Custom TreeCellRenderer. ///////////////////////////////////////////////////////////////////
-
     private class SourceListTreeCellRenderer implements TreeCellRenderer {
 
         private final CategoryTreeCellRenderer iCategoryRenderer = new CategoryTreeCellRenderer();
@@ -458,7 +465,7 @@ public class MacSourceDesktopTree extends BasicTreeUI {
                 fColorScheme.getCategoryTextColor(),
                 fColorScheme.getCategoryTextColor(),
                 fColorScheme.getCategoryTextShadowColor());
-        
+
         private final JLabel fSelectedCatLabel = MacWidgetFactory.makeEmphasizedLabel(new JLabel(),
                 fColorScheme.getSelectedItemTextColor(),
                 fColorScheme.getSelectedItemTextColor(),
@@ -537,8 +544,8 @@ public class MacSourceDesktopTree extends BasicTreeUI {
             if (value instanceof DefaultMutableTreeNode
                     && ((DefaultMutableTreeNode) value).getUserObject() instanceof SourceListBadgeContentProvider) {
                 Object userObject = ((DefaultMutableTreeNode) node).getUserObject();
-                SourceListBadgeContentProvider badgeContentProvider =
-                        (SourceListBadgeContentProvider) userObject;
+                SourceListBadgeContentProvider badgeContentProvider
+                        = (SourceListBadgeContentProvider) userObject;
                 if (badgeContentProvider.getCounterValue() > 0) {
                     fBuilder.add(fCountRenderer.getComponent(), cc.xy(3, 2, "center, fill"));
                     fCountRenderer.setState(badgeContentProvider.getCounterValue(), selected);
@@ -550,8 +557,8 @@ public class MacSourceDesktopTree extends BasicTreeUI {
     }
 
     // SourceListTreeSelectionModel implementation. ///////////////////////////////////////////////
-
     private class SourceListTreeSelectionModel extends DefaultTreeSelectionModel {
+
         public SourceListTreeSelectionModel() {
             setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         }

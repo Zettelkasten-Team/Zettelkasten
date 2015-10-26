@@ -40,24 +40,24 @@ import javax.swing.AbstractButton;
  * @author Daniel Luedecke
  */
 public class MacToolbarButton {
+
     public static final String SEGMENT_POSITION_FIRST = "first";
     public static final String SEGMENT_POSITION_MIDDLE = "middle";
     public static final String SEGMENT_POSITION_LAST = "last";
     public static final String SEGMENT_POSITION_ONLY = "only";
-    
+
     public static AbstractButton makeTexturedToolBarButton(AbstractButton button, String segmentPosition) {
-        
-        if (Constants.isJava7OnMac || Constants.isJava8OnMac || null==segmentPosition || segmentPosition.isEmpty() || segmentPosition.equals(SEGMENT_POSITION_ONLY)) {
-            button.putClientProperty("JButton.buttonType","textured");
-        }
-        else {
-            button.putClientProperty("JButton.buttonType","segmentedTextured");
-            button.putClientProperty("JButton.segmentPosition",segmentPosition);
+
+        if (Constants.isJava7OnMac || Constants.isJava8OnMac || null == segmentPosition || segmentPosition.isEmpty() || segmentPosition.equals(SEGMENT_POSITION_ONLY)) {
+            button.putClientProperty("JButton.buttonType", "textured");
+        } else {
+            button.putClientProperty("JButton.buttonType", "segmentedTextured");
+            button.putClientProperty("JButton.segmentPosition", segmentPosition);
         }
         button.setText(null);
         button.setBorderPainted(true);
         button.setPreferredSize(Constants.seaGlassButtonDimension);
-        
+
         return button;
     }
 }

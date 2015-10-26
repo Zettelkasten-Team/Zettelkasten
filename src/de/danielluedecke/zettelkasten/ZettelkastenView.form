@@ -477,6 +477,7 @@
                             <Property name="dividerLocation" type="int" value="380"/>
                             <Property name="orientation" type="int" value="0"/>
                             <Property name="name" type="java.lang.String" value="jSplitPane2" noResource="true"/>
+                            <Property name="oneTouchExpandable" type="boolean" value="true"/>
                           </Properties>
 
                           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
@@ -1275,6 +1276,7 @@
                             <Property name="dividerLocation" type="int" value="380"/>
                             <Property name="orientation" type="int" value="0"/>
                             <Property name="name" type="java.lang.String" value="jSplitPane3" noResource="true"/>
+                            <Property name="oneTouchExpandable" type="boolean" value="true"/>
                           </Properties>
 
                           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>

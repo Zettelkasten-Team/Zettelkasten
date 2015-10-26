@@ -378,9 +378,9 @@ public class MacSourceTree extends BasicTreeUI {
 
     private class SourceListTreeCellRenderer implements TreeCellRenderer {
 
-        private CategoryTreeCellRenderer iCategoryRenderer = new CategoryTreeCellRenderer();
+        private final CategoryTreeCellRenderer iCategoryRenderer = new CategoryTreeCellRenderer();
 
-        private ItemTreeCellRenderer iItemRenderer = new ItemTreeCellRenderer();
+        private final ItemTreeCellRenderer iItemRenderer = new ItemTreeCellRenderer();
 
         @Override
         public Component getTreeCellRendererComponent(
@@ -396,12 +396,12 @@ public class MacSourceTree extends BasicTreeUI {
 
     private class CategoryTreeCellRenderer implements TreeCellRenderer {
 
-        private JLabel fLabel = MacWidgetFactory.makeEmphasizedLabel(new JLabel(),
+        private final JLabel fLabel = MacWidgetFactory.makeEmphasizedLabel(new JLabel(),
                 ColorUtil.colorDarkLabelGray,
                 ColorUtil.colorDarkLabelGray,
                 ColorUtil.colorDarkLabelShadowGray);
 
-        private JLabel fSelectedCatLabel = MacWidgetFactory.makeEmphasizedLabel(new JLabel(),
+        private final JLabel fSelectedCatLabel = MacWidgetFactory.makeEmphasizedLabel(new JLabel(),
                 fColorScheme.getSelectedItemTextColor(),
                 fColorScheme.getSelectedItemTextColor(),
                 fColorScheme.getSelectedItemFontShadowColor());
@@ -424,18 +424,18 @@ public class MacSourceTree extends BasicTreeUI {
 
     private class ItemTreeCellRenderer implements TreeCellRenderer {
 
-        private PanelBuilder fBuilder;
+        private final PanelBuilder fBuilder;
 
-        private SourceListCountBadgeRenderer fCountRenderer = new SourceListCountBadgeRenderer(
+        private final SourceListCountBadgeRenderer fCountRenderer = new SourceListCountBadgeRenderer(
                 fColorScheme.getSelectedBadgeColor(), fColorScheme.getActiveUnselectedBadgeColor(),
                 fColorScheme.getInativeUnselectedBadgeColor(), fColorScheme.getBadgeTextColor());
 
-        private JLabel fSelectedLabel = MacWidgetFactory.makeEmphasizedLabel(new JLabel(),
+        private final JLabel fSelectedLabel = MacWidgetFactory.makeEmphasizedLabel(new JLabel(),
                 fColorScheme.getSelectedItemTextColor(),
                 fColorScheme.getSelectedItemTextColor(),
                 fColorScheme.getSelectedItemFontShadowColor());
 
-        private JLabel fUnselectedLabel = MacWidgetFactory.makeEmphasizedLabel(new JLabel(),
+        private final JLabel fUnselectedLabel = MacWidgetFactory.makeEmphasizedLabel(new JLabel(),
                 fColorScheme.getUnselectedItemTextColor(),
                 fColorScheme.getUnselectedItemTextColor(),
                 TRANSPARENT_COLOR);

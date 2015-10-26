@@ -12222,6 +12222,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jSplitPane2.setDividerLocation(380);
             jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
             jSplitPane2.setName("jSplitPane2"); // NOI18N
+            jSplitPane2.setOneTouchExpandable(true);
 
             jScrollPane10.setBorder(null);
             jScrollPane10.setName("jScrollPane10"); // NOI18N
@@ -12674,6 +12675,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jSplitPane3.setDividerLocation(380);
             jSplitPane3.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
             jSplitPane3.setName("jSplitPane3"); // NOI18N
+            jSplitPane3.setOneTouchExpandable(true);
 
             jScrollPane9.setBorder(null);
             jScrollPane9.setName("jScrollPane9"); // NOI18N
