@@ -10,6 +10,7 @@ Die aktuellste Programmversion [kann hier heruntergeladen](http://zettelkasten.d
 #### Neue Funktionen und Änderungen
 
 * Font size of UI is now adjusted for higher screen resolutions.
+* Updated OpenCSV-library.
 
 #### Behobene Fehler
 
