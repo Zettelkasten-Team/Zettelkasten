@@ -84,6 +84,7 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.FileDialog;
 import java.awt.Font;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
@@ -2866,6 +2867,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private void setDefaultLookAndFeel() {
         try {
+            // System.setProperty("awt.useSystemAAFontSettings", "on");
+            try { // Try to scale default font size according to screen resolution.
+                Font fm = (Font) UIManager.getLookAndFeelDefaults().get("defaultFont");
+                // check if laf supports default font
+                if (fm != null) {
+                    UIManager.getLookAndFeelDefaults().put("defaultFont", fm.deriveFont(fm.getSize2D() * Toolkit.getDefaultToolkit().getScreenResolution() / 96));
+                }
+            } catch (HeadlessException e) {
+            }            
             // UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
             String laf = settings.getLookAndFeel();
             if (laf.equals(Constants.seaGlassLookAndFeelClassName)) {
@@ -6163,11 +6173,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // sort the array
             if (children != null && children.length > 0) {
                 Arrays.sort(children, new Comparer());
-            }
-            // add each item as child of note
-            // create and add a new child
-            for (String c : children) {
-                node.add(new DefaultMutableTreeNode(c));
+                // add each item as child of note
+                // create and add a new child
+                for (String c : children) {
+                    node.add(new DefaultMutableTreeNode(c));
+                }
             }
         }
         // set cluster links

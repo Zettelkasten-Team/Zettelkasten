@@ -5,34 +5,13 @@ Der elektronische Zettelkasten ist ein Programm, das sich am Arbeitsprinzip des 
 ### Download
 Die aktuellste Programmversion [kann hier heruntergeladen](http://zettelkasten.danielluedecke.de/download.php) werden.
 
-### Dokumentation und Anleitungen
-Ausführliche Anleitungen zu den verschiedenen Funktionen gibt es [in der Wiki](http://zettelkasten.danielluedecke.de/wiki/doku.php). Fragen und Anregungen zum Zettelkasten können in der [Mailingliste](https://de.groups.yahoo.com/neo/groups/zettelkasten/info) gestellt werden.
-
-### Changelog der aktuellen Entwicklerversion
+### Changelog der aktuellen Entwicklerversion 3.2.7-1
 
 #### Neue Funktionen und Änderungen
-* In der Registerkarte _Überschriften_ werden jetzt Zettel als Ausgangsfolgezettel oder Folgezettel markiert ([#96](https://github.com/sjPlot/Zettelkasten/issues/96)). Die Sortierung der Spalte _Folgezettel_ in der Registerkarte _Überschriften_ ist per Voreinstellung deakitiviert, da der erstmalige Aufbau der Tabelle länger dauern kann. Die Sortierung kann in den Einstellungen _Tabellen und Listen_ aktiviert werden.
-* Der Export von Zetteln ins Markdown-, Text- und LaTex-Format kann jetzt auch jeden Zettel als einzelne Datei exportieren ([#13](https://github.com/sjPlot/Zettelkasten/issues/13) und [#77](https://github.com/sjPlot/Zettelkasten/issues/77)).
-* Beim Export ins Markdown-, Text- und LaTex-Format werden Fußnoten durch formatierte Autorenangaben ersetzt (sofern die Literatur mit Bibkey verknüpft ist).
-* Literaturfußnoten können jetzt auch den Bibkey statt der Nummer des Literatureintrags enthalten (`[fn luhsozsys:123]` würde z.B. umgewandelt in `Luhmann 1984: 123`).
-* Das automatische Einklammern von Literaturfußnoten kann in den Einstellungen abgestellt werden ([#91](https://github.com/sjPlot/Zettelkasten/issues/91)).
-* Über das Menü _Suchen_ (Untermenü _Zettel_) können jetzt Zettel gesucht werden, die Teil einer Folgezettelsequenz sind (entweder Ausgangs- oder Folgezettel).
-* Über das Menü _Suchen_ (Untermenü _Zettel_) können jetzt Zettel gesucht werden, die _keine_ Querverweise enthalten (und auf die nicht durch Querverweise verwiesen wird) ([#34](https://github.com/sjPlot/Zettelkasten/issues/34)).
-* Die Sortierung der Tabellenspalten wird gespeichert, sodass diese beim erneuten Programmstart wiederhergestellt wird ([#72](https://github.com/sjPlot/Zettelkasten/issues/72)).
-* Literatur, die während der Neueingabe oder Bearbeiten eines Zettels als Literaturfußnote im Text referenziert wird, wird beim Beenden der Eingabe automatisch als Autorenangabe zum Zettel hinzugefügt, falls dies noch nicht geschehen ist.
-* Verbesserte Stabilität aller Lese- und Schreib-Operationen von Daten (Import, Export, Laden, Speichern, Auto-Backup...).
-* Geschwindigkeitsverbesserungen der Suchfunktionen ([#95](https://github.com/sjPlot/Zettelkasten/issues/95)).
-* Im englischen Interface wurden _trails_ in _note sequences_ und _entry_ in _note_ umbenannt.
-* Neue Einstellung, um Formatierungs-Tags bei einer Suche _nicht_ zu entfernen. Dadurch wird die Suchgeschwindigkeit erhöht, jedoch werden Wörter, die durch Formatierungen unterbrochen werden, nicht gefunden (eine Suche nach `Zettelkasten` findet dann nicht `[f]Zettel[/f]kasten`).
+
+* Font size of UI is now adjusted for higher screen resolutions.
 
 #### Behobene Fehler
-* Bei Dateien, die im Neueingabefenster per Drag'n'Drop ins Textfeld gezogen wurden, kam keine Abfrage zum Verschieben oder Kopieren der Dateien.
-* Änderung [#82](https://github.com/sjPlot/Zettelkasten/issues/82) wurde rückgängig gemacht, da es Probleme mit URLs in BibTex-Autorenangaben gab.
-* In der Registerkarte _Literatur_ wurden _Buchkapitel_ und _Artikel in Büchern_ bei der Filterfunktion vertauscht ([#90](https://github.com/sjPlot/Zettelkasten/issues/90)).
-* Dateinamen mit Unterstrichen kollidierten mit Markdowninterpretation ([#26](https://github.com/sjPlot/Zettelkasten/issues/26)).
-* Schreibtischexport ins Markdown deklarierte keine Überschriften ([#56](https://github.com/sjPlot/Zettelkasten/issues/56)).
-* Im Exportfenster konnten beim Export ins Textformat keine Zettelelemente ausgewählt werden.
-* Bei Fußnoten ohne Bibkey wurde die Seitenzahl nicht angezeigt ([#74](https://github.com/sjPlot/Zettelkasten/issues/74)).
 
 ### Screenshots
 Aktuelle Screenshots [gibt es hier](http://zettelkasten.danielluedecke.de/gallery.php).

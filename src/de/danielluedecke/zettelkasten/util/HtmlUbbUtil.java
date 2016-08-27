@@ -1370,6 +1370,7 @@ public class HtmlUbbUtil {
             // strike
             dummy = dummy.replaceAll("---(.*?)---", "<strike>$1</strike>");
             // images
+            // TODO Img tag nach oben, vor kursiv format, und _ im Dateinamen durch "´:`" o.ä. (bevor Matthias meckert, 100-Zeichenfolge!) ersetzen
             dummy = dummy.replaceAll("[!]{1}\\[([^\\[]+)\\]\\(([^\\)]+)\\)", "[img]$2[/img]");
             // we need to fix emphasing in image tags. if image file path has
             // underscores, these have been replaced to italic / bold etc.
