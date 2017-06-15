@@ -69,7 +69,7 @@ public class TestObjectFactory {
                         TestObjectFactory.getInstance().stenoData);
 
                 File fileObject;
-                fileObject = new File(file);
+                fileObject = new File(file); //FIXME
 
                 settings.setFilePath(fileObject);
                 this.file = fileObject;
