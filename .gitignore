@@ -23,3 +23,10 @@
 
 # ZKN backups #
 *.zkb3
+
+# Gradle task artifacts & build results
+.gradle/
+build/
+target/
+*.iml
+
