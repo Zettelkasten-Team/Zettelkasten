@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>Zettelkasten</groupId>
 	<artifactId>Zettelkasten</artifactId>
-	<version>3.2.5.2</version>
+	<version>3.2.7</version>
 
 	<!-- Define a local repository for dependencies that are not available in 
 		public maven repositories, see http://stackoverflow.com/questions/2229757/maven-add-a-dependency-to-a-jar-by-relative-path/2230464#2230464 
