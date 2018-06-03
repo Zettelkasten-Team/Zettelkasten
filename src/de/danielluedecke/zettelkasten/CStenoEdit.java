@@ -36,8 +36,6 @@ package de.danielluedecke.zettelkasten;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.StenoData;
 import de.danielluedecke.zettelkasten.util.Constants;
-import com.explodingpixels.macwidgets.MacWidgetFactory;
-import com.explodingpixels.widgets.TableUtils;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -48,7 +46,6 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -151,17 +148,6 @@ public class CStenoEdit extends javax.swing.JDialog {
         // create auto-sorter for tabel
         jTableSteno.setAutoCreateRowSorter(true);
         jTableSteno.setGridColor(settingsObj.getTableGridColor());
-        if (settingsObj.isMacAqua()) {
-            TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
-                @Override
-                public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
-                }
-            };
-            TableUtils.makeSortable(jTableSteno, sortDelegate);
-            // change back default column-resize-behaviour when we have itunes-tables,
-            // since the default for those is "auto resize off"
-            jTableSteno.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
-        }
         // init the table, i.e. fill it with all existing data
         tm = (DefaultTableModel)jTableSteno.getModel();
         tm.setRowCount(0);
@@ -283,7 +269,7 @@ public class CStenoEdit extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTableSteno = (settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+        jTableSteno = new javax.swing.JTable();
         jButtonCancel = new javax.swing.JButton();
         jButtonApply = new javax.swing.JButton();
 
@@ -319,8 +305,10 @@ public class CStenoEdit extends javax.swing.JDialog {
         jTableSteno.setName("jTableSteno"); // NOI18N
         jTableSteno.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jTableSteno);
-        jTableSteno.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableSteno.columnModel.title0")); // NOI18N
-        jTableSteno.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableSteno.columnModel.title1")); // NOI18N
+        if (jTableSteno.getColumnModel().getColumnCount() > 0) {
+            jTableSteno.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableSteno.columnModel.title0")); // NOI18N
+            jTableSteno.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableSteno.columnModel.title1")); // NOI18N
+        }
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CStenoEdit.class, this);
         jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N

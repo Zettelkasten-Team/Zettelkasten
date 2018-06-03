@@ -36,14 +36,6 @@
  */
 package de.danielluedecke.zettelkasten;
 
-import com.explodingpixels.macwidgets.BottomBar;
-import com.explodingpixels.macwidgets.BottomBarSize;
-import com.explodingpixels.macwidgets.MacButtonFactory;
-import com.explodingpixels.macwidgets.MacUtils;
-import com.explodingpixels.macwidgets.MacWidgetFactory;
-import com.explodingpixels.macwidgets.UnifiedToolBar;
-import com.explodingpixels.widgets.TableUtils;
-import com.explodingpixels.widgets.WindowUtils;
 import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
 import de.danielluedecke.zettelkasten.database.BibTex;
@@ -55,10 +47,7 @@ import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.StenoData;
 import de.danielluedecke.zettelkasten.database.Synonyms;
 import de.danielluedecke.zettelkasten.database.TasksData;
-import de.danielluedecke.zettelkasten.mac.MacSourceList;
-import de.danielluedecke.zettelkasten.mac.MacSourceTree;
 import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
-import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
 import de.danielluedecke.zettelkasten.tasks.AutoBackupTask;
 import de.danielluedecke.zettelkasten.tasks.CheckForUpdateTask;
 import de.danielluedecke.zettelkasten.tasks.FindDoubleEntriesTask;
@@ -79,7 +68,6 @@ import de.danielluedecke.zettelkasten.util.ZettelkastenViewUtil;
 import de.danielluedecke.zettelkasten.util.classes.TitleTableCellRenderer;
 import de.danielluedecke.zettelkasten.util.classes.TreeUserObject;
 import java.awt.AWTException;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.FileDialog;
@@ -747,17 +735,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jScrollPane15.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, ColorUtil.getBorderGray(settingsObj)));
             jTabbedPaneMain.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
             jListEntryKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(getResourceMap().getString("jListEntryKeywords.border.title"), settings));
-            jEditorPaneBookmarkComment.setBorder(ZknMacWidgetFactory.getTitledBorder(getResourceMap().getString("jEditorPaneBookmarkComment.border.title"), settings));
-        }
-        if (settingsObj.isMacAqua()) {
-            ZknMacWidgetFactory.updateSplitPane(jSplitPane1);
-            ZknMacWidgetFactory.updateSplitPane(jSplitPane2);
-            ZknMacWidgetFactory.updateSplitPane(jSplitPane3);
-            ZknMacWidgetFactory.updateSplitPane(jSplitPaneMain1);
-            ZknMacWidgetFactory.updateSplitPane(jSplitPaneMain2);
-            ZknMacWidgetFactory.updateSplitPane(jSplitPaneLinks);
-            ZknMacWidgetFactory.updateSplitPane(jSplitPaneAuthors);
-            jListEntryKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(getResourceMap().getString("jListEntryKeywords.border.title"), ColorUtil.colorJTreeText, settings));
             jEditorPaneBookmarkComment.setBorder(ZknMacWidgetFactory.getTitledBorder(getResourceMap().getString("jEditorPaneBookmarkComment.border.title"), settings));
         }
     }
@@ -2020,9 +1997,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             tb_addtodesktop.setVisible(settings.getShowAllIcons());
             tb_find.setVisible(settings.getShowAllIcons());
         }
-        if (settings.isMacAqua() && bottomBarNeedsUdpate) {
-            makeMacToolbar();
-        }
         if (settings.isSeaGlass()) {
             makeSeaGlassToolbar();
         }
@@ -2153,21 +2127,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             t.setShowHorizontalLines(settings.getShowGridHorizontal());
             t.setShowVerticalLines(settings.getShowGridVertical());
             t.setIntercellSpacing(settings.getCellSpacing());
-            // make extra table-sorter for itunes-tables
-            if (settings.isMacAqua()) {
-                TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
-                    @Override
-                    public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
-                    }
-                };
-                TableUtils.makeSortable(t, sortDelegate);
-                // change back default column-resize-behaviour when we have itunes-tables,
-                // since the default for those is "auto resize off"
-                t.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
-            }
-//            if (settings.isMacAqua()) {
-//                t.setDefaultRenderer(String.class, new MacSourceList.CustomTableCellRenderer());
-//            }
         }
     }
 
@@ -2776,30 +2735,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * and th selection-mode
      */
     private void initTrees() {
-        // in case we have mac os x with aqua look&feel, make JTrees look
-        // mac-like
-        if (settings.isMacAqua()) {
-            // this tree has a root, so use "true" as parameter
-            jTreeLuhmann.setUI(new MacSourceTree(true));
-            // this tree has no root, so use "false" as parameter
-            jTreeCluster.setUI(new MacSourceTree(false));
-            // this tree has no root, so use "false" as parameter
-            jTreeKeywords.setUI(new MacSourceTree(false));
-        } // on all other os / look&feels JTrees remain normal.
-        else {
-            // create array with all jTrees of mainframe
-            javax.swing.JTree[] trees = new javax.swing.JTree[]{jTreeLuhmann, jTreeCluster, jTreeKeywords};
-            // and iterate that arrea
-            for (javax.swing.JTree tree : trees) {
-                // remove icons from jTree
-                DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer) tree.getCellRenderer();
-                // Remove the icons
-                renderer.setLeafIcon(null);
-                renderer.setClosedIcon(null);
-                renderer.setOpenIcon(null);
-                // set tree to single-selection-mode
-                tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-            }
+        // create array with all jTrees of mainframe
+        javax.swing.JTree[] trees = new javax.swing.JTree[]{jTreeLuhmann, jTreeCluster, jTreeKeywords};
+        // and iterate that arrea
+        for (javax.swing.JTree tree : trees) {
+            // remove icons from jTree
+            DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer) tree.getCellRenderer();
+            // Remove the icons
+            renderer.setLeafIcon(null);
+            renderer.setClosedIcon(null);
+            renderer.setOpenIcon(null);
+            // set tree to single-selection-mode
+            tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         }
     }
 
@@ -2884,14 +2831,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             UIManager.setLookAndFeel(laf);
             // log info
             Constants.zknlogger.log(Level.INFO, "Using following LaF: {0}", settings.getLookAndFeel());
-            // when we have mac os with aqua look and feel, set menubar to main-menubar at top of screen
-            if (settings.isMacAqua()) {
-                System.setProperty("apple.laf.useScreenMenuBar", "true");
-                System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Zettelkasten");
-                MacUtils.makeWindowLeopardStyle(ZettelkastenView.super.getFrame().getRootPane());
-//                WindowUtils.createAndInstallRepaintWindowFocusListener(ZettelkastenView.super.getFrame());
-                WindowUtils.installJComponentRepainterOnWindowFocusChanged(ZettelkastenView.super.getFrame().getRootPane());
-            }
             if (settings.isSeaGlass()) {
                 // ZettelkastenView.super.getFrame().getRootPane().putClientProperty("SeaGlass.UnifiedToolbarLook", Boolean.TRUE);
                 ZettelkastenView.super.getFrame().getRootPane().setBackground(ColorUtil.colorSeaGlassGray);
@@ -11115,97 +11054,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         toolBar.setPreferredSize(new java.awt.Dimension(toolBar.getSize().width,Constants.seaGlassToolbarHeight));
         toolBar.add(new javax.swing.JToolBar.Separator(), 0);
     }
-    /**
-     *
-     * @param bottomBarNeedsUdpate if {@code true}, the bottom bar on mac aqua style will also be
-     * re-initialized. Use {@code true} only the first time the bottom bar is initialized. For further
-     * GUI-updates, e.g. from settings window, use {@code false} as parameter.
-     */
-    private void makeMacToolbar() {
-        // hide default toolbr
-        toolBar.setVisible(false);
-        getFrame().remove(toolBar);
-        // and create mac toolbar
-        if (settings.getShowIcons() || settings.getShowIconText()) {
-
-            UnifiedToolBar mactoolbar = new UnifiedToolBar();
-
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_newEntry, MacToolbarButton.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_open, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_save, MacToolbarButton.SEGMENT_POSITION_LAST));
-            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            if (settings.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_edit, MacToolbarButton.SEGMENT_POSITION_FIRST));
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_delete, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_copy, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_paste, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_selectall, MacToolbarButton.SEGMENT_POSITION_LAST));
-            }
-            else {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_copy, MacToolbarButton.SEGMENT_POSITION_FIRST));
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_paste, MacToolbarButton.SEGMENT_POSITION_LAST));
-            }
-            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_addmanlinks, MacToolbarButton.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_addluhmann, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-            if (settings.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_addbookmark, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_addtodesktop, MacToolbarButton.SEGMENT_POSITION_LAST));
-            }
-            else {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_addbookmark, MacToolbarButton.SEGMENT_POSITION_LAST));
-            }
-            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            if (settings.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_find, MacToolbarButton.SEGMENT_POSITION_FIRST));
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_first, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-            }
-            else {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_first, MacToolbarButton.SEGMENT_POSITION_FIRST));
-            }
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_prev, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_next, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_last, MacToolbarButton.SEGMENT_POSITION_LAST));
-
-            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(32, 1));
-            mactoolbar.addComponentToLeft(tb_searchTextfield);
-
-            mactoolbar.installWindowDraggerOnWindow(ZettelkastenView.super.getFrame());
-            mainPanel.add(mactoolbar.getComponent(),BorderLayout.PAGE_START);
-        }
-        makeMacBottomBar();
-    }
-
-
-    /**
-     */
-    private void makeMacBottomBar() {
-        jPanel12.setVisible(false);
-        BottomBar macbottombar = new BottomBar(BottomBarSize.LARGE);
-        // history buttons
-        buttonHistoryBack.setBorderPainted(true);
-        buttonHistoryFore.setBorderPainted(true);
-        buttonHistoryBack.putClientProperty("JButton.buttonType","segmentedTextured");
-        buttonHistoryFore.putClientProperty("JButton.buttonType","segmentedTextured");
-        buttonHistoryBack.putClientProperty("JButton.segmentPosition","only");
-        buttonHistoryFore.putClientProperty("JButton.segmentPosition","only");
-        buttonHistoryBack.putClientProperty("JComponent.sizeVariant","small");
-        buttonHistoryFore.putClientProperty("JComponent.sizeVariant","small");
-        macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(statusEntryLabel),5);
-        macbottombar.addComponentToLeft(jTextFieldEntryNumber,5);
-        macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(statusOfEntryLabel),10);
-        macbottombar.addComponentToLeft(buttonHistoryBack);
-        macbottombar.addComponentToLeft(buttonHistoryFore,10);
-        macbottombar.addComponentToLeft(MacButtonFactory.makeUnifiedToolBarButton(statusErrorButton),5);
-        macbottombar.addComponentToLeft(MacButtonFactory.makeUnifiedToolBarButton(statusDesktopEntryButton));
-        macbottombar.addComponentToCenter(MacWidgetFactory.makeEmphasizedLabel(jLabelMemory));
-        macbottombar.addComponentToRight(MacWidgetFactory.makeEmphasizedLabel(statusMsgLabel));
-        macbottombar.addComponentToRight(statusAnimationLabel,4);
-        statusPanel.remove(jPanel12);
-        statusPanel.setBorder(null);
-        statusPanel.setLayout(new BorderLayout());
-        statusPanel.add(macbottombar.getComponent(),BorderLayout.PAGE_START);
-    }
 
 
     /**
@@ -11488,17 +11336,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTextFieldLiveSearch = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jListEntryKeywords = MacSourceList.createMacSourceList();
+        jListEntryKeywords = new javax.swing.JList();
         jPanelMainRight = new javax.swing.JPanel();
         jTabbedPaneMain = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jSplitPaneLinks = new javax.swing.JSplitPane();
         jPanel14 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTableLinks = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+        jTableLinks = new javax.swing.JTable();
         jPanelManLinks = new javax.swing.JPanel();
         jScrollPane15 = new javax.swing.JScrollPane();
-        jTableManLinks = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+        jTableManLinks = new javax.swing.JTable();
         jPanel10 = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
         jScrollPane10 = new javax.swing.JScrollPane();
@@ -11533,13 +11381,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jScrollPane17 = new javax.swing.JScrollPane();
             jTreeKeywords = new javax.swing.JTree();
             jScrollPane6 = new javax.swing.JScrollPane();
-            jTableKeywords = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+            jTableKeywords = new javax.swing.JTable();
             jPanel7 = new javax.swing.JPanel();
             jTextFieldFilterAuthors = new javax.swing.JTextField();
             jSplitPaneAuthors = new javax.swing.JSplitPane();
             jPanel15 = new javax.swing.JPanel();
             jScrollPane7 = new javax.swing.JScrollPane();
-            jTableAuthors = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+            jTableAuthors = new javax.swing.JTable();
             jComboBoxAuthorType = new javax.swing.JComboBox();
             jPanelDispAuthor = new javax.swing.JPanel();
             jScrollPane16 = new javax.swing.JScrollPane();
@@ -11547,7 +11395,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jButtonRefreshAuthors = new javax.swing.JButton();
             jPanel8 = new javax.swing.JPanel();
             jScrollPane8 = new javax.swing.JScrollPane();
-            jTableTitles = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+            jTableTitles = new javax.swing.JTable();
             jTextFieldFilterTitles = new javax.swing.JTextField();
             jButtonRefreshTitles = new javax.swing.JButton();
             jPanel11 = new javax.swing.JPanel();
@@ -11564,12 +11412,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jComboBoxBookmarkCategory = new javax.swing.JComboBox();
             jSplitPane3 = new javax.swing.JSplitPane();
             jScrollPane9 = new javax.swing.JScrollPane();
-            jTableBookmarks = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+            jTableBookmarks = new javax.swing.JTable();
             jScrollPane14 = new javax.swing.JScrollPane();
             jEditorPaneBookmarkComment = new javax.swing.JEditorPane();
             jPanel13 = new javax.swing.JPanel();
             jScrollPane13 = new javax.swing.JScrollPane();
-            jTableAttachments = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+            jTableAttachments = new javax.swing.JTable();
             jTextFieldFilterAttachments = new javax.swing.JTextField();
             jButtonRefreshAttachments = new javax.swing.JButton();
             menuBar = new javax.swing.JMenuBar();

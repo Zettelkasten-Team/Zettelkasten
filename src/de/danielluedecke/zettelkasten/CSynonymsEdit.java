@@ -35,7 +35,6 @@ package de.danielluedecke.zettelkasten;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.Synonyms;
 import de.danielluedecke.zettelkasten.util.Constants;
-import com.explodingpixels.macwidgets.MacWidgetFactory;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import java.awt.Color;
@@ -358,7 +357,7 @@ public class CSynonymsEdit extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = (settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+        jTable1 = new javax.swing.JTable();
         jButtonCancel = new javax.swing.JButton();
         jButtonApply = new javax.swing.JButton();
         jTextFieldFind = new javax.swing.JTextField();

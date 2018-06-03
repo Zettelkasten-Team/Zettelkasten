@@ -45,14 +45,7 @@ import de.danielluedecke.zettelkasten.util.classes.ImagePreview;
 import de.danielluedecke.zettelkasten.util.classes.EntryStringTransferHandler;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import de.danielluedecke.zettelkasten.database.Daten;
-import com.explodingpixels.macwidgets.BottomBar;
-import com.explodingpixels.macwidgets.BottomBarSize;
-import com.explodingpixels.macwidgets.MacUtils;
-import com.explodingpixels.macwidgets.MacWidgetFactory;
-import com.explodingpixels.macwidgets.UnifiedToolBar;
-import com.explodingpixels.widgets.WindowUtils;
 import de.danielluedecke.zettelkasten.database.TasksData;
-import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
 import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
 import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
@@ -60,7 +53,6 @@ import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
 import de.danielluedecke.zettelkasten.util.ListUtil;
 import de.danielluedecke.zettelkasten.util.NewEntryFrameUtil;
 import de.danielluedecke.zettelkasten.util.PlatformUtil;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -351,12 +343,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         if (settingsObj.isMemoryUsageLogged) {
             // log info
             Constants.zknlogger.log(Level.INFO, "Memory usage logged. New Entry Window opened.");
-        }
-        // create brushed look for window, so toolbar and window-bar become a unit
-        if (settingsObj.isMacAqua()) {
-            MacUtils.makeWindowLeopardStyle(getRootPane());
-            // WindowUtils.createAndInstallRepaintWindowFocusListener(this);
-            WindowUtils.installJComponentRepainterOnWindowFocusChanged(this.getRootPane());
         }
         entryNumber = en;
         luhmann = l;
@@ -1261,9 +1247,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             tb_highlight.setVisible(settingsObj.getShowAllIcons());
             tb_strike.setVisible(settingsObj.getShowAllIcons());
         }
-        if (settingsObj.isMacAqua()) {
-            makeMacToolbar();
-        }
         if (settingsObj.isSeaGlass()) {
             makeSeaGlassToolbar();
         }
@@ -1367,74 +1350,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jToolBarNewEntry.add(new javax.swing.JToolBar.Separator(), 0);
     }
 
-    private void makeMacToolbar() {
-        // hide default toolbr
-        jToolBarNewEntry.setVisible(false);
-        this.remove(jToolBarNewEntry);
-        // and create mac toolbar
-        if (settingsObj.getShowIcons() || settingsObj.getShowIconText()) {
-
-            UnifiedToolBar mactoolbar = new UnifiedToolBar();
-
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_cut, MacToolbarButton.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_copy, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_paste, MacToolbarButton.SEGMENT_POSITION_LAST));
-            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            if (settingsObj.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_selectall, MacToolbarButton.SEGMENT_POSITION_ONLY));
-                mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            }
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_undo, MacToolbarButton.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_redo, MacToolbarButton.SEGMENT_POSITION_LAST));
-            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            if (settingsObj.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_newauthor, MacToolbarButton.SEGMENT_POSITION_ONLY));
-                mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            }
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_manlink, MacToolbarButton.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_footnote, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_insertimage, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_inserttable, MacToolbarButton.SEGMENT_POSITION_LAST));
-            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_bold, MacToolbarButton.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_italic, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-            if (settingsObj.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_underline, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_strike, MacToolbarButton.SEGMENT_POSITION_LAST));
-            } else {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_underline, MacToolbarButton.SEGMENT_POSITION_LAST));
-            }
-            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            if (settingsObj.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_textcolor, MacToolbarButton.SEGMENT_POSITION_FIRST));
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_highlight, MacToolbarButton.SEGMENT_POSITION_LAST));
-            } else {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_textcolor, MacToolbarButton.SEGMENT_POSITION_ONLY));
-            }
-
-            mactoolbar.installWindowDraggerOnWindow(this);
-            newEntryMainPanel.add(mactoolbar.getComponent(), BorderLayout.PAGE_START);
-        }
-        makeMacBottomBar();
-    }
-
-    private void makeMacBottomBar() {
-        jPanel1.setVisible(false);
-        BottomBar macbottombar = new BottomBar(BottomBarSize.LARGE);
-        macbottombar.addComponentToRight(jButtonCancel);
-        macbottombar.addComponentToRight(jButtonOK, 4);
-        macbottombar.addComponentToRight(statusAnimationLabel, 4);
-
-        jButtonCancel.putClientProperty("JButton.buttonType", "textured");
-        jButtonOK.putClientProperty("JButton.buttonType", "textured");
-        jButtonCancel.putClientProperty("JComponent.sizeVariant", "small");
-        jButtonOK.putClientProperty("JComponent.sizeVariant", "small");
-
-        statusPanel.remove(jPanel1);
-        statusPanel.setBorder(null);
-        statusPanel.setLayout(new BorderLayout());
-        statusPanel.add(macbottombar.getComponent(), BorderLayout.PAGE_START);
-    }
 
     /**
      * This method sets the default font-size for tables, lists and treeviews.
@@ -2054,21 +1969,28 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                         createQuickKeywordList();
                     }
                     // here we start with step one
-                    if (1 == stepcounter) {
-                        // when the task is over, receive the remaining keywords...
-                        remainingKeywords = taskinfo.getKeywordSuggesionList(TasksData.REMAINING_KW);
-                        // and the current keywordlist
-                        displayedKeywordList = keywordStep1 = taskinfo.getKeywordSuggesionList(TasksData.NEW_KW);
-                    } else if (2 == stepcounter || 3 == stepcounter) {
-                        // when the task is over, receive the remaining keywords...
-                        remainingKeywords = taskinfo.getKeywordSuggesionList(TasksData.REMAINING_KW);
-                        // and the current keywordlist
-                        displayedKeywordList = taskinfo.getKeywordSuggesionList(TasksData.NEW_KW);
-                    } else if (4 == stepcounter) {
-                        // when the task is over, receive the remaining keywords...
-                        displayedKeywordList = remainingKeywords;
-                        // update button-appearance
-                        jButtonAddKeywords.putClientProperty("JButton.segmentPosition", "only");
+                    switch (stepcounter) {
+                        case 1:
+                            // when the task is over, receive the remaining keywords...
+                            remainingKeywords = taskinfo.getKeywordSuggesionList(TasksData.REMAINING_KW);
+                            // and the current keywordlist
+                            displayedKeywordList = keywordStep1 = taskinfo.getKeywordSuggesionList(TasksData.NEW_KW);
+                            break;
+                        case 2:
+                        case 3:
+                            // when the task is over, receive the remaining keywords...
+                            remainingKeywords = taskinfo.getKeywordSuggesionList(TasksData.REMAINING_KW);
+                            // and the current keywordlist
+                            displayedKeywordList = taskinfo.getKeywordSuggesionList(TasksData.NEW_KW);
+                            break;
+                        case 4:
+                            // when the task is over, receive the remaining keywords...
+                            displayedKeywordList = remainingKeywords;
+                            // update button-appearance
+                            jButtonAddKeywords.putClientProperty("JButton.segmentPosition", "only");
+                            break;
+                        default:
+                            break;
                     }
                     // and set the new keywords to the list
                     jListQuickInputKeywords.setListData(displayedKeywordList.toArray());
@@ -4090,20 +4012,24 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                         true,
                         entryNumber);
                 // check whether result was an error when adding a follower-entry (trailing entry(
-                if (result == Daten.ADD_LUHMANNENTRY_ERR) {
-                    JOptionPane.showMessageDialog(this,
-                            resourceMap.getString("errMsgInsertEntry"),
-                            resourceMap.getString("errMsgInsertEntryTitle"),
-                            JOptionPane.PLAIN_MESSAGE);
-                } // else check whether an error occured when adding a new entry
-                else if (result == Daten.ADD_ENTRY_ERR) {
-                    JOptionPane.showMessageDialog(this,
-                            resourceMap.getString("errMsgAddEntry"),
-                            resourceMap.getString("errMsgAddEntryTitle"),
-                            JOptionPane.PLAIN_MESSAGE);
-                } else {
-                    // tell about success
-                    Constants.zknlogger.log(Level.INFO, "New entry saved.");
+                switch (result) {
+                // else check whether an error occured when adding a new entry
+                    case Daten.ADD_LUHMANNENTRY_ERR:
+                        JOptionPane.showMessageDialog(this,
+                                resourceMap.getString("errMsgInsertEntry"),
+                                resourceMap.getString("errMsgInsertEntryTitle"),
+                                JOptionPane.PLAIN_MESSAGE);
+                        break;
+                    case Daten.ADD_ENTRY_ERR:
+                        JOptionPane.showMessageDialog(this,
+                                resourceMap.getString("errMsgAddEntry"),
+                                resourceMap.getString("errMsgAddEntryTitle"),
+                                JOptionPane.PLAIN_MESSAGE);
+                        break;
+                    default:
+                        // tell about success
+                        Constants.zknlogger.log(Level.INFO, "New entry saved.");
+                        break;
                 }
             } // here we have the user adding a new entry at the end of the XML-document.
             // In this case, the variable "entryNumber" indicates whether we have a trailing entry or not.
@@ -4125,20 +4051,24 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                         Tools.getTimeStamp(),
                         entryNumber);
                 // check whether result was an error when adding a follower-entry (trailing entry(
-                if (result == Daten.ADD_LUHMANNENTRY_ERR) {
-                    JOptionPane.showMessageDialog(this,
-                            resourceMap.getString("errMsgInsertEntry"),
-                            resourceMap.getString("errMsgInsertEntryTitle"),
-                            JOptionPane.PLAIN_MESSAGE);
-                } // else check whether an error occured when adding a new entry
-                else if (result == Daten.ADD_ENTRY_ERR) {
-                    JOptionPane.showMessageDialog(this,
-                            resourceMap.getString("errMsgAddEntry"),
-                            resourceMap.getString("errMsgAddEntryTitle"),
-                            JOptionPane.PLAIN_MESSAGE);
-                } else {
-                    // tell about success
-                    Constants.zknlogger.log(Level.INFO, "New entry saved.");
+                switch (result) {
+                // else check whether an error occured when adding a new entry
+                    case Daten.ADD_LUHMANNENTRY_ERR:
+                        JOptionPane.showMessageDialog(this,
+                                resourceMap.getString("errMsgInsertEntry"),
+                                resourceMap.getString("errMsgInsertEntryTitle"),
+                                JOptionPane.PLAIN_MESSAGE);
+                        break;
+                    case Daten.ADD_ENTRY_ERR:
+                        JOptionPane.showMessageDialog(this,
+                                resourceMap.getString("errMsgAddEntry"),
+                                resourceMap.getString("errMsgAddEntryTitle"),
+                                JOptionPane.PLAIN_MESSAGE);
+                        break;
+                    default:
+                        // tell about success
+                        Constants.zknlogger.log(Level.INFO, "New entry saved.");
+                        break;
                 }
             }
         }
@@ -5090,13 +5020,13 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jPanel4 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jListKeywords = MacSourceList.createMacSourceList();
-        jTextFieldAddKeyword = (settingsObj.isMacAqua()) ? ZknMacWidgetFactory.createHudTreeTextField(resourceMap.getString("textFieldDefaultText")) : new javax.swing.JTextField();
+        jTextFieldAddKeyword = new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTextAreaRemarks = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
         jListLinks = MacSourceList.createMacSourceList();
-        jTextFieldAddLink = (settingsObj.isMacAqua()) ? ZknMacWidgetFactory.createHudTreeTextField(resourceMap.getString("textFieldDefaultText")) : new javax.swing.JTextField();
+        jTextFieldAddLink = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jTabbedPaneNewEntry1 = new javax.swing.JTabbedPane();
         jPanel7 = new javax.swing.JPanel();
@@ -6335,7 +6265,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         newEntryFormatMenu.add(jMenuItemHighlight);
 
         jMenuItemCode.setAction(actionMap.get("formatCode")); // NOI18N
-        jMenuItemCode.setToolTipText(resourceMap.getString("jMenuItemCode.toolTipText")); // NOI18N
         jMenuItemCode.setName("jMenuItemCode"); // NOI18N
         newEntryFormatMenu.add(jMenuItemCode);
 

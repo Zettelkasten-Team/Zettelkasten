@@ -33,8 +33,6 @@
 
 package de.danielluedecke.zettelkasten.tasks;
 
-import com.explodingpixels.macwidgets.MacWidgetFactory;
-import com.explodingpixels.widgets.TableUtils;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.Settings;
@@ -129,15 +127,6 @@ public class FindDoubleEntriesTask extends javax.swing.JDialog {
         // create auto-sorter for tabel
         jTable1.setAutoCreateRowSorter(false);
         jTable1.setGridColor(settingsObj.getTableGridColor());
-        // make extra table-sorter for itunes-tables
-        if (settingsObj.isMacAqua()) {
-            TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
-                @Override
-                public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
-                }
-            };
-            TableUtils.makeSortable(jTable1, sortDelegate);
-        }
         
         // disable table while thread is running
         jTable1.setEnabled(false);
@@ -369,7 +358,7 @@ public class FindDoubleEntriesTask extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = (settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+        jTable1 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         progressBar = new javax.swing.JProgressBar();
         statusAnimationLabel = new javax.swing.JLabel();

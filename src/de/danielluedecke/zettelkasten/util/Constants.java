@@ -50,7 +50,7 @@ public class Constants {
     /**
      * This variable stores the current programme and build version number
      */
-    public static final String BUILD_VERSION = "3.2.7 (Build 20151016)";
+    public static final String BUILD_VERSION = "3.2.8 (Build 20180603)";
     /**
      * This constants stores the website-address where the Zettelkasten can be
      * downloaded:<br><br>

@@ -39,8 +39,6 @@ import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.database.Daten;
-import com.explodingpixels.macwidgets.MacWidgetFactory;
-import com.explodingpixels.widgets.TableUtils;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
 import de.danielluedecke.zettelkasten.util.PlatformUtil;
@@ -61,7 +59,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -274,18 +271,6 @@ public class CImportBibTex extends javax.swing.JDialog {
             f = new Font(f.getName(), f.getStyle(), f.getSize() + defaultsize);
             // set new font
             jTableBibEntries.setFont(f);
-        }
-        // make extra table-sorter for itunes-tables
-        if (settingsObj.isMacAqua()) {
-            // make extra table-sorter for itunes-tables
-            TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
-                @Override
-                public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
-                }
-            };
-            TableUtils.makeSortable(jTableBibEntries, sortDelegate);
-            // set back default resize mode
-            jTableBibEntries.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
         }
     }
 
@@ -1056,7 +1041,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jComboBoxCiteStyle = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTableBibEntries = (settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+        jTableBibEntries = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jButtonSelectAll = new javax.swing.JButton();
         jButtonRefresh = new javax.swing.JButton();

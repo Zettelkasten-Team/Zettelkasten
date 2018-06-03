@@ -1,3 +1,4 @@
+
 /*
  * Relaunch64 - A Java Crossassembler for C64 machine language coding.
  * Copyright (C) 2001-2013 by Daniel Lüdecke (http://www.danielluedecke.de)
@@ -102,10 +103,5 @@ public class ZknMacWidgetFactory {
         else {
             textComponent.setBorder(null);
         }
-    }
-    public static JTextField createHudTreeTextField(String text) {
-        JTextField textField = new JTextField(text);
-        textField.setUI(new HudTreeTextFieldUI());
-        return textField;
     }
 }

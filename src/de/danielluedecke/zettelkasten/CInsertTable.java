@@ -35,7 +35,6 @@ package de.danielluedecke.zettelkasten;
 
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
-import com.explodingpixels.macwidgets.MacWidgetFactory;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -295,7 +294,7 @@ public class CInsertTable extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = (settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+        jTable1 = new javax.swing.JTable();
         jCheckBoxTableHeader = new javax.swing.JCheckBox();
         jButtonApply = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();

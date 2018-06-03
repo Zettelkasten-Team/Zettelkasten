@@ -32,28 +32,20 @@
  */
 package de.danielluedecke.zettelkasten;
 
-import com.explodingpixels.macwidgets.BottomBar;
-import com.explodingpixels.macwidgets.BottomBarSize;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.classes.EntryStringTransferHandler;
-import com.explodingpixels.macwidgets.MacUtils;
-import com.explodingpixels.macwidgets.MacWidgetFactory;
-import com.explodingpixels.macwidgets.UnifiedToolBar;
-import com.explodingpixels.widgets.WindowUtils;
 import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
 import de.danielluedecke.zettelkasten.database.DesktopData;
 import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.StenoData;
-import de.danielluedecke.zettelkasten.mac.MacSourceDesktopTree;
 import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.database.Bookmarks;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.TasksData;
-import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
 import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
 import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
 import de.danielluedecke.zettelkasten.tasks.export.ExportTools;
@@ -62,7 +54,6 @@ import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
 import de.danielluedecke.zettelkasten.util.PlatformUtil;
 import de.danielluedecke.zettelkasten.util.TreeUtil;
 import de.danielluedecke.zettelkasten.util.classes.TreeUserObject;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FileDialog;
@@ -321,12 +312,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         if (settingsObj.isMemoryUsageLogged) {
             // log info
             Constants.zknlogger.log(Level.INFO, "Memory usage logged. Desktop Window opened.");
-        }
-        // create brushed look for window, so toolbar and window-bar become a unit
-        if (settingsObj.isMacAqua()) {
-            MacUtils.makeWindowLeopardStyle(getRootPane());
-            // WindowUtils.createAndInstallRepaintWindowFocusListener(this);
-            WindowUtils.installJComponentRepainterOnWindowFocusChanged(this.getRootPane());
         }
         // init all components
         initComponents();
@@ -830,9 +815,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             tb_addluhmann.setVisible(false);
             tb_rename.setVisible(false);
         }
-        if (settingsObj.isMacAqua()) {
-            makeMacToolbar();
-        }
         if (settingsObj.isSeaGlass()) {
             makeSeaGlassToolbar();
         }
@@ -870,7 +852,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         jPanelLiveSearch.setBackground(backcol);
         jSplitPaneDesktop1.setBackground(backcol);
         jSplitPaneDesktop2.setBackground(backcol);
-        MacWidgetFactory.makeEmphasizedLabel(jLabel1);
         // get the toolbar-action
         AbstractAction ac = (AbstractAction) org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(DesktopFrame.class, this).get("findCancel");
         // and change the large-icon-property, which is applied to the toolbar-icons,
@@ -904,63 +885,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         Tools.makeTexturedToolBarButton(tb_refresh, Tools.SEGMENT_POSITION_ONLY);
         jToolBarDesktop.setPreferredSize(new java.awt.Dimension(jToolBarDesktop.getSize().width, Constants.seaGlassToolbarHeight));
         jToolBarDesktop.add(new javax.swing.JToolBar.Separator(), 0);
-    }
-
-    private void makeMacToolbar() {
-        // hide default toolbr
-        jToolBarDesktop.setVisible(false);
-        this.remove(jToolBarDesktop);
-        // and create mac toolbar
-        if (settingsObj.getShowIcons() || settingsObj.getShowIconText()) {
-
-            UnifiedToolBar mactoolbar = new UnifiedToolBar();
-
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_newbullet, MacToolbarButton.SEGMENT_POSITION_FIRST));
-            if (settingsObj.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_newentry, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_addluhmann, MacToolbarButton.SEGMENT_POSITION_LAST));
-            } else {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_newentry, MacToolbarButton.SEGMENT_POSITION_LAST));
-            }
-            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_modifyentry, MacToolbarButton.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_cut, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_copy, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_paste, MacToolbarButton.SEGMENT_POSITION_LAST));
-            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_moveup, MacToolbarButton.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_movedown, MacToolbarButton.SEGMENT_POSITION_LAST));
-            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            if (settingsObj.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_rename, MacToolbarButton.SEGMENT_POSITION_FIRST));
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_comment, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-            } else {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_comment, MacToolbarButton.SEGMENT_POSITION_FIRST));
-            }
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_delete, MacToolbarButton.SEGMENT_POSITION_LAST));
-            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_refresh, MacToolbarButton.SEGMENT_POSITION_ONLY));
-
-            mactoolbar.installWindowDraggerOnWindow(this);
-            jPanel1.add(mactoolbar.getComponent(), BorderLayout.PAGE_START);
-        }
-        makeMacBottomBar();
-    }
-
-    private void makeMacBottomBar() {
-        jPanel7.setVisible(false);
-
-        BottomBar macbottombar = new BottomBar(BottomBarSize.LARGE);
-        macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(jLabel1));
-        macbottombar.addComponentToLeft(jComboBoxDesktop);
-        macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(jLabelWordCount));
-        macbottombar.addComponentToLeft(jButtonShowMultipleOccurencesDlg);
-        macbottombar.addComponentToRight(statusAnimationLabel);
-
-        jPanel2.remove(jPanel7);
-        jPanel2.setBorder(null);
-        jPanel2.setLayout(new BorderLayout());
-        jPanel2.add(macbottombar.getComponent(), BorderLayout.PAGE_START);
     }
 
     /**
@@ -1272,21 +1196,16 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         DefaultTreeModel dtm = (DefaultTreeModel) jTreeDesktop.getModel();
         // and first of all, clear the jTree
         dtm.setRoot(null);
-        // macstyle beim jTree setzen
-        if (settingsObj.isMacAqua()) {
-            jTreeDesktop.setUI(new MacSourceDesktopTree(desktopObj, dataObj, settingsObj));
-        } else {
-            // set cell renderer, for desktop icons
-            jTreeDesktop.setCellRenderer(new MyCommentRenderer(Constants.iconDesktopComment,
-                    Constants.iconDesktopLuhmann,
-                    settingsObj.getUseMacBackgroundColor()));
-            if (settingsObj.getUseMacBackgroundColor()) {
-                jTreeDesktop.setBackground(ColorUtil.colorJTreeLighterBackground);
-                jTreeDesktop.setForeground(ColorUtil.colorJTreeDarkText);
-            }
-            // set tree-selection-mode
-            jTreeDesktop.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        // set cell renderer, for desktop icons
+        jTreeDesktop.setCellRenderer(new MyCommentRenderer(Constants.iconDesktopComment,
+                Constants.iconDesktopLuhmann,
+                settingsObj.getUseMacBackgroundColor()));
+        if (settingsObj.getUseMacBackgroundColor()) {
+            jTreeDesktop.setBackground(ColorUtil.colorJTreeLighterBackground);
+            jTreeDesktop.setForeground(ColorUtil.colorJTreeDarkText);
         }
+        // set tree-selection-mode
+        jTreeDesktop.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         // enable drag&drop
         jTreeDesktop.setDragEnabled(true);
         // init transfer handler for tree
@@ -3054,29 +2973,33 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 int result = desktopObj.importArchivedDesktop(archive);
                 // here we go on in case the desktop-name of the imported archive
                 // already exists. in this case, the user shoould rename the archive
-                if (DesktopData.IMPORT_ARCHIVE_ERR_DESKTOPNAME_EXISTS == result) {
-                    // desktop-name already existed, so desktop was not added...
-                    JOptionPane.showMessageDialog(this, resourceMap.getString("errDesktopNameExistsMsg", archive.getRootElement().getAttributeValue("name")), resourceMap.getString("errDesktopNameExistsTitle"), JOptionPane.PLAIN_MESSAGE);
-                    // user-input for new desktop-description
-                    String newDeskName = (String) JOptionPane.showInputDialog(this, resourceMap.getString("newDesktopMsg"), resourceMap.getString("newDesktopTitle"), JOptionPane.PLAIN_MESSAGE);
-                    // check for valid-return value, or if the user cancelled the action
-                    if (newDeskName != null && !newDeskName.isEmpty()) {
-                        // if everything was ok, set new name
-                        archive.getRootElement().setAttribute("name", newDeskName);
-                    } else {
-                        // else user has cancelled process
-                        JOptionPane.showMessageDialog(this, resourceMap.getString("openArchiveCancelled"), resourceMap.getString("openArchiveDlgTitle"), JOptionPane.PLAIN_MESSAGE);
+                switch (result) {
+                    case DesktopData.IMPORT_ARCHIVE_ERR_DESKTOPNAME_EXISTS:
+                        // desktop-name already existed, so desktop was not added...
+                        JOptionPane.showMessageDialog(this, resourceMap.getString("errDesktopNameExistsMsg", archive.getRootElement().getAttributeValue("name")), resourceMap.getString("errDesktopNameExistsTitle"), JOptionPane.PLAIN_MESSAGE);
+                        // user-input for new desktop-description
+                        String newDeskName = (String) JOptionPane.showInputDialog(this, resourceMap.getString("newDesktopMsg"), resourceMap.getString("newDesktopTitle"), JOptionPane.PLAIN_MESSAGE);
+                        // check for valid-return value, or if the user cancelled the action
+                        if (newDeskName != null && !newDeskName.isEmpty()) {
+                            // if everything was ok, set new name
+                            archive.getRootElement().setAttribute("name", newDeskName);
+                        } else {
+                            // else user has cancelled process
+                            JOptionPane.showMessageDialog(this, resourceMap.getString("openArchiveCancelled"), resourceMap.getString("openArchiveDlgTitle"), JOptionPane.PLAIN_MESSAGE);
+                            return;
+                        }   break;
+                    case DesktopData.IMPORT_ARCHIVE_ERR_OTHER:
+                        // tell user about problem
+                        JOptionPane.showMessageDialog(this, resourceMap.getString("openArchiveError"), resourceMap.getString("openArchiveDlgTitle"), JOptionPane.PLAIN_MESSAGE);
+                        // and show error log
+                        zknframe.showErrorIcon();
                         return;
-                    }
-                } else if (DesktopData.IMPORT_ARCHIVE_ERR_OTHER == result) {
-                    // tell user about problem
-                    JOptionPane.showMessageDialog(this, resourceMap.getString("openArchiveError"), resourceMap.getString("openArchiveDlgTitle"), JOptionPane.PLAIN_MESSAGE);
-                    // and show error log
-                    zknframe.showErrorIcon();
-                    return;
-                } else if (DesktopData.IMPORT_ARCHIVE_OK == result) {
-                    // everything is ok, so quit while-loop
-                    finished = true;
+                    case DesktopData.IMPORT_ARCHIVE_OK:
+                        // everything is ok, so quit while-loop
+                        finished = true;
+                        break;
+                    default:
+                        break;
                 }
             }
             // show success
