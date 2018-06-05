@@ -37,7 +37,6 @@ import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
-import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -252,7 +251,7 @@ public class CImport extends javax.swing.JDialog {
         File importdir = settingsObj.getLastOpenedImportDir();
         // let user choose filepath
         filepath = FileOperationsUtil.chooseFile(this,
-                                          (settingsObj.isMacAqua())?FileDialog.LOAD:JFileChooser.OPEN_DIALOG,
+                                          JFileChooser.OPEN_DIALOG,
                                           JFileChooser.FILES_ONLY,
                                           (null==importdir)?null:importdir.getPath(),
                                           (null==importdir)?null:importdir.getName(),
@@ -421,26 +420,28 @@ public class CImport extends javax.swing.JDialog {
                             jCheckBox1.requestFocusInWindow();
                             break;
                 }
-                if (Constants.TYPE_ZKN3==selected) {
-                    appendingpossible = false;
-                    jRadioButton1.setEnabled(false);
-                    jRadioButton2.setEnabled(false);
-                    jRadioButton2.setSelected(true);
-                    jLabel3.setEnabled(false);
-                }
-                else if (Constants.TYPE_BIB==selected) {
-                    appendingpossible = false;
-                    jRadioButton1.setEnabled(false);
-                    jRadioButton2.setEnabled(false);
-                    jRadioButton2.setSelected(true);
-                    jLabel3.setEnabled(false);
-                }
-                else {
-                    // when we want to import foreign-word or synonyms etc.,
-                    // we don't need append-option
-                    jRadioButton1.setEnabled(appendingpossible);
-                    jRadioButton2.setEnabled(appendingpossible);
-                    jLabel3.setEnabled(appendingpossible);
+                switch (selected) {
+                    case Constants.TYPE_ZKN3:
+                        appendingpossible = false;
+                        jRadioButton1.setEnabled(false);
+                        jRadioButton2.setEnabled(false);
+                        jRadioButton2.setSelected(true);
+                        jLabel3.setEnabled(false);
+                        break;
+                    case Constants.TYPE_BIB:
+                        appendingpossible = false;
+                        jRadioButton1.setEnabled(false);
+                        jRadioButton2.setEnabled(false);
+                        jRadioButton2.setSelected(true);
+                        jLabel3.setEnabled(false);
+                        break;
+                    default:
+                        // when we want to import foreign-word or synonyms etc.,
+                        // we don't need append-option
+                        jRadioButton1.setEnabled(appendingpossible);
+                        jRadioButton2.setEnabled(appendingpossible);
+                        jLabel3.setEnabled(appendingpossible);
+                        break;
                 }
             }
         });

@@ -37,7 +37,6 @@ import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
-import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -304,14 +303,19 @@ public class CExport extends javax.swing.JDialog {
                     jCheckBoxHighlightKeywords.setSelected(false);
                 }
                 // set keyboard focus input
-                if (TYPE_MD == selectedIndex || TYPE_TXT == selectedIndex || TYPE_TEX == selectedIndex) {
-                    jCheckBoxSeparateFile.requestFocusInWindow();
-                } // when the user selectes csv-format as export-type,
-                // enable the combobox for the csv-separator
-                else if (TYPE_CSV == selectedIndex) {
-                    jComboBoxCSVSeparator.requestFocusInWindow();
-                } else {
-                    jButtonBrowse.requestFocusInWindow();
+                switch (selectedIndex) {
+                // when the user selectes csv-format as export-type,
+                    case TYPE_MD:
+                    case TYPE_TXT:
+                    case TYPE_TEX:
+                        jCheckBoxSeparateFile.requestFocusInWindow();
+                        break;
+                    case TYPE_CSV:
+                        jComboBoxCSVSeparator.requestFocusInWindow();
+                        break;
+                    default:
+                        jButtonBrowse.requestFocusInWindow();
+                        break;
                 }
                 // check whetehr the user changes the fileformat, then apply new file-extenstion
                 String filext = jTextFieldFilepath.getText();
@@ -458,7 +462,7 @@ public class CExport extends javax.swing.JDialog {
             
         } else {
             filepath = FileOperationsUtil.chooseFile(this,
-                    (settingsObj.isMacAqua()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG,
+                    JFileChooser.SAVE_DIALOG,
                     JFileChooser.FILES_ONLY,
                     (null == exportdir) ? null : exportdir.getPath(),
                     (null == exportdir) ? null : exportdir.getName(),

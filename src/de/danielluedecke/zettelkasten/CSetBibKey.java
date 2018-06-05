@@ -147,7 +147,7 @@ public class CSetBibKey extends javax.swing.JDialog {
         // set last settings
         jComboBoxShowBibTex.setSelectedIndex(settingsObj.getLastUsedSetBibyKeyType());
         // in case we have mac os x with aqua look&feel, make components look more mac-like...
-        if (settingsObj.isMacAqua() || settingsObj.isSeaGlass()) {
+        if (settingsObj.isSeaGlass()) {
             // textfield should look like search-textfield...
             jTextFieldFilterTable.putClientProperty("JTextField.variant", "search");
             if (settingsObj.isSeaGlass()) {

@@ -116,10 +116,6 @@ public class CInformation extends javax.swing.JDialog {
             jTextAreaDescription.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaDescription.border.title"), null, settingsObj));
             jTextAreaSysInfo.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaSysInfo.border.title"), null, settingsObj));
         }
-        if (settingsObj.isMacAqua()) {
-            jTextAreaDescription.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaDescription.border.title"), ColorUtil.colorJTreeText, settingsObj));
-            jTextAreaSysInfo.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaSysInfo.border.title"), ColorUtil.colorJTreeText, settingsObj));
-        }
         // retrieve filepath
         String filepath = settingsObj.getFilePath().toString();
         try {

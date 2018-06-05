@@ -45,14 +45,12 @@ import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
 import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
 import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.PlatformUtil;
 import java.awt.AWTKeyStroke;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GraphicsDevice;
@@ -260,8 +258,8 @@ public class SearchResultsFrame extends javax.swing.JFrame {
          */
         jScrollPane1.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
         jScrollPane4.setBorder(null);
-        if (settingsObj.getUseMacBackgroundColor() || settingsObj.isMacAqua()) {
-            jListKeywords.setBackground((settingsObj.isMacAqua()) ? ColorUtil.colorJTreeBackground : ColorUtil.colorJTreeLighterBackground);
+        if (settingsObj.getUseMacBackgroundColor()) {
+            jListKeywords.setBackground(ColorUtil.colorJTreeLighterBackground);
             jListKeywords.setForeground(ColorUtil.colorJTreeDarkText);
         }
         if (settingsObj.isSeaGlass()) {
@@ -277,11 +275,6 @@ public class SearchResultsFrame extends javax.swing.JFrame {
                 jPanel2.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
             }
             // jPanel3.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(settingsObj)));
-        }
-        if (settingsObj.isMacAqua()) {
-            ZknMacWidgetFactory.updateSplitPane(jSplitPaneSearch1);
-            ZknMacWidgetFactory.updateSplitPane(jSplitPaneSearch2);
-            jListKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jListKeywords.border.title"), ColorUtil.colorJTreeText, settingsObj));
         }
     }
 
@@ -628,31 +621,29 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         // ATTENTION! Mnemonic keys are NOT applied on Mac OS, see Apple guidelines for
         // further details:
         // http://developer.apple.com/DOCUMENTATION/Java/Conceptual/Java14Development/07-NativePlatformIntegration/NativePlatformIntegration.html#//apple_ref/doc/uid/TP40001909-211867-BCIBDHFJ
-        if (!settingsObj.isMacAqua()) {
-            // init the variables
-            String menutext;
-            char mkey;
-            // the mnemonic key for the file menu
-            menutext = searchFileMenu.getText();
-            mkey = menutext.charAt(0);
-            searchFileMenu.setMnemonic(mkey);
-            // the mnemonic key for the edit menu
-            menutext = searchEditMenu.getText();
-            mkey = menutext.charAt(0);
-            searchEditMenu.setMnemonic(mkey);
-            // the mnemonic key for the filter menu
-            menutext = searchFilterMenu.getText();
-            mkey = menutext.charAt(0);
-            searchFilterMenu.setMnemonic(mkey);
-            // the mnemonic key for the search menu
-            menutext = searchSearchMenu.getText();
-            mkey = menutext.charAt(0);
-            searchSearchMenu.setMnemonic(mkey);
-            // the mnemonic key for the view menu
-            menutext = searchViewMenu.getText();
-            mkey = menutext.charAt(0);
-            searchViewMenu.setMnemonic(mkey);
-        }
+        // init the variables
+        String menutext;
+        char mkey;
+        // the mnemonic key for the file menu
+        menutext = searchFileMenu.getText();
+        mkey = menutext.charAt(0);
+        searchFileMenu.setMnemonic(mkey);
+        // the mnemonic key for the edit menu
+        menutext = searchEditMenu.getText();
+        mkey = menutext.charAt(0);
+        searchEditMenu.setMnemonic(mkey);
+        // the mnemonic key for the filter menu
+        menutext = searchFilterMenu.getText();
+        mkey = menutext.charAt(0);
+        searchFilterMenu.setMnemonic(mkey);
+        // the mnemonic key for the search menu
+        menutext = searchSearchMenu.getText();
+        mkey = menutext.charAt(0);
+        searchSearchMenu.setMnemonic(mkey);
+        // the mnemonic key for the view menu
+        menutext = searchViewMenu.getText();
+        mkey = menutext.charAt(0);
+        searchViewMenu.setMnemonic(mkey);
         // on Mac OS, at least for the German locale, the File menu is called different
         // compared to windows or linux. Furthermore, we don't need the about and preferences
         // menu items, since these are locates on the program's menu item in the apple-menu-bar
@@ -850,7 +841,6 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         }
         settingsObj.setSearchFrameSplitLayout(currentlayout);
         jSplitPaneSearch1.setOrientation(currentlayout);
-        if (settingsObj.isMacAqua()) ZknMacWidgetFactory.updateSplitPane(jSplitPaneSearch1);
     }
     
     

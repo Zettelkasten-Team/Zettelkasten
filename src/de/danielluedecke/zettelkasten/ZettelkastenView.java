@@ -70,10 +70,8 @@ import de.danielluedecke.zettelkasten.util.classes.TreeUserObject;
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Desktop;
-import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.HeadlessException;
-import java.awt.Image;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
@@ -631,9 +629,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // init the searchbox for the toolbar
         createToolbarSearchbox();
         // if we have mac osx aqua-look, apply leopard style
-        if (settings.isMacAqua()) {
-            setupMacOSXLeopardStyle();
-        }
         if (settings.isSeaGlass()) {
             setupSeaGlassStyle();
         }
@@ -718,8 +713,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jScrollPane13.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
         jScrollPane14.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
         jScrollPane16.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-        if (settingsObj.getUseMacBackgroundColor() || settingsObj.isMacAqua()) {
-            jListEntryKeywords.setBackground((settingsObj.isMacAqua()) ? ColorUtil.colorJTreeBackground : ColorUtil.colorJTreeLighterBackground);
+        if (settingsObj.getUseMacBackgroundColor()) {
+            jListEntryKeywords.setBackground(ColorUtil.colorJTreeLighterBackground);
             jListEntryKeywords.setForeground(ColorUtil.colorJTreeDarkText);
         }
         if (settingsObj.isSeaGlass()) {
@@ -1849,7 +1844,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // init a search textfield that is added to the toolbar
         tb_searchTextfield = new JTextField(15);
         // on mac, make textfield look like a search box
-        if (settings.isMacAqua() || settings.isSeaGlass()) {
+        if (settings.isSeaGlass()) {
             tb_searchTextfield.putClientProperty("JTextField.variant", "search");
         } else {
             tb_searchTextfield.setPreferredSize(new java.awt.Dimension(150, 26));
@@ -1917,7 +1912,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         );
         toolBar.add(settings.isSeaGlass() ? tb_searchTextfield : jPanelSearchBox);
         // hide label on mac
-        jLabelLupe.setVisible(!settings.isMacAqua() && !settings.isSeaGlass());
+        jLabelLupe.setVisible(!settings.isSeaGlass());
     }
 
     /**
@@ -2055,37 +2050,29 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // further details:
         // http://developer.apple.com/DOCUMENTATION/Java/Conceptual/Java14Development/07-NativePlatformIntegration/NativePlatformIntegration.html#//apple_ref/doc/uid/TP40001909-211867-BCIBDHFJ
         //
-        // when we have aqua look&feel, make some of the menu items invisivle, which already
-        // appear in the Apple-Menu
-        if (settings.isMacAqua()) {
-            aboutMenu.setVisible(false);
-            exitMenuItem.setVisible(false);
-            jSeparatorExit.setVisible(false);
-        } else {
-            // init the variables
-            String menutext;
-            char mkey;
-            // the mnemonic key for the file menu
-            menutext = fileMenu.getText();
-            mkey = menutext.charAt(0);
-            fileMenu.setMnemonic(mkey);
-            // the mnemonic key for the edit menu
-            menutext = editMenu.getText();
-            mkey = menutext.charAt(0);
-            editMenu.setMnemonic(mkey);
-            // the mnemonic key for the search menu
-            menutext = findMenu.getText();
-            mkey = menutext.charAt(0);
-            findMenu.setMnemonic(mkey);
-            // the mnemonic key for the view menu
-            menutext = viewMenu.getText();
-            mkey = menutext.charAt(0);
-            viewMenu.setMnemonic(mkey);
-            // the mnemonic key for the windows menu
-            menutext = windowsMenu.getText();
-            mkey = menutext.charAt(0);
-            windowsMenu.setMnemonic(mkey);
-        }
+        // init the variables
+        String menutext;
+        char mkey;
+        // the mnemonic key for the file menu
+        menutext = fileMenu.getText();
+        mkey = menutext.charAt(0);
+        fileMenu.setMnemonic(mkey);
+        // the mnemonic key for the edit menu
+        menutext = editMenu.getText();
+        mkey = menutext.charAt(0);
+        editMenu.setMnemonic(mkey);
+        // the mnemonic key for the search menu
+        menutext = findMenu.getText();
+        mkey = menutext.charAt(0);
+        findMenu.setMnemonic(mkey);
+        // the mnemonic key for the view menu
+        menutext = viewMenu.getText();
+        mkey = menutext.charAt(0);
+        viewMenu.setMnemonic(mkey);
+        // the mnemonic key for the windows menu
+        menutext = windowsMenu.getText();
+        mkey = menutext.charAt(0);
+        windowsMenu.setMnemonic(mkey);
         // on Mac OS, at least for the German locale, the File menu is called different
         // compared to windows or linux. Furthermore, we don't need the about and preferences
         // menu items, since these are locates on the program's menu item in the apple-menu-bar
@@ -2854,7 +2841,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jTextFieldEntryNumber.setText("");
             statusOfEntryLabel.setText(getResourceMap().getString("entryOfText"));
             // set new border text
-            Color bcol = (settings.isMacAqua()) ? ColorUtil.colorJTreeText : null;
+            Color bcol = null;
             jListEntryKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(getResourceMap().getString("jListEntryKeywords.border.title"), bcol, settings));
             // clear all table contents
             clearTreesAndTables();
@@ -3320,7 +3307,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             bordertext.append(" (").append(String.valueOf(keywordListModel.size())).append(")");
         }
         // set new border text
-        Color bcol = (settings.isMacAqua()) ? ColorUtil.colorJTreeText : null;
+        Color bcol = null;
         jListEntryKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(bordertext.toString(), bcol, settings));
         // en- or disable those actions which are related to the displaying of the current entry
         setCurrentEntryShown(displayedZettel != data.getCurrentZettelPos());
@@ -6059,10 +6046,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         if (sb.length() > 3) {
             sb.setLength(sb.length() - 3);
         }
-        // and set the relations as status message label
-        if (!settings.isMacAqua()) {
-            statusMsgLabel.setText(sb.toString());
-        }
         jTreeCluster.setToolTipText(sb.toString());
         // remember this relation as "global variable"
         lastClusterRelationKeywords = sb.toString();
@@ -7919,7 +7902,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     @Action
     public void showAboutBox() {
         if (null == zknAboutBox) {
-            zknAboutBox = new AboutBox(getFrame(), settings.isMacAqua() | settings.isMacAqua());
+            zknAboutBox = new AboutBox(getFrame());
             zknAboutBox.setLocationRelativeTo(getFrame());
         }
         ZettelkastenApp.getApplication().show(zknAboutBox);
@@ -8643,7 +8626,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             }
             // create a swing filechooser when we have no mac
             File filepath = FileOperationsUtil.chooseFile(getFrame(),
-                    (settings.isMacAqua()) ? FileDialog.LOAD : JFileChooser.OPEN_DIALOG,
+                    JFileChooser.OPEN_DIALOG,
                     JFileChooser.FILES_ONLY,
                     filedir,
                     filename,
@@ -8952,7 +8935,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             return false;
         }
         File filepath = FileOperationsUtil.chooseFile(getFrame(),
-                (settings.isMacAqua()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG,
+                JFileChooser.SAVE_DIALOG,
                 JFileChooser.FILES_ONLY,
                 null,
                 null,
@@ -9200,7 +9183,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             selectedfile = bibtex.getFilePath();
         }
         selectedfile = FileOperationsUtil.chooseFile(getFrame(),
-                (settings.isMacAqua()) ? FileDialog.LOAD : JFileChooser.OPEN_DIALOG,
+                JFileChooser.OPEN_DIALOG,
                 JFileChooser.FILES_ONLY,
                 (null == selectedfile) ? null : selectedfile.toString(),
                 (null == selectedfile) ? null : selectedfile.getName(),
@@ -9332,7 +9315,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             }
             // here we open a swing filechooser, in case the os ist no mac aqua
             File filepath = FileOperationsUtil.chooseFile(getFrame(),
-                    (settings.isMacAqua()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG,
+                    JFileChooser.SAVE_DIALOG,
                     JFileChooser.FILES_ONLY,
                     null,
                     null,
@@ -10941,65 +10924,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
 
-    /**
-     * This method applies some graphical stuff so the appearance of the program is even more
-     * mac-like...
-     */
-    private void setupMacOSXLeopardStyle() {
-    // <editor-fold defaultstate="collapsed" desc="Initiation of some UI-stuff particular for Mac OS X">
-        // now we have to change back the background-color of all components in the mainpart of the
-        // frame, since the brush-metal-look applies to all components
-        //
-        // other components become normal gray - which is, however, a little bit
-        // darker than the default gray
-        //
-        // snow-leopard and java 6/7 have different color-rendering, we need a different
-        // background-color for OS X 10.5 and above as well as java 6 and 7
-        Color backcol = ColorUtil.getMacBackgroundColor();
-        // on Leopard (OS X 10.5), we have different rendering, thus we need these lines
-        if (PlatformUtil.isLeopard()) {
-            mainPanel.setBackground(backcol);
-        }
-        jPanelMainRight.setBackground(backcol);
-        jSplitPaneMain1.setBackground(backcol);
-        jSplitPane1.setBackground(backcol);
-        jSplitPaneMain2.setBackground(backcol);
-        jSplitPaneLinks.setBackground(backcol);
-        jSplitPaneAuthors.setBackground(backcol);
-        jTabbedPaneMain.setBackground(backcol);
-        jPanel1.setBackground(backcol);
-        jPanel2.setBackground(backcol);
-        jPanel7.setBackground(backcol);
-        jPanel8.setBackground(backcol);
-        jPanel9.setBackground(backcol);
-        jPanel10.setBackground(backcol);
-        jPanel11.setBackground(backcol);
-        jPanel13.setBackground(backcol);
-        jPanel14.setBackground(backcol);
-        jPanel15.setBackground(backcol);
-        jPanelLiveSearch.setBackground(backcol);
-        jPanelManLinks.setBackground(backcol);
-        jPanelDispAuthor.setBackground(backcol);
-        // make searchfields look like mac
-        searchTextFieldVariants();
-        // remove custim borders
-        jScrollPane2.setBorder(null);
-        jScrollPane5.setBorder(null);
-        jScrollPane16.setBorder(null);
-        // make refresh buttons look like mac
-        // get the action map
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(ZettelkastenView.class, this);
-        // init variables
-        AbstractAction ac;
-        // get the toolbar-action
-        ac = (AbstractAction) actionMap.get("findLiveCancel");
-        // and change the large-icon-property, which is applied to the toolbar-icons,
-        // to the new icon
-        ac.putValue(AbstractAction.LARGE_ICON_KEY,new ImageIcon(Toolkit.getDefaultToolkit().getImage("NSImage://NSStopProgressFreestandingTemplate").getScaledInstance(16, 16,Image.SCALE_SMOOTH)));
-        ac.putValue(AbstractAction.SMALL_ICON,new ImageIcon(Toolkit.getDefaultToolkit().getImage("NSImage://NSStopProgressFreestandingTemplate").getScaledInstance(16, 16,Image.SCALE_SMOOTH)));
-    // </editor-fold>
-    }
-
     private void setupSeaGlassStyle() {
         // make searchfields look like mac
         searchTextFieldVariants();
@@ -11008,7 +10932,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     private void searchTextFieldVariants() {
-        if (settings.isMacAqua() || settings.isSeaGlass()) {
+        if (settings.isSeaGlass()) {
             jTextFieldLiveSearch.putClientProperty("JTextField.variant", "search");
             jTextFieldFilterKeywords.putClientProperty("JTextField.variant", "search");
             jTextFieldFilterAuthors.putClientProperty("JTextField.variant", "search");

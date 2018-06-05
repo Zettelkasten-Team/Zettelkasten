@@ -43,7 +43,6 @@ import de.danielluedecke.zettelkasten.util.ColorUtil;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
 import de.danielluedecke.zettelkasten.util.PlatformUtil;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
-import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -202,7 +201,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         // initially, disable apply button
         jButtonApply.setEnabled(false);
         // if we have mac os x with aqua-look&feel, make certain components look like mac...
-        if (settingsObj.isMacAqua() || settingsObj.isSeaGlass()) {
+        if (settingsObj.isSeaGlass()) {
             // make button smaller...
             jButtonSelectAll.putClientProperty("JButton.buttonType", "roundRect");
             // textfield should look like search-textfield...
@@ -975,7 +974,7 @@ public class CImportBibTex extends javax.swing.JDialog {
             selectedfile = bibtexObj.getFilePath();
         }
         selectedfile = FileOperationsUtil.chooseFile(this,
-                (settingsObj.isMacAqua()) ? FileDialog.LOAD : JFileChooser.OPEN_DIALOG,
+                JFileChooser.OPEN_DIALOG,
                 JFileChooser.FILES_ONLY,
                 (null == selectedfile) ? null : selectedfile.toString(),
                 (null == selectedfile) ? null : selectedfile.getName(),

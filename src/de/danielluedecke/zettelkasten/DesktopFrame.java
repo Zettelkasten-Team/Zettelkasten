@@ -56,7 +56,6 @@ import de.danielluedecke.zettelkasten.util.TreeUtil;
 import de.danielluedecke.zettelkasten.util.classes.TreeUserObject;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.IllegalComponentStateException;
@@ -322,10 +321,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         luhmannIconVisible.setSelected(isLuhmannIconVisible);
         // set application icon
         setIconImage(Constants.zknicon.getImage());
-        // if we have mac os x with aqua, make the window look like typical cocoa-applications
-        if (settingsObj.isMacAqua()) {
-            setupMacOSXLeopardStyle();
-        }
         if (settingsObj.isSeaGlass()) {
             setupSeaGlassStyle();
         }
@@ -365,13 +360,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         if (settingsObj.isSeaGlass()) {
             jSplitPaneDesktop2.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
             jScrollPane1.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(settingsObj)));
-            jTextArea1.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea1.border.title"), settingsObj));
-            jTextArea2.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea2.border.title"), settingsObj));
-            jTextArea3.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea3.border.title"), settingsObj));
-        }
-        if (settingsObj.isMacAqua()) {
-            ZknMacWidgetFactory.updateSplitPane(jSplitPaneDesktop1);
-            ZknMacWidgetFactory.updateSplitPane(jSplitPaneDesktop2);
             jTextArea1.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea1.border.title"), settingsObj));
             jTextArea2.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea2.border.title"), settingsObj));
             jTextArea3.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea3.border.title"), settingsObj));
@@ -958,23 +946,21 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // ATTENTION! Mnemonic keys are NOT applied on Mac OS, see Apple guidelines for
         // further details:
         // http://developer.apple.com/DOCUMENTATION/Java/Conceptual/Java14Development/07-NativePlatformIntegration/NativePlatformIntegration.html#//apple_ref/doc/uid/TP40001909-211867-BCIBDHFJ
-        if (!settingsObj.isMacAqua()) {
-            // init the variables
-            String menutext;
-            char mkey;
-            // the mnemonic key for the file menu
-            menutext = desktopMenuFile.getText();
-            mkey = menutext.charAt(0);
-            desktopMenuFile.setMnemonic(mkey);
-            // the mnemonic key for the edit menu
-            menutext = desktopMenuEdit.getText();
-            mkey = menutext.charAt(0);
-            desktopMenuEdit.setMnemonic(mkey);
-            // the mnemonic key for the view menu
-            menutext = desktopMenuView.getText();
-            mkey = menutext.charAt(0);
-            desktopMenuView.setMnemonic(mkey);
-        }
+        // init the variables
+        String menutext;
+        char mkey;
+        // the mnemonic key for the file menu
+        menutext = desktopMenuFile.getText();
+        mkey = menutext.charAt(0);
+        desktopMenuFile.setMnemonic(mkey);
+        // the mnemonic key for the edit menu
+        menutext = desktopMenuEdit.getText();
+        mkey = menutext.charAt(0);
+        desktopMenuEdit.setMnemonic(mkey);
+        // the mnemonic key for the view menu
+        menutext = desktopMenuView.getText();
+        mkey = menutext.charAt(0);
+        desktopMenuView.setMnemonic(mkey);
         // on Mac OS, at least for the German locale, the File menu is called different
         // compared to windows or linux. Furthermore, we don't need the about and preferences
         // menu items, since these are locates on the program's menu item in the apple-menu-bar
@@ -2915,7 +2901,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         File importdir = settingsObj.getFilePath();
         // let user choose filepath
         File filepath = FileOperationsUtil.chooseFile(this,
-                (settingsObj.isMacAqua()) ? FileDialog.LOAD : JFileChooser.OPEN_DIALOG,
+                JFileChooser.OPEN_DIALOG,
                 JFileChooser.FILES_ONLY,
                 (null == importdir) ? null : importdir.getPath(),
                 (null == importdir) ? null : importdir.getName(),
@@ -3031,7 +3017,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         File exportdir = new File(datafilepath);
         // here we open a swing filechooser, in case the os ist no mac aqua
         File filepath = FileOperationsUtil.chooseFile(this,
-                (settingsObj.isMacAqua()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG,
+                JFileChooser.SAVE_DIALOG,
                 JFileChooser.FILES_ONLY,
                 exportdir.getPath(),
                 exportdir.getName(),

@@ -311,25 +311,23 @@ public class CSearchDlg extends javax.swing.JDialog {
 
     
     private void setMnemonicKeys() {
-        if (!settingsObj.isMacAqua()) {
-            // init the variables
-            String text;
-            char mkey;
-            // set mnemonic key
-            text = jLabel1.getText();
-            mkey = text.charAt(1);
-            jLabel1.setDisplayedMnemonic(mkey);
-            jLabel1.setLabelFor(jTextFieldSearchTerm);
-            // set mnemonic key
-            jCheckBoxRegEx.setDisplayedMnemonicIndex(0);
-            jCheckBoxSTitles.setDisplayedMnemonicIndex(1);
-            jCheckBoxSContent.setDisplayedMnemonicIndex(0);
-            jCheckBoxSKeywords.setDisplayedMnemonicIndex(0);
-            jCheckBoxSAuthors.setDisplayedMnemonicIndex(0);
-            jCheckBoxWholeWord.setDisplayedMnemonicIndex(0);
-            jCheckBoxMatchCase.setDisplayedMnemonicIndex(0);
-            jCheckBoxSynonyms.setDisplayedMnemonicIndex(1);
-        }
+        // init the variables
+        String text;
+        char mkey;
+        // set mnemonic key
+        text = jLabel1.getText();
+        mkey = text.charAt(1);
+        jLabel1.setDisplayedMnemonic(mkey);
+        jLabel1.setLabelFor(jTextFieldSearchTerm);
+        // set mnemonic key
+        jCheckBoxRegEx.setDisplayedMnemonicIndex(0);
+        jCheckBoxSTitles.setDisplayedMnemonicIndex(1);
+        jCheckBoxSContent.setDisplayedMnemonicIndex(0);
+        jCheckBoxSKeywords.setDisplayedMnemonicIndex(0);
+        jCheckBoxSAuthors.setDisplayedMnemonicIndex(0);
+        jCheckBoxWholeWord.setDisplayedMnemonicIndex(0);
+        jCheckBoxMatchCase.setDisplayedMnemonicIndex(0);
+        jCheckBoxSynonyms.setDisplayedMnemonicIndex(1);
     }
     
 

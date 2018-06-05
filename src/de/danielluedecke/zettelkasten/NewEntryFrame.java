@@ -366,10 +366,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jButtonQuickKeyword.setVisible(settingsObj.getQuickInput());
         jCheckBoxQuickInput.setSelected(settingsObj.getQuickInput());
         initComboBox();
-        // if we have mac os x with aqua/leopard-style make window look like native leopard
-        if (settingsObj.isMacAqua()) {
-            setupMacOSXLeopardStyle();
-        }
         if (settingsObj.isSeaGlass()) {
             setupSeaGlassStyle();
         }
@@ -448,24 +444,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             jListKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jListKeywords.border.title"), settingsObj));
             jTextAreaRemarks.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaRemarks.border.title"), settingsObj));
             jListLinks.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jListLinks.border.title"), settingsObj));
-        }
-        if (settingsObj.isMacAqua()) {
-            ZknMacWidgetFactory.updateSplitPane(jSplitPaneNewEntry1);
-            ZknMacWidgetFactory.updateSplitPane(jSplitPaneNewEntry2);
-            ZknMacWidgetFactory.updateSplitPane(jSplitPaneNewEntry3);
-            ZknMacWidgetFactory.updateSplitPane(jSplitPaneNewEntry4);
-            jScrollPane3.setBorder(null);
-            jScrollPane4.setBorder(null);
-            jScrollPane5.setBorder(null);
-            jScrollPane6.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-            jScrollPane7.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-            jTextAreaEntry.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaEntry.border.title"), settingsObj));
-            jTextAreaAuthor.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaAuthor.border.title"), settingsObj));
-            jListKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jListKeywords.border.title"), ColorUtil.colorJTreeText, settingsObj));
-            jTextAreaRemarks.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaRemarks.border.title"), ColorUtil.colorJTreeText, settingsObj));
-            jListLinks.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jListLinks.border.title"), ColorUtil.colorJTreeText, settingsObj));
-            jTextFieldAddKeyword.setText(resourceMap.getString("textFieldDefaultText"));
-            jTextFieldAddLink.setText(resourceMap.getString("textFieldDefaultText"));
         }
     }
 
@@ -837,34 +815,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
                 }
             }
         });
-        if (settingsObj.isMacAqua()) {
-            jTextFieldAddKeyword.addFocusListener(new java.awt.event.FocusAdapter() {
-                @Override
-                public void focusGained(java.awt.event.FocusEvent evt) {
-                    ZknMacWidgetFactory.setTextFieldBorder(jTextFieldAddKeyword);
-                    updateTextFieldText(jTextFieldAddKeyword);
-                }
-
-                @Override
-                public void focusLost(java.awt.event.FocusEvent evt) {
-                    ZknMacWidgetFactory.setTextFieldBorder(jTextFieldAddKeyword);
-                    updateTextFieldText(jTextFieldAddKeyword);
-                }
-            });
-            jTextFieldAddLink.addFocusListener(new java.awt.event.FocusAdapter() {
-                @Override
-                public void focusGained(java.awt.event.FocusEvent evt) {
-                    ZknMacWidgetFactory.setTextFieldBorder(jTextFieldAddLink);
-                    updateTextFieldText(jTextFieldAddLink);
-                }
-
-                @Override
-                public void focusLost(java.awt.event.FocusEvent evt) {
-                    ZknMacWidgetFactory.setTextFieldBorder(jTextFieldAddLink);
-                    updateTextFieldText(jTextFieldAddLink);
-                }
-            });
-        }
         /*        
          jListQuickInputKeywords.addFocusListener(new java.awt.event.FocusAdapter() {
          @Override public void focusLost(java.awt.event.FocusEvent evt) {
@@ -1257,42 +1207,6 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         componentVariants();
     }
 
-    /**
-     * This method applies some graphical stuff so the appearance of the program
-     * is even more mac-like...
-     */
-    private void setupMacOSXLeopardStyle() {
-        // now we have to change back the background-color of all components in the mainpart of the
-        // frame, since the brush-metal-look applies to all components
-        // we change the background-color of the main-area here...
-        //
-        // since snow-leopard has a different color-rendering, we need a different
-        // background-color for OS X 10.6
-        Color backcol = ColorUtil.getMacBackgroundColor();
-        // on Leopard (OS X 10.5), we have different rendering, thus we need these lines
-        if (PlatformUtil.isLeopard()) {
-            getContentPane().setBackground(backcol);
-            newEntryMainPanel.setBackground(backcol);
-        }
-        jPanel2.setBackground(backcol);
-        jPanel3.setBackground(backcol);
-        jPanel5.setBackground(backcol);
-        jPanel7.setBackground(backcol);
-        jPanel8.setBackground(backcol);
-        jPanel9.setBackground(backcol);
-        jPanelQuickInput.setBackground(backcol);
-        jSplitPaneNewEntry1.setBackground(backcol);
-        jSplitPaneNewEntry2.setBackground(backcol);
-        jSplitPaneNewEntry3.setBackground(backcol);
-        jSplitPaneNewEntry4.setBackground(backcol);
-        Color darkbackcol = ColorUtil.colorJTreeBackground;
-        jPanel4.setBackground(darkbackcol);
-        jPanel6.setBackground(darkbackcol);
-        jListKeywords.setBackground(darkbackcol);
-        jListLinks.setBackground(darkbackcol);
-        jTextAreaRemarks.setBackground(darkbackcol);
-        componentVariants();
-    }
 
     private void componentVariants() {
         // some of the buttons will be designed specifically here...
@@ -1449,31 +1363,29 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // ATTENTION! Mnemonic keys are NOT applied on Mac OS, see Apple guidelines for
         // further details:
         // http://developer.apple.com/DOCUMENTATION/Java/Conceptual/Java14Development/07-NativePlatformIntegration/NativePlatformIntegration.html#//apple_ref/doc/uid/TP40001909-211867-BCIBDHFJ
-        if (!settingsObj.isMacAqua()) {
-            // init the variables
-            String menutext;
-            char mkey;
-            // the mnemonic key for the file menu
-            menutext = newEntryFileMenu.getText();
-            mkey = menutext.charAt(0);
-            newEntryFileMenu.setMnemonic(mkey);
-            // the mnemonic key for the edit menu
-            menutext = newEntryEditMenu.getText();
-            mkey = menutext.charAt(0);
-            newEntryEditMenu.setMnemonic(mkey);
-            // the mnemonic key for the insert menu
-            menutext = newEntryInsertMenu.getText();
-            mkey = menutext.charAt(0);
-            newEntryInsertMenu.setMnemonic(mkey);
-            // the mnemonic key for the format menu
-            menutext = newEntryFormatMenu.getText();
-            mkey = menutext.charAt(0);
-            newEntryFormatMenu.setMnemonic(mkey);
-            // the mnemonic key for the file menu
-            menutext = newEntryWindowMenu.getText();
-            mkey = menutext.charAt(1);
-            newEntryWindowMenu.setMnemonic(mkey);
-        }
+        // init the variables
+        String menutext;
+        char mkey;
+        // the mnemonic key for the file menu
+        menutext = newEntryFileMenu.getText();
+        mkey = menutext.charAt(0);
+        newEntryFileMenu.setMnemonic(mkey);
+        // the mnemonic key for the edit menu
+        menutext = newEntryEditMenu.getText();
+        mkey = menutext.charAt(0);
+        newEntryEditMenu.setMnemonic(mkey);
+        // the mnemonic key for the insert menu
+        menutext = newEntryInsertMenu.getText();
+        mkey = menutext.charAt(0);
+        newEntryInsertMenu.setMnemonic(mkey);
+        // the mnemonic key for the format menu
+        menutext = newEntryFormatMenu.getText();
+        mkey = menutext.charAt(0);
+        newEntryFormatMenu.setMnemonic(mkey);
+        // the mnemonic key for the file menu
+        menutext = newEntryWindowMenu.getText();
+        mkey = menutext.charAt(1);
+        newEntryWindowMenu.setMnemonic(mkey);
         // on Mac OS, at least for the German locale, the File menu is called different
         // compared to windows or linux. Furthermore, we don't need the about and preferences
         // menu items, since these are locates on the program's menu item in the apple-menu-bar
