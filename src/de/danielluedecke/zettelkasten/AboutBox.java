@@ -58,7 +58,7 @@ public class AboutBox extends javax.swing.JDialog {
      * @param parent
      * @param ismacaqua 
      */
-    public AboutBox(java.awt.Frame parent, boolean ismacaqua) {
+    public AboutBox(java.awt.Frame parent) {
         super(parent);
         initComponents();
         // set application icon

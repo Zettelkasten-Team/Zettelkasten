@@ -112,7 +112,7 @@ public class CFilterSearch extends javax.swing.JDialog {
         terms = t;
         Collections.sort(terms, new Comparer());
         // when we have aqua-style, change scrollbars
-        if (se.isMacAqua() || se.isSeaGlass()) {
+        if (se.isSeaGlass()) {
             jTextFieldFilter.putClientProperty("JTextField.variant", "search");
             if (se.isSeaGlass()) {
                 jButtonOk.putClientProperty("JComponent.sizeVariant", "small");

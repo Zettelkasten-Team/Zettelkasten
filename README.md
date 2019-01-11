@@ -11,6 +11,8 @@ Die aktuellste Programmversion [kann hier heruntergeladen](http://zettelkasten.d
 
 * Font size of UI is now adjusted for higher screen resolutions.
 * Updated OpenCSV-library.
+* Updated CommonLang-library.
+* Code-Cleanup and all Mac-Library dependencies were removed.
 
 #### Behobene Fehler
 

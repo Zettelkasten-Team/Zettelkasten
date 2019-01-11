@@ -33,8 +33,6 @@
 
 package de.danielluedecke.zettelkasten;
 
-import com.explodingpixels.macwidgets.BottomBar;
-import com.explodingpixels.macwidgets.BottomBarSize;
 import de.danielluedecke.zettelkasten.mac.MacSourceList;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
@@ -45,21 +43,14 @@ import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.classes.DateComparer;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import de.danielluedecke.zettelkasten.database.Daten;
-import com.explodingpixels.macwidgets.MacUtils;
-import com.explodingpixels.macwidgets.MacWidgetFactory;
-import com.explodingpixels.macwidgets.UnifiedToolBar;
-import com.explodingpixels.widgets.TableUtils;
-import com.explodingpixels.widgets.WindowUtils;
 import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
 import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
 import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.PlatformUtil;
 import java.awt.AWTKeyStroke;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GraphicsDevice;
@@ -203,12 +194,6 @@ public class SearchResultsFrame extends javax.swing.JFrame {
             // log info
             Constants.zknlogger.log(Level.INFO,"Memory usage logged. Search Results Window opened.");
         }
-        // create brushed look for window, so toolbar and window-bar become a unit
-        if (settingsObj.isMacAqua()) {
-            MacUtils.makeWindowLeopardStyle(getRootPane());
-            // WindowUtils.createAndInstallRepaintWindowFocusListener(this);
-            WindowUtils.installJComponentRepainterOnWindowFocusChanged(this.getRootPane());
-        }
         // init all components
         Tools.initLocaleForDefaultActions(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(SearchResultsFrame.class, this));
         initComponents();
@@ -217,10 +202,6 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         initBorders(settingsObj);
         // set application icon
         setIconImage(Constants.zknicon.getImage());
-        // if we have mac os x with aqua, make the window look like typical cocoa-applications
-        if (settingsObj.isMacAqua()) {
-            setupMacOSXLeopardStyle();
-        }
         if (settingsObj.isSeaGlass()) {
             setupSeaGlassStyle();
         }
@@ -277,8 +258,8 @@ public class SearchResultsFrame extends javax.swing.JFrame {
          */
         jScrollPane1.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
         jScrollPane4.setBorder(null);
-        if (settingsObj.getUseMacBackgroundColor() || settingsObj.isMacAqua()) {
-            jListKeywords.setBackground((settingsObj.isMacAqua()) ? ColorUtil.colorJTreeBackground : ColorUtil.colorJTreeLighterBackground);
+        if (settingsObj.getUseMacBackgroundColor()) {
+            jListKeywords.setBackground(ColorUtil.colorJTreeLighterBackground);
             jListKeywords.setForeground(ColorUtil.colorJTreeDarkText);
         }
         if (settingsObj.isSeaGlass()) {
@@ -294,11 +275,6 @@ public class SearchResultsFrame extends javax.swing.JFrame {
                 jPanel2.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
             }
             // jPanel3.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(settingsObj)));
-        }
-        if (settingsObj.isMacAqua()) {
-            ZknMacWidgetFactory.updateSplitPane(jSplitPaneSearch1);
-            ZknMacWidgetFactory.updateSplitPane(jSplitPaneSearch2);
-            jListKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jListKeywords.border.title"), ColorUtil.colorJTreeText, settingsObj));
         }
     }
 
@@ -357,7 +333,6 @@ public class SearchResultsFrame extends javax.swing.JFrame {
                 tbb.setIcon(null);
             }
         }
-        if (settingsObj.isMacAqua()) makeMacToolBar();
         if (settingsObj.isSeaGlass()) makeSeaGlassToolbar();
     }
 
@@ -371,36 +346,6 @@ public class SearchResultsFrame extends javax.swing.JFrame {
     }
     
     
-    /**
-     * This method applies some graphical stuff so the appearance of the program is even more
-     * mac-like...
-     */
-    private void setupMacOSXLeopardStyle() {
-        // now we have to change back the background-color of all components in the mainpart of the
-        // frame, since the brush-metal-look applies to all components
-        //
-        // other components become normal gray - which is, however, a little bit
-        // darker than the default gray
-        //
-        // since snow-leopard has a different color-rendering, we need a different
-        // background-color for OS X 10.6
-        Color backcol = ColorUtil.getMacBackgroundColor();
-        // on Leopard (OS X 10.5), we have different rendering, thus we need these lines
-        if (PlatformUtil.isLeopard()) {
-            searchframe.getContentPane().setBackground(backcol);
-            searchMainPanel.setBackground(backcol);
-        }
-        jPanel1.setBackground(backcol);
-        jPanel2.setBackground(backcol);
-        jPanel3.setBackground(backcol);
-        jPanel4.setBackground(backcol);
-        jSplitPaneSearch1.setBackground(backcol);
-        jSplitPaneSearch2.setBackground(backcol);
-        jTextFieldFilterList.putClientProperty("JTextField.variant", "search");
-        MacWidgetFactory.makeEmphasizedLabel(jLabel1);
-        MacWidgetFactory.makeEmphasizedLabel(jLabelHits);
-    }
-
     private void makeSeaGlassToolbar() {
         Tools.makeTexturedToolBarButton(tb_copy, Tools.SEGMENT_POSITION_FIRST);
         Tools.makeTexturedToolBarButton(tb_selectall, Tools.SEGMENT_POSITION_LAST);
@@ -418,57 +363,6 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         Tools.makeTexturedToolBarButton(tb_highlight, Tools.SEGMENT_POSITION_ONLY);
         searchToolbar.setPreferredSize(new java.awt.Dimension(searchToolbar.getSize().width,Constants.seaGlassToolbarHeight));
         searchToolbar.add(new javax.swing.JToolBar.Separator(), 0);
-    }
-    
-    private void makeMacToolBar() {
-        // hide default toolbr
-        searchToolbar.setVisible(false);
-        this.remove(searchToolbar);
-        // and create mac toolbar
-        if (settingsObj.getShowIcons() || settingsObj.getShowIconText()) {
-            
-            UnifiedToolBar mactoolbar = new UnifiedToolBar();
-
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_copy, MacToolbarButton.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_selectall, MacToolbarButton.SEGMENT_POSITION_LAST));
-            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_editentry, MacToolbarButton.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_remove, MacToolbarButton.SEGMENT_POSITION_LAST));
-            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_manlinks, MacToolbarButton.SEGMENT_POSITION_FIRST));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_luhmann, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-            if (settingsObj.getShowAllIcons()) {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_bookmark, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_desktop, MacToolbarButton.SEGMENT_POSITION_LAST));
-            }
-            else {
-                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_bookmark, MacToolbarButton.SEGMENT_POSITION_LAST));
-            }
-            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_highlight, MacToolbarButton.SEGMENT_POSITION_ONLY));
-
-            mactoolbar.installWindowDraggerOnWindow(this);
-            searchMainPanel.add(mactoolbar.getComponent(),BorderLayout.PAGE_START);
-        }
-        makeMacBottomBar();
-    }
-
-    private void makeMacBottomBar() {
-        jPanel9.setVisible(false);
-
-        BottomBar macbottombar = new BottomBar(BottomBarSize.LARGE);
-        macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(jLabelHits),20);
-        macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(jLabel1),4);
-        macbottombar.addComponentToLeft(jComboBoxSearches,4);
-        macbottombar.addComponentToLeft(jButtonDeleteSearch,4);
-        
-        jButtonDeleteSearch.setBorderPainted(true);
-        jButtonDeleteSearch.putClientProperty("JButton.buttonType","textured");
-        
-        searchStatusPanel.remove(jPanel9);
-        searchStatusPanel.setBorder(null);
-        searchStatusPanel.setLayout(new BorderLayout());
-        searchStatusPanel.add(macbottombar.getComponent(),BorderLayout.PAGE_START);
     }
 
 
@@ -727,31 +621,29 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         // ATTENTION! Mnemonic keys are NOT applied on Mac OS, see Apple guidelines for
         // further details:
         // http://developer.apple.com/DOCUMENTATION/Java/Conceptual/Java14Development/07-NativePlatformIntegration/NativePlatformIntegration.html#//apple_ref/doc/uid/TP40001909-211867-BCIBDHFJ
-        if (!settingsObj.isMacAqua()) {
-            // init the variables
-            String menutext;
-            char mkey;
-            // the mnemonic key for the file menu
-            menutext = searchFileMenu.getText();
-            mkey = menutext.charAt(0);
-            searchFileMenu.setMnemonic(mkey);
-            // the mnemonic key for the edit menu
-            menutext = searchEditMenu.getText();
-            mkey = menutext.charAt(0);
-            searchEditMenu.setMnemonic(mkey);
-            // the mnemonic key for the filter menu
-            menutext = searchFilterMenu.getText();
-            mkey = menutext.charAt(0);
-            searchFilterMenu.setMnemonic(mkey);
-            // the mnemonic key for the search menu
-            menutext = searchSearchMenu.getText();
-            mkey = menutext.charAt(0);
-            searchSearchMenu.setMnemonic(mkey);
-            // the mnemonic key for the view menu
-            menutext = searchViewMenu.getText();
-            mkey = menutext.charAt(0);
-            searchViewMenu.setMnemonic(mkey);
-        }
+        // init the variables
+        String menutext;
+        char mkey;
+        // the mnemonic key for the file menu
+        menutext = searchFileMenu.getText();
+        mkey = menutext.charAt(0);
+        searchFileMenu.setMnemonic(mkey);
+        // the mnemonic key for the edit menu
+        menutext = searchEditMenu.getText();
+        mkey = menutext.charAt(0);
+        searchEditMenu.setMnemonic(mkey);
+        // the mnemonic key for the filter menu
+        menutext = searchFilterMenu.getText();
+        mkey = menutext.charAt(0);
+        searchFilterMenu.setMnemonic(mkey);
+        // the mnemonic key for the search menu
+        menutext = searchSearchMenu.getText();
+        mkey = menutext.charAt(0);
+        searchSearchMenu.setMnemonic(mkey);
+        // the mnemonic key for the view menu
+        menutext = searchViewMenu.getText();
+        mkey = menutext.charAt(0);
+        searchViewMenu.setMnemonic(mkey);
         // on Mac OS, at least for the German locale, the File menu is called different
         // compared to windows or linux. Furthermore, we don't need the about and preferences
         // menu items, since these are locates on the program's menu item in the apple-menu-bar
@@ -949,7 +841,6 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         }
         settingsObj.setSearchFrameSplitLayout(currentlayout);
         jSplitPaneSearch1.setOrientation(currentlayout);
-        if (settingsObj.isMacAqua()) ZknMacWidgetFactory.updateSplitPane(jSplitPaneSearch1);
     }
     
     
@@ -1103,18 +994,6 @@ public class SearchResultsFrame extends javax.swing.JFrame {
             sorter.setSortKeys(l);
             // sort table
             sorter.sort();
-        }
-        // make extra table-sorter for itunes-tables
-        if (settingsObj.isMacAqua()) {
-            TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
-                @Override
-                public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
-                }
-            };
-            TableUtils.makeSortable(jTableResults, sortDelegate);
-            // change back default column-resize-behaviour when we have itunes-tables,
-            // since the default for those is "auto resize off"
-            jTableResults.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
         }
         jTableResults.setShowHorizontalLines(settingsObj.getShowGridHorizontal());
         jTableResults.setShowVerticalLines(settingsObj.getShowGridVertical());
@@ -2264,7 +2143,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         jSplitPaneSearch1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTableResults = (settingsObj.isMacStyle()) ? com.explodingpixels.macwidgets.MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+        jTableResults = new javax.swing.JTable();
         jTextFieldFilterList = new javax.swing.JTextField();
         jButtonResetList = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();

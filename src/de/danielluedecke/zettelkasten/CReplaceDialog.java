@@ -142,13 +142,11 @@ public class CReplaceDialog extends javax.swing.JDialog {
     }
 
     private void initMnemonics() {
-        if (!settingsObj.isMacAqua()) {
-            jLabel1.setDisplayedMnemonic(0);        
-            jLabel2.setDisplayedMnemonic(0);        
-            jCheckBoxRegEx.setDisplayedMnemonicIndex(0);
-            jCheckBoxMatchCase.setDisplayedMnemonicIndex(0);
-            jCheckBoxWholeWord.setDisplayedMnemonicIndex(0);
-        }
+        jLabel1.setDisplayedMnemonic(0);        
+        jLabel2.setDisplayedMnemonic(0);        
+        jCheckBoxRegEx.setDisplayedMnemonicIndex(0);
+        jCheckBoxMatchCase.setDisplayedMnemonicIndex(0);
+        jCheckBoxWholeWord.setDisplayedMnemonicIndex(0);
     }
 
     private void initListeners() {

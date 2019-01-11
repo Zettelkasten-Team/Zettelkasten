@@ -38,8 +38,6 @@ import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import de.danielluedecke.zettelkasten.database.Daten;
-import com.explodingpixels.macwidgets.MacWidgetFactory;
-import com.explodingpixels.widgets.TableUtils;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import de.danielluedecke.zettelkasten.util.PlatformUtil;
 import java.awt.Font;
@@ -55,7 +53,6 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.DocumentEvent;
@@ -149,20 +146,8 @@ public class CSetBibKey extends javax.swing.JDialog {
         }
         // set last settings
         jComboBoxShowBibTex.setSelectedIndex(settingsObj.getLastUsedSetBibyKeyType());
-        // change layout style if user wishes itunes-like scrollbars...
-        if (settingsObj.isMacAqua()) {
-            // make extra table-sorter for itunes-tables
-            TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
-                @Override
-                public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
-                }
-            };
-            TableUtils.makeSortable(jTablePreview, sortDelegate);
-            // set back default resize mode
-            jTablePreview.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
-        }
         // in case we have mac os x with aqua look&feel, make components look more mac-like...
-        if (settingsObj.isMacAqua() || settingsObj.isSeaGlass()) {
+        if (settingsObj.isSeaGlass()) {
             // textfield should look like search-textfield...
             jTextFieldFilterTable.putClientProperty("JTextField.variant", "search");
             if (settingsObj.isSeaGlass()) {
@@ -703,7 +688,7 @@ public class CSetBibKey extends javax.swing.JDialog {
         jButtonCancel = new javax.swing.JButton();
         jButtonApply = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTablePreview = (settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+        jTablePreview = new javax.swing.JTable();
         jLabelTitle = new javax.swing.JLabel();
         jButtonRefreshView = new javax.swing.JButton();
         jTextFieldFilterTable = new javax.swing.JTextField();
@@ -739,7 +724,6 @@ public class CSetBibKey extends javax.swing.JDialog {
         jButtonApply.setAction(actionMap.get("applyChanges")); // NOI18N
         jButtonApply.setName("jButtonApply"); // NOI18N
 
-        jScrollPane1.setBorder(null);
         jScrollPane1.setName("jScrollPane1"); // NOI18N
         jScrollPane1.setPreferredSize(new java.awt.Dimension(100, 100));
 
@@ -773,8 +757,10 @@ public class CSetBibKey extends javax.swing.JDialog {
         jTablePreview.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jTablePreview.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jTablePreview);
-        jTablePreview.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTablePreview.columnModel.title0")); // NOI18N
-        jTablePreview.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTablePreview.columnModel.title1")); // NOI18N
+        if (jTablePreview.getColumnModel().getColumnCount() > 0) {
+            jTablePreview.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTablePreview.columnModel.title0")); // NOI18N
+            jTablePreview.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTablePreview.columnModel.title1")); // NOI18N
+        }
 
         jLabelTitle.setText(resourceMap.getString("jLabelTitle.text")); // NOI18N
         jLabelTitle.setName("jLabelTitle"); // NOI18N

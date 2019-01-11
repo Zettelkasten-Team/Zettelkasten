@@ -38,7 +38,6 @@ import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
-import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -253,7 +252,7 @@ public class CDesktopExport extends javax.swing.JDialog {
         File exportdir = settingsObj.getLastOpenedExportDir();
         // here we open a swing filechooser, in case the os ist no mac aqua
         filepath = FileOperationsUtil.chooseFile(this,
-                                          (settingsObj.isMacAqua())?FileDialog.SAVE:JFileChooser.SAVE_DIALOG,
+                                          JFileChooser.SAVE_DIALOG,
                                           JFileChooser.FILES_ONLY,
                                           (null==exportdir)?null:exportdir.getPath(),
                                           (null==exportdir)?null:exportdir.getName(),

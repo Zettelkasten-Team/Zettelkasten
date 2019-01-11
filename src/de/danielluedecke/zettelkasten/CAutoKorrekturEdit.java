@@ -35,8 +35,6 @@ package de.danielluedecke.zettelkasten;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
 import de.danielluedecke.zettelkasten.util.Constants;
-import com.explodingpixels.macwidgets.MacWidgetFactory;
-import com.explodingpixels.widgets.TableUtils;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -147,18 +145,6 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
         // create auto-sorter for tabel
         jTableAutoKorrektur.setAutoCreateRowSorter(true);
         jTableAutoKorrektur.setGridColor(settingsObj.getTableGridColor());
-        // make extra table-sorter for itunes-tables
-        if (settingsObj.isMacAqua()) {
-            TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
-                @Override
-                public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
-                }
-            };
-            TableUtils.makeSortable(jTableAutoKorrektur, sortDelegate);
-            // change back default column-resize-behaviour when we have itunes-tables,
-            // since the default for those is "auto resize off"
-            jTableAutoKorrektur.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
-        }
         // init the table, i.e. fill it with all existing data
         tm = (DefaultTableModel) jTableAutoKorrektur.getModel();
         tm.setRowCount(0);
@@ -294,7 +280,7 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTableAutoKorrektur = (settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+        jTableAutoKorrektur = new javax.swing.JTable();
         jButtonCancel = new javax.swing.JButton();
         jButtonApply = new javax.swing.JButton();
 
@@ -329,8 +315,10 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
         jTableAutoKorrektur.setCellSelectionEnabled(true);
         jTableAutoKorrektur.setName("jTableAutoKorrektur"); // NOI18N
         jScrollPane1.setViewportView(jTableAutoKorrektur);
-        jTableAutoKorrektur.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableAutoKorrektur.columnModel.title0")); // NOI18N
-        jTableAutoKorrektur.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableAutoKorrektur.columnModel.title1")); // NOI18N
+        if (jTableAutoKorrektur.getColumnModel().getColumnCount() > 0) {
+            jTableAutoKorrektur.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableAutoKorrektur.columnModel.title0")); // NOI18N
+            jTableAutoKorrektur.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableAutoKorrektur.columnModel.title1")); // NOI18N
+        }
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CAutoKorrekturEdit.class, this);
         jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
