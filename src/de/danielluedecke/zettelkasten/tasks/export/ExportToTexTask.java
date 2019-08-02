@@ -57,7 +57,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void> {
 
     /**
-     * Reference to the CDaten object, which contains the XML data of the Zettelkasten will be
+     * Reference to the Daten object, which contains the XML data of the Zettelkasten will be
      * passed as parameter in the constructor, see below
      */
     private final Daten dataObj;
