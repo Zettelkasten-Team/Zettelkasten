@@ -22,7 +22,17 @@ public class TestSampleLoad {
 		int zettelNumber = 1;		
 		Object content = daten.getZettelContentAsHtml(zettelNumber);
 		assertFalse("Could not retrieve zettel content", content.toString()
-				.equals(""));
+				.equals("[h1]Headline[/h1]\n" +
+						"\n" +
+						"[q]Zitat, welches korrekt übernommen wird[/q]\n" +
+						"\n" +
+						"Das hier ist ein [qm]inline quote[/qm].\n" +
+						"\n" +
+						"# Headline\n" +
+						"\n" +
+						"> Zitat, welches nicht korrekt übernommen wird\n" +
+						"\n" +
+						"Das hier ist ein [qm]inline quote[/qm]."));
 		System.out.println("Content is " + content);
 	}
 
