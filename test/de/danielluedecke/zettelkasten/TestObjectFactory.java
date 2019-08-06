@@ -68,8 +68,8 @@ public class TestObjectFactory {
 						TestObjectFactory.getInstance().synonyms,
 						TestObjectFactory.getInstance().stenoData);
 
-				File fileObject = new File(TestObjectFactory.class
-						.getClassLoader().getResource(file).getPath());
+				File fileObject;
+				fileObject = new File(file);
 				settings.setFilePath(fileObject);
 				this.file = fileObject;
 				

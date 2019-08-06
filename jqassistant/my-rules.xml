@@ -1,0 +1,20 @@
+<jqa:jqassistant-rules xmlns:jqa="http://www.buschmais.com/jqassistant/core/analysis/rules/schema/v1.0">
+
+    <constraint id="my-rules:TestClassName">
+        <requiresConcept refId="junit4:TestClass" />
+        <description>All JUnit test classes must have a name with suffix "Test".</description>
+        <cypher><![CDATA[
+            MATCH
+                (t:Junit4:Test:Class)
+            WHERE NOT
+                t.name =~ ".*Test"
+            RETURN
+                t AS InvalidTestClass
+        ]]></cypher>
+    </constraint>
+
+    <group id="default">
+        <includeConstraint refId="my-rules:TestClassName" />
+    </group>
+
+</jqa:jqassistant-rules>
