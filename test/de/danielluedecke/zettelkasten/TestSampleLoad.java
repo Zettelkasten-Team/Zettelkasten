@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import de.danielluedecke.zettelkasten.database.Daten;
 
-public class SampleLoad {
+public class TestSampleLoad {
 
 	private Daten daten;
 
