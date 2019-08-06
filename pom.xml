@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>Zettelkasten</groupId>
 	<artifactId>Zettelkasten</artifactId>
-	<version>3.2.7</version>
+	<version>3.2.8-SNAPSHOT</version>
 
 	<!-- Define a local repository for dependencies that are not available in 
 		public maven repositories, see http://stackoverflow.com/questions/2229757/maven-add-a-dependency-to-a-jar-by-relative-path/2230464#2230464 
@@ -94,33 +94,23 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>com.buschmais.jqassistant</groupId>
-				<artifactId>jqassistant-maven-plugin</artifactId>
-			</plugin>
+            <plugin>
+                <groupId>com.buschmais.jqassistant</groupId>
+                <artifactId>jqassistant-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>scan</goal>
+                            <goal>analyze</goal>
+                        </goals>
+                        <configuration>
+                            <warnOnSeverity>MINOR</warnOnSeverity>
+                            <failOnSeverity>MAJOR</failOnSeverity>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>com.buschmais.jqassistant</groupId>
-					<artifactId>jqassistant-maven-plugin</artifactId>
-					<version>${jqassistant.version}</version>
-					<executions>
-						<execution>
-							<id>default</id>
-							<goals>
-								<goal>scan</goal>
-								<goal>analyze</goal>
-							</goals>
-							<configuration>
-								<warnOnSeverity>INFO</warnOnSeverity>
-								<failOnSeverity>MAJOR</failOnSeverity>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 	<reporting>
 		<plugins>
