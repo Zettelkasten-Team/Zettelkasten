@@ -17,16 +17,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import de.danielluedecke.zettelkasten.TestObjectFactory;
-import de.danielluedecke.zettelkasten.TestObjectFactory.ZKN3Settings;
-
 /**
  *
  * @author rgb
  */
 public class DatenTest {
-    
-    private Daten daten;
     
     public DatenTest() {
     }
@@ -40,9 +35,7 @@ public class DatenTest {
     }
     
     @Before
-    public void setUp() throws Exception {
-        	daten = TestObjectFactory
-                        .getDaten(TestObjectFactory.ZKN3Settings.ZKN3_TRICKY_MARKDOWN);
+    public void setUp() {
     }
     
     @After

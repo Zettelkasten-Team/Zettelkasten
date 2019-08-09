@@ -1,135 +1,97 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package de.danielluedecke.zettelkasten.tasks.export;
 
-import static org.junit.Assert.assertFalse;
-
-import java.io.File;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.tree.DefaultMutableTreeNode;
-
-import org.jdesktop.application.Application;
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
-import de.danielluedecke.zettelkasten.TestObjectFactory;
-import de.danielluedecke.zettelkasten.TestObjectFactory.ZKN3Settings;
-import de.danielluedecke.zettelkasten.database.BibTex;
-import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.database.TasksData;
-import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
-
+/**
+ *
+ * @author rgb
+ */
 public class ExportToTexTaskTest {
 
-	private ExportToTexTask exportToTexTask;
-	private Daten daten;
-	private ZKN3Settings settings;
+    public ExportToTexTaskTest() {
+    }
 
-	@Before
-	public void initialize() throws Exception {
-		settings = TestObjectFactory.ZKN3Settings.ZKN3_TRICKY_MARKDOWN;
-		daten = TestObjectFactory.getDaten(settings);
+    @BeforeClass
+    public static void setUpClass() {
+    }
 
-		JDialog parent = null;
-		Application app = org.jdesktop.application.Application
-				.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class);
-		JLabel label = new JLabel();
-		TasksData td = null;
-		DesktopData dt = null;
-		File fp = null;
-		BibTex bto = null;
-		ArrayList<Object> ee = null;
-		int type = 0;
-		int part = 0;
-		DefaultMutableTreeNode n = null;
-		boolean bibtex = false;
-		boolean ihv = false;
-		boolean numberprefix = false;
-		boolean contenttable = false;
+    @AfterClass
+    public static void tearDownClass() {
+    }
 
-		exportToTexTask = new ExportToTexTask(app, parent, label, td, daten,
-				dt, settings.settings, bto, fp, ee, type, part, n, bibtex, ihv,
-				numberprefix, contenttable, false);
-	}
+    @Before
+    public void setUp() {
+    }
 
-	@Test
-	public void testBugMarkdownZitatWirdNichtKorrektNachLatexExportiert()
-			throws Exception {
-		String brokenExportString = daten.getZettelContent(1);
+    @After
+    public void tearDown() {
+    }
 
-		// daten.get
-		System.out.println("String before tex convertion: "
-				+ brokenExportString);
-		/*
+    /**
+     * Test of doInBackground method, of class ExportToTexTask.
+     */
+    @Test
+    public void testDoInBackground() {
+        System.out.println("doInBackground");
+        ExportToTexTask instance = null;
+        Object expResult = null;
+        Object result = instance.doInBackground();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    @Test
+    public void testBugMarkdownZitatWirdNichtKorrektNachLatexExportiert()
+            throws Exception {
+        /*
 		 * It seems that the current implementation of
 		 * ExportToTexTask.convertedTex() does *not* convert any quotation tags
 		 * at all, neither in Markdown nor in UBB syntax:
-		 */
-		String convertedTex = getConvertedTex(brokenExportString);
+         */
+    }
 
-		assertFalse(
-				"ConvertedTex string produced a \rangle from Markdown-quote '>'",
-				convertedTex.contains("\\rangle"));
-
-		System.out.println("String after getConvertedTex: " + convertedTex);
-
-		int exporttype = 13;
-		String exportPage = HtmlUbbUtil
-                        .convertUbbToTex(settings.settings, daten, new BibTex(
-                                null, settings.settings), convertedTex,
-                                settings.settings.getLatexExportFootnoteRef(),
-                                settings.settings
-                                        .getLatexExportCreateFormTags(),
-                                Constants.EXP_TYPE_DESKTOP_TEX == exporttype,
-                                settings.settings
-                                        .getLatexExportRemoveNonStandardTags());
-
-		String latexPage = exportPage;
-
-		System.out.println("exportPage after entire LaTex-Convertion: \n\n"
-				+ latexPage);
-
-		for (String charSequenceWeDontWantInFinalTex : new String[] { "[q]",
-				"[/q]", "[qm]", "[/qm]", ">", "\\rangle" }) {
-			assertFalse("Converted string still contains character sequence \""
-					+ charSequenceWeDontWantInFinalTex + "\"",
-					latexPage.contains(charSequenceWeDontWantInFinalTex));
-		}
-	}
-
-	@Test
-	public void testMarkdownQuotationBecomesLaTeXRangle() throws Exception {
-		String inputString = daten.getZettelContent(1);
-
-		/*
+    @Test
+    public void testMarkdownQuotationBecomesLaTeXRangle() throws Exception {
+        /*
 		 * It seems that convertSpecialChars() does not respect Markdown
 		 * quotations: ">" is escaped into "\rangle"
-		 */
+         */
+    }
 
-		System.out.println("String before tex convertion: " + inputString);
-		String convertedTex = getConvertedTex(inputString);
-		System.out.println("String after tex convertion:  " + convertedTex);
+    /**
+     * Test of succeeded method, of class ExportToTexTask.
+     */
+    @Test
+    public void testSucceeded() {
+        System.out.println("succeeded");
+        Object result_2 = null;
+        ExportToTexTask instance = null;
+        instance.succeeded(result_2);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
 
-		/*
-		 * After solving this issue, the following assertions should AFAIK not
-		 * fail:
-		 */
-		assertFalse("Quoted string is falsely introduced by \\rangle",
-				convertedTex.contains("\\rangle"));
-	}
+    /**
+     * Test of finished method, of class ExportToTexTask.
+     */
+    @Test
+    public void testFinished() {
+        System.out.println("finished");
+        ExportToTexTask instance = null;
+        instance.finished();
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
 
-	/**
-	 * Helper method to invoke the private method "getConvertedTex"
-	 */
-	private String getConvertedTex(String input) throws Exception {
-		Class c = exportToTexTask.getClass();
-
-		Method method = c.getDeclaredMethod("getConvertedTex", String.class);
-		method.setAccessible(true);
-		return (String) method.invoke(exportToTexTask, input);
-	}
 }
