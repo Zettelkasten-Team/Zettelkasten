@@ -94,7 +94,7 @@ public class Daten {
      */
     private Document zknFile;
     /**
-     * XML Document that Stores the data of entries that should be exportet to
+     * XML Document that Stores the data of entries that should be exported to
      * .zkn3-format
      */
     private Document zknFileExport;
