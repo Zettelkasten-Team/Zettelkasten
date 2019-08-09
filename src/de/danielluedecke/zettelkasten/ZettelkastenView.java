@@ -8606,7 +8606,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
     /**
      * Opens a file dialog and lets the user choose a zkn3-file. Then a method
-     * in the CLoadSave-class is called to open the file and store the data in
+     * in the LoadFileTask-class is called to open the file and store the data in
      * the CData-class.
      */
     @Action
@@ -8866,7 +8866,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
     /**
      * Saves the document. Opens a file dialog and then calls a method the the
-     * CLoadSave-class to save the data in the default file format (zkn3)
+     * LoadFileTask-class to save the data in the default file format (zkn3)
      *
      * @return {@code true} if save was successful, {@code false} otherwise
      */

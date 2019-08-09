@@ -151,7 +151,7 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
             Constants.zknlogger.log(Level.INFO, "Opening file {0}", fp.toString());
             // it looks like the SAXBuilder is closing an input stream. So we have to
             // re-open the ZIP-file each time we want to retrieve an XML-file from it
-            // this is necessary, because we want tot retrieve the zipped xml-files
+            // this is necessary, because we want to retrieve the zipped xml-files
             // *without* temporarily saving them to harddisk
             for (int cnt = 0; cnt < dataObj.getFilesToLoadCount(); cnt++) {
                 // show status text

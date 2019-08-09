@@ -60,7 +60,7 @@ import org.jdom2.IllegalNameException;
  * XML Tree. It also provides typical methods like getters and setters, stores
  * the file path, the modified state and so on. All relevant operations need for
  * managing the data file can be found here, except loading (open file) and
- * saving operations. These can be found in "CLoadSave.java".
+ * saving operations. These can be found in "LoadFileTask.java".
  *
  * @author danielludecke
  */
