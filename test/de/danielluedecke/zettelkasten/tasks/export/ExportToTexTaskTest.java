@@ -23,7 +23,7 @@ import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 
-public class TestExportToTexTask {
+public class ExportToTexTaskTest {
 
 	private ExportToTexTask exportToTexTask;
 	private Daten daten;
