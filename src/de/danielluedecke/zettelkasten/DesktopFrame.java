@@ -3319,7 +3319,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         DefaultMutableTreeNode selection = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
         // enumerate all children of the node's parent's children...
-        Enumeration<DefaultMutableTreeNode> children = node.getParent().children();
+        Enumeration<DefaultMutableTreeNode> children = (Enumeration<DefaultMutableTreeNode>) node.getParent().children();
         while (children.hasMoreElements()) {
             try {
                 // get each child
