@@ -523,7 +523,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * @param stn
      * @param td
      */
-    @SuppressWarnings("LeakingThisInConstructor")
     public ZettelkastenView(SingleFrameApplication app, Settings st, AcceleratorKeys ak, AutoKorrektur ac, Synonyms sy, StenoData stn, TasksData td) {
         super(app);
         taskinfo = td;

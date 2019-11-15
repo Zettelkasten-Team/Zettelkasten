@@ -58,7 +58,6 @@ public class ZettelkastenApp extends SingleFrameApplication {
     AutoKorrektur autoKorrekt;
     Synonyms synonyms;
     StenoData steno;
-    TasksData taskdata;
 
     private String[] params;
 
@@ -80,7 +79,7 @@ public class ZettelkastenApp extends SingleFrameApplication {
         steno = new StenoData();
         // prepare the class which stores information that are returned
         // from several tasks
-        taskdata = new TasksData();
+        TasksData taskData = new TasksData();
         // create new instance of the settings-class here,
         // so we can load and save settings directly on startup and just before
         // shutdown
@@ -88,17 +87,17 @@ public class ZettelkastenApp extends SingleFrameApplication {
         // load settings
         settings.loadSettings();
         // retrieve the current default language
-        String deflang = settings.getLanguage();
+        String defLang = settings.getLanguage();
         // get country-coded
         String englishCountryCode = new Locale("en","","").getLanguage();
         String germanCountryCode = new Locale("de","","").getLanguage();
         String spanishCountryCode = new Locale("es","","").getLanguage();
         // create locale-variable
         Locale newLocale = new Locale("en","GB");
-        // check for defailt language and overwrite default-language-setting (which is UK)
-        if (deflang.equals(spanishCountryCode)) newLocale = new Locale("es","ES");
-        if (deflang.equals(germanCountryCode)) newLocale = new Locale("de","DE");
-        if (deflang.equals(englishCountryCode)) newLocale = new Locale("en","GB");
+        // check for default language and overwrite default-language-setting (which is UK)
+        if (defLang.equals(spanishCountryCode)) newLocale = new Locale("es","ES");
+        if (defLang.equals(germanCountryCode)) newLocale = new Locale("de","DE");
+        if (defLang.equals(englishCountryCode)) newLocale = new Locale("en","GB");
         // set default locale
         Locale.setDefault(newLocale);
         // check parameters for filepath of loaded file
@@ -124,11 +123,11 @@ public class ZettelkastenApp extends SingleFrameApplication {
                     break;
                 }
             }
-            catch (NumberFormatException ex) {
+            catch (NumberFormatException ignored) {
 
             }
         }
-        show(new ZettelkastenView(this, settings, accKeys, autoKorrekt,synonyms,steno,taskdata));
+        show(new ZettelkastenView(this, settings, accKeys, autoKorrekt,synonyms,steno, taskData));
     }
 
     
