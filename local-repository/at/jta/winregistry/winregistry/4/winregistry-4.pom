@@ -4,6 +4,6 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>at.jta.winregistry</groupId>
   <artifactId>winregistry</artifactId>
-  <version>4.5</version>
+  <version>4</version>
   <description>POM was created from install:install-file</description>
 </project>

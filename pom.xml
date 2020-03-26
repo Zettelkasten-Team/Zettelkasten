@@ -7,16 +7,19 @@
 
 
     <build>
-        <sourceDirectory>src</sourceDirectory>
-        <testSourceDirectory>test</testSourceDirectory>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
         <resources>
             <resource>
-                <directory>src</directory>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
+                <directory>src/main/resources</directory>
             </resource>
         </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
+
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -67,7 +70,7 @@
                                 <mkdir dir="${basedir}/target/app"/>
                                 <bundleapp outputdirectory="${basedir}/target/app"
                                            name="Zettelkasten" displayname="Zettelkasten"
-                                           identifier="de.danielluedecke.zettelkasten.ZettelkastenApp"
+                                           identifier="danielluedecke.zettelkasten.ZettelkastenApp"
                                            shortversion="${project.version}" icon="${basedir}/zkn3_2.icns"
                                            applicationCategory="public.app-category.developer-tools"
                                            mainclassname="de/danielluedecke/zettelkasten/ZettelkastenApp"
@@ -152,15 +155,11 @@
             <groupId>at.jta.winregistry</groupId>
             <artifactId>winregistry</artifactId>
             <version>4.5</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/WinRegistry-4.5.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>bibtex</groupId>
             <artifactId>javabib</artifactId>
             <version>20040801</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/javabib-bin.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -176,4 +175,11 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>my-local-repo</id>
+            <url>file://${basedir}/local-repository</url>
+        </repository>
+    </repositories>
 </project>
