@@ -35,7 +35,7 @@ package de.danielluedecke.zettelkasten.database;
 
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.tasks.StartSearchTask;
-import de.danielluedecke.zettelkasten.util.classes.Comparer;
+import de.danielluedecke.zettelkasten.util.misc.Comparer;
 import de.danielluedecke.zettelkasten.util.Constants;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

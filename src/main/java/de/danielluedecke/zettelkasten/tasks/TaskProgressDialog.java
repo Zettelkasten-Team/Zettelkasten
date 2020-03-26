@@ -52,7 +52,7 @@ import de.danielluedecke.zettelkasten.tasks.importtasks.ImportFromCSV;
 import de.danielluedecke.zettelkasten.tasks.importtasks.ImportFromZkn;
 import de.danielluedecke.zettelkasten.tasks.importtasks.ImportFromZkx;
 import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
+import de.danielluedecke.zettelkasten.util.misc.InitStatusbarForTasks;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;

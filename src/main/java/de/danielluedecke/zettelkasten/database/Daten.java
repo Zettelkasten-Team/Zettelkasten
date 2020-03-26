@@ -36,7 +36,7 @@ import de.danielluedecke.zettelkasten.CMakeFormImage;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.tasks.SaveFileTask;
 import de.danielluedecke.zettelkasten.tasks.export.ExportToZknTask;
-import de.danielluedecke.zettelkasten.util.classes.Comparer;
+import de.danielluedecke.zettelkasten.util.misc.Comparer;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.Tools;

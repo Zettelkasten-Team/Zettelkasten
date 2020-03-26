@@ -36,7 +36,7 @@ import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.util.classes.Comparer;
+import de.danielluedecke.zettelkasten.util.misc.Comparer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;

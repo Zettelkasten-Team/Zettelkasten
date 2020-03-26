@@ -34,11 +34,11 @@ package de.danielluedecke.zettelkasten;
 
 import bibtex.dom.BibtexEntry;
 import de.danielluedecke.zettelkasten.util.*;
-import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
+import de.danielluedecke.zettelkasten.util.misc.InitStatusbarForTasks;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.util.classes.Comparer;
+import de.danielluedecke.zettelkasten.util.misc.Comparer;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

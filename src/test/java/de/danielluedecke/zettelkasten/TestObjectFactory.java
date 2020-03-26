@@ -53,9 +53,9 @@ public class TestObjectFactory {
 	 * Abstracts sample files and settings
 	 */
 	public enum ZKN3Settings {
-		ZKN3_SAMPLE("/de/danielluedecke/zettelkasten/resources/zkn3_sample.zkn3", false), ZKN3_TRICKY_NON_MARKDOWN(
-				"/de/danielluedecke/zettelkasten/resources/zkn3_tricky.zkn3", false), ZKN3_TRICKY_MARKDOWN(
-                "/de/danielluedecke/zettelkasten/resources/zkn3_tricky.zkn3", true);
+		ZKN3_SAMPLE("de/danielluedecke/zettelkasten/resources/zkn3_sample.zkn3", false), ZKN3_TRICKY_NON_MARKDOWN(
+				"de/danielluedecke/zettelkasten/resources/zkn3_sample.zkn3", false), ZKN3_TRICKY_MARKDOWN(
+                "de/danielluedecke/zettelkasten/resources/zkn3_tricky.zkn3", true);
 
 		public Settings settings;
 		public File file;
@@ -68,8 +68,8 @@ public class TestObjectFactory {
 						TestObjectFactory.getInstance().synonyms,
 						TestObjectFactory.getInstance().stenoData);
 
-				File fileObject = new File(TestObjectFactory.class
-						.getClassLoader().getResource(file).getPath());
+				File fileObject = new File(getClass()
+						.getClassLoader().getResource(file).getFile());
 				settings.setFilePath(fileObject);
 				this.file = fileObject;
 				

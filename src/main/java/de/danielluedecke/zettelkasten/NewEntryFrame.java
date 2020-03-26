@@ -32,7 +32,7 @@
  */
 package de.danielluedecke.zettelkasten;
 
-import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
+import de.danielluedecke.zettelkasten.util.misc.InitStatusbarForTasks;
 import de.danielluedecke.zettelkasten.mac.MacSourceList;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
@@ -41,9 +41,9 @@ import de.danielluedecke.zettelkasten.database.StenoData;
 import de.danielluedecke.zettelkasten.database.Synonyms;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.util.classes.ImagePreview;
-import de.danielluedecke.zettelkasten.util.classes.EntryStringTransferHandler;
-import de.danielluedecke.zettelkasten.util.classes.Comparer;
+import de.danielluedecke.zettelkasten.util.misc.ImagePreview;
+import de.danielluedecke.zettelkasten.util.misc.EntryStringTransferHandler;
+import de.danielluedecke.zettelkasten.util.misc.Comparer;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
