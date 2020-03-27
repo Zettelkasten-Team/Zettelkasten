@@ -70,7 +70,7 @@
                                 <mkdir dir="${basedir}/target/app"/>
                                 <bundleapp outputdirectory="${basedir}/target/app"
                                            name="Zettelkasten" displayname="Zettelkasten"
-                                           identifier="danielluedecke.zettelkasten.ZettelkastenApp"
+                                           identifier="de.danielluedecke.zettelkasten.ZettelkastenApp"
                                            shortversion="${project.version}" icon="${basedir}/zkn3_2.icns"
                                            applicationCategory="public.app-category.developer-tools"
                                            mainclassname="de/danielluedecke/zettelkasten/ZettelkastenApp"

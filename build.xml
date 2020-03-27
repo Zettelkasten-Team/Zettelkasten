@@ -83,8 +83,8 @@
             icon="zkn3.icns"
             displayname="Zettelkasten"
             copyright="(c) 2001-2015 Daniel Lüdecke"
-            identifier="danielluedecke.zettelkasten.ZettelkastenApp"
-            mainclassname="danielluedecke.zettelkasten.ZettelkastenApp">
+            identifier="de.danielluedecke.zettelkasten.ZettelkastenApp"
+            mainclassname="de.danielluedecke.zettelkasten.ZettelkastenApp">
             
             <classpath file="store/Zettelkasten.jar" />
         </bundleapp>
