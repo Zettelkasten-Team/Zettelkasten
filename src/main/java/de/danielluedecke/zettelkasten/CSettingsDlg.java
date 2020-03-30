@@ -1236,20 +1236,20 @@ public class CSettingsDlg extends javax.swing.JDialog {
     }
 
     private boolean initRegCheckBox() {
-       try {
+   /*    try {
             Regor winreg = new Regor();
             return (winreg.openKey(Regor.HKEY_CLASSES_ROOT, ".zkn3") != null && winreg.openKey(Regor.HKEY_CLASSES_ROOT, "zkn3_auto_file\\shell\\Open\\command") != null);
         } catch (RegistryErrorException e) {
             Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
         } catch (NotSupportedOSException e) {
             Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-        }
+        }*/
         return false;
 
     }
 
     private void registerFileExtension() {
-        try {
+      /*  try {
             Regor winreg = new Regor();
             if (jCheckBoxRegistry.isSelected()) {
                 Key regkey = winreg.openKey(Regor.HKEY_CLASSES_ROOT, ".zkn3");
@@ -1283,7 +1283,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, resourceMap.getString("errorRegistryMsg"), resourceMap.getString("errorRegistryTitle"), JOptionPane.PLAIN_MESSAGE);
         } catch (NotSupportedOSException e) {
             Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-        }
+        }*/
     }
 
     /**
