@@ -114,8 +114,11 @@ fabric.properties
 **/nbproject/private/
 **/nbproject/Makefile-*.mk
 **/nbproject/Package-*.bash
-**/nbproject/project.properties
-**/nbproject/genfiles.properties
+nbproject/project.properties
+nbproject/genfiles.properties
+nbproject/build-impl.xml
+nbproject/jnlp-impl.xml
+nbproject/jnlp-impl_backup.xml
 build/
 nbbuild/
 dist/
