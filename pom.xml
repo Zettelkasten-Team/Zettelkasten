@@ -44,14 +44,6 @@
         </profile>
     </profiles>
 
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/sjPlot/Zettelkasten</url>
-        </repository>
-    </distributionManagement>
-
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <testSourceDirectory>src/test/java</testSourceDirectory>
