@@ -232,8 +232,12 @@ public class CSettingsDlg extends javax.swing.JDialog {
         } else {
             jCheckBoxSystray.setSelected(settings.getMinimizeToTray());
         }
+
         // en- and disable checkboxes depending on the os
-        jCheckBoxRegistry.setEnabled(System.getProperty("os.name").toLowerCase().startsWith("windows"));
+        //TODO: Disabled until #198 is fixed.
+        // jCheckBoxRegistry.setEnabled(System.getProperty("os.name").toLowerCase().startsWith("windows"));
+        jCheckBoxRegistry.setEnabled(false);
+
         // init mainfont
         mainfont = settings.getMainFont();
         mainfontcolor = settings.getMainfont(Settings.FONTCOLOR);
