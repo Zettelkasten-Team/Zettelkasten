@@ -47,14 +47,14 @@
 - Seitenzahlen in Literaturfußnoten werden beim LaTex-Export berücksichtigt, bspw. `[fn 666:31]` wird zu `\cite[S.31]{luhmann1984sozsys}`.
 - Die Funktion _BibTex-Datei neu laden_ aktualisiert automatisch vorhandene Literatureinträge ([#75](https://github.com/sjPlot/Zettelkasten/issues/75)).
 
-###Änderungen
+### Änderungen
 - Die manuelle Sortierung von Zetteln (z.B. das Verschieben in der Registerkarte _Überschriften_) wurde entfernt, da diese Funktion den Im- und Export zu fehleranfällig machte.
 - Folgezettel in der Registerkarte können jetzt standardmäßig nur bis zu einer bestimmten Ebene aufgeklappt werden ([#73](https://github.com/sjPlot/Zettelkasten/issues/73)).
 - Fußnoten-Zitierstil beim LaTex-Export verwendet nun `\footcite` statt `footnote{\cite}` ([#63](https://github.com/sjPlot/Zettelkasten/issues/63)).
 - Beim Einfügen von Literaturfußnoten werden automatisch Klammern um die Referenzen gesetzt. Beim Export ins LaTex-Format mit der Option `footcite` werden diese Klammern automatisch entfernt ([#65](https://github.com/sjPlot/Zettelkasten/issues/65)).
 - Die Suche im Zettel aktualisiert die Zettelansicht (Hervorheben der gefundenen Suchstellen) erst nach drücken der Eingabetaste. Dies verhindert bei längeren Zetteln, dass die Suchbegriffeingabe nicht hakt ([#70](https://github.com/sjPlot/Zettelkasten/issues/70)).
 
-###Fehlerbehebungen
+### Fehlerbehebungen
 - Schlagwörter importieren von BibTex-Einträgen (ohne neuen Eintrag zu erstellen) funktionierte nicht ([#33](https://github.com/sjPlot/Zettelkasten/issues/33)).
 - Querverweise mit Tooltips mit Anführungszeichen funktionierten nicht ([#53](https://github.com/sjPlot/Zettelkasten/issues/53)).
 - Bildpfade beim LaTex-Export wurden nicht korrekt übersetzt ([#51](https://github.com/sjPlot/Zettelkasten/issues/51)).
@@ -69,12 +69,12 @@
 <a name="3.2.5.1"></a>
 # 3.2.5.1 (2015-05-29)
 
-###Änderungen
+### Änderungen
 - Mehrfachformatierungen während der Neueingabe wurden vereinfacht durch Beibehalten der Textauswahl. Damit lässt sich ein Wort oder Absatz schneller mit mehreren Formatierungen hintereinander auszeichnen ([#39](https://github.com/sjPlot/Zettelkasten/issues/39)).
 - `[code]` formatiert Code-Blocks mit eingerückten Leerzeichen (d.h. wandelt `[code]` in `<pre>` um). Inline-Code wird jetzt durch ` ausgezeichnet (`code`) ([#48](https://github.com/sjPlot/Zettelkasten/issues/48)).
 - Aktualisierung der [JDOM](http://www.jdom.org)\- und [OpenCSV](http://opencsv.sourceforge.net)-Bibliotheken.
 
-###Fehlerbehebungen
+### Fehlerbehebungen
 - Mehrere Suchbegriffe im Suchfenster, durch Kommata getrennt, werden jetzt von Leerzeichen bereinigt ([#27](https://github.com/sjPlot/Zettelkasten/issues/27)).
 - Markdown-Zitat werden jetzt korrekt nach LaTeX exportiert ([#31](https://github.com/sjPlot/Zettelkasten/issues/31)).
 - Doppelte Zeilenumbrüche entfernen bei Neueingabe wird jetzt nur auf Auswahl angewendet ([#16](https://github.com/sjPlot/Zettelkasten/issues/16)).
