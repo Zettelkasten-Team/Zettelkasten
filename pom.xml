@@ -5,10 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.danielluedecke</groupId>
     <artifactId>Zettelkasten</artifactId>
-    <version>3.3</version>
+    <version>3.3.0</version>
     <name>Zettelkasten</name>
 
     <properties>
+        <zkn.launch4jVersion>${project.version}.0</zkn.launch4jVersion>
         <zkn.supportsDmg>false</zkn.supportsDmg>
         <zkn.useGenIsoImage>false</zkn.useGenIsoImage>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -135,6 +136,59 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>1.7.25</version>
+                <executions>
+                    <execution>
+                        <id>launch4j</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <dontWrapJar>false</dontWrapJar>
+                            <headerType>gui</headerType>
+                            <jar>target/${build.finalName}.jar</jar>
+                            <outfile>target/${build.finalName}.exe</outfile>
+                            <chdir>.</chdir>
+                            <priority>normal</priority>
+                            <downloadUrl>http://java.com/download</downloadUrl>
+                            <stayAlive>false</stayAlive>
+                            <restartOnCrash>false</restartOnCrash>
+                            <manifest></manifest>
+                            <icon>zkn2.ico</icon>
+                            <jre>
+                                <minVersion>1.7.0</minVersion>
+                                <bundledJre64Bit>false</bundledJre64Bit>
+                                <bundledJreAsFallback>false</bundledJreAsFallback>
+                                <path>jre/</path>
+                                <jdkPreference>preferJre</jdkPreference>
+                                <runtimeBits>32/64</runtimeBits>
+                            </jre>
+                            <splash>
+                                <file>splash.bmp</file>
+                                <waitForWindow>true</waitForWindow>
+                                <timeout>60</timeout>
+                                <timeoutErr>true</timeoutErr>
+                            </splash>
+                            <versionInfo>
+                                <fileVersion>${zkn.launch4jVersion}</fileVersion>
+                                <txtFileVersion>Zettelkasten 3</txtFileVersion>
+                                <fileDescription>Zettelkasten - nach Niklas Luhmann</fileDescription>
+                                <copyright>Daniel Luedecke</copyright>
+                                <productVersion>${zkn.launch4jVersion}</productVersion>
+                                <txtProductVersion>${project.version}</txtProductVersion>
+                                <productName>${project.build.finalName}</productName>
+                                <internalName>zkn</internalName>
+                                <originalFilename>${project.build.finalName}.exe</originalFilename>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 
