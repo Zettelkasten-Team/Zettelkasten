@@ -74,21 +74,7 @@
 
     <!-- See http://docs.oracle.com/javase/7/docs/technotes/guides/jweb/packagingAppsForMac.html -->
     
-    <taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask" classpath="appbundler-1.0ea.jar" />
 
-    <target name="Bundle OS X .app">
-        <bundleapp outputdirectory="store"
-            name="Zettelkasten"
-            executableName="Zettelkasten"
-            icon="zkn3.icns"
-            displayname="Zettelkasten"
-            copyright="(c) 2001-2015 Daniel Lüdecke"
-            identifier="de.danielluedecke.zettelkasten.ZettelkastenApp"
-            mainclassname="de.danielluedecke.zettelkasten.ZettelkastenApp">
-            
-            <classpath file="store/Zettelkasten.jar" />
-        </bundleapp>
-    </target>
         
     <target name="package-for-store" depends="jar">
 

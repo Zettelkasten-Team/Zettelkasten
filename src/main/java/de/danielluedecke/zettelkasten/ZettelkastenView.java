@@ -170,6 +170,23 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
     // <editor-fold defaultstate="collapsed" desc="Variablendeklaration">
     /**
+     * String array that contain highlight terms. this is used when creating the
+     * html-entry in the update display method. the
+     * {@link #findLive() live-search}-feature uses this to highlight the terms,
+     * or e.g. highlighting the keywords in the text needs this array.
+     */
+    static DataFlavor urlFlavor;
+
+    static {
+        try {
+            urlFlavor
+                    = new DataFlavor("application/x-java-url; class=java.net.URL");
+        } catch (ClassNotFoundException cnfe) {
+            Constants.zknlogger.log(Level.WARNING, "Could not create URL Data Flavor!");
+        }
+    }
+
+    /**
      * initiate the data class. this class stores and manages the main data for
      * this program.
      */
@@ -236,6 +253,84 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private final List<String> isFollowerList = new ArrayList<>();
     /**
+     * Constant for the selected tab of the tab pane. Since the order of the
+     * tabs might change in the future, we declare constant here, so we just
+     * have to make changes here instead of searching through the source code
+     */
+    private final int TAB_LINKS = 0;
+    /**
+     * Constant for the selected tab of the tab pane. Since the order of the
+     * tabs might change in the future, we declare constant here, so we just
+     * have to make changes here instead of searching through the source code
+     */
+    private final int TAB_LUHMANN = 1;
+    /**
+     * Constant for the selected tab of the tab pane. Since the order of the
+     * tabs might change in the future, we declare constant here, so we just
+     * have to make changes here instead of searching through the source code
+     */
+    private final int TAB_KEYWORDS = 2;
+    /**
+     * Constant for the selected tab of the tab pane. Since the order of the
+     * tabs might change in the future, we declare constant here, so we just
+     * have to make changes here instead of searching through the source code
+     */
+    private final int TAB_AUTHORS = 3;
+    /**
+     * Constant for the selected tab of the tab pane. Since the order of the
+     * tabs might change in the future, we declare constant here, so we just
+     * have to make changes here instead of searching through the source code
+     */
+    private final int TAB_TITLES = 4;
+    /**
+     * Constant for the selected tab of the tab pane. Since the order of the
+     * tabs might change in the future, we declare constant here, so we just
+     * have to make changes here instead of searching through the source code
+     */
+    private final int TAB_CLUSTER = 5;
+    /**
+     * Constant for the selected tab of the tab pane. Since the order of the
+     * tabs might change in the future, we declare constant here, so we just
+     * have to make changes here instead of searching through the source code
+     */
+    private final int TAB_BOOKMARKS = 6;
+    /**
+     * Constant for the selected tab of the tab pane. Since the order of the
+     * tabs might change in the future, we declare constant here, so we just
+     * have to make changes here instead of searching through the source code
+     */
+    private final int TAB_ATTACHMENTS = 7;
+    /**
+     * get the strings for file descriptions from the resource map
+     */
+    private final org.jdesktop.application.ResourceMap toolbarResourceMap
+            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            getContext().getResourceMap(ToolbarIcons.class);
+    /**
+     * This variables stores the currently displayed zettel. the currently
+     * <i>displayed</i>
+     * Zettel may differ from the currently <i>active</i> Zettel, if we e.g.
+     * select an entry by single-clicking it from a jTable, but do not activate
+     * it by double-clicking it.
+     */
+    public int displayedZettel = -1;
+    /**
+     *
+     */
+    public ByteArrayOutputStream baos_log = new ByteArrayOutputStream(1048576);
+    /**
+     *
+     */
+    boolean isLiveSearchActive = false;
+    /**
+     *
+     */
+    boolean editEntryFromDesktop = false;
+    /**
+     *
+     */
+    boolean editEntryFromSearchWindow = false;
+    /**
      * This variable stores the table data of the keyword-list when this list is
      * filtered. All changes to a fitered table-list are also applied to this
      * linked list. When the table-list is being refreshed, we don't need to run
@@ -300,13 +395,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     /**
      *
      */
-    boolean isLiveSearchActive = false;
-    /**
-     *
-     */
     private boolean isbnc = false;
-    public boolean isBackupNecessary() { return isbnc; }
-    public void backupNecessary(boolean val) { isbnc = val; }
     /**
      *
      */
@@ -314,16 +403,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     /**
      *
      */
-    boolean editEntryFromDesktop = false;
-    /**
-     *
-     */
-    boolean editEntryFromSearchWindow = false;
-    /**
-     *
-     */
     private String updateURI = Constants.UPDATE_URI;
-    public void setUpdateURI(String uri) { updateURI = uri; }
     /**
      * This string contains an added keyword that was added to the
      * jTableKeywords, so the new added value can be selected immediatley after
@@ -352,66 +432,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private DefaultMutableTreeNode selectedLuhmannNode = null;
     /**
-     * Constant for the selected tab of the tab pane. Since the order of the
-     * tabs might change in the future, we declare constant here, so we just
-     * have to make changes here instead of searching through the source code
-     */
-    private final int TAB_LINKS = 0;
-    /**
-     * Constant for the selected tab of the tab pane. Since the order of the
-     * tabs might change in the future, we declare constant here, so we just
-     * have to make changes here instead of searching through the source code
-     */
-    private final int TAB_LUHMANN = 1;
-    /**
-     * Constant for the selected tab of the tab pane. Since the order of the
-     * tabs might change in the future, we declare constant here, so we just
-     * have to make changes here instead of searching through the source code
-     */
-    private final int TAB_KEYWORDS = 2;
-    /**
-     * Constant for the selected tab of the tab pane. Since the order of the
-     * tabs might change in the future, we declare constant here, so we just
-     * have to make changes here instead of searching through the source code
-     */
-    private final int TAB_AUTHORS = 3;
-    /**
-     * Constant for the selected tab of the tab pane. Since the order of the
-     * tabs might change in the future, we declare constant here, so we just
-     * have to make changes here instead of searching through the source code
-     */
-    private final int TAB_TITLES = 4;
-    /**
-     * Constant for the selected tab of the tab pane. Since the order of the
-     * tabs might change in the future, we declare constant here, so we just
-     * have to make changes here instead of searching through the source code
-     */
-    private final int TAB_CLUSTER = 5;
-    /**
-     * Constant for the selected tab of the tab pane. Since the order of the
-     * tabs might change in the future, we declare constant here, so we just
-     * have to make changes here instead of searching through the source code
-     */
-    private final int TAB_BOOKMARKS = 6;
-    /**
-     * Constant for the selected tab of the tab pane. Since the order of the
-     * tabs might change in the future, we declare constant here, so we just
-     * have to make changes here instead of searching through the source code
-     */
-    private final int TAB_ATTACHMENTS = 7;
-    /**
      * indicates the currently selected tab, which will become the previously
      * selected tab when the tabbedpane state changed.
      */
     private int previousSelectedTab = -1;
-    /**
-     * This variables stores the currently displayed zettel. the currently
-     * <i>displayed</i>
-     * Zettel may differ from the currently <i>active</i> Zettel, if we e.g.
-     * select an entry by single-clicking it from a jTable, but do not activate
-     * it by double-clicking it.
-     */
-    public int displayedZettel = -1;
     /**
      * Indicates whether the thread "createLinksTask" is running or not...
      */
@@ -428,8 +452,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * Indicates whether the thread "createAutoBackupTask" is running or not...
      */
     private boolean cabir = false;
-    public boolean isAutoBackupRunning() { return cabir; }
-    public void setAutoBackupRunning(boolean val) { cabir = val; }
     /**
      * Since the window for editing new entries is a modeless frame, we need to
      * have an indicator which tells us whether the an entry is currently being
@@ -466,35 +488,629 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     /**
      *
      */
-    public ByteArrayOutputStream baos_log = new ByteArrayOutputStream(1048576);
-    /**
-     *
-     */
     private createLinksTask cLinksTask;
     /**
-     * String array that contain highlight terms. this is used when creating the
-     * html-entry in the update display method. the
-     * {@link #findLive() live-search}-feature uses this to highlight the terms,
-     * or e.g. highlighting the keywords in the text needs this array.
+     * This variable indicates whether we have any entries, so we can en- or disable
+     * the all relevant actions that need at least one entry to be enabled.
      */
-    static DataFlavor urlFlavor;
-
-    static {
-        try {
-            urlFlavor
-                    = new DataFlavor("application/x-java-url; class=java.net.URL");
-        } catch (ClassNotFoundException cnfe) {
-            Constants.zknlogger.log(Level.WARNING, "Could not create URL Data Flavor!");
-        }
-    }
+    private boolean entriesAvailable = false;
     /**
-     * get the strings for file descriptions from the resource map
+     * This variable indicates whether we have more than one entry, so we can en- or disable
+     * the all relevant actions that need at least two entries to be enabled.
      */
-    private final org.jdesktop.application.ResourceMap toolbarResourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
-            getContext().getResourceMap(ToolbarIcons.class);
+    private boolean moreEntriesAvailable = false;
+    /**
+     * This variable indicates whether we have entries in the tables, so we can en- or disable
+     * the cut and copy actions and other actions that need at least one selection.
+     */
+    private boolean tableEntriesSelected = false;
+    /**
+     * This variable indicates whether we have entries in the tables, so we can en- or disable
+     * the cut and copy actions and other actions that need at least one selection.
+     */
+    private boolean exportPossible = false;
+    /**
+     * This variable indicates whether we have search results or not. dependent on this setting,
+     * the related menu-item in the windows-menu is en/disbaled
+     */
+    private boolean searchResultsAvailable = false;
 
     // </editor-fold>
+    /**
+     * This variable indicates whether we have desktop data or not. dependent on this setting,
+     * the related menu-item in the windows-menu is en/disbaled
+     */
+    private boolean desktopAvailable = false;
+    /**
+     * This variable indicates whether we have entries in the lists, so we can en- or disable
+     * the cut and copy actions and other actions that need at least one selection.
+     */
+    private boolean listFilledWithEntry = false;
+    /**
+     * This variable indicates whether we have seleced text, so we can en- or disable
+     * the related actions.
+     */
+    private boolean textSelected = false;
+    /**
+     * This variable indicates whether we have seleced text, so we can en- or disable
+     * the related actions.
+     */
+    private boolean bibtexFileLoaded = false;
+    /**
+     * This variable indicates whether the displayed entry is already bookmarked,
+     * so we can en- or disable the bookmark-action.
+     */
+    private boolean entryBookmarked = false;
+    /**
+     * This variable indicates whether the a luhmann-number (i.e. entry in the jTreeLuhmann)
+     * is selected or not.
+     * so we can en- or disable the bookmark-action.
+     */
+    private boolean luhmannSelected = false;
+    /**
+     * This variable indicates whether an entry has follower or not (i.e. elements in the jTreeLuhmann)
+     */
+    private boolean moreLuhmann = false;
+    /**
+     * This variable indicates whether the a luhmann-number (i.e. entry in the jTreeLuhmann)
+     * is selected or not.
+     * so we can en- or disable the bookmark-action.
+     */
+    private boolean saveEnabled = false;
+    /**
+     * This variable indicates whether the current entry ist displayed, or if
+     * e.g. a selected other entry is shown - so we can "reset" the display by
+     * showing the current entry again
+     */
+    private boolean currentEntryShown = false;
+    /**
+     * This variable indicates whether the history-function is available or not.
+     */
+    private boolean historyForAvailable = false;
+    /**
+     * This variable indicates whether the history-function is available or not.
+     */
+    private boolean historyBackAvailable = false;
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu aboutMenu;
+    private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JMenuItem addFirstLineToTitleMenuItem;
+    private javax.swing.JMenuItem addSelectionToKeywordMenuItem;
+    private javax.swing.JMenuItem addSelectionToTitleMenuItem;
+    private javax.swing.JMenuItem addToDesktopMenuItem;
+    private javax.swing.JButton buttonHistoryBack;
+    private javax.swing.JButton buttonHistoryFore;
+    private javax.swing.JMenuItem copyMenuItem;
+    private javax.swing.JMenuItem copyPlainMenuItem;
+    private javax.swing.JMenuItem deleteKwFromListMenuItem;
+    private javax.swing.JMenuItem deleteZettelMenuItem;
+    private javax.swing.JMenuItem duplicateEntryMenuItem;
+    private javax.swing.JMenu editMenu;
+    private javax.swing.JMenuItem editMenuItem;
+    private javax.swing.JMenuItem exitMenuItem;
+    private javax.swing.JMenuItem exportMenuItem;
+    private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenuItem findDoubleEntriesItem;
+    private javax.swing.JMenuItem findEntriesAnyLuhmann;
+    private javax.swing.JMenuItem findEntriesFromCreatedTimestamp;
+    private javax.swing.JMenuItem findEntriesFromEditedTimestamp;
+    private javax.swing.JMenuItem findEntriesTopLevelLuhmann;
+    private javax.swing.JMenuItem findEntriesWithAttachments;
+    private javax.swing.JMenuItem findEntriesWithRatings;
+    private javax.swing.JMenuItem findEntriesWithRemarks;
+    private javax.swing.JMenuItem findEntriesWithoutAuthors;
+    private javax.swing.JMenuItem findEntriesWithoutKeywords;
+    private javax.swing.JMenuItem findEntriesWithoutManualLinks;
+    private javax.swing.JMenuItem findEntriesWithoutRatings;
+    private javax.swing.JMenuItem findEntriesWithoutRemarks;
+    private javax.swing.JMenu findEntryKeywordsMenu;
+    private javax.swing.JMenu findEntryWithout;
+    private javax.swing.JMenu findMenu;
+    private javax.swing.JMenuItem findMenuItem;
+    private javax.swing.JMenuItem findReplaceMenuItem;
+    private javax.swing.JMenuItem gotoEntryMenuItem;
+    private javax.swing.JCheckBoxMenuItem highlightSegmentsMenuItem;
+    private javax.swing.JMenuItem historyForMenuItem;
+    private javax.swing.JMenuItem histroyBackMenuItem;
+    private javax.swing.JMenuItem homeMenuItem;
+    private javax.swing.JMenuItem importMenuItem;
+    private javax.swing.JMenuItem insertEntryMenuItem;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonRefreshAttachments;
+    private javax.swing.JButton jButtonRefreshAuthors;
+    private javax.swing.JButton jButtonRefreshCluster;
+    private javax.swing.JButton jButtonRefreshKeywords;
+    private javax.swing.JButton jButtonRefreshTitles;
+    private javax.swing.JCheckBox jCheckBoxCluster;
+    private javax.swing.JCheckBox jCheckBoxShowAllLuhmann;
+    private javax.swing.JCheckBox jCheckBoxShowSynonyms;
+    private javax.swing.JComboBox jComboBoxAuthorType;
+    private javax.swing.JComboBox jComboBoxBookmarkCategory;
+    private javax.swing.JEditorPane jEditorPaneBookmarkComment;
+    private javax.swing.JEditorPane jEditorPaneClusterEntries;
+    private javax.swing.JEditorPane jEditorPaneDispAuthor;
+    private javax.swing.JEditorPane jEditorPaneEntry;
+    private javax.swing.JEditorPane jEditorPaneIsFollower;
+    private javax.swing.JLabel jLabelMemory;
+    private javax.swing.JList jListEntryKeywords;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
+    private javax.swing.JPanel jPanel14;
+    private javax.swing.JPanel jPanel15;
+    private javax.swing.JPanel jPanel16;
+    private javax.swing.JPanel jPanel17;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
+    private javax.swing.JPanel jPanelDispAuthor;
+    private javax.swing.JPanel jPanelLiveSearch;
+    private javax.swing.JPanel jPanelMainRight;
+    private javax.swing.JPanel jPanelManLinks;
+    private javax.swing.JPopupMenu jPopupMenuAttachments;
+    private javax.swing.JPopupMenu jPopupMenuAuthors;
+    private javax.swing.JPopupMenu jPopupMenuBookmarks;
+    private javax.swing.JPopupMenu jPopupMenuKeywordList;
+    private javax.swing.JPopupMenu jPopupMenuKeywords;
+    private javax.swing.JPopupMenu jPopupMenuLinks;
+    private javax.swing.JPopupMenu jPopupMenuLuhmann;
+    private javax.swing.JPopupMenu jPopupMenuMain;
+    private javax.swing.JPopupMenu jPopupMenuTitles;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane10;
+    private javax.swing.JScrollPane jScrollPane11;
+    private javax.swing.JScrollPane jScrollPane13;
+    private javax.swing.JScrollPane jScrollPane14;
+    private javax.swing.JScrollPane jScrollPane15;
+    private javax.swing.JScrollPane jScrollPane16;
+    private javax.swing.JScrollPane jScrollPane17;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JScrollPane jScrollPane9;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JToolBar.Separator jSeparator10;
+    private javax.swing.JSeparator jSeparator100;
+    private javax.swing.JPopupMenu.Separator jSeparator101;
+    private javax.swing.JSeparator jSeparator102;
+    private javax.swing.JSeparator jSeparator103;
+    private javax.swing.JSeparator jSeparator104;
+    private javax.swing.JSeparator jSeparator105;
+    private javax.swing.JPopupMenu.Separator jSeparator106;
+    private javax.swing.JSeparator jSeparator107;
+    private javax.swing.JPopupMenu.Separator jSeparator108;
+    private javax.swing.JSeparator jSeparator109;
+    private javax.swing.JSeparator jSeparator11;
+    private javax.swing.JSeparator jSeparator110;
+    private javax.swing.JPopupMenu.Separator jSeparator111;
+    private javax.swing.JPopupMenu.Separator jSeparator112;
+    private javax.swing.JPopupMenu.Separator jSeparator113;
+    private javax.swing.JPopupMenu.Separator jSeparator114;
+    private javax.swing.JPopupMenu.Separator jSeparator115;
+    private javax.swing.JPopupMenu.Separator jSeparator116;
+    private javax.swing.JPopupMenu.Separator jSeparator117;
+    private javax.swing.JPopupMenu.Separator jSeparator118;
+    private javax.swing.JPopupMenu.Separator jSeparator119;
+    private javax.swing.JSeparator jSeparator12;
+    private javax.swing.JSeparator jSeparator13;
+    private javax.swing.JSeparator jSeparator14;
+    private javax.swing.JSeparator jSeparator15;
+    private javax.swing.JSeparator jSeparator16;
+    private javax.swing.JSeparator jSeparator17;
+    private javax.swing.JSeparator jSeparator18;
+    private javax.swing.JSeparator jSeparator19;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator20;
+    private javax.swing.JSeparator jSeparator21;
+    private javax.swing.JSeparator jSeparator22;
+    private javax.swing.JSeparator jSeparator23;
+    private javax.swing.JSeparator jSeparator24;
+    private javax.swing.JSeparator jSeparator25;
+    private javax.swing.JSeparator jSeparator26;
+    private javax.swing.JSeparator jSeparator27;
+    private javax.swing.JSeparator jSeparator28;
+    private javax.swing.JSeparator jSeparator29;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator30;
+    private javax.swing.JSeparator jSeparator31;
+    private javax.swing.JToolBar.Separator jSeparator32;
+    private javax.swing.JSeparator jSeparator33;
+    private javax.swing.JPopupMenu.Separator jSeparator34;
+    private javax.swing.JSeparator jSeparator35;
+    private javax.swing.JSeparator jSeparator36;
+    private javax.swing.JSeparator jSeparator37;
+    private javax.swing.JSeparator jSeparator38;
+    private javax.swing.JSeparator jSeparator39;
+    private javax.swing.JToolBar.Separator jSeparator4;
+    private javax.swing.JSeparator jSeparator40;
+    private javax.swing.JSeparator jSeparator41;
+    private javax.swing.JSeparator jSeparator42;
+    private javax.swing.JSeparator jSeparator43;
+    private javax.swing.JSeparator jSeparator44;
+    private javax.swing.JSeparator jSeparator45;
+    private javax.swing.JSeparator jSeparator46;
+
+    // TODO wenn import abbricht, werden nicht alle listen resettet, bspw. table enthalten noch alte daten
+    private javax.swing.JSeparator jSeparator47;
+    private javax.swing.JSeparator jSeparator48;
+    private javax.swing.JSeparator jSeparator49;
+    private javax.swing.JToolBar.Separator jSeparator5;
+    private javax.swing.JSeparator jSeparator50;
+    private javax.swing.JSeparator jSeparator51;
+    private javax.swing.JSeparator jSeparator52;
+    private javax.swing.JSeparator jSeparator53;
+    private javax.swing.JSeparator jSeparator54;
+    private javax.swing.JSeparator jSeparator55;
+    private javax.swing.JSeparator jSeparator56;
+    private javax.swing.JSeparator jSeparator57;
+    private javax.swing.JSeparator jSeparator58;
+    private javax.swing.JSeparator jSeparator59;
+    private javax.swing.JSeparator jSeparator6;
+    private javax.swing.JSeparator jSeparator60;
+    private javax.swing.JSeparator jSeparator61;
+    private javax.swing.JSeparator jSeparator62;
+    private javax.swing.JSeparator jSeparator63;
+    private javax.swing.JSeparator jSeparator64;
+    private javax.swing.JPopupMenu.Separator jSeparator65;
+    private javax.swing.JSeparator jSeparator66;
+    private javax.swing.JSeparator jSeparator67;
+    private javax.swing.JSeparator jSeparator68;
+    private javax.swing.JSeparator jSeparator69;
+    private javax.swing.JSeparator jSeparator7;
+    private javax.swing.JSeparator jSeparator70;
+    private javax.swing.JSeparator jSeparator71;
+    private javax.swing.JPopupMenu.Separator jSeparator72;
+    private javax.swing.JPopupMenu.Separator jSeparator73;
+    private javax.swing.JPopupMenu.Separator jSeparator74;
+    private javax.swing.JSeparator jSeparator75;
+    private javax.swing.JSeparator jSeparator76;
+    private javax.swing.JSeparator jSeparator77;
+    private javax.swing.JSeparator jSeparator78;
+    private javax.swing.JSeparator jSeparator79;
+    private javax.swing.JSeparator jSeparator8;
+    private javax.swing.JSeparator jSeparator80;
+    private javax.swing.JSeparator jSeparator81;
+    private javax.swing.JSeparator jSeparator82;
+    private javax.swing.JSeparator jSeparator83;
+    private javax.swing.JSeparator jSeparator84;
+    private javax.swing.JSeparator jSeparator85;
+    private javax.swing.JSeparator jSeparator86;
+    private javax.swing.JSeparator jSeparator87;
+    private javax.swing.JSeparator jSeparator88;
+    private javax.swing.JSeparator jSeparator89;
+    private javax.swing.JSeparator jSeparator9;
+    private javax.swing.JSeparator jSeparator90;
+    private javax.swing.JSeparator jSeparator91;
+    private javax.swing.JSeparator jSeparator92;
+    private javax.swing.JSeparator jSeparator93;
+    private javax.swing.JSeparator jSeparator94;
+    private javax.swing.JSeparator jSeparator95;
+    private javax.swing.JSeparator jSeparator96;
+    private javax.swing.JSeparator jSeparator97;
+    private javax.swing.JSeparator jSeparator98;
+    private javax.swing.JSeparator jSeparator99;
+    private javax.swing.JSeparator jSeparatorAbout1;
+    private javax.swing.JSeparator jSeparatorExit;
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JSplitPane jSplitPane2;
+    private javax.swing.JSplitPane jSplitPane3;
+    private javax.swing.JSplitPane jSplitPaneAuthors;
+    private javax.swing.JSplitPane jSplitPaneLinks;
+    private javax.swing.JSplitPane jSplitPaneMain1;
+    private javax.swing.JSplitPane jSplitPaneMain2;
+    private javax.swing.JTabbedPane jTabbedPaneMain;
+    private javax.swing.JTable jTableAttachments;
+    private javax.swing.JTable jTableAuthors;
+    private javax.swing.JTable jTableBookmarks;
+    private javax.swing.JTable jTableKeywords;
+    private javax.swing.JTable jTableLinks;
+    private javax.swing.JTable jTableManLinks;
+    private javax.swing.JTable jTableTitles;
+    private javax.swing.JTextField jTextFieldEntryNumber;
+    private javax.swing.JTextField jTextFieldFilterAttachments;
+    private javax.swing.JTextField jTextFieldFilterAuthors;
+    private javax.swing.JTextField jTextFieldFilterCluster;
+    private javax.swing.JTextField jTextFieldFilterKeywords;
+    private javax.swing.JTextField jTextFieldFilterTitles;
+    private javax.swing.JTextField jTextFieldLiveSearch;
+    private javax.swing.JTree jTreeCluster;
+    private javax.swing.JTree jTreeKeywords;
+    private javax.swing.JTree jTreeLuhmann;
+    private javax.swing.JMenuItem lastEntryMenuItem;
+    private javax.swing.JMenuItem liveSearchMenuItem;
+    private javax.swing.JPanel mainPanel;
+    private javax.swing.JMenuItem manualInsertLinksMenuItem;
+    private javax.swing.JMenuItem manualInsertMenuItem;
+    private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem menuFileInformation;
+    private javax.swing.JMenuItem menuKwListSearchAnd;
+    private javax.swing.JMenuItem menuKwListSearchNot;
+    private javax.swing.JMenuItem menuKwListSearchOr;
+    private javax.swing.JMenuItem newDesktopMenuItem;
+    private javax.swing.JMenuItem newEntryMenuItem;
+    private javax.swing.JMenuItem newZettelkastenMenuItem;
+    private javax.swing.JMenuItem nextEntryMenuItem;
+    private javax.swing.JMenuItem openMenuItem;
+    private javax.swing.JMenuItem pasteMenuItem;
+    private javax.swing.JMenuItem popupAttachmentsCopy;
+    private javax.swing.JMenuItem popupAttachmentsDelete;
+    private javax.swing.JMenuItem popupAttachmentsEdit;
+    private javax.swing.JMenuItem popupAttachmentsExport;
+    private javax.swing.JMenuItem popupAttachmentsGoto;
+    private javax.swing.JMenuItem popupAuthorsAddToEntry;
+    private javax.swing.JMenuItem popupAuthorsBibkey;
+    private javax.swing.JMenuItem popupAuthorsCopy;
+    private javax.swing.JMenuItem popupAuthorsDelete;
+    private javax.swing.JMenuItem popupAuthorsDesktop;
+    private javax.swing.JMenuItem popupAuthorsDesktopAnd;
+    private javax.swing.JMenuItem popupAuthorsEdit;
+    private javax.swing.JMenuItem popupAuthorsImport;
+    private javax.swing.JMenuItem popupAuthorsLuhmann;
+    private javax.swing.JMenuItem popupAuthorsLuhmannAnd;
+    private javax.swing.JMenuItem popupAuthorsManLinks;
+    private javax.swing.JMenuItem popupAuthorsManLinksAnd;
+    private javax.swing.JMenuItem popupAuthorsNew;
+    private javax.swing.JMenuItem popupAuthorsSearchLogAnd;
+    private javax.swing.JMenuItem popupAuthorsSearchLogNot;
+    private javax.swing.JMenuItem popupAuthorsSearchLogOr;
+    private javax.swing.JMenu popupAuthorsSubAdd;
+    private javax.swing.JMenuItem popupBookmarkAddDesktop;
+    private javax.swing.JMenuItem popupBookmarksAddLuhmann;
+    private javax.swing.JMenuItem popupBookmarksAddManLinks;
+    private javax.swing.JMenuItem popupBookmarksDelete;
+    private javax.swing.JMenuItem popupBookmarksDeleteCat;
+    private javax.swing.JMenuItem popupBookmarksEdit;
+    private javax.swing.JMenuItem popupBookmarksEditCat;
+    private javax.swing.JMenuItem popupKeywordsAddToList;
+    private javax.swing.JMenuItem popupKeywordsCopy;
+    private javax.swing.JMenuItem popupKeywordsDelete;
+    private javax.swing.JMenuItem popupKeywordsDesktop;
+    private javax.swing.JMenuItem popupKeywordsDesktopAnd;
+    private javax.swing.JMenuItem popupKeywordsEdit;
+    private javax.swing.JMenuItem popupKeywordsLuhmann;
+    private javax.swing.JMenuItem popupKeywordsLuhmannAnd;
+    private javax.swing.JMenuItem popupKeywordsManLinks;
+    private javax.swing.JMenuItem popupKeywordsManLinksAnd;
+    private javax.swing.JMenuItem popupKeywordsNew;
+    private javax.swing.JMenuItem popupKeywordsSearchAnd;
+    private javax.swing.JMenuItem popupKeywordsSearchNot;
+    private javax.swing.JMenuItem popupKeywordsSearchOr;
+    private javax.swing.JMenuItem popupKwListCopy;
+    private javax.swing.JMenuItem popupKwListDelete;
+    private javax.swing.JMenuItem popupKwListHighlight;
+    private javax.swing.JCheckBoxMenuItem popupKwListHighlightSegments;
+    private javax.swing.JCheckBoxMenuItem popupKwListLogAnd;
+    private javax.swing.JCheckBoxMenuItem popupKwListLogOr;
+    private javax.swing.JMenuItem popupKwListRefresh;
+    private javax.swing.JMenuItem popupKwListSearchAnd;
+    private javax.swing.JMenuItem popupKwListSearchNot;
+    private javax.swing.JMenuItem popupKwListSearchOr;
+
+
+/**
+ * This event catches mouse-cicks which occur when the user clicks a hyperlink
+ * in the main editor-pane. First has to be checked, wether the clicked hyperlink
+ * was an web-url or links to a local file. Then the url or file will be opened
+ *
+ * @param evt
+ */
+    private javax.swing.JMenuItem popupLinkRemoveManLink;
+    private javax.swing.JMenuItem popupLinksDesktop;
+    private javax.swing.JMenuItem popupLinksLuhmann;
+    private javax.swing.JMenuItem popupLinksManLinks;
+    private javax.swing.JMenuItem popupLinksRefresh;
+    private javax.swing.JMenuItem popupLuhmannAdd;
+    private javax.swing.JMenuItem popupLuhmannBookmarks;
+    private javax.swing.JMenuItem popupLuhmannDelete;
+    private javax.swing.JMenuItem popupLuhmannDesktop;
+    private javax.swing.JMenuItem popupLuhmannLevel1;
+    private javax.swing.JMenuItem popupLuhmannLevel2;
+    private javax.swing.JMenuItem popupLuhmannLevel3;
+    private javax.swing.JMenuItem popupLuhmannLevel4;
+    private javax.swing.JMenuItem popupLuhmannLevel5;
+    private javax.swing.JMenuItem popupLuhmannLevelAll;
+    private javax.swing.JMenuItem popupLuhmannManLinks;
+    private javax.swing.JMenu popupLuhmannSetLevel;
+    private javax.swing.JMenuItem popupMainAddToKeyword;
+    private javax.swing.JMenuItem popupMainCopy;
+    private javax.swing.JMenuItem popupMainCopyPlain;
+    private javax.swing.JMenuItem popupMainFind;
+    private javax.swing.JMenuItem popupMainSetFirstLineAsTitle;
+    private javax.swing.JMenuItem popupMainSetSelectionAsTitle;
+    private javax.swing.JMenuItem popupTitlesAutomaticTitle;
+    private javax.swing.JMenuItem popupTitlesBookmarks;
+    private javax.swing.JMenuItem popupTitlesCopy;
+    private javax.swing.JMenuItem popupTitlesDelete;
+    private javax.swing.JMenuItem popupTitlesDesktop;
+    private javax.swing.JMenuItem popupTitlesEdit;
+    private javax.swing.JMenuItem popupTitlesEditEntry;
+    private javax.swing.JMenuItem popupTitlesLuhmann;
+    private javax.swing.JMenuItem popupTitlesManLinks;
+    private javax.swing.JMenuItem preferencesMenuItem;
+    private javax.swing.JMenuItem prevEntryMenuItem;
+    private javax.swing.JMenuItem quickNewEntryMenuItem;
+    private javax.swing.JMenuItem quickNewTitleEntryMenuItem;
+    private javax.swing.JMenuItem randomEntryMenuItem;
+    private javax.swing.JMenuItem recentDoc1;
+    private javax.swing.JMenuItem recentDoc2;
+    private javax.swing.JMenuItem recentDoc3;
+    private javax.swing.JMenuItem recentDoc4;
+    private javax.swing.JMenuItem recentDoc5;
+    private javax.swing.JMenuItem recentDoc6;
+    private javax.swing.JMenuItem recentDoc7;
+    private javax.swing.JMenuItem recentDoc8;
+    private javax.swing.JMenu recentDocsSubMenu;
+    private javax.swing.JMenuItem saveAsMenuItem;
+    private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JMenuItem selectAllMenuItem;
+    private javax.swing.JMenuItem setBookmarkMenuItem;
+    private javax.swing.JMenuItem showAttachmentsMenuItem;
+    private javax.swing.JMenuItem showAuthorsMenuItem;
+    private javax.swing.JMenuItem showBookmarksMenuItem;
+    private javax.swing.JMenuItem showClusterMenuItem;
+    private javax.swing.JMenuItem showCurrentEntryAgain;
+    private javax.swing.JMenuItem showDesktopMenuItem;
+    private javax.swing.JMenuItem showErrorLogMenuItem;
+    private javax.swing.JCheckBoxMenuItem showHighlightKeywords;
+    private javax.swing.JMenuItem showKeywordsMenuItem;
+    private javax.swing.JMenuItem showLinksMenuItem;
+    private javax.swing.JMenuItem showLuhmannMenuItem;
+    private javax.swing.JMenuItem showNewEntryMenuItem;
+    private javax.swing.JMenuItem showSearchResultsMenuItem;
+    private javax.swing.JMenuItem showTitlesMenuItem;
+    private javax.swing.JLabel statusAnimationLabel;
+    private javax.swing.JButton statusDesktopEntryButton;
+    private javax.swing.JLabel statusEntryLabel;
+    private javax.swing.JButton statusErrorButton;
+    private javax.swing.JLabel statusMsgLabel;
+    private javax.swing.JLabel statusOfEntryLabel;
+    private javax.swing.JPanel statusPanel;
+    private javax.swing.JButton tb_addbookmark;
+    private javax.swing.JButton tb_addluhmann;
+    private javax.swing.JButton tb_addmanlinks;
+    private javax.swing.JButton tb_addtodesktop;
+    private javax.swing.JButton tb_copy;
+    private javax.swing.JButton tb_delete;
+    private javax.swing.JButton tb_edit;
+    private javax.swing.JButton tb_find;
+    private javax.swing.JButton tb_first;
+    private javax.swing.JButton tb_last;
+    private javax.swing.JButton tb_newEntry;
+    private javax.swing.JButton tb_next;
+    private javax.swing.JButton tb_open;
+    private javax.swing.JButton tb_paste;
+    private javax.swing.JButton tb_prev;
+    private javax.swing.JButton tb_save;
+    private javax.swing.JButton tb_selectall;
+    private javax.swing.JToolBar toolBar;
+    private javax.swing.JMenuItem viewAttachmentEdit;
+    private javax.swing.JMenuItem viewAttachmentsCopy;
+    private javax.swing.JMenuItem viewAttachmentsDelete;
+    private javax.swing.JMenuItem viewAttachmentsExport;
+    private javax.swing.JMenuItem viewAuthorsAddLuhmann;
+    private javax.swing.JMenuItem viewAuthorsAddLuhmannAnd;
+    private javax.swing.JMenuItem viewAuthorsAddToEntry;
+    private javax.swing.JMenuItem viewAuthorsAttachBibtexFile;
+    private javax.swing.JMenuItem viewAuthorsBibkey;
+    private javax.swing.JMenuItem viewAuthorsCopy;
+    private javax.swing.JMenuItem viewAuthorsDelete;
+    private javax.swing.JMenuItem viewAuthorsDesktop;
+    private javax.swing.JMenuItem viewAuthorsDesktopAnd;
+    private javax.swing.JMenuItem viewAuthorsEdit;
+    private javax.swing.JMenuItem viewAuthorsExport;
+    private javax.swing.JMenuItem viewAuthorsImport;
+    private javax.swing.JMenuItem viewAuthorsManLinks;
+    private javax.swing.JMenuItem viewAuthorsManLinksAnd;
+    private javax.swing.JMenuItem viewAuthorsNew;
+    private javax.swing.JMenuItem viewAuthorsRefreshBibtexFile;
+    private javax.swing.JMenuItem viewAuthorsSearchAnd;
+    private javax.swing.JMenuItem viewAuthorsSearchNot;
+    private javax.swing.JMenuItem viewAuthorsSearchOr;
+    private javax.swing.JMenu viewAuthorsSubAdd;
+    private javax.swing.JMenu viewAuthorsSubEdit;
+    private javax.swing.JMenu viewAuthorsSubFind;
+    private javax.swing.JMenuItem viewBookmarkDesktop;
+    private javax.swing.JMenuItem viewBookmarksAddLuhmann;
+    private javax.swing.JMenuItem viewBookmarksDelete;
+    private javax.swing.JMenuItem viewBookmarksDeleteCat;
+    private javax.swing.JMenuItem viewBookmarksEdit;
+    private javax.swing.JMenuItem viewBookmarksEditCat;
+    private javax.swing.JMenuItem viewBookmarksExport;
+    private javax.swing.JMenuItem viewBookmarksExportSearch;
+    private javax.swing.JMenuItem viewBookmarksManLink;
+    private javax.swing.JMenuItem viewClusterExport;
+    private javax.swing.JMenuItem viewClusterExportToSearch;
+    private javax.swing.JMenuItem viewKeywordsAddToList;
+    private javax.swing.JMenuItem viewKeywordsCopy;
+    private javax.swing.JMenuItem viewKeywordsDelete;
+    private javax.swing.JMenuItem viewKeywordsDesktop;
+    private javax.swing.JMenuItem viewKeywordsDesktopAnd;
+    private javax.swing.JMenuItem viewKeywordsEdit;
+    private javax.swing.JMenuItem viewKeywordsExport;
+    private javax.swing.JMenuItem viewKeywordsLuhmann;
+    private javax.swing.JMenuItem viewKeywordsLuhmannAnd;
+    private javax.swing.JMenuItem viewKeywordsManLinks;
+    private javax.swing.JMenuItem viewKeywordsManLinksAnd;
+    private javax.swing.JMenuItem viewKeywordsNew;
+    private javax.swing.JMenuItem viewKeywordsSearchAnd;
+    private javax.swing.JMenuItem viewKeywordsSearchNot;
+    private javax.swing.JMenuItem viewKeywordsSearchOr;
+    private javax.swing.JMenu viewMenu;
+    private javax.swing.JMenuItem viewMenuAttachmentGoto;
+    private javax.swing.JMenu viewMenuAttachments;
+    private javax.swing.JMenu viewMenuAuthors;
+    private javax.swing.JMenu viewMenuBookmarks;
+    private javax.swing.JMenu viewMenuCluster;
+    private javax.swing.JMenuItem viewMenuExportToSearch;
+    private javax.swing.JMenu viewMenuKeywords;
+    private javax.swing.JMenu viewMenuLinks;
+    private javax.swing.JMenuItem viewMenuLinksDesktop;
+    private javax.swing.JMenuItem viewMenuLinksExport;
+    private javax.swing.JCheckBoxMenuItem viewMenuLinksKwListLogAnd;
+    private javax.swing.JCheckBoxMenuItem viewMenuLinksKwListLogOr;
+    private javax.swing.JMenuItem viewMenuLinksKwListRefresh;
+    private javax.swing.JMenuItem viewMenuLinksLuhmann;
+    private javax.swing.JMenuItem viewMenuLinksManLink;
+    private javax.swing.JMenuItem viewMenuLinksRemoveManLink;
+    private javax.swing.JMenu viewMenuLuhmann;
+    private javax.swing.JMenuItem viewMenuLuhmannBookmarks;
+    private javax.swing.JMenuItem viewMenuLuhmannDelete;
+    private javax.swing.JMenuItem viewMenuLuhmannDepth1;
+    private javax.swing.JMenuItem viewMenuLuhmannDepth2;
+    private javax.swing.JMenuItem viewMenuLuhmannDepth3;
+    private javax.swing.JMenuItem viewMenuLuhmannDepth4;
+    private javax.swing.JMenuItem viewMenuLuhmannDepth5;
+    private javax.swing.JMenuItem viewMenuLuhmannDepthAll;
+    private javax.swing.JMenuItem viewMenuLuhmannDesktop;
+    private javax.swing.JMenuItem viewMenuLuhmannExport;
+    private javax.swing.JMenuItem viewMenuLuhmannExportSearch;
+    private javax.swing.JMenuItem viewMenuLuhmannManLinks;
+    private javax.swing.JMenu viewMenuLuhmannShowLevel;
+    private javax.swing.JCheckBoxMenuItem viewMenuLuhmannShowNumbers;
+    private javax.swing.JMenuItem viewMenuLuhmannShowTopLevel;
+    private javax.swing.JMenu viewMenuTitles;
+    private javax.swing.JMenuItem viewTitlesAutomaticFirstLine;
+    private javax.swing.JMenuItem viewTitlesBookmarks;
+    private javax.swing.JMenuItem viewTitlesCopy;
+    private javax.swing.JMenuItem viewTitlesDelete;
+    private javax.swing.JMenuItem viewTitlesDesktop;
+    private javax.swing.JMenuItem viewTitlesEdit;
+    private javax.swing.JMenuItem viewTitlesExport;
+    private javax.swing.JMenuItem viewTitlesLuhmann;
+    private javax.swing.JMenuItem viewTitlesManLinks;
+    private javax.swing.JMenu windowsMenu;
+    private javax.swing.JTextField tb_searchTextfield;
+    private javax.swing.JPanel jPanelSearchBox;
+    private javax.swing.JLabel jLabelLupe;
+    private TaskProgressDialog taskDlg;
+    private NewEntryFrame newEntryDlg;
+    private CImport importWindow;
+    private CUpdateInfoBox updateInfoDlg;
+    private CExport exportWindow;
+    private CBiggerEditField biggerEditDlg;
+    private SearchResultsFrame searchResultsDlg;
+    private CSearchDlg searchDlg;
+    private CReplaceDialog replaceDlg;
+    private DesktopFrame desktopDlg;
+    private CSettingsDlg settingsDlg;
+    private CNewBookmark newBookmarkDlg;
+    private CErrorLog errorDlg;
+    private CInformation informationDlg;
+    private CExportEntries exportEntriesDlg;
+    private CImportBibTex importBibTexDlg;
+    private CShowMultipleDesktopOccurences multipleOccurencesDlg;
+    private CSetBibKey setBibKeyDlg;
+    private AboutBox zknAboutBox;
+    private FindDoubleEntriesTask doubleEntriesDlg;
+    private CRateEntry rateEntryDlg;
     /**
      *
      * @param app
@@ -675,6 +1291,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // this timer should start after 5 minutes and update every 5 minutes
         makeAutoBackupTimer.schedule(new AutoBackupTimer(), Constants.autobackupUpdateStart, Constants.autobackupUpdateInterval);
     }
+
+    public boolean isBackupNecessary() { return isbnc; }
+
+    public void backupNecessary(boolean val) { isbnc = val; }
+
+    public void setUpdateURI(String uri) { updateURI = uri; }
+
+    public boolean isAutoBackupRunning() { return cabir; }
+
+    public void setAutoBackupRunning(boolean val) { cabir = val; }
 
     private void initBorders(Settings settingsObj) {
         /*
@@ -2790,7 +3416,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     UIManager.getLookAndFeelDefaults().put("defaultFont", fm.deriveFont(fm.getSize2D() * Toolkit.getDefaultToolkit().getScreenResolution() / 96));
                 }
             } catch (HeadlessException e) {
-            }            
+            }
             // UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
             String laf = settings.getLookAndFeel();
             if (laf.equals(Constants.seaGlassLookAndFeelClassName)) {
@@ -6443,128 +7069,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-    /**
-     * This Action creates the links between of the currently displayed entry
-     * with all other enries, based on matching keywords. These hyperlinks are
-     * stored in the JTable of the JTabbedPane
-     *
-     * @return the background task
-     */
-    private class createLinksTask extends org.jdesktop.application.Task<Object, Void> {
-
-        /**
-         * This variable stores the table data of the links-list. We use this
-         * variable in the "createLinksTask", because when we add the values to
-         * the tables directly (via tablemodel) and the user skips through the
-         * entries before the task has finished, the table contains wrong
-         * values. so, within the task this list is filled, and only when the
-         * task has finished, we copy this list to the table.
-         */
-        private ArrayList<Object[]> linkedlinkslist;
-
-        @SuppressWarnings("LeakingThisInConstructor")
-        createLinksTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to createLinksTask fields, here.
-            super(app);
-            cLinksTask = this;
-        }
-
-        @Override
-        protected Object doInBackground() {
-            // Your Task's code here.  This method runs
-            // on a background thread, so don't reference
-            // the Swing GUI from here.
-
-            // tell program that this thread is running...
-            createLinksIsRunning = true;
-            // variable that indicates whether a match of keywords was found
-            boolean found;
-            int cnt;
-            // get the length of the data file, i.e. the amount of entrys
-            final int len = data.getCount(Daten.ZKNCOUNT);
-            // get the keyword index numbers of the current entry
-            String[] kws = data.getCurrentKeywords();
-            // if we have any keywords, go on
-            if (kws != null) {
-                // create new instance of that variable
-                linkedlinkslist = new ArrayList<>();
-                // iterate all entrys of the zettelkasten
-                for (cnt = 1; cnt <= len; cnt++) {
-                    // leave out the comparison of the current entry with itself
-                    if (cnt == data.getCurrentZettelPos()) {
-                        continue;
-                    }
-                    // init the found indicator
-                    found = false;
-                    // iterate all keywords of current entry
-                    for (String k : kws) {
-                        // look for occurences of any of the current keywords
-                        if (data.existsInKeywords(k, cnt, false)) {
-                            // set found-indicator
-                            found = true;
-                            break;
-                        }
-                    }
-                    // if we have a match, connect entries, i.e. display the number and title of
-                    // the linked entries in the table of the tabbed pane
-                    if (found) {
-                        // create a new object
-                        Object[] ob = new Object[4];
-                        // store the information in that object
-                        ob[0] = cnt;
-                        ob[1] = data.getZettelTitle(cnt);
-                        ob[2] = data.getLinkStrength(data.getCurrentZettelPos(), cnt);
-                        ob[3] = data.getZettelRating(cnt);
-                        // and add that content as a new row to the table
-                        linkedlinkslist.add(ob);
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void succeeded(Object result) {
-            // Runs on the EDT.  Update the GUI based on
-            // the result computed by doInBackground().
-            DefaultTableModel tm = (DefaultTableModel) jTableLinks.getModel();
-            // reset the table
-            tm.setRowCount(0);
-            // check whether we have any entries at all...
-            if (linkedlinkslist != null) {
-                // create iterator for linked list
-                Iterator<Object[]> i = linkedlinkslist.iterator();
-                // go through linked list and add all objects to the table model
-                try {
-                    while (i.hasNext()) {
-                        tm.addRow(i.next());
-                    }
-                } catch (ConcurrentModificationException e) {
-                    // reset the table when we have overlappings threads
-                    tm.setRowCount(0);
-                }
-            }
-            // display manual links now...
-            displayManualLinks();
-        }
-
-        @Override
-        protected void finished() {
-            super.finished();
-            cLinksTask = null;
-            createLinksIsRunning = false;
-            // show/enable viewmenu, if we have at least one entry...
-            if ((jTableLinks.getRowCount() > 0) && (TAB_LINKS == jTabbedPaneMain.getSelectedIndex())) {
-                showTabMenu(viewMenuLinks);
-            }
-            // show amount of entries
-            statusMsgLabel.setText("(" + String.valueOf(jTableLinks.getRowCount()) + " " + org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(ZettelkastenView.class).getString("statusTextLinks") + ")");
-        }
-    }
-
     private void fillLuhmannNumbers(MutableTreeNode node, int zettelpos, int selection) {
         // is current entry = to be selected entry?
         if (zettelpos == selection) {
@@ -6699,45 +7203,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     /**
-     * This class starts a timer that displays the memory-usage of the
-     * zettelkasten
-     */
-    class MemoryTimer extends TimerTask {
-
-        @Override
-        public void run() {
-            // display memory usage
-            calculateMemoryUsage();
-        }
-    }
-
-    /**
-     * This class starts a timer that displays the memory-usage of the
-     * zettelkasten
-     */
-    class ErrorIconTimer extends TimerTask {
-
-        @Override
-        public void run() {
-            // make update-icon flash
-            flashErrorIcon();
-        }
-    }
-
-    /**
-     * This class starts a timer that displays the memory-usage of the
-     * zettelkasten
-     */
-    class AutoBackupTimer extends TimerTask {
-
-        @Override
-        public void run() {
-            // create autobackup
-            makeAutoBackup();
-        }
-    }
-
-    /**
      * This method creates the so-called Luhmann-numbers, i.e. follower-entries
      * of the current entry. Since follower-entries can have other followers
      * itself (subentries), we iterate all entries and subentries here, creating
@@ -6836,6 +7301,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public final Task checkForUpdate() {
         return new CheckForUpdateTask(org.jdesktop.application.Application.getInstance(ZettelkastenApp.class), this, settings);
     }
+
     /**
      * This task creates the related (clustered) keywords from the current
      * entry. Therefore, the current entry's keywords are retrieved. Then, in
@@ -6848,115 +7314,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     @Action
     public Task clusterTask() {
         return new createClusterTask(org.jdesktop.application.Application.getInstance(ZettelkastenApp.class));
-    }
-
-    /**
-     * This task creates the related (clustered) keywords from the current
-     * entry. Therefore, the current entry's keywords are retrieved. Then, in
-     * each entry of the data-file we look for occurences of the current entry's
-     * keywords. If we found any matches, the related entry's other keywords are
-     * added to the final keyword-list.
-     *
-     * @return the background task
-     */
-    private class createClusterTask extends org.jdesktop.application.Task<Object, Void> {
-
-        // create link list for the keywords and related keywords
-
-        LinkedList<String> lwsClusterTask = new LinkedList<>();
-
-        createClusterTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to createLinksTask fields, here.
-            super(app);
-        }
-
-        @Override
-        protected Object doInBackground() {
-            // Your Task's code here.  This method runs
-            // on a background thread, so don't reference
-            // the Swing GUI from here.
-            //
-            // tell programm that the thread is running
-            createClusterIsRunning = true;
-            // get current entries keywords
-            String[] cws = data.getCurrentKeywords();
-            // if we have any current keywords, go on
-            if (cws != null) {
-                // get amount of entries
-                int count = data.getCount(Daten.ZKNCOUNT);
-                // add all current keywords and their related keywords to
-                // the linked list
-                for (String c : cws) {
-                    // add each curent keyword to cluster list
-                    lwsClusterTask.add(c);
-                    // now go through all entries
-                    for (int cnt = 1; cnt <= count; cnt++) {
-                        // check whether current keywords exits in entry
-                        if (data.existsInKeywords(c, cnt, false)) {
-                            // if yes, retrieve entry's keywords
-                            String[] newkws = data.getKeywords(cnt);
-                            // check whether we have any keywords at all
-                            if (newkws != null) {
-                                // if so, iterate keywords
-                                for (String n : newkws) {
-                                    // and add each keyword to the link list, if it's not
-                                    // already in that list...
-                                    if (!lwsClusterTask.contains(n)) {
-                                        lwsClusterTask.add(n);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                // sort the array
-                Collections.sort(lwsClusterTask, new Comparer());
-            }
-            // we have no filtered list...
-            linkedclusterlist = false;
-            // indicate that the cluster list is up to date...
-            data.setClusterlistUpToDate(true);
-
-            return null;
-        }
-
-        @Override
-        protected void succeeded(Object result) {
-            // Runs on the EDT.  Update the GUI based on
-            // the result computed by doInBackground().
-            //
-            // get the treemodel
-            DefaultTreeModel dtm = (DefaultTreeModel) jTreeCluster.getModel();
-            // set this as root node. we don't need to care about this, since the
-            // root is not visible.
-            DefaultMutableTreeNode root = new DefaultMutableTreeNode("ZKN3-Cluster");
-            dtm.setRoot(root);
-            // if we have any keywords, set them to the list
-            if (lwsClusterTask.size() > 0) {
-                // create iterator
-                Iterator<String> i = lwsClusterTask.iterator();
-                // and add all items to the list
-                while (i.hasNext()) {
-                    root.add(new DefaultMutableTreeNode(i.next()));
-                }
-                // completely expand the jTree
-                TreeUtil.expandAllTrees(true, jTreeCluster);
-            }
-        }
-
-        @Override
-        protected void finished() {
-            super.finished();
-            createClusterIsRunning = false;
-            jCheckBoxCluster.setEnabled(true);
-            // enable textfield only if we have more than 1 element in the jTree
-            jTextFieldFilterCluster.setEnabled(jTreeCluster.getRowCount() > 1);
-            // show amount of entries
-            statusMsgLabel.setText("(" + String.valueOf(jTreeCluster.getRowCount()) + " " + org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(ZettelkastenView.class).getString("statusTextKeywords") + ")");
-            jTreeCluster.setToolTipText(null);
-        }
     }
 
     /**
@@ -6973,123 +7330,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     @Action
     public Task createFilterLinks() {
         return new createFilterLinksTask(org.jdesktop.application.Application.getInstance(ZettelkastenApp.class));
-    }
-
-    /**
-     * This Action creates the links between of the currently displayed entry
-     * with all other enries, based on matching keywords. These hyperlinks are
-     * stored in the JTable of the JTabbedPane.<br><br>
-     * Unlike the createLinks-task, this task does not look for any single
-     * occurences of keywords, but of logical-combination of the selected
-     * keywords. I.e., whether <i>all</i> or <i>at least one</i>
-     * of the selected keywords is/are part of another entry's keywords-list.
-     *
-     * @return the background task
-     */
-    private class createFilterLinksTask extends org.jdesktop.application.Task<Object, Void> {
-
-        /**
-         * This variable stores the table data of the filtered links-list. We
-         * use this variable in the "createLinksTask", because when we add the
-         * values to the tables directly (via tablemodel) and the user skips
-         * through the entries before the task has finished, the table contains
-         * wrong values. so, within the task this list is filled, and only when
-         * the task has finished, we copy this list to the table.
-         */
-        private ArrayList<Object[]> linkedfilteredlinkslist;
-
-        createFilterLinksTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to createLinksTask fields, here.
-            super(app);
-        }
-
-        @Override
-        protected Object doInBackground() {
-            // Your Task's code here.  This method runs
-            // on a background thread, so don't reference
-            // the Swing GUI from here.
-
-            // tell program that this thread is running...
-            createFilterLinksIsRunning = true;
-            // variable that indicates whether a match of keywords was found
-            boolean found;
-            int cnt;
-            // create string array for selected keyword-values
-            String[] kws = retrieveSelectedKeywordsFromList();
-            // if we have no selection, return null. this happens, when the view is refreshed and a value
-            // in the jListEntryKeywords is selected - the jList then loses somehow the selectiob, so this
-            // task is startet, although no keyword is selected...
-            if (null == kws) {
-                return null;
-            }
-            // get the length of the data file, i.e. the amount of entrys
-            final int len = data.getCount(Daten.ZKNCOUNT);
-            // get setting, whether we have logical-and or logical-or-search
-            boolean log_and = settings.getLogKeywordlist().equalsIgnoreCase(Settings.SETTING_LOGKEYWORDLIST_AND);
-            // create new instance of that variable
-            linkedfilteredlinkslist = new ArrayList<>();
-            // iterate all entrys of the zettelkasten
-            for (cnt = 1; cnt <= len; cnt++) {
-                // leave out the comparison of the current entry with itself
-                if (cnt == data.getCurrentZettelPos()) {
-                    continue;
-                }
-                // init the found indicator
-                found = false;
-                // if we have logical-or, at least one of the keywords must exist.
-                // so go through all selected keywords and look for occurences
-                if (data.existsInKeywords(kws, cnt, log_and, false)) {
-                    found = true;
-                }
-                // if we have a match, connect entries, i.e. display the number and title of
-                // the linked entries in the table of the tabbed pane
-                if (found) {
-                    // create a new object
-                    Object[] ob = new Object[3];
-                    // store the information in that object
-                    ob[0] = cnt;
-                    ob[1] = data.getZettelTitle(cnt);
-                    ob[2] = data.getLinkStrength(data.getCurrentZettelPos(), cnt);
-                    // and add that content to the linked list
-                    linkedfilteredlinkslist.add(ob);
-                }
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void succeeded(Object result) {
-            // Runs on the EDT.  Update the GUI based on
-            // the result computed by doInBackground().
-            DefaultTableModel tm = (DefaultTableModel) jTableLinks.getModel();
-            // reset the table
-            tm.setRowCount(0);
-            // check whether we have any entries at all...
-            if (linkedfilteredlinkslist != null) {
-                // create iterator for linked list
-                Iterator<Object[]> i = linkedfilteredlinkslist.iterator();
-                // go through linked list and add all objects to the table model
-                try {
-                    while (i.hasNext()) {
-                        tm.addRow(i.next());
-                    }
-                } catch (ConcurrentModificationException e) {
-                    // reset the table when we have overlappings threads
-                    tm.setRowCount(0);
-                }
-            }
-            // show amount of entries
-            statusMsgLabel.setText("(" + String.valueOf(jTableLinks.getRowCount()) + " " + org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(ZettelkastenView.class).getString("statusTextLinks") + ")");
-        }
-
-        @Override
-        protected void finished() {
-            super.finished();
-            createFilterLinksIsRunning = false;
-        }
     }
 
     /**
@@ -7585,7 +7825,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         updateDisplay();
     }
 
-    // TODO wenn import abbricht, werden nicht alle listen resettet, bspw. table enthalten noch alte daten
     /**
      * This method opens two dialogs: 1) the import dialog where the user can
      * choose which type of data to import and where the file is locates. and 2)
@@ -8829,10 +9068,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         } else if (Settings.SHOWATSTARTUP_FIRST == getstarttupvalue) {
             shownr = 1;
         } else if (Settings.SHOWATSTARTUP_LAST == getstarttupvalue) {
+            //TODO: This should be bound to the zkn file instead of the settings
             shownr = settings.getStartupEntry();
         } else if (Settings.SHOWATSTARTUP_RANDOM == getstarttupvalue) {
             shownr = (int) (Math.random() * data.getCount(Daten.ZKNCOUNT)) + 1;
         }
+
+        //fallback to first zettel if sbownr is higher than the count of available zettel in this zkn
+        shownr = shownr>data.getCount(Daten.ZKNCOUNT)?1:shownr;
+
         // set the first entry that should be displayed as current zettelpos and history-pos...
         data.setCurrentZettelPos(shownr);
         data.setInitialHistoryPos(shownr);
@@ -9567,7 +9811,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         ZettelkastenApp.getApplication().show(searchResultsDlg);
     }
 
-
     @Action
     public void showNewEntryWindow() {
         if (newEntryDlg!=null) {
@@ -9577,7 +9820,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             newEntryDlg.setAlwaysOnTop(false);
         }
     }
-
 
     /**
      * Shows the desktop/outliner window. If it hasn't been created yet, a new instance will be created.
@@ -9590,7 +9832,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         ZettelkastenApp.getApplication().show(desktopDlg);
     }
 
-
     /**
      * Shows the desktop/outliner window. If it hasn't been created yet, a new instance will be created.
      * <br><br>
@@ -9600,6 +9841,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void showEntryInDesktopWindow() {
         showEntryInDesktopWindow(displayedZettel);
     }
+
     public void showEntryInDesktopWindow(int nr) {
         // check for valid value
         if (-1==nr) return;
@@ -9610,7 +9852,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // show entry on desktop
         desktopDlg.showEntryInDesktop(nr);
     }
-
 
     /**
      * Retrieves the selected text and adds it as new keyword to the entry.
@@ -9631,7 +9872,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-
     /**
      * Retrieves the selected text and sets it as entry's title.
      */
@@ -9651,7 +9891,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             updateTabbedPane();
         }
     }
-
 
     /**
      * Retrieves the first text line and sets it as entry's title.
@@ -9674,7 +9913,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             updateTabbedPane();
         }
     }
-
 
     /**
      * Retrieves the first text line and sets it as entry's title. This method is called
@@ -9706,7 +9944,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         updateTabbedPane();
     }
 
-
     /**
      * Opens the find dialog and sets the text selection as default search term.
      */
@@ -9720,7 +9957,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-
     /**
      * Opens the find dialog.
      */
@@ -9729,7 +9965,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         find(null);
     }
 
-
     /**
      * Opens the replace dialog.
      */
@@ -9737,7 +9972,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void replace() {
         replace(getFrame(),null,null);
     }
-
 
     /**
      * Opens the find dialog. An optional initial value {@code initSearchTerm} can be supplied
@@ -9776,7 +10010,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // try to motivate garbage collector
         System.gc();
     }
-
 
     /**
      * Opens the replace-dialog and optionally sets the initial values {@code initSearchTerm}
@@ -9847,7 +10080,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         return true;
     }
 
-
     /**
      * Starts a search request and finds entries that don't contain any keywords.
      */
@@ -9855,6 +10087,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void findWithoutKeywords() {
         findEntryWithout(Constants.SEARCH_NO_KEYWORDS);
     }
+
     /**
      * Starts a search request and finds entries that don't have any remarks.
      */
@@ -9862,6 +10095,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void findWithoutRemarks() {
         findEntryWithout(Constants.SEARCH_NO_REMARKS);
     }
+
     /**
      * Starts a search request and finds entries that have remarks.
      */
@@ -9869,6 +10103,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void findWithRemarks() {
         findEntryWithout(Constants.SEARCH_WITH_REMARKS);
     }
+
     /**
      * Starts a search request and finds entries that have attachments.
      */
@@ -9876,6 +10111,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void findWithAttachments() {
         findEntryWithout(Constants.SEARCH_WITH_ATTACHMENTS);
     }
+
     /**
      * Starts a search request and finds entries that don't contain any authors.
      */
@@ -9883,6 +10119,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void findWithoutAuthors() {
         findEntryWithout(Constants.SEARCH_NO_AUTHORS);
     }
+
     /**
      * Starts a search request and finds entries that have been rated.
      */
@@ -9890,6 +10127,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void findWithRating() {
         findEntryWithout(Constants.SEARCH_WITH_RATINGS);
     }
+
     /**
      * Starts a search request and finds entries that have <i>not</i> been rated.
      */
@@ -9897,6 +10135,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void findWithoutRating() {
         findEntryWithout(Constants.SEARCH_WITHOUT_RATINGS);
     }
+
     /**
      * Starts a search request and finds entries that have <i>no</i>
      * manual links.
@@ -9905,6 +10144,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void findWithoutManualLinks() {
         findEntryWithout(Constants.SEARCH_WITHOUT_MANUAL_LINKS);
     }
+
     /**
      * Starts a search request and finds entries that are part of
      * any note sequence.
@@ -9913,6 +10153,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void findLuhmannAny() {
         findEntryWithout(Constants.SEARCH_IS_ANY_LUHMANN);
     }
+
     /**
      * Starts a search request and finds entries that are top-level
      * trailing entries (follower).
@@ -9921,7 +10162,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void findLuhmannParent() {
         findEntryWithout(Constants.SEARCH_TOP_LEVEL_LUHMANN);
     }
-
 
     /**
      * Starts a search request and finds entries <i>not</i> according to a certain find term,
@@ -9976,7 +10216,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         System.gc();
     }
 
-
     @Action(enabledProperty = "moreEntriesAvailable")
     public void findEntriesWithTimeStampCreated() {
         findEntriesWithTimeStamp(Constants.SEARCH_WITH_CREATED_TIME, Constants.TIMESTAMP_CREATED, Constants.SEARCH_WITH_CREATED_TIME);
@@ -9986,7 +10225,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     public void findEntriesWithTimeStampEdited() {
         findEntriesWithTimeStamp(Constants.SEARCH_WITH_EDITED_TIME, Constants.TIMESTAMP_EDITED, Constants.SEARCH_WITH_EDITED_TIME);
     }
-
 
     /**
      * This method searches for entries that have been either created or edited during a certain time-period.
@@ -10094,7 +10332,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         System.gc();
     }
 
-
     /**
      * This method show the panel with the live-search text box,
      * where the user can find text in the current entry live by typing.
@@ -10108,7 +10345,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // indicate that live search is active
         isLiveSearchActive = true;
     }
-
 
     /**
      * Cancels the live-search by simply hiding the panel
@@ -10124,7 +10360,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // update display, i.e. remove highlighted search terms
         updateDisplayParts(displayedZettel);
     }
-
 
     /**
      * Opens the search dialog. This method can deal several search requests.<br><br>For instance, we
@@ -10256,7 +10491,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         System.gc();
     }
 
-
     /**
      * This method gets all selected elements of the jListEntryKeywords
      * and returns them in an array.
@@ -10276,7 +10510,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // ...or null, if error occured.
         return null;
     }
-
 
     /**
      * Depending on the selected tabbed pane, this method retrieves the wither selected authors
@@ -10324,7 +10557,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-
     /**
      * Depending on the selected tabbed pane, this method retrieves the wither selected authors
      * from the jTableAuthors or the selected keywords from the jTableKeywords and starts a search
@@ -10370,7 +10602,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                                break;
         }
     }
-
 
     /**
      * Depending on the selected tabbed pane, this method retrieves the wither selected authors
@@ -10418,7 +10649,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-
     /**
      * Retrieves the selected keywords from the jListEntryKeywords and starts a search
      * for those entries, that contain <i>all</i> selected entries.
@@ -10442,7 +10672,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     Constants.STARTSEARCH_USUAL,        // whether we have a usual search, or a search for entries without remarks or keywords and so on - see related method findEntryWithout
                     Constants.SEARCH_USUAL);
     }
-
 
     /**
      * Retrieves the selected keywords from the jListEntryKeywords and starts a search
@@ -10468,7 +10697,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     Constants.SEARCH_USUAL);
     }
 
-
     /**
      * Retrieves the selected keywords from the jTableKeywords and starts a search
      * for those entries, that contain <i>at least one</i> of the selected entries.
@@ -10492,7 +10720,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     Constants.STARTSEARCH_USUAL,        // whether we have a usual search, or a search for entries without remarks or keywords and so on - see related method findEntryWithout
                     Constants.SEARCH_USUAL);
     }
-
 
     /**
      * Here we place the typical steps we have to do after a file was opened
@@ -10538,7 +10765,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         updateDisplay();
     }
 
-
     /**
      * Changes the text in the application's titlebar, by adding the filename of the currently
      * opened file to it.
@@ -10556,7 +10782,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             getFrame().setTitle(getResourceMap().getString("Application.title"));
         }
     }
-
 
     /**
      * This method filters the entries in the jTableLinks depending on the selected keyword(s)
@@ -10607,7 +10832,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         tM.setForegroundTask(cflT);
     }
 
-
     /**
      * Here we save the user- and programm settings. usually, this method is called from
      * within the exis listener
@@ -10632,7 +10856,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             showErrorIcon();
         }
     }
-
 
     /**
      * This method is called when a user selects an entry from the jTableLinks. Whenever a
@@ -10715,7 +10938,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-
     public void setBackupNecessary() {
         backupNecessary(bibtex.isModified() | synonyms.isModified() | data.isMetaModified() | data.isModified() | searchrequests.isModified() | bookmarks.isModified() | desktop.isModified());
         // update mainframe's toolbar and enable save-function
@@ -10723,6 +10945,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             setSaveEnabled(true);
         }
     }
+
     public void resetBackupNecessary() {
         backupNecessary(false);
     }
@@ -10788,53 +11011,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // no changes, so everything is ok
         return true;
     }
-
-
-    /**
-     * This is the Exit-Listener. Here we put in all the things which should be done
-     * before closing the window and exiting the program
-     */
-    private class ConfirmExit implements Application.ExitListener {
-        @Override
-        public boolean canExit(EventObject e) {
-            // if we still have an active edit-progress, don't quit the apllication, but tell
-            // the user to finish editing first...
-            if (isEditModeActive) {
-                // show message box
-                JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("cannotExitActiveEditMsg"),getResourceMap().getString("cannotExitActiveEditTitle"),JOptionPane.PLAIN_MESSAGE);
-                // bring edit window to front
-                if (newEntryDlg!=null) {
-                    newEntryDlg.toFront();
-                }
-                // and don't exit...
-                return false;
-            }
-            if (isAutoBackupRunning()) {
-                // show message box
-                JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("cannotExitAutobackMsg"),getResourceMap().getString("cannotExitAutobackTitle"),JOptionPane.PLAIN_MESSAGE);
-                // and don't exit...
-                return false;
-            }
-            // return true to say "yes, we can", or false if exiting should cancelled
-            return askForSaveChanges(getResourceMap().getString("msgSaveChangesOnExitTitle"));
-        }
-        @Override
-        public void willExit(EventObject e) {
-            // when exiting, kill all timers (auto-save, memory-logging...)
-            terminateTimers();
-            // save the settings
-            saveSettings();
-            // and create an additional backup, when option is activated.
-            makeExtraBackup();
-            try {
-                if (baos_log != null) {
-                    baos_log.close();
-                }
-            } catch (IOException ex) {
-            }
-        }
-    }
-
 
     /**
      * This is an application listener that is initialised when running the program
@@ -10904,7 +11080,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     // </editor-fold>
     }
 
-
     private void setupSeaGlassStyle() {
         // make searchfields look like mac
         searchTextFieldVariants();
@@ -10922,6 +11097,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jTextFieldFilterAttachments.putClientProperty("JTextField.variant", "search");
         }
     }
+
     private void makeSeaGlassToolbar() {
         Tools.makeTexturedToolBarButton(tb_newEntry, Tools.SEGMENT_POSITION_FIRST);
         Tools.makeTexturedToolBarButton(tb_open, Tools.SEGMENT_POSITION_MIDDLE);
@@ -10960,267 +11136,166 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         toolBar.add(new javax.swing.JToolBar.Separator(), 0);
     }
 
-
-    /**
-     * This class sets up a selection listener for the tables. each table which shall react
-     * on selections, e.g. by showing an entry, gets this selectionlistener in the method
-     * {@link #initSelectionListeners() initSelectionListeners()}.
-     */
-    private class SelectionListener implements ListSelectionListener {
-        JTable table;
-
-        // It is necessary to keep the table since it is not possible
-        // to determine the table from the event's source
-        SelectionListener(JTable table) {
-            this.table = table;
-        }
-        @Override
-        public void valueChanged(ListSelectionEvent e) {
-            // when a tableupdate is being processed, to call the listener...
-            if (tableUpdateActive) {
-                return;
-            }
-            // get list selection model
-            ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-            // set value-adjusting to true, so we don't fire multiple value-changed events...
-            lsm.setValueIsAdjusting(true);
-            if (jTableAuthors==table) {
-                showAuthorText();
-                if (setBibKeyDlg!=null) {
-                    setBibKeyDlg.initTitleAndBibkey();
-                }
-            }
-            else if (jTableTitles==table) {
-                showEntryFromTitles();
-            }
-            else if (jTableAttachments==table) {
-                showEntryFromAttachments();
-            }
-            // if the user selects an entry from the table, i.e. a referred link to another entry,
-            // highlight the jListEntryKeywors, which keywords are responsible for the links to
-            // the other entry
-            else if (jTableLinks==table) {
-                showRelatedKeywords();
-            }
-            else if (jTableManLinks==table) {
-                showEntryFromManualLinks();
-            }
-            else if (jTableBookmarks==table) {
-                showEntryFromBookmarks();
-            }
-        }
-    }
-
-
-    /**
-     * This variable indicates whether we have any entries, so we can en- or disable
-     * the all relevant actions that need at least one entry to be enabled.
-     */
-    private boolean entriesAvailable = false;
     public boolean isEntriesAvailable() {
         return entriesAvailable;
     }
+
     public void setEntriesAvailable(boolean b) {
         boolean old = isEntriesAvailable();
         this.entriesAvailable = b;
         firePropertyChange("entriesAvailable", old, isEntriesAvailable());
     }
-    /**
-     * This variable indicates whether we have more than one entry, so we can en- or disable
-     * the all relevant actions that need at least two entries to be enabled.
-     */
-    private boolean moreEntriesAvailable = false;
+
     public boolean isMoreEntriesAvailable() {
         return moreEntriesAvailable;
     }
+
     public void setMoreEntriesAvailable(boolean b) {
         boolean old = isMoreEntriesAvailable();
         this.moreEntriesAvailable = b;
         firePropertyChange("moreEntriesAvailable", old, isMoreEntriesAvailable());
     }
-    /**
-     * This variable indicates whether we have entries in the tables, so we can en- or disable
-     * the cut and copy actions and other actions that need at least one selection.
-     */
-    private boolean tableEntriesSelected = false;
+
     public boolean isTableEntriesSelected() {
         return tableEntriesSelected;
     }
+
     public void setTableEntriesSelected(boolean b) {
         boolean old = isTableEntriesSelected();
         this.tableEntriesSelected = b;
         firePropertyChange("tableEntriesSelected", old, isTableEntriesSelected());
     }
-    /**
-     * This variable indicates whether we have entries in the tables, so we can en- or disable
-     * the cut and copy actions and other actions that need at least one selection.
-     */
-    private boolean exportPossible = false;
+
     public boolean isExportPossible() {
         return exportPossible;
     }
+
     public void setExportPossible(boolean b) {
         boolean old = isExportPossible();
         this.exportPossible = b;
         firePropertyChange("exportPossible", old, isExportPossible());
     }
-    /**
-     * This variable indicates whether we have search results or not. dependent on this setting,
-     * the related menu-item in the windows-menu is en/disbaled
-     */
-    private boolean searchResultsAvailable = false;
+
     public boolean isSearchResultsAvailable() {
         return searchResultsAvailable;
     }
+
     public void setSearchResultsAvailable(boolean b) {
         boolean old = isSearchResultsAvailable();
         this.searchResultsAvailable = b;
         firePropertyChange("searchResultsAvailable", old, isSearchResultsAvailable());
     }
-    /**
-     * This variable indicates whether we have desktop data or not. dependent on this setting,
-     * the related menu-item in the windows-menu is en/disbaled
-     */
-    private boolean desktopAvailable = false;
+
     public boolean isDesktopAvailable() {
         return desktopAvailable;
     }
+
     public void setDesktopAvailable(boolean b) {
         boolean old = isDesktopAvailable();
         this.desktopAvailable = b;
         firePropertyChange("DesktopAvailable", old, isDesktopAvailable());
     }
-    /**
-     * This variable indicates whether we have entries in the lists, so we can en- or disable
-     * the cut and copy actions and other actions that need at least one selection.
-     */
-    private boolean listFilledWithEntry = false;
+
     public boolean isListFilledWithEntry() {
         return listFilledWithEntry;
     }
+
     public void setListFilledWithEntry(boolean b) {
         boolean old = isListFilledWithEntry();
         this.listFilledWithEntry = b;
         firePropertyChange("listFilledWithEntry", old, isListFilledWithEntry());
     }
-    /**
-     * This variable indicates whether we have seleced text, so we can en- or disable
-     * the related actions.
-     */
-    private boolean textSelected = false;
+
     public boolean isTextSelected() {
         return textSelected;
     }
+
     public void setTextSelected(boolean b) {
         boolean old = isTextSelected();
         this.textSelected = b;
         firePropertyChange("textSelected", old, isTextSelected());
     }
-    /**
-     * This variable indicates whether we have seleced text, so we can en- or disable
-     * the related actions.
-     */
-    private boolean bibtexFileLoaded = false;
+
     public boolean isBibtexFileLoaded() {
         return bibtexFileLoaded;
     }
+
     public void setBibtexFileLoaded(boolean b) {
         boolean old = isBibtexFileLoaded();
         this.bibtexFileLoaded = b;
         firePropertyChange("bibtexFileLoaded", old, isBibtexFileLoaded());
     }
-    /**
-     * This variable indicates whether the displayed entry is already bookmarked,
-     * so we can en- or disable the bookmark-action.
-     */
-    private boolean entryBookmarked = false;
+    // End of variables declaration//GEN-END:variables
+
     public boolean isEntryBookmarked() {
         return entryBookmarked;
     }
+
     public void setEntryBookmarked(boolean b) {
         boolean old = isEntryBookmarked();
         this.entryBookmarked = b;
         firePropertyChange("entryBookmarked", old, isEntryBookmarked());
     }
-    /**
-     * This variable indicates whether the a luhmann-number (i.e. entry in the jTreeLuhmann)
-     * is selected or not.
-     * so we can en- or disable the bookmark-action.
-     */
-    private boolean luhmannSelected = false;
+
     public boolean isLuhmannSelected() {
         return luhmannSelected;
     }
+
     public void setLuhmannSelected(boolean b) {
         boolean old = isLuhmannSelected();
         this.luhmannSelected = b;
         firePropertyChange("luhmannSelected", old, isLuhmannSelected());
     }
-    /**
-     * This variable indicates whether an entry has follower or not (i.e. elements in the jTreeLuhmann)
-     */
-    private boolean moreLuhmann = false;
+
     public boolean isMoreLuhmann() {
         return moreLuhmann;
     }
+
     public void setMoreLuhmann(boolean b) {
         boolean old = isMoreLuhmann();
         this.moreLuhmann = b;
         firePropertyChange("moreLuhmann", old, isMoreLuhmann());
     }
-    /**
-     * This variable indicates whether the a luhmann-number (i.e. entry in the jTreeLuhmann)
-     * is selected or not.
-     * so we can en- or disable the bookmark-action.
-     */
-    private boolean saveEnabled = false;
+
     public boolean isSaveEnabled() {
         return saveEnabled;
     }
+
     public void setSaveEnabled(boolean b) {
         boolean old = isSaveEnabled();
         this.saveEnabled = b;
         firePropertyChange("saveEnabled", old, isSaveEnabled());
     }
-    /**
-     * This variable indicates whether the current entry ist displayed, or if
-     * e.g. a selected other entry is shown - so we can "reset" the display by
-     * showing the current entry again
-     */
-    private boolean currentEntryShown = false;
+
     public boolean isCurrentEntryShown() {
         return currentEntryShown;
     }
+
     public void setCurrentEntryShown(boolean b) {
         boolean old = isCurrentEntryShown();
         this.currentEntryShown = b;
         firePropertyChange("currentEntryShown", old, isCurrentEntryShown());
     }
-    /**
-     * This variable indicates whether the history-function is available or not.
-     */
-    private boolean historyForAvailable = false;
+
     public boolean isHistoryForAvailable() {
         return historyForAvailable;
     }
+
     public void setHistoryForAvailable(boolean b) {
         boolean old = isHistoryForAvailable();
         this.historyForAvailable = b;
         firePropertyChange("historyForAvailable", old, isHistoryForAvailable());
     }
-    /**
-     * This variable indicates whether the history-function is available or not.
-     */
-    private boolean historyBackAvailable = false;
+
     public boolean isHistoryBackAvailable() {
         return historyBackAvailable;
     }
+
     public void setHistoryBackAvailable(boolean b) {
         boolean old = isHistoryBackAvailable();
         this.historyBackAvailable = b;
         firePropertyChange("historyBackAvailable", old, isHistoryBackAvailable());
     }
-
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -14385,15 +14460,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             setToolBar(toolBar);
         }// </editor-fold>//GEN-END:initComponents
 
-
-/**
- * This event catches mouse-cicks which occur when the user clicks a hyperlink
- * in the main editor-pane. First has to be checked, wether the clicked hyperlink
- * was an web-url or links to a local file. Then the url or file will be opened
- *
- * @param evt
- */
-
     /**
      * Enables and disables the menu items for the popupMenuKeywordList and viewMenuLinks
      */
@@ -14420,536 +14486,485 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         popupKwListRefresh.setEnabled(TAB_LINKS==jTabbedPaneMain.getSelectedIndex());
     }
 
+    /**
+     * This Action creates the links between of the currently displayed entry
+     * with all other enries, based on matching keywords. These hyperlinks are
+     * stored in the JTable of the JTabbedPane
+     *
+     * @return the background task
+     */
+    private class createLinksTask extends org.jdesktop.application.Task<Object, Void> {
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenu aboutMenu;
-    private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JMenuItem addFirstLineToTitleMenuItem;
-    private javax.swing.JMenuItem addSelectionToKeywordMenuItem;
-    private javax.swing.JMenuItem addSelectionToTitleMenuItem;
-    private javax.swing.JMenuItem addToDesktopMenuItem;
-    private javax.swing.JButton buttonHistoryBack;
-    private javax.swing.JButton buttonHistoryFore;
-    private javax.swing.JMenuItem copyMenuItem;
-    private javax.swing.JMenuItem copyPlainMenuItem;
-    private javax.swing.JMenuItem deleteKwFromListMenuItem;
-    private javax.swing.JMenuItem deleteZettelMenuItem;
-    private javax.swing.JMenuItem duplicateEntryMenuItem;
-    private javax.swing.JMenu editMenu;
-    private javax.swing.JMenuItem editMenuItem;
-    private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JMenuItem exportMenuItem;
-    private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenuItem findDoubleEntriesItem;
-    private javax.swing.JMenuItem findEntriesAnyLuhmann;
-    private javax.swing.JMenuItem findEntriesFromCreatedTimestamp;
-    private javax.swing.JMenuItem findEntriesFromEditedTimestamp;
-    private javax.swing.JMenuItem findEntriesTopLevelLuhmann;
-    private javax.swing.JMenuItem findEntriesWithAttachments;
-    private javax.swing.JMenuItem findEntriesWithRatings;
-    private javax.swing.JMenuItem findEntriesWithRemarks;
-    private javax.swing.JMenuItem findEntriesWithoutAuthors;
-    private javax.swing.JMenuItem findEntriesWithoutKeywords;
-    private javax.swing.JMenuItem findEntriesWithoutManualLinks;
-    private javax.swing.JMenuItem findEntriesWithoutRatings;
-    private javax.swing.JMenuItem findEntriesWithoutRemarks;
-    private javax.swing.JMenu findEntryKeywordsMenu;
-    private javax.swing.JMenu findEntryWithout;
-    private javax.swing.JMenu findMenu;
-    private javax.swing.JMenuItem findMenuItem;
-    private javax.swing.JMenuItem findReplaceMenuItem;
-    private javax.swing.JMenuItem gotoEntryMenuItem;
-    private javax.swing.JCheckBoxMenuItem highlightSegmentsMenuItem;
-    private javax.swing.JMenuItem historyForMenuItem;
-    private javax.swing.JMenuItem histroyBackMenuItem;
-    private javax.swing.JMenuItem homeMenuItem;
-    private javax.swing.JMenuItem importMenuItem;
-    private javax.swing.JMenuItem insertEntryMenuItem;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButtonRefreshAttachments;
-    private javax.swing.JButton jButtonRefreshAuthors;
-    private javax.swing.JButton jButtonRefreshCluster;
-    private javax.swing.JButton jButtonRefreshKeywords;
-    private javax.swing.JButton jButtonRefreshTitles;
-    private javax.swing.JCheckBox jCheckBoxCluster;
-    private javax.swing.JCheckBox jCheckBoxShowAllLuhmann;
-    private javax.swing.JCheckBox jCheckBoxShowSynonyms;
-    private javax.swing.JComboBox jComboBoxAuthorType;
-    private javax.swing.JComboBox jComboBoxBookmarkCategory;
-    private javax.swing.JEditorPane jEditorPaneBookmarkComment;
-    private javax.swing.JEditorPane jEditorPaneClusterEntries;
-    private javax.swing.JEditorPane jEditorPaneDispAuthor;
-    private javax.swing.JEditorPane jEditorPaneEntry;
-    private javax.swing.JEditorPane jEditorPaneIsFollower;
-    private javax.swing.JLabel jLabelMemory;
-    private javax.swing.JList jListEntryKeywords;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel13;
-    private javax.swing.JPanel jPanel14;
-    private javax.swing.JPanel jPanel15;
-    private javax.swing.JPanel jPanel16;
-    private javax.swing.JPanel jPanel17;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
-    private javax.swing.JPanel jPanelDispAuthor;
-    private javax.swing.JPanel jPanelLiveSearch;
-    private javax.swing.JPanel jPanelMainRight;
-    private javax.swing.JPanel jPanelManLinks;
-    private javax.swing.JPopupMenu jPopupMenuAttachments;
-    private javax.swing.JPopupMenu jPopupMenuAuthors;
-    private javax.swing.JPopupMenu jPopupMenuBookmarks;
-    private javax.swing.JPopupMenu jPopupMenuKeywordList;
-    private javax.swing.JPopupMenu jPopupMenuKeywords;
-    private javax.swing.JPopupMenu jPopupMenuLinks;
-    private javax.swing.JPopupMenu jPopupMenuLuhmann;
-    private javax.swing.JPopupMenu jPopupMenuMain;
-    private javax.swing.JPopupMenu jPopupMenuTitles;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane10;
-    private javax.swing.JScrollPane jScrollPane11;
-    private javax.swing.JScrollPane jScrollPane13;
-    private javax.swing.JScrollPane jScrollPane14;
-    private javax.swing.JScrollPane jScrollPane15;
-    private javax.swing.JScrollPane jScrollPane16;
-    private javax.swing.JScrollPane jScrollPane17;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JScrollPane jScrollPane8;
-    private javax.swing.JScrollPane jScrollPane9;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JToolBar.Separator jSeparator10;
-    private javax.swing.JSeparator jSeparator100;
-    private javax.swing.JPopupMenu.Separator jSeparator101;
-    private javax.swing.JSeparator jSeparator102;
-    private javax.swing.JSeparator jSeparator103;
-    private javax.swing.JSeparator jSeparator104;
-    private javax.swing.JSeparator jSeparator105;
-    private javax.swing.JPopupMenu.Separator jSeparator106;
-    private javax.swing.JSeparator jSeparator107;
-    private javax.swing.JPopupMenu.Separator jSeparator108;
-    private javax.swing.JSeparator jSeparator109;
-    private javax.swing.JSeparator jSeparator11;
-    private javax.swing.JSeparator jSeparator110;
-    private javax.swing.JPopupMenu.Separator jSeparator111;
-    private javax.swing.JPopupMenu.Separator jSeparator112;
-    private javax.swing.JPopupMenu.Separator jSeparator113;
-    private javax.swing.JPopupMenu.Separator jSeparator114;
-    private javax.swing.JPopupMenu.Separator jSeparator115;
-    private javax.swing.JPopupMenu.Separator jSeparator116;
-    private javax.swing.JPopupMenu.Separator jSeparator117;
-    private javax.swing.JPopupMenu.Separator jSeparator118;
-    private javax.swing.JPopupMenu.Separator jSeparator119;
-    private javax.swing.JSeparator jSeparator12;
-    private javax.swing.JSeparator jSeparator13;
-    private javax.swing.JSeparator jSeparator14;
-    private javax.swing.JSeparator jSeparator15;
-    private javax.swing.JSeparator jSeparator16;
-    private javax.swing.JSeparator jSeparator17;
-    private javax.swing.JSeparator jSeparator18;
-    private javax.swing.JSeparator jSeparator19;
-    private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JSeparator jSeparator20;
-    private javax.swing.JSeparator jSeparator21;
-    private javax.swing.JSeparator jSeparator22;
-    private javax.swing.JSeparator jSeparator23;
-    private javax.swing.JSeparator jSeparator24;
-    private javax.swing.JSeparator jSeparator25;
-    private javax.swing.JSeparator jSeparator26;
-    private javax.swing.JSeparator jSeparator27;
-    private javax.swing.JSeparator jSeparator28;
-    private javax.swing.JSeparator jSeparator29;
-    private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JSeparator jSeparator30;
-    private javax.swing.JSeparator jSeparator31;
-    private javax.swing.JToolBar.Separator jSeparator32;
-    private javax.swing.JSeparator jSeparator33;
-    private javax.swing.JPopupMenu.Separator jSeparator34;
-    private javax.swing.JSeparator jSeparator35;
-    private javax.swing.JSeparator jSeparator36;
-    private javax.swing.JSeparator jSeparator37;
-    private javax.swing.JSeparator jSeparator38;
-    private javax.swing.JSeparator jSeparator39;
-    private javax.swing.JToolBar.Separator jSeparator4;
-    private javax.swing.JSeparator jSeparator40;
-    private javax.swing.JSeparator jSeparator41;
-    private javax.swing.JSeparator jSeparator42;
-    private javax.swing.JSeparator jSeparator43;
-    private javax.swing.JSeparator jSeparator44;
-    private javax.swing.JSeparator jSeparator45;
-    private javax.swing.JSeparator jSeparator46;
-    private javax.swing.JSeparator jSeparator47;
-    private javax.swing.JSeparator jSeparator48;
-    private javax.swing.JSeparator jSeparator49;
-    private javax.swing.JToolBar.Separator jSeparator5;
-    private javax.swing.JSeparator jSeparator50;
-    private javax.swing.JSeparator jSeparator51;
-    private javax.swing.JSeparator jSeparator52;
-    private javax.swing.JSeparator jSeparator53;
-    private javax.swing.JSeparator jSeparator54;
-    private javax.swing.JSeparator jSeparator55;
-    private javax.swing.JSeparator jSeparator56;
-    private javax.swing.JSeparator jSeparator57;
-    private javax.swing.JSeparator jSeparator58;
-    private javax.swing.JSeparator jSeparator59;
-    private javax.swing.JSeparator jSeparator6;
-    private javax.swing.JSeparator jSeparator60;
-    private javax.swing.JSeparator jSeparator61;
-    private javax.swing.JSeparator jSeparator62;
-    private javax.swing.JSeparator jSeparator63;
-    private javax.swing.JSeparator jSeparator64;
-    private javax.swing.JPopupMenu.Separator jSeparator65;
-    private javax.swing.JSeparator jSeparator66;
-    private javax.swing.JSeparator jSeparator67;
-    private javax.swing.JSeparator jSeparator68;
-    private javax.swing.JSeparator jSeparator69;
-    private javax.swing.JSeparator jSeparator7;
-    private javax.swing.JSeparator jSeparator70;
-    private javax.swing.JSeparator jSeparator71;
-    private javax.swing.JPopupMenu.Separator jSeparator72;
-    private javax.swing.JPopupMenu.Separator jSeparator73;
-    private javax.swing.JPopupMenu.Separator jSeparator74;
-    private javax.swing.JSeparator jSeparator75;
-    private javax.swing.JSeparator jSeparator76;
-    private javax.swing.JSeparator jSeparator77;
-    private javax.swing.JSeparator jSeparator78;
-    private javax.swing.JSeparator jSeparator79;
-    private javax.swing.JSeparator jSeparator8;
-    private javax.swing.JSeparator jSeparator80;
-    private javax.swing.JSeparator jSeparator81;
-    private javax.swing.JSeparator jSeparator82;
-    private javax.swing.JSeparator jSeparator83;
-    private javax.swing.JSeparator jSeparator84;
-    private javax.swing.JSeparator jSeparator85;
-    private javax.swing.JSeparator jSeparator86;
-    private javax.swing.JSeparator jSeparator87;
-    private javax.swing.JSeparator jSeparator88;
-    private javax.swing.JSeparator jSeparator89;
-    private javax.swing.JSeparator jSeparator9;
-    private javax.swing.JSeparator jSeparator90;
-    private javax.swing.JSeparator jSeparator91;
-    private javax.swing.JSeparator jSeparator92;
-    private javax.swing.JSeparator jSeparator93;
-    private javax.swing.JSeparator jSeparator94;
-    private javax.swing.JSeparator jSeparator95;
-    private javax.swing.JSeparator jSeparator96;
-    private javax.swing.JSeparator jSeparator97;
-    private javax.swing.JSeparator jSeparator98;
-    private javax.swing.JSeparator jSeparator99;
-    private javax.swing.JSeparator jSeparatorAbout1;
-    private javax.swing.JSeparator jSeparatorExit;
-    private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JSplitPane jSplitPane2;
-    private javax.swing.JSplitPane jSplitPane3;
-    private javax.swing.JSplitPane jSplitPaneAuthors;
-    private javax.swing.JSplitPane jSplitPaneLinks;
-    private javax.swing.JSplitPane jSplitPaneMain1;
-    private javax.swing.JSplitPane jSplitPaneMain2;
-    private javax.swing.JTabbedPane jTabbedPaneMain;
-    private javax.swing.JTable jTableAttachments;
-    private javax.swing.JTable jTableAuthors;
-    private javax.swing.JTable jTableBookmarks;
-    private javax.swing.JTable jTableKeywords;
-    private javax.swing.JTable jTableLinks;
-    private javax.swing.JTable jTableManLinks;
-    private javax.swing.JTable jTableTitles;
-    private javax.swing.JTextField jTextFieldEntryNumber;
-    private javax.swing.JTextField jTextFieldFilterAttachments;
-    private javax.swing.JTextField jTextFieldFilterAuthors;
-    private javax.swing.JTextField jTextFieldFilterCluster;
-    private javax.swing.JTextField jTextFieldFilterKeywords;
-    private javax.swing.JTextField jTextFieldFilterTitles;
-    private javax.swing.JTextField jTextFieldLiveSearch;
-    private javax.swing.JTree jTreeCluster;
-    private javax.swing.JTree jTreeKeywords;
-    private javax.swing.JTree jTreeLuhmann;
-    private javax.swing.JMenuItem lastEntryMenuItem;
-    private javax.swing.JMenuItem liveSearchMenuItem;
-    private javax.swing.JPanel mainPanel;
-    private javax.swing.JMenuItem manualInsertLinksMenuItem;
-    private javax.swing.JMenuItem manualInsertMenuItem;
-    private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem menuFileInformation;
-    private javax.swing.JMenuItem menuKwListSearchAnd;
-    private javax.swing.JMenuItem menuKwListSearchNot;
-    private javax.swing.JMenuItem menuKwListSearchOr;
-    private javax.swing.JMenuItem newDesktopMenuItem;
-    private javax.swing.JMenuItem newEntryMenuItem;
-    private javax.swing.JMenuItem newZettelkastenMenuItem;
-    private javax.swing.JMenuItem nextEntryMenuItem;
-    private javax.swing.JMenuItem openMenuItem;
-    private javax.swing.JMenuItem pasteMenuItem;
-    private javax.swing.JMenuItem popupAttachmentsCopy;
-    private javax.swing.JMenuItem popupAttachmentsDelete;
-    private javax.swing.JMenuItem popupAttachmentsEdit;
-    private javax.swing.JMenuItem popupAttachmentsExport;
-    private javax.swing.JMenuItem popupAttachmentsGoto;
-    private javax.swing.JMenuItem popupAuthorsAddToEntry;
-    private javax.swing.JMenuItem popupAuthorsBibkey;
-    private javax.swing.JMenuItem popupAuthorsCopy;
-    private javax.swing.JMenuItem popupAuthorsDelete;
-    private javax.swing.JMenuItem popupAuthorsDesktop;
-    private javax.swing.JMenuItem popupAuthorsDesktopAnd;
-    private javax.swing.JMenuItem popupAuthorsEdit;
-    private javax.swing.JMenuItem popupAuthorsImport;
-    private javax.swing.JMenuItem popupAuthorsLuhmann;
-    private javax.swing.JMenuItem popupAuthorsLuhmannAnd;
-    private javax.swing.JMenuItem popupAuthorsManLinks;
-    private javax.swing.JMenuItem popupAuthorsManLinksAnd;
-    private javax.swing.JMenuItem popupAuthorsNew;
-    private javax.swing.JMenuItem popupAuthorsSearchLogAnd;
-    private javax.swing.JMenuItem popupAuthorsSearchLogNot;
-    private javax.swing.JMenuItem popupAuthorsSearchLogOr;
-    private javax.swing.JMenu popupAuthorsSubAdd;
-    private javax.swing.JMenuItem popupBookmarkAddDesktop;
-    private javax.swing.JMenuItem popupBookmarksAddLuhmann;
-    private javax.swing.JMenuItem popupBookmarksAddManLinks;
-    private javax.swing.JMenuItem popupBookmarksDelete;
-    private javax.swing.JMenuItem popupBookmarksDeleteCat;
-    private javax.swing.JMenuItem popupBookmarksEdit;
-    private javax.swing.JMenuItem popupBookmarksEditCat;
-    private javax.swing.JMenuItem popupKeywordsAddToList;
-    private javax.swing.JMenuItem popupKeywordsCopy;
-    private javax.swing.JMenuItem popupKeywordsDelete;
-    private javax.swing.JMenuItem popupKeywordsDesktop;
-    private javax.swing.JMenuItem popupKeywordsDesktopAnd;
-    private javax.swing.JMenuItem popupKeywordsEdit;
-    private javax.swing.JMenuItem popupKeywordsLuhmann;
-    private javax.swing.JMenuItem popupKeywordsLuhmannAnd;
-    private javax.swing.JMenuItem popupKeywordsManLinks;
-    private javax.swing.JMenuItem popupKeywordsManLinksAnd;
-    private javax.swing.JMenuItem popupKeywordsNew;
-    private javax.swing.JMenuItem popupKeywordsSearchAnd;
-    private javax.swing.JMenuItem popupKeywordsSearchNot;
-    private javax.swing.JMenuItem popupKeywordsSearchOr;
-    private javax.swing.JMenuItem popupKwListCopy;
-    private javax.swing.JMenuItem popupKwListDelete;
-    private javax.swing.JMenuItem popupKwListHighlight;
-    private javax.swing.JCheckBoxMenuItem popupKwListHighlightSegments;
-    private javax.swing.JCheckBoxMenuItem popupKwListLogAnd;
-    private javax.swing.JCheckBoxMenuItem popupKwListLogOr;
-    private javax.swing.JMenuItem popupKwListRefresh;
-    private javax.swing.JMenuItem popupKwListSearchAnd;
-    private javax.swing.JMenuItem popupKwListSearchNot;
-    private javax.swing.JMenuItem popupKwListSearchOr;
-    private javax.swing.JMenuItem popupLinkRemoveManLink;
-    private javax.swing.JMenuItem popupLinksDesktop;
-    private javax.swing.JMenuItem popupLinksLuhmann;
-    private javax.swing.JMenuItem popupLinksManLinks;
-    private javax.swing.JMenuItem popupLinksRefresh;
-    private javax.swing.JMenuItem popupLuhmannAdd;
-    private javax.swing.JMenuItem popupLuhmannBookmarks;
-    private javax.swing.JMenuItem popupLuhmannDelete;
-    private javax.swing.JMenuItem popupLuhmannDesktop;
-    private javax.swing.JMenuItem popupLuhmannLevel1;
-    private javax.swing.JMenuItem popupLuhmannLevel2;
-    private javax.swing.JMenuItem popupLuhmannLevel3;
-    private javax.swing.JMenuItem popupLuhmannLevel4;
-    private javax.swing.JMenuItem popupLuhmannLevel5;
-    private javax.swing.JMenuItem popupLuhmannLevelAll;
-    private javax.swing.JMenuItem popupLuhmannManLinks;
-    private javax.swing.JMenu popupLuhmannSetLevel;
-    private javax.swing.JMenuItem popupMainAddToKeyword;
-    private javax.swing.JMenuItem popupMainCopy;
-    private javax.swing.JMenuItem popupMainCopyPlain;
-    private javax.swing.JMenuItem popupMainFind;
-    private javax.swing.JMenuItem popupMainSetFirstLineAsTitle;
-    private javax.swing.JMenuItem popupMainSetSelectionAsTitle;
-    private javax.swing.JMenuItem popupTitlesAutomaticTitle;
-    private javax.swing.JMenuItem popupTitlesBookmarks;
-    private javax.swing.JMenuItem popupTitlesCopy;
-    private javax.swing.JMenuItem popupTitlesDelete;
-    private javax.swing.JMenuItem popupTitlesDesktop;
-    private javax.swing.JMenuItem popupTitlesEdit;
-    private javax.swing.JMenuItem popupTitlesEditEntry;
-    private javax.swing.JMenuItem popupTitlesLuhmann;
-    private javax.swing.JMenuItem popupTitlesManLinks;
-    private javax.swing.JMenuItem preferencesMenuItem;
-    private javax.swing.JMenuItem prevEntryMenuItem;
-    private javax.swing.JMenuItem quickNewEntryMenuItem;
-    private javax.swing.JMenuItem quickNewTitleEntryMenuItem;
-    private javax.swing.JMenuItem randomEntryMenuItem;
-    private javax.swing.JMenuItem recentDoc1;
-    private javax.swing.JMenuItem recentDoc2;
-    private javax.swing.JMenuItem recentDoc3;
-    private javax.swing.JMenuItem recentDoc4;
-    private javax.swing.JMenuItem recentDoc5;
-    private javax.swing.JMenuItem recentDoc6;
-    private javax.swing.JMenuItem recentDoc7;
-    private javax.swing.JMenuItem recentDoc8;
-    private javax.swing.JMenu recentDocsSubMenu;
-    private javax.swing.JMenuItem saveAsMenuItem;
-    private javax.swing.JMenuItem saveMenuItem;
-    private javax.swing.JMenuItem selectAllMenuItem;
-    private javax.swing.JMenuItem setBookmarkMenuItem;
-    private javax.swing.JMenuItem showAttachmentsMenuItem;
-    private javax.swing.JMenuItem showAuthorsMenuItem;
-    private javax.swing.JMenuItem showBookmarksMenuItem;
-    private javax.swing.JMenuItem showClusterMenuItem;
-    private javax.swing.JMenuItem showCurrentEntryAgain;
-    private javax.swing.JMenuItem showDesktopMenuItem;
-    private javax.swing.JMenuItem showErrorLogMenuItem;
-    private javax.swing.JCheckBoxMenuItem showHighlightKeywords;
-    private javax.swing.JMenuItem showKeywordsMenuItem;
-    private javax.swing.JMenuItem showLinksMenuItem;
-    private javax.swing.JMenuItem showLuhmannMenuItem;
-    private javax.swing.JMenuItem showNewEntryMenuItem;
-    private javax.swing.JMenuItem showSearchResultsMenuItem;
-    private javax.swing.JMenuItem showTitlesMenuItem;
-    private javax.swing.JLabel statusAnimationLabel;
-    private javax.swing.JButton statusDesktopEntryButton;
-    private javax.swing.JLabel statusEntryLabel;
-    private javax.swing.JButton statusErrorButton;
-    private javax.swing.JLabel statusMsgLabel;
-    private javax.swing.JLabel statusOfEntryLabel;
-    private javax.swing.JPanel statusPanel;
-    private javax.swing.JButton tb_addbookmark;
-    private javax.swing.JButton tb_addluhmann;
-    private javax.swing.JButton tb_addmanlinks;
-    private javax.swing.JButton tb_addtodesktop;
-    private javax.swing.JButton tb_copy;
-    private javax.swing.JButton tb_delete;
-    private javax.swing.JButton tb_edit;
-    private javax.swing.JButton tb_find;
-    private javax.swing.JButton tb_first;
-    private javax.swing.JButton tb_last;
-    private javax.swing.JButton tb_newEntry;
-    private javax.swing.JButton tb_next;
-    private javax.swing.JButton tb_open;
-    private javax.swing.JButton tb_paste;
-    private javax.swing.JButton tb_prev;
-    private javax.swing.JButton tb_save;
-    private javax.swing.JButton tb_selectall;
-    private javax.swing.JToolBar toolBar;
-    private javax.swing.JMenuItem viewAttachmentEdit;
-    private javax.swing.JMenuItem viewAttachmentsCopy;
-    private javax.swing.JMenuItem viewAttachmentsDelete;
-    private javax.swing.JMenuItem viewAttachmentsExport;
-    private javax.swing.JMenuItem viewAuthorsAddLuhmann;
-    private javax.swing.JMenuItem viewAuthorsAddLuhmannAnd;
-    private javax.swing.JMenuItem viewAuthorsAddToEntry;
-    private javax.swing.JMenuItem viewAuthorsAttachBibtexFile;
-    private javax.swing.JMenuItem viewAuthorsBibkey;
-    private javax.swing.JMenuItem viewAuthorsCopy;
-    private javax.swing.JMenuItem viewAuthorsDelete;
-    private javax.swing.JMenuItem viewAuthorsDesktop;
-    private javax.swing.JMenuItem viewAuthorsDesktopAnd;
-    private javax.swing.JMenuItem viewAuthorsEdit;
-    private javax.swing.JMenuItem viewAuthorsExport;
-    private javax.swing.JMenuItem viewAuthorsImport;
-    private javax.swing.JMenuItem viewAuthorsManLinks;
-    private javax.swing.JMenuItem viewAuthorsManLinksAnd;
-    private javax.swing.JMenuItem viewAuthorsNew;
-    private javax.swing.JMenuItem viewAuthorsRefreshBibtexFile;
-    private javax.swing.JMenuItem viewAuthorsSearchAnd;
-    private javax.swing.JMenuItem viewAuthorsSearchNot;
-    private javax.swing.JMenuItem viewAuthorsSearchOr;
-    private javax.swing.JMenu viewAuthorsSubAdd;
-    private javax.swing.JMenu viewAuthorsSubEdit;
-    private javax.swing.JMenu viewAuthorsSubFind;
-    private javax.swing.JMenuItem viewBookmarkDesktop;
-    private javax.swing.JMenuItem viewBookmarksAddLuhmann;
-    private javax.swing.JMenuItem viewBookmarksDelete;
-    private javax.swing.JMenuItem viewBookmarksDeleteCat;
-    private javax.swing.JMenuItem viewBookmarksEdit;
-    private javax.swing.JMenuItem viewBookmarksEditCat;
-    private javax.swing.JMenuItem viewBookmarksExport;
-    private javax.swing.JMenuItem viewBookmarksExportSearch;
-    private javax.swing.JMenuItem viewBookmarksManLink;
-    private javax.swing.JMenuItem viewClusterExport;
-    private javax.swing.JMenuItem viewClusterExportToSearch;
-    private javax.swing.JMenuItem viewKeywordsAddToList;
-    private javax.swing.JMenuItem viewKeywordsCopy;
-    private javax.swing.JMenuItem viewKeywordsDelete;
-    private javax.swing.JMenuItem viewKeywordsDesktop;
-    private javax.swing.JMenuItem viewKeywordsDesktopAnd;
-    private javax.swing.JMenuItem viewKeywordsEdit;
-    private javax.swing.JMenuItem viewKeywordsExport;
-    private javax.swing.JMenuItem viewKeywordsLuhmann;
-    private javax.swing.JMenuItem viewKeywordsLuhmannAnd;
-    private javax.swing.JMenuItem viewKeywordsManLinks;
-    private javax.swing.JMenuItem viewKeywordsManLinksAnd;
-    private javax.swing.JMenuItem viewKeywordsNew;
-    private javax.swing.JMenuItem viewKeywordsSearchAnd;
-    private javax.swing.JMenuItem viewKeywordsSearchNot;
-    private javax.swing.JMenuItem viewKeywordsSearchOr;
-    private javax.swing.JMenu viewMenu;
-    private javax.swing.JMenuItem viewMenuAttachmentGoto;
-    private javax.swing.JMenu viewMenuAttachments;
-    private javax.swing.JMenu viewMenuAuthors;
-    private javax.swing.JMenu viewMenuBookmarks;
-    private javax.swing.JMenu viewMenuCluster;
-    private javax.swing.JMenuItem viewMenuExportToSearch;
-    private javax.swing.JMenu viewMenuKeywords;
-    private javax.swing.JMenu viewMenuLinks;
-    private javax.swing.JMenuItem viewMenuLinksDesktop;
-    private javax.swing.JMenuItem viewMenuLinksExport;
-    private javax.swing.JCheckBoxMenuItem viewMenuLinksKwListLogAnd;
-    private javax.swing.JCheckBoxMenuItem viewMenuLinksKwListLogOr;
-    private javax.swing.JMenuItem viewMenuLinksKwListRefresh;
-    private javax.swing.JMenuItem viewMenuLinksLuhmann;
-    private javax.swing.JMenuItem viewMenuLinksManLink;
-    private javax.swing.JMenuItem viewMenuLinksRemoveManLink;
-    private javax.swing.JMenu viewMenuLuhmann;
-    private javax.swing.JMenuItem viewMenuLuhmannBookmarks;
-    private javax.swing.JMenuItem viewMenuLuhmannDelete;
-    private javax.swing.JMenuItem viewMenuLuhmannDepth1;
-    private javax.swing.JMenuItem viewMenuLuhmannDepth2;
-    private javax.swing.JMenuItem viewMenuLuhmannDepth3;
-    private javax.swing.JMenuItem viewMenuLuhmannDepth4;
-    private javax.swing.JMenuItem viewMenuLuhmannDepth5;
-    private javax.swing.JMenuItem viewMenuLuhmannDepthAll;
-    private javax.swing.JMenuItem viewMenuLuhmannDesktop;
-    private javax.swing.JMenuItem viewMenuLuhmannExport;
-    private javax.swing.JMenuItem viewMenuLuhmannExportSearch;
-    private javax.swing.JMenuItem viewMenuLuhmannManLinks;
-    private javax.swing.JMenu viewMenuLuhmannShowLevel;
-    private javax.swing.JCheckBoxMenuItem viewMenuLuhmannShowNumbers;
-    private javax.swing.JMenuItem viewMenuLuhmannShowTopLevel;
-    private javax.swing.JMenu viewMenuTitles;
-    private javax.swing.JMenuItem viewTitlesAutomaticFirstLine;
-    private javax.swing.JMenuItem viewTitlesBookmarks;
-    private javax.swing.JMenuItem viewTitlesCopy;
-    private javax.swing.JMenuItem viewTitlesDelete;
-    private javax.swing.JMenuItem viewTitlesDesktop;
-    private javax.swing.JMenuItem viewTitlesEdit;
-    private javax.swing.JMenuItem viewTitlesExport;
-    private javax.swing.JMenuItem viewTitlesLuhmann;
-    private javax.swing.JMenuItem viewTitlesManLinks;
-    private javax.swing.JMenu windowsMenu;
-    // End of variables declaration//GEN-END:variables
+        /**
+         * This variable stores the table data of the links-list. We use this
+         * variable in the "createLinksTask", because when we add the values to
+         * the tables directly (via tablemodel) and the user skips through the
+         * entries before the task has finished, the table contains wrong
+         * values. so, within the task this list is filled, and only when the
+         * task has finished, we copy this list to the table.
+         */
+        private ArrayList<Object[]> linkedlinkslist;
 
-    private javax.swing.JTextField tb_searchTextfield;
-    private javax.swing.JPanel jPanelSearchBox;
-    private javax.swing.JLabel jLabelLupe;
-    private TaskProgressDialog taskDlg;
-    private NewEntryFrame newEntryDlg;
-    private CImport importWindow;
-    private CUpdateInfoBox updateInfoDlg;
-    private CExport exportWindow;
-    private CBiggerEditField biggerEditDlg;
-    private SearchResultsFrame searchResultsDlg;
-    private CSearchDlg searchDlg;
-    private CReplaceDialog replaceDlg;
-    private DesktopFrame desktopDlg;
-    private CSettingsDlg settingsDlg;
-    private CNewBookmark newBookmarkDlg;
-    private CErrorLog errorDlg;
-    private CInformation informationDlg;
-    private CExportEntries exportEntriesDlg;
-    private CImportBibTex importBibTexDlg;
-    private CShowMultipleDesktopOccurences multipleOccurencesDlg;
-    private CSetBibKey setBibKeyDlg;
-    private AboutBox zknAboutBox;
-    private FindDoubleEntriesTask doubleEntriesDlg;
-    private CRateEntry rateEntryDlg;
+        @SuppressWarnings("LeakingThisInConstructor")
+        createLinksTask(org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to createLinksTask fields, here.
+            super(app);
+            cLinksTask = this;
+        }
+
+        @Override
+        protected Object doInBackground() {
+            // Your Task's code here.  This method runs
+            // on a background thread, so don't reference
+            // the Swing GUI from here.
+
+            // tell program that this thread is running...
+            createLinksIsRunning = true;
+            // variable that indicates whether a match of keywords was found
+            boolean found;
+            int cnt;
+            // get the length of the data file, i.e. the amount of entrys
+            final int len = data.getCount(Daten.ZKNCOUNT);
+            // get the keyword index numbers of the current entry
+            String[] kws = data.getCurrentKeywords();
+            // if we have any keywords, go on
+            if (kws != null) {
+                // create new instance of that variable
+                linkedlinkslist = new ArrayList<>();
+                // iterate all entrys of the zettelkasten
+                for (cnt = 1; cnt <= len; cnt++) {
+                    // leave out the comparison of the current entry with itself
+                    if (cnt == data.getCurrentZettelPos()) {
+                        continue;
+                    }
+                    // init the found indicator
+                    found = false;
+                    // iterate all keywords of current entry
+                    for (String k : kws) {
+                        // look for occurences of any of the current keywords
+                        if (data.existsInKeywords(k, cnt, false)) {
+                            // set found-indicator
+                            found = true;
+                            break;
+                        }
+                    }
+                    // if we have a match, connect entries, i.e. display the number and title of
+                    // the linked entries in the table of the tabbed pane
+                    if (found) {
+                        // create a new object
+                        Object[] ob = new Object[4];
+                        // store the information in that object
+                        ob[0] = cnt;
+                        ob[1] = data.getZettelTitle(cnt);
+                        ob[2] = data.getLinkStrength(data.getCurrentZettelPos(), cnt);
+                        ob[3] = data.getZettelRating(cnt);
+                        // and add that content as a new row to the table
+                        linkedlinkslist.add(ob);
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void succeeded(Object result) {
+            // Runs on the EDT.  Update the GUI based on
+            // the result computed by doInBackground().
+            DefaultTableModel tm = (DefaultTableModel) jTableLinks.getModel();
+            // reset the table
+            tm.setRowCount(0);
+            // check whether we have any entries at all...
+            if (linkedlinkslist != null) {
+                // create iterator for linked list
+                Iterator<Object[]> i = linkedlinkslist.iterator();
+                // go through linked list and add all objects to the table model
+                try {
+                    while (i.hasNext()) {
+                        tm.addRow(i.next());
+                    }
+                } catch (ConcurrentModificationException e) {
+                    // reset the table when we have overlappings threads
+                    tm.setRowCount(0);
+                }
+            }
+            // display manual links now...
+            displayManualLinks();
+        }
+
+        @Override
+        protected void finished() {
+            super.finished();
+            cLinksTask = null;
+            createLinksIsRunning = false;
+            // show/enable viewmenu, if we have at least one entry...
+            if ((jTableLinks.getRowCount() > 0) && (TAB_LINKS == jTabbedPaneMain.getSelectedIndex())) {
+                showTabMenu(viewMenuLinks);
+            }
+            // show amount of entries
+            statusMsgLabel.setText("(" + String.valueOf(jTableLinks.getRowCount()) + " " + org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(ZettelkastenView.class).getString("statusTextLinks") + ")");
+        }
+    }
+
+    /**
+     * This class starts a timer that displays the memory-usage of the
+     * zettelkasten
+     */
+    class MemoryTimer extends TimerTask {
+
+        @Override
+        public void run() {
+            // display memory usage
+            calculateMemoryUsage();
+        }
+    }
+
+    /**
+     * This class starts a timer that displays the memory-usage of the
+     * zettelkasten
+     */
+    class ErrorIconTimer extends TimerTask {
+
+        @Override
+        public void run() {
+            // make update-icon flash
+            flashErrorIcon();
+        }
+    }
+
+    /**
+     * This class starts a timer that displays the memory-usage of the
+     * zettelkasten
+     */
+    class AutoBackupTimer extends TimerTask {
+
+        @Override
+        public void run() {
+            // create autobackup
+            makeAutoBackup();
+        }
+    }
+
+    /**
+     * This task creates the related (clustered) keywords from the current
+     * entry. Therefore, the current entry's keywords are retrieved. Then, in
+     * each entry of the data-file we look for occurences of the current entry's
+     * keywords. If we found any matches, the related entry's other keywords are
+     * added to the final keyword-list.
+     *
+     * @return the background task
+     */
+    private class createClusterTask extends org.jdesktop.application.Task<Object, Void> {
+
+        // create link list for the keywords and related keywords
+
+        LinkedList<String> lwsClusterTask = new LinkedList<>();
+
+        createClusterTask(org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to createLinksTask fields, here.
+            super(app);
+        }
+
+        @Override
+        protected Object doInBackground() {
+            // Your Task's code here.  This method runs
+            // on a background thread, so don't reference
+            // the Swing GUI from here.
+            //
+            // tell programm that the thread is running
+            createClusterIsRunning = true;
+            // get current entries keywords
+            String[] cws = data.getCurrentKeywords();
+            // if we have any current keywords, go on
+            if (cws != null) {
+                // get amount of entries
+                int count = data.getCount(Daten.ZKNCOUNT);
+                // add all current keywords and their related keywords to
+                // the linked list
+                for (String c : cws) {
+                    // add each curent keyword to cluster list
+                    lwsClusterTask.add(c);
+                    // now go through all entries
+                    for (int cnt = 1; cnt <= count; cnt++) {
+                        // check whether current keywords exits in entry
+                        if (data.existsInKeywords(c, cnt, false)) {
+                            // if yes, retrieve entry's keywords
+                            String[] newkws = data.getKeywords(cnt);
+                            // check whether we have any keywords at all
+                            if (newkws != null) {
+                                // if so, iterate keywords
+                                for (String n : newkws) {
+                                    // and add each keyword to the link list, if it's not
+                                    // already in that list...
+                                    if (!lwsClusterTask.contains(n)) {
+                                        lwsClusterTask.add(n);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                // sort the array
+                Collections.sort(lwsClusterTask, new Comparer());
+            }
+            // we have no filtered list...
+            linkedclusterlist = false;
+            // indicate that the cluster list is up to date...
+            data.setClusterlistUpToDate(true);
+
+            return null;
+        }
+
+        @Override
+        protected void succeeded(Object result) {
+            // Runs on the EDT.  Update the GUI based on
+            // the result computed by doInBackground().
+            //
+            // get the treemodel
+            DefaultTreeModel dtm = (DefaultTreeModel) jTreeCluster.getModel();
+            // set this as root node. we don't need to care about this, since the
+            // root is not visible.
+            DefaultMutableTreeNode root = new DefaultMutableTreeNode("ZKN3-Cluster");
+            dtm.setRoot(root);
+            // if we have any keywords, set them to the list
+            if (lwsClusterTask.size() > 0) {
+                // create iterator
+                Iterator<String> i = lwsClusterTask.iterator();
+                // and add all items to the list
+                while (i.hasNext()) {
+                    root.add(new DefaultMutableTreeNode(i.next()));
+                }
+                // completely expand the jTree
+                TreeUtil.expandAllTrees(true, jTreeCluster);
+            }
+        }
+
+        @Override
+        protected void finished() {
+            super.finished();
+            createClusterIsRunning = false;
+            jCheckBoxCluster.setEnabled(true);
+            // enable textfield only if we have more than 1 element in the jTree
+            jTextFieldFilterCluster.setEnabled(jTreeCluster.getRowCount() > 1);
+            // show amount of entries
+            statusMsgLabel.setText("(" + String.valueOf(jTreeCluster.getRowCount()) + " " + org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(ZettelkastenView.class).getString("statusTextKeywords") + ")");
+            jTreeCluster.setToolTipText(null);
+        }
+    }
+
+    /**
+     * This Action creates the links between of the currently displayed entry
+     * with all other enries, based on matching keywords. These hyperlinks are
+     * stored in the JTable of the JTabbedPane.<br><br>
+     * Unlike the createLinks-task, this task does not look for any single
+     * occurences of keywords, but of logical-combination of the selected
+     * keywords. I.e., whether <i>all</i> or <i>at least one</i>
+     * of the selected keywords is/are part of another entry's keywords-list.
+     *
+     * @return the background task
+     */
+    private class createFilterLinksTask extends org.jdesktop.application.Task<Object, Void> {
+
+        /**
+         * This variable stores the table data of the filtered links-list. We
+         * use this variable in the "createLinksTask", because when we add the
+         * values to the tables directly (via tablemodel) and the user skips
+         * through the entries before the task has finished, the table contains
+         * wrong values. so, within the task this list is filled, and only when
+         * the task has finished, we copy this list to the table.
+         */
+        private ArrayList<Object[]> linkedfilteredlinkslist;
+
+        createFilterLinksTask(org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to createLinksTask fields, here.
+            super(app);
+        }
+
+        @Override
+        protected Object doInBackground() {
+            // Your Task's code here.  This method runs
+            // on a background thread, so don't reference
+            // the Swing GUI from here.
+
+            // tell program that this thread is running...
+            createFilterLinksIsRunning = true;
+            // variable that indicates whether a match of keywords was found
+            boolean found;
+            int cnt;
+            // create string array for selected keyword-values
+            String[] kws = retrieveSelectedKeywordsFromList();
+            // if we have no selection, return null. this happens, when the view is refreshed and a value
+            // in the jListEntryKeywords is selected - the jList then loses somehow the selectiob, so this
+            // task is startet, although no keyword is selected...
+            if (null == kws) {
+                return null;
+            }
+            // get the length of the data file, i.e. the amount of entrys
+            final int len = data.getCount(Daten.ZKNCOUNT);
+            // get setting, whether we have logical-and or logical-or-search
+            boolean log_and = settings.getLogKeywordlist().equalsIgnoreCase(Settings.SETTING_LOGKEYWORDLIST_AND);
+            // create new instance of that variable
+            linkedfilteredlinkslist = new ArrayList<>();
+            // iterate all entrys of the zettelkasten
+            for (cnt = 1; cnt <= len; cnt++) {
+                // leave out the comparison of the current entry with itself
+                if (cnt == data.getCurrentZettelPos()) {
+                    continue;
+                }
+                // init the found indicator
+                found = false;
+                // if we have logical-or, at least one of the keywords must exist.
+                // so go through all selected keywords and look for occurences
+                if (data.existsInKeywords(kws, cnt, log_and, false)) {
+                    found = true;
+                }
+                // if we have a match, connect entries, i.e. display the number and title of
+                // the linked entries in the table of the tabbed pane
+                if (found) {
+                    // create a new object
+                    Object[] ob = new Object[3];
+                    // store the information in that object
+                    ob[0] = cnt;
+                    ob[1] = data.getZettelTitle(cnt);
+                    ob[2] = data.getLinkStrength(data.getCurrentZettelPos(), cnt);
+                    // and add that content to the linked list
+                    linkedfilteredlinkslist.add(ob);
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void succeeded(Object result) {
+            // Runs on the EDT.  Update the GUI based on
+            // the result computed by doInBackground().
+            DefaultTableModel tm = (DefaultTableModel) jTableLinks.getModel();
+            // reset the table
+            tm.setRowCount(0);
+            // check whether we have any entries at all...
+            if (linkedfilteredlinkslist != null) {
+                // create iterator for linked list
+                Iterator<Object[]> i = linkedfilteredlinkslist.iterator();
+                // go through linked list and add all objects to the table model
+                try {
+                    while (i.hasNext()) {
+                        tm.addRow(i.next());
+                    }
+                } catch (ConcurrentModificationException e) {
+                    // reset the table when we have overlappings threads
+                    tm.setRowCount(0);
+                }
+            }
+            // show amount of entries
+            statusMsgLabel.setText("(" + String.valueOf(jTableLinks.getRowCount()) + " " + org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(ZettelkastenView.class).getString("statusTextLinks") + ")");
+        }
+
+        @Override
+        protected void finished() {
+            super.finished();
+            createFilterLinksIsRunning = false;
+        }
+    }
+
+    /**
+     * This is the Exit-Listener. Here we put in all the things which should be done
+     * before closing the window and exiting the program
+     */
+    private class ConfirmExit implements Application.ExitListener {
+        @Override
+        public boolean canExit(EventObject e) {
+            // if we still have an active edit-progress, don't quit the apllication, but tell
+            // the user to finish editing first...
+            if (isEditModeActive) {
+                // show message box
+                JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("cannotExitActiveEditMsg"),getResourceMap().getString("cannotExitActiveEditTitle"),JOptionPane.PLAIN_MESSAGE);
+                // bring edit window to front
+                if (newEntryDlg!=null) {
+                    newEntryDlg.toFront();
+                }
+                // and don't exit...
+                return false;
+            }
+            if (isAutoBackupRunning()) {
+                // show message box
+                JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("cannotExitAutobackMsg"),getResourceMap().getString("cannotExitAutobackTitle"),JOptionPane.PLAIN_MESSAGE);
+                // and don't exit...
+                return false;
+            }
+            // return true to say "yes, we can", or false if exiting should cancelled
+            return askForSaveChanges(getResourceMap().getString("msgSaveChangesOnExitTitle"));
+        }
+        @Override
+        public void willExit(EventObject e) {
+            // when exiting, kill all timers (auto-save, memory-logging...)
+            terminateTimers();
+            // save the settings
+            saveSettings();
+            // and create an additional backup, when option is activated.
+            makeExtraBackup();
+            try {
+                if (baos_log != null) {
+                    baos_log.close();
+                }
+            } catch (IOException ex) {
+            }
+        }
+    }
+
+    /**
+     * This class sets up a selection listener for the tables. each table which shall react
+     * on selections, e.g. by showing an entry, gets this selectionlistener in the method
+     * {@link #initSelectionListeners() initSelectionListeners()}.
+     */
+    private class SelectionListener implements ListSelectionListener {
+        JTable table;
+
+        // It is necessary to keep the table since it is not possible
+        // to determine the table from the event's source
+        SelectionListener(JTable table) {
+            this.table = table;
+        }
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            // when a tableupdate is being processed, to call the listener...
+            if (tableUpdateActive) {
+                return;
+            }
+            // get list selection model
+            ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+            // set value-adjusting to true, so we don't fire multiple value-changed events...
+            lsm.setValueIsAdjusting(true);
+            if (jTableAuthors==table) {
+                showAuthorText();
+                if (setBibKeyDlg!=null) {
+                    setBibKeyDlg.initTitleAndBibkey();
+                }
+            }
+            else if (jTableTitles==table) {
+                showEntryFromTitles();
+            }
+            else if (jTableAttachments==table) {
+                showEntryFromAttachments();
+            }
+            // if the user selects an entry from the table, i.e. a referred link to another entry,
+            // highlight the jListEntryKeywors, which keywords are responsible for the links to
+            // the other entry
+            else if (jTableLinks==table) {
+                showRelatedKeywords();
+            }
+            else if (jTableManLinks==table) {
+                showEntryFromManualLinks();
+            }
+            else if (jTableBookmarks==table) {
+                showEntryFromBookmarks();
+            }
+        }
+    }
 }
