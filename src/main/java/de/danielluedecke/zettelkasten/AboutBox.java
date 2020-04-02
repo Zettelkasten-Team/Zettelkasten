@@ -34,6 +34,8 @@
 package de.danielluedecke.zettelkasten;
 
 import de.danielluedecke.zettelkasten.util.Constants;
+import de.danielluedecke.zettelkasten.util.Version;
+
 import java.awt.Desktop;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -61,7 +63,7 @@ public class AboutBox extends javax.swing.JDialog {
         initComponents();
         // set application icon
         setIconImage(Constants.zknicon.getImage());
-        setTitle("Zettelkasten "+Constants.BUILD_VERSION);
+        setTitle("Zettelkasten "+ Version.get().getVersionString());
         // these codelines add an escape-listener to the dialog. so, when the user
         // presses the escape-key, the same action is performed as if the user
         // presses the cancel button...
