@@ -133,42 +133,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- Ported from build.xml, inspired by https://github.com/todowiki/todowiki/blob/master/todowiki-core/pom.xml -->
-            <!--<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.7</version>
-                <executions>
-                    <execution>
-                        <id>run</id>
-                        <phase>install</phase>
-                        <configuration>
-                            <target>
-                                <taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask"
-                                         classpath="${basedir}/appbundler-1.0ea.jar"/>
-
-                                <mkdir dir="${basedir}/target/app"/>
-                                <bundleapp outputdirectory="${basedir}/target/app"
-                                           name="Zettelkasten" displayname="Zettelkasten"
-                                           identifier="de.danielluedecke.zettelkasten.ZettelkastenApp"
-                                           shortversion="${project.version}" icon="${basedir}/zkn3_2.icns"
-                                           applicationCategory="public.app-category.developer-tools"
-                                           mainclassname="de/danielluedecke/zettelkasten/ZettelkastenApp"
-                                           copyright="(c) 2001-2015 Daniel Lüdecke">
-                                    <classpath
-                                            file="${basedir}/target/${project.artifactId}-${project.version}.jar"/>
-                                    <option value="-Dapple.laf.useScreenMenuBar=true"/>
-                                </bundleapp>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
-
         </plugins>
     </build>
 
