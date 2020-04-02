@@ -5,7 +5,7 @@
 - Die Schriftgröße der Benutzeroberfläche wurde an höhere Bildschirmauflösungen angepasst.
 - Der Programmcode wurde optimiert.
 ### Fehlerbehebungen
-- Beim XML-Export wurden die Zettel-IDs nicht mit exportiert ([171](https://github.com/sjPlot/Zettelkasten/issues/171).
+- Beim XML-Export wurden die Zettel-IDs nicht mit exportiert ([171](https://github.com/sjPlot/Zettelkasten/issues/171)).
 - Falls die Option "Beim Programmstart: Zuletzt ausgewählten Zettel anzeigen" aktiviert war, konnte es in bestimmten Situationen dazu kommen, dass der Zettelkasten nicht mehr startete (siehe [178](https://github.com/sjPlot/Zettelkasten/issues/178)). 
 <a name="3.2.7"></a>
 # [3.2.7](https://github.com/sjPlot/Zettelkasten/compare/3.2.6...3.2.7) (2015-10-16)
