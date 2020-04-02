@@ -3,9 +3,10 @@
 
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>Zettelkasten</groupId>
+    <groupId>de.danielluedecke</groupId>
     <artifactId>Zettelkasten</artifactId>
     <version>3.3</version>
+    <name>Zettelkasten</name>
 
     <properties>
         <zkn.supportsDmg>false</zkn.supportsDmg>
@@ -90,6 +91,7 @@
                         <JVMVersion>8+</JVMVersion>
                         <CFBundleDevelopmentRegion>German</CFBundleDevelopmentRegion>
                         <CFBundleName>${project.name}</CFBundleName>
+                        <CFBundleDisplayName>${project.name}</CFBundleDisplayName>
                         <CFBundleIdentifier>${build.finalName}</CFBundleIdentifier>
                         <CFBundleShortVersionString>${project.version}</CFBundleShortVersionString>
                         <CFBundleIconFile>zkn3_2.icns</CFBundleIconFile>
