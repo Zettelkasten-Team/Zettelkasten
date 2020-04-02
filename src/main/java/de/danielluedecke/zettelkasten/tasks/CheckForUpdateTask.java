@@ -4,6 +4,8 @@ package de.danielluedecke.zettelkasten.tasks;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
+import de.danielluedecke.zettelkasten.util.Version;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -92,9 +94,9 @@ public class CheckForUpdateTask extends org.jdesktop.application.Task<Object, Vo
         // check whether we have a valid array with content
         if (updateversion != null && updateversion.length > 0) {
             // retrieve start-index of the build-number within the version-string.
-            int substringindex = Constants.BUILD_VERSION.indexOf("(Build") + 7;
+            int substringindex = Version.get().getVersionString().indexOf("(Build") + 7;
             // only copy buildinfo into string, other information of version-info are not needed
-            String curversion = Constants.BUILD_VERSION.substring(substringindex, substringindex + 8);
+            String curversion = Version.get().getVersionString().substring(substringindex, substringindex + 8);
             // store build number of update
             updateBuildNr = updateversion[0];
             // check whether there's a newer version online
