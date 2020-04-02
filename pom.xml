@@ -26,8 +26,8 @@
                 </os>
             </activation>
             <properties>
-                <zkn.supportsDmg>true</zkn.supportsDmg>
-                <zkn.useGenIsoImage>true</zkn.useGenIsoImage>
+                <zkn.supportsDmg>false</zkn.supportsDmg>
+                <zkn.useGenIsoImage>false</zkn.useGenIsoImage>
             </properties>
         </profile>
         <profile>
