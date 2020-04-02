@@ -259,6 +259,9 @@ public class ExportToXmlTask extends org.jdesktop.application.Task<Object, Void>
             Element zettel = dataObj.retrieveZettel(zettelnummer);
             // create new zettel-element for our final export file
             Element el_zettel = new Element(Daten.ELEMENT_ZETTEL);
+
+            el_zettel.setAttribute(Daten.ATTRIBUTE_ZETTEL_ID, ""+zettelnummer);
+
             // see whether the bit "EXPORT_TITLE" is set
             // in the exportparts-variabe. if so, export title
             if ((exportparts & Constants.EXPORT_TITLE) != 0) {
