@@ -98,6 +98,26 @@
                 </configuration>
             </plugin>
 
+          <!--  <plugin>
+                <groupId>sh.tak.appbundler</groupId>
+                <artifactId>appbundle-maven-plugin</artifactId>
+                <version>1.2.0</version>
+                <configuration>
+                    <mainClass>de.danielluedecke.zettelkasten.ZettelkastenApp</mainClass>
+                    <dictionaryFile>info.plist</dictionaryFile>
+                    <iconFile>CustomIncon.icns</iconFile>
+                    <generateDiskImageFile>true</generateDiskImageFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>bundle</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>-->
+
             <plugin>
                 <groupId>de.perdian.maven.plugins</groupId>
                 <artifactId>macosappbundler-maven-plugin</artifactId>
@@ -114,7 +134,7 @@
                         <CFBundleDevelopmentRegion>German</CFBundleDevelopmentRegion>
                         <CFBundleName>${project.name}</CFBundleName>
                         <CFBundleDisplayName>${project.name}</CFBundleDisplayName>
-                        <CFBundleIdentifier>${build.finalName}</CFBundleIdentifier>
+                        <CFBundleIdentifier>de.danielluedecke.zettelkasten.ZettelkastenApp</CFBundleIdentifier>
                         <CFBundleShortVersionString>${project.version}</CFBundleShortVersionString>
                         <CFBundleIconFile>zkn3_2.icns</CFBundleIconFile>
                     </plist>
@@ -184,9 +204,8 @@
                                 <minVersion>1.7.0</minVersion>
                                 <bundledJre64Bit>false</bundledJre64Bit>
                                 <bundledJreAsFallback>false</bundledJreAsFallback>
-                                <path>jre/</path>
                                 <jdkPreference>preferJre</jdkPreference>
-                                <runtimeBits>32/64</runtimeBits>
+                                <runtimeBits>64/32</runtimeBits>
                             </jre>
                             <splash>
                                 <file>splash.bmp</file>
