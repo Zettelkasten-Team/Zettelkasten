@@ -33,13 +33,20 @@
 
 package de.danielluedecke.zettelkasten;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import de.danielluedecke.zettelkasten.database.*;
 import de.danielluedecke.zettelkasten.util.Constants;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
+import javax.swing.*;
+import javax.swing.plaf.basic.BasicLookAndFeel;
 import java.io.File;
 import java.util.Locale;
+
 
 /**
  * The main class of the application.
@@ -157,6 +164,10 @@ public class ZettelkastenApp extends SingleFrameApplication {
 
     @Override
     protected void initialize(String[] args) {
+
+        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo( "Flat Light", FlatIntelliJLaf.class.getName()));
+        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo( "Flat Dark", FlatDarculaLaf.class.getName()));
+
         if (System.getProperty("os.name").startsWith("Mac"))
             System.setProperty("apple.laf.useScreenMenuBar", "true");
         this.params = args;

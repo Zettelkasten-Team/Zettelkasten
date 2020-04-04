@@ -1139,9 +1139,9 @@ public class CSettingsDlg extends javax.swing.JDialog {
             }
         }
       //  jComboBoxLAF.addItem(Constants.seaGlassLookAndFeelClassName);
-        if (settings.isSeaGlass()) {
+      /*  if (settings.isSeaGlass()) {
             lafselection = installed_laf.length;
-        }
+        }*/
         // select the last active look and feel
         jComboBoxLAF.setSelectedIndex(lafselection);
     }
