@@ -112,6 +112,10 @@
                 <version>1.14.0</version>
                 <configuration>
                     <!-- optional configuration -->
+                    <gitFlowConfig>
+                        <developmentBranch>develop</developmentBranch>
+                        <productionBranch>master</productionBranch>
+                    </gitFlowConfig>
                 </configuration>
             </plugin>
 
