@@ -119,6 +119,19 @@
             </plugin>-->
 
             <plugin>
+                <groupId>com.amashchenko.maven.plugin</groupId>
+                <artifactId>gitflow-maven-plugin</artifactId>
+                <version>1.14.0</version>
+                <configuration>
+                    <!-- optional configuration -->
+                    <gitFlowConfig>
+                        <developmentBranch>develop</developmentBranch>
+                        <productionBranch>master</productionBranch>
+                    </gitFlowConfig>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>de.perdian.maven.plugins</groupId>
                 <artifactId>macosappbundler-maven-plugin</artifactId>
                 <version>1.7.0</version>
@@ -141,7 +154,7 @@
                     <dmg>
                         <generate>${zkn.supportsDmg}</generate>
                         <useGenIsoImage>${zkn.useGenIsoImage}</useGenIsoImage>
-                        <dmgFileName>${build.finalName}</dmgFileName>
+                        <dmgFileName>${project.build.finalName}</dmgFileName>
                     </dmg>
 
                 </configuration>
@@ -191,8 +204,8 @@
                         <configuration>
                             <dontWrapJar>false</dontWrapJar>
                             <headerType>gui</headerType>
-                            <jar>target/${build.finalName}.jar</jar>
-                            <outfile>target/${build.finalName}.exe</outfile>
+                            <jar>target/${project.build.finalName}.jar</jar>
+                            <outfile>target/${project.build.finalName}.exe</outfile>
                             <chdir>.</chdir>
                             <priority>normal</priority>
                             <downloadUrl>http://java.com/download</downloadUrl>
@@ -205,7 +218,7 @@
                                 <bundledJre64Bit>false</bundledJre64Bit>
                                 <bundledJreAsFallback>false</bundledJreAsFallback>
                                 <jdkPreference>preferJre</jdkPreference>
-                                <runtimeBits>64/32</runtimeBits>
+                                <runtimeBits>32/64</runtimeBits>
                             </jre>
                             <splash>
                                 <file>splash.bmp</file>
