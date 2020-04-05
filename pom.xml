@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.danielluedecke</groupId>
     <artifactId>Zettelkasten</artifactId>
-    <version>3.3.0</version>
+    <version>3.3.1</version>
     <name>Zettelkasten</name>
 
     <properties>
