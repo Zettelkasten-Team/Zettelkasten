@@ -1,5 +1,5 @@
 <a name="v3.3.1"></a>
-# [3.3.1](https://github.com/sjPlot/Zettelkasten/compare/3.3.0...v3.3.1) (2020-04-05)
+# [3.3.1](https://github.com/sjPlot/Zettelkasten/compare/3.3.0...v3.3.1) (2020-04-06)
 ### Fehlerbehebungen
 - Look-and-Feel Seaglass wurde entfernt, da es zu Kompatibilitätsproblemen mit JDK 11 führte ([210](https://github.com/sjPlot/Zettelkasten/issues/210))
 
