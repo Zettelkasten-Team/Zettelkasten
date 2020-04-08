@@ -127,7 +127,8 @@ public class Settings {
      * See method "loadSettings" below for more details.
      */
     private final List<String> dataFilesToLoad = new ArrayList<>();
-    
+
+    //TODO needs to be removed
     public boolean isSeaGlass() {
         return false;
         //seaglass plugin is not compatible with modules

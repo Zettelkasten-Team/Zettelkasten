@@ -1655,7 +1655,7 @@ public class BibTex {
                         // check whether we have double periods at the end of the string...
                         // this may happen, if the user entered a period at the end of a title,
                         // while we automatically add a period after it.
-                        if ((dummy.endsWith("") && !dummy.endsWith("...")) || (dummy.endsWith("?.") || dummy.endsWith("!."))) {
+                        if ((dummy.endsWith("..") && !dummy.endsWith("...")) || (dummy.endsWith("?.") || dummy.endsWith("!."))) {
                             // cut the last period.
                             dummy = dummy.substring(0, dummy.length() - 1);
                         }
