@@ -129,7 +129,9 @@ public class Settings {
     private final List<String> dataFilesToLoad = new ArrayList<>();
     
     public boolean isSeaGlass() {
-        return getLookAndFeel().equals(Constants.seaGlassLookAndFeelClassName);
+        return false;
+        //seaglass plugin is not compatible with modules
+        //getLookAndFeel().equals(Constants.seaGlassLookAndFeelClassName);
     }
     public boolean isNimbus() {
         return getLookAndFeel().contains("nimbus");

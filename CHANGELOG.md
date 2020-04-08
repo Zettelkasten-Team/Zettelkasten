@@ -1,5 +1,10 @@
-<a name="3.3.0"></a>
-# [3.3.0](https://github.com/sjPlot/Zettelkasten/compare/3.2.7...3.3.0) (2020-04-02)
+<a name="v3.3.1"></a>
+# [3.3.1](https://github.com/sjPlot/Zettelkasten/compare/3.3.0...v3.3.1) (2020-04-06)
+### Fehlerbehebungen
+- Look-and-Feel Seaglass wurde entfernt, da es zu Kompatibilitätsproblemen mit JDK 11 führte ([210](https://github.com/sjPlot/Zettelkasten/issues/210))
+
+<a name="v3.3.0"></a>
+# [3.3.0](https://github.com/sjPlot/Zettelkasten/compare/3.2.7...v3.3.0) (2020-04-02)
 ### Änderungen
 - Registrierung der Dateiendung ".zkn3" wurde temporär deaktiviert.
 - Die Schriftgröße der Benutzeroberfläche wurde an höhere Bildschirmauflösungen angepasst.
