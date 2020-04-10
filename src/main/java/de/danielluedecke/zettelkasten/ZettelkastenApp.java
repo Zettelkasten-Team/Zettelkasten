@@ -79,6 +79,7 @@ public class ZettelkastenApp extends SingleFrameApplication {
      * @param args
      */
     public static void main(String[] args) {
+        System.setProperty("Dawt.useSystemAAFontSettings", "lcd");
         launch(ZettelkastenApp.class, args);
     }
 
