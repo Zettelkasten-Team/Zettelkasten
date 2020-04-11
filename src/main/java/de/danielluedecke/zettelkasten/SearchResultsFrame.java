@@ -1299,7 +1299,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
             jEditorPaneSearchEntry.setText(cleanedContent.toString());
         }
         // place caret, so content scrolls to top
-        jEditorPaneSearchEntry.setCaretPosition(1);
+        jEditorPaneSearchEntry.setCaretPosition(0);
     }
 
 

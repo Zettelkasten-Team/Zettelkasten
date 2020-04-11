@@ -3944,7 +3944,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jEditorPaneEntry.setText(cleanedContent.toString());
         }
         // place caret, so content scrolls to top
-        jEditorPaneEntry.setCaretPosition(1);
+        jEditorPaneEntry.setCaretPosition(0);
         // set entry number tzo textfield
         jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
     }
