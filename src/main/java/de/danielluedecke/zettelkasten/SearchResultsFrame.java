@@ -70,18 +70,7 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
-import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
-import javax.swing.RowSorter;
+import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.ListSelectionEvent;
@@ -1982,13 +1971,12 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         // repaint the components (necessary, since the components are not properly repainted else)
         repaint();
         // set input focus
-        this.setAlwaysOnTop(true);
-        this.toFront();
-        this.requestFocusInWindow();
-        this.setAlwaysOnTop(false);
-        setAlwaysOnTop(true);
-        setAlwaysOnTop(false);
-        toFront();
+        SwingUtilities.invokeLater(() -> {
+            this.setAlwaysOnTop(true);
+            this.requestFocusInWindow();
+            toFront();
+            this.setAlwaysOnTop(false);
+        });
     }
 
 

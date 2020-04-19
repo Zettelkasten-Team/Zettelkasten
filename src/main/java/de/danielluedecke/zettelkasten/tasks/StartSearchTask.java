@@ -403,11 +403,12 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         // now we have searched through all parts and can see whether this entry
                         // is a search-result or not...
                         //
-                        // if we have logica-and-search, go on here...
+                        // if we have logical-and-search, go on here...
                         if (Constants.LOG_AND == logical) {
                             // we then need to have at least the same amount of matches as
                             // the length of the searchterm-array
                             // if this is true, append entry-number to stringbuffer
+                            //TODO: this can't be right. Not the number must match, but the items
                             if (foundCounter >= searchTerms.length) {
                                 finalresults.add(searchnr);
                             }

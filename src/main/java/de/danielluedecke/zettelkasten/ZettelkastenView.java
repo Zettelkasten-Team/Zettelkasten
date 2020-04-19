@@ -10487,8 +10487,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // display error message box that nothing was found
             JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("errNothingFoundMsg"),getResourceMap().getString("errNothingFoundTitle"),JOptionPane.PLAIN_MESSAGE);
         }
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
