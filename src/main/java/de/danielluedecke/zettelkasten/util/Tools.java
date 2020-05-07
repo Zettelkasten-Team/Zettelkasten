@@ -69,6 +69,7 @@ import javax.swing.JOptionPane;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.parser.ParserDelegator;
 
+import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
@@ -1945,6 +1946,11 @@ public class Tools {
     public static HashMap<String, Element> retrieveAllZettelAsMap(Document doc) {
         return (HashMap<String, Element>)doc.getRootElement().getContent()
                 .stream()
+                .filter(entry -> {
+                    Attribute attribute = ((Element)entry).getAttribute(Daten.ATTRIBUTE_ZETTEL_ID);
+                    return ((Element)entry).getAttribute(Daten.ATTRIBUTE_ZETTEL_ID)!=null
+                            && !attribute.getValue().isEmpty();
+                })
                 .collect(Collectors.toMap(
                         entry -> ((Element)entry).getAttributeValue(Daten.ATTRIBUTE_ZETTEL_ID),
                         entry -> (Element)entry));

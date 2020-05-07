@@ -259,7 +259,7 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
         // remove all entries with identical ID, because we can't have these entries twice
         // in the database. if the user wants to update entries (with same IDs), the synch feature
         // can be used.
-        removeDoubleEntries(zkn3Doc);
+        handleDoubleEntries(zkn3Doc);
         // get the length of the data
         final int len = zkn3Doc.getRootElement().getContentSize();
         // reset the progressbar
@@ -389,7 +389,7 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
      *
      * @param zdoc
      */
-    private void removeDoubleEntries(Document zdoc) {
+    private void handleDoubleEntries(Document zdoc) {
         // set new import message, telling that data conversion is proceeded
         msgLabel.setText(resourceMap.getString("importDlgMsgRemoveDouble"));
         // create a list of all elements from the given xml file
