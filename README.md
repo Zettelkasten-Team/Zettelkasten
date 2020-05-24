@@ -22,7 +22,8 @@
 
 
 Der elektronische Zettelkasten ist ein Programm, das sich am Arbeitsprinzip des Zettelkastens von Niklas Luhmann orientiert. Die offizielle Homepage zum Programm ist [http://zettelkasten.danielluedecke.de](http://zettelkasten.danielluedecke.de).
-
+<br/>
+<br/>
 ![screenshot](http://zettelkasten.danielluedecke.de/img/gallery/zkn1.png)
 
 ## Download
