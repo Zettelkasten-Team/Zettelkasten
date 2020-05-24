@@ -1,21 +1,25 @@
-<p align="center">
-    <img src="http://zettelkasten.danielluedecke.de/img/zkn_header.png" />
-</p>
-<p align="center">
+# Zettelkasten - nach Luhmann 
+<img src="src/main/resources/de/danielluedecke/zettelkasten/resources/icons/zkn3-256x256.png" height="128" align="right"/>
+
+<p>
     <a href="https://github.com/sjPlot/Zettelkasten/graphs/contributors" alt="Contributors">
-        <img src="https://img.shields.io/github/contributors/sjPlot/Zettelkasten" /></a>
-    <img src="https://github.com/sjPlot/Zettelkasten/workflows/Java%20CI%20with%20Maven/badge.svg" alt="build status"></a>
-     <a href="https://github.com/sjPlot/Zettelkasten/releases" alt="Release">
-            <img src="https://img.shields.io/github/release/sjPlot/Zettelkasten.svg" /></a>
-      <a href="https://github.com/sjPlot/Zettelkasten/releases" alt="Downloads">
-                 <img src="https://img.shields.io/github/downloads/sjPlot/Zettelkasten/total.svg" /></a>       
-       <a href="https://github.com/sjPlot/Zettelkasten/issues" alt="Resolution time">
-                       <img src="http://isitmaintained.com/badge/resolution/sjPlot/Zettelkasten.svg" /></a>    
-                       <a href="https://github.com/sjPlot/Zettelkasten/issues" alt="Open Issues">
-                                              <img src="http://isitmaintained.com/badge/open/sjPlot/Zettelkasten.svg" /></a>            
+        <img src="https://img.shields.io/github/contributors/sjPlot/Zettelkasten" />
+    </a>
+    <img src="https://github.com/sjPlot/Zettelkasten/workflows/Java%20CI%20with%20Maven/badge.svg" alt="build status"/>
+    <a href="https://github.com/sjPlot/Zettelkasten/releases" alt="Release">
+        <img src="https://img.shields.io/github/release/sjPlot/Zettelkasten.svg" />
+    </a>
+     <a href="https://github.com/sjPlot/Zettelkasten/releases" alt="Downloads">
+        <img src="https://img.shields.io/github/downloads/sjPlot/Zettelkasten/total.svg" />
+     </a>       
+     <a href="https://github.com/sjPlot/Zettelkasten/issues" alt="Resolution time">
+        <img src="http://isitmaintained.com/badge/resolution/sjPlot/Zettelkasten.svg" />
+    </a>
+     <a href="https://github.com/sjPlot/Zettelkasten/issues" alt="Open Issues">
+        <img src="http://isitmaintained.com/badge/open/sjPlot/Zettelkasten.svg" />
+     </a>            
 </p>
 
----
 
 Der elektronische Zettelkasten ist ein Programm, das sich am Arbeitsprinzip des Zettelkastens von Niklas Luhmann orientiert. Die offizielle Homepage zum Programm ist [http://zettelkasten.danielluedecke.de](http://zettelkasten.danielluedecke.de).
 
