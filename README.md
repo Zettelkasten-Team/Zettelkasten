@@ -1,5 +1,5 @@
 <p align="center">
-![Zettelkasten - nach Luhmann](http://zettelkasten.danielluedecke.de/img/zkn_header.png)
+    <img src="http://zettelkasten.danielluedecke.de/img/zkn_header.png" />
 </p>
 <p align="center">
     <a href="https://github.com/sjPlot/Zettelkasten/graphs/contributors" alt="Contributors">
