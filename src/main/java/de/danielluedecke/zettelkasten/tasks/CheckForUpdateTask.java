@@ -1,14 +1,18 @@
 package de.danielluedecke.zettelkasten.tasks;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.Version;
+import org.kohsuke.github.*;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.logging.Level;
 
 /*
@@ -80,48 +84,36 @@ public class CheckForUpdateTask extends org.jdesktop.application.Task<Object, Vo
 
     @Override
     protected Object doInBackground() throws IOException {
-        // Your Task's code here.  This method runs
-        // on a background thread, so don't reference
-        // the Swing GUI from here.
-        String updateinfo = accessUpdateFile(new URL(Constants.UPDATE_INFO_URI));
-        // check for valid access
-        if (null == updateinfo || updateinfo.isEmpty()) {
-            return null;
+
+        GitHub github = GitHub.connectAnonymously();
+        GHRelease release = null;
+        GHRepository zettelkasten = github.getUser("sjPlot").getRepository("Zettelkasten");
+        PagedIterable<GHRelease> ghReleases = zettelkasten.listReleases();
+        PagedIterable<GHTag> ghTags = zettelkasten.listTags();
+        for(GHRelease r: ghReleases) {
+            if (r.isPrerelease() && settingsObj.getAutoNightlyUpdate()) {
+                release = r;
+            } else if (!r.isDraft()) {
+                release = r;
+            }
+            if (release != null) break;
         }
-        // retrieve update info and split them into an array. this array will hold the latest
-        // build-version-number in the first field, and the type of update in the 2. field.
-        String[] updateversion = updateinfo.split("\n");
-        // check whether we have a valid array with content
-        if (updateversion != null && updateversion.length > 0) {
-            // retrieve start-index of the build-number within the version-string.
-            int substringindex = Version.get().getVersionString().indexOf("(Build") + 7;
-            // only copy buildinfo into string, other information of version-info are not needed
-            String curversion = Version.get().getVersionString().substring(substringindex, substringindex + 8);
-            // store build number of update
-            updateBuildNr = updateversion[0];
-            // check whether there's a newer version online
-            updateavailable = (curversion.compareTo(updateBuildNr) < 0);
-            // check whether update hint should be shown for this version or not
-            showUpdateMsg = (updateBuildNr.compareTo(settingsObj.getShowUpdateHintVersion()) != 0);
-            // if no update available and user wants to check for nightly versions,
-            // check this now
-            if (!updateavailable && settingsObj.getAutoNightlyUpdate()) {
-                updateinfo = accessUpdateFile(new URL(Constants.UPDATE_NIGHTLY_INFO_URI));
-                // check for valid access
-                if (null == updateinfo || updateinfo.isEmpty()) {
-                    return null;
-                }
-                // retrieve update info and split them into an array. this array will hold the latest
-                // build-version-number in the first field, and the type of update in the 2. field.
-                updateversion = updateinfo.split("\n");
-                if (updateversion != null && updateversion.length > 0) {
-                    updateavailable = (curversion.compareTo(updateversion[0]) < 0);
-                    if (updateavailable) {
-                        zknframe.setUpdateURI(Constants.UPDATE_NIGHTLY_URI);
-                    }
-                }
+        if (release == null) return null;
+
+        for(GHTag tag : ghTags) {
+            if (tag.getName().equals(release.getName())) {
+                updateBuildNr = tag.getCommit().getSHA1().substring(0,7);
+                break;
             }
         }
+        Version otherVersion = new Version();
+        otherVersion.setBuild(updateBuildNr);
+        otherVersion.setVersion(release.getName());
+        updateavailable = Version.get().compare(otherVersion) < 0;
+
+        showUpdateMsg = (updateBuildNr.compareTo(settingsObj.getShowUpdateHintVersion()) != 0);
+        zknframe.setUpdateURI(release.getHtmlUrl().toString());
+
         return null;  // return your result
     }
 
