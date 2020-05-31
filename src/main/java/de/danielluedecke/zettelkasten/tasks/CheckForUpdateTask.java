@@ -12,7 +12,11 @@ import org.kohsuke.github.*;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Date;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 
 /*
@@ -32,6 +36,7 @@ public class CheckForUpdateTask extends org.jdesktop.application.Task<Object, Vo
     private boolean updateavailable = false;
     private boolean showUpdateMsg = true;
     private String updateBuildNr = "0";
+    private long cachingDuration = 4*60*60*1000;
     private final Settings settingsObj;
     /**
      * Reference to the main frame.
@@ -85,34 +90,75 @@ public class CheckForUpdateTask extends org.jdesktop.application.Task<Object, Vo
     @Override
     protected Object doInBackground() throws IOException {
 
-        GitHub github = GitHub.connectAnonymously();
-        GHRelease release = null;
-        GHRepository zettelkasten = github.getUser("sjPlot").getRepository("Zettelkasten");
-        PagedIterable<GHRelease> ghReleases = zettelkasten.listReleases();
-        PagedIterable<GHTag> ghTags = zettelkasten.listTags();
-        for(GHRelease r: ghReleases) {
-            if (r.isPrerelease() && settingsObj.getAutoNightlyUpdate()) {
-                release = r;
-            } else if (!r.isDraft()) {
-                release = r;
-            }
-            if (release != null) break;
+        Path zkdir = Paths.get(System.getProperty("user.home") + File.separatorChar + ".Zettelkasten");
+        Path versionPath = zkdir.resolve("version.properties");
+        Properties versionProperties = new Properties();
+        String versionName;
+        String releaseUrl;
+        if (!zkdir.toFile().exists()) {
+            zkdir.toFile().mkdirs();
         }
-        if (release == null) return null;
 
-        for(GHTag tag : ghTags) {
-            if (tag.getName().equals(release.getName())) {
-                updateBuildNr = tag.getCommit().getSHA1().substring(0,7);
-                break;
+        if (versionPath.toFile().exists()
+                && (new Date().getTime()-versionPath.toFile().lastModified() <= cachingDuration)) {
+            try (FileInputStream fos = new FileInputStream(versionPath.toAbsolutePath().toString())) {
+                versionProperties.load(fos);
+                versionName = versionProperties.getProperty("version");
+                updateBuildNr = versionProperties.getProperty("buildNr");
+                releaseUrl = versionProperties.getProperty("releaseUrl");
             }
+            Constants.zknlogger.info("Found and loaded version properties file.");
+        } else {
+            if (versionPath.toFile().exists()){
+                Constants.zknlogger.info("Found version properties file, but it is older than "
+                        + cachingDuration/1000/60/60 + " hours.");
+            } else {
+                Constants.zknlogger.info("Did not find any version properties file.");
+            }
+            Constants.zknlogger.info("Loading version information from github.");
+            GitHub github = GitHub.connectAnonymously();
+            GHRelease release = null;
+            GHRepository zettelkasten = github.getUser("sjPlot").getRepository("Zettelkasten");
+            PagedIterable<GHRelease> ghReleases = zettelkasten.listReleases();
+            PagedIterable<GHTag> ghTags = zettelkasten.listTags();
+            for (GHRelease r : ghReleases) {
+                if (r.isPrerelease() && settingsObj.getAutoNightlyUpdate()) {
+                    release = r;
+                } else if (!r.isDraft()) {
+                    release = r;
+                }
+                if (release != null) break;
+            }
+            if (release == null) return null;
+
+            for (GHTag tag : ghTags) {
+                if (tag.getName().equals(release.getName())) {
+                    updateBuildNr = tag.getCommit().getSHA1().substring(0, 7);
+                    break;
+                }
+            }
+            versionName = release.getName();
+            releaseUrl = release.getHtmlUrl().toString();
         }
+
+        versionProperties.setProperty("version", versionName);
+        versionProperties.setProperty("buildNr", updateBuildNr);
+        versionProperties.setProperty("releaseUrl", releaseUrl);
+        try (FileOutputStream fos = new FileOutputStream(versionPath.toAbsolutePath().toString())){
+            versionProperties.store(fos, null);
+            Constants.zknlogger.fine("stored version properties file.");
+        } catch(IOException e) {
+            Constants.zknlogger.warning("Could not write version file.");
+        }
+
         Version otherVersion = new Version();
         otherVersion.setBuild(updateBuildNr);
-        otherVersion.setVersion(release.getName());
+        otherVersion.setVersion(versionName);
+
         updateavailable = Version.get().compare(otherVersion) < 0;
 
         showUpdateMsg = (updateBuildNr.compareTo(settingsObj.getShowUpdateHintVersion()) != 0);
-        zknframe.setUpdateURI(release.getHtmlUrl().toString());
+        zknframe.setUpdateURI(releaseUrl);
 
         return null;  // return your result
     }
