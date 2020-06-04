@@ -8,6 +8,8 @@ GITHUB
 NOTE: You can map files in a GitHub repository/directory to resources in Transifex. 
 * `filter_type: dir` or
 * `filter_type: file` 
+
+The first attempt looked like this:
 ```yaml
 filters:
   - filter_type: dir
@@ -20,22 +22,9 @@ filters:
     translation_files_expression: 'translations/<lang>/'
 ```
 [More Examples of YAML Configurations](https://docs.transifex.com/transifex-github-integrations/github-tx-ui#more-examples-of-yaml-configurations-) ?
+
+In order to maintain our structure in GitHub we need to use the file dir type and specify each file name in the yaml config file:
 ```yaml
-filters:
-- filter_type: file
-  # all supported i18n types: https://docs.transifex.com/formats
-  file_format: PROPERTIES
-  source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CAutoKorrekturEdit.properties
-  source_language: de
-  translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CAutoKorrekturEdit_<lang>.properties'
-
-filters:
-- filter_type: file
-  file_format: PROPERTIES
-  source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CBiggerEditField.properties
-  source_language: de
-  translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CBiggerEditField_<lang>.properties'
-
 filters:
   - filter_type: dir
     # all supported i18n types: https://docs.transifex.com/formats
@@ -45,6 +34,20 @@ filters:
     source_file_dir: src/main/resources/de/danielluedecke/zettelkasten/resources/
     # path expression to translation files, must contain <lang> placeholder
     translation_files_expression: 'translations/<lang>/'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CAutoKorrekturEdit.properties
+    source_language: de
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CAutoKorrekturEdit_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CBiggerEditField.properties
+    source_language: de
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CBiggerEditField_<lang>.properties'
 ```
 # Edit resource settings
 ## Slug
@@ -109,10 +112,13 @@ You wrote: "the translation files expression requires the lang keyword as a dire
 Does that mean we would have to change/adapt the directory structure in our source code repo?
 
 the translation files in github need to be in a separate location in github. The integration pushes everything including whats in subdirectories
+
 you would have to change/adapt your repo
+
 Yes, the translation files in github are all in a seprate location, i.e. src/main/resources/de/danielluedecke/zettelkasten/resources
 
 in order to maintain your structure in github you need to use the file dir type and specify each file name in the yaml config file
+
 You wrote: "you would have to change/adapt your repo"
 
 Does this mean we would have to move the existing *_en_GB.properties and *_es_ES.properties files to another subdirectory before importing them from GitHub to Transifex?
@@ -120,6 +126,7 @@ Where can I find documentation or an example for using the file dir type ?
 https://docs.transifex.com/transifex-github-integrations/github-tx-ui writes about filter_type: dir
 
 https://docs.transifex.com/transifex-github-integrations/github-tx-ui#more-examples-of-yaml-configurations-
+
 Thanks for the advice. I think I've seen these examples before.
 
 Is there anything else I can help you with?
