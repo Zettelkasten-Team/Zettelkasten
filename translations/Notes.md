@@ -35,6 +35,16 @@ filters:
   source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CBiggerEditField.properties
   source_language: de
   translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CBiggerEditField_<lang>.properties'
+
+filters:
+  - filter_type: dir
+    # all supported i18n types: https://docs.transifex.com/formats
+    file_format: PROPERTIES
+    source_file_extension: properties
+    source_language: de
+    source_file_dir: src/main/resources/de/danielluedecke/zettelkasten/resources/
+    # path expression to translation files, must contain <lang> placeholder
+    translation_files_expression: 'translations/<lang>/'
 ```
 # Edit resource settings
 ## Slug
