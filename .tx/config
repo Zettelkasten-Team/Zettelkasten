@@ -1,0 +1,10 @@
+[main]
+host = https://www.transifex.com
+
+[zettelkasten.aboutbox-properties]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/AboutBox_<lang>.properties
+minimum_perc = 0
+source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/AboutBox.properties
+source_lang = de
+type = UNICODEPROPERTIES
+
