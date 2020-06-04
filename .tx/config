@@ -6,5 +6,5 @@ file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/AboutB
 minimum_perc = 0
 source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/AboutBox.properties
 source_lang = de
-type = UNICODEPROPERTIES
+type = PROPERTIES
 
