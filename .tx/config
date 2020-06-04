@@ -2,9 +2,204 @@
 host = https://www.transifex.com
 
 [zettelkasten.aboutbox-properties]
-file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/AboutBox_<lang>.properties
+file_filter = translations/zettelkasten.aboutbox-properties/<lang>.properties
 minimum_perc = 0
 source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/AboutBox.properties
 source_lang = de
 type = UNICODEPROPERTIES
+
+[zettelkasten.aboutboxproperties]
+file_filter = translations/zettelkasten.aboutboxproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cautokorrektureditproperties]
+file_filter = translations/zettelkasten.cautokorrektureditproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cbiggereditfieldproperties]
+file_filter = translations/zettelkasten.cbiggereditfieldproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cdesktopdisplayitemsproperties]
+file_filter = translations/zettelkasten.cdesktopdisplayitemsproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cdesktopexportproperties]
+file_filter = translations/zettelkasten.cdesktopexportproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cdesktopmultipleexportproperties]
+file_filter = translations/zettelkasten.cdesktopmultipleexportproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cerrorlogproperties]
+file_filter = translations/zettelkasten.cerrorlogproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cexportentriesproperties]
+file_filter = translations/zettelkasten.cexportentriesproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cexportproperties]
+file_filter = translations/zettelkasten.cexportproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cfiltersearchproperties]
+file_filter = translations/zettelkasten.cfiltersearchproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cfindreplacedialogproperties]
+file_filter = translations/zettelkasten.cfindreplacedialogproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cfontchooserproperties]
+file_filter = translations/zettelkasten.cfontchooserproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cformeditorproperties]
+file_filter = translations/zettelkasten.cformeditorproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.chighlightsearchsettingsproperties]
+file_filter = translations/zettelkasten.chighlightsearchsettingsproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cimportbibtexproperties]
+file_filter = translations/zettelkasten.cimportbibtexproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cimportproperties]
+file_filter = translations/zettelkasten.cimportproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cinformationproperties]
+file_filter = translations/zettelkasten.cinformationproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cinserthyperlinkproperties]
+file_filter = translations/zettelkasten.cinserthyperlinkproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cinsertmanuallinkproperties]
+file_filter = translations/zettelkasten.cinsertmanuallinkproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cinserttableproperties]
+file_filter = translations/zettelkasten.cinserttableproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cmodifydesktopentryproperties]
+file_filter = translations/zettelkasten.cmodifydesktopentryproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cnewbookmarkproperties]
+file_filter = translations/zettelkasten.cnewbookmarkproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cpdfexportsettingsproperties]
+file_filter = translations/zettelkasten.cpdfexportsettingsproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.crateentryproperties]
+file_filter = translations/zettelkasten.crateentryproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.creplacedialogproperties]
+file_filter = translations/zettelkasten.creplacedialogproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.csearchdlgproperties]
+file_filter = translations/zettelkasten.csearchdlgproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.csetbibkeyproperties]
+file_filter = translations/zettelkasten.csetbibkeyproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.csettingsdlgproperties]
+file_filter = translations/zettelkasten.csettingsdlgproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cshowmultipledesktopoccurencesproperties]
+file_filter = translations/zettelkasten.cshowmultipledesktopoccurencesproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cstenoeditproperties]
+file_filter = translations/zettelkasten.cstenoeditproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.csynonymseditproperties]
+file_filter = translations/zettelkasten.csynonymseditproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.ctexexportsettingsproperties]
+file_filter = translations/zettelkasten.ctexexportsettingsproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.cupdateinfoboxproperties]
+file_filter = translations/zettelkasten.cupdateinfoboxproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.desktopframeproperties]
+file_filter = translations/zettelkasten.desktopframeproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.newentryframeproperties]
+file_filter = translations/zettelkasten.newentryframeproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.searchresultsframeproperties]
+file_filter = translations/zettelkasten.searchresultsframeproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.toolbariconsproperties]
+file_filter = translations/zettelkasten.toolbariconsproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.zettelkastenappproperties]
+file_filter = translations/zettelkasten.zettelkastenappproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.zettelkastenviewproperties]
+file_filter = translations/zettelkasten.zettelkastenviewproperties/<lang>.properties
+source_lang = de
+type = PROPERTIES
 
