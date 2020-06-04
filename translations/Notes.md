@@ -2,8 +2,12 @@
 ## Project Integrations
 ### GitHub
 #### Edit Settings
-NOTE: You can only map files in a GitHub repository/directory to resources in Transifex. 
-NOTE: Only `filter_type: dir` seems to work. `filter_type: file` does not work.
+Update Link Settings > Select Files > Select files to synchronize
+GITHUB
+#### Mapping
+NOTE: You can map files in a GitHub repository/directory to resources in Transifex. 
+* `filter_type: dir` or
+* `filter_type: file` 
 ```yaml
 filters:
   - filter_type: dir
@@ -14,6 +18,23 @@ filters:
     source_file_dir: src/main/resources/de/danielluedecke/zettelkasten/resources/
     # path expression to translation files, must contain <lang> placeholder
     translation_files_expression: 'translations/<lang>/'
+```
+[More Examples of YAML Configurations](https://docs.transifex.com/transifex-github-integrations/github-tx-ui#more-examples-of-yaml-configurations-) ?
+```yaml
+filters:
+- filter_type: file
+  # all supported i18n types: https://docs.transifex.com/formats
+  file_format: PROPERTIES
+  source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CAutoKorrekturEdit.properties
+  source_language: de
+  translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CAutoKorrekturEdit_<lang>.properties'
+
+filters:
+- filter_type: file
+  file_format: PROPERTIES
+  source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CBiggerEditField.properties
+  source_language: de
+  translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CBiggerEditField_<lang>.properties'
 ```
 # Edit resource settings
 ## Slug
