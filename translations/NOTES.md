@@ -48,6 +48,55 @@ filters:
     source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CBiggerEditField.properties
     source_language: de
     translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CBiggerEditField_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopDisplayItems.properties
+    source_language: de
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopDisplayItem_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopExport.properties 
+    source_language: de
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopExport_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopMultipleExport.properties
+    source_language: de
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopMultipleExport_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CErrorLog.properties
+    source_language: de
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CErrorLog_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CExport.properties
+    source_language: de
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CExport_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CExportEntries.properties
+    source_language: de
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CExportEntries_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/
+    source_language: de
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/ _<lang>.properties'
 ```
 # Edit resource settings
 ## Slug
