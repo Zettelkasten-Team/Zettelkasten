@@ -1,10 +1,9 @@
 [main]
 host = https://www.transifex.com
 
-[zettelkasten.cautokorrekturedit-properties]
+[zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-cautokorrekturedit-properties--feature-transifex]
 file_filter = translations/<lang>/CAutoKorrekturEdit_<lang>.properties
 minimum_perc = 0
 source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CAutoKorrekturEdit.properties
 source_lang = de
 type = PROPERTIES
-
