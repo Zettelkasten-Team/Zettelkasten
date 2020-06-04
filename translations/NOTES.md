@@ -98,13 +98,38 @@ filters:
     source_language: de
     translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/ _<lang>.properties'
 ```
-# Edit resource settings
-## Slug
-src-main-resources-de-danielluedecke-zettelkasten-resources-cautokorrekturedit-properties--feature-transifex
-## Name
-src..resources/CAutoKorrekturEdit.properties (feature/Transifex)
+# Languages 
+https://www.transifex.com/zettelkasten/zettelkasten/languages/
+
+Edit languages
+
+## Current
+* English (United Kingdom) (en_GB)
+* Portugeuse (Brazil) (pt_BR)
+* Spanish (Spain) (es_ES)
+
+NOTE: The focus should be on the new language pt_BR at the moment. 
+Keyword here is the CLI Client and:
+````shell
+$ tx pull -l pt_BR
+```` 
+
 # CLI Client
-[Configuring one local file (mapping)](https://docs.transifex.com/client/config#configuring-one-local-file-(mapping))
+[Configuring one local file (mapping)](https://docs.transifex.com/client/config#configuring-one-local-file-(mapping)) > Resources
+````shell
+$ tx config mapping -r <project_slug.resource_slug> --source-lang <lang_code> \
+--type <i18n_type> [--source-file <file>] --expression '<path_expression>'
+````
+
+To be able to use the CLI client, the `.tx/config` file must be configured. 
+We need the Slug information from https://www.transifex.com/zettelkasten/zettelkasten/content/ 
+
+## Edit resource settings
+### Slug (example)
+src-main-resources-de-danielluedecke-zettelkasten-resources-cautokorrekturedit-properties--feature-transifex
+### Name (example)
+src..resources/CAutoKorrekturEdit.properties (feature/Transifex)
+
 # Chat with Transifex Team Member
 2020-06-04 1:23 PM
 Tex
