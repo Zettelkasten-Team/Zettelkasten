@@ -1,53 +1,13 @@
 [main]
 host = https://www.transifex.com
 
-[zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-aboutbox-en-properties--feature-transifex]
-file_filter = translations/zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-aboutbox-en-properties--feature-transifex/<lang>.properties
-source_lang = de
-type = PROPERTIES
-
 [zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-aboutbox-es-properties--feature-transifex]
 file_filter = translations/zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-aboutbox-es-properties--feature-transifex/<lang>.properties
 source_lang = de
 type = PROPERTIES
 
-[zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-aboutbox-properties--feature-transifex]
-file_filter = translations/zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-aboutbox-properties--feature-transifex/<lang>.properties
-source_lang = de
-type = PROPERTIES
-
-[zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-aboutbox-pt-br-properties--feature-transifex]
-file_filter = translations/zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-aboutbox-pt-br-properties--feature-transifex/<lang>.properties
-source_lang = de
-type = PROPERTIES
-
-[zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-cautokorrekturedit-en-gb-properties--feature-transifex]
-file_filter = translations/zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-cautokorrekturedit-en-gb-properties--feature-transifex/<lang>.properties
-source_lang = de
-type = PROPERTIES
-
-[zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-cautokorrekturedit-es-es-properties--feature-transifex]
-file_filter = translations/zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-cautokorrekturedit-es-es-properties--feature-transifex/<lang>.properties
-source_lang = de
-type = PROPERTIES
-
 [zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-cautokorrekturedit-properties--feature-transifex]
 file_filter = translations/zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-cautokorrekturedit-properties--feature-transifex/<lang>.properties
-source_lang = de
-type = PROPERTIES
-
-[zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-cbiggereditfield-en-gb-properties--feature-transifex]
-file_filter = translations/zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-cbiggereditfield-en-gb-properties--feature-transifex/<lang>.properties
-source_lang = de
-type = PROPERTIES
-
-[zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-cbiggereditfield-es-es-properties--feature-transifex]
-file_filter = translations/zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-cbiggereditfield-es-es-properties--feature-transifex/<lang>.properties
-source_lang = de
-type = PROPERTIES
-
-[zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-cbiggereditfield-properties--feature-transifex]
-file_filter = translations/zettelkasten.src-main-resources-de-danielluedecke-zettelkasten-resources-cbiggereditfield-properties--feature-transifex/<lang>.properties
 source_lang = de
 type = PROPERTIES
 
