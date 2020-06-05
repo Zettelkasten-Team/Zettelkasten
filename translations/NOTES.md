@@ -1,4 +1,31 @@
-# Transifex
+# Transifex evaluation
+
+## Brazilian Portuguese translation [#237](https://github.com/sjPlot/Zettelkasten/issues/237)
+This section describes the configuration for the translation project from English (en) to Portuguese (pt_BR). 
+The next section "Project Integrations" describes in particular the learning experiences made 
+regarding the YAML configuration of the file synchronization between the GitHub repository and the Transifex project(s).
+
+The special thing about the pt_BR project is that the source language should be English.  
+However, the source language was German until now.
+With Transifex we could probably work on several projects in parallel,
+and each project can be configured for a different source language. 
+(German for the overall Zettelkasten project and English for the pt_BR project)
+
+### YAML config
+It seems to boil down to working with the filter type file instead of filter type directory 
+and listing each file individually in the YAML configuration of the respective project.
+
+Copy and paste the following YAML configuration to the Update Link Settings, 
+Select Files dialog of the pt_BR project at Transifex named "Brazilian Portuguese translation #237".
+```yaml
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CAutoKorrekturEdit_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CAutoKorrekturEdit_<lang>.properties'
+
+```
 ## Project Integrations
 ### GitHub
 #### Edit Settings
@@ -98,12 +125,12 @@ filters:
     source_language: de
     translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/ _<lang>.properties'
 ```
-# Languages 
+## Languages 
 https://www.transifex.com/zettelkasten/zettelkasten/languages/
 
 Edit languages
 
-## Current
+### Current
 * English (United Kingdom) (en_GB)
 * Portugeuse (Brazil) (pt_BR)
 * Spanish (Spain) (es_ES)
@@ -114,7 +141,7 @@ Keyword here is the CLI Client and:
 $ tx pull -l pt_BR
 ```` 
 
-# CLI Client
+## CLI Client
 [Configuring one local file (mapping)](https://docs.transifex.com/client/config#configuring-one-local-file-(mapping)) > Resources
 ````shell
 $ tx config mapping -r <project_slug.resource_slug> --source-lang <lang_code> \
@@ -122,7 +149,7 @@ $ tx config mapping -r <project_slug.resource_slug> --source-lang <lang_code> \
 ````
 
 To be able to use the CLI client, the `.tx/config` file must be configured. 
-We need the Slug information from https://www.transifex.com/zettelkasten/zettelkasten/content/ 
+We need the Slug information from https://www.transifex.com/zettelkasten/zettelkasten/content/ > Resources
 
 ## Edit resource settings
 ### Slug (example)
@@ -130,7 +157,7 @@ src-main-resources-de-danielluedecke-zettelkasten-resources-cautokorrekturedit-p
 ### Name (example)
 src..resources/CAutoKorrekturEdit.properties (feature/Transifex)
 
-# Chat with Transifex Team Member
+## Chat with Transifex Team Member
 2020-06-04 1:23 PM
 Tex
 Hi! 👋 I'm Tex, the Transifex Bot!
