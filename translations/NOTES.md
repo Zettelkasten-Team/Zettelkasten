@@ -25,6 +25,13 @@ filters:
     source_language: en
     translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CAutoKorrekturEdit_<lang>.properties'
 
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CBiggerEditField_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CBiggerEditField_<lang>.properties'
+
 ```
 ## Project Integrations
 ### GitHub
