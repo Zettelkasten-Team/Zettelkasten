@@ -1,23 +1,26 @@
 # Transifex evaluation
 
 ## Brazilian Portuguese translation [#237](https://github.com/sjPlot/Zettelkasten/issues/237)
-This section describes the configuration for the translation project from English (en) to Portuguese (pt_BR). 
-The next section "Project Integrations" describes in particular the learning experiences made 
-regarding the YAML configuration of the file synchronization between the GitHub repository and the Transifex project(s).
 
-The special thing about the pt_BR project is that the source language should be English.  
-However, the source language was German until now.
-With Transifex we could probably work on several projects in parallel,
-and each project can be configured for a different source language. 
-(German for the overall Zettelkasten project and English for the pt_BR project)
+This section describes the configuration for the translation project from English (en_GB) to Brazilian Portuguese (pt_BR). The next section "Project Integrations" describes in particular the learning experiences made regarding the YAML configuration of the file synchronization between the GitHub repository and the Transifex project(s).
+
+The special thing about the pt_BR project is that the source language should be English. Until now, however, the source language has been German. With Transifex we could probably work on several projects in parallel and configure a different source language for each project if needed. (German for the overall project Zettelkasten and English for the pt_BR project)
 
 ### YAML config
-It seems to boil down to working with the filter type file instead of filter type directory 
-and listing each file individually in the YAML configuration of the respective project.
 
-Copy and paste the following YAML configuration to the Update Link Settings, 
-Select Files dialog of the pt_BR project at Transifex named "Brazilian Portuguese translation #237".
+It seems to boil down to working with the filter type file instead of filter type directory. So, we list each file individually in the YAML configuration of the respective project.
+
+Copy and paste the following [YAML configuration](pt_BR/pt_BR.yaml) to the Update Link Settings, 
+Select Files dialog of the pt_BR project at Transifex named "Brazilian Portuguese translation #237":
+
 ```yaml
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/AboutBox_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/_<lang>.properties'
+
 filters:
   - filter_type: file
     file_format: PROPERTIES
@@ -31,6 +34,251 @@ filters:
     source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CBiggerEditField_en_GB.properties
     source_language: en
     translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CBiggerEditField_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopExport_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopExport_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopMultipleExport_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopMultipleExport_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CErrorLog_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CErrorLog_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CExportEntries_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CExportEntries_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CExport_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CExport_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CFilterSearch_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CFilterSearch_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CFindReplaceDialog_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CFindReplaceDialog_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CFontChooser_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CFontChooser_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CFormEditor_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CFormEditor_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CHighlightSearchSettings_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CHighlightSearchSettings_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CImportBibTex_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CImportBibTex_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CImport_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CImport_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CInformation_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CInformation_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CInsertHyperlink_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CInsertHyperlink_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CInsertManualLink_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CInsertManualLink_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CInsertTable_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CInsertTable_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CModifyDesktopEntry_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CModifyDesktopEntry_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CNewBookmark_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CNewBookmark_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CPdfExportSettings_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CPdfExportSettings_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CRateEntry_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CRateEntry_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CReplaceDialog_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CReplaceDialog_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CSearchDlg_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CSearchDlg_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CSetBibKey_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CSetBibKey_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CSettingsDlg_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CSettingsDlg_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CShowMultipleDesktopOccurences_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CShowMultipleDesktopOccurences_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CStenoEdit_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CStenoEdit_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CSynonymsEdit_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CSynonymsEdit_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CTexExportSettings_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CTexExportSettings_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/CUpdateInfoBox_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/CUpdateInfoBox_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/DesktopFrame_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/DesktopFrame_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/NewEntryFrame_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/NewEntryFrame_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/SearchResultsFrame_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/SearchResultsFrame_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/ToolbarIcons_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/ToolbarIcons_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/ZettelkastenApp_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/ZettelkastenApp_<lang>.properties'
+
+filters:
+  - filter_type: file
+    file_format: PROPERTIES
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/ZettelkastenView_en_GB.properties
+    source_language: en
+    translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/ZettelkastenView_<lang>.properties'
 
 ```
 ## Project Integrations
