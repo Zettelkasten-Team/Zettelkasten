@@ -2444,7 +2444,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 
         jComboBoxManualTimestamp.setName("jComboBoxManualTimestamp"); // NOI18N
 
-        jComboBoxLocale.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"English", "German (Deutsch)", "Spanish (Espanol)"}));
+        jComboBoxLocale.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"English", "German (Deutsch)", "Spanish (Espanol)", "Portuguese (Brazil)"}));
         jComboBoxLocale.setName("jComboBoxLocale"); // NOI18N
 
         jLabel15.setText(resourceMap.getString("jLabel15.text")); // NOI18N
