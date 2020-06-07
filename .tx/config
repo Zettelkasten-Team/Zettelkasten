@@ -229,3 +229,9 @@ source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CDeskt
 source_lang = en_GB
 type = PROPERTIES
 
+[brazilian-portuguese-translation-237.ExportTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/export/resources/ExportTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/export/resources/ExportTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
