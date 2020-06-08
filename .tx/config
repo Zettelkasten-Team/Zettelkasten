@@ -1,9 +1,51 @@
 [main]
 host = https://www.transifex.com
 
+[zettelkasten.AboutBox]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/AboutBox_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/AboutBox.properties
+source_lang = de
+type = PROPERTIES
+
+[zettelkasten.CAutoKorrekturEdit]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/CAutoKorrekturEdit_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CAutoKorrekturEdit.properties
+source_lang = de
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.src_main_resources_de_danielluedecke_zettelkasten_resources_CAutoKorrekturEdit_en_GB]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/CAutoKorrekturEdit_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CAutoKorrekturEdit_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[zettelkasten.CBiggerEditField]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/CBiggerEditField_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CBiggerEditField.properties
+source_lang = de
+type = PROPERTIES
+
 [brazilian-portuguese-translation-237.src_main_resources_de_danielluedecke_zettelkasten_resources_CBiggerEditField_en_GB]
 file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/CBiggerEditField_<lang>.properties
 source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CBiggerEditField_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[zettelkasten.CDesktopDisplayItems]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopDisplayItems_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopDisplayItems.properties
+source_lang = de
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.src_main_resources_de_danielluedecke_zettelkasten_resources_CDesktopDisplayItems_en_GB]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopDisplayItems_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopDisplayItems_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.src_main_resources_de_danielluedecke_zettelkasten_resources_CDesktopMultipleExport_en_GB]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopMultipleExport_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopMultipleExport_en_GB.properties
 source_lang = en_GB
 type = PROPERTIES
 
@@ -23,6 +65,12 @@ type = PROPERTIES
 file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/DesktopFrame_<lang>.properties
 source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/DesktopFrame_en_GB.properties
 source_lang = en_GB
+type = PROPERTIES
+
+[zettelkasten.CFindReplaceDialog]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/CFindReplaceDialog_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CFindReplaceDialog.properties
+source_lang = de
 type = PROPERTIES
 
 [brazilian-portuguese-translation-237.src_main_resources_de_danielluedecke_zettelkasten_resources_CFindReplaceDialog_en_GB]
@@ -88,12 +136,6 @@ type = PROPERTIES
 [brazilian-portuguese-translation-237.src_main_resources_de_danielluedecke_zettelkasten_resources_CStenoEdit_en_GB]
 file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/CStenoEdit_<lang>.properties
 source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CStenoEdit_en_GB.properties
-source_lang = en_GB
-type = PROPERTIES
-
-[brazilian-portuguese-translation-237.src_main_resources_de_danielluedecke_zettelkasten_resources_CDesktopDisplayItems_en_GB]
-file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopDisplayItems_<lang>.properties
-source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopDisplayItems_en_GB.properties
 source_lang = en_GB
 type = PROPERTIES
 
@@ -163,12 +205,6 @@ source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CPdfEx
 source_lang = en_GB
 type = PROPERTIES
 
-[brazilian-portuguese-translation-237.src_main_resources_de_danielluedecke_zettelkasten_resources_CAutoKorrekturEdit_en_GB]
-file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/CAutoKorrekturEdit_<lang>.properties
-source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CAutoKorrekturEdit_en_GB.properties
-source_lang = en_GB
-type = PROPERTIES
-
 [brazilian-portuguese-translation-237.src_main_resources_de_danielluedecke_zettelkasten_resources_CDesktopExport_en_GB]
 file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopExport_<lang>.properties
 source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopExport_en_GB.properties
@@ -220,12 +256,6 @@ type = PROPERTIES
 [brazilian-portuguese-translation-237.src_main_resources_de_danielluedecke_zettelkasten_resources_ToolbarIcons_en_GB]
 file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/ToolbarIcons_<lang>.properties
 source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/ToolbarIcons_en_GB.properties
-source_lang = en_GB
-type = PROPERTIES
-
-[brazilian-portuguese-translation-237.src_main_resources_de_danielluedecke_zettelkasten_resources_CDesktopMultipleExport_en_GB]
-file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopMultipleExport_<lang>.properties
-source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CDesktopMultipleExport_en_GB.properties
 source_lang = en_GB
 type = PROPERTIES
 
