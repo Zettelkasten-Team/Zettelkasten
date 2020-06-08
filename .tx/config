@@ -177,7 +177,7 @@ type = PROPERTIES
 
 [zettelkasten.CImportBibTex]
 file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/CImportBibTex_<lang>.properties
-source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CImportBibTex.prmperties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CImportBibTex.properties
 source_lang = de
 type = PROPERTIES
 
