@@ -331,7 +331,7 @@ source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CSetti
 source_lang = en_GB
 type = PROPERTIES
 
-[zettelkasten.CShowMultipleDesktopOccurences] 
+[zettelkasten.CShowMultipleDesktopOccurences]
 file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/CShowMultipleDesktopOccurences_<lang>.properties
 source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/CShowMultipleDesktopOccurences.properties
 source_lang = de
@@ -415,7 +415,7 @@ source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/NewEnt
 source_lang = en_GB
 type = PROPERTIES
 
-[zettelkasten.SearchResultsFrame] 
+[zettelkasten.SearchResultsFrame]
 file_filter = src/main/resources/de/danielluedecke/zettelkasten/resources/SearchResultsFrame_<lang>.properties
 source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/SearchResultsFrame.properties
 source_lang = de
@@ -463,9 +463,6 @@ source_file = src/main/resources/de/danielluedecke/zettelkasten/resources/Zettel
 source_lang = en_GB
 type = PROPERTIES
 
-
-# tasks
-
 [zettelkasten.tasks_export_resources_ExportTask]
 file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/export/resources/ExportTask_<lang>.properties
 source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/export/resources/ExportTask.properties
@@ -478,7 +475,9 @@ source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/export/res
 source_lang = en_GB
 type = PROPERTIES
 
-
-# util.resources
-
+[brazilian-portuguese-translation-237.FileOperationsUtil]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/util/resources/FileOperationsUtil_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/util/resources/FileOperationsUtil_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
 
