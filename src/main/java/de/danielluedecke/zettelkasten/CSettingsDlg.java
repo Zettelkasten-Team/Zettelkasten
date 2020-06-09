@@ -1979,6 +1979,9 @@ public class CSettingsDlg extends javax.swing.JDialog {
             case 2:
                 settings.setLanguage("es");
                 break;
+            case 3:
+                settings.setLanguage("pt");
+                break;
             default:
                 settings.setLanguage("en");
                 break;
