@@ -34,16 +34,13 @@
 package de.danielluedecke.zettelkasten;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.FlatLightLaf;
 import de.danielluedecke.zettelkasten.database.*;
 import de.danielluedecke.zettelkasten.util.Constants;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicLookAndFeel;
 import java.io.File;
 import java.util.Locale;
 
@@ -115,9 +112,11 @@ public class ZettelkastenApp extends SingleFrameApplication {
         String englishCountryCode = new Locale("en", "", "").getLanguage();
         String germanCountryCode = new Locale("de", "", "").getLanguage();
         String spanishCountryCode = new Locale("es", "", "").getLanguage();
+        String portugueseCountryCode = new Locale("pt", "", "").getLanguage();
         // create locale-variable
         Locale newLocale = new Locale("en", "GB");
         // check for default language and overwrite default-language-setting (which is UK)
+        if (defLang.equals(portugueseCountryCode)) newLocale = new Locale("pt", "BR");
         if (defLang.equals(spanishCountryCode)) newLocale = new Locale("es", "ES");
         if (defLang.equals(germanCountryCode)) newLocale = new Locale("de", "DE");
         if (defLang.equals(englishCountryCode)) newLocale = new Locale("en", "GB");

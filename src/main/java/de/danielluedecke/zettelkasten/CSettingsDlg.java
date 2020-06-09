@@ -449,6 +449,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
                 jComboBoxLocale.setSelectedIndex(1);
             } else if (lang.equalsIgnoreCase("es")) {
                 jComboBoxLocale.setSelectedIndex(2);
+            } else if (lang.equalsIgnoreCase("pt")) {
+                jComboBoxLocale.setSelectedIndex(3);
             } else {
                 jComboBoxLocale.setSelectedIndex(0);
             }
