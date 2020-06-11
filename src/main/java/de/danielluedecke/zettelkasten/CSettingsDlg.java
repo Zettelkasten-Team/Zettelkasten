@@ -2792,7 +2792,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jButtonListFont.setName("jButtonListFont"); // NOI18N
 
         jLabelFontDeskLayout.setText(resourceMap.getString("jLabelFontDeskLayout.text")); // NOI18N
-        jLabelFontDeskLayout.setName("jLabel22"); // NOI18N
+        jLabelFontDeskLayout.setName("jLabelFontDeskLayout"); // NOI18N
 
         jButtonDesktopFont.setText(resourceMap.getString("jButtonDesktopFont.text")); // NOI18N
         jButtonDesktopFont.setName("jButtonDesktopFont"); // NOI18N
