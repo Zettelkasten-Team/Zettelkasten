@@ -481,3 +481,9 @@ source_file = src/main/resources/de/danielluedecke/zettelkasten/util/resources/F
 source_lang = en_GB
 type = PROPERTIES
 
+[brazilian-portuguese-translation-237.HtmlUbbUtil]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/util/resources/HtmUbbUtil_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/util/resources/HtmlUbbUtil_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
