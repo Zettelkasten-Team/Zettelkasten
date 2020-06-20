@@ -475,6 +475,132 @@ source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/export/res
 source_lang = en_GB
 type = PROPERTIES
 
+[brazilian-portuguese-translation-237.ImportTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/importtasks/resources/ImportTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/importtasks/resources/ImportTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.ConvertFormatTagsTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/ConvertFormatTagsTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/ConvertFormatTagsTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.DeleteAuthorsTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/DeleteAuthorsTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/DeleteAuthorsTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.DeleteEntryTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/DeleteEntryTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/DeleteEntryTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.DeleteKeywordsTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/DeleteKeywordsTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/DeleteKeywordsTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.EntriesToLuhmannTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/EntriesToLuhmannTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/EntriesToLuhmannTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.FindDoubleEntriesTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/FindDoubleEntriesTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/FindDoubleEntriesTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.KeywordSuggestionsTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/KeywordSuggestionsTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/KeywordSuggestionsTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.LoadFileTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/LoadFileTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/LoadFileTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.MergeAuthorsTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/MergeAuthorsTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/MergeAuthorsTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.RefreshBibTexTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/RefreshBibTexTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/RefreshBibTexTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.ReplaceTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/ReplaceTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/ReplaceTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.SaveFileTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/SaveFileTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/SaveFileTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.SetFirstLineAsTitleTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/SetFirstLineAsTitleTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/SetFirstLineAsTitleTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.ShowAttachmentListTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/ShowAttachmentListTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/ShowAttachmentListTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.ShowAuthorListTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/ShowAuthorListTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/ShowAuthorListTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.ShowKeywordListTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/ShowKeywordListTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/ShowKeywordListTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.ShowTitleListTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/ShowTitleListTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/ShowTitleListTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.StartSearchTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/StartSearchTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/StartSearchTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.TaskProgressDialog]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/TaskProgressDialog_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/TaskProgressDialog_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
+[brazilian-portuguese-translation-237.UpdateFileTask]
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/UpdateFileTask_<lang>.properties
+source_file = src/main/resources/de/danielluedecke/zettelkasten/tasks/resources/UpdateFileTask_en_GB.properties
+source_lang = en_GB
+type = PROPERTIES
+
 [brazilian-portuguese-translation-237.FileOperationsUtil]
 file_filter = src/main/resources/de/danielluedecke/zettelkasten/util/resources/FileOperationsUtil_<lang>.properties
 source_file = src/main/resources/de/danielluedecke/zettelkasten/util/resources/FileOperationsUtil_en_GB.properties
@@ -482,8 +608,7 @@ source_lang = en_GB
 type = PROPERTIES
 
 [brazilian-portuguese-translation-237.HtmlUbbUtil]
-file_filter = src/main/resources/de/danielluedecke/zettelkasten/util/resources/HtmUbbUtil_<lang>.properties
+file_filter = src/main/resources/de/danielluedecke/zettelkasten/util/resources/HtmlUbbUtil_<lang>.properties
 source_file = src/main/resources/de/danielluedecke/zettelkasten/util/resources/HtmlUbbUtil_en_GB.properties
 source_lang = en_GB
 type = PROPERTIES
-
