@@ -265,6 +265,11 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.8.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.kohsuke</groupId>
+            <artifactId>github-api</artifactId>
+            <version>1.111</version>
+        </dependency>
 
         <dependency>
             <groupId>com.opencsv</groupId>
