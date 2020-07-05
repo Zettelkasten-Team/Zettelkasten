@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.danielluedecke</groupId>
     <artifactId>Zettelkasten</artifactId>
-    <version>3.3.1.9</version>
+    <version>3.3.2</version>
     <name>Zettelkasten</name>
 
     <properties>
-        <zkn.launch4jVersion>${project.version}</zkn.launch4jVersion>
+        <zkn.launch4jVersion>${project.version}.0</zkn.launch4jVersion>
         <zkn.supportsDmg>false</zkn.supportsDmg>
         <zkn.useGenIsoImage>false</zkn.useGenIsoImage>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
