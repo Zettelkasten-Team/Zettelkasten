@@ -43,6 +43,7 @@ import de.danielluedecke.zettelkasten.util.Tools;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
@@ -258,7 +259,7 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
         // remove all entries with identical ID, because we can't have these entries twice
         // in the database. if the user wants to update entries (with same IDs), the synch feature
         // can be used.
-        removeDoubleEntries(zkn3Doc);
+        handleDoubleEntries(zkn3Doc);
         // get the length of the data
         final int len = zkn3Doc.getRootElement().getContentSize();
         // reset the progressbar
@@ -388,14 +389,16 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
      *
      * @param zdoc
      */
-    private void removeDoubleEntries(Document zdoc) {
+    private void handleDoubleEntries(Document zdoc) {
         // set new import message, telling that data conversion is proceeded
         msgLabel.setText(resourceMap.getString("importDlgMsgRemoveDouble"));
         // create a list of all elements from the given xml file
         List<?> elementList = zdoc.getRootElement().getContent();
         // reset the progressbar
         setProgress(0, 0, elementList.size());
-        // the outer loop for the imported data
+
+        HashMap<String, Element> documentElements = Tools.retrieveAllZettelAsMap(dataObj.getZknData());
+
         for (int cnt = 0; cnt < elementList.size(); cnt++) {
             // get element of imported data file
             Element importentry = (Element) elementList.get(cnt);
@@ -405,9 +408,10 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
             if (id != null && !id.isEmpty()) {
                 // check whether Zettel with unique ID already exists
                 // in the current database
-                if (dataObj.findZettelFromID(id) != -1) {
-                    // if yes, remove double entry from imported document
-                    zdoc.getRootElement().getContent().remove(cnt);
+                if (documentElements.containsKey(id)) {
+                    // if yes, create new id for entry with duplicated id from imported document
+                    importentry.setAttribute(Daten.ATTRIBUTE_ZETTEL_ID, Tools.createZknID(filepath.getName()));
+               //     zdoc.getRootElement().getContent().remove(cnt);
                     // add number of removed entry to list. remember that
                     // the entry-number adds on to our counter, which starts
                     // at zero.

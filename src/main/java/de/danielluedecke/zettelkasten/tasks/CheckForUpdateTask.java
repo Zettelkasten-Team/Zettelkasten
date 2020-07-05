@@ -1,14 +1,22 @@
 package de.danielluedecke.zettelkasten.tasks;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.Version;
+import org.kohsuke.github.*;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Date;
+import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 
 /*
@@ -28,6 +36,7 @@ public class CheckForUpdateTask extends org.jdesktop.application.Task<Object, Vo
     private boolean updateavailable = false;
     private boolean showUpdateMsg = true;
     private String updateBuildNr = "0";
+    private long cachingDuration = 4*60*60*1000;
     private final Settings settingsObj;
     /**
      * Reference to the main frame.
@@ -80,48 +89,77 @@ public class CheckForUpdateTask extends org.jdesktop.application.Task<Object, Vo
 
     @Override
     protected Object doInBackground() throws IOException {
-        // Your Task's code here.  This method runs
-        // on a background thread, so don't reference
-        // the Swing GUI from here.
-        String updateinfo = accessUpdateFile(new URL(Constants.UPDATE_INFO_URI));
-        // check for valid access
-        if (null == updateinfo || updateinfo.isEmpty()) {
-            return null;
+
+        Path zkdir = Paths.get(System.getProperty("user.home") + File.separatorChar + ".Zettelkasten");
+        Path versionPath = zkdir.resolve("version.properties");
+        Properties versionProperties = new Properties();
+        String versionName;
+        String releaseUrl;
+        if (!zkdir.toFile().exists()) {
+            zkdir.toFile().mkdirs();
         }
-        // retrieve update info and split them into an array. this array will hold the latest
-        // build-version-number in the first field, and the type of update in the 2. field.
-        String[] updateversion = updateinfo.split("\n");
-        // check whether we have a valid array with content
-        if (updateversion != null && updateversion.length > 0) {
-            // retrieve start-index of the build-number within the version-string.
-            int substringindex = Version.get().getVersionString().indexOf("(Build") + 7;
-            // only copy buildinfo into string, other information of version-info are not needed
-            String curversion = Version.get().getVersionString().substring(substringindex, substringindex + 8);
-            // store build number of update
-            updateBuildNr = updateversion[0];
-            // check whether there's a newer version online
-            updateavailable = (curversion.compareTo(updateBuildNr) < 0);
-            // check whether update hint should be shown for this version or not
-            showUpdateMsg = (updateBuildNr.compareTo(settingsObj.getShowUpdateHintVersion()) != 0);
-            // if no update available and user wants to check for nightly versions,
-            // check this now
-            if (!updateavailable && settingsObj.getAutoNightlyUpdate()) {
-                updateinfo = accessUpdateFile(new URL(Constants.UPDATE_NIGHTLY_INFO_URI));
-                // check for valid access
-                if (null == updateinfo || updateinfo.isEmpty()) {
-                    return null;
+
+        if (versionPath.toFile().exists()
+                && (new Date().getTime()-versionPath.toFile().lastModified() <= cachingDuration)) {
+            try (FileInputStream fos = new FileInputStream(versionPath.toAbsolutePath().toString())) {
+                versionProperties.load(fos);
+                versionName = versionProperties.getProperty("version");
+                updateBuildNr = versionProperties.getProperty("buildNr");
+                releaseUrl = versionProperties.getProperty("releaseUrl");
+            }
+            Constants.zknlogger.info("Found and loaded version properties file.");
+        } else {
+            if (versionPath.toFile().exists()){
+                Constants.zknlogger.info("Found version properties file, but it is older than "
+                        + cachingDuration/1000/60/60 + " hours.");
+            } else {
+                Constants.zknlogger.info("Did not find any version properties file.");
+            }
+            Constants.zknlogger.info("Loading version information from github.");
+            GitHub github = GitHub.connectAnonymously();
+            GHRelease release = null;
+            GHRepository zettelkasten = github.getUser("sjPlot").getRepository("Zettelkasten");
+            PagedIterable<GHRelease> ghReleases = zettelkasten.listReleases();
+            PagedIterable<GHTag> ghTags = zettelkasten.listTags();
+            for (GHRelease r : ghReleases) {
+                if (r.isPrerelease() && settingsObj.getAutoNightlyUpdate()) {
+                    release = r;
+                } else if (!r.isDraft()) {
+                    release = r;
                 }
-                // retrieve update info and split them into an array. this array will hold the latest
-                // build-version-number in the first field, and the type of update in the 2. field.
-                updateversion = updateinfo.split("\n");
-                if (updateversion != null && updateversion.length > 0) {
-                    updateavailable = (curversion.compareTo(updateversion[0]) < 0);
-                    if (updateavailable) {
-                        zknframe.setUpdateURI(Constants.UPDATE_NIGHTLY_URI);
-                    }
+                if (release != null) break;
+            }
+            if (release == null) return null;
+
+            for (GHTag tag : ghTags) {
+                if (tag.getName().equals(release.getName())) {
+                    updateBuildNr = tag.getCommit().getSHA1().substring(0, 7);
+                    break;
                 }
             }
+            versionName = release.getName();
+            releaseUrl = release.getHtmlUrl().toString();
         }
+
+        versionProperties.setProperty("version", versionName);
+        versionProperties.setProperty("buildNr", updateBuildNr);
+        versionProperties.setProperty("releaseUrl", releaseUrl);
+        try (FileOutputStream fos = new FileOutputStream(versionPath.toAbsolutePath().toString())){
+            versionProperties.store(fos, null);
+            Constants.zknlogger.fine("stored version properties file.");
+        } catch(IOException e) {
+            Constants.zknlogger.warning("Could not write version file.");
+        }
+
+        Version otherVersion = new Version();
+        otherVersion.setBuild(updateBuildNr);
+        otherVersion.setVersion(versionName);
+
+        updateavailable = Version.get().compare(otherVersion) < 0;
+
+        showUpdateMsg = (updateBuildNr.compareTo(settingsObj.getShowUpdateHintVersion()) != 0);
+        zknframe.setUpdateURI(releaseUrl);
+
         return null;  // return your result
     }
 

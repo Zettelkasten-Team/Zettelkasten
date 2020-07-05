@@ -3944,7 +3944,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jEditorPaneEntry.setText(cleanedContent.toString());
         }
         // place caret, so content scrolls to top
-        jEditorPaneEntry.setCaretPosition(1);
+        jEditorPaneEntry.setCaretPosition(0);
         // set entry number tzo textfield
         jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
     }
@@ -10487,8 +10487,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // display error message box that nothing was found
             JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("errNothingFoundMsg"),getResourceMap().getString("errNothingFoundTitle"),JOptionPane.PLAIN_MESSAGE);
         }
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**

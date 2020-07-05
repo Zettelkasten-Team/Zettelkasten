@@ -33,13 +33,17 @@
 
 package de.danielluedecke.zettelkasten;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
 import de.danielluedecke.zettelkasten.database.*;
 import de.danielluedecke.zettelkasten.util.Constants;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.Locale;
+
 
 /**
  * The main class of the application.
@@ -72,6 +76,7 @@ public class ZettelkastenApp extends SingleFrameApplication {
      * @param args
      */
     public static void main(String[] args) {
+        System.setProperty("Dawt.useSystemAAFontSettings", "lcd");
         launch(ZettelkastenApp.class, args);
     }
 
@@ -107,9 +112,11 @@ public class ZettelkastenApp extends SingleFrameApplication {
         String englishCountryCode = new Locale("en", "", "").getLanguage();
         String germanCountryCode = new Locale("de", "", "").getLanguage();
         String spanishCountryCode = new Locale("es", "", "").getLanguage();
+        String portugueseCountryCode = new Locale("pt", "", "").getLanguage();
         // create locale-variable
         Locale newLocale = new Locale("en", "GB");
         // check for default language and overwrite default-language-setting (which is UK)
+        if (defLang.equals(portugueseCountryCode)) newLocale = new Locale("pt", "BR");
         if (defLang.equals(spanishCountryCode)) newLocale = new Locale("es", "ES");
         if (defLang.equals(germanCountryCode)) newLocale = new Locale("de", "DE");
         if (defLang.equals(englishCountryCode)) newLocale = new Locale("en", "GB");
@@ -157,6 +164,10 @@ public class ZettelkastenApp extends SingleFrameApplication {
 
     @Override
     protected void initialize(String[] args) {
+
+        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo( "Flat Light", FlatIntelliJLaf.class.getName()));
+        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo( "Flat Dark", FlatDarculaLaf.class.getName()));
+
         if (System.getProperty("os.name").startsWith("Mac"))
             System.setProperty("apple.laf.useScreenMenuBar", "true");
         this.params = args;

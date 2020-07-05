@@ -147,7 +147,11 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
         // check whether file already exists
         if (filepath.exists()) {
             // file exists, ask user to overwrite it...
-            int optionDocExists = JOptionPane.showConfirmDialog(null, resourceMap.getString("askForOverwriteFileMsg", "", filepath.getName()), resourceMap.getString("askForOverwriteFileTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+            int optionDocExists = JOptionPane.showConfirmDialog(null,
+                    resourceMap.getString("askForOverwriteFileMsg", "", filepath.getName()),
+                    resourceMap.getString("askForOverwriteFileTitle"),
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.PLAIN_MESSAGE);
             // if the user does *not* choose to overwrite, quit...
             if (optionDocExists != JOptionPane.YES_OPTION) {
                 // don't show "export was OK" message in main frame
