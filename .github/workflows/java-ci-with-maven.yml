@@ -6,11 +6,11 @@ name: Java CI with Maven
 on:
   push:
     branches:
-      - '*/**'
+      - 'devel'
       - '!master'
   pull_request:
     branches:
-      - '*/**'
+      - 'devel'
       - '!master'
 
 jobs:
