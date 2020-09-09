@@ -98,38 +98,6 @@
                 </configuration>
             </plugin>
 
-           <plugin>
-                <groupId>sh.tak.appbundler</groupId>
-                <artifactId>appbundle-maven-plugin</artifactId>
-                <version>1.2.0</version>
-                <configuration>
-                    <mainClass>de.danielluedecke.zettelkasten.ZettelkastenApp</mainClass>
-                    <dictionaryFile>Info.plist</dictionaryFile>
-                    <iconFile>zkn3_2.icns</iconFile>
-                    <generateDiskImageFile>true</generateDiskImageFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>bundle</goal>
-                        </goals>
-                    </execution>
-                </executions>
-               <dependencies>
-                   <dependency>
-                       <groupId>org.codehaus.plexus</groupId>
-                       <artifactId>plexus-archiver</artifactId>
-                       <version>4.1.0</version>
-                   </dependency>
-                   <dependency>
-                       <groupId>org.codehaus.plexus</groupId>
-                       <artifactId>plexus-velocity</artifactId>
-                       <version>1.2</version>
-                   </dependency>
-               </dependencies>
-            </plugin>
-
             <plugin>
                 <groupId>com.amashchenko.maven.plugin</groupId>
                 <artifactId>gitflow-maven-plugin</artifactId>
