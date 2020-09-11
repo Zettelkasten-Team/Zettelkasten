@@ -10,39 +10,40 @@ on:
     branches: [ develop ]
 
 jobs:
-  build-on-ubuntu-latest:
+  job-on-ubuntu-latest:
+    build:
 
-    runs-on: ubuntu-latest
+      runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-    - run: mkdir staging && cp target/*.jar target/*.exe staging  
-    - uses: actions/upload-artifact@v2
-      with:
-        name: Package (*.jar and *.exe)
-        path: staging
+      steps:
+        - uses: actions/checkout@v2
+        - name: Set up JDK 1.8
+          uses: actions/setup-java@v1
+          with:
+            java-version: 1.8
+        - name: Build with Maven
+          run: mvn -B package --file pom.xml
+        - run: mkdir staging && cp target/*.jar target/*.exe staging  
+        - uses: actions/upload-artifact@v2
+          with:
+            name: Package (*.jar and *.exe)
+            path: staging
 
-jobs:
-  build-on-macos-latest:
+  job-on-macos-latest:
+    build:
 
-    runs-on: macos-latest
+      runs-on: macos-latest
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-    - run: mkdir staging && target/*.dmg staging # TODO target/*.dmg 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: Package (*.dmg) – Apple Disk Image, java-version: 1.8
-        path: staging
+      steps:
+        - uses: actions/checkout@v2
+        - name: Set up JDK 1.8
+          uses: actions/setup-java@v1
+          with:
+            java-version: 1.8
+        - name: Build with Maven
+          run: mvn -B package --file pom.xml
+        - run: mkdir staging && target/*.dmg staging # TODO target/*.dmg 
+        - uses: actions/upload-artifact@v2
+          with:
+            name: Package (*.dmg) – Apple Disk Image, java-version: 1.8
+            path: staging
