@@ -25,7 +25,7 @@ jobs:
       - run: mkdir staging && cp target/*.jar target/*.exe staging  
       - uses: actions/upload-artifact@v2
         with:
-          name: Package (*.jar and *.exe)
+          name: Package (.jar and .exe)
           path: staging
 
   build-on-macos-latest:
@@ -40,8 +40,8 @@ jobs:
           java-version: 1.8
       - name: Build with Maven
         run: mvn -B package --file pom.xml
-      - run: mkdir staging && target/*.dmg staging # TODO target/*.dmg 
+      - run: mkdir staging && target/*.dmg staging
       - uses: actions/upload-artifact@v2
         with:
-          name: Package (*.dmg)
+          name: Package (.dmg)
           path: staging
