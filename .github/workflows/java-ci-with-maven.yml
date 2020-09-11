@@ -45,5 +45,5 @@ jobs:
         - run: mkdir staging && target/*.dmg staging # TODO target/*.dmg 
         - uses: actions/upload-artifact@v2
           with:
-            name: Package (*.dmg) – Apple Disk Image, java-version: 1.8
+            name: Package (*.dmg)
             path: staging
