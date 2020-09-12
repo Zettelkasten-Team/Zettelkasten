@@ -33,22 +33,22 @@
 
 package de.danielluedecke.zettelkasten;
 
-import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.SearchRequests;
+import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
-import java.awt.Color;
+import org.jdesktop.application.Action;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import javax.swing.JComponent;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
-import org.jdesktop.application.Action;
 
 /**
  *
@@ -357,7 +357,7 @@ public class CSearchDlg extends javax.swing.JDialog {
         getRootPane().setDefaultButton(jButtonSearch);
         jComboBoxHistory.addActionListener(new java.awt.event.ActionListener() {
             @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if (jComboBoxHistory.getSelectedIndex()>0) jTextFieldSearchTerm.setText(jComboBoxHistory.getSelectedItem().toString());
+                if (jComboBoxHistory.getSelectedIndex()>0) jTextFieldSearchTerm.setText(Objects.requireNonNull(jComboBoxHistory.getSelectedItem()).toString());
             }
         });
         jCheckBoxTimeSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -783,7 +783,11 @@ public class CSearchDlg extends javax.swing.JDialog {
         jFormattedTextFieldTimeTo.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT))));
         jFormattedTextFieldTimeTo.setName("jFormattedTextFieldTimeTo"); // NOI18N
 
-        jComboBoxTimeSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Erstelldatum", "Änderungsdatum", "Beides" }));
+        jComboBoxTimeSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
+                    resourceMap.getString("jComboBoxTimeSearch.CreationDate"), // "Erstelldatum"
+                    resourceMap.getString("jComboBoxTimeSearch.ChangeDate"), // "Änderungsdatum"
+                    resourceMap.getString("jComboBoxTimeSearch.Both"), // "Beides"
+                }));
         jComboBoxTimeSearch.setName("jComboBoxTimeSearch"); // NOI18N
 
         jCheckBoxRegEx.setText(resourceMap.getString("jCheckBoxRegEx.text")); // NOI18N
