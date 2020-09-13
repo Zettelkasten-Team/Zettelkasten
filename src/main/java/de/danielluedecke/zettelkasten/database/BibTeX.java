@@ -38,6 +38,7 @@ import bibtex.dom.BibtexFile;
 import bibtex.dom.BibtexNode;
 import bibtex.parser.BibtexParser;
 import bibtex.parser.ParseException;
+import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
@@ -153,7 +154,7 @@ public class BibTeX {
      * get the strings for file descriptions from the resource map
      */
     private final static org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
             getContext().getResourceMap(ZettelkastenView.class);
 
     public BibTeX(ZettelkastenView zkn, Settings s) {
@@ -646,7 +647,7 @@ public class BibTeX {
             int newentries = addEntries(attachedbibtexentries);
             // tell user
             if (newentries > 0) {
-                JOptionPane.showMessageDialog(null, resourceMap.getString("importMissingBibtexEntriesText", String.valueOf(newentries)), "BibTeX-Import", JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(null, resourceMap.getString("importMissingBibtexEntriesText", String.valueOf(newentries), 0+""), "BibTeX-Import", JOptionPane.PLAIN_MESSAGE);
             }
         }
         return true;

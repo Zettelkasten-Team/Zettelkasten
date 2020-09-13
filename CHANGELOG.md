@@ -2,6 +2,7 @@
 ### Änderungen
 - pt-BR translation ([237](https://github.com/Zettelkasten-Team/Zettelkasten/issues/237))
 - Sea Glass Look and Feel For Swing rekonstruiert ([292](https://github.com/Zettelkasten-Team/Zettelkasten/issues/292))
+- Fixed a bug where the success dialog of the BibTeX import could not be displayed because a value for the format string was missing ([257](https://github.com/Zettelkasten-Team/Zettelkasten/issues/257))
 
 <a name="v3.3.1"></a>
 # [3.3.1](https://github.com/Zettelkasten-Team/Zettelkasten/compare/v3.3.0...v3.3.1) (2020-04-06)
