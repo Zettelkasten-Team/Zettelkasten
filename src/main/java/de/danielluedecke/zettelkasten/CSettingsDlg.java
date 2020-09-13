@@ -244,7 +244,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabelFontDeskLayout;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -449,6 +449,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
                 jComboBoxLocale.setSelectedIndex(1);
             } else if (lang.equalsIgnoreCase("es")) {
                 jComboBoxLocale.setSelectedIndex(2);
+            } else if (lang.equalsIgnoreCase("pt")) {
+                jComboBoxLocale.setSelectedIndex(3);
             } else {
                 jComboBoxLocale.setSelectedIndex(0);
             }
@@ -1979,6 +1981,9 @@ public class CSettingsDlg extends javax.swing.JDialog {
             case 2:
                 settings.setLanguage("es");
                 break;
+            case 3:
+                settings.setLanguage("pt");
+                break;
             default:
                 settings.setLanguage("en");
                 break;
@@ -2216,7 +2221,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jSliderTextfields = new javax.swing.JSlider();
         jLabel16 = new javax.swing.JLabel();
         jButtonListFont = new javax.swing.JButton();
-        jLabel22 = new javax.swing.JLabel();
+        jLabelFontDeskLayout = new javax.swing.JLabel();
         jButtonDesktopFont = new javax.swing.JButton();
         jLabel23 = new javax.swing.JLabel();
         jSliderDesktopFontSize = new javax.swing.JSlider();
@@ -2444,7 +2449,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 
         jComboBoxManualTimestamp.setName("jComboBoxManualTimestamp"); // NOI18N
 
-        jComboBoxLocale.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"English", "German (Deutsch)", "Spanish (Espanol)"}));
+        jComboBoxLocale.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"English", "German (Deutsch)", "Spanish (Espanol)", "Portuguese (Brazil)"}));
         jComboBoxLocale.setName("jComboBoxLocale"); // NOI18N
 
         jLabel15.setText(resourceMap.getString("jLabel15.text")); // NOI18N
@@ -2786,8 +2791,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jButtonListFont.setText(resourceMap.getString("jButtonListFont.text")); // NOI18N
         jButtonListFont.setName("jButtonListFont"); // NOI18N
 
-        jLabel22.setText(resourceMap.getString("jLabel22.text")); // NOI18N
-        jLabel22.setName("jLabel22"); // NOI18N
+        jLabelFontDeskLayout.setText(resourceMap.getString("jLabelFontDeskLayout.text")); // NOI18N
+        jLabelFontDeskLayout.setName("jLabelFontDeskLayout"); // NOI18N
 
         jButtonDesktopFont.setText(resourceMap.getString("jButtonDesktopFont.text")); // NOI18N
         jButtonDesktopFont.setName("jButtonDesktopFont"); // NOI18N
@@ -2832,7 +2837,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jButtonListFont))
                                         .addGroup(jPanel11Layout.createSequentialGroup()
-                                                .addComponent(jLabel22)
+                                                .addComponent(jLabelFontDeskLayout)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jButtonDesktopFont))
                                         .addComponent(jLabel11)
@@ -2875,7 +2880,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
                                         .addComponent(jButtonListFont))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel22)
+                                        .addComponent(jLabelFontDeskLayout)
                                         .addComponent(jButtonDesktopFont))
                                 .addGap(17, 17, 17))
         );
