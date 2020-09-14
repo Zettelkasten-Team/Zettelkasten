@@ -40,7 +40,6 @@ import org.jdesktop.application.Action;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -233,17 +232,15 @@ public class CSearchDlg extends javax.swing.JDialog {
      * Reference to the settings class. needed for storing the find-settings, like
      * where to search and which search term was entered.
      */
-    private Settings settingsObj;
+    private final Settings settingsObj;
     /**
      * Reference to the search requesr class.
      */
-    private SearchRequests searchObj;
+    private final SearchRequests searchObj;
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
-        getContext().getResourceMap(CSearchDlg.class);
+    private final org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(CSearchDlg.class);
     
     
     /**
@@ -346,44 +343,33 @@ public class CSearchDlg extends javax.swing.JDialog {
         // presses the escape-key, the same action is performed as if the user
         // presses the cancel button...
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-        ActionListener cancelAction = new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                cancel();
-            }
-        };
+        ActionListener cancelAction = evt -> cancel();
         getRootPane().registerKeyboardAction(cancelAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
         // set default button
         getRootPane().setDefaultButton(jButtonSearch);
-        jComboBoxHistory.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if (jComboBoxHistory.getSelectedIndex()>0) jTextFieldSearchTerm.setText(Objects.requireNonNull(jComboBoxHistory.getSelectedItem()).toString());
-            }
+        jComboBoxHistory.addActionListener(evt -> {
+            if (jComboBoxHistory.getSelectedIndex()>0) jTextFieldSearchTerm.setText(Objects.requireNonNull(jComboBoxHistory.getSelectedItem()).toString());
         });
-        jCheckBoxTimeSearch.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // check whether the time-search is enabled or not
-                boolean timesearch = jCheckBoxTimeSearch.isSelected();
-                settingsObj.setSearchTime(timesearch);
-                jCheckBoxTimeSearch.setSelected(timesearch);
-                jFormattedTextFieldTimeFrom.setEnabled(timesearch);
-                jFormattedTextFieldTimeTo.setEnabled(timesearch);
-                jLabelTimeSearch.setEnabled(timesearch);
-                jComboBoxTimeSearch.setEnabled(timesearch);
-            }
+        jCheckBoxTimeSearch.addActionListener(evt -> {
+            // check whether the time-search is enabled or not
+            boolean timesearch = jCheckBoxTimeSearch.isSelected();
+            settingsObj.setSearchTime(timesearch);
+            jCheckBoxTimeSearch.setSelected(timesearch);
+            jFormattedTextFieldTimeFrom.setEnabled(timesearch);
+            jFormattedTextFieldTimeTo.setEnabled(timesearch);
+            jLabelTimeSearch.setEnabled(timesearch);
+            jComboBoxTimeSearch.setEnabled(timesearch);
         });
-        jCheckBoxRegEx.addActionListener(new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButtonLogAnd.setEnabled(!jCheckBoxRegEx.isSelected());
-                jRadioButtonLogOr.setEnabled(!jCheckBoxRegEx.isSelected());
-                jRadioButtonLogNot.setEnabled(!jCheckBoxRegEx.isSelected());
-                jCheckBoxWholeWord.setEnabled(!jCheckBoxRegEx.isSelected());
-                jCheckBoxMatchCase.setEnabled(!jCheckBoxRegEx.isSelected());
-                jCheckBoxSynonyms.setEnabled(!jCheckBoxRegEx.isSelected());
-                jLabel2.setText(resourceMap.getString(jCheckBoxRegEx.isSelected()?"jLabel2.textRegEx":"jLabel2.text"));
-                if (jCheckBoxRegEx.isSelected()) checkRegExPattern();
-                else jTextFieldSearchTerm.setForeground(Color.BLACK);
-            }
+        jCheckBoxRegEx.addActionListener(evt -> {
+            jRadioButtonLogAnd.setEnabled(!jCheckBoxRegEx.isSelected());
+            jRadioButtonLogOr.setEnabled(!jCheckBoxRegEx.isSelected());
+            jRadioButtonLogNot.setEnabled(!jCheckBoxRegEx.isSelected());
+            jCheckBoxWholeWord.setEnabled(!jCheckBoxRegEx.isSelected());
+            jCheckBoxMatchCase.setEnabled(!jCheckBoxRegEx.isSelected());
+            jCheckBoxSynonyms.setEnabled(!jCheckBoxRegEx.isSelected());
+            jLabel2.setText(resourceMap.getString(jCheckBoxRegEx.isSelected()?"jLabel2.textRegEx":"jLabel2.text"));
+            if (jCheckBoxRegEx.isSelected()) checkRegExPattern();
+            else jTextFieldSearchTerm.setForeground(Color.BLACK);
         });
         jTextFieldSearchTerm.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -608,7 +594,6 @@ public class CSearchDlg extends javax.swing.JDialog {
         jPopupMenuCCP.add(popupCCPpaste);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(CSearchDlg.class);
         setTitle(resourceMap.getString("FormSearchDialog.title")); // NOI18N
         setModal(true);
         setName("FormSearchDialog"); // NOI18N
@@ -779,7 +764,7 @@ public class CSearchDlg extends javax.swing.JDialog {
         jFormattedTextFieldTimeTo.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT))));
         jFormattedTextFieldTimeTo.setName("jFormattedTextFieldTimeTo"); // NOI18N
 
-        jComboBoxTimeSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
+        jComboBoxTimeSearch.setModel(new DefaultComboBoxModel(new String[] {
                     resourceMap.getString("jComboBoxTimeSearch.CreationDate"), // "Erstelldatum"
                     resourceMap.getString("jComboBoxTimeSearch.ChangeDate"), // "Änderungsdatum"
                     resourceMap.getString("jComboBoxTimeSearch.Both"), // "Beides"
