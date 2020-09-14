@@ -647,7 +647,7 @@ public class BibTex {
             int newentries = addEntries(attachedbibtexentries);
             // tell user
             if (newentries > 0) {
-                JOptionPane.showMessageDialog(null, resourceMap.getString("importMissingBibtexEntriesText", String.valueOf(newentries)), "BibTex-Import", JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(null, resourceMap.getString("importMissingBibtexEntriesText", String.valueOf(newentries), 0+""), "BibTex-Import", JOptionPane.PLAIN_MESSAGE);
             }
         }
         return true;
