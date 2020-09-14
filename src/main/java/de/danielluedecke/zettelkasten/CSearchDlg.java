@@ -561,15 +561,18 @@ public class CSearchDlg extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroupSearchOptions = new javax.swing.ButtonGroup();
         jPopupMenuCCP = new javax.swing.JPopupMenu();
         popupCCPcut = new javax.swing.JMenuItem();
         popupCCPcopy = new javax.swing.JMenuItem();
         popupCCPpaste = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jTextFieldSearchTerm = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
+        jCheckBoxRegEx = new javax.swing.JCheckBox();
+        jLabel3 = new javax.swing.JLabel();
+        jComboBoxHistory = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
         jCheckBoxSTitles = new javax.swing.JCheckBox();
         jCheckBoxSContent = new javax.swing.JCheckBox();
@@ -585,16 +588,13 @@ public class CSearchDlg extends javax.swing.JDialog {
         jCheckBoxWholeWord = new javax.swing.JCheckBox();
         jCheckBoxMatchCase = new javax.swing.JCheckBox();
         jCheckBoxSynonyms = new javax.swing.JCheckBox();
-        jButtonCancel = new javax.swing.JButton();
-        jButtonSearch = new javax.swing.JButton();
-        jComboBoxHistory = new javax.swing.JComboBox();
-        jLabel3 = new javax.swing.JLabel();
         jCheckBoxTimeSearch = new javax.swing.JCheckBox();
         jFormattedTextFieldTimeFrom = new javax.swing.JFormattedTextField();
         jLabelTimeSearch = new javax.swing.JLabel();
         jFormattedTextFieldTimeTo = new javax.swing.JFormattedTextField();
         jComboBoxTimeSearch = new javax.swing.JComboBox();
-        jCheckBoxRegEx = new javax.swing.JCheckBox();
+        jButtonCancel = new javax.swing.JButton();
+        jButtonSearch = new javax.swing.JButton();
 
         jPopupMenuCCP.setName("jPopupMenuCCP"); // NOI18N
 
@@ -608,7 +608,7 @@ public class CSearchDlg extends javax.swing.JDialog {
         jPopupMenuCCP.add(popupCCPpaste);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CSearchDlg.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(CSearchDlg.class);
         setTitle(resourceMap.getString("FormSearchDialog.title")); // NOI18N
         setModal(true);
         setName("FormSearchDialog"); // NOI18N
@@ -616,14 +616,22 @@ public class CSearchDlg extends javax.swing.JDialog {
 
         jPanel1.setName("jPanel1"); // NOI18N
 
+        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
+        jLabel2.setName("jLabel2"); // NOI18N
+
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 
         jTextFieldSearchTerm.setText(resourceMap.getString("jTextFieldSearchTerm.text")); // NOI18N
         jTextFieldSearchTerm.setName("jTextFieldSearchTerm"); // NOI18N
 
-        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
-        jLabel2.setName("jLabel2"); // NOI18N
+        jCheckBoxRegEx.setText(resourceMap.getString("jCheckBoxRegEx.text")); // NOI18N
+        jCheckBoxRegEx.setName("jCheckBoxRegEx"); // NOI18N
+
+        jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
+        jLabel3.setName("jLabel3"); // NOI18N
+
+        jComboBoxHistory.setName("jComboBoxHistory"); // NOI18N
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel2.border.title"))); // NOI18N
         jPanel2.setName("jPanel2"); // NOI18N
@@ -698,16 +706,16 @@ public class CSearchDlg extends javax.swing.JDialog {
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel5.border.title"))); // NOI18N
         jPanel5.setName("jPanel5"); // NOI18N
 
-        buttonGroup1.add(jRadioButtonLogAnd);
+        buttonGroupSearchOptions.add(jRadioButtonLogAnd);
         jRadioButtonLogAnd.setSelected(true);
         jRadioButtonLogAnd.setText(resourceMap.getString("jRadioButtonLogAnd.text")); // NOI18N
         jRadioButtonLogAnd.setName("jRadioButtonLogAnd"); // NOI18N
 
-        buttonGroup1.add(jRadioButtonLogOr);
+        buttonGroupSearchOptions.add(jRadioButtonLogOr);
         jRadioButtonLogOr.setText(resourceMap.getString("jRadioButtonLogOr.text")); // NOI18N
         jRadioButtonLogOr.setName("jRadioButtonLogOr"); // NOI18N
 
-        buttonGroup1.add(jRadioButtonLogNot);
+        buttonGroupSearchOptions.add(jRadioButtonLogNot);
         jRadioButtonLogNot.setText(resourceMap.getString("jRadioButtonLogNot.text")); // NOI18N
         jRadioButtonLogNot.setName("jRadioButtonLogNot"); // NOI18N
 
@@ -757,18 +765,6 @@ public class CSearchDlg extends javax.swing.JDialog {
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CSearchDlg.class, this);
-        jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
-        jButtonCancel.setName("jButtonCancel"); // NOI18N
-
-        jButtonSearch.setAction(actionMap.get("startSearch")); // NOI18N
-        jButtonSearch.setName("jButtonSearch"); // NOI18N
-
-        jComboBoxHistory.setName("jComboBoxHistory"); // NOI18N
-
-        jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
-        jLabel3.setName("jLabel3"); // NOI18N
-
         jCheckBoxTimeSearch.setText(resourceMap.getString("jCheckBoxTimeSearch.text")); // NOI18N
         jCheckBoxTimeSearch.setName("jCheckBoxTimeSearch"); // NOI18N
 
@@ -790,8 +786,12 @@ public class CSearchDlg extends javax.swing.JDialog {
                 }));
         jComboBoxTimeSearch.setName("jComboBoxTimeSearch"); // NOI18N
 
-        jCheckBoxRegEx.setText(resourceMap.getString("jCheckBoxRegEx.text")); // NOI18N
-        jCheckBoxRegEx.setName("jCheckBoxRegEx"); // NOI18N
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance().getContext().getActionMap(CSearchDlg.class, this);
+        jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
+        jButtonCancel.setName("jButtonCancel"); // NOI18N
+
+        jButtonSearch.setAction(actionMap.get("startSearch")); // NOI18N
+        jButtonSearch.setName("jButtonSearch"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -857,7 +857,7 @@ public class CSearchDlg extends javax.swing.JDialog {
                     .addComponent(jLabelTimeSearch)
                     .addComponent(jFormattedTextFieldTimeTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBoxTimeSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 11, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCancel)
                     .addComponent(jButtonSearch)))
@@ -884,7 +884,7 @@ public class CSearchDlg extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroupSearchOptions;
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonSearch;
     private javax.swing.JCheckBox jCheckBoxMatchCase;

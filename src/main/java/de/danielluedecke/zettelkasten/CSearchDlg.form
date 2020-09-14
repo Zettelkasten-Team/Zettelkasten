@@ -2,7 +2,7 @@
 
 <Form version="1.5" maxVersion="1.6" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <NonVisualComponents>
-    <Component class="javax.swing.ButtonGroup" name="buttonGroup1">
+    <Component class="javax.swing.ButtonGroup" name="buttonGroupSearchOptions">
     </Component>
     <Container class="javax.swing.JPopupMenu" name="jPopupMenuCCP">
       <Properties>
@@ -166,6 +166,12 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
+        <Component class="javax.swing.JLabel" name="jLabel2">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="jLabel2.text"/>
+            <Property name="name" type="java.lang.String" value="jLabel2" noResource="true"/>
+          </Properties>
+        </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" resourceKey="jLabel1.text"/>
@@ -178,10 +184,21 @@
             <Property name="name" type="java.lang.String" value="jTextFieldSearchTerm" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel2">
+        <Component class="javax.swing.JCheckBox" name="jCheckBoxRegEx">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="jLabel2.text"/>
-            <Property name="name" type="java.lang.String" value="jLabel2" noResource="true"/>
+            <Property name="text" type="java.lang.String" resourceKey="jCheckBoxRegEx.text"/>
+            <Property name="name" type="java.lang.String" value="jCheckBoxRegEx" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel3">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="jLabel3.text"/>
+            <Property name="name" type="java.lang.String" value="jLabel3" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="jComboBoxHistory">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="jComboBoxHistory" noResource="true"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JPanel" name="jPanel2">
@@ -358,7 +375,7 @@
             <Component class="javax.swing.JRadioButton" name="jRadioButtonLogAnd">
               <Properties>
                 <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-                  <ComponentRef name="buttonGroup1"/>
+                  <ComponentRef name="buttonGroupSearchOptions"/>
                 </Property>
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" resourceKey="jRadioButtonLogAnd.text"/>
@@ -368,7 +385,7 @@
             <Component class="javax.swing.JRadioButton" name="jRadioButtonLogOr">
               <Properties>
                 <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-                  <ComponentRef name="buttonGroup1"/>
+                  <ComponentRef name="buttonGroupSearchOptions"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="jRadioButtonLogOr.text"/>
                 <Property name="name" type="java.lang.String" value="jRadioButtonLogOr" noResource="true"/>
@@ -377,7 +394,7 @@
             <Component class="javax.swing.JRadioButton" name="jRadioButtonLogNot">
               <Properties>
                 <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-                  <ComponentRef name="buttonGroup1"/>
+                  <ComponentRef name="buttonGroupSearchOptions"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="jRadioButtonLogNot.text"/>
                 <Property name="name" type="java.lang.String" value="jRadioButtonLogNot" noResource="true"/>
@@ -403,33 +420,6 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="jButtonCancel">
-          <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.CSearchDlg" id="cancel" methodName="cancel"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="jButtonCancel" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="jButtonSearch">
-          <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.CSearchDlg" id="startSearch" methodName="startSearch"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="jButtonSearch" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="jComboBoxHistory">
-          <Properties>
-            <Property name="name" type="java.lang.String" value="jComboBoxHistory" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="jLabel3">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="jLabel3.text"/>
-            <Property name="name" type="java.lang.String" value="jLabel3" noResource="true"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JCheckBox" name="jCheckBoxTimeSearch">
           <Properties>
             <Property name="text" type="java.lang.String" resourceKey="jCheckBoxTimeSearch.text"/>
@@ -472,10 +462,20 @@
             <Property name="name" type="java.lang.String" value="jComboBoxTimeSearch" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="jCheckBoxRegEx">
+        <Component class="javax.swing.JButton" name="jButtonCancel">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="jCheckBoxRegEx.text"/>
-            <Property name="name" type="java.lang.String" value="jCheckBoxRegEx" noResource="true"/>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="de.danielluedecke.zettelkasten.CSearchDlg" id="cancel" methodName="cancel"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="jButtonCancel" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="jButtonSearch">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="de.danielluedecke.zettelkasten.CSearchDlg" id="startSearch" methodName="startSearch"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="jButtonSearch" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>
