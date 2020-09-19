@@ -118,7 +118,7 @@ public class CheckForUpdateTask extends org.jdesktop.application.Task<Object, Vo
             Constants.zknlogger.info("Loading version information from github.");
             GitHub github = GitHub.connectAnonymously();
             GHRelease release = null;
-            GHRepository zettelkasten = github.getUser("sjPlot").getRepository("Zettelkasten");
+            GHRepository zettelkasten = github.getOrganization("Zettelkasten-Team").getRepository("Zettelkasten");
             PagedIterable<GHRelease> ghReleases = zettelkasten.listReleases();
             PagedIterable<GHTag> ghTags = zettelkasten.listTags();
             for (GHRelease r : ghReleases) {
