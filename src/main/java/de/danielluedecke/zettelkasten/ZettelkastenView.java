@@ -307,7 +307,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
             getContext().getResourceMap(ToolbarIcons.class);
     /**
-     * This variables stores the currently displayed zettel. the currently
+     * This variables stores the currently displayed zettel. The currently
      * <i>displayed</i>
      * Zettel may differ from the currently <i>active</i> Zettel, if we e.g.
      * select an entry by single-clicking it from a jTable, but do not activate
