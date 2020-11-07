@@ -8138,8 +8138,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     /**
-     * This method opens the new-entry-window for editing new or existing
-     * entries. if an entry is currently being edited, the
+     * This method opens the new-entry-window for editing new or existing entries.
+     * If an entry is currently being edited, the
      * {@code isEditModeActive} flag is set. In this case, the edit-window is
      * only brought to the front. Else, a new window is created.
      *
