@@ -8120,7 +8120,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     @Action
     public void newEntry() {
-        openEditWindow(false, -1, false, false, -1);
+        openEditor(false, -1, false, false, -1);
     }
 
     /**
@@ -8131,9 +8131,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     @Action(enabledProperty = "entriesAvailable")
     public void editEntry() {
         if (data.isDeleted(displayedZettel)) {
-            openEditWindow(false, displayedZettel, false, true, -1);
+            openEditor(false, displayedZettel, false, true, -1);
         } else {
-            openEditWindow(true, displayedZettel, false, false, -1);
+            openEditor(true, displayedZettel, false, false, -1);
         }
     }
 
@@ -8156,8 +8156,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * prev/next attributes of an entry. Use {@code -1} to add entry to the end
      * of entry order.
      */
-    public void openEditWindow(boolean isEditing, int entrynumber, boolean isLuhmann, boolean isDeleted, int insertAfterEntry) {
-        openEditWindow(isEditing, entrynumber, isLuhmann, isDeleted, insertAfterEntry, jEditorPaneEntry.getSelectedText());
+    public void openEditor(boolean isEditing, int entrynumber, boolean isLuhmann, boolean isDeleted, int insertAfterEntry) {
+        openEditor(isEditing, entrynumber, isLuhmann, isDeleted, insertAfterEntry, jEditorPaneEntry.getSelectedText());
     }
 
     /**
@@ -8180,7 +8180,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * of entry order.
      * @param String content
      */
-    private void openEditWindow(boolean isEditing, int entrynumber, boolean isLuhmann, boolean isDeleted, int insertAfterEntry, String content) {
+    private void openEditor(boolean isEditing, int entrynumber, boolean isLuhmann, boolean isDeleted, int insertAfterEntry, String content) {
         // check whether an entry is already being edited, i.e. the edit-window is already created
         if (isEditModeActive) {
             // if so, bring that window to the front
@@ -8472,7 +8472,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     @Action(enabledProperty = "entriesAvailable")
     public void insertEntry() {
-        openEditWindow(false, displayedZettel, true, false, displayedZettel);
+        openEditor(false, displayedZettel, true, false, displayedZettel);
     }
 
     /**
