@@ -8182,9 +8182,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private void openEditor(boolean isEditing, int entrynumber, boolean isLuhmann, boolean isDeleted, int insertAfterEntry, String content) {
         // check whether an entry is already being edited, i.e. the edit-window is already created
-        if (isEditModeActive) {
-            // if so, bring that window to the front
-        } // else create a new window and display it.
+        if (isEditModeActive){}
+        /* else create a new window and display it. */
         else {
             newEntryDlg = new NewEntryFrame(this, data, taskinfo, acceleratorKeys, settings, autoKorrekt, synonyms, steno, content, isEditing, entrynumber, isLuhmann, isDeleted);
             newEntryDlg.setLocationRelativeTo(getFrame());
@@ -8193,6 +8192,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             isEditModeActive = true;
             // if so, bring that window to the front
         }
+        // bring that window to the front
         newEntryDlg.toFront();
     }
 
