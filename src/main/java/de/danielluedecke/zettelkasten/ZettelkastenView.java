@@ -8190,8 +8190,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             isEditModeActive = true;
             // if so, bring that window to the front
         }
-        /* else create a new window and display it. */
-        // bring that window to the front
         newEntryDlg.toFront();
     }
 
