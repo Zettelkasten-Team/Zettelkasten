@@ -33,11 +33,16 @@ public class PersonEditorPanel extends JPanel {
         //         data on the fields.
     }
 
-    public JTextField getFirstNameField() {
+    JTextField getFirstNameField(  ) {
         return this.firstNameField;
     }
 
-    public JTextField getLastNameField() {
+    JTextField getLastNameField(  ) {
         return this.lastNameField;
+    }
+
+    private void updateEnabledStates(  ) {
+        this.firstNameField.setEnabled(person != null);
+        this.lastNameField.setEnabled(person != null);
     }
 }
