@@ -2,22 +2,22 @@
 <img src="src/main/resources/de/danielluedecke/zettelkasten/resources/icons/zkn3-256x256.png" height="128" align="right"/>
 
 <p>
-    <a href="https://github.com/sjPlot/Zettelkasten/releases" alt="Release">
-        <img src="https://img.shields.io/github/release/sjPlot/Zettelkasten.svg" />
+    <a href="https://github.com/Zettelkasten-Team/Zettelkasten/releases" alt="Release">
+        <img src="https://img.shields.io/github/release/Zettelkasten-Team/Zettelkasten.svg" />
     </a>
-     <a href="https://github.com/sjPlot/Zettelkasten/releases" alt="Downloads">
-        <img src="https://img.shields.io/github/downloads/sjPlot/Zettelkasten/total.svg" />
+     <a href="https://github.com/Zettelkasten-Team/Zettelkasten/releases" alt="Downloads">
+        <img src="https://img.shields.io/github/downloads/Zettelkasten-Team/Zettelkasten/total.svg" />
      </a>       
-     <a href="https://github.com/sjPlot/Zettelkasten/issues" alt="Resolution time">
-        <img src="http://isitmaintained.com/badge/resolution/sjPlot/Zettelkasten.svg" />
+     <a href="https://github.com/Zettelkasten-Team/Zettelkasten/issues" alt="Resolution time">
+        <img src="http://isitmaintained.com/badge/resolution/Zettelkasten-Team/Zettelkasten.svg" />
     </a>
-     <a href="https://github.com/sjPlot/Zettelkasten/issues" alt="Open Issues">
-        <img src="http://isitmaintained.com/badge/open/sjPlot/Zettelkasten.svg" />
+     <a href="https://github.com/Zettelkasten-Team/Zettelkasten/issues" alt="Open Issues">
+        <img src="http://isitmaintained.com/badge/open/Zettelkasten-Team/Zettelkasten.svg" />
      </a>            
-    <a href="https://github.com/sjPlot/Zettelkasten/graphs/contributors" alt="Contributors">
-        <img src="https://img.shields.io/github/contributors/sjPlot/Zettelkasten" />
+    <a href="https://github.com/Zettelkasten-Team/Zettelkasten/graphs/contributors" alt="Contributors">
+        <img src="https://img.shields.io/github/contributors/Zettelkasten-Team/Zettelkasten" />
     </a>
-    <img src="https://github.com/sjPlot/Zettelkasten/workflows/Java%20CI%20with%20Maven/badge.svg" alt="build status"/>
+    <img src="https://github.com/Zettelkasten-Team/Zettelkasten/workflows/Java%20CI%20with%20Maven/badge.svg" alt="build status"/>
 </p>
 
 
@@ -27,7 +27,7 @@ Der elektronische Zettelkasten ist ein Programm, das sich am Arbeitsprinzip des 
 ![screenshot](http://zettelkasten.danielluedecke.de/img/gallery/zkn1.png)
 
 ## Download
-Die aktuellste Programmversion [kann hier heruntergeladen](https://github.com/sjPlot/Zettelkasten/releases) werden.
+Die aktuellste Programmversion [kann hier heruntergeladen](https://github.com/Zettelkasten-Team/Zettelkasten/releases) werden.
 
 ## Zettelkasten bauen
 
@@ -36,7 +36,7 @@ Zusätzlich wird Maven 3 verwendet.
 
 Zum Klonen des Repositories wird außerdem Git benötigt.
 
-`git clone git@github.com:sjPlot/Zettelkasten.git`
+`git clone git@github.com:Zettelkasten-Team/Zettelkasten.git`
 
 Anschließend kann das Projekt mit folgendem Befehl gebaut werden:
 
