@@ -1220,10 +1220,12 @@ public class Settings {
      * @return the filepath of the last used main datafile, or null if no filepath was specified.
      */
     public File getFilePath() {
-        // we do this step by step rather that appending a ".getText()" to the line below, because
-        // by doing so we can check whether the child element exists or not, and avoiding null pointer
-        // exceptions
-        // first, get the filepath, which is in relation to the zkn-path
+        /*
+         We do this step by step rather that appending a ".getText()" to the line below, because
+         by doing so we can check whether the child element exists or not, and avoiding null pointer
+         exceptions
+         first, get the filepath, which is in relation to the zkn-path
+        */
         Element el = settingsFile.getRootElement().getChild(SETTING_FILEPATH);
         // create an empty string as return value
         String value = "";
