@@ -1,12 +1,13 @@
 package de.danielluedecke.zettelkasten;
-import junit.framework.TestCase;
+import org.junit.After;
 
 import javax.swing.*;
 
-public class SwingTestCase extends TestCase {
+public class SwingTestCase {
     private JFrame testFrame = null;
 
-    protected void tearDown( ) throws Exception {
+    @After
+    public void tearDown() throws Exception {
         if (this.testFrame != null) {
             this.testFrame.dispose( );
             this.testFrame = null;
