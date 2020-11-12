@@ -5,6 +5,7 @@ public class PersonEditorPanelTest extends SwingTestCase{
     private PersonEditorPanel tannerPanel;
     private Person tanner;
 
+    @Override
     protected void setUp(  ) throws Exception {
         // create a panel without a Person
         this.emptyPanel = new PersonEditorPanel(  );

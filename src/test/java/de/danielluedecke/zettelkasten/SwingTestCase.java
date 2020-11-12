@@ -7,6 +7,7 @@ import javax.swing.*;
 public class SwingTestCase extends TestCase {
     private JFrame testFrame;
 
+    @Override
     protected void tearDown(  ) throws Exception {
         if (this.testFrame != null) {
             this.testFrame.dispose( );
