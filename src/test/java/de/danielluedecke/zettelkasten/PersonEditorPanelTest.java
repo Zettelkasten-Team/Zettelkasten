@@ -10,14 +10,16 @@ public class PersonEditorPanelTest extends SwingTestCase{
         this.emptyPanel = new PersonEditorPanel(  );
 
         // create a panel with a Person
-        Person tanner = new Person("Tanner", "Burke");
+        this.tanner = new Person("Tanner", "Burke");
         this.tannerPanel = new PersonEditorPanel(  );
         this.tannerPanel.setPerson(tanner);
     }
 
     public void testTextFieldsAreInitiallyDisabled(  ) {
-        assertTrue("First name field should be disabled", !this.emptyPanel.getFirstNameField().isEnabled());
-        assertTrue("Last name field should be disabled", !this.emptyPanel.getLastNameField().isEnabled());
+        assertTrue("First name field should be disabled",
+                !this.emptyPanel.getFirstNameField().isEnabled());
+        assertTrue("Last name field should be disabled",
+                !this.emptyPanel.getLastNameField().isEnabled());
     }
 
     public void testEnabledStateAfterSettingPerson(  ) {
