@@ -1,7 +1,5 @@
 package de.danielluedecke.zettelkasten;
 
-import javax.swing.*;
-
 public class PersonEditorPanelTest extends SwingTestCase{
     private PersonEditorPanel emptyPanel;
     private PersonEditorPanel tannerPanel;
