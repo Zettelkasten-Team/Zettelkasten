@@ -1,6 +1,7 @@
 package de.danielluedecke.zettelkasten;
 
 import javax.swing.*;
+import java.awt.BorderLayout;
 
 public class PersonEditorPanelTest extends SwingTestCase{
     private PersonEditorPanel emptyPanel;
@@ -17,6 +18,9 @@ public class PersonEditorPanelTest extends SwingTestCase{
         this.tanner = new Person("Tanner", "Burke");
         this.tannerPanel = new PersonEditorPanel(personEditorPanel);
         this.tannerPanel.setPerson(this.tanner);
+
+        getTestFrame().getContentPane().add(this.tannerPanel, BorderLayout.CENTER);
+        getTestFrame().pack();
     }
 
     public void testTextFieldsAreInitiallyDisabled(  ) {
