@@ -1,8 +1,9 @@
 package de.danielluedecke.zettelkasten;
+
 import junit.framework.TestCase;
 import org.junit.After;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 
 public class SwingTestCase extends TestCase {
     private JFrame testFrame = null;
