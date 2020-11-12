@@ -10,7 +10,8 @@ public class PersonEditorPanel extends JPanel {
     private Person person;
     private JPanel PersonEditorPanel;
 
-    public PersonEditorPanel(  ) {
+    public PersonEditorPanel(JPanel personEditorPanel) {
+        PersonEditorPanel = personEditorPanel;
         layoutGui(  );
         updateDataDisplay(  );
     }
