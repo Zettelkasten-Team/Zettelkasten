@@ -8,6 +8,7 @@ public class PersonEditorPanel extends JPanel {
     // @todo - add more fields later
 
     private Person person;
+    private JPanel PersonEditorPanel;
 
     public PersonEditorPanel(  ) {
         layoutGui(  );
