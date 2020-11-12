@@ -16,7 +16,7 @@ public class PersonEditorPanelTest extends SwingTestCase{
         // create a panel with a Person
         this.tanner = new Person("Tanner", "Burke");
         this.tannerPanel = new PersonEditorPanel(personEditorPanel);
-        this.tannerPanel.setPerson(tanner);
+        this.tannerPanel.setPerson(this.tanner);
     }
 
     public void testTextFieldsAreInitiallyDisabled(  ) {
