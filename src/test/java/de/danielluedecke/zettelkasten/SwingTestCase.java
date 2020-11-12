@@ -2,6 +2,7 @@ package de.danielluedecke.zettelkasten;
 
 import junit.framework.TestCase;
 import org.junit.After;
+import org.junit.Before;
 
 import javax.swing.JFrame;
 
@@ -13,12 +14,15 @@ public class SwingTestCase extends TestCase {
         if (this.testFrame != null) {
             this.testFrame.dispose( );
             this.testFrame = null;
+        }
     }
-    }
-    public JFrame getTestFrame( ) {
+    
+    @Before
+    public JFrame getTestFrame() {
         if (this.testFrame == null) {
             this.testFrame = new JFrame("Test");
     }
-        return this.testFrame;
+        final JFrame testFrame = this.testFrame;
+        return testFrame;
     }
 }

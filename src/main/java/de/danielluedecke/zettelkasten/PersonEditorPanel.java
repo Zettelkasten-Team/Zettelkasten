@@ -31,6 +31,14 @@ public class PersonEditorPanel extends JPanel {
     private void updateDataDisplay(  ) {
         // @todo - ensure the fields are properly enabled, also set
         //         data on the fields.
+        if (this.person == null) {
+            this.firstNameField.setText("");
+            this.lastNameField.setText("");
+        } else {
+            this.firstNameField.setText(this.person.getFirstName(  ));
+            this.lastNameField.setText(this.person.getLastName(  ));
+        }
+        updateEnabledStates(  );
     }
 
     JTextField getFirstNameField(  ) {

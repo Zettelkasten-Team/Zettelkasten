@@ -29,4 +29,17 @@ public class PersonEditorPanelTest extends SwingTestCase{
                 this.tannerPanel.getLastNameField().isEnabled(  ));
     }
 
+    public void testFirstName(  ) {
+        assertEquals("First name", "",
+                this.emptyPanel.getFirstNameField().getText(  ));
+        assertEquals("First name", this.tanner.getFirstName(  ),
+                this.tannerPanel.getFirstNameField().getText(  ));
+    }
+
+    public void testLastName(  ) {
+        assertEquals("Last name", "",
+                this.emptyPanel.getLastNameField().getText(  ));
+        assertEquals("Last name", this.tanner.getLastName(  ),
+                this.tannerPanel.getLastNameField().getText(  ));
+    }
 }
