@@ -3,12 +3,12 @@ package de.danielluedecke.zettelkasten;
 import javax.swing.*;
 
 public class PersonEditorPanel extends JPanel {
+    private JPanel PersonEditorPanel;
     private JTextField firstNameField = new JTextField(20);
     private JTextField lastNameField = new JTextField(20);
     // @todo - add more fields later
 
     private Person person;
-    private JPanel PersonEditorPanel;
 
     public PersonEditorPanel(JPanel personEditorPanel) {
         PersonEditorPanel = personEditorPanel;
