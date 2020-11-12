@@ -8,10 +8,6 @@ public class PersonEditorPanelTest extends SwingTestCase{
     private Person tanner;
     private JPanel personEditorPanel;
 
-    public PersonEditorPanelTest(JPanel personEditorPanel) {
-        this.personEditorPanel = personEditorPanel;
-    }
-
     @Override
     protected void setUp(  ) {
         // create a panel without a Person
