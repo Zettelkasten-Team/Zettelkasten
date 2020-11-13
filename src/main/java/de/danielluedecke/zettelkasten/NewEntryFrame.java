@@ -222,7 +222,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      */
     private LinkedList<String> selectedKeywords, remainingKeywords;
     /**
-     * This varibale indicates in which step of the quickinput we are currently.
+     * This variable indicates in which step of the quickinput we are currently.
      */
     private int stepcounter;
     private int focusowner = Constants.FOCUS_UNKNOWN;
