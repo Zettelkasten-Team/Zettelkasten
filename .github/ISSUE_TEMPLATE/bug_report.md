@@ -28,5 +28,8 @@ If applicable, add screenshots to help explain your problem.
  - Java-Version [e.g. 14]
  - Zettelkasten-Version
 
-**Additional context and log files**
-Add any other context about the problem here. You can find the log files under "Window" -> "Log ..."
+**Log information**
+Please provide us General Log and Session-Log information. You can find these information via Window > Log… > Error log
+
+**Additional context**
+Add any other context about the problem here.
