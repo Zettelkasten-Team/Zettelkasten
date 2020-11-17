@@ -1,8 +1,12 @@
 package de.danielluedecke.zettelkasten;
+
+import org.junit.Test;
+
 public class ZettelkastenViewTest {
 
-    @org.junit.Test
+    @Test
     public void editEntry() {
         /* TODO Add at least one assertion to this test case. */
     }
+
 }
