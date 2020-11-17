@@ -181,7 +181,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      */
     private boolean authorListUpToDate = false;
     /**
-     * inidcates whether the quickinput list for keywords is up to date or not
+     * indicates whether the quickinput list for keywords is up to date or not
      */
     private boolean keywordsListUpToDate = false;
     /**
