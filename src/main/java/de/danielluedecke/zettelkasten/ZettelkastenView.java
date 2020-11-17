@@ -8275,7 +8275,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     /**
      * This method starts a background thread that creates an automatic backup
      * of the current main data file. the file is saved to the same directory as
-     * the main data file, just changing the extenstion to ".zkb3".
+     * the main data file, just changing the extension to ".zkb3".
      * <br><br>
      * This method is called when we have changes that are not save, e.g. after
      * the methods {@link #newEntry() newEntry()} or
@@ -8308,7 +8308,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     /**
-     * This mehtod creates an additional backup of<br>
+     * This method creates an additional backup of<br>
      * - the data-file - the meta-data ({@code zettelkasten-data.zkd3}) when the
      * user quits the application. These files are saved to a certain directory
      * that is specified by the user.
