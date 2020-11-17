@@ -8233,7 +8233,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             data.setAttachmentlistUpToDate(false);
             // tell about success
             Constants.zknlogger.log(Level.INFO, "Entry save finished.");
-            // update the dislay...
+            // update the display...
             updateDisplay();
             // tell about success
             Constants.zknlogger.log(Level.INFO, "Display updated.");
@@ -8388,7 +8388,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
     /**
      * This method deletes the currently displayed zettel. usually this method
-     * is called from the delete-action from the toolbbar or menu, in contrary
+     * is called from the delete-action from the toolbar or menu, in contrary
      * to the delete-function from the jTableTitles which deletes selected
      * entries (see {@link #deleteEntry() deleteEntry()}).<br><br>
      * The entry is not being deleted completely. To keep the ordering and
@@ -8412,7 +8412,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     @Action(enabledProperty = "moreEntriesAvailable")
     public void addToDesktop() {
-        // add entyry to desktop
+        // add entry to desktop
         addToDesktop(new int[]{displayedZettel});
     }
 
@@ -8423,7 +8423,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * This method needs to be public, since we want to access it from other
      * frames, like for instance {@link CSearchResults}.
      *
-     * @param entries an int-array conatining the entry-numbers of those entries
+     * @param entries an int-array containing the entry-numbers of those entries
      * that should be added to the desktop.
      */
     public void addToDesktop(int[] entries) {
@@ -8437,7 +8437,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
         // show desktop
         ZettelkastenApp.getApplication().show(desktopDlg);
-        // add entyry to desktop
+        // add entry to desktop
         desktopDlg.addEntries(entries);
         // enable window-menu-item, if we have loaded desktop data
         setDesktopAvailable(desktop.getCount() > 0);
@@ -8463,7 +8463,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * are indicated as "followers" (i.e.: sub-entries) of the current visible
      * entry. All the stuff like saving the data to the main-data-object is done
      * within the class "CNewEntry.java". We than additionally set the
-     * "luhmann"-tag here (see CDaten.java for more detaiks), which is used in
+     * "luhmann"-tag here (see CDaten.java for more details), which is used in
      * the "showLuhmann" method here.
      */
     @Action(enabledProperty = "entriesAvailable")
@@ -8479,7 +8479,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * there is any selection.<br><br>
      * All the stuff like saving the data to the main-data-object is done within
      * the class "CNewEntry.java". We than additionally set the "luhmann"-tag
-     * here (see CDaten.java for more detaiks), which is used in the
+     * here (see CDaten.java for more details), which is used in the
      * "showLuhmann" method here.<br><br>
      * Entries may be separated with commas, or also contain a "from-to" option.
      * example: "4,6,11-15,19"
@@ -8557,10 +8557,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * This method needs to be public, since we want to access it from other
      * frames, like for instance {@link CSearchResults}.
      *
-     * @param entries an int-array conatining the entry-numbers of those entries
+     * @param entries an int-array containing the entry-numbers of those entries
      * that should be added as manual links
      * @return {@code true} if entries have been successfully added, false if an
-     * error occured
+     * error occurred
      */
     public boolean addToManLinks(int[] entries) {
         return addToManLinks(displayedZettel, entries);
@@ -8583,10 +8583,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      *
      * @param activatedEntry the entry-number where the manual links should be
      * added to...
-     * @param entries an int-array conatining the entry-numbers of those entries
+     * @param entries an int-array containing the entry-numbers of those entries
      * that should be added as manual links
      * @return {@code true} if entries have been successfully added, false if an
-     * error occured
+     * error occurred
      */
     private boolean addToManLinks(int activatedEntry, int[] entries) {
         if ((null == entries) || (entries.length < 1) || (-1 == entries[0])) {
@@ -10772,7 +10772,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         if (searchResultsDlg != null) {
             sft = searchResultsDlg.getSearchFrameTable();
         }
-        // svae table sorting
+        // save table sorting
         settings.setTableSorting(new javax.swing.JTable[]{
             jTableLinks, jTableManLinks, jTableKeywords,
             jTableAuthors, jTableTitles, jTableBookmarks,
@@ -14882,7 +14882,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 showEntryFromAttachments();
             }
             // if the user selects an entry from the table, i.e. a referred link to another entry,
-            // highlight the jListEntryKeywors, which keywords are responsible for the links to
+            // highlight the jListEntryKeywords, which keywords are responsible for the links to
             // the other entry
             else if (jTableLinks==table) {
                 showRelatedKeywords();
