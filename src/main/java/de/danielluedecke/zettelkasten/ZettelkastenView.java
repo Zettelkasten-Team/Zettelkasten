@@ -9142,7 +9142,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             updateTitle();
             // update the display and toolbar icons
             updateDisplay();
-            // check whether saving was successfull.
+            // check whether saving was successful.
             // if not, show error-icon
             if (!data.isSaveOk()) {
                 showErrorIcon();
