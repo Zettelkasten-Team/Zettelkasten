@@ -8194,8 +8194,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     /**
-     * This method is called from the CNewEntry-frame to indicate when an
-     * edit.action has been finished.
+     * This method is called by NewEntryFrame to indicate when an edit.action has ended.
      */
     public void finishedEditing() {
         // edit window was closed
