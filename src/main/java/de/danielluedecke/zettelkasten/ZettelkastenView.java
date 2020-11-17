@@ -8124,9 +8124,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     /**
-     * This method opens the window for editing existing entries. All the stuff
-     * like saving the data to the main-data-object is done within the class
-     * "CNewEntry.java"
+     * This method opens the window for editing existing entries. All the stuff like
+     * saving the data to the main-data-object is done within {@link NewEntryFrame}
      */
     @Action(enabledProperty = "entriesAvailable")
     public void editEntry() {
