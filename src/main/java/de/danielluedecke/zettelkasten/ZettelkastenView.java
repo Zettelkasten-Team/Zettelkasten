@@ -8271,8 +8271,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // reset variable
         editEntryFromDesktop = false;
         editEntryFromSearchWindow = false;
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
