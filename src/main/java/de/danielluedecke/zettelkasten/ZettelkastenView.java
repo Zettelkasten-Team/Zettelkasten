@@ -14842,6 +14842,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     baos_log.close();
                 }
             } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
     }
