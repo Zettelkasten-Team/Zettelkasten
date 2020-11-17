@@ -8418,7 +8418,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * entry-numbers of the to be added entries have to be passed as
      * integer-array.<br><br>
      * This method needs to be public, since we want to access it from other
-     * frames, like for instance {@link CSearchResults}.
+     * frames, like for instance {@link SearchResultsFrame}.
      *
      * @param entries an int-array containing the entry-numbers of those entries
      * that should be added to the desktop.
