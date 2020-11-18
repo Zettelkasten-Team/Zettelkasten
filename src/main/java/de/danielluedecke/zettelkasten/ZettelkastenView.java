@@ -91,6 +91,8 @@ import java.util.logging.StreamHandler;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static javax.swing.UIManager.setLookAndFeel;
+
 
 /*
  * To-Do-Sammlung
@@ -1096,7 +1098,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         } catch (IOException | SecurityException ex) {
             Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
         }
-        // befor components are drawn, set the default look and feel for this application
+        // before components are drawn, set the default look and feel for this application
         setDefaultLookAndFeel();
         // setup the local for the default actions cut/copy/paste
         Tools.initLocaleForDefaultActions(org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(ZettelkastenView.class, this));
@@ -3342,25 +3344,24 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private void setDefaultLookAndFeel() {
         try {
-            // System.setProperty("awt.useSystemAAFontSettings", "on");
-            try { // Try to scale default font size according to screen resolution.
-                Font fm = (Font) UIManager.getLookAndFeelDefaults().get("defaultFont");
-                // check if laf supports default font
-                if (fm != null) {
-                    UIManager.getLookAndFeelDefaults().put("defaultFont", fm.deriveFont(fm.getSize2D() * Toolkit.getDefaultToolkit().getScreenResolution() / 96));
-                }
-            } catch (HeadlessException e) {
-            }
-            // UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            // Try to scale default font size according to screen resolution.
+            Font fm = (Font) UIManager.getLookAndFeelDefaults().get("defaultFont");
+
+            // check if laf supports default font
+            if (fm != null)
+                UIManager.getLookAndFeelDefaults().put("defaultFont", fm.deriveFont(fm.getSize2D() * Toolkit.getDefaultToolkit().getScreenResolution() / 96));
+
             String laf = settings.getLookAndFeel();
             if (laf.equals(Constants.seaGlassLookAndFeelClassName)) {
                 laf = "com.seaglasslookandfeel.SeaGlassLookAndFeel";
             }
-            UIManager.setLookAndFeel(laf);
+
+            setLookAndFeel(laf);
+
             // log info
             Constants.zknlogger.log(Level.INFO, "Using following LaF: {0}", settings.getLookAndFeel());
+
             if (settings.isSeaGlass()) {
-                // ZettelkastenView.super.getFrame().getRootPane().putClientProperty("SeaGlass.UnifiedToolbarLook", Boolean.TRUE);
                 ZettelkastenView.super.getFrame().getRootPane().setBackground(ColorUtil.colorSeaGlassGray);
             }
         } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
