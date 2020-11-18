@@ -1167,8 +1167,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
         // hide panels for live-search and is-follower-numbers
         jPanelLiveSearch.setVisible(false);
-        // since we have a splitpane in this tab, we don't need auto-hiding anymore
-        /* jPanelManLinks.setVisible(false); */
         // setup the jtree-component
         initTrees();
         // setup a table sorter and visible grids for the JTables

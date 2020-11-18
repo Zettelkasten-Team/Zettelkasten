@@ -1,32 +1,39 @@
 package de.danielluedecke.zettelkasten;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class PersonEditorPanel extends JPanel {
     private JPanel PersonEditorPanel;
-    private JTextField firstNameField = new JTextField(20);
-    private JTextField lastNameField = new JTextField(20);
-    // @todo - add more fields later
-
+    private JTextField firstNameField;
+    private JTextField lastNameField;
     private Person person;
 
-    public PersonEditorPanel(JPanel personEditorPanel) {
+    public PersonEditorPanel() {
         layoutGui(  );
         updateDataDisplay(  );
     }
 
-    public void setPerson(Person p) {
-        this.person = person;
-        updateDataDisplay(  );
+    JTextField getFirstNameField(  ) {
+        return this.firstNameField;
     }
 
-    public Person getPerson(  ) {
-        // @todo - update the person with new information from the fields
-        return this.person;
+    JTextField getLastNameField(  ) {
+        return this.lastNameField;
     }
 
-    private void layoutGui(  ) {
-        // @todo - define the layout
+    private void layoutGui() {
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        add(new JLabel("First Name:"), gbc);
+        add(new JLabel("Last Name:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        add(this.firstNameField, gbc);
+        add(this.lastNameField, gbc);
     }
 
     private void updateDataDisplay(  ) {
@@ -42,16 +49,19 @@ public class PersonEditorPanel extends JPanel {
         updateEnabledStates(  );
     }
 
-    JTextField getFirstNameField(  ) {
-        return this.firstNameField;
-    }
-
-    JTextField getLastNameField(  ) {
-        return this.lastNameField;
-    }
-
     private void updateEnabledStates(  ) {
         this.firstNameField.setEnabled(person != null);
         this.lastNameField.setEnabled(person != null);
     }
+
+    public void setPerson(Person person) {
+        this.person = person;
+        updateDataDisplay(  );
+    }
+
+    public Person getPerson(  ) {
+        // @todo - update the person with new information from the fields
+        return this.person;
+    }
+
 }
