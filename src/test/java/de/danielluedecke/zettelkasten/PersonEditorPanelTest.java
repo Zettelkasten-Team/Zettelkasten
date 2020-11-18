@@ -64,6 +64,9 @@ public class PersonEditorPanelTest extends SwingTestCase{
         /* simulate the user hitting tab */
         firstNameField.transferFocus();
 
+        /* wait until the transferFocus() method is processed */
+        waitForSwing();
+
         /* ensure that the last name field now has focus */
         JTextField lastNameField = this.tannerPanel.getLastNameField();
         assertTrue("Expected last name field to have focus", lastNameField.hasFocus( ));
