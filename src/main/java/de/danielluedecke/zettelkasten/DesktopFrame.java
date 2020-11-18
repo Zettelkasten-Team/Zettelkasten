@@ -2520,14 +2520,14 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         int nr = getSelectedEntryNumber();
         // when we have a valid selection, go on
         if (nr != -1) {
-            zknframe.openEditWindow(true, nr, false, false, -1);
+            zknframe.openEditor(true, nr, false, false, -1);
         }
     }
 
     @Action(enabledProperty = "nodeSelected")
     public void insertEntry() {
         zknframe.editEntryFromDesktop = true;
-        zknframe.openEditWindow(false, -1, false, false, getSelectedEntryNumber());
+        zknframe.openEditor(false, -1, false, false, getSelectedEntryNumber());
     }
 
     /**
