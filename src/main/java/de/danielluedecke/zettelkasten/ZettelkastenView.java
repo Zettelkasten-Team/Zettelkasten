@@ -3348,17 +3348,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             Font fm = (Font) UIManager.getLookAndFeelDefaults().get("defaultFont");
 
             // check if laf supports default font
-            if (fm != null)
+            if (fm != null) {
                 UIManager.getLookAndFeelDefaults().put("defaultFont", fm.deriveFont(fm.getSize2D() * Toolkit.getDefaultToolkit().getScreenResolution() / 96));
+            }
 
             // log info
             Constants.zknlogger.log(Level.INFO, "Using following LaF: {0}", settings.getLookAndFeel());
 
             setLookAndFeel(settings.getLookAndFeel());
 
-            if (settings.isSeaGlass()) {
-                ZettelkastenView.super.getFrame().getRootPane().setBackground(ColorUtil.colorSeaGlassGray);
-            }
         } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
         }
