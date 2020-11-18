@@ -260,13 +260,12 @@
             <artifactId>flatlaf</artifactId>
             <version>0.29</version>
         </dependency>
-
-
+        <!-- https://mvnrepository.com/artifact/com.seaglasslookandfeel/seaglasslookandfeel -->
         <dependency>
-             <groupId>com.seaglasslookandfeel</groupId>
-             <artifactId>seaglasslookandfeel</artifactId>
-             <version>0.2</version>
-         </dependency>
+            <groupId>com.seaglasslookandfeel</groupId>
+            <artifactId>seaglasslookandfeel</artifactId>
+            <version>0.2.1</version>
+        </dependency>
         <dependency>
             <groupId>org.jdesktop</groupId>
             <artifactId>swing-worker</artifactId>
