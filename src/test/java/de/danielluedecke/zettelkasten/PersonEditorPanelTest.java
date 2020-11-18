@@ -50,4 +50,18 @@ public class PersonEditorPanelTest extends SwingTestCase{
         assertEquals("Last name", this.tanner.getLastName(  ),
                 this.tannerPanel.getLastNameField().getText(  ));
     }
+
+    public void testTabOrder( ) {
+        JTextField firstNameField = this.tannerPanel.getFirstNameField();
+
+        firstNameField.requestFocusInWindow();
+
+        /* simulate the user hitting tab */
+        firstNameField.transferFocus();
+
+        /* ensure that the last name field now has focus */
+        JTextField lastNameField = this.tannerPanel.getLastNameField();
+        assertTrue("Expected last name field to have focus", lastNameField.hasFocus( ));
+    }
+
 }
