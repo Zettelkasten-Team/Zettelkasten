@@ -21,6 +21,7 @@ public class PersonEditorPanelTest extends SwingTestCase{
 
         getTestFrame().getContentPane().add(this.tannerPanel, BorderLayout.CENTER);
         getTestFrame().pack();
+        getTestFrame().setVisible(true);
     }
 
     public void testTextFieldsAreInitiallyDisabled(  ) {
