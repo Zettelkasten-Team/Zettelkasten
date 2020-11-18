@@ -5,6 +5,7 @@ import org.jdesktop.application.SingleFrameApplication;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.Objects;
 
 /**
  * This class offers convenience access testable Zettelkasten objects.
@@ -59,8 +60,8 @@ public class TestObjectFactory {
 						TestObjectFactory.getInstance().synonyms,
 						TestObjectFactory.getInstance().stenoData);
 
-				settings.setFilePath(new File(TestObjectFactory.class
-						.getClassLoader().getResource(file).getPath()));
+				settings.setFilePath(new File(Objects.requireNonNull(TestObjectFactory.class
+						.getClassLoader().getResource(file)).getPath()));
 				settings.setMarkdownActivated(markdownActivated);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
