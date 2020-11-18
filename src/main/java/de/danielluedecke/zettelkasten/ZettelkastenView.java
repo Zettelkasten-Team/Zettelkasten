@@ -1073,12 +1073,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         bookmarks = new Bookmarks(this, settings);
         bibtex = new BibTex(this, settings);
         // init all those classes that rely on parameters and could not be initialised
-        // befor the constructor is called...
+        // before the constructor is called...
         data = new Daten(this, settings, synonyms, bibtex);
         // init stream-logger, so we have the logging both to a file and a byte-array
         StreamHandler sHandler = new StreamHandler(baos_log, new SimpleFormatter());
         Constants.zknlogger.addHandler(sHandler);
-        // tell logger to log everthing
+        // tell logger to log everything
         Constants.zknlogger.setLevel(Level.ALL);
         // init file-logger
         FileHandler fh;
@@ -3329,7 +3329,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         linkedtitlelist = null;
         linkedattachmentlist = null;
         linkedclusterlist = false;
-        // clear the jtress
+        // clear the jtrees
         clearTreesAndTables();
         displayedZettel = -1;
         // hide panels for live-search and is-follower-numbers
