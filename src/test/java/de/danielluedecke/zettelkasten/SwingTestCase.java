@@ -26,9 +26,7 @@ public class SwingTestCase extends TestCase {
     public void waitForSwing() {
         if (!SwingUtilities.isEventDispatchThread()) {
             try {
-                SwingUtilities.invokeAndWait(new Runnable() {
-                    public void run() {
-                    }
+                SwingUtilities.invokeAndWait(() -> {
                 });
             } catch (InterruptedException e) {
             } catch (InvocationTargetException e) {
