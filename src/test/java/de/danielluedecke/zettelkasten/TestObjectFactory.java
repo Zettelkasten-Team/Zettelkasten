@@ -17,7 +17,7 @@ public class TestObjectFactory {
 
 	/**
 	 * Implementation of a thread safe, synchronized singleton pattern
-	 * {@link https://web.archive.org/web/20150910003303/http://de.wikibooks.org/wiki/Java_Standard:_Muster_Singleton}.
+	 * @see <a href="https://web.archive.org/web/20150910003303/http://de.wikibooks.org/wiki/Java_Standard:_Muster_Singleton">Java Standard: Muster Singleton [archived copy]</a>
 	 */
 	private static TestObjectFactory instance;
 
