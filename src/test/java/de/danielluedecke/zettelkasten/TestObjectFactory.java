@@ -33,7 +33,7 @@ public class TestObjectFactory {
 	private AcceleratorKeys acceleratorKeys;
 	private Synonyms synonyms;
 
-	private TestObjectFactory() throws Exception {
+	private TestObjectFactory() {
 		stenoData = null;
 		autoKorrektur = null;
 		tasksData = null;
