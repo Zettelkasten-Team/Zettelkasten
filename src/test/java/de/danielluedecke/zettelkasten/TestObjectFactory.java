@@ -92,6 +92,6 @@ public class TestObjectFactory {
 			throws Exception {
 		Field field = instance.getClass().getDeclaredField(fieldName);
 		field.setAccessible(true);
-		return (Daten) field.get(instance);
+		return field.get(instance);
 	}
 }
