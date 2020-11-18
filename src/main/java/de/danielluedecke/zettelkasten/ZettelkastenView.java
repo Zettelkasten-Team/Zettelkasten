@@ -268,7 +268,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     boolean editEntryFromSearchWindow = false;
     /**
      * This variable stores the table data of the keyword-list when this list is
-     * filtered. All changes to a fitered table-list are also applied to this
+     * filtered. All changes to a filtered table-list are also applied to this
      * linked list. When the table-list is being refreshed, we don't need to run
      * the time-consuming task; instead we simply iterate this list and set the
      * values to the table
@@ -276,7 +276,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private LinkedList<Object[]> linkedkeywordlist;
     /**
      * This variable stores the table data of the author-list when this list is
-     * filtered. All changes to a fitered table-list are also applied to this
+     * filtered. All changes to a filtered table-list are also applied to this
      * linked list. When the table-list is being refreshed, we don't need to run
      * the time-consuming task; instead we simply iterate this list and set the
      * values to the table
@@ -284,7 +284,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private LinkedList<Object[]> linkedauthorlist;
     /**
      * This variable stores the table data of the title-list when this list is
-     * filtered. All changes to a fitered table-list are also applied to this
+     * filtered. All changes to a filtered table-list are also applied to this
      * linked list. When the table-list is being refreshed, we don't need to run
      * the time-consuming task; instead we simply iterate this list and set the
      * values to the table
@@ -342,13 +342,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private String updateURI = Constants.UPDATE_URI;
     /**
      * This string contains an added keyword that was added to the
-     * jTableKeywords, so the new added value can be selected immediatley after
+     * jTableKeywords, so the new added value can be selected immediately after
      * adding in to the table.
      */
     private String newAddedKeyword = null;
     /**
      * This string contains an added author that was added to the jTableAuthors,
-     * so the new added value can be selected immediatley after adding in to the
+     * so the new added value can be selected immediately after adding in to the
      * table.
      */
     private String newAddedAuthor = null;
@@ -454,7 +454,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     // </editor-fold>
     /**
      * This variable indicates whether we have desktop data or not. dependent on this setting,
-     * the related menu-item in the windows-menu is en/disbaled
+     * the related menu-item in the windows-menu is en/disabled
      */
     private boolean desktopAvailable = false;
     /**
@@ -463,12 +463,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private boolean listFilledWithEntry = false;
     /**
-     * This variable indicates whether we have seleced text, so we can en- or disable
+     * This variable indicates whether we have selected text, so we can en- or disable
      * the related actions.
      */
     private boolean textSelected = false;
     /**
-     * This variable indicates whether we have seleced text, so we can en- or disable
+     * This variable indicates whether we have selected text, so we can en- or disable
      * the related actions.
      */
     private boolean bibtexFileLoaded = false;
@@ -832,8 +832,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 
 /**
- * This event catches mouse-cicks which occur when the user clicks a hyperlink
- * in the main editor-pane. First has to be checked, wether the clicked hyperlink
+ * This event catches mouse-clicks which occur when the user clicks a hyperlink
+ * in the main editor-pane. First has to be checked, whether the clicked hyperlink
  * was an web-url or links to a local file. Then the url or file will be opened
  *
  * @param evt
@@ -1146,7 +1146,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // tell about fail
             Constants.zknlogger.log(Level.INFO, "No BibTex-File specified yet.");
         }
-        // tick checbox-menuitem
+        // tick checkbox menu item
         showHighlightKeywords.setSelected(settings.getHighlightKeywords());
         // tick checkbox whether keyword-synonyms should also be displayed in the
         // jtableKeywords or not...
@@ -1183,16 +1183,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         initAcceleratorTable();
         // init the icons of the toolbar, whether they are small, medium or large
         initToolbarIcons(true);
-        // when we have a mac, we need an extra quit-hanlder...
+        // when we have a mac, we need an extra quit-handler...
         if (PlatformUtil.isMacOS()) {
             setupMacOSXApplicationListener();
         }
         // add an exit-listener, which offers saving etc. on
-        // exit, when we have unaved changes to the data file
+        // exit, when we have unsaved changes to the data file
         getApplication().addExitListener(new ConfirmExit());
         // add window-listener. somehow I lost the behaviour that clicking on the frame's
         // upper right cross on Windows OS, quits the application. Instead, it just makes
-        // the frame disapear, but does not quit, so it looks like the application was quit
+        // the frame disappear, but does not quit, so it looks like the application was quit
         // but asking for changes took place. So, we simply add a windows-listener additionally
         ZettelkastenView.super.getFrame().addWindowListener(this);
         ZettelkastenView.super.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -2545,7 +2545,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * should have accelerator keys. We don't use the GUI designer to set the
      * values, because the user should have the possibility to define own
      * accelerator keys, which are managed within the CAcceleratorKeys-class and
-     * loaed/saved via the CSettings-class
+     * loaded/saved via the CSettings-class
      */
     private void initAcceleratorTable() {
         // setting up the accelerator table. we have two possibilities: either assigning
