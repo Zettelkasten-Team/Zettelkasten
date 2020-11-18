@@ -323,27 +323,6 @@
             <version>1.18.4</version>
             <scope>provided</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.7.0</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/abbot/abbot -->
-        <dependency>
-            <groupId>abbot</groupId>
-            <artifactId>abbot</artifactId>
-            <version>1.4.0</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.easytesting/fest-swing-junit-4.5 -->
-        <dependency>
-            <groupId>org.easytesting</groupId>
-            <artifactId>fest-swing-junit-4.5</artifactId>
-            <version>1.2.1</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <repositories>
