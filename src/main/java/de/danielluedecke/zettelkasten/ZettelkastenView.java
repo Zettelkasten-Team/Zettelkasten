@@ -3351,12 +3351,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             if (fm != null)
                 UIManager.getLookAndFeelDefaults().put("defaultFont", fm.deriveFont(fm.getSize2D() * Toolkit.getDefaultToolkit().getScreenResolution() / 96));
 
-            String laf = settings.getLookAndFeel();
-            if (laf.equals(Constants.seaGlassLookAndFeelClassName)) {
-                laf = "com.seaglasslookandfeel.SeaGlassLookAndFeel";
-            }
-
-            setLookAndFeel(laf);
+            setLookAndFeel(settings.getLookAndFeel());
 
             // log info
             Constants.zknlogger.log(Level.INFO, "Using following LaF: {0}", settings.getLookAndFeel());
