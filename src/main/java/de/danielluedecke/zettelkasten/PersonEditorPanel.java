@@ -11,7 +11,6 @@ public class PersonEditorPanel extends JPanel {
     private Person person;
 
     public PersonEditorPanel(JPanel personEditorPanel) {
-        PersonEditorPanel = personEditorPanel;
         layoutGui(  );
         updateDataDisplay(  );
     }
