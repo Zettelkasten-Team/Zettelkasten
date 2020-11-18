@@ -1,17 +1,10 @@
 package de.danielluedecke.zettelkasten;
 
-import java.io.File;
-import java.lang.reflect.Field;
-
+import de.danielluedecke.zettelkasten.database.*;
 import org.jdesktop.application.SingleFrameApplication;
 
-import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
-import de.danielluedecke.zettelkasten.database.AutoKorrektur;
-import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.database.StenoData;
-import de.danielluedecke.zettelkasten.database.Synonyms;
-import de.danielluedecke.zettelkasten.database.TasksData;
+import java.io.File;
+import java.lang.reflect.Field;
 
 /**
  * This class offers convenience access testable Zettelkasten objects.
