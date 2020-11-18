@@ -55,11 +55,7 @@ public class PersonEditorPanelTest extends SwingTestCase{
     public void testTabOrder( ) {
         JTextField firstNameField = this.tannerPanel.getFirstNameField();
 
-        /* make sure the first name field has focus */
-        while (!firstNameField.hasFocus()){
-            getTestFrame().toFront();
-            firstNameField.requestFocusInWindow();
-        }
+        firstNameField.requestFocusInWindow();
 
         /* simulate the user hitting tab */
         firstNameField.transferFocus();
