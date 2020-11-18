@@ -983,7 +983,6 @@ public class Settings {
                         if (entryname.equals(filesToLoad1)) {
                             try {
                                 SAXBuilder builder = new SAXBuilder();
-                                // Document doc = new Document();
                                 Document doc = builder.build(zip);
                                 // compare, which file we have retrieved, so we store the data
                                 // correctly on our data-object
@@ -1040,7 +1039,6 @@ public class Settings {
                         if (entryname.equals(dataFilesToLoad1)) {
                             try {
                                 SAXBuilder builder = new SAXBuilder();
-                                // Document doc = new Document();
                                 Document doc = builder.build(zip);
                                 // compare, which file we have retrieved, so we store the data
                                 // correctly on our data-object
