@@ -3,6 +3,7 @@ package de.danielluedecke.zettelkasten;
 import junit.framework.TestCase;
 
 import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
 
 public class SwingTestCase extends TestCase {
     private JFrame testFrame;
@@ -22,4 +23,16 @@ public class SwingTestCase extends TestCase {
         return this.testFrame;
     }
 
+    public void waitForSwing() {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            try {
+                SwingUtilities.invokeAndWait(new Runnable() {
+                    public void run() {
+                    }
+                });
+            } catch (InterruptedException e) {
+            } catch (InvocationTargetException e) {
+            }
+        }
+    }
 }
