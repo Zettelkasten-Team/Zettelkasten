@@ -165,7 +165,7 @@ public class ImportFromCSV extends org.jdesktop.application.Task<Object, Void> {
         Element title;
         Element luhmann;
 
-        // return value that indicates that an error occured
+        // return value that indicates that an error occurred
         taskinfo.setImportOk(false);
         try {
             CSVReader csvreader = new CSVReader(new FileReader(filepath), separatorchar, '\"');
