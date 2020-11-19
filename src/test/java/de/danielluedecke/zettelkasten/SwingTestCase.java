@@ -1,5 +1,6 @@
 package de.danielluedecke.zettelkasten;
 
+
 import junit.framework.TestCase;
 
 import javax.swing.*;
@@ -7,6 +8,14 @@ import java.lang.reflect.InvocationTargetException;
 
 public class SwingTestCase extends TestCase {
     private JFrame testFrame;
+
+    public SwingTestCase(String name) {
+        super(name);
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+    }
 
     @Override
     protected void tearDown() {

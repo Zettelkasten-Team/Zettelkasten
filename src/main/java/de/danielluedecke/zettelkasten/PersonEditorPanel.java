@@ -10,15 +10,15 @@ public class PersonEditorPanel extends JPanel {
     private Person person;
 
     public PersonEditorPanel() {
-        layoutGui();
-        updateDataDisplay();
+        layoutGui(  );
+        updateDataDisplay(  );
     }
 
-    JTextField getFirstNameField() {
+    JTextField getFirstNameField(  ) {
         return this.firstNameField;
     }
 
-    JTextField getLastNameField() {
+    JTextField getLastNameField(  ) {
         return this.lastNameField;
     }
 
@@ -36,33 +36,30 @@ public class PersonEditorPanel extends JPanel {
         add(this.lastNameField, gbc);
     }
 
-    private void updateDataDisplay() {
+    private void updateDataDisplay(  ) {
+        // @todo - ensure the fields are properly enabled, also set
+        //         data on the fields.
         if (this.person == null) {
             this.firstNameField.setText("");
             this.lastNameField.setText("");
         } else {
-            this.firstNameField.setText(this.person.getFirstName());
-            this.lastNameField.setText(this.person.getLastName());
+            this.firstNameField.setText(this.person.getFirstName(  ));
+            this.lastNameField.setText(this.person.getLastName(  ));
         }
-        updateEnabledStates();
+        updateEnabledStates(  );
     }
 
-    private void updateEnabledStates() {
-        if (this.person == null) {
-            this.firstNameField.setEnabled(false);
-            this.lastNameField.setEnabled(false);
-        } else {
-            this.firstNameField.setEnabled(true);
-            this.lastNameField.setEnabled(true);
-        }
+    private void updateEnabledStates(  ) {
+        this.firstNameField.setEnabled(person != null);
+        this.lastNameField.setEnabled(person != null);
     }
 
     public void setPerson(Person person) {
         this.person = person;
-        updateDataDisplay();
+        updateDataDisplay(  );
     }
 
-    public Person getPerson() {
+    public Person getPerson(  ) {
         // @todo - update the person with new information from the fields
         return this.person;
     }
