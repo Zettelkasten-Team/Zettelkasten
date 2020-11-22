@@ -75,7 +75,7 @@ public class CMakeFormImage {
      */
     private final org.jdesktop.application.ResourceMap resourceMap = 
         org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
-        getContext().getResourceMap(NewEntryFrame.class);
+        getContext().getResourceMap(EditorFrame.class);
     
     public CMakeFormImage(Daten dat, Settings set, String ftag) {
         settingsObj = set;

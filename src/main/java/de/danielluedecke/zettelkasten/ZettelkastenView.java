@@ -1027,7 +1027,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JPanel jPanelSearchBox;
     private javax.swing.JLabel jLabelLupe;
     private TaskProgressDialog taskDlg;
-    private NewEntryFrame newEntryDlg;
+    private EditorFrame newEntryDlg;
     private CImport importWindow;
     private CUpdateInfoBox updateInfoDlg;
     private CExport exportWindow;
@@ -8117,7 +8117,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
     /**
      * This method opens the window for editing existing entries. All the stuff like
-     * saving the data to the main-data-object is done within {@link NewEntryFrame}
+     * saving the data to the main-data-object is done within {@link EditorFrame}
      */
     @Action(enabledProperty = "entriesAvailable")
     public void editEntry() {
@@ -8174,7 +8174,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private void openEditor(boolean isEditing, int entrynumber, boolean isLuhmann, boolean isDeleted, int insertAfterEntry, String content) {
         // check whether an entry is already being edited, i.e. the edit-window is already created
         if (!isEditModeActive) {
-            newEntryDlg = new NewEntryFrame(this, data, taskinfo, acceleratorKeys, settings, autoKorrekt, synonyms, steno, content, isEditing, entrynumber, isLuhmann, isDeleted);
+            newEntryDlg = new EditorFrame(this, data, taskinfo, acceleratorKeys, settings, autoKorrekt, synonyms, steno, content, isEditing, entrynumber, isLuhmann, isDeleted);
             newEntryDlg.setLocationRelativeTo(getFrame());
             ZettelkastenApp.getApplication().show(newEntryDlg);
             // edit window was initialized
@@ -8185,7 +8185,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     /**
-     * This method is called by NewEntryFrame to indicate when an edit.action has ended.
+     * This method is called by EditorFrame to indicate when an edit.action has ended.
      */
     public void finishedEditing() {
         // edit window was closed

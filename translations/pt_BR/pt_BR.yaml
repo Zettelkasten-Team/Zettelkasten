@@ -232,7 +232,7 @@ filters:
 filters:
   - filter_type: file
     file_format: PROPERTIES
-    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/NewEntryFrame_en_GB.properties
+    source_file: src/main/resources/de/danielluedecke/zettelkasten/resources/EditorFrame_en_GB.properties
     source_language: en_GB
     translation_files_expression: 'src/main/resources/de/danielluedecke/zettelkasten/resources/NewEntryFrame_<lang>.properties'
 

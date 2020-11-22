@@ -34,7 +34,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupMainSelectAll">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="selecteAllText" methodName="selecteAllText"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="selecteAllText" methodName="selecteAllText"/>
             </Property>
             <Property name="name" type="java.lang.String" value="popupMainSelectAll" noResource="true"/>
           </Properties>
@@ -47,7 +47,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupMainUndo">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="undoAction" methodName="undoAction"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="undoAction" methodName="undoAction"/>
             </Property>
             <Property name="name" type="java.lang.String" value="popupMainUndo" noResource="true"/>
           </Properties>
@@ -55,7 +55,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupMainRedo">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="redoAction" methodName="redoAction"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="redoAction" methodName="redoAction"/>
             </Property>
             <Property name="name" type="java.lang.String" value="popupMainRedo" noResource="true"/>
           </Properties>
@@ -68,7 +68,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupMainRemoveHighlights">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="removeHighlights" methodName="removeHighlights"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="removeHighlights" methodName="removeHighlights"/>
             </Property>
             <Property name="name" type="java.lang.String" value="popupMainRemoveHighlights" noResource="true"/>
           </Properties>
@@ -81,7 +81,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupMainAddSegment">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="addSegmentFromQuickList" methodName="addSegmentFromQuickList"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="addSegmentFromQuickList" methodName="addSegmentFromQuickList"/>
             </Property>
             <Property name="name" type="java.lang.String" value="popupMainAddSegment" noResource="true"/>
           </Properties>
@@ -89,7 +89,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupMainAddKeywordFromSelection">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="addKeywordFromSelection" methodName="addKeywordFromSelection"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="addKeywordFromSelection" methodName="addKeywordFromSelection"/>
             </Property>
             <Property name="name" type="java.lang.String" value="popupMainAddKeywordFromSelection" noResource="true"/>
           </Properties>
@@ -97,7 +97,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupMainAddTitleFromSelection">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="addTitleFromSelection" methodName="addTitleFromSelection"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="addTitleFromSelection" methodName="addTitleFromSelection"/>
             </Property>
             <Property name="name" type="java.lang.String" value="popupMainAddTitleFromSelection" noResource="true"/>
           </Properties>
@@ -110,7 +110,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupMainReplace">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="replace" methodName="replace"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="replace" methodName="replace"/>
             </Property>
             <Property name="name" type="java.lang.String" value="popupMainReplace" noResource="true"/>
           </Properties>
@@ -123,7 +123,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupMainQuickInputSelection">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="createQuickInputFromSelection" methodName="createQuickInputFromSelection"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="createQuickInputFromSelection" methodName="createQuickInputFromSelection"/>
             </Property>
             <Property name="name" type="java.lang.String" value="popupMainQuickInputSelection" noResource="true"/>
           </Properties>
@@ -142,7 +142,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="popupMainBold">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatBold" methodName="formatBold"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatBold" methodName="formatBold"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="popupMainBold" noResource="true"/>
               </Properties>
@@ -150,7 +150,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="popupMainItalic">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatItalic" methodName="formatItalic"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatItalic" methodName="formatItalic"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="popupMainItalic" noResource="true"/>
               </Properties>
@@ -158,7 +158,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="popupMainUnderline">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatUnderline" methodName="formatUnderline"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatUnderline" methodName="formatUnderline"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="popupMainUnderline" noResource="true"/>
               </Properties>
@@ -166,7 +166,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="popupMainStrikeThrough">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatStrikeThrough" methodName="formatStrikeThrough"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatStrikeThrough" methodName="formatStrikeThrough"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="popupMainStrikeThrough" noResource="true"/>
               </Properties>
@@ -179,7 +179,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="popupMainHeader1">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatHeading1" methodName="formatHeading1"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatHeading1" methodName="formatHeading1"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="popupMainHeader1" noResource="true"/>
               </Properties>
@@ -187,7 +187,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="poupMainHeader2">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatHeading2" methodName="formatHeading2"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatHeading2" methodName="formatHeading2"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="poupMainHeader2" noResource="true"/>
               </Properties>
@@ -200,7 +200,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="popupMainCite">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatCite" methodName="formatCite"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatCite" methodName="formatCite"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="popupMainCite" noResource="true"/>
               </Properties>
@@ -213,7 +213,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="popupMainTextcolor">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatColor" methodName="formatColor"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatColor" methodName="formatColor"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="popupMainTextcolor" noResource="true"/>
               </Properties>
@@ -221,7 +221,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="popupMainHighlight">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatHighlight" methodName="formatHighlight"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatHighlight" methodName="formatHighlight"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="popupMainHighlight" noResource="true"/>
               </Properties>
@@ -234,7 +234,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="popupMainCenter">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="alignCenter" methodName="alignCenter"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="alignCenter" methodName="alignCenter"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="popupMainCenter" noResource="true"/>
               </Properties>
@@ -242,7 +242,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="popupMainMargin">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="alignMargin" methodName="alignMargin"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="alignMargin" methodName="alignMargin"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="popupMainMargin" noResource="true"/>
               </Properties>
@@ -250,7 +250,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="popupMainList">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatList" methodName="formatList"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatList" methodName="formatList"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="popupMainList" noResource="true"/>
               </Properties>
@@ -263,7 +263,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="popupMainSup">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatSup" methodName="formatSup"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatSup" methodName="formatSup"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="popupMainSup" noResource="true"/>
               </Properties>
@@ -271,7 +271,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="popupMainSub">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatSub" methodName="formatSub"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatSub" methodName="formatSub"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="popupMainSub" noResource="true"/>
               </Properties>
@@ -292,7 +292,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="popupRemoveDoubleLine">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="removeDoubleLineSeparators" methodName="removeDoubleLineSeparators"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="removeDoubleLineSeparators" methodName="removeDoubleLineSeparators"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="popupRemoveDoubleLine" noResource="true"/>
               </Properties>
@@ -305,7 +305,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="popupRemoveDoubleSpace">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="removeDoubleSpaceChars" methodName="removeDoubleSpaceChars"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="removeDoubleSpaceChars" methodName="removeDoubleSpaceChars"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="popupRemoveDoubleSpace" noResource="true"/>
               </Properties>
@@ -318,7 +318,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="popupRemoveTab">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="removeTabChars" methodName="removeTabChars"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="removeTabChars" methodName="removeTabChars"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="popupRemoveTab" noResource="true"/>
               </Properties>
@@ -331,7 +331,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="popupRemoveSingleLine">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="removeSingleLineSeparators" methodName="removeSingleLineSeparators"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="removeSingleLineSeparators" methodName="removeSingleLineSeparators"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="popupRemoveSingleLine" noResource="true"/>
               </Properties>
@@ -346,7 +346,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupMainAddSpellCorrect">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="addSelectionToSpellCorrection" methodName="addSelectionToSpellCorrection"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="addSelectionToSpellCorrection" methodName="addSelectionToSpellCorrection"/>
             </Property>
             <Property name="name" type="java.lang.String" value="popupMainAddSpellCorrect" noResource="true"/>
           </Properties>
@@ -354,7 +354,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupMainAddSteno">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="addSelectionToSteno" methodName="addSelectionToSteno"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="addSelectionToSteno" methodName="addSelectionToSteno"/>
             </Property>
             <Property name="name" type="java.lang.String" value="popupMainAddSteno" noResource="true"/>
           </Properties>
@@ -373,7 +373,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupKeywordsAddSegment">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="addSegment" methodName="addSegment"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="addSegment" methodName="addSegment"/>
             </Property>
             <Property name="name" type="java.lang.String" value="popupKeywordsAddSegment" noResource="true"/>
           </Properties>
@@ -386,7 +386,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupKeywordsGetCurrentKeywords">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="retrieveKeywordsFromDisplayedEntry" methodName="retrieveKeywordsFromDisplayedEntry"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="retrieveKeywordsFromDisplayedEntry" methodName="retrieveKeywordsFromDisplayedEntry"/>
             </Property>
             <Property name="name" type="java.lang.String" value="popupKeywordsGetCurrentKeywords" noResource="true"/>
           </Properties>
@@ -399,7 +399,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupKeywordsRemove">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="removeKeyword" methodName="removeKeyword"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="removeKeyword" methodName="removeKeyword"/>
             </Property>
             <Property name="name" type="java.lang.String" value="popupKeywordsRemove" noResource="true"/>
           </Properties>
@@ -418,7 +418,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupQuickKeywordsAddSegment">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="addSegmentFromQuickList" methodName="addSegmentFromQuickList"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="addSegmentFromQuickList" methodName="addSegmentFromQuickList"/>
             </Property>
             <Property name="name" type="java.lang.String" value="popupQuickKeywordsAddSegment" noResource="true"/>
           </Properties>
@@ -477,7 +477,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemApply">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="applyChanges" methodName="applyChanges"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="applyChanges" methodName="applyChanges"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="jMenuItemApply.text"/>
                 <Property name="name" type="java.lang.String" value="jMenuItemApply" noResource="true"/>
@@ -491,7 +491,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemEditSynonyms">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="editSynonyms" methodName="editSynonyms"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="editSynonyms" methodName="editSynonyms"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemEditSynonyms" noResource="true"/>
               </Properties>
@@ -504,7 +504,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemClose">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="closeWindow" methodName="closeWindow"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="closeWindow" methodName="closeWindow"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemClose" noResource="true"/>
               </Properties>
@@ -549,7 +549,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemSelectAll">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="selecteAllText" methodName="selecteAllText"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="selecteAllText" methodName="selecteAllText"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemSelectAll" noResource="true"/>
               </Properties>
@@ -562,7 +562,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemAddSegment">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="addSegmentFromQuickList" methodName="addSegmentFromQuickList"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="addSegmentFromQuickList" methodName="addSegmentFromQuickList"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemAddSegment" noResource="true"/>
               </Properties>
@@ -575,7 +575,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemAddKeywordFromSelection">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="addKeywordFromSelection" methodName="addKeywordFromSelection"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="addKeywordFromSelection" methodName="addKeywordFromSelection"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemAddKeywordFromSelection" noResource="true"/>
               </Properties>
@@ -588,7 +588,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemAddFirstLineToTitle">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="addTitleFromFirstLine" methodName="addTitleFromFirstLine"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="addTitleFromFirstLine" methodName="addTitleFromFirstLine"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemAddFirstLineToTitle" noResource="true"/>
               </Properties>
@@ -596,7 +596,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemAddTitleFromSelection">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="addTitleFromSelection" methodName="addTitleFromSelection"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="addTitleFromSelection" methodName="addTitleFromSelection"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemAddTitleFromSelection" noResource="true"/>
               </Properties>
@@ -609,7 +609,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemUndo">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="undoAction" methodName="undoAction"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="undoAction" methodName="undoAction"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemUndo" noResource="true"/>
               </Properties>
@@ -617,7 +617,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemRedo">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="redoAction" methodName="redoAction"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="redoAction" methodName="redoAction"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemRedo" noResource="true"/>
               </Properties>
@@ -630,7 +630,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemReplace">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="replace" methodName="replace"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="replace" methodName="replace"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemReplace" noResource="true"/>
               </Properties>
@@ -643,7 +643,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemRetrieveDisplayedKeywords">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="retrieveKeywordsFromDisplayedEntry" methodName="retrieveKeywordsFromDisplayedEntry"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="retrieveKeywordsFromDisplayedEntry" methodName="retrieveKeywordsFromDisplayedEntry"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemRetrieveDisplayedKeywords" noResource="true"/>
               </Properties>
@@ -662,7 +662,7 @@
                 <MenuItem class="javax.swing.JMenuItem" name="menuRemoveDoubleLineSeps">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="removeDoubleLineSeparators" methodName="removeDoubleLineSeparators"/>
+                      <action class="de.danielluedecke.zettelkasten.EditorFrame" id="removeDoubleLineSeparators" methodName="removeDoubleLineSeparators"/>
                     </Property>
                     <Property name="name" type="java.lang.String" value="menuRemoveDoubleLineSeps" noResource="true"/>
                   </Properties>
@@ -675,7 +675,7 @@
                 <MenuItem class="javax.swing.JMenuItem" name="menuRemoveDoubleSpaces">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="removeDoubleSpaceChars" methodName="removeDoubleSpaceChars"/>
+                      <action class="de.danielluedecke.zettelkasten.EditorFrame" id="removeDoubleSpaceChars" methodName="removeDoubleSpaceChars"/>
                     </Property>
                     <Property name="name" type="java.lang.String" value="menuRemoveDoubleSpaces" noResource="true"/>
                   </Properties>
@@ -688,7 +688,7 @@
                 <MenuItem class="javax.swing.JMenuItem" name="menuRemoveTabs">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="removeTabChars" methodName="removeTabChars"/>
+                      <action class="de.danielluedecke.zettelkasten.EditorFrame" id="removeTabChars" methodName="removeTabChars"/>
                     </Property>
                     <Property name="name" type="java.lang.String" value="menuRemoveTabs" noResource="true"/>
                   </Properties>
@@ -701,7 +701,7 @@
                 <MenuItem class="javax.swing.JMenuItem" name="menuRemoveLineSeps">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="removeSingleLineSeparators" methodName="removeSingleLineSeparators"/>
+                      <action class="de.danielluedecke.zettelkasten.EditorFrame" id="removeSingleLineSeparators" methodName="removeSingleLineSeparators"/>
                     </Property>
                     <Property name="name" type="java.lang.String" value="menuRemoveLineSeps" noResource="true"/>
                   </Properties>
@@ -719,7 +719,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemNewAuthor">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="addAuthorFromMenu" methodName="addAuthorFromMenu"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="addAuthorFromMenu" methodName="addAuthorFromMenu"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemNewAuthor" noResource="true"/>
               </Properties>
@@ -732,7 +732,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemInsertURL">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="insertHyperlink" methodName="insertHyperlink"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="insertHyperlink" methodName="insertHyperlink"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemInsertURL" noResource="true"/>
               </Properties>
@@ -740,7 +740,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemInsertManlink">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="insertManualLink" methodName="insertManualLink"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="insertManualLink" methodName="insertManualLink"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="jMenuItemInsertManlink.text"/>
                 <Property name="name" type="java.lang.String" value="jMenuItemInsertManlink" noResource="true"/>
@@ -749,7 +749,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemInsertFootnote">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="insertFootnote" methodName="insertFootnote"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="insertFootnote" methodName="insertFootnote"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemInsertFootnote" noResource="true"/>
               </Properties>
@@ -757,7 +757,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemInsertImage">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="insertImage" methodName="insertImage"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="insertImage" methodName="insertImage"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemInsertImage" noResource="true"/>
               </Properties>
@@ -765,7 +765,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemInsertTable">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="insertTable" methodName="insertTable"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="insertTable" methodName="insertTable"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemInsertTable" noResource="true"/>
               </Properties>
@@ -773,7 +773,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemInsertForm">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="insertForm" methodName="insertForm"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="insertForm" methodName="insertForm"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemInsertForm" noResource="true"/>
               </Properties>
@@ -786,7 +786,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemInsertAttachment">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="insertAttachment" methodName="insertAttachment"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="insertAttachment" methodName="insertAttachment"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemInsertAttachment" noResource="true"/>
               </Properties>
@@ -799,7 +799,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemSymbols">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="insertSymbol" methodName="insertSymbol"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="insertSymbol" methodName="insertSymbol"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemSymbols" noResource="true"/>
               </Properties>
@@ -812,7 +812,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemManualTimestamp">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="insertManualTimestamp" methodName="insertManualTimestamp"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="insertManualTimestamp" methodName="insertManualTimestamp"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemManualTimestamp" noResource="true"/>
               </Properties>
@@ -828,7 +828,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemFBold">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatBold" methodName="formatBold"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatBold" methodName="formatBold"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemFBold" noResource="true"/>
               </Properties>
@@ -836,7 +836,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemFItalic">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatItalic" methodName="formatItalic"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatItalic" methodName="formatItalic"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemFItalic" noResource="true"/>
               </Properties>
@@ -844,7 +844,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemFUnderline">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatUnderline" methodName="formatUnderline"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatUnderline" methodName="formatUnderline"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemFUnderline" noResource="true"/>
               </Properties>
@@ -852,7 +852,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemFStrike">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatStrikeThrough" methodName="formatStrikeThrough"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatStrikeThrough" methodName="formatStrikeThrough"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemFStrike" noResource="true"/>
               </Properties>
@@ -865,7 +865,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemHeading1">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatHeading1" methodName="formatHeading1"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatHeading1" methodName="formatHeading1"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemHeading1" noResource="true"/>
               </Properties>
@@ -873,7 +873,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemHeading2">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatHeading2" methodName="formatHeading2"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatHeading2" methodName="formatHeading2"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemHeading2" noResource="true"/>
               </Properties>
@@ -886,7 +886,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemCite">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatCite" methodName="formatCite"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatCite" methodName="formatCite"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemCite" noResource="true"/>
               </Properties>
@@ -894,7 +894,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemQuotemark">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatQuote" methodName="formatQuote"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatQuote" methodName="formatQuote"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemQuotemark" noResource="true"/>
               </Properties>
@@ -907,7 +907,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemFont">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatFont" methodName="formatFont"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatFont" methodName="formatFont"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemFont" noResource="true"/>
               </Properties>
@@ -915,7 +915,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemColor">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatColor" methodName="formatColor"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatColor" methodName="formatColor"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemColor" noResource="true"/>
               </Properties>
@@ -923,7 +923,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemHighlight">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatHighlight" methodName="formatHighlight"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatHighlight" methodName="formatHighlight"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemHighlight" noResource="true"/>
               </Properties>
@@ -931,7 +931,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemCode">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatCode" methodName="formatCode"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatCode" methodName="formatCode"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemCode" noResource="true"/>
               </Properties>
@@ -939,7 +939,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemInlineCode">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatInlineCode" methodName="formatInlineCode"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatInlineCode" methodName="formatInlineCode"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemInlineCode" noResource="true"/>
               </Properties>
@@ -952,7 +952,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemAlignLeft">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="alignLeft" methodName="alignLeft"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="alignLeft" methodName="alignLeft"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemAlignLeft" noResource="true"/>
               </Properties>
@@ -960,7 +960,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemCenter">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="alignCenter" methodName="alignCenter"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="alignCenter" methodName="alignCenter"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemCenter" noResource="true"/>
               </Properties>
@@ -968,7 +968,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemAlignRight">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="alignRight" methodName="alignRight"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="alignRight" methodName="alignRight"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemAlignRight" noResource="true"/>
               </Properties>
@@ -976,7 +976,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemAlignJustify">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="alignJustify" methodName="alignJustify"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="alignJustify" methodName="alignJustify"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemAlignJustify" noResource="true"/>
               </Properties>
@@ -989,7 +989,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemMargin">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="alignMargin" methodName="alignMargin"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="alignMargin" methodName="alignMargin"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemMargin" noResource="true"/>
               </Properties>
@@ -1002,7 +1002,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemList">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatList" methodName="formatList"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatList" methodName="formatList"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemList" noResource="true"/>
               </Properties>
@@ -1010,7 +1010,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemOrderedList">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatOrderedList" methodName="formatOrderedList"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatOrderedList" methodName="formatOrderedList"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemOrderedList" noResource="true"/>
               </Properties>
@@ -1023,7 +1023,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemTextSup">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatSup" methodName="formatSup"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatSup" methodName="formatSup"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemTextSup" noResource="true"/>
               </Properties>
@@ -1031,7 +1031,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemTextSub">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatSub" methodName="formatSub"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatSub" methodName="formatSub"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemTextSub" noResource="true"/>
               </Properties>
@@ -1047,7 +1047,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemFocusMain">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="setFocusToEditPane" methodName="setFocusToEditPane"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="setFocusToEditPane" methodName="setFocusToEditPane"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemFocusMain" noResource="true"/>
               </Properties>
@@ -1060,7 +1060,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemFocusKeywords">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="setFocusToKeywordList" methodName="setFocusToKeywordList"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="setFocusToKeywordList" methodName="setFocusToKeywordList"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemFocusKeywords" noResource="true"/>
               </Properties>
@@ -1073,7 +1073,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemFocusAuthors">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="setFocusToAuthorList" methodName="setFocusToAuthorList"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="setFocusToAuthorList" methodName="setFocusToAuthorList"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jMenuItemFocusAuthors" noResource="true"/>
               </Properties>
@@ -1198,7 +1198,7 @@
         <Component class="javax.swing.JButton" name="tb_selectall">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="selecteAllText" methodName="selecteAllText"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="selecteAllText" methodName="selecteAllText"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="tb_selectall.text"/>
             <Property name="borderPainted" type="boolean" value="false"/>
@@ -1217,7 +1217,7 @@
         <Component class="javax.swing.JButton" name="tb_undo">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="undoAction" methodName="undoAction"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="undoAction" methodName="undoAction"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="tb_undo.text"/>
             <Property name="borderPainted" type="boolean" value="false"/>
@@ -1231,7 +1231,7 @@
         <Component class="javax.swing.JButton" name="tb_redo">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="redoAction" methodName="redoAction"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="redoAction" methodName="redoAction"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="tb_redo.text"/>
             <Property name="borderPainted" type="boolean" value="false"/>
@@ -1250,7 +1250,7 @@
         <Component class="javax.swing.JButton" name="tb_newauthor">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="addAuthorFromMenu" methodName="addAuthorFromMenu"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="addAuthorFromMenu" methodName="addAuthorFromMenu"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="tb_newauthor.text"/>
             <Property name="borderPainted" type="boolean" value="false"/>
@@ -1269,7 +1269,7 @@
         <Component class="javax.swing.JButton" name="tb_footnote">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="insertFootnote" methodName="insertFootnote"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="insertFootnote" methodName="insertFootnote"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="tb_footnote.text"/>
             <Property name="borderPainted" type="boolean" value="false"/>
@@ -1283,7 +1283,7 @@
         <Component class="javax.swing.JButton" name="tb_manlink">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="insertManualLink" methodName="insertManualLink"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="insertManualLink" methodName="insertManualLink"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="tb_manlink.text"/>
             <Property name="borderPainted" type="boolean" value="false"/>
@@ -1297,7 +1297,7 @@
         <Component class="javax.swing.JButton" name="tb_insertimage">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="insertImage" methodName="insertImage"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="insertImage" methodName="insertImage"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="tb_insertimage.text"/>
             <Property name="borderPainted" type="boolean" value="false"/>
@@ -1311,7 +1311,7 @@
         <Component class="javax.swing.JButton" name="tb_inserttable">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="insertTable" methodName="insertTable"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="insertTable" methodName="insertTable"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="tb_inserttable.text"/>
             <Property name="borderPainted" type="boolean" value="false"/>
@@ -1325,7 +1325,7 @@
         <Component class="javax.swing.JButton" name="tb_insertattachment">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="insertAttachment" methodName="insertAttachment"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="insertAttachment" methodName="insertAttachment"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="tb_insertattachment.text"/>
             <Property name="borderPainted" type="boolean" value="false"/>
@@ -1344,7 +1344,7 @@
         <Component class="javax.swing.JButton" name="tb_bold">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatBold" methodName="formatBold"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatBold" methodName="formatBold"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="tb_bold.text"/>
             <Property name="borderPainted" type="boolean" value="false"/>
@@ -1358,7 +1358,7 @@
         <Component class="javax.swing.JButton" name="tb_italic">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatItalic" methodName="formatItalic"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatItalic" methodName="formatItalic"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="tb_italic.text"/>
             <Property name="borderPainted" type="boolean" value="false"/>
@@ -1372,7 +1372,7 @@
         <Component class="javax.swing.JButton" name="tb_underline">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatUnderline" methodName="formatUnderline"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatUnderline" methodName="formatUnderline"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="tb_underline.text"/>
             <Property name="borderPainted" type="boolean" value="false"/>
@@ -1386,7 +1386,7 @@
         <Component class="javax.swing.JButton" name="tb_strike">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatStrikeThrough" methodName="formatStrikeThrough"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatStrikeThrough" methodName="formatStrikeThrough"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="tb_strike.text"/>
             <Property name="borderPainted" type="boolean" value="false"/>
@@ -1405,7 +1405,7 @@
         <Component class="javax.swing.JButton" name="tb_textcolor">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatColor" methodName="formatColor"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatColor" methodName="formatColor"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="tb_textcolor.text"/>
             <Property name="borderPainted" type="boolean" value="false"/>
@@ -1419,7 +1419,7 @@
         <Component class="javax.swing.JButton" name="tb_highlight">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="formatHighlight" methodName="formatHighlight"/>
+              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="formatHighlight" methodName="formatHighlight"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="tb_highlight.text"/>
             <Property name="borderPainted" type="boolean" value="false"/>
@@ -2015,7 +2015,7 @@
                         <Component class="javax.swing.JButton" name="jButtonRefreshAuthorlist">
                           <Properties>
                             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="refreshAuthorList" methodName="refreshAuthorList"/>
+                              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="refreshAuthorList" methodName="refreshAuthorList"/>
                             </Property>
                             <Property name="icon" type="javax.swing.Icon" resourceKey="jButtonRefreshAuthorlist.icon"/>
                             <Property name="text" type="java.lang.String" resourceKey="jButtonRefreshAuthorlist.text"/>
@@ -2032,7 +2032,7 @@
                         <Component class="javax.swing.JButton" name="jButtonAddAuthors">
                           <Properties>
                             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="addQuickAuthorToList" methodName="addQuickAuthorToList"/>
+                              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="addQuickAuthorToList" methodName="addQuickAuthorToList"/>
                             </Property>
                             <Property name="name" type="java.lang.String" value="jButtonAddAuthors" noResource="true"/>
                           </Properties>
@@ -2136,7 +2136,7 @@
                         <Component class="javax.swing.JButton" name="jButtonRefreshKeywordlist">
                           <Properties>
                             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="showKeywords" methodName="showKeywords"/>
+                              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="showKeywords" methodName="showKeywords"/>
                             </Property>
                             <Property name="icon" type="javax.swing.Icon" resourceKey="jButtonRefreshKeywordlist.icon"/>
                             <Property name="text" type="java.lang.String" resourceKey="jButtonRefreshKeywordlist.text"/>
@@ -2153,7 +2153,7 @@
                         <Component class="javax.swing.JButton" name="jButtonAddKeywords">
                           <Properties>
                             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="addQuickKeywordToList" methodName="addQuickKeywordToList"/>
+                              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="addQuickKeywordToList" methodName="addQuickKeywordToList"/>
                             </Property>
                             <Property name="name" type="java.lang.String" value="jButtonAddKeywords" noResource="true"/>
                           </Properties>
@@ -2161,7 +2161,7 @@
                         <Component class="javax.swing.JButton" name="jButtonQuickKeyword">
                           <Properties>
                             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                              <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="showNextQuickInputStep" methodName="showNextQuickInputStep"/>
+                              <action class="de.danielluedecke.zettelkasten.EditorFrame" id="showNextQuickInputStep" methodName="showNextQuickInputStep"/>
                             </Property>
                             <Property name="name" type="java.lang.String" value="jButtonQuickKeyword" noResource="true"/>
                           </Properties>
@@ -2200,7 +2200,7 @@
                             <Component class="javax.swing.JCheckBox" name="jCheckBoxQuickInput">
                               <Properties>
                                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="toggleQuickInput" methodName="toggleQuickInput"/>
+                                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="toggleQuickInput" methodName="toggleQuickInput"/>
                                 </Property>
                                 <Property name="name" type="java.lang.String" value="jCheckBoxQuickInput" noResource="true"/>
                               </Properties>
@@ -2307,7 +2307,7 @@
             <Component class="javax.swing.JButton" name="jButtonOK">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="applyChanges" methodName="applyChanges"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="applyChanges" methodName="applyChanges"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="jButtonOK.text"/>
                 <Property name="name" type="java.lang.String" value="jButtonOK" noResource="true"/>
@@ -2316,7 +2316,7 @@
             <Component class="javax.swing.JButton" name="jButtonCancel">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.NewEntryFrame" id="cancel" methodName="cancel"/>
+                  <action class="de.danielluedecke.zettelkasten.EditorFrame" id="cancel" methodName="cancel"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jButtonCancel" noResource="true"/>
               </Properties>

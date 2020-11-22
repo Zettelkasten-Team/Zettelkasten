@@ -7728,7 +7728,7 @@ public class Daten {
 
     /**
      * This method extracts manual links from an entry's content that have been
-     * added via the NewEntryFrame.<br><br>
+     * added via the EditorFrame.<br><br>
      * All manual link tags {@code [z #number]text[/z]} will be scanned and the
      * numbers (references to other entries) are extracted. All manual links are
      * returned as integer list.
