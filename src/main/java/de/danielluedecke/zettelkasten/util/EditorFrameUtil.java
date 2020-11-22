@@ -36,14 +36,15 @@ package de.danielluedecke.zettelkasten.util;
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.StenoData;
-import java.awt.event.KeyEvent;
+
 import javax.swing.text.BadLocationException;
+import java.awt.event.KeyEvent;
 
 /**
  *
  * @author Luedeke
  */
-public class NewEntryFrameUtil {
+public class EditorFrameUtil {
 
     public static void checkSteno(Settings settingsObj, StenoData stenoObj, javax.swing.JTextArea ta) {
         if (settingsObj.getStenoActivated()) {

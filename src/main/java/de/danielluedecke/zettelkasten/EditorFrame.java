@@ -939,9 +939,9 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         jTextAreaEntry.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                NewEntryFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaEntry, settingsObj, spellObj);
+                EditorFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaEntry, settingsObj, spellObj);
                 if (settingsObj.getAutoCompleteTags()) {
-                    NewEntryFrameUtil.autoCompleteTags(jTextAreaEntry, evt.getKeyChar());
+                    EditorFrameUtil.autoCompleteTags(jTextAreaEntry, evt.getKeyChar());
                 }
                 enableBySelection();
             }
@@ -966,7 +966,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         jTextAreaAuthor.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                NewEntryFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaAuthor, settingsObj, spellObj);
+                EditorFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaAuthor, settingsObj, spellObj);
             }
         });
         jTextAreaRemarks.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -989,7 +989,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         jTextAreaRemarks.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                NewEntryFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaRemarks, settingsObj, spellObj);
+                EditorFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaRemarks, settingsObj, spellObj);
             }
         });
         jTextFieldFilterAuthorlist.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1422,13 +1422,13 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (jTextAreaEntry == e.getSource()) {
-                    NewEntryFrameUtil.checkSteno(settingsObj, stenoObj, jTextAreaEntry);
+                    EditorFrameUtil.checkSteno(settingsObj, stenoObj, jTextAreaEntry);
                 }
                 if (jTextAreaAuthor == e.getSource()) {
-                    NewEntryFrameUtil.checkSteno(settingsObj, stenoObj, jTextAreaAuthor);
+                    EditorFrameUtil.checkSteno(settingsObj, stenoObj, jTextAreaAuthor);
                 }
                 if (jTextAreaRemarks == e.getSource()) {
-                    NewEntryFrameUtil.checkSteno(settingsObj, stenoObj, jTextAreaRemarks);
+                    EditorFrameUtil.checkSteno(settingsObj, stenoObj, jTextAreaRemarks);
                 }
             }
         };
