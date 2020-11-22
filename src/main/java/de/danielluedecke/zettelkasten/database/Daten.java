@@ -36,26 +36,19 @@ import de.danielluedecke.zettelkasten.CMakeFormImage;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.tasks.SaveFileTask;
 import de.danielluedecke.zettelkasten.tasks.export.ExportToZknTask;
-import de.danielluedecke.zettelkasten.util.misc.Comparer;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.Tools;
+import de.danielluedecke.zettelkasten.util.misc.Comparer;
+import org.jdom2.*;
+
+import javax.swing.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import javax.swing.JOptionPane;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.IllegalAddException;
-import org.jdom2.IllegalDataException;
-import org.jdom2.IllegalNameException;
 
 /**
  * This is the data class. This class stores all the programme data in a JDOM
