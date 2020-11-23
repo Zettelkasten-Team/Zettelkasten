@@ -18,7 +18,7 @@ public class SwingTestCase extends TestCase {
     }
 
     @Override
-    protected void tearDown() {
+    protected void tearDown() throws Exception {
         if (this.testFrame != null) {
             this.testFrame.dispose();
             this.testFrame = null;
