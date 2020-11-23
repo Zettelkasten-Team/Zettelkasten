@@ -33,13 +33,10 @@
 package de.danielluedecke.zettelkasten.util;
 
 import de.danielluedecke.zettelkasten.ZettelkastenView;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+
+import javax.swing.*;
+import java.awt.*;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 
 /**
  * This class contains generic constant values that are used all over the
