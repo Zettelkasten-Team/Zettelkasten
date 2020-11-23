@@ -13,8 +13,9 @@ public class EditorFrameTest extends SwingTestCase{
 
     @Before
     public void setUp() throws Exception {
-        EditorFrame emptyEditorFrame = new EditorFrame();
+        EditorFrame emptyEditorFrame = new EditorFrame(null, null, null, null, null, null, null, null, "content", false, 0, false, false);
     }
+    
 
     @After
     public void tearDown() throws Exception {

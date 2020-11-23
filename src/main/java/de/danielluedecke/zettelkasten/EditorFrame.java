@@ -262,14 +262,14 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
      * and add a new entry to the data-class.
      *
      * @param zkn
-     * @param d
+     * @param d the data-class
      * @param td
      * @param ak
      * @param s
      * @param ac
      * @param syn
      * @param stn
-     * @param content
+     * @param content Contents of the Zettel
      * @param em
      * @param en
      * @param l
