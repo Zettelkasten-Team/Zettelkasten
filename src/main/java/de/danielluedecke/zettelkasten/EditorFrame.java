@@ -3700,7 +3700,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         // check whether memory usage is logged. if so, tell logger that new entry windows was opened
         if (settingsObj.isMemoryUsageLogged) {
             // log info
-            Constants.zknlogger.log(Level.INFO, "Memory usage logged. New Entry Window closed.");
+            Constants.zknlogger.log(Level.INFO, "Memory usage logged. Editor window closed.");
         }
         // and close the window
         dispose();
