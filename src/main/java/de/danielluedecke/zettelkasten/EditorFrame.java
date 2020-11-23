@@ -132,6 +132,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
      * be filled
      */
     private List<Element> hyperlinks;
+    private final String content;
     /**
      * state variable that indicated whether we have a new entry (false), or an
      * edit-action (true)
@@ -261,41 +262,57 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
      * the text fields (when editing an existing entry) or save the information
      * and add a new entry to the data-class.
      *
-     * @param zkn
-     * @param d the data-class
-     * @param td
-     * @param ak
-     * @param s
-     * @param ac
-     * @param syn
-     * @param stn
+     * @param zkn {@link ZettelkastenView}
+     * @param d {@link Daten}
+     * @param td {@link TasksData}
+     * @param ak {@link AcceleratorKeys}
+     * @param s {@link Settings}
+     * @param ac {@link AutoKorrektur}
+     * @param syn {@link Synonyms}
+     * @param stn {@link StenoData}
      * @param content Contents of the Zettel
-     * @param em
-     * @param en
-     * @param l
-     * @param isdel
+     * @param em edit mode
+     * @param en entry number
+     * @param l luhmann
+     * @param isdel isDeleted
      */
-    public EditorFrame(ZettelkastenView zkn, Daten d, TasksData td, AcceleratorKeys ak, Settings s, AutoKorrektur ac, Synonyms syn, StenoData stn, String content, boolean em, int en, boolean l, boolean isdel) {
+    public EditorFrame(ZettelkastenView zkn,
+                       Daten d,
+                       TasksData td,
+                       AcceleratorKeys ak,
+                       Settings s,
+                       AutoKorrektur ac,
+                       Synonyms syn,
+                       StenoData stn,
+                       String content,
+                       boolean em,
+                       int en,
+                       boolean l,
+                       boolean isdel) {
         mainframe = zkn;
 
         // init the variables from the parameters
         dataObj = d;
         taskinfo = td;
-        stenoObj = stn;
         accKeys = ak;
         settingsObj = s;
-        synonymsObj = syn;
         spellObj = ac;
-        isDeleted = isdel;
-        lastSelectedFont = new Font("Courier", Font.PLAIN, 12);
+        synonymsObj = syn;
+        stenoObj = stn;
+        this.content = content;
         editmode = em;
+        entryNumber = en;
+        luhmann = l;
+        isDeleted = isdel;
+
+        lastSelectedFont = new Font("Courier", Font.PLAIN, 12);
+
         // check whether memory usage is logged. if so, tell logger that Editor windows was opened
         if (settingsObj.isMemoryUsageLogged) {
             // log info
             Constants.zknlogger.log(Level.INFO, "Memory usage logged. Editor window opened.");
         }
-        entryNumber = en;
-        luhmann = l;
+
         keywordStep1 = selectedKeywords = displayedKeywordList = remainingKeywords = null;
         stepcounter = 1;
         // init locale for the default-actions cut/copy/paste
@@ -316,9 +333,6 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         jButtonQuickKeyword.setVisible(settingsObj.getQuickInput());
         jCheckBoxQuickInput.setSelected(settingsObj.getQuickInput());
         initComboBox();
-        if (settingsObj.isSeaGlass()) {
-            setupSeaGlassStyle();
-        }
         // init default font-size for tables, lists and text fields...
         initDefaultFontSize();
         // disable add- and remove-buttons
@@ -337,7 +351,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         // This method initialises the toolbar buttons. depending on the user-setting, we either
         // display small, medium or large icons as toolbar-icons.
         initToolbarIcons();
-        // when we have an entry to edit, fill the textfields with content
+        // when we have an entry to edit, fill the text fields with content
         // else set probable selected text from entry as "pre-content"
         // the content of "content" is retrieved from text-selection from the main window.
         if (!editmode) {

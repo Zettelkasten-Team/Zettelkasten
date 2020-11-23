@@ -22,7 +22,7 @@ public class EditorFrameTest extends SwingTestCase {
 
     @Before
     public void setUp() throws Exception {
-        this.emptyFrame = new EditorFrame(null, null, null, null, null, null, null, null, "", false, 0, false, false);
+        this.emptyFrame = new EditorFrame(null, null, null, null, null, null, null, null, null, false, 0, false, false);
 
         getTestFrame().getContentPane().add(this.emptyFrame, BorderLayout.CENTER);
         getTestFrame().pack();
