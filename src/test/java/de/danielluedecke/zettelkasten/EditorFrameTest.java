@@ -1,11 +1,15 @@
 package de.danielluedecke.zettelkasten;
 
+
 import org.junit.After;
 import org.junit.Before;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import java.awt.*;
 
-public class EditorFrameTest extends SwingTestCase{
+public class EditorFrameTest extends SwingTestCase {
+
+    private EditorFrame emptyEditorFrame;
 
     public EditorFrameTest(String name) {
         super(name);
@@ -13,9 +17,18 @@ public class EditorFrameTest extends SwingTestCase{
 
     @Before
     public void setUp() throws Exception {
-        EditorFrame emptyEditorFrame = new EditorFrame(null, null, null, null, null, null, null, null, "content", false, 0, false, false);
+        this.emptyEditorFrame = new EditorFrame(null, null, null, null, null, null, null, null, "", false, 0, false, false);
+
+        getTestFrame().getContentPane().add(this.emptyEditorFrame, BorderLayout.CENTER);
+        getTestFrame().pack();
+        getTestFrame().setVisible(true);
     }
-    
+
+    @Test
+    public void testContentPaneShouldBeEnabled() {
+        assertTrue("Content pane should be enabled",
+                this.emptyEditorFrame.getContentPane().isEnabled());
+    }
 
     @After
     public void tearDown() throws Exception {
