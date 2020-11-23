@@ -610,7 +610,7 @@ public class CImportBibTex extends javax.swing.JDialog {
             for (int cnt = 0; cnt < rows.length; cnt++) {
                 // retrieve author from table-selection
                 Object au = jTableBibEntries.getValueAt(rows[cnt], 1);
-                // now to the bibey
+                // now to the bibkey
                 Object bibkey = jTableBibEntries.getValueAt(rows[cnt], 0);
                 // if we have any author, go on...
                 if (au != null && !au.toString().isEmpty()) {
@@ -639,7 +639,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                             if (bibkey != null) {
                                 // and add it to the recently added author-value
                                 dataObj.setAuthorBibKey(pos, bibkey.toString());
-                                // if the user also wants to add imported literatur as entries, do
+                                // if the user also wants to add imported literature as entries, do
                                 // this here. we then have to check whether the imported bibtex-entry
                                 // has an abstract or annotation, and if so, we use this as content for
                                 // the new entry
@@ -678,7 +678,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                     else {
                         // set new author value, i.e. overwrite existing author with new value
                         dataObj.setAuthor(bibkeypos, au.toString());
-                        // if the user also wants to *update* imported literatur as entries, we do
+                        // if the user also wants to *update* imported literature as entries, we do
                         // this here. we then have to check whether the imported bibtex-entry
                         // has an abstract or annotation, and if so, we use this as content for
                         // the new entry or update an existing entry with this content
@@ -946,7 +946,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         protected void finished() {
             // get iterator for all rowdata
             Iterator<String[]> it = rowdata.iterator();
-            // create tablemodel for the table data, which is not editable
+            // create table model for the table data, which is not editable
             DefaultTableModel tm = (DefaultTableModel) jTableBibEntries.getModel();
             tm.setRowCount(0);
             // and iterate all loaded bibtex-entries
