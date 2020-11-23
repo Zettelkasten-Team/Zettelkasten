@@ -1681,17 +1681,16 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
     }
 
     private void setRefreshKeywords() {
-        if (settingsObj.getQuickInput() && (dataObj.getCount(Daten.KWCOUNT) > 0)) {
-            // only the first and the third step are using the text-content to retrieve
-            // the keywords, so we only need to enable the refresh-button for the keyword-quickinput
-            // when text is changed during the 1st or 3rd step.
+        // only the first and the third step are using the text-content to retrieve
+        // the keywords, so we only need to enable the refresh-button for the keyword-quickinput
+        // when text is changed during the 1st or 3rd step.
+        if (settingsObj.getQuickInput() && (dataObj.getCount(Daten.KWCOUNT) > 0))
             if ((1 == stepcounter) || (3 == stepcounter)) {
                 // disable the refresh and filter buttons
                 jButtonRefreshKeywordlist.setEnabled(true);
                 // set upto-date state to false
                 keywordsListUpToDate = false;
             }
-        }
     }
 
     @Action
