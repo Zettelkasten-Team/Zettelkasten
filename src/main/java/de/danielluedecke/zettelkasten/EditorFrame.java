@@ -333,6 +333,9 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         jButtonQuickKeyword.setVisible(settingsObj.getQuickInput());
         jCheckBoxQuickInput.setSelected(settingsObj.getQuickInput());
         initComboBox();
+        if (settingsObj.isSeaGlass()) {
+            setupSeaGlassStyle();
+        }
         // init default font-size for tables, lists and text fields...
         initDefaultFontSize();
         // disable add- and remove-buttons
