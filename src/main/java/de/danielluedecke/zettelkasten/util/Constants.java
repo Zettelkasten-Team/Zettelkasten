@@ -914,7 +914,7 @@ public class Constants {
 
     /**
      * A string array that contains the different encodings that are used by the
-     * different reference- managers when exporting their data to a bibtext
+     * different reference managers when exporting their data to a bibtex
      * file. use also {@link #BIBTEX_DESCRIPTIONS} to retrieve the programmes'
      * names associated with these encoding.<br><br>
      * 0: UTF-8 (Bibliographix)<br>
