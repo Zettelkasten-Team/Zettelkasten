@@ -138,9 +138,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
      */
     private static boolean editmode;
 
-    public EditorFrame() {
 
-    }
 
     /**
      * Determines whether the EditorFrame is used for a new entry or for
