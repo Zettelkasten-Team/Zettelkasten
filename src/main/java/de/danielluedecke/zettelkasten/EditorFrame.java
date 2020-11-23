@@ -253,10 +253,10 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
             getContext().getResourceMap(ToolbarIcons.class);
 
     /**
-     * Creates new form CNewEntry. This Dialog is an edit-mask for creating new
+     * Creates new form EditorFrame. This Dialog is an edit-mask for creating new
      * entries or editing existing entries. Therefor, we pass the data-class as
      * parameter, so we can either retrieve information to fill automatically
-     * the textfields (when editing an existing entry) or save the information
+     * the text fields (when editing an existing entry) or save the information
      * and add a new entry to the data-class.
      *
      * @param zkn
@@ -287,7 +287,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         isDeleted = isdel;
         lastSelectedFont = new Font("Courier", Font.PLAIN, 12);
         editmode = em;
-        // check whether memory usage is logged. if so, tell logger that new entry windows was opened
+        // check whether memory usage is logged. if so, tell logger that Editor windows was opened
         if (settingsObj.isMemoryUsageLogged) {
             // log info
             Constants.zknlogger.log(Level.INFO, "Memory usage logged. Editor window opened.");
@@ -305,7 +305,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         initListeners();
         // set borders manually
         initBorders(settingsObj);
-        // clear the listviews
+        // clear the list views
         keywordListModel.clear();
         linkListModel.clear();
         quickInputKeywordsListModel.clear();
@@ -317,13 +317,13 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         if (settingsObj.isSeaGlass()) {
             setupSeaGlassStyle();
         }
-        // init default font-size for tables, lists and textfields...
+        // init default font-size for tables, lists and text fields...
         initDefaultFontSize();
         // disable add- and remove-buttons
         setKeywordSelected(false);
         setAttachmentSelected(false);
         // init the progress bar and status icon for
-        // the swingworker background thread
+        // the swing worker background thread
         // creates a new class object. This variable is not used, it just associates task monitors to
         // the background tasks. furthermore, by doing this, this class object also animates the 
         // busy icon and the progress bar of this frame.
@@ -341,7 +341,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         if (!editmode) {
             if (content != null) {
                 jTextAreaEntry.setText(content);
-                // if we have editmode, enable apply-button
+                // if we have edit mode, enable apply-button
                 setTextfieldFilled(!content.isEmpty());
             }
         } else {
@@ -1598,7 +1598,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         }
         // finally, change title
         setTitle(resourceMap.getString("frametitleEdit") + " (" + String.valueOf(entryNumber) + ")");
-        // if we have editmode, enable apply-button
+        // if we have edit mode, enable apply-button
         setTextfieldFilled(!jTextAreaEntry.getText().isEmpty());
     }
 
@@ -1612,7 +1612,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
      * But: when editing an entry, the text-content in the jTextAreaEntry could
      * be filled, while the user changes the author-values - these changes are
      * recognized in the modified-value, but do usually not enable the
-     * apply-button. thus, when we have editmode (true), we also enable the
+     * apply-button. thus, when we have edit mode (true), we also enable the
      * apply-button here...
      *
      * @param m whether the modified state is true or false
@@ -1620,7 +1620,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
     private void setModified(boolean m) {
         // change modified state
         modified = m;
-        // if we have editmode, enable apply-button
+        // if we have edit mode, enable apply-button
         setTextfieldFilled(!jTextAreaEntry.getText().isEmpty());
     }
 
@@ -4423,11 +4423,11 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 
             // when the list is already up to date, do nothing
             if (keywordsListUpToDate) {
-                // enable tabpane during background task operations
+                // enable tab pane during background task operations
                 jTabbedPaneNewEntry1.setEnabled(true);
                 return null;
             }
-            // tell programm the task is running
+            // tell program the task is running
             qiKeywordTaskIsRunning = true;
             // tell selection listener we are working and selection listener should not react on changes now
             listUpdateActive = true;
@@ -4437,14 +4437,14 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
             // create new list that will contain the array, but without
             // possible empty elements. when an author or keyword is deleted,
             // its content is just cleared, the element itself is not removed. we do
-            // this to have always the same indexnumber for a keyword or an author.
+            // this to have always the same index number for a keyword or an author.
             // now we copy the array to a linked list, leaving out empty elements
             displayedKeywordList = new LinkedList<>();
             // go through all keywords of the keyword datafile
             for (cnt = 0; cnt < count; cnt++) {
                 // get the keyword as string and add them to the array
                 String kw = dataObj.getKeyword(cnt + 1);
-                // if keyword is not empry, add it to liszt
+                // if keyword is not empty, add it to liszt
                 if (!kw.isEmpty()) {
                     displayedKeywordList.add(kw);
                 }
