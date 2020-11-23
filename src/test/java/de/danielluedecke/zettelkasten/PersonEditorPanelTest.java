@@ -15,6 +15,10 @@ public class PersonEditorPanelTest extends SwingTestCase{
         super(name);
     }
 
+    public static Test suite() {
+        return new RepeatedTest(new TestSuite(PersonEditorPanelTest.class), 1);
+    }
+
     @Override
     protected void setUp() throws Exception {
         // create a panel without a Person
@@ -73,9 +77,5 @@ public class PersonEditorPanelTest extends SwingTestCase{
         /* ensure that the last name field now has focus */
         JTextField lastNameField = this.tannerPanel.getLastNameField();
         assertTrue("Expected last name field to have focus", lastNameField.hasFocus( ));
-    }
-
-    public static Test suite() {
-        return new RepeatedTest(new TestSuite(PersonEditorPanelTest.class), 1);
     }
 }

@@ -16,6 +16,10 @@ public class EditorFrameTest extends SwingTestCase {
         super(name);
     }
 
+    public static junit.framework.Test suite() {
+        return new RepeatedTest(new TestSuite(EditorFrameTest.class), 1);
+    }
+
     @Before
     public void setUp() throws Exception {
         this.emptyFrame = new EditorFrame(null, null, null, null, null, null, null, null, "", false, 0, false, false);
@@ -33,9 +37,5 @@ public class EditorFrameTest extends SwingTestCase {
 
     @After
     public void tearDown() throws Exception {
-    }
-
-    public static junit.framework.Test suite() {
-        return new RepeatedTest(new TestSuite(EditorFrameTest.class), 1);
     }
 }
