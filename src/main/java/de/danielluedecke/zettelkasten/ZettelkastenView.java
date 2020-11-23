@@ -1027,7 +1027,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JPanel jPanelSearchBox;
     private javax.swing.JLabel jLabelLupe;
     private TaskProgressDialog taskDlg;
-    private EditorFrame newEntryDlg;
+    private EditorFrame editZettelDialog;
     private CImport importWindow;
     private CUpdateInfoBox updateInfoDlg;
     private CExport exportWindow;
@@ -5303,15 +5303,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
         // when we are editing an entry, check whether the to be deleted entry is currently edited.
         // if yes, cancel deletion
-        if (isEditModeActive && newEntryDlg != null) {
+        if (isEditModeActive && editZettelDialog != null) {
             // go through all entries that should be deleted
             for (int n : nrs) {
                 // if one of those to be deleted entries is currently being edited, cancel deletion
-                if (n == newEntryDlg.entryNumber) {
+                if (n == editZettelDialog.entryNumber) {
                     // show error message
                     JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("deleteNotPossibleMsg"), getResourceMap().getString("deleteNotPossibleTitle"), JOptionPane.PLAIN_MESSAGE);
                     // display edit-dialog
-                    newEntryDlg.toFront();
+                    editZettelDialog.toFront();
                     // leave method
                     return false;
                 }
@@ -7302,8 +7302,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             if (desktopDlg != null) {
                 desktopDlg.initToolbarIcons();
             }
-            if (newEntryDlg != null) {
-                newEntryDlg.initToolbarIcons();
+            if (editZettelDialog != null) {
+                editZettelDialog.initToolbarIcons();
             }
             // set background color
             jEditorPaneEntry.setBackground(new Color(Integer.parseInt(settings.getMainBackgroundColor(), 16)));
@@ -8174,14 +8174,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private void openEditor(boolean isEditing, int entrynumber, boolean isLuhmann, boolean isDeleted, int insertAfterEntry, String content) {
         // check whether an entry is already being edited, i.e. the edit-window is already created
         if (!isEditModeActive) {
-            newEntryDlg = new EditorFrame(this, data, taskinfo, acceleratorKeys, settings, autoKorrekt, synonyms, steno, content, isEditing, entrynumber, isLuhmann, isDeleted);
-            newEntryDlg.setLocationRelativeTo(getFrame());
-            ZettelkastenApp.getApplication().show(newEntryDlg);
+            editZettelDialog = new EditorFrame(this, data, taskinfo, acceleratorKeys, settings, autoKorrekt, synonyms, steno, content, isEditing, entrynumber, isLuhmann, isDeleted);
+            editZettelDialog.setLocationRelativeTo(getFrame());
+            ZettelkastenApp.getApplication().show(editZettelDialog);
             // edit window was initialized
             isEditModeActive = true;
             // if so, bring that window to the front
         }
-        newEntryDlg.toFront();
+        editZettelDialog.toFront();
     }
 
     /**
@@ -8192,16 +8192,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         isEditModeActive = false;
         // if the user made changes to the datafile, e.g. adding new entries
         // update the display
-        if (newEntryDlg.isModified()) {
+        if (editZettelDialog.isModified()) {
             //
             // here we update modified entries in the desktop window
             //
             // when we had an edit-option...
-            if (newEntryDlg.isEditMode()
+            if (editZettelDialog.isEditMode()
                     && // and whether a current desktop-dialog is opened.
                     desktopDlg != null
                     && // check whether the changed entry was on the desktop...
-                    desktop.checkForDoubleEntry(desktop.getCurrentDesktopNr(), newEntryDlg.entryNumber)) // if yes, update desktop-view
+                    desktop.checkForDoubleEntry(desktop.getCurrentDesktopNr(), editZettelDialog.entryNumber)) // if yes, update desktop-view
             {
                 desktopDlg.updateEntriesAfterEditing();
             }
@@ -8209,7 +8209,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // here we update modified entries in the searchresults window
             //
             // when we had an edit-option and whether a current search-dialog is opened.
-            if (newEntryDlg.isEditMode() && searchResultsDlg != null) {
+            if (editZettelDialog.isEditMode() && searchResultsDlg != null) {
                 // if yes, update desktop-view
                 searchResultsDlg.updateDisplayAfterEditing();
             }
@@ -9729,11 +9729,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
     @Action
     public void showNewEntryWindow() {
-        if (newEntryDlg!=null) {
-            newEntryDlg.setAlwaysOnTop(true);
-            newEntryDlg.toFront();
-            newEntryDlg.requestFocus();
-            newEntryDlg.setAlwaysOnTop(false);
+        if (editZettelDialog !=null) {
+            editZettelDialog.setAlwaysOnTop(true);
+            editZettelDialog.toFront();
+            editZettelDialog.requestFocus();
+            editZettelDialog.setAlwaysOnTop(false);
         }
     }
 
@@ -14800,8 +14800,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // show message box
                 JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("cannotExitActiveEditMsg"),getResourceMap().getString("cannotExitActiveEditTitle"),JOptionPane.PLAIN_MESSAGE);
                 // bring edit window to front
-                if (newEntryDlg!=null) {
-                    newEntryDlg.toFront();
+                if (editZettelDialog !=null) {
+                    editZettelDialog.toFront();
                 }
                 // and don't exit...
                 return false;
