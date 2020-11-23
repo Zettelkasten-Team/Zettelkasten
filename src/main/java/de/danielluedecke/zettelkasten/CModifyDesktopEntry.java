@@ -112,7 +112,6 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
      * @param acc
      * @param content 
      */
-    @SuppressWarnings("LeakingThisInConstructor")
     public CModifyDesktopEntry(DesktopFrame parent, Settings s, AutoKorrektur ak, StenoData st, AcceleratorKeys acc, String content) {
 
         settingsObj = s;

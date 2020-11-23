@@ -273,7 +273,6 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
      * @param l
      * @param isdel
      */
-    @SuppressWarnings("LeakingThisInConstructor")
     public EditorFrame(ZettelkastenView zkn, Daten d, TasksData td, AcceleratorKeys ak, Settings s, AutoKorrektur ac, Synonyms syn, StenoData stn, String content, boolean em, int en, boolean l, boolean isdel) {
         mainframe = zkn;
 
