@@ -7874,8 +7874,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // i.e. the constructor is not called (because the if-statement above is not true)
         importWindow.dispose();
         importWindow = null;
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
