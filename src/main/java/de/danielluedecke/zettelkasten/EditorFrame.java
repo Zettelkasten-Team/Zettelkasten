@@ -1649,17 +1649,17 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
      * so disable then when other fields have the input focus.
      *
      * @param focus indicates whether the <b>main textfield</b> has the focus or
-     * nor. if this parameter is false, the undo/redo buttons are always
+     * not. if this parameter is false, the undo/redo buttons are always
      * disabled. if the value is true, the buttons are enabled when undo/redo is
      * possible (canUndo() and canRedo()).
      */
-    private void updateToolbar(boolean foc) {
+    private void updateToolbar(boolean focus) {
         // we've outsourced the update of the undo/redo buttons to an
         // own method so we can call this method also from within the
         // documents change listener. undo/redo buttons will immediately
         // being updated as the users is typing text.
-        updateUndoRedoButtons(foc);
-        setFocus(foc);
+        updateUndoRedoButtons(focus);
+        setFocus(focus);
     }
 
     /**
@@ -1674,10 +1674,10 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
      * the value is true, the buttons are enabled when undo/redo is possible
      * (canUndo() and canRedo()).
      */
-    private void updateUndoRedoButtons(boolean foc) {
-        // set undo/redo
-        setUndoPossible(foc && undomanager.canUndo());
-        setRedoPossible(foc && undomanager.canRedo());
+    private void updateUndoRedoButtons(boolean focus) {
+        /* set undo/redo */
+        setUndoPossible(focus && undomanager.canUndo());
+        setRedoPossible(focus && undomanager.canRedo());
     }
 
     private void setRefreshKeywords() {
