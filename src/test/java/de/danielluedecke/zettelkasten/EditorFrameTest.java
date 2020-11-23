@@ -1,6 +1,8 @@
 package de.danielluedecke.zettelkasten;
 
 
+import junit.extensions.RepeatedTest;
+import junit.framework.TestSuite;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
@@ -8,8 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.awt.*;
 
 public class EditorFrameTest extends SwingTestCase {
-
-    private EditorFrame emptyEditorFrame;
+    private EditorFrame emptyFrame;
 
     public EditorFrameTest(String name) {
         super(name);
@@ -17,9 +18,9 @@ public class EditorFrameTest extends SwingTestCase {
 
     @Before
     public void setUp() throws Exception {
-        this.emptyEditorFrame = new EditorFrame(null, null, null, null, null, null, null, null, "", false, 0, false, false);
+        this.emptyFrame = new EditorFrame(null, null, null, null, null, null, null, null, "", false, 0, false, false);
 
-        getTestFrame().getContentPane().add(this.emptyEditorFrame, BorderLayout.CENTER);
+        getTestFrame().getContentPane().add(this.emptyFrame, BorderLayout.CENTER);
         getTestFrame().pack();
         getTestFrame().setVisible(true);
     }
@@ -27,10 +28,14 @@ public class EditorFrameTest extends SwingTestCase {
     @Test
     public void testContentPaneShouldBeEnabled() {
         assertTrue("Content pane should be enabled",
-                this.emptyEditorFrame.getContentPane().isEnabled());
+                this.emptyFrame.getContentPane().isEnabled());
     }
 
     @After
     public void tearDown() throws Exception {
+    }
+
+    public static junit.framework.Test suite() {
+        return new RepeatedTest(new TestSuite(EditorFrameTest.class), 1);
     }
 }
