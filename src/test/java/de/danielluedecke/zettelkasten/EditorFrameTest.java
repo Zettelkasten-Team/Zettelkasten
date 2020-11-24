@@ -72,12 +72,6 @@ public class EditorFrameTest extends SwingTestCase {
 
     @Test
     public void testContentPaneShouldBeEnabled() {
-        //uncomment to see the window
-        /*try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
         assertTrue("Content pane should be enabled",
                 this.emptyFrame.getContentPane().getComponent(0).isEnabled());
     }
