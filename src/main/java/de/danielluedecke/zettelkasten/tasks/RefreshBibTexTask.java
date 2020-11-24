@@ -130,7 +130,7 @@ public class RefreshBibTexTask extends org.jdesktop.application.Task<Object, Voi
                     resourceMap.getString("importMissingBibtexEntriesText", 
                             String.valueOf(newentries),
                             String.valueOf(updateCount)), 
-                    "BibTex-Import", 
+                    "BibTeX-Import",
                     JOptionPane.PLAIN_MESSAGE);
         }
         // log info about updates authors
