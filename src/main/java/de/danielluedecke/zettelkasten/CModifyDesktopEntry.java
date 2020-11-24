@@ -33,34 +33,20 @@
 
 package de.danielluedecke.zettelkasten;
 
-import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.database.AutoKorrektur;
 import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
+import de.danielluedecke.zettelkasten.database.AutoKorrektur;
+import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.StenoData;
-import de.danielluedecke.zettelkasten.util.Tools;
-import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.util.ColorUtil;
-import de.danielluedecke.zettelkasten.util.NewEntryFrameUtil;
-import de.danielluedecke.zettelkasten.util.PlatformUtil;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JColorChooser;
-import javax.swing.JComponent;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
+import de.danielluedecke.zettelkasten.util.*;
+import org.jdesktop.application.Action;
+
+import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.undo.UndoManager;
-import org.jdesktop.application.Action;
+import java.awt.*;
+import java.awt.event.*;
 
 /**
  *
@@ -112,7 +98,6 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
      * @param acc
      * @param content 
      */
-    @SuppressWarnings("LeakingThisInConstructor")
     public CModifyDesktopEntry(DesktopFrame parent, Settings s, AutoKorrektur ak, StenoData st, AcceleratorKeys acc, String content) {
 
         settingsObj = s;
@@ -201,7 +186,7 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
         // the delete/backspace-key
         AbstractAction a_tab = new AbstractAction(){
             @Override public void actionPerformed(ActionEvent e) {
-                if (jTextArea1==e.getSource()) NewEntryFrameUtil.checkSteno(settingsObj,stenoObj,jTextArea1);
+                if (jTextArea1==e.getSource()) EditorFrameUtil.checkSteno(settingsObj,stenoObj,jTextArea1);
             }
         };
         jTextArea1.getActionMap().put("TabKeyPressed",a_tab);
@@ -367,8 +352,8 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
         undomanager.setLimit(1000);
         jTextArea1.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override public void keyReleased(java.awt.event.KeyEvent evt) {
-                NewEntryFrameUtil.checkSpelling(evt.getKeyCode(),jTextArea1,settingsObj,spellObj);
-                NewEntryFrameUtil.autoCompleteTags(jTextArea1, evt.getKeyChar());
+                EditorFrameUtil.checkSpelling(evt.getKeyCode(),jTextArea1,settingsObj,spellObj);
+                EditorFrameUtil.autoCompleteTags(jTextArea1, evt.getKeyChar());
             }
         });
         jTextArea1.addMouseListener(new java.awt.event.MouseAdapter() {

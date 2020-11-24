@@ -32,78 +32,20 @@
  */
 package de.danielluedecke.zettelkasten;
 
-import de.danielluedecke.zettelkasten.util.misc.InitStatusbarForTasks;
+import de.danielluedecke.zettelkasten.database.*;
 import de.danielluedecke.zettelkasten.mac.MacSourceList;
-import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.database.AutoKorrektur;
-import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
-import de.danielluedecke.zettelkasten.database.StenoData;
-import de.danielluedecke.zettelkasten.database.Synonyms;
-import de.danielluedecke.zettelkasten.util.Tools;
-import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.util.misc.ImagePreview;
-import de.danielluedecke.zettelkasten.util.misc.EntryStringTransferHandler;
-import de.danielluedecke.zettelkasten.util.misc.Comparer;
-import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
 import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
-import de.danielluedecke.zettelkasten.util.ColorUtil;
-import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
-import de.danielluedecke.zettelkasten.util.ListUtil;
-import de.danielluedecke.zettelkasten.util.NewEntryFrameUtil;
-import de.danielluedecke.zettelkasten.util.PlatformUtil;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDragEvent;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.ConcurrentModificationException;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Level;
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JColorChooser;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.ListModel;
-import javax.swing.ListSelectionModel;
+import de.danielluedecke.zettelkasten.util.*;
+import de.danielluedecke.zettelkasten.util.misc.Comparer;
+import de.danielluedecke.zettelkasten.util.misc.EntryStringTransferHandler;
+import de.danielluedecke.zettelkasten.util.misc.ImagePreview;
+import de.danielluedecke.zettelkasten.util.misc.InitStatusbarForTasks;
+import org.jdesktop.application.Action;
+import org.jdesktop.application.*;
+import org.jdom2.Element;
+
+import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -114,19 +56,26 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import javax.swing.undo.UndoManager;
-import org.jdesktop.application.Action;
-import org.jdesktop.application.Application;
-import org.jdesktop.application.ApplicationContext;
-import org.jdesktop.application.Task;
-import org.jdesktop.application.TaskMonitor;
-import org.jdesktop.application.TaskService;
-import org.jdom2.Element;
+import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.*;
+import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.*;
+import java.util.logging.Level;
 
 /**
  *
  * @author danielludecke
  */
-public class NewEntryFrame extends javax.swing.JFrame implements WindowListener, DropTargetListener {
+public class EditorFrame extends javax.swing.JFrame implements WindowListener, DropTargetListener {
 
     /**
      * create a variable for a list model. this list model is used for the
@@ -183,14 +132,17 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      * be filled
      */
     private List<Element> hyperlinks;
+    private final String content;
     /**
      * state variable that indicated whether we have a new entry (false), or an
      * edit-action (true)
      */
     private static boolean editmode;
 
+
+
     /**
-     * Determines whether the NewEntryFrame is used for a new entry or for
+     * Determines whether the EditorFrame is used for a new entry or for
      * editing an existing entry.
      *
      * @param val {@code true} if we want to edit an existing entry,
@@ -217,7 +169,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      *
      */
     public boolean isDeleted;
-    private Font lastSelectefFont;
+    private Font lastSelectedFont;
     /**
      * This variable stores the entry number, if we have an entry which should
      * be edited
@@ -232,7 +184,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      */
     private boolean authorListUpToDate = false;
     /**
-     * inidcates whether the quickinput list for keywords is up to date or not
+     * indicates whether the quickinput list for keywords is up to date or not
      */
     private boolean keywordsListUpToDate = false;
     /**
@@ -273,7 +225,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      */
     private LinkedList<String> selectedKeywords, remainingKeywords;
     /**
-     * This varibale indicates in which step of the quickinput we are currently.
+     * This variable indicates in which step of the quickinput we are currently.
      */
     private int stepcounter;
     private int focusowner = Constants.FOCUS_UNKNOWN;
@@ -295,7 +247,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      */
     private final org.jdesktop.application.ResourceMap resourceMap
             = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
-            getContext().getResourceMap(NewEntryFrame.class);
+            getContext().getResourceMap(EditorFrame.class);
     /**
      * get the strings for file descriptions from the resource map
      */
@@ -304,52 +256,67 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             getContext().getResourceMap(ToolbarIcons.class);
 
     /**
-     * Creates new form CNewEntry. This Dialog is an edit-mask for creating new
+     * Creates new form EditorFrame. This Dialog is an edit-mask for creating new
      * entries or editing existing entries. Therefor, we pass the data-class as
      * parameter, so we can either retrieve information to fill automatically
-     * the textfields (when editing an existing entry) or save the information
+     * the text fields (when editing an existing entry) or save the information
      * and add a new entry to the data-class.
      *
-     * @param zkn
-     * @param d
-     * @param td
-     * @param ak
-     * @param s
-     * @param ac
-     * @param syn
-     * @param stn
-     * @param content
-     * @param em
-     * @param en
-     * @param l
-     * @param isdel
+     * @param zkn {@link ZettelkastenView}
+     * @param d {@link Daten}
+     * @param td {@link TasksData}
+     * @param ak {@link AcceleratorKeys}
+     * @param s {@link Settings}
+     * @param ac {@link AutoKorrektur}
+     * @param syn {@link Synonyms}
+     * @param stn {@link StenoData}
+     * @param content Contents of the Zettel
+     * @param em edit mode
+     * @param en entry number
+     * @param l luhmann
+     * @param isdel isDeleted
      */
-    @SuppressWarnings("LeakingThisInConstructor")
-    public NewEntryFrame(ZettelkastenView zkn, Daten d, TasksData td, AcceleratorKeys ak, Settings s, AutoKorrektur ac, Synonyms syn, StenoData stn, String content, boolean em, int en, boolean l, boolean isdel) {
+    public EditorFrame(ZettelkastenView zkn,
+                       Daten d,
+                       TasksData td,
+                       AcceleratorKeys ak,
+                       Settings s,
+                       AutoKorrektur ac,
+                       Synonyms syn,
+                       StenoData stn,
+                       String content,
+                       boolean em,
+                       int en,
+                       boolean l,
+                       boolean isdel) {
         mainframe = zkn;
 
         // init the variables from the parameters
         dataObj = d;
         taskinfo = td;
-        stenoObj = stn;
         accKeys = ak;
         settingsObj = s;
-        synonymsObj = syn;
         spellObj = ac;
-        isDeleted = isdel;
-        lastSelectefFont = new Font("Courier", Font.PLAIN, 12);
+        synonymsObj = syn;
+        stenoObj = stn;
+        this.content = content;
         editmode = em;
-        // check whether memory usage is logged. if so, tell logger that new entry windows was opened
-        if (settingsObj.isMemoryUsageLogged) {
-            // log info
-            Constants.zknlogger.log(Level.INFO, "Memory usage logged. New Entry Window opened.");
-        }
         entryNumber = en;
         luhmann = l;
+        isDeleted = isdel;
+
+        lastSelectedFont = new Font("Courier", Font.PLAIN, 12);
+
+        // check whether memory usage is logged. if so, tell logger that Editor windows was opened
+        if (settingsObj.isMemoryUsageLogged) {
+            // log info
+            Constants.zknlogger.log(Level.INFO, "Memory usage logged. Editor window opened.");
+        }
+
         keywordStep1 = selectedKeywords = displayedKeywordList = remainingKeywords = null;
         stepcounter = 1;
         // init locale for the default-actions cut/copy/paste
-        Tools.initLocaleForDefaultActions(org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(NewEntryFrame.class, this));
+        Tools.initLocaleForDefaultActions(org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(EditorFrame.class, this));
         initComponents();
         // set application icon
         setIconImage(Constants.zknicon.getImage());
@@ -357,7 +324,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         initListeners();
         // set borders manually
         initBorders(settingsObj);
-        // clear the listviews
+        // clear the list views
         keywordListModel.clear();
         linkListModel.clear();
         quickInputKeywordsListModel.clear();
@@ -366,16 +333,13 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jButtonQuickKeyword.setVisible(settingsObj.getQuickInput());
         jCheckBoxQuickInput.setSelected(settingsObj.getQuickInput());
         initComboBox();
-        if (settingsObj.isSeaGlass()) {
-            setupSeaGlassStyle();
-        }
-        // init default font-size for tables, lists and textfields...
+        // init default font-size for tables, lists and text fields...
         initDefaultFontSize();
         // disable add- and remove-buttons
         setKeywordSelected(false);
         setAttachmentSelected(false);
         // init the progress bar and status icon for
-        // the swingworker background thread
+        // the swing worker background thread
         // creates a new class object. This variable is not used, it just associates task monitors to
         // the background tasks. furthermore, by doing this, this class object also animates the 
         // busy icon and the progress bar of this frame.
@@ -387,13 +351,13 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // This method initialises the toolbar buttons. depending on the user-setting, we either
         // display small, medium or large icons as toolbar-icons.
         initToolbarIcons();
-        // when we have an entry to edit, fill the textfields with content
+        // when we have an entry to edit, fill the text fields with content
         // else set probable selected text from entry as "pre-content"
         // the content of "content" is retrieved from text-selection from the main window.
         if (!editmode) {
             if (content != null) {
                 jTextAreaEntry.setText(content);
-                // if we have editmode, enable apply-button
+                // if we have edit mode, enable apply-button
                 setTextfieldFilled(!content.isEmpty());
             }
         } else {
@@ -990,9 +954,9 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jTextAreaEntry.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                NewEntryFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaEntry, settingsObj, spellObj);
+                EditorFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaEntry, settingsObj, spellObj);
                 if (settingsObj.getAutoCompleteTags()) {
-                    NewEntryFrameUtil.autoCompleteTags(jTextAreaEntry, evt.getKeyChar());
+                    EditorFrameUtil.autoCompleteTags(jTextAreaEntry, evt.getKeyChar());
                 }
                 enableBySelection();
             }
@@ -1017,7 +981,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jTextAreaAuthor.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                NewEntryFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaAuthor, settingsObj, spellObj);
+                EditorFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaAuthor, settingsObj, spellObj);
             }
         });
         jTextAreaRemarks.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1040,7 +1004,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jTextAreaRemarks.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                NewEntryFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaRemarks, settingsObj, spellObj);
+                EditorFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaRemarks, settingsObj, spellObj);
             }
         });
         jTextFieldFilterAuthorlist.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1183,8 +1147,8 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // get the action map
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.
                 getInstance(ZettelkastenApp.class).getContext().
-                getActionMap(NewEntryFrame.class, this);
-        // finally, we have to manuall init the actions for the popup-menu, since the gui-builder always
+                getActionMap(EditorFrame.class, this);
+        // finally, we have to manual init the actions for the popup-menu, since the gui-builder always
         // puts the menu-items before the line where the action-map is initialised. we cannot change
         // this because it is in the protected area, and when changing it from outside, it will
         // always be re-arranged by the gui-designer
@@ -1315,7 +1279,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      * should have accelerator keys. We don't use the GUI designer to set the
      * values, because the user should have the possibility to define own
      * accelerator keys, which are managed within the CAcceleratorKeys-class and
-     * loaed/saved via the CSettings-class
+     * loaded/saved via the CSettings-class
      */
     private void initAcceleratorTable() {
         // setting up the accelerator table. we have two possibilities: either assigning
@@ -1336,7 +1300,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // get the action map
         javax.swing.ActionMap actionMap
                 = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
-                getContext().getActionMap(NewEntryFrame.class, this);
+                getContext().getActionMap(EditorFrame.class, this);
         // iterate the xml file with the accelerator keys for the main window
         for (int cnt = 1; cnt <= accKeys.getCount(AcceleratorKeys.NEWENTRYKEYS); cnt++) {
             // get the action's name
@@ -1473,13 +1437,13 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (jTextAreaEntry == e.getSource()) {
-                    NewEntryFrameUtil.checkSteno(settingsObj, stenoObj, jTextAreaEntry);
+                    EditorFrameUtil.checkSteno(settingsObj, stenoObj, jTextAreaEntry);
                 }
                 if (jTextAreaAuthor == e.getSource()) {
-                    NewEntryFrameUtil.checkSteno(settingsObj, stenoObj, jTextAreaAuthor);
+                    EditorFrameUtil.checkSteno(settingsObj, stenoObj, jTextAreaAuthor);
                 }
                 if (jTextAreaRemarks == e.getSource()) {
-                    NewEntryFrameUtil.checkSteno(settingsObj, stenoObj, jTextAreaRemarks);
+                    EditorFrameUtil.checkSteno(settingsObj, stenoObj, jTextAreaRemarks);
                 }
             }
         };
@@ -1650,7 +1614,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         }
         // finally, change title
         setTitle(resourceMap.getString("frametitleEdit") + " (" + String.valueOf(entryNumber) + ")");
-        // if we have editmode, enable apply-button
+        // if we have edit mode, enable apply-button
         setTextfieldFilled(!jTextAreaEntry.getText().isEmpty());
     }
 
@@ -1664,7 +1628,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      * But: when editing an entry, the text-content in the jTextAreaEntry could
      * be filled, while the user changes the author-values - these changes are
      * recognized in the modified-value, but do usually not enable the
-     * apply-button. thus, when we have editmode (true), we also enable the
+     * apply-button. thus, when we have edit mode (true), we also enable the
      * apply-button here...
      *
      * @param m whether the modified state is true or false
@@ -1672,7 +1636,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     private void setModified(boolean m) {
         // change modified state
         modified = m;
-        // if we have editmode, enable apply-button
+        // if we have edit mode, enable apply-button
         setTextfieldFilled(!jTextAreaEntry.getText().isEmpty());
     }
 
@@ -1701,17 +1665,17 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      * so disable then when other fields have the input focus.
      *
      * @param focus indicates whether the <b>main textfield</b> has the focus or
-     * nor. if this parameter is false, the undo/redo buttons are always
+     * not. if this parameter is false, the undo/redo buttons are always
      * disabled. if the value is true, the buttons are enabled when undo/redo is
      * possible (canUndo() and canRedo()).
      */
-    private void updateToolbar(boolean foc) {
+    private void updateToolbar(boolean focus) {
         // we've outsourced the update of the undo/redo buttons to an
         // own method so we can call this method also from within the
         // documents change listener. undo/redo buttons will immediately
         // being updated as the users is typing text.
-        updateUndoRedoButtons(foc);
-        setFocus(foc);
+        updateUndoRedoButtons(focus);
+        setFocus(focus);
     }
 
     /**
@@ -1726,24 +1690,23 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      * the value is true, the buttons are enabled when undo/redo is possible
      * (canUndo() and canRedo()).
      */
-    private void updateUndoRedoButtons(boolean foc) {
-        // set undo/redo
-        setUndoPossible(foc && undomanager.canUndo());
-        setRedoPossible(foc && undomanager.canRedo());
+    private void updateUndoRedoButtons(boolean focus) {
+        /* set undo/redo */
+        setUndoPossible(focus && undomanager.canUndo());
+        setRedoPossible(focus && undomanager.canRedo());
     }
 
     private void setRefreshKeywords() {
-        if (settingsObj.getQuickInput() && (dataObj.getCount(Daten.KWCOUNT) > 0)) {
-            // only the first and the third step are using the text-content to retrieve
-            // the keywords, so we only need to enable the refresh-button for the keyword-quickinput
-            // when text is changed during the 1st or 3rd step.
+        // only the first and the third step are using the text-content to retrieve
+        // the keywords, so we only need to enable the refresh-button for the keyword-quickinput
+        // when text is changed during the 1st or 3rd step.
+        if (settingsObj.getQuickInput() && (dataObj.getCount(Daten.KWCOUNT) > 0))
             if ((1 == stepcounter) || (3 == stepcounter)) {
                 // disable the refresh and filter buttons
                 jButtonRefreshKeywordlist.setEnabled(true);
                 // set upto-date state to false
                 keywordsListUpToDate = false;
             }
-        }
     }
 
     @Action
@@ -2650,15 +2613,15 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     public void formatFont() {
         // create font-chooser dialog
         if (null == fontDlg) {
-            fontDlg = new CFontChooser(null, lastSelectefFont);
+            fontDlg = new CFontChooser(null, lastSelectedFont);
             fontDlg.setLocationRelativeTo(this);
         }
         ZettelkastenApp.getApplication().show(fontDlg);
 
         // if the user has chosen a font, set it
         if (fontDlg.selectedFont != null) {
-            lastSelectefFont = fontDlg.selectedFont;
-            surroundSelection(Constants.FORMAT_FONT_OPEN + " " + lastSelectefFont.getFontName() + "]", Constants.FORMAT_FONT_CLOSE);
+            lastSelectedFont = fontDlg.selectedFont;
+            surroundSelection(Constants.FORMAT_FONT_OPEN + " " + lastSelectedFont.getFontName() + "]", Constants.FORMAT_FONT_CLOSE);
         }
         // close and dispose the font-dialog
         fontDlg.dispose();
@@ -3748,11 +3711,11 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             }
         }
         // tell mainframe that it has to update the content
-        mainframe.finishedEditing();
+        mainframe.EditingFinishedEvent();
         // check whether memory usage is logged. if so, tell logger that new entry windows was opened
         if (settingsObj.isMemoryUsageLogged) {
             // log info
-            Constants.zknlogger.log(Level.INFO, "Memory usage logged. New Entry Window closed.");
+            Constants.zknlogger.log(Level.INFO, "Memory usage logged. Editor window closed.");
         }
         // and close the window
         dispose();
@@ -3778,7 +3741,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             return;
         }
         // tell mainframe that it has to update the content
-        mainframe.finishedEditing();
+        mainframe.EditingFinishedEvent();
         // check whether memory usage is logged. if so, tell logger that new entry windows was opened
         if (settingsObj.isMemoryUsageLogged) {
             // log info
@@ -4475,11 +4438,11 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
 
             // when the list is already up to date, do nothing
             if (keywordsListUpToDate) {
-                // enable tabpane during background task operations
+                // enable tab pane during background task operations
                 jTabbedPaneNewEntry1.setEnabled(true);
                 return null;
             }
-            // tell programm the task is running
+            // tell program the task is running
             qiKeywordTaskIsRunning = true;
             // tell selection listener we are working and selection listener should not react on changes now
             listUpdateActive = true;
@@ -4489,14 +4452,14 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
             // create new list that will contain the array, but without
             // possible empty elements. when an author or keyword is deleted,
             // its content is just cleared, the element itself is not removed. we do
-            // this to have always the same indexnumber for a keyword or an author.
+            // this to have always the same index number for a keyword or an author.
             // now we copy the array to a linked list, leaving out empty elements
             displayedKeywordList = new LinkedList<>();
             // go through all keywords of the keyword datafile
             for (cnt = 0; cnt < count; cnt++) {
                 // get the keyword as string and add them to the array
                 String kw = dataObj.getKeyword(cnt + 1);
-                // if keyword is not empry, add it to liszt
+                // if keyword is not empty, add it to liszt
                 if (!kw.isEmpty()) {
                     displayedKeywordList.add(kw);
                 }
@@ -4560,7 +4523,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     }
 
     /**
-     * This variable indicates whether we have seleced text, so we can en- or
+     * This variable indicates whether we have selected text, so we can en- or
      * disable the cut and copy actions.
      */
     private boolean textSelected = false;
@@ -4576,7 +4539,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     }
 
     /**
-     * This variable indicates whether we have seleced text, so we can en- or
+     * This variable indicates whether we have selected text, so we can en- or
      * disable the cut and copy actions.
      */
     private boolean segmentPossible = false;
@@ -4592,7 +4555,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     }
 
     /**
-     * This variable indicates whether we have seleced text, so we can en- or
+     * This variable indicates whether we have selected text, so we can en- or
      * disable the cut and copy actions.
      */
     private boolean authorSelected = false;
@@ -4608,7 +4571,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     }
 
     /**
-     * This variable indicates whether we have seleced text, so we can en- or
+     * This variable indicates whether we have selected text, so we can en- or
      * disable the cut and copy actions.
      */
     private boolean keywordSelected = false;
@@ -4624,7 +4587,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     }
 
     /**
-     * This variable indicates whether we have seleced text, so we can en- or
+     * This variable indicates whether we have selected text, so we can en- or
      * disable the cut and copy actions.
      */
     private boolean quickKeywordSelected = false;
@@ -4640,7 +4603,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     }
 
     /**
-     * This variable indicates whether we have seleced text, so we can en- or
+     * This variable indicates whether we have selected text, so we can en- or
      * disable the cut and copy actions.
      */
     private boolean attachmentSelected = false;
@@ -4675,7 +4638,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
 
     /**
      * This variable indicates whether undo/redo is possible. This is the case
-     * when the main text fiel (jTextAreaEntry) has the focus and changes have
+     * when the main text field (jTextAreaEntry) has the focus and changes have
      * been made.
      */
     private boolean undoPossible = false;
@@ -4691,7 +4654,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     }
     /**
      * This variable indicates whether undo/redo is possible. This is the case
-     * when the main text fiel (jTextAreaEntry) has the focus and changes have
+     * when the main text field (jTextAreaEntry) has the focus and changes have
      * been made.
      */
     private boolean redoPossible = false;
@@ -5064,7 +5027,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jSeparator26.setName("jSeparator26"); // NOI18N
         jPopupMenuMain.add(jSeparator26);
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(NewEntryFrame.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(EditorFrame.class, this);
         popupMainSelectAll.setAction(actionMap.get("selecteAllText")); // NOI18N
         popupMainSelectAll.setName("popupMainSelectAll"); // NOI18N
         jPopupMenuMain.add(popupMainSelectAll);
@@ -5119,7 +5082,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jSeparator20.setName("jSeparator20"); // NOI18N
         jPopupMenuMain.add(jSeparator20);
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(NewEntryFrame.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(EditorFrame.class);
         formatSubmenu.setText(resourceMap.getString("formatSubmenu.text")); // NOI18N
         formatSubmenu.setName("formatSubmenu"); // NOI18N
 

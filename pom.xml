@@ -1,13 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.danielluedecke</groupId>
     <artifactId>Zettelkasten</artifactId>
     <version>3.3.2</version>
     <name>Zettelkasten</name>
-
     <properties>
         <zkn.launch4jVersion>${project.version}.0</zkn.launch4jVersion>
         <zkn.supportsDmg>false</zkn.supportsDmg>
@@ -15,7 +12,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j.version>1.6.1</slf4j.version>
     </properties>
-
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.7.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <profiles>
         <profile>
             <id>linux</id>
@@ -43,7 +50,6 @@
             </properties>
         </profile>
     </profiles>
-
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <testSourceDirectory>src/test/java</testSourceDirectory>
@@ -69,7 +75,6 @@
                 <directory>src/test/resources</directory>
             </testResource>
         </testResources>
-
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -79,7 +84,14 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                    <testFailureIgnore>true</testFailureIgnore>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
@@ -97,7 +109,6 @@
                     <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>com.amashchenko.maven.plugin</groupId>
                 <artifactId>gitflow-maven-plugin</artifactId>
@@ -110,7 +121,6 @@
                     </gitFlowConfig>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>de.perdian.maven.plugins</groupId>
                 <artifactId>macosappbundler-maven-plugin</artifactId>
@@ -147,7 +157,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -221,13 +230,15 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
-
-
     <dependencies>
-
+        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.8.1</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -238,7 +249,6 @@
             <artifactId>github-api</artifactId>
             <version>1.111</version>
         </dependency>
-
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
@@ -254,19 +264,17 @@
             <artifactId>jdom2</artifactId>
             <version>2.0.5</version>
         </dependency>
-
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
             <version>0.29</version>
         </dependency>
-
-
-        <!-- <dependency>
-             <groupId>com.seaglasslookandfeel</groupId>
-             <artifactId>seaglasslookandfeel</artifactId>
-             <version>0.2</version>
-         </dependency>-->
+        <!-- https://mvnrepository.com/artifact/com.seaglasslookandfeel/seaglasslookandfeel -->
+        <dependency>
+            <groupId>com.seaglasslookandfeel</groupId>
+            <artifactId>seaglasslookandfeel</artifactId>
+            <version>0.2.1</version>
+        </dependency>
         <dependency>
             <groupId>org.jdesktop</groupId>
             <artifactId>swing-worker</artifactId>
@@ -297,13 +305,26 @@
             <artifactId>javabib</artifactId>
             <version>20040801</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.7.0</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/com.approvaltests/approvaltests -->
+        <dependency>
+            <groupId>com.approvaltests</groupId>
+            <artifactId>approvaltests</artifactId>
+            <version>9.3.0</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -311,7 +332,6 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
     <repositories>
         <repository>
             <id>my-local-repo</id>

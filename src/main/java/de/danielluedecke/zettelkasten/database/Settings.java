@@ -37,14 +37,16 @@ import de.danielluedecke.zettelkasten.CImportBibTex;
 import de.danielluedecke.zettelkasten.CSetBibKey;
 import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
-import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
-import de.danielluedecke.zettelkasten.util.Tools;
-import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
-import de.danielluedecke.zettelkasten.util.PlatformUtil;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
+import de.danielluedecke.zettelkasten.util.*;
+import org.jdom2.Attribute;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.XMLOutputter;
+
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -57,17 +59,6 @@ import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-import javax.swing.JOptionPane;
-import javax.swing.JSplitPane;
-import javax.swing.RowSorter;
-import javax.swing.SortOrder;
-import javax.swing.UIManager;
-import org.jdom2.Attribute;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.output.XMLOutputter;
 
 /**
  *
@@ -127,12 +118,9 @@ public class Settings {
      * See method "loadSettings" below for more details.
      */
     private final List<String> dataFilesToLoad = new ArrayList<>();
-
-    //TODO needs to be removed
+    
     public boolean isSeaGlass() {
-        return false;
-        //seaglass plugin is not compatible with modules
-        //getLookAndFeel().equals(Constants.seaGlassLookAndFeelClassName);
+        return getLookAndFeel().equals(Constants.seaGlassLookAndFeelClassName);
     }
     public boolean isNimbus() {
         return getLookAndFeel().contains("nimbus");
@@ -995,7 +983,6 @@ public class Settings {
                         if (entryname.equals(filesToLoad1)) {
                             try {
                                 SAXBuilder builder = new SAXBuilder();
-                                // Document doc = new Document();
                                 Document doc = builder.build(zip);
                                 // compare, which file we have retrieved, so we store the data
                                 // correctly on our data-object
@@ -1052,7 +1039,6 @@ public class Settings {
                         if (entryname.equals(dataFilesToLoad1)) {
                             try {
                                 SAXBuilder builder = new SAXBuilder();
-                                // Document doc = new Document();
                                 Document doc = builder.build(zip);
                                 // compare, which file we have retrieved, so we store the data
                                 // correctly on our data-object
@@ -1229,10 +1215,12 @@ public class Settings {
      * @return the filepath of the last used main datafile, or null if no filepath was specified.
      */
     public File getFilePath() {
-        // we do this step by step rather that appending a ".getText()" to the line below, because
-        // by doing so we can check whether the child element exists or not, and avoiding null pointer
-        // exceptions
-        // first, get the filepath, which is in relation to the zkn-path
+        /*
+         We do this step by step rather that appending a ".getText()" to the line below, because
+         by doing so we can check whether the child element exists or not, and avoiding null pointer
+         exceptions
+         first, get the filepath, which is in relation to the zkn-path
+        */
         Element el = settingsFile.getRootElement().getChild(SETTING_FILEPATH);
         // create an empty string as return value
         String value = "";

@@ -36,62 +36,41 @@
  */
 package de.danielluedecke.zettelkasten;
 
-import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
-import de.danielluedecke.zettelkasten.database.AutoKorrektur;
-import de.danielluedecke.zettelkasten.util.*;
-import de.danielluedecke.zettelkasten.database.BibTex;
-import de.danielluedecke.zettelkasten.database.Bookmarks;
-import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.database.SearchRequests;
-import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.database.StenoData;
-import de.danielluedecke.zettelkasten.database.Synonyms;
-import de.danielluedecke.zettelkasten.database.TasksData;
+import de.danielluedecke.zettelkasten.database.*;
 import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
 import de.danielluedecke.zettelkasten.tasks.AutoBackupTask;
 import de.danielluedecke.zettelkasten.tasks.CheckForUpdateTask;
 import de.danielluedecke.zettelkasten.tasks.FindDoubleEntriesTask;
 import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
 import de.danielluedecke.zettelkasten.tasks.export.ExportTools;
-import de.danielluedecke.zettelkasten.util.misc.Comparer;
-import de.danielluedecke.zettelkasten.util.misc.DateComparer;
-import de.danielluedecke.zettelkasten.util.misc.EntryStringTransferHandler;
-import de.danielluedecke.zettelkasten.util.misc.InitStatusbarForTasks;
-import de.danielluedecke.zettelkasten.util.misc.TitleTableCellRenderer;
-import de.danielluedecke.zettelkasten.util.misc.TreeUserObject;
-import java.awt.AWTException;
-import java.awt.Color;
-import java.awt.Desktop;
-import java.awt.Font;
-import java.awt.HeadlessException;
-import java.awt.SystemTray;
-import java.awt.Toolkit;
-import java.awt.TrayIcon;
+import de.danielluedecke.zettelkasten.util.*;
+import de.danielluedecke.zettelkasten.util.misc.*;
+import org.jdesktop.application.Action;
+import org.jdesktop.application.*;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
+
+import javax.swing.*;
+import javax.swing.border.MatteBorder;
+import javax.swing.event.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.tree.*;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDragEvent;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Writer;
+import java.awt.dnd.*;
+import java.awt.event.*;
+import java.io.*;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -102,6 +81,8 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Timer;
 import java.util.*;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -109,53 +90,8 @@ import java.util.logging.SimpleFormatter;
 import java.util.logging.StreamHandler;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
-import javax.swing.RowSorter;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.MatteBorder;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
-import org.jdesktop.application.Action;
-import org.jdesktop.application.Application;
-import org.jdesktop.application.ApplicationContext;
-import org.jdesktop.application.FrameView;
-import org.jdesktop.application.SingleFrameApplication;
-import org.jdesktop.application.Task;
-import org.jdesktop.application.TaskMonitor;
-import org.jdesktop.application.TaskService;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
+
+import static javax.swing.UIManager.setLookAndFeel;
 
 
 /*
@@ -307,7 +243,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
             getContext().getResourceMap(ToolbarIcons.class);
     /**
-     * This variables stores the currently displayed zettel. the currently
+     * This variables stores the currently displayed zettel. The currently
      * <i>displayed</i>
      * Zettel may differ from the currently <i>active</i> Zettel, if we e.g.
      * select an entry by single-clicking it from a jTable, but do not activate
@@ -332,7 +268,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     boolean editEntryFromSearchWindow = false;
     /**
      * This variable stores the table data of the keyword-list when this list is
-     * filtered. All changes to a fitered table-list are also applied to this
+     * filtered. All changes to a filtered table-list are also applied to this
      * linked list. When the table-list is being refreshed, we don't need to run
      * the time-consuming task; instead we simply iterate this list and set the
      * values to the table
@@ -340,7 +276,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private LinkedList<Object[]> linkedkeywordlist;
     /**
      * This variable stores the table data of the author-list when this list is
-     * filtered. All changes to a fitered table-list are also applied to this
+     * filtered. All changes to a filtered table-list are also applied to this
      * linked list. When the table-list is being refreshed, we don't need to run
      * the time-consuming task; instead we simply iterate this list and set the
      * values to the table
@@ -348,7 +284,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private LinkedList<Object[]> linkedauthorlist;
     /**
      * This variable stores the table data of the title-list when this list is
-     * filtered. All changes to a fitered table-list are also applied to this
+     * filtered. All changes to a filtered table-list are also applied to this
      * linked list. When the table-list is being refreshed, we don't need to run
      * the time-consuming task; instead we simply iterate this list and set the
      * values to the table
@@ -406,13 +342,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private String updateURI = Constants.UPDATE_URI;
     /**
      * This string contains an added keyword that was added to the
-     * jTableKeywords, so the new added value can be selected immediatley after
+     * jTableKeywords, so the new added value can be selected immediately after
      * adding in to the table.
      */
     private String newAddedKeyword = null;
     /**
      * This string contains an added author that was added to the jTableAuthors,
-     * so the new added value can be selected immediatley after adding in to the
+     * so the new added value can be selected immediately after adding in to the
      * table.
      */
     private String newAddedAuthor = null;
@@ -518,7 +454,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     // </editor-fold>
     /**
      * This variable indicates whether we have desktop data or not. dependent on this setting,
-     * the related menu-item in the windows-menu is en/disbaled
+     * the related menu-item in the windows-menu is en/disabled
      */
     private boolean desktopAvailable = false;
     /**
@@ -527,12 +463,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private boolean listFilledWithEntry = false;
     /**
-     * This variable indicates whether we have seleced text, so we can en- or disable
+     * This variable indicates whether we have selected text, so we can en- or disable
      * the related actions.
      */
     private boolean textSelected = false;
     /**
-     * This variable indicates whether we have seleced text, so we can en- or disable
+     * This variable indicates whether we have selected text, so we can en- or disable
      * the related actions.
      */
     private boolean bibtexFileLoaded = false;
@@ -896,8 +832,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 
 /**
- * This event catches mouse-cicks which occur when the user clicks a hyperlink
- * in the main editor-pane. First has to be checked, wether the clicked hyperlink
+ * This event catches mouse-clicks which occur when the user clicks a hyperlink
+ * in the main editor-pane. First has to be checked, whether the clicked hyperlink
  * was an web-url or links to a local file. Then the url or file will be opened
  *
  * @param evt
@@ -1091,7 +1027,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JPanel jPanelSearchBox;
     private javax.swing.JLabel jLabelLupe;
     private TaskProgressDialog taskDlg;
-    private NewEntryFrame newEntryDlg;
+    private EditorFrame editZettelDialog;
     private CImport importWindow;
     private CUpdateInfoBox updateInfoDlg;
     private CExport exportWindow;
@@ -1137,12 +1073,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         bookmarks = new Bookmarks(this, settings);
         bibtex = new BibTex(this, settings);
         // init all those classes that rely on parameters and could not be initialised
-        // befor the constructor is called...
+        // before the constructor is called...
         data = new Daten(this, settings, synonyms, bibtex);
         // init stream-logger, so we have the logging both to a file and a byte-array
         StreamHandler sHandler = new StreamHandler(baos_log, new SimpleFormatter());
         Constants.zknlogger.addHandler(sHandler);
-        // tell logger to log everthing
+        // tell logger to log everything
         Constants.zknlogger.setLevel(Level.ALL);
         // init file-logger
         FileHandler fh;
@@ -1162,7 +1098,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         } catch (IOException | SecurityException ex) {
             Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
         }
-        // befor components are drawn, set the default look and feel for this application
+        // before components are drawn, set the default look and feel for this application
         setDefaultLookAndFeel();
         // setup the local for the default actions cut/copy/paste
         Tools.initLocaleForDefaultActions(org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(ZettelkastenView.class, this));
@@ -1210,7 +1146,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // tell about fail
             Constants.zknlogger.log(Level.INFO, "No BibTex-File specified yet.");
         }
-        // tick checbox-menuitem
+        // tick checkbox menu item
         showHighlightKeywords.setSelected(settings.getHighlightKeywords());
         // tick checkbox whether keyword-synonyms should also be displayed in the
         // jtableKeywords or not...
@@ -1231,8 +1167,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
         // hide panels for live-search and is-follower-numbers
         jPanelLiveSearch.setVisible(false);
-        // since we have a splitpane in this tab, we don't need auto-hiding anymore
-        /* jPanelManLinks.setVisible(false); */
         // setup the jtree-component
         initTrees();
         // setup a table sorter and visible grids for the JTables
@@ -1247,16 +1181,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         initAcceleratorTable();
         // init the icons of the toolbar, whether they are small, medium or large
         initToolbarIcons(true);
-        // when we have a mac, we need an extra quit-hanlder...
+        // when we have a mac, we need an extra quit-handler...
         if (PlatformUtil.isMacOS()) {
             setupMacOSXApplicationListener();
         }
         // add an exit-listener, which offers saving etc. on
-        // exit, when we have unaved changes to the data file
+        // exit, when we have unsaved changes to the data file
         getApplication().addExitListener(new ConfirmExit());
         // add window-listener. somehow I lost the behaviour that clicking on the frame's
         // upper right cross on Windows OS, quits the application. Instead, it just makes
-        // the frame disapear, but does not quit, so it looks like the application was quit
+        // the frame disappear, but does not quit, so it looks like the application was quit
         // but asking for changes took place. So, we simply add a windows-listener additionally
         ZettelkastenView.super.getFrame().addWindowListener(this);
         ZettelkastenView.super.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -2609,7 +2543,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * should have accelerator keys. We don't use the GUI designer to set the
      * values, because the user should have the possibility to define own
      * accelerator keys, which are managed within the CAcceleratorKeys-class and
-     * loaed/saved via the CSettings-class
+     * loaded/saved via the CSettings-class
      */
     private void initAcceleratorTable() {
         // setting up the accelerator table. we have two possibilities: either assigning
@@ -3393,7 +3327,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         linkedtitlelist = null;
         linkedattachmentlist = null;
         linkedclusterlist = false;
-        // clear the jtress
+        // clear the jtrees
         clearTreesAndTables();
         displayedZettel = -1;
         // hide panels for live-search and is-follower-numbers
@@ -3408,27 +3342,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     private void setDefaultLookAndFeel() {
         try {
-            // System.setProperty("awt.useSystemAAFontSettings", "on");
-            try { // Try to scale default font size according to screen resolution.
-                Font fm = (Font) UIManager.getLookAndFeelDefaults().get("defaultFont");
-                // check if laf supports default font
-                if (fm != null) {
-                    UIManager.getLookAndFeelDefaults().put("defaultFont", fm.deriveFont(fm.getSize2D() * Toolkit.getDefaultToolkit().getScreenResolution() / 96));
-                }
-            } catch (HeadlessException e) {
+            // Try to scale default font size according to screen resolution.
+            Font fm = (Font) UIManager.getLookAndFeelDefaults().get("defaultFont");
+
+            // check if laf supports default font
+            if (fm != null) {
+                UIManager.getLookAndFeelDefaults().put("defaultFont", fm.deriveFont(fm.getSize2D() * Toolkit.getDefaultToolkit().getScreenResolution() / 96));
             }
-            // UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-            String laf = settings.getLookAndFeel();
-            if (laf.equals(Constants.seaGlassLookAndFeelClassName)) {
-                laf = "com.seaglasslookandfeel.SeaGlassLookAndFeel";
-            }
-            UIManager.setLookAndFeel(laf);
+
             // log info
             Constants.zknlogger.log(Level.INFO, "Using following LaF: {0}", settings.getLookAndFeel());
-            if (settings.isSeaGlass()) {
-                // ZettelkastenView.super.getFrame().getRootPane().putClientProperty("SeaGlass.UnifiedToolbarLook", Boolean.TRUE);
-                ZettelkastenView.super.getFrame().getRootPane().setBackground(ColorUtil.colorSeaGlassGray);
-            }
+
+            setLookAndFeel(settings.getLookAndFeel());
+
         } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
         }
@@ -5377,15 +5303,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
         // when we are editing an entry, check whether the to be deleted entry is currently edited.
         // if yes, cancel deletion
-        if (isEditModeActive && newEntryDlg != null) {
+        if (isEditModeActive && editZettelDialog != null) {
             // go through all entries that should be deleted
             for (int n : nrs) {
                 // if one of those to be deleted entries is currently being edited, cancel deletion
-                if (n == newEntryDlg.entryNumber) {
+                if (n == editZettelDialog.entryNumber) {
                     // show error message
                     JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("deleteNotPossibleMsg"), getResourceMap().getString("deleteNotPossibleTitle"), JOptionPane.PLAIN_MESSAGE);
                     // display edit-dialog
-                    newEntryDlg.toFront();
+                    editZettelDialog.toFront();
                     // leave method
                     return false;
                 }
@@ -7376,8 +7302,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             if (desktopDlg != null) {
                 desktopDlg.initToolbarIcons();
             }
-            if (newEntryDlg != null) {
-                newEntryDlg.initToolbarIcons();
+            if (editZettelDialog != null) {
+                editZettelDialog.initToolbarIcons();
             }
             // set background color
             jEditorPaneEntry.setBackground(new Color(Integer.parseInt(settings.getMainBackgroundColor(), 16)));
@@ -7883,7 +7809,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 if (Constants.TYPE_ZKN == importWindow.getImportType()) {
                     // get current date as default or initial value
                     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy");
-                    // get mainfile that should be importet
+                    // get mainfile that should be imported
                     File f = importWindow.getFilePath();
                     // get last modification date from file
                     long l = f.lastModified();
@@ -7948,8 +7874,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // i.e. the constructor is not called (because the if-statement above is not true)
         importWindow.dispose();
         importWindow = null;
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -8186,26 +8110,25 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     @Action
     public void newEntry() {
-        openEditWindow(false, -1, false, false, -1);
+        openEditor(false, -1, false, false, -1);
     }
 
     /**
-     * This method opens the window for editing existing entries. All the stuff
-     * like saving the data to the main-data-object is done within the class
-     * "CNewEntry.java"
+     * This method opens the window for editing existing entries. All the stuff like
+     * saving the data to the main-data-object is done within {@link EditorFrame}
      */
     @Action(enabledProperty = "entriesAvailable")
     public void editEntry() {
         if (data.isDeleted(displayedZettel)) {
-            openEditWindow(false, displayedZettel, false, true, -1);
+            openEditor(false, displayedZettel, false, true, -1);
         } else {
-            openEditWindow(true, displayedZettel, false, false, -1);
+            openEditor(true, displayedZettel, false, false, -1);
         }
     }
 
     /**
-     * This method opens the new-entry-window for editing new or existing
-     * entries. if an entry is currently being edited, the
+     * This method opens the new-entry-window for editing new or existing entries.
+     * If an entry is currently being edited, the
      * {@code isEditModeActive} flag is set. In this case, the edit-window is
      * only brought to the front. Else, a new window is created.
      *
@@ -8222,8 +8145,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * prev/next attributes of an entry. Use {@code -1} to add entry to the end
      * of entry order.
      */
-    public void openEditWindow(boolean isEditing, int entrynumber, boolean isLuhmann, boolean isDeleted, int insertAfterEntry) {
-        openEditWindow(isEditing, entrynumber, isLuhmann, isDeleted, insertAfterEntry, jEditorPaneEntry.getSelectedText());
+    public void openEditor(boolean isEditing, int entrynumber, boolean isLuhmann, boolean isDeleted, int insertAfterEntry) {
+        openEditor(isEditing, entrynumber, isLuhmann, isDeleted, insertAfterEntry, jEditorPaneEntry.getSelectedText());
     }
 
     /**
@@ -8246,64 +8169,59 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * of entry order.
      * @param String content
      */
-    private void openEditWindow(boolean isEditing, int entrynumber, boolean isLuhmann, boolean isDeleted, int insertAfterEntry, String content) {
+    private void openEditor(boolean isEditing, int entrynumber, boolean isLuhmann, boolean isDeleted, int insertAfterEntry, String content) {
         // check whether an entry is already being edited, i.e. the edit-window is already created
-        if (isEditModeActive) {
-            // if so, bring that window to the front
-            newEntryDlg.toFront();
-        } // else create a new window and display it.
-        else {
-            newEntryDlg = new NewEntryFrame(this, data, taskinfo, acceleratorKeys, settings, autoKorrekt, synonyms, steno, content, isEditing, entrynumber, isLuhmann, isDeleted);
-            newEntryDlg.setLocationRelativeTo(getFrame());
-            ZettelkastenApp.getApplication().show(newEntryDlg);
+        if (!isEditModeActive) {
+            editZettelDialog = new EditorFrame(this, data, taskinfo, acceleratorKeys, settings, autoKorrekt, synonyms, steno, content, isEditing, entrynumber, isLuhmann, isDeleted);
+            editZettelDialog.setLocationRelativeTo(getFrame());
+            ZettelkastenApp.getApplication().show(editZettelDialog);
             // edit window was initialized
             isEditModeActive = true;
             // if so, bring that window to the front
-            newEntryDlg.toFront();
         }
+        editZettelDialog.toFront();
     }
 
     /**
-     * This method is called from the CNewEntry-frame to indicate when an
-     * edit.action has been finished.
+     * This method is called by EditorFrame to indicate when an edit.action has ended.
      */
-    public void finishedEditing() {
+    public void EditingFinishedEvent() {
         // edit window was closed
         isEditModeActive = false;
         // if the user made changes to the datafile, e.g. adding new entries
         // update the display
-        if (newEntryDlg.isModified()) {
+        if (editZettelDialog.isModified()) {
             //
             // here we update modified entries in the desktop window
             //
             // when we had an edit-option...
-            if (newEntryDlg.isEditMode()
+            if (editZettelDialog.isEditMode()
                     && // and whether a current desktop-dialog is opened.
                     desktopDlg != null
                     && // check whether the changed entry was on the desktop...
-                    desktop.checkForDoubleEntry(desktop.getCurrentDesktopNr(), newEntryDlg.entryNumber)) // if yes, update desktop-view
+                    desktop.checkForDoubleEntry(desktop.getCurrentDesktopNr(), editZettelDialog.entryNumber)) // if yes, update desktop-view
             {
                 desktopDlg.updateEntriesAfterEditing();
             }
             //
-            // here we update modified entries in the searchresults window
+            // here we update modified entries in the search results window
             //
             // when we had an edit-option and whether a current search-dialog is opened.
-            if (newEntryDlg.isEditMode() && searchResultsDlg != null) {
+            if (editZettelDialog.isEditMode() && searchResultsDlg != null) {
                 // if yes, update desktop-view
                 searchResultsDlg.updateDisplayAfterEditing();
             }
-            // authorlist might be out of date now...
+            // author list might be out of date now...
             data.setAuthorlistUpToDate(false);
-            // and keywordlist might be out of date now as well...
+            // and keyword list might be out of date now as well...
             data.setKeywordlistUpToDate(false);
             // and titles might be out of date now as well...
             data.setTitlelistUpToDate(false);
-            // and attachment-list might be out of date now as well...
+            // and attachment list might be out of date now as well...
             data.setAttachmentlistUpToDate(false);
             // tell about success
             Constants.zknlogger.log(Level.INFO, "Entry save finished.");
-            // update the dislay...
+            // update the display...
             updateDisplay();
             // tell about success
             Constants.zknlogger.log(Level.INFO, "Display updated.");
@@ -8341,14 +8259,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // reset variable
         editEntryFromDesktop = false;
         editEntryFromSearchWindow = false;
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
      * This method starts a background thread that creates an automatic backup
      * of the current main data file. the file is saved to the same directory as
-     * the main data file, just changing the extenstion to ".zkb3".
+     * the main data file, just changing the extension to ".zkb3".
      * <br><br>
      * This method is called when we have changes that are not save, e.g. after
      * the methods {@link #newEntry() newEntry()} or
@@ -8381,7 +8297,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     /**
-     * This mehtod creates an additional backup of<br>
+     * This method creates an additional backup of<br>
      * - the data-file - the meta-data ({@code zettelkasten-data.zkd3}) when the
      * user quits the application. These files are saved to a certain directory
      * that is specified by the user.
@@ -8458,7 +8374,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
     /**
      * This method deletes the currently displayed zettel. usually this method
-     * is called from the delete-action from the toolbbar or menu, in contrary
+     * is called from the delete-action from the toolbar or menu, in contrary
      * to the delete-function from the jTableTitles which deletes selected
      * entries (see {@link #deleteEntry() deleteEntry()}).<br><br>
      * The entry is not being deleted completely. To keep the ordering and
@@ -8482,7 +8398,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     @Action(enabledProperty = "moreEntriesAvailable")
     public void addToDesktop() {
-        // add entyry to desktop
+        // add entry to desktop
         addToDesktop(new int[]{displayedZettel});
     }
 
@@ -8491,9 +8407,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * entry-numbers of the to be added entries have to be passed as
      * integer-array.<br><br>
      * This method needs to be public, since we want to access it from other
-     * frames, like for instance {@link CSearchResults}.
+     * frames, like for instance {@link SearchResultsFrame}.
      *
-     * @param entries an int-array conatining the entry-numbers of those entries
+     * @param entries an int-array containing the entry-numbers of those entries
      * that should be added to the desktop.
      */
     public void addToDesktop(int[] entries) {
@@ -8507,7 +8423,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
         // show desktop
         ZettelkastenApp.getApplication().show(desktopDlg);
-        // add entyry to desktop
+        // add entry to desktop
         desktopDlg.addEntries(entries);
         // enable window-menu-item, if we have loaded desktop data
         setDesktopAvailable(desktop.getCount() > 0);
@@ -8533,12 +8449,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * are indicated as "followers" (i.e.: sub-entries) of the current visible
      * entry. All the stuff like saving the data to the main-data-object is done
      * within the class "CNewEntry.java". We than additionally set the
-     * "luhmann"-tag here (see CDaten.java for more detaiks), which is used in
+     * "luhmann"-tag here (see CDaten.java for more details), which is used in
      * the "showLuhmann" method here.
      */
     @Action(enabledProperty = "entriesAvailable")
     public void insertEntry() {
-        openEditWindow(false, displayedZettel, true, false, displayedZettel);
+        openEditor(false, displayedZettel, true, false, displayedZettel);
     }
 
     /**
@@ -8549,7 +8465,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * there is any selection.<br><br>
      * All the stuff like saving the data to the main-data-object is done within
      * the class "CNewEntry.java". We than additionally set the "luhmann"-tag
-     * here (see CDaten.java for more detaiks), which is used in the
+     * here (see CDaten.java for more details), which is used in the
      * "showLuhmann" method here.<br><br>
      * Entries may be separated with commas, or also contain a "from-to" option.
      * example: "4,6,11-15,19"
@@ -8625,12 +8541,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * entry. The entry-numbers of the to be added entries have to be passed as
      * integer-array.<br><br>
      * This method needs to be public, since we want to access it from other
-     * frames, like for instance {@link CSearchResults}.
+     * frames, like for instance {@link SearchResultsFrame}.
      *
-     * @param entries an int-array conatining the entry-numbers of those entries
+     * @param entries an int-array containing the entry-numbers of those entries
      * that should be added as manual links
      * @return {@code true} if entries have been successfully added, false if an
-     * error occured
+     * error occurred
      */
     public boolean addToManLinks(int[] entries) {
         return addToManLinks(displayedZettel, entries);
@@ -8653,10 +8569,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      *
      * @param activatedEntry the entry-number where the manual links should be
      * added to...
-     * @param entries an int-array conatining the entry-numbers of those entries
+     * @param entries an int-array containing the entry-numbers of those entries
      * that should be added as manual links
      * @return {@code true} if entries have been successfully added, false if an
-     * error occured
+     * error occurred
      */
     private boolean addToManLinks(int activatedEntry, int[] entries) {
         if ((null == entries) || (entries.length < 1) || (-1 == entries[0])) {
@@ -8963,12 +8879,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // if original-file is *older* than backup-file, ask
             // the user what to do...
             if (modifiedOriginal < modifiedBackup) {
-                // ask the user whether he wants to load the original file,
+                // ask user whether they want to load the original file,
                 // the newer backup-file or cancel the complete load-operation...
                 int option = JOptionPane.showConfirmDialog(getFrame(), getResourceMap().getString("newerBackupMsg"), getResourceMap().getString("newerBackupTitle"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 // the user chose to cancel the operation, so return "null"
                 if (JOptionPane.CANCEL_OPTION == option || JOptionPane.CLOSED_OPTION == option /*User pressed cancel key*/) {
-                    // clear filepath, so the data-file won't be accidently overwritten...
+                    // clear filepath, so the data-file won't be accidentally overwritten...
                     settings.setFilePath(null);
                     // return result
                     return false;
@@ -9215,9 +9131,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             updateTitle();
             // update the display and toolbar icons
             updateDisplay();
-            // try to motivate garbage collector
-            System.gc();
-            // check whether saving was successfull.
+            // check whether saving was successful.
             // if not, show error-icon
             if (!data.isSaveOk()) {
                 showErrorIcon();
@@ -9813,11 +9727,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
     @Action
     public void showNewEntryWindow() {
-        if (newEntryDlg!=null) {
-            newEntryDlg.setAlwaysOnTop(true);
-            newEntryDlg.toFront();
-            newEntryDlg.requestFocus();
-            newEntryDlg.setAlwaysOnTop(false);
+        if (editZettelDialog !=null) {
+            editZettelDialog.setAlwaysOnTop(true);
+            editZettelDialog.toFront();
+            editZettelDialog.requestFocus();
+            editZettelDialog.setAlwaysOnTop(false);
         }
     }
 
@@ -10842,7 +10756,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         if (searchResultsDlg != null) {
             sft = searchResultsDlg.getSearchFrameTable();
         }
-        // svae table sorting
+        // save table sorting
         settings.setTableSorting(new javax.swing.JTable[]{
             jTableLinks, jTableManLinks, jTableKeywords,
             jTableAuthors, jTableTitles, jTableBookmarks,
@@ -14884,8 +14798,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // show message box
                 JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("cannotExitActiveEditMsg"),getResourceMap().getString("cannotExitActiveEditTitle"),JOptionPane.PLAIN_MESSAGE);
                 // bring edit window to front
-                if (newEntryDlg!=null) {
-                    newEntryDlg.toFront();
+                if (editZettelDialog !=null) {
+                    editZettelDialog.toFront();
                 }
                 // and don't exit...
                 return false;
@@ -14912,6 +14826,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     baos_log.close();
                 }
             } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
     }
@@ -14952,7 +14867,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 showEntryFromAttachments();
             }
             // if the user selects an entry from the table, i.e. a referred link to another entry,
-            // highlight the jListEntryKeywors, which keywords are responsible for the links to
+            // highlight the jListEntryKeywords, which keywords are responsible for the links to
             // the other entry
             else if (jTableLinks==table) {
                 showRelatedKeywords();

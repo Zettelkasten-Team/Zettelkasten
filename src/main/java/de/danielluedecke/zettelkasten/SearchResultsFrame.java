@@ -1310,7 +1310,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
             // remember that entry editing came from search window
             mainframe.editEntryFromSearchWindow = true;
             // open edit window
-            mainframe.openEditWindow(true,Integer.parseInt(jTableResults.getValueAt(row, 0).toString()),false,false,-1);
+            mainframe.openEditor(true,Integer.parseInt(jTableResults.getValueAt(row, 0).toString()),false,false,-1);
         }
     }
 
