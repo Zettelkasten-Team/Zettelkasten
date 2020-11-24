@@ -8187,7 +8187,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     /**
      * This method is called by EditorFrame to indicate when an edit.action has ended.
      */
-    public void finishedEditing() {
+    public void EditingFinishedEvent() {
         // edit window was closed
         isEditModeActive = false;
         // if the user made changes to the datafile, e.g. adding new entries
@@ -8206,20 +8206,20 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 desktopDlg.updateEntriesAfterEditing();
             }
             //
-            // here we update modified entries in the searchresults window
+            // here we update modified entries in the search results window
             //
             // when we had an edit-option and whether a current search-dialog is opened.
             if (editZettelDialog.isEditMode() && searchResultsDlg != null) {
                 // if yes, update desktop-view
                 searchResultsDlg.updateDisplayAfterEditing();
             }
-            // authorlist might be out of date now...
+            // author list might be out of date now...
             data.setAuthorlistUpToDate(false);
-            // and keywordlist might be out of date now as well...
+            // and keyword list might be out of date now as well...
             data.setKeywordlistUpToDate(false);
             // and titles might be out of date now as well...
             data.setTitlelistUpToDate(false);
-            // and attachment-list might be out of date now as well...
+            // and attachment list might be out of date now as well...
             data.setAttachmentlistUpToDate(false);
             // tell about success
             Constants.zknlogger.log(Level.INFO, "Entry save finished.");
