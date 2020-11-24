@@ -208,13 +208,13 @@ public class CImportBibTex extends javax.swing.JDialog {
             // and set it as initial value to the textfield
             if (cuf != null && cuf.exists()) {
                 jTextFieldBibtexFilepath.setText(cuf.toString());
-                fillBibtexTable();
+                fillBibTeXTable();
             } else if (luf != null && luf.exists()) {
                 jTextFieldBibtexFilepath.setText(luf.toString());
-                fillBibtexTable();
+                fillBibTeXTable();
             }
         } else {
-            fillBibtexTable();
+            fillBibTeXTable();
         }
         jButtonRefresh.setEnabled(false);
     }
@@ -325,14 +325,14 @@ public class CImportBibTex extends javax.swing.JDialog {
                     // change cite-style-setting
                     bibtexObj.setCiteStyle(jComboBoxCiteStyle.getSelectedIndex());
                     // if we already have any attached BibTeX file, update table
-                    fillBibtexTable();
+                    fillBibTeXTable();
                 }
             }
         });
         jComboBoxShowBibTex.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fillBibtexTable();
+                fillBibTeXTable();
             }
         });
         SelectionListener listener = new SelectionListener();
@@ -355,7 +355,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         jRadioButtonSourceDB.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fillBibtexTable();
+                fillBibTeXTable();
                 settingsObj.setLastUsedBibtexImportSource(BIBTEX_SOURCE_DB);
             }
         });
@@ -364,7 +364,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         jRadioButtonSourceFile.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fillBibtexTable();
+                fillBibTeXTable();
                 settingsObj.setLastUsedBibtexImportSource(BIBTEX_SOURCE_FILE);
             }
         });
@@ -447,7 +447,7 @@ public class CImportBibTex extends javax.swing.JDialog {
             if (linkedtablelist != null && linkedtablelist.size() > 0) {
                 refreshList();
             } else {
-                fillBibtexTable();
+                fillBibTeXTable();
             }
         }
     }
@@ -493,7 +493,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         jButtonRefresh.setEnabled(true);
     }
 
-    private void fillBibtexTable() {
+    private void fillBibTeXTable() {
         if (jRadioButtonSourceFile.isSelected()) {
             // retrieve currently attached file
             File currentlyattachedfile = bibtexObj.getCurrentlyAttachedFile();
@@ -972,7 +972,7 @@ public class CImportBibTex extends javax.swing.JDialog {
             // set new BibTeX filepath
             bibtexObj.setFilePath(selectedfile);
             bibtexObj.detachCurrentlyAttachedFile();
-            fillBibtexTable();
+            fillBibTeXTable();
         }
     }
 
