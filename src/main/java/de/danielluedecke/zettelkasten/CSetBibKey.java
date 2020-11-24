@@ -774,7 +774,7 @@ public class CSetBibKey extends javax.swing.JDialog {
         jTextFieldFilterTable.setToolTipText(resourceMap.getString("jTextFieldFilterTable.toolTipText")); // NOI18N
         jTextFieldFilterTable.setName("jTextFieldFilterTable"); // NOI18N
 
-        jComboBoxShowBibTex.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nur neue BibTex-Einträge anzeigen", "Nur vorhandene BibTex-Einträge anzeigen", "Alle BibTex-Einträge anzeigen" }));
+        jComboBoxShowBibTex.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nur neue BibTeX-Einträge anzeigen", "Nur vorhandene BibTeX-Einträge anzeigen", "Alle BibTeX-Einträge anzeigen" }));
         jComboBoxShowBibTex.setName("jComboBoxShowBibTex"); // NOI18N
 
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
