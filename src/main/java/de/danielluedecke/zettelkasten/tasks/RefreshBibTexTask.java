@@ -38,8 +38,9 @@ import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.TasksData;
+
+import javax.swing.*;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 /**
  *
