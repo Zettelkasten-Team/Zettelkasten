@@ -634,34 +634,8 @@ public class CImportBibTex extends javax.swing.JDialog {
                                 // if the user also wants to add imported literature as entries, do
                                 // this here. we then have to check whether the imported BibTeX entry
                                 // has an abstract or annotation, and if so, we use this as content for
-                                // the new entry
-                                if (jCheckBoxAddAsEntry.isSelected()) {
-                                    // init variable
-                                    String[] keywords = null;
-                                    // if user also wants keywords, retrieve them now
-                                    if (jCheckBoxImportKeywords.isSelected()) {
-                                        keywords = (jRadioButtonSourceDB.isSelected()) ? bibtexObj.getKeywords(bibkey.toString()) : bibtexObj.getKeywordsFromAttachedFile(bibkey.toString());
-                                    }
-                                    // retrieve abstract (i.e. content for entry)
-                                    String content = (jRadioButtonSourceDB.isSelected()) ? bibtexObj.getAbstract(bibkey.toString()) : bibtexObj.getAbstractFromAttachedFile(bibkey.toString());
-                                    // only create content/new entry, if any abstract was found...
-                                    if (content != null && !content.isEmpty()) {
-                                        // finally, add entry to dataset
-                                        dataObj.addEntryFromBibTex("", content, new String[]{au.toString()}, keywords, Tools.getTimeStamp());
-                                        // and increase entry counter
-                                        newEntries++;
-                                    } // if nothing found, add at least the keywords
-                                    else if (keywords != null && keywords.length > 0) {
-                                        // add keywords to database
-                                        dataObj.addKeywordsToDatabase(keywords);
-                                    }
-                                } else if (jCheckBoxImportKeywords.isSelected()) {
-                                    String[] keywords = (jRadioButtonSourceDB.isSelected()) ? bibtexObj.getKeywords(bibkey.toString()) : bibtexObj.getKeywordsFromAttachedFile(bibkey.toString());
-                                    if (keywords != null && keywords.length > 0) {
-                                        // add keywords to database
-                                        dataObj.addKeywordsToDatabase(keywords);
-                                    }
-                                }
+                                // the new Zettel
+                                addAsZettel(au, bibkey);
                             }
                         }
                     } // here we have an already existing bibkey and update the author-values...
@@ -797,6 +771,36 @@ public class CImportBibTex extends javax.swing.JDialog {
                 setProgress(cnt, 0, rows.length);
             }
             return null;
+        }
+
+        private void addAsZettel(Object au, Object bibkey) {
+            if (jCheckBoxAddAsEntry.isSelected()) {
+                // init variable
+                String[] keywords = null;
+                // if user also wants keywords, retrieve them now
+                if (jCheckBoxImportKeywords.isSelected()) {
+                    keywords = (jRadioButtonSourceDB.isSelected()) ? bibtexObj.getKeywords(bibkey.toString()) : bibtexObj.getKeywordsFromAttachedFile(bibkey.toString());
+                }
+                // retrieve abstract (i.e. content for entry)
+                String content = (jRadioButtonSourceDB.isSelected()) ? bibtexObj.getAbstract(bibkey.toString()) : bibtexObj.getAbstractFromAttachedFile(bibkey.toString());
+                // only create content/new entry, if any abstract was found...
+                if (content != null && !content.isEmpty()) {
+                    // finally, add entry to dataset
+                    dataObj.addEntryFromBibTex("", content, new String[]{au.toString()}, keywords, Tools.getTimeStamp());
+                    // and increase entry counter
+                    newEntries++;
+                } // if nothing found, add at least the keywords
+                else if (keywords != null && keywords.length > 0) {
+                    // add keywords to database
+                    dataObj.addKeywordsToDatabase(keywords);
+                }
+            } else if (jCheckBoxImportKeywords.isSelected()) {
+                String[] keywords = (jRadioButtonSourceDB.isSelected()) ? bibtexObj.getKeywords(bibkey.toString()) : bibtexObj.getKeywordsFromAttachedFile(bibkey.toString());
+                if (keywords != null && keywords.length > 0) {
+                    // add keywords to database
+                    dataObj.addKeywordsToDatabase(keywords);
+                }
+            }
         }
 
         @Override
