@@ -33,13 +33,22 @@
 package de.danielluedecke.zettelkasten;
 
 import bibtex.dom.BibtexEntry;
-import de.danielluedecke.zettelkasten.util.*;
-import de.danielluedecke.zettelkasten.util.misc.InitStatusbarForTasks;
-import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.database.Daten;
+import de.danielluedecke.zettelkasten.database.Settings;
+import de.danielluedecke.zettelkasten.util.*;
 import de.danielluedecke.zettelkasten.util.misc.Comparer;
-import java.awt.Font;
+import de.danielluedecke.zettelkasten.util.misc.InitStatusbarForTasks;
+import org.jdesktop.application.Action;
+import org.jdesktop.application.*;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -49,23 +58,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.logging.Level;
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
-import org.jdesktop.application.Action;
-import org.jdesktop.application.Application;
-import org.jdesktop.application.ApplicationContext;
-import org.jdesktop.application.Task;
-import org.jdesktop.application.TaskMonitor;
-import org.jdesktop.application.TaskService;
 
 /**
  *
@@ -610,7 +602,7 @@ public class CImportBibTex extends javax.swing.JDialog {
             for (int cnt = 0; cnt < rows.length; cnt++) {
                 // retrieve author from table-selection
                 Object au = jTableBibEntries.getValueAt(rows[cnt], 1);
-                // now to the bibey
+                // now to the bibkey
                 Object bibkey = jTableBibEntries.getValueAt(rows[cnt], 0);
                 // if we have any author, go on...
                 if (au != null && !au.toString().isEmpty()) {
@@ -639,7 +631,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                             if (bibkey != null) {
                                 // and add it to the recently added author-value
                                 dataObj.setAuthorBibKey(pos, bibkey.toString());
-                                // if the user also wants to add imported literatur as entries, do
+                                // if the user also wants to add imported literature as entries, do
                                 // this here. we then have to check whether the imported bibtex-entry
                                 // has an abstract or annotation, and if so, we use this as content for
                                 // the new entry
@@ -678,7 +670,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                     else {
                         // set new author value, i.e. overwrite existing author with new value
                         dataObj.setAuthor(bibkeypos, au.toString());
-                        // if the user also wants to *update* imported literatur as entries, we do
+                        // if the user also wants to *update* imported literature as entries, we do
                         // this here. we then have to check whether the imported bibtex-entry
                         // has an abstract or annotation, and if so, we use this as content for
                         // the new entry or update an existing entry with this content
@@ -839,8 +831,6 @@ public class CImportBibTex extends javax.swing.JDialog {
             // close window
             setVisible(false);
             dispose();
-            // call gc
-            System.gc();
         }
     }
 
@@ -946,7 +936,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         protected void finished() {
             // get iterator for all rowdata
             Iterator<String[]> it = rowdata.iterator();
-            // create tablemodel for the table data, which is not editable
+            // create table model for the table data, which is not editable
             DefaultTableModel tm = (DefaultTableModel) jTableBibEntries.getModel();
             tm.setRowCount(0);
             // and iterate all loaded bibtex-entries
@@ -993,8 +983,6 @@ public class CImportBibTex extends javax.swing.JDialog {
     public void cancel() {
         dispose();
         setVisible(false);
-        // call gc
-        System.gc();
     }
 
     /**
