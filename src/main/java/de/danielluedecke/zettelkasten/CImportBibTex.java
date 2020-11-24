@@ -230,7 +230,7 @@ public class CImportBibTex extends javax.swing.JDialog {
     private void initTable() {
         // create new table sorter
         TableRowSorter<TableModel> sorter = new TableRowSorter<>();
-        // tell tgis jtable that it has an own sorter
+        // tell this jtable that it has an own sorter
         jTableBibEntries.setRowSorter(sorter);
         // and tell the sorter, which table model to sort.
         sorter.setModel((DefaultTableModel) jTableBibEntries.getModel());
@@ -243,18 +243,18 @@ public class CImportBibTex extends javax.swing.JDialog {
         }
         // noe header re-ordering
         jTableBibEntries.getTableHeader().setReorderingAllowed(false);
-        // apply grid-settings and cellspacing
+        // apply grid-settings and cell spacing
         jTableBibEntries.setGridColor(settingsObj.getTableGridColor());
         jTableBibEntries.setShowHorizontalLines(settingsObj.getShowGridHorizontal());
         jTableBibEntries.setShowVerticalLines(settingsObj.getShowGridVertical());
         jTableBibEntries.setIntercellSpacing(settingsObj.getCellSpacing());
-        // get the default fontsize for tables and lists
+        // get the default font size for tables and lists
         int defaultsize = settingsObj.getTableFontSize();
-        // only set new fonts, when fontsize differs from the initial value
+        // only set new fonts, when font size differs from the initial value
         if (defaultsize > 0) {
             // get current font
             Font f = jTableBibEntries.getFont();
-            // create new font, add fontsize-value
+            // create new font, add font size value
             f = new Font(f.getName(), f.getStyle(), f.getSize() + defaultsize);
             // set new font
             jTableBibEntries.setFont(f);
@@ -455,7 +455,7 @@ public class CImportBibTex extends javax.swing.JDialog {
     private void filterList(boolean regEx) {
         // when we filter the table and want to restore it, we don't need to run the
         // time-consuming task that creates the author-list and related author-frequencies.
-        // instead, we simply copy the values from the linkedlist to the table-model, which is
+        // instead, we simply copy the values from the linked list to the table-model, which is
         // much faster. but therefore we have to apply all changes to the filtered-table
         // (like adding/changing values in a filtered list) to the linked list as well.
 
@@ -552,7 +552,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         // abstracts, where existing entries will be replaced by new BibTeX updates.
         // in this case, the combo box's selected index must be greater than 0
         if (jComboBoxShowBibTex.getSelectedIndex() > 0) {
-            // create a JOptionPane with repalce/new/concat/cancel options
+            // create a JOptionPane with replace/new/concat/cancel options
             updateOption = JOptionPane.showOptionDialog(this,
                     resourceMap.getString("msgConfirmUpdateEntry"),
                     resourceMap.getString("msgConfirmUpdateEntryTitle"),

@@ -124,7 +124,7 @@ public class ZettelkastenApp extends SingleFrameApplication {
         // check parameters for filepath of loaded file
         for (String par : params) {
             // check whether one of the params is a path-description to
-            // a zettelkasten-data-file. in this case, we would find the extension ".zkn3".
+            // a Zettelkasten data file. in this case, we would find the extension ".zkn3".
             if (par.toLowerCase().endsWith(Constants.ZKN_FILEEXTENSION)) {
                 // create a dummy-file out of the parameter to check whether file exists or not
                 File dummyfile = new File(par);

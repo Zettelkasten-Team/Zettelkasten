@@ -1075,7 +1075,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // init all those classes that rely on parameters and could not be initialised
         // before the constructor is called...
         data = new Daten(this, settings, synonyms, bibtex);
-        // init stream-logger, so we have the logging both to a file and a byte-array
+        // init stream logger, so we have the logging both to a file and a byte array
         StreamHandler sHandler = new StreamHandler(baos_log, new SimpleFormatter());
         Constants.zknlogger.addHandler(sHandler);
         // tell logger to log everything
@@ -1091,7 +1091,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     3,
                     // and no appending...
                     false);
-            // add filehandler to our global logger
+            // add file handler to our global logger
             Constants.zknlogger.addHandler(fh);
             // and use a simple formatting, so the log-file will be readable
             fh.setFormatter(new SimpleFormatter());
@@ -1159,7 +1159,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // the two checkboxes above, to avoid triggering unnecessary actions.
         // furthermore, we init the selection listeners for the tables and lists here
         initListeners();
-        // init the searchbox for the toolbar
+        // init the search box for the toolbar
         createToolbarSearchbox();
         // if we have mac osx aqua-look, apply leopard style
         if (settings.isSeaGlass()) {
