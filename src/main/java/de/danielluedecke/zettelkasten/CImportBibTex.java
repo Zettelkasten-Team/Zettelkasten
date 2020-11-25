@@ -68,15 +68,15 @@ public class CImportBibTex extends javax.swing.JDialog {
     /**
      *
      */
-    private Settings settingsObj;
+    private final Settings settingsObj;
     /**
      *
      */
-    private BibTeX bibtexObj;
+    private final BibTeX bibtexObj;
     /**
      *
      */
-    private Daten dataObj;
+    private final Daten dataObj;
     /**
      * When the user wants to re-import BibTeX entries, abstracts/annotations of BibTeX entries that
      * create a new entry can be a) added as new entry, b) replace an existing entry that already
@@ -97,7 +97,7 @@ public class CImportBibTex extends javax.swing.JDialog {
     public static final int BIBTEX_SOURCE_FILE = 1;
     public static final int BIBTEX_SOURCE_DB = 2;
 
-    private ZettelkastenView mainframe;
+    private final ZettelkastenView mainframe;
 
     /**
      * This array-list contains all entry-numbers of those entries that have been modified during
@@ -141,7 +141,7 @@ public class CImportBibTex extends javax.swing.JDialog {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap
+    private final org.jdesktop.application.ResourceMap resourceMap
             = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
             getContext().getResourceMap(CImportBibTex.class);
 
@@ -233,7 +233,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         // tell this jtable that it has an own sorter
         jTableBibEntries.setRowSorter(sorter);
         // and tell the sorter, which table model to sort.
-        sorter.setModel((DefaultTableModel) jTableBibEntries.getModel());
+        sorter.setModel(jTableBibEntries.getModel());
         // in this table, the first column needs a custom comparator.
         try {
             sorter.setComparator(0, new Comparer());
@@ -369,7 +369,7 @@ public class CImportBibTex extends javax.swing.JDialog {
             }
         });
         // create action which should be executed when the user presses
-        // the enter-key
+        // the enter key
         AbstractAction a_enter = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -378,7 +378,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                 }
             }
         };
-        // put action to the textfield's actionmaps
+        // put action to the textfield's action maps
         jTextFieldFilterTable.getActionMap().put("EnterKeyPressed", a_enter);
         // associate enter-keystroke with that action
         KeyStroke ks = KeyStroke.getKeyStroke("ENTER");
@@ -393,7 +393,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                 }
             }
         };
-        // put action to the textfield's actionmaps
+        // put action to the textfield's action maps
         jTextFieldFilterTable.getActionMap().put("RegExEnterKeyPressed", a_regex_enter);
         // associate enter-keystroke with that action
         ks = KeyStroke.getKeyStroke("alt ENTER");
@@ -542,7 +542,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         jRadioButtonSourceFile.setEnabled(!block);
         // refresh button is either blockes (disabled) or enabled whether
         // we have any content in linkedtablelist.
-        jButtonRefresh.setEnabled((block) ? false : linkedtablelist != null);
+        jButtonRefresh.setEnabled((!block) && linkedtablelist != null);
     }
 
     @Action
@@ -1091,10 +1091,10 @@ public class CImportBibTex extends javax.swing.JDialog {
                 "BibKey", "Literaturangabe"
             }
         ) {
-            Class[] types = new Class [] {
+            final Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class
             };
-            boolean[] canEdit = new boolean [] {
+            final boolean[] canEdit = new boolean [] {
                 false, false
             };
 
