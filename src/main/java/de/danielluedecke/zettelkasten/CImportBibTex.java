@@ -635,7 +635,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                                 // this here. we then have to check whether the imported BibTeX entry
                                 // has an abstract or annotation, and if so, we use this as content for
                                 // the new Zettel
-                                addAsZettel(au, bibkey);
+                                createZettelFromBibTeXAbstract(au, bibkey);
                             }
                         }
                     } // here we have an already existing bibkey and update the author-values...
@@ -773,7 +773,7 @@ public class CImportBibTex extends javax.swing.JDialog {
             return null;
         }
 
-        private void addAsZettel(Object au, Object bibkey) {
+        private void createZettelFromBibTeXAbstract(Object au, Object bibkey) {
             if (jCheckBoxAddAsEntry.isSelected()) {
                 // init variable
                 String[] keywords = null;
