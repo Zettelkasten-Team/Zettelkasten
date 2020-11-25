@@ -894,7 +894,8 @@ public class CImportBibTex extends javax.swing.JDialog {
             int count = (jRadioButtonSourceFile.isSelected()) ? bibtexObj.getAttachedFileCount() : bibtexObj.getCount();
             // iterate all entries of the BibTeX file
             for (int cnt = 0; cnt < count; cnt++) {
-                String bibkey, au;
+                String bibkey;
+                String au;
                 // check which BibTeX data source we need
                 if (jRadioButtonSourceFile.isSelected()) {
                     // ...retrieve bibkey
