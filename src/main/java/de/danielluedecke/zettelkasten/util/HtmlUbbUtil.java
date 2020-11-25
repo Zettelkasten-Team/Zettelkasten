@@ -33,7 +33,7 @@
 package de.danielluedecke.zettelkasten.util;
 
 import de.danielluedecke.zettelkasten.ZettelkastenApp;
-import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.util.misc.Comparer;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.Settings;
@@ -559,7 +559,7 @@ public class HtmlUbbUtil {
      */
     public static String getEntryAsHTML(Settings settings,
             Daten dataObj,
-            BibTex bibtexObj,
+            BibTeX bibtexObj,
             int entrynr,
             String[] segmentKeywords,
             int sourceframe) {
@@ -891,7 +891,7 @@ public class HtmlUbbUtil {
      * @param createHTMLFootnotes
      * @return a converted string with html-tags instead of ubb-tags
      */
-    public static String convertUbbToHtml(Settings settings, Daten dataObj, BibTex bibtexObj, String c, int sourceframe, boolean isExport, boolean createHTMLFootnotes) {
+    public static String convertUbbToHtml(Settings settings, Daten dataObj, BibTeX bibtexObj, String c, int sourceframe, boolean isExport, boolean createHTMLFootnotes) {
         // create new string
         String dummy = replaceUbbToHtml(c, settings.getMarkdownActivated(), (Constants.FRAME_DESKTOP == sourceframe), isExport);
         // add title attributes to manual links
@@ -996,11 +996,11 @@ public class HtmlUbbUtil {
      * @param content
      * @return 
      */
-    public static String convertFootnotesToPlain(Daten data, BibTex bibtexObj, Settings settings, String content) {
+    public static String convertFootnotesToPlain(Daten data, BibTeX bibtexObj, Settings settings, String content) {
         return convertFootnotes(data, bibtexObj, settings, content, false, false);
     }
     
-    private static String convertFootnotes(Daten data, BibTex bibtexObj, Settings settings, String content, boolean isLatex, boolean asHtml) {
+    private static String convertFootnotes(Daten data, BibTeX bibtexObj, Settings settings, String content, boolean isLatex, boolean asHtml) {
         if (isLatex) {
             content = content.replaceAll("\\[fn ([^\\[]*)\\]", "(FN $1)");
         } else {
@@ -2023,7 +2023,7 @@ public class HtmlUbbUtil {
      * @param removeNonStandardTags
      * @return a converted string with html-tags instead of ubb-tags
      */
-    public static String convertUbbToTex(Settings settings, Daten dataObj, BibTex bibtexObj, String c, boolean useFootnoteRef, boolean createFormTag, boolean isDesktop, boolean removeNonStandardTags) {
+    public static String convertUbbToTex(Settings settings, Daten dataObj, BibTeX bibtexObj, String c, boolean useFootnoteRef, boolean createFormTag, boolean isDesktop, boolean removeNonStandardTags) {
         // here we create a path to our image folder. this is needed for
         // converting image tags, since the image ae copied to an own local folder,
         // but the source-information only stores the file name, not the path information.
@@ -2778,7 +2778,7 @@ public class HtmlUbbUtil {
      * @param createHtmlFootnotes
      * @return a string with the html-page-content
      */
-    public static String getHtmlContentForDesktop(Daten dataObj, BibTex bibtexObj, Settings settings, int nr, boolean isHeadingVisible, boolean isEntryNumberVisible, boolean isExport, boolean createHtmlFootnotes) {
+    public static String getHtmlContentForDesktop(Daten dataObj, BibTeX bibtexObj, Settings settings, int nr, boolean isHeadingVisible, boolean isEntryNumberVisible, boolean isExport, boolean createHtmlFootnotes) {
         // get the zettelcontent
         return getHtmlContentForDesktop(dataObj,
                 bibtexObj,
@@ -2856,7 +2856,7 @@ public class HtmlUbbUtil {
      * @param createHtmlFootnotes
      * @return a string with the html-page-content
      */
-    public static String getHtmlContentForDesktop(Daten dataObj, BibTex bibtexObj, Settings settings, String zettelcontent, int nr, boolean isHeadingVisible, boolean isEntryNumberVisible, boolean isExport, boolean createHtmlFootnotes) {
+    public static String getHtmlContentForDesktop(Daten dataObj, BibTeX bibtexObj, Settings settings, String zettelcontent, int nr, boolean isHeadingVisible, boolean isEntryNumberVisible, boolean isExport, boolean createHtmlFootnotes) {
         // create an empty string buffer. this buffer contains the html-string
         // which is being display in the desktop window's main textfield
         StringBuilder retval = new StringBuilder("");

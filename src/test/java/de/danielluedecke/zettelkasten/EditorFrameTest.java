@@ -48,7 +48,7 @@ public class EditorFrameTest extends SwingTestCase {
                 stenoData,
                 tasksData);
 
-        BibTex bibTex = new BibTex(zknFrame, s);
+        BibTeX bibTex = new BibTeX(zknFrame, s);
 
         this.emptyFrame = new EditorFrame(zknFrame,
                 new Daten(zknFrame, s, synonyms, bibTex),
@@ -64,9 +64,9 @@ public class EditorFrameTest extends SwingTestCase {
                 false,
                 false);
 
-       getTestFrame().getContentPane().add(this.emptyFrame.getRootPane(), BorderLayout.CENTER);
-       getTestFrame().pack();
-       getTestFrame().setVisible(true);
+        getTestFrame().getContentPane().add(this.emptyFrame.getRootPane(), BorderLayout.CENTER);
+        getTestFrame().pack();
+        getTestFrame().setVisible(true);
 
     }
 

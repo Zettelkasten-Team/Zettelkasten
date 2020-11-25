@@ -32,9 +32,9 @@
  */
 package de.danielluedecke.zettelkasten;
 
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.*;
-import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.util.misc.Comparer;
 import de.danielluedecke.zettelkasten.database.Daten;
 
@@ -68,7 +68,7 @@ import org.jdesktop.application.Action;
  */
 public class CSetBibKey extends javax.swing.JDialog {
 
-    private BibTex bibtexObj;
+    private BibTeX bibtexObj;
     private Settings settingsObj;
     private Daten dataObj;
 
@@ -112,7 +112,7 @@ public class CSetBibKey extends javax.swing.JDialog {
      * import/export of bibtex-files
      * @param s a reference to the {@code CSettings}-class
      */
-    public CSetBibKey(java.awt.Frame parent, ZettelkastenView mf, Daten d, BibTex bt, Settings s) {
+    public CSetBibKey(java.awt.Frame parent, ZettelkastenView mf, Daten d, BibTeX bt, Settings s) {
         super(parent);
         // copy parameters to our global variables
         bibtexObj = bt;

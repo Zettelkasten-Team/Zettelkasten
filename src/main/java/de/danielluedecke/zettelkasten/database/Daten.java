@@ -79,7 +79,7 @@ public class Daten {
     /**
      * A refrence to the settings class
      */
-    private final BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     /**
      * A refrence to the synonyms class
      */
@@ -383,7 +383,7 @@ public class Daten {
      * @param syn
      * @param bib
      */
-    public Daten(ZettelkastenView zkn, Settings s, Synonyms syn, BibTex bib) {
+    public Daten(ZettelkastenView zkn, Settings s, Synonyms syn, BibTeX bib) {
         // initiate the JDOM files and all other data, thus
         // creating an empty "Zettelkasten"
         zknframe = zkn;
@@ -5778,9 +5778,9 @@ public class Daten {
 
     /**
      * This method returns the bibkey-string of an author-value. the
-     * bibkey-string referres to a BibTex-entry in a given BibTex-file, so the
+     * bibkey-string referres to a BibTeX-entry in a given BibTeX-file, so the
      * "formatted" author of the author-value saved in our authorXml-file can be
-     * retrieved via a BibTex-File.<br><br>
+     * retrieved via a BibTeX-File.<br><br>
      * This attribute is optional, so {@code null} might be returned.
      *
      * @param pos the index number of the author which you are looking for.
@@ -5796,9 +5796,9 @@ public class Daten {
 
     /**
      * This method returns the bibkey-string of an author-value. the
-     * bibkey-string referres to a BibTex-entry in a given BibTex-file, so the
+     * bibkey-string referres to a BibTeX-entry in a given BibTeX-file, so the
      * "formatted" author of the author-value saved in our authorXml-file can be
-     * retrieved via a BibTex-File.<br><br>
+     * retrieved via a BibTeX-File.<br><br>
      * This attribute is optional, so {@code null} might be returned.
      *
      * @param au the author-value as string
@@ -5812,9 +5812,9 @@ public class Daten {
 
     /**
      * This method returns the bibkey-string of an author-value. the
-     * bibkey-string referres to a BibTex-entry in a given BibTex-file, so the
+     * bibkey-string referres to a BibTeX-entry in a given BibTeX-file, so the
      * "formatted" author of the author-value saved in our authorXml-file can be
-     * retrieved via a BibTex-File.<br><br>
+     * retrieved via a BibTeX-File.<br><br>
      * This attribute is optional, so {@code null} might be returned.<br><br>
      * This method does the work for both
      * {@link #getAuthorBibKey(java.lang.String) getAuthorBibKey(String)} and
@@ -5844,12 +5844,12 @@ public class Daten {
 
     /**
      * This method sets the bibkey-string of an author-value. the bibkey-string
-     * referres to a BibTex-entry in a given BibTex-file, so the "formatted"
+     * referres to a BibTeX-entry in a given BibTeX-file, so the "formatted"
      * author of the author-value saved in our authorXml-file can be retrieved
-     * via a BibTex-File.
+     * via a BibTeX-File.
      *
      * @param pos the index number of the author which you are looking for
-     * @param key the bibkey of the related BibTex-entry.
+     * @param key the bibkey of the related BibTeX-entry.
      * @return {@code true} if bibkey-attribute was successfully changed,
      * {@code false} if an error occured
      */
@@ -5859,13 +5859,13 @@ public class Daten {
 
     /**
      * This method sets the bibkey-string of an author-value. the bibkey-string
-     * referres to a BibTex-entry in a given BibTex-file, so the "formatted"
+     * referres to a BibTeX-entry in a given BibTeX-file, so the "formatted"
      * author of the author-value saved in our authorXml-file can be retrieved
-     * via a BibTex-File.
+     * via a BibTeX-File.
      *
      * @param au the author-value as string of that author where the
      * bibkey-value should be changed
-     * @param key the bibkey of the related BibTex-entry.
+     * @param key the bibkey of the related BibTeX-entry.
      * @return {@code true} if bibkey-attribute was successfully changed,
      * {@code false} if an error occured
      */
@@ -5885,16 +5885,16 @@ public class Daten {
 
     /**
      * This method sets the bibkey-string of an author-value. the bibkey-string
-     * referres to a BibTex-entry in a given BibTex-file, so the "formatted"
+     * referres to a BibTeX-entry in a given BibTeX-file, so the "formatted"
      * author of the author-value saved in our authorXml-file can be retrieved
-     * via a BibTex-File.<br><br>
+     * via a BibTeX-File.<br><br>
      * This method does the work for both
      * {@link #setAuthorBibKey(java.lang.String, java.lang.String) setAuthorBibKey(String, String)}
      * and
      * {@link #setAuthorBibKey(int, java.lang.String) setAuthorBibKey(int, String)}.
      *
      * @param pos the index number of the author which you are looking for
-     * @param key the bibkey of the related BibTex-entry.
+     * @param key the bibkey of the related BibTeX-entry.
      * @return {@code true} if bibkey-attribute was successfully changed,
      * {@code false} if an error occured
      */

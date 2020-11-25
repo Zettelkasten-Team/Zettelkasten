@@ -35,7 +35,7 @@ package de.danielluedecke.zettelkasten.tasks.export;
 import bibtex.dom.BibtexEntry;
 import de.danielluedecke.zettelkasten.CTexExportSettings;
 import de.danielluedecke.zettelkasten.ZettelkastenApp;
-import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.misc.Comparer;
@@ -310,7 +310,7 @@ public class ExportTools {
      * @param filepath
      * @param resmap
      */
-    public static void writeBibTexFile(Daten dataObj, BibTex bibtexObj, ArrayList<Object> exportentries, File filepath, org.jdesktop.application.ResourceMap resmap) {
+    public static void writeBibTexFile(Daten dataObj, BibTeX bibtexObj, ArrayList<Object> exportentries, File filepath, org.jdesktop.application.ResourceMap resmap) {
         // check whether we have any bibtex-entries at all...
         if (bibtexObj.getCount() > 0) {
             // this list will contain all found bibkeys within the authors
@@ -352,7 +352,7 @@ public class ExportTools {
                 // check whether exported bibtex-file aready exists
                 if (exportbibfilepath.exists()) {
                     // file exists, ask user to overwrite it...
-                    int optionDocExists = JOptionPane.showConfirmDialog(null, resmap.getString("askForOverwriteFileMsg", "BibTex-", exportbibfilepath.getName()), resmap.getString("askForOverwriteFileTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    int optionDocExists = JOptionPane.showConfirmDialog(null, resmap.getString("askForOverwriteFileMsg", "BibTeX-", exportbibfilepath.getName()), resmap.getString("askForOverwriteFileTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
                     // if the user does *not* choose to overwrite, quit...
                     if (JOptionPane.NO_OPTION == optionDocExists) {
                         return;

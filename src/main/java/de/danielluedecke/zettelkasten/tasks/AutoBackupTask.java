@@ -7,7 +7,7 @@ package de.danielluedecke.zettelkasten.tasks;
 
 import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
-import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Bookmarks;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.DesktopData;
@@ -39,7 +39,7 @@ public class AutoBackupTask extends org.jdesktop.application.Task<Object, Void> 
     private final Daten dataObj;
     private final Settings settingsObj;
     private final Bookmarks bookmarksObj;
-    private final BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     private final Synonyms synonymsObj;
     private final SearchRequests searchObj;
     private final DesktopData desktopObj;
@@ -58,7 +58,7 @@ public class AutoBackupTask extends org.jdesktop.application.Task<Object, Void> 
 
     public AutoBackupTask(org.jdesktop.application.Application app, ZettelkastenView zkn,
             javax.swing.JLabel ml, Daten d, 
-            DesktopData desk, Settings s, SearchRequests sr, Synonyms sy, Bookmarks bm, BibTex bt) {
+            DesktopData desk, Settings s, SearchRequests sr, Synonyms sy, Bookmarks bm, BibTeX bt) {
         // Runs on the EDT.  Copy GUI state that
         // doInBackground() depends on from parameters
         // to ImportFileTask fields, here.

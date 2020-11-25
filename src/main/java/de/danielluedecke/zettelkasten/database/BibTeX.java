@@ -42,26 +42,13 @@ import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+
+import javax.swing.*;
+import java.io.*;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
 
 /**
  * This class is responsible for managing bibtex files.<br><br>
@@ -82,14 +69,14 @@ import javax.swing.JOptionPane;
  *
  * @author danielludecke
  */
-public class BibTex {
+public class BibTeX {
 
     /**
      * A reference to the settings-class (CSettings)
      */
     private final Settings settingsObj;
     /**
-     * The main variable that stors the currently opened bibtex-file
+     * The main variable that stores the currently opened BibTeX file
      */
     private BibtexFile bibtexfile = new BibtexFile();
     /**
@@ -157,7 +144,7 @@ public class BibTex {
             = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
             getContext().getResourceMap(ZettelkastenView.class);
 
-    public BibTex(ZettelkastenView zkn, Settings s) {
+    public BibTeX(ZettelkastenView zkn, Settings s) {
         zknframe = zkn;
         settingsObj = s;
         modified = false;
@@ -459,9 +446,9 @@ public class BibTex {
     }
 
     /**
-     * Sets the filepath to the latest used bibtex-file.
+     * Sets the filepath to the latest used BibTeX file.
      *
-     * @param fp filepath to the current bibtex-file
+     * @param fp filepath to the current BibTeX file
      */
     public void setFilePath(File fp) {
         settingsObj.setLastUsedBibTexFile(fp.toString());
@@ -524,9 +511,9 @@ public class BibTex {
     }
 
     /**
-     * Gets the path to the last used bibtex-file
+     * Gets the path to the last used BibTeX file
      *
-     * @return the path of the last used bibtex-file, or {@code null} if no such
+     * @return the path of the last used BibTeX file, or {@code null} if no such
      * path was specified nor does exist.
      */
     public File getFilePath() {
@@ -534,18 +521,18 @@ public class BibTex {
     }
 
     /**
-     * Returns the currently attached bibtex-file. May be used to determine
-     * whether the user's chosen bibtex-file <i>is already</i> opened or <i>has
+     * Returns the currently attached BibTeX file. May be used to determine
+     * whether the user's chosen BibTeX file <i>is already</i> opened or <i>has
      * to be</i> opened.
      *
-     * @return the currently attached bibtex-file
+     * @return the currently attached BibTeX file
      */
     public File getCurrentlyAttachedFile() {
         return currentlyattachedfile;
     }
 
     /**
-     * "Detaches" the currently attached bibtex-file, which means that the
+     * "Detaches" the currently attached BibTeX file, which means that the
      * filepath to the currently attached file is set to {@code null}.
      */
     public void detachCurrentlyAttachedFile() {
@@ -567,7 +554,7 @@ public class BibTex {
     }
 
     /**
-     * This method opens (and "attaches") a bibtex-file which is specified via
+     * This method opens (and "attaches") a BibTeX file which is specified via
      * the {@link #setFilePath(java.io.File) setFilePath(File)} method. The file
      * is parsed into the private variable {@code bibtexfile}, which can be
      * accessed via {@link #getFile() getFile()}.
@@ -587,11 +574,11 @@ public class BibTex {
     public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport, boolean updateExistingEntries) {
         // reset currently attached filepath
         currentlyattachedfile = null;
-        // if we have no bibtex-filepath, return false
+        // if we have no BibTeX filepath, return false
         if (null == getFilePath() || !getFilePath().exists()) {
             return false;
         }
-        // create a new bibtex-parser for parsing the bibtex-file
+        // create a new bibtex-parser for parsing the BibTeX file
         BibtexParser bp = new BibtexParser(false);
         // create stream-readers for reading the file
         InputStreamReader isr = null;
@@ -601,12 +588,12 @@ public class BibTex {
             is = new FileInputStream(getFilePath());
             // read the stream, using the related character encoding
             isr = new InputStreamReader(is, encoding);
-            // create new bibtex-file
+            // create new BibTeX file
             bibtexfile = new BibtexFile();
             // parse file into our bibtexfile-variable
             bp.parse(bibtexfile, isr);
-            // get all nodes (entries) from the bibtex-file, so we can
-            // prepare a linked list containing all entries of that bibtex-file
+            // get all nodes (entries) from the BibTeX file, so we can
+            // prepare a linked list containing all entries of that BibTeX file
             List<BibtexNode> bibNodes = bibtexfile.getEntries();
             // reset old linked list
             attachedbibtexentries.clear();
@@ -617,7 +604,7 @@ public class BibTex {
                     BibtexEntry be = (BibtexEntry) node;
                     // if yes, add that entry to the linked list
                     attachedbibtexentries.add(be);
-                    // now we have all entries from the specified bibtex-file
+                    // now we have all entries from the specified BibTeX file
                     // parsed into a linked list, so we have easy access to each
                     // single bibtex-entry via the list "bibtexentries"
                 }
@@ -654,7 +641,7 @@ public class BibTex {
     }
 
     /**
-     * This method opens (and "attaches") a bibtex-file which is specified via
+     * This method opens (and "attaches") a BibTeX file which is specified via
      * the {@link #setFilePath(java.io.File) setFilePath(File)} method. The file
      * is parsed into the private variable {@code bibtexfile}, which can be
      * accessed via {@link #getFile() getFile()}.
@@ -673,7 +660,7 @@ public class BibTex {
     }
 
     /**
-     * This method opens (and "attaches") a bibtex-file which is specified via
+     * This method opens (and "attaches") a BibTeX file which is specified via
      * the {@link #setFilePath(java.io.File) setFilePath(File)} method. The file
      * is parsed into the private variable {@code bibtexfile}, which can be
      * accessed via {@link #getFile() getFile()}.
@@ -685,23 +672,23 @@ public class BibTex {
      * {@code false} otherwise.
      */
     public boolean openFile(InputStream is, String encoding) {
-        // if we have no bibtex-filepath, return false
+        // if we have no BibTeX filepath, return false
         if (null == is) {
             return false;
         }
-        // create a new bibtex-parser for parsing the bibtex-file
+        // create a new bibtex-parser for parsing the BibTeX file
         BibtexParser bp = new BibtexParser(false);
         // create stream-readers for reading the file
         InputStreamReader isr = null;
         try {
             // read the stream, using the related character encoding
             isr = new InputStreamReader(is, encoding);
-            // create new bibtex-file
+            // create new BibTeX file
             bibtexfile = new BibtexFile();
             // parse file into our bibtexfile-variable
             bp.parse(bibtexfile, isr);
-            // get all nodes (entries) from the bibtex-file, so we can
-            // prepare a linked list containing all entries of that bibtex-file
+            // get all nodes (entries) from the BibTeX file, so we can
+            // prepare a linked list containing all entries of that BibTeX file
             List<BibtexNode> bibNodes = bibtexfile.getEntries();
             // reset old linked list
             bibtexentries.clear();
@@ -711,7 +698,7 @@ public class BibTex {
                 if (node instanceof BibtexEntry) {
                     // if yes, add that entry to the linked list
                     bibtexentries.add((BibtexEntry) node);
-                    // now we have all entries from the specified bibtex-file
+                    // now we have all entries from the specified BibTeX file
                     // parsed into a linked list, so we have easy access to each
                     // single bibtex-entry via the list "bibtexentries"
                 }
@@ -734,23 +721,23 @@ public class BibTex {
     }
 
     public boolean appendFile(InputStream is, String encoding) {
-        // if we have no bibtex-filepath, return false
+        // if we have no BibTeX filepath, return false
         if (null == is) {
             return false;
         }
-        // create a new bibtex-parser for parsing the bibtex-file
+        // create a new bibtex-parser for parsing the BibTeX file
         BibtexParser bp = new BibtexParser(false);
         // create stream-readers for reading the file
         InputStreamReader isr = null;
         try {
             // read the stream, using the related character encoding
             isr = new InputStreamReader(is, encoding);
-            // create new bibtex-file
+            // create new BibTeX file
             BibtexFile appfile = new BibtexFile();
             // parse file into our bibtexfile-variable
             bp.parse(appfile, isr);
-            // get all nodes (entries) from the bibtex-file, so we can
-            // prepare a linked list containing all entries of that bibtex-file
+            // get all nodes (entries) from the BibTeX file, so we can
+            // prepare a linked list containing all entries of that BibTeX file
             List<BibtexNode> bibNodes = appfile.getEntries();
             // iterate nodes
             for (BibtexNode node : bibNodes) {
@@ -758,7 +745,7 @@ public class BibTex {
                 if (node instanceof BibtexEntry) {
                     // if yes, add that entry to the linked list
                     addEntry((BibtexEntry) node);
-                    // now we have all entries from the specified bibtex-file
+                    // now we have all entries from the specified BibTeX file
                     // parsed into a linked list, so we have easy access to each
                     // single bibtex-entry via the list "bibtexentries"
                 }
@@ -840,7 +827,7 @@ public class BibTex {
     }
 
     /**
-     * This method returns the file name of the last used bibtex-file.
+     * This method returns the file name of the last used BibTeX file.
      *
      * @return the name of the given file, excluding extension, or {@code null}
      * if an error occured.
@@ -851,9 +838,9 @@ public class BibTex {
 
     /**
      * This method returns the imported entries of the original ("attached")
-     * bibtex-file.
+     * BibTeX file.
      * <br><br>
-     * Bibtex-entries that should be exported to a new created bibtex-file
+     * Bibtex-entries that should be exported to a new created BibTeX file
      * always use functions with the suffix "ForExport" (e.g.
      * {@link #addBibtexEntryForExport(bibtex.dom.BibtexEntry) addBibtexEntryForExport()}).
      *
@@ -864,9 +851,9 @@ public class BibTex {
     }
 
     /**
-     * This method returns the entries of the bibtex-file in the ZKN3-Database.
+     * This method returns the entries of the BibTeX file in the ZKN3-Database.
      * <br><br>
-     * Bibtex-entries that should be exported to a new created bibtex-file
+     * Bibtex-entries that should be exported to a new created BibTeX file
      * always use functions with the suffix "ForExport" (e.g.
      * {@link #addBibtexEntryForExport(bibtex.dom.BibtexEntry) addBibtexEntryForExport()}).
      *
@@ -878,7 +865,7 @@ public class BibTex {
 
     /**
      * Gets the bibtex-entry indicated by {@code nr} from the original
-     * (attached) bibtex-file.
+     * (attached) BibTeX file.
      *
      * @param nr the entry-number of the entry that should be returned
      * @return the related entry, or {@code null} if an error occured.
@@ -893,7 +880,7 @@ public class BibTex {
 
     /**
      * Gets the bibtex-entry indicated by {@code nr} from the original
-     * bibtex-file in the ZKN3-Database.
+     * BibTeX file in the ZKN3-Database.
      *
      * @param nr the entry-number of the entry that should be returned
      * @return the related entry, or {@code null} if an error occured.
@@ -908,7 +895,7 @@ public class BibTex {
 
     /**
      * Gets the bibtex-entry indicated by {@code bibkey} from the original
-     * (attached) bibtex-file.
+     * (attached) BibTeX file.
      *
      * @param bibkey the bibkey of the entry that should be returned
      * @return the related entry, or {@code null} if an error occured.
@@ -932,7 +919,7 @@ public class BibTex {
 
     /**
      * Gets the bibtex-entry indicated by {@code bibkey} from the original
-     * bibtex-file in the ZKN3-Database.
+     * BibTeX file in the ZKN3-Database.
      *
      * @param bibkey the bibkey of the entry that should be returned
      * @return the related entry, or {@code null} if an error occured or nothing
@@ -969,7 +956,7 @@ public class BibTex {
 
     /**
      * Sets (replaces) the bibtex-entry indicated by {@code bibkey} from the
-     * original bibtex-file in the ZKN3-Database with a new BibTexEntry
+     * original BibTeX file in the ZKN3-Database with a new BibTexEntry
      * {@code entry}.
      *
      * @param bibkey the bibkey of the entry that should be updated / set
@@ -1019,7 +1006,7 @@ public class BibTex {
     /**
      * Gets an bibtex-entry index-number from the bibtex-entry that is
      * associated with the bibkey-value {@code bibkey} from the original
-     * bibtex-file in the ZKN3-Database.
+     * BibTeX file in the ZKN3-Database.
      *
      * @param bibkey the bibkey of the entry which number should be returned
      * @return the related entry-number of the bibtex-entry that has the
@@ -1052,7 +1039,7 @@ public class BibTex {
      * currently attached file.
      *
      * @param entrynr the entry-number of an entry within the currently attached
-     * bibtex-file
+     * BibTeX file
      * @return the related bibkey, or null if no key or no such entry exists.
      */
     public String getBibkeyFromAttachedFile(int entrynr) {
@@ -1071,7 +1058,7 @@ public class BibTex {
      * currently attached file.
      *
      * @param entrynr the entry-number of an entry within the currently attached
-     * bibtex-file
+     * BibTeX file
      * @return the related bibkey, or null if no key or no such entry exists.
      */
     public String getBibkey(int entrynr) {
@@ -1159,7 +1146,7 @@ public class BibTex {
      * {@code entrynr} from the currently attached file.
      *
      * @param entrynr the entry-number of an entry within the currently attached
-     * bibtex-file
+     * BibTeX file
      * @return the related keywords as string-array, or null if no keywords or
      * no such entry exists.
      */
@@ -1296,7 +1283,7 @@ public class BibTex {
      * {@link #addBibtexEntryForExport(bibtex.dom.BibtexEntry) addBibtexEntryForExport(bibtex.dom.BibtexEntry)}
      * to add new entries to this list that should be exported.
      *
-     * @param fp the filepath and filename of the new bibtex-file that should be
+     * @param fp the filepath and filename of the new BibTeX file that should be
      * created, containing all entries which are currently saved to
      * {@link #outputbibtexentries outputbibtexentries}.
      * @return {@code true} if entries have been successfully exported,
@@ -1342,7 +1329,7 @@ public class BibTex {
 
     /**
      * This method returns a formatted string consisting of the author-, year-
-     * and title-value of an bibtex-entry of the currently attached bibtex-file.
+     * and title-value of an bibtex-entry of the currently attached BibTeX file.
      * The requested entry is specified by its {@code entrynr}.
      *
      * @param entrynr the number of the entry that should be retrieved
@@ -1357,7 +1344,7 @@ public class BibTex {
 
     /**
      * This method returns a formatted string consisting of the author-, year-
-     * and title-value of an bibtex-entry of the currently attached bibtex-file.
+     * and title-value of an bibtex-entry of the currently attached BibTeX file.
      * The requested entry is specified by its {@code entrynr}.
      *
      * @param entrynr the number of the entry that should be retrieved
@@ -1372,7 +1359,7 @@ public class BibTex {
 
     /**
      * This method returns a formatted string consisting of the author-, year-
-     * and title-value of an bibtex-entry of the currently attached bibtex-file.
+     * and title-value of an bibtex-entry of the currently attached BibTeX file.
      * The requested entry is specified by its {@code bibkey}.
      *
      * @param bibkey the bibkey of the entry that should be retrieved
@@ -1387,7 +1374,7 @@ public class BibTex {
 
     /**
      * This method returns a formatted string consisting of the author-, year-
-     * and title-value of an bibtex-entry of the currently attached bibtex-file.
+     * and title-value of an bibtex-entry of the currently attached BibTeX file.
      * The requested entry is specified by its {@code entrynr}.
      *
      * @param entrynr the number of the entry that should be retrieved
@@ -1402,7 +1389,7 @@ public class BibTex {
 
     /**
      * This method returns a formatted string consisting of the author-, year-
-     * and title-value of an bibtex-entry of the currently attached bibtex-file.
+     * and title-value of an bibtex-entry of the currently attached BibTeX file.
      * The requested entry is specified by its {@code bibkey}.
      *
      * @param bibkey the bibkey of the entry that should be retrieved
@@ -1417,7 +1404,7 @@ public class BibTex {
 
     /**
      * This method returns a formatted string consisting of the author-, year-
-     * and title-value of an bibtex-entry of the currently attached bibtex-file.
+     * and title-value of an bibtex-entry of the currently attached BibTeX file.
      * This method does the work for both
      * {@link #getFormattedEntryFromAttachedFile(java.lang.String) getFormattedEntryFromAttachedFile(String)}
      * and
@@ -1537,7 +1524,7 @@ public class BibTex {
                 if (dummy != null && !dummy.isEmpty()) {
                     // ...get the "format template"
                     String app = fields.get(f);
-                    // and replace the place holder with the associated value from the bibtex-file
+                    // and replace the place holder with the associated value from the BibTeX file
                     if (app != null) {
                         // first check, whether we have an author, because we need to split this
                         if (f.equalsIgnoreCase("author") || f.equalsIgnoreCase("editor")) {

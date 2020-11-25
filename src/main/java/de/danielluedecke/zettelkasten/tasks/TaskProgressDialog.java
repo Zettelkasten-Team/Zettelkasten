@@ -33,14 +33,8 @@
 package de.danielluedecke.zettelkasten.tasks;
 
 import de.danielluedecke.zettelkasten.ZettelkastenApp;
-import de.danielluedecke.zettelkasten.database.BibTex;
-import de.danielluedecke.zettelkasten.database.Bookmarks;
-import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.database.SearchRequests;
-import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.database.Synonyms;
-import de.danielluedecke.zettelkasten.database.TasksData;
+import de.danielluedecke.zettelkasten.database.*;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.tasks.export.ExportToCsvTask;
 import de.danielluedecke.zettelkasten.tasks.export.ExportToHtmlTask;
 import de.danielluedecke.zettelkasten.tasks.export.ExportToMdTask;
@@ -104,7 +98,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * and -result that are related with this data file
      */
     private SearchRequests searchrequestsObj;
-    private BibTex bibtexObj;
+    private BibTeX bibtexObj;
 
     private TaskMonitor tM;
     private TaskService tS;
@@ -151,7 +145,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @param s
      * @param bib
      */
-    public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, Bookmarks bm, SearchRequests sr, DesktopData dk, Synonyms sy, Settings s, BibTex bib) {
+    public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, Bookmarks bm, SearchRequests sr, DesktopData dk, Synonyms sy, Settings s, BibTeX bib) {
         super(parent);
         dataObj = d;
         synonymsObj = sy;
@@ -190,7 +184,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @param d
      * @param bib
      */
-    public TaskProgressDialog(java.awt.Frame parent, int task_id, TasksData td, Daten d, BibTex bib) {
+    public TaskProgressDialog(java.awt.Frame parent, int task_id, TasksData td, Daten d, BibTeX bib) {
         super(parent);
         dataObj = d;
         bibtexObj = bib;
@@ -231,7 +225,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @param bib
      * @param rf
      */
-    public TaskProgressDialog(java.awt.Frame parent, int task_id, Settings s, Daten d, DesktopData dk, BibTex bib, boolean rf) {
+    public TaskProgressDialog(java.awt.Frame parent, int task_id, Settings s, Daten d, DesktopData dk, BibTeX bib, boolean rf) {
         super(parent);
         dataObj = d;
         settingsObj = s;
@@ -374,7 +368,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * should be sortable or not (time consuming!)
      * pane.
      */
-    public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, Synonyms s, BibTex bt, Settings set, boolean is, int et, DefaultTableModel dtm, boolean mls) {
+    public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, Synonyms s, BibTeX bt, Settings set, boolean is, int et, DefaultTableModel dtm, boolean mls) {
         super(parent);
         dataObj = d;
         bibtexObj = bt;
@@ -696,7 +690,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @param bm
      * @param dt a reference to the DesktopData-class
      * @param s a reference to the Settings-class
-     * @param bto a refrence to the BibTex-class
+     * @param bto a refrence to the BibTeX-class
      * @param syn
      * @param fp the filepath and -name of the export-file
      * @param ee an integer-array of those entries that should be exported. use {
@@ -738,9 +732,9 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @param numberprefix indicates whether entries' titles should have their
      * entry-number included or not.
      */
-    public TaskProgressDialog(java.awt.Frame parent, int task_id, TasksData td, Daten d, Bookmarks bm, DesktopData dt, Settings s, BibTex bto, Synonyms syn,
-            File fp, ArrayList<Object> ee, int type, int part, char csep, DefaultMutableTreeNode n,
-            boolean separateFiles, boolean notag, boolean bibtex, boolean highlightkws, boolean ct, boolean ihv, boolean numberprefix) {
+    public TaskProgressDialog(java.awt.Frame parent, int task_id, TasksData td, Daten d, Bookmarks bm, DesktopData dt, Settings s, BibTeX bto, Synonyms syn,
+                              File fp, ArrayList<Object> ee, int type, int part, char csep, DefaultMutableTreeNode n,
+                              boolean separateFiles, boolean notag, boolean bibtex, boolean highlightkws, boolean ct, boolean ihv, boolean numberprefix) {
         super(parent);
         // store parameters
         dataObj = d;

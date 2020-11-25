@@ -33,17 +33,12 @@
 
 package de.danielluedecke.zettelkasten;
 
+import de.danielluedecke.zettelkasten.database.*;
 import de.danielluedecke.zettelkasten.mac.MacSourceList;
-import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
-import de.danielluedecke.zettelkasten.database.SearchRequests;
-import de.danielluedecke.zettelkasten.database.Synonyms;
 import de.danielluedecke.zettelkasten.util.*;
 import de.danielluedecke.zettelkasten.util.misc.DateComparer;
 import de.danielluedecke.zettelkasten.util.misc.Comparer;
-import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.BibTex;
-import de.danielluedecke.zettelkasten.database.DesktopData;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
 import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
 
@@ -107,7 +102,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
      * Reference to the settings class.
      */
     private final Settings settingsObj;
-    private final BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     /**
      *
      */
@@ -164,7 +159,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
      * @param bib 
      */
     @SuppressWarnings("LeakingThisInConstructor")
-    public SearchResultsFrame(ZettelkastenView zkn, Daten d, SearchRequests sr, DesktopData desk, Settings s, AcceleratorKeys ak, Synonyms syn, BibTex bib) {
+    public SearchResultsFrame(ZettelkastenView zkn, Daten d, SearchRequests sr, DesktopData desk, Settings s, AcceleratorKeys ak, Synonyms syn, BibTeX bib) {
         searchframe = this;
         // init variables from parameters
         dataObj=d;

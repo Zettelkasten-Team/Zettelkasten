@@ -33,7 +33,7 @@
 package de.danielluedecke.zettelkasten.tasks.export;
 
 import de.danielluedecke.zettelkasten.ZettelkastenApp;
-import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.DesktopData;
 import de.danielluedecke.zettelkasten.database.Settings;
@@ -69,7 +69,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
     /**
      *
      */
-    private final BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     /**
      *
      */
@@ -173,8 +173,8 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
      * @param sf whether each note should be saved as separate file
      */
     public ExportToTexTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label,
-            TasksData td, Daten d, DesktopData dt, Settings s, BibTex bto, File fp, ArrayList<Object> ee, int type, int part,
-            DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix, boolean contenttable, boolean sf) {
+                           TasksData td, Daten d, DesktopData dt, Settings s, BibTeX bto, File fp, ArrayList<Object> ee, int type, int part,
+                           DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix, boolean contenttable, boolean sf) {
         super(app);
         dataObj = d;
         settingsObj = s;

@@ -35,11 +35,9 @@ package de.danielluedecke.zettelkasten.util;
 import de.danielluedecke.zettelkasten.ToolbarIcons;
 import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
-import de.danielluedecke.zettelkasten.database.BibTex;
-import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.database.Synonyms;
+import de.danielluedecke.zettelkasten.database.*;
+import de.danielluedecke.zettelkasten.database.BibTeX;
+
 import java.awt.Desktop;
 import java.awt.Frame;
 import java.awt.HeadlessException;
@@ -235,7 +233,7 @@ public class Tools {
      * <li>in all other cases, {@code null} is returned.</li>
      * </ul>
      */
-    public static String openHyperlink(String linktype, Frame frame, int sourceframe, Daten data, BibTex bibtexObj, Settings settings, JEditorPane mainpane, int displayedZettel) {
+    public static String openHyperlink(String linktype, Frame frame, int sourceframe, Daten data, BibTeX bibtexObj, Settings settings, JEditorPane mainpane, int displayedZettel) {
         // here comes the part that is not depending on the desktop-api
         //
         // here we have a reference (ankh) to the attachments, which are located at the

@@ -33,7 +33,7 @@
 
 package de.danielluedecke.zettelkasten;
 
-import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
@@ -75,7 +75,7 @@ public class CImport extends javax.swing.JDialog {
      */
     private File filepath;
     private final Settings settingsObj;
-    private final BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     /**
      * indicates which type of data format should be imported.
      * refer to the Zettelkasten.view properties file (resources) to see
@@ -122,7 +122,7 @@ public class CImport extends javax.swing.JDialog {
      * @param bt
      * @param ap 
      */
-    public CImport(java.awt.Frame parent,Settings st, BibTex bt, boolean ap) {
+    public CImport(java.awt.Frame parent, Settings st, BibTeX bt, boolean ap) {
         super(parent);
         initComponents();
         // set application icon
