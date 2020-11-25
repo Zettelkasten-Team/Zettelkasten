@@ -748,6 +748,8 @@ public class CImportBibTex extends javax.swing.JDialog {
                                                     // store entry-number of modified entry
                                                     modifiedEntries.add(counter);
                                                     break;
+                                                default:
+                                                    throw new IllegalStateException("Unexpected value: " + updateOption);
                                             }
                                         }
                                     }
