@@ -1104,6 +1104,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                 return types [columnIndex];
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
