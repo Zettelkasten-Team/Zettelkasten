@@ -930,6 +930,8 @@ public class CImportBibTex extends javax.swing.JDialog {
                             rowdata.add(new String[]{bibkey, au});
                         }
                         break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + jComboBoxShowBibTex.getSelectedIndex());
                 }
                 setProgress(cnt, 0, count);
             }
