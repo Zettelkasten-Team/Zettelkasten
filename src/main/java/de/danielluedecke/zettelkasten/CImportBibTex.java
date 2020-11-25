@@ -581,6 +581,9 @@ public class CImportBibTex extends javax.swing.JDialog {
 
     private class addSelectedAuthorsTask extends org.jdesktop.application.Task<Object, Void> {
 
+        private Object au;
+        private Object bibkey;
+
         addSelectedAuthorsTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters
@@ -774,6 +777,8 @@ public class CImportBibTex extends javax.swing.JDialog {
         }
 
         private void createZettelFromBibTeXAbstract(Object au, Object bibkey) {
+            this.au = au;
+            this.bibkey = bibkey;
             if (jCheckBoxAddAsEntry.isSelected()) {
                 // init variable
                 String[] keywords = null;
