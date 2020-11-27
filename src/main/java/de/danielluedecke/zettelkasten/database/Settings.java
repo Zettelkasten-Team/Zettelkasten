@@ -5264,8 +5264,8 @@ public class Settings {
     /**
      * Sets the character-encoding of the currently attached BibTeX file.
      *
-     * @param value set the last used bibtex-format, i.e. the format (encoding) of the currently
-     * attached BibTeX file. following constants are used:<br>
+     * @param value set the last used BibTeX format, i.e. the format (encoding) of the currently
+     * attached BibTeX file. The following constants are used:<br>
      * 0: UTF-8 (Bibliographix)<br>
      * 1: UTF-8 (Citavi)<br>
      * 2: ISO8859_1 (Emacs with AucTex/RefTex)<br>

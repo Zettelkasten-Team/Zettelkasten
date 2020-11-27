@@ -1806,7 +1806,7 @@ public class BibTeX {
      */
     private String convertEscapeChars(String dummy, boolean fromAttachedFile) {
         // check whether we have citavi- or mendeley-import. in such case, umlauts are "encoded" with
-        // backslah-quote (i.e. ä = \"a), so we have to re-cpnvert it.
+        // backslash-quote (i.e. ä = \"a), so we have to re-convert it.
         if ((fromAttachedFile && getEncoding() == Constants.BIBTEX_DESC_BIBDESK_INDEX) || !fromAttachedFile) {
             dummy = dummy.replace("{\\\"a}", "ä").replace("{\\\"A}", "Ä")
                     .replace("{\\\"o}", "ö").replace("{\\\"O}", "Ö")

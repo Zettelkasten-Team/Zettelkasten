@@ -9339,7 +9339,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             Object encodingchoice = JOptionPane.showInputDialog(getFrame(), getResourceMap().getString("bibtexEncodingsMsg"), getResourceMap().getString("bibtexEncodingsTitle"), JOptionPane.PLAIN_MESSAGE, null, Constants.BIBTEX_DESCRIPTIONS, Constants.BIBTEX_DESCRIPTIONS[settings.getLastUsedBibtexFormat()]);
             // if user did not cancel the operation, go on and open the bibtex-file
             if (encodingchoice != null) {
-                // iterate all availabe bibtex-encodings.
+                // iterate all available BibTeX encodings.
                 // if the appropriate encoding that matched the user's choice was found,
                 // use that index-number to open the bibtex-file
                 for (int enc = 0; enc < Constants.BIBTEX_DESCRIPTIONS.length; enc++) {
