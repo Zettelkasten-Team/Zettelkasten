@@ -9250,20 +9250,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     /**
-     * This method imports literature entries from a given BibTeX file and adds
-     * the literature as author entries to the authorFile.xml file of the data file.
+     * This method imports literature entries/references from a given BibTeX file and
+     * adds the references as author entries to the authorFile.xml file of the data file.
+     * <br><br
+     * A new dialog is opened (see {@link CImportBibTex})
+     * where the user can select a BibTeX file to open, and
+     * a file format of that BibTeX file
+     * (which corresponds to the literature program that is used, e.g. Citavi, JabRef, Zotero, etc.).
      * <br><br>
-     * A new dialog is opened (see {@link CImportBibTex} fore more details)
-     * where the user can choose a BibTeX file to open, and a file-format (which
-     * corresponds to the literature program that is used, e.g. Citavi, JabRef,
-     * Zotero...) of that BibTeX-file.
-     * <br><br>
-     * All BibTeX entries of that file are displayed in a table where the user
-     * can select those entries that should be imported. Entries that have
-     * already previously being imported are
-     * <i>not</i> listed in that tables (these entries are identified by their
-     * bibkeys, i.e. if an existing author value has the same bibkey like an
-     * entry of that BibTeX file).
+     * All BibTeX entries of this file are displayed in a table where
+     * the user can select the entries to be imported.
+     * Entries that have already been imported before are <i>not</i> listed in this table
+     * (these entries are identified by their BibTeX keys,
+     * i.e. if an existing author value has the same key as an entry in this BibTeX file).
      * <br><br>
      * Beside importing the author-values, the user can optionally choose to
      * create an entry for each imported BibTeX entry, in case the BibTeX entry
