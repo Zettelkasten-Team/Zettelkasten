@@ -9275,8 +9275,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // free memory and release all allocated components
             importBibTexDlg.dispose();
             importBibTexDlg = null;
-            // try to motivate garbage collector
-            System.gc();
         }
         // if dialog window isn't already created, do this now
         if (null == importBibTexDlg) {
