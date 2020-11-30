@@ -1871,8 +1871,6 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         }
         dispose();
         setVisible(false);
-        // try to motivate garbage collector
-        System.gc();
     }
     
     
@@ -2014,8 +2012,6 @@ public class SearchResultsFrame extends javax.swing.JFrame {
                         }
                         rateEntryDlg.dispose();
                         rateEntryDlg=null;
-                        // try to motivate garbage collector
-                        System.gc();
                     }
                     catch (NumberFormatException ex) {
                         // log error
