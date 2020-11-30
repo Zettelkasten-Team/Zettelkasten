@@ -1679,7 +1679,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 }
                 // when the memory label is clicked, call the garbage collector.
                 if (1 == evt.getClickCount()) {
-                    //FIXME
+                    //FIXME Which memory label?
                     System.gc();
                 }
             }
