@@ -9174,19 +9174,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     @Action
     public void importAuthors() {
-        // if dialog window isn't already created, do this now
-        if (importBibTexDlg != null) {
-            // free memory and release all allocated components
-            importBibTexDlg.dispose();
-            importBibTexDlg = null;
-        }
-        // if dialog window isn't already created, do this now
-        if (null == importBibTexDlg) {
-            // create a new dialog window
-            importBibTexDlg = new CImportBibTex(getFrame(), this, data, bibtex, settings);
-            // center window
-            importBibTexDlg.setLocationRelativeTo(getFrame());
-        }
+        importBibTexDlg = new CImportBibTex(getFrame(), this, data, bibtex, settings);
+        importBibTexDlg.setLocationRelativeTo(getFrame());
         ZettelkastenApp.getApplication().show(importBibTexDlg);
     }
 
