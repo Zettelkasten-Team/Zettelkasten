@@ -1679,7 +1679,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 }
                 // when the memory label is clicked, call the garbage collector.
                 if (1 == evt.getClickCount()) {
-                    //FIXME Which memory label?
+                    //FIXME Which memory label? (hiddenFeatures, toggleMemoryTimer)
                     System.gc();
                 }
             }
@@ -7000,12 +7000,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     /**
-     * This method, called when the user enters "m" as input in the
-     * entry-textfield in the lower statusbar, toggles a timer that display the
-     * current memory usage of the application. this timer is executes every 5
-     * seconds, so the memory-usage is updated each 5 seconds.
+     * This method, which is called when the user enters "m" in the input text box in the lower status bar,
+     * toggles a timer that indicates the current memory usage of the application.
+     * This timer runs every 5 seconds, so the memory usage is updated every 5 seconds.
      * <br><br>
-     * If the user types "m" for the second time, the timer is stopped.
+     * When the user enters "m" for the second time, the timer stops and the memory usage is no longer displayed.
      */
     public void toggleMemoryTimer() {
         // check whether we have a already running timer...
