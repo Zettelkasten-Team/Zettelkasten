@@ -1677,9 +1677,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 if (evt.getButton() != MouseEvent.BUTTON1) {
                     return;
                 }
-                // when the memory label is clicked, call the garbage collector.
+                // when the memory label (hiddenFeatures, toggleMemoryTimer) is clicked, call the garbage collector.
                 if (1 == evt.getClickCount()) {
-                    //FIXME Which memory label? (hiddenFeatures, toggleMemoryTimer)
+                    //FIXME 'System.gc()' should not be called in production code
                     System.gc();
                 }
             }
