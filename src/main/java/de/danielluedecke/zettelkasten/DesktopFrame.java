@@ -2851,7 +2851,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     public void importArchivedDesktop() {
         // create document
         Document archive = new Document();
-        // retrieve last used importdirectory
+        // retrieve last used import directory
         File importdir = settingsObj.getFilePath();
         // let user choose filepath
         File filepath = FileOperationsUtil.chooseFile(this,
@@ -3908,11 +3908,11 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             // on a background thread, so don't reference
             // the Swing GUI from here.
 
-            // tell programm that the task is running
+            // tell program that the task is running
             cDisplayTaskIsRunning = true;
             // clear content
             jEditorPaneMain.setText(resourceMap.getString("contentBeingUpdated"));
-            // get the treemodel
+            // get the tree model
             DefaultTreeModel dtm = (DefaultTreeModel) jTreeDesktop.getModel();
             // create a new root element from the current desktop name and set it as root
             DefaultMutableTreeNode root = (DefaultMutableTreeNode) dtm.getRoot();
@@ -3920,7 +3920,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             if (root.getChildCount() > 0) {
                 //
                 boolean showComments;
-                // clean stringbuilder for word-count
+                // clean string builder for word-count
                 sbWordCountDisplayTask.setLength(0);
                 // create the content for the html-page
                 sbDisplayTask.append("<table ");
@@ -3951,7 +3951,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 // therefor, we first need all entries
                 int[] entries = desktopObj.retrieveDesktopEntries();
                 LinkedList<String> remainingAuthors = new LinkedList<>();
-                // interate entries
+                // iterate entries
                 for (int e : entries) {
                     // get authors
                     String[] aus = dataObj.getAuthors(e);
