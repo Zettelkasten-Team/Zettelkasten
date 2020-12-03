@@ -77,7 +77,7 @@ public class Daten {
      */
     private final Settings settings;
     /**
-     * A reference to the settings class
+     * A reference to the {@link BibTeX} class
      */
     private final BibTeX bibtexObj;
     /**
@@ -89,8 +89,7 @@ public class Daten {
      */
     private Document zknFile;
     /**
-     * XML Document that Stores the data of entries that should be exportet to
-     * .zkn3-format
+     * XML Document that Stores the data of entries that should be exported to .zkn3-format
      */
     private Document zknFileExport;
     /**
@@ -1216,7 +1215,7 @@ public class Daten {
         // create a list of all elements from the given xml file
         try {
             List<?> elementList = doc.getRootElement().getContent();
-            // and return the requestet Element
+            // and return the requested Element
             try {
                 return (Element) elementList.get(pos - 1);
             } catch (IndexOutOfBoundsException e) {
