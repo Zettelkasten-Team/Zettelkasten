@@ -73,15 +73,15 @@ public class Daten {
     private static final String currentVersion = "3.8";
     public static final String backwardCompatibleVersion = "3.4";
     /**
-     * A refrence to the settings class
+     * A reference to the settings class
      */
     private final Settings settings;
     /**
-     * A refrence to the settings class
+     * A reference to the settings class
      */
     private final BibTeX bibtexObj;
     /**
-     * A refrence to the synonyms class
+     * A reference to the synonyms class
      */
     private final Synonyms synonymsObj;
     /**
