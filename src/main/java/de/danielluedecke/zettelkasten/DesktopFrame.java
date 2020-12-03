@@ -3930,10 +3930,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 sbDisplayTask.append("class=\"maintable\">");
                 // check which display option is chosen
                 switch (settingsObj.getDesktopCommentDisplayOptions()) {
-                    case Constants.DESKTOP_WITH_COMMENTS:
-                        showComments = desktopObj.desktopHasComments(desktopObj.getCurrentDesktopElement());
-                        exportEntriesToEditorPane(root, sbDisplayTask, showComments);
-                        break;
                     case Constants.DESKTOP_WITHOUT_COMMENTS:
                         showComments = false;
                         exportEntriesToEditorPane(root, sbDisplayTask, showComments);
@@ -3942,7 +3938,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                         showComments = false;
                         exportCommentsToEditorPane(root, sbDisplayTask);
                         break;
-                    default:
+                    default: // DESKTOP_WITH_COMMENTS
                         showComments = desktopObj.desktopHasComments(desktopObj.getCurrentDesktopElement());
                         exportEntriesToEditorPane(root, sbDisplayTask, showComments);
                         break;
