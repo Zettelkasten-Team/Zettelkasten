@@ -536,7 +536,7 @@ public class Bookmarks {
         try {
             List<?> elementList = newbookmarks.getRootElement().getContent();
             try {
-                // iterate all importet bookmakrs
+                // iterate all imported bookmarks
                 for (int cnt = 0; cnt < newbookmarks.getContentSize(); cnt++) {
                     // retrieve each single bookmark-element
                     Element b = (Element) elementList.get(cnt);
@@ -555,7 +555,7 @@ public class Bookmarks {
                             if (cat != null && !cat.isEmpty()) {
                                 // retrieve possible comment
                                 String comment = b.getText();
-                                // and add new importet bookmark
+                                // and add new imported bookmark
                                 addBookmark(index, cat, comment);
                             }
                         }
