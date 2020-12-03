@@ -33,20 +33,13 @@
 package de.danielluedecke.zettelkasten.database;
 
 import de.danielluedecke.zettelkasten.ZettelkastenView;
-import de.danielluedecke.zettelkasten.util.misc.Comparer;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import de.danielluedecke.zettelkasten.util.misc.Comparer;
+import org.jdom2.*;
+
+import java.util.*;
 import java.util.logging.Level;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.IllegalAddException;
-import org.jdom2.IllegalDataException;
-import org.jdom2.IllegalNameException;
 
 /**
  *
