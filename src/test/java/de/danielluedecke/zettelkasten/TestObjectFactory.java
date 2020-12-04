@@ -28,27 +28,26 @@ public class TestObjectFactory {
 		return TestObjectFactory.instance;
 	}
 
-	private final StenoData stenoData;
-	private final AutoKorrektur autoKorrektur;
-	private final TasksData tasksData;
 	private final AcceleratorKeys acceleratorKeys;
+	private final AutoKorrektur autoKorrektur;
 	private final Synonyms synonyms;
+	private final StenoData stenoData;
+	private final TasksData tasksData;
 
 	private TestObjectFactory() {
-		stenoData = null;
-		autoKorrektur = null;
-		tasksData = null;
-
 		acceleratorKeys = new AcceleratorKeys();
+		autoKorrektur = null;
 		synonyms = new Synonyms();
+		stenoData = null;
+		tasksData = null;
 	}
 
 	/**
 	 * Abstracts sample files and settings
 	 */
 	public enum ZKN3Settings {
-		ZKN3_SAMPLE("zkn3_sample.zkn3", false), ZKN3_TRICKY_MARKDOWN(
-				"zkn3_tricky.zkn3", true);
+		ZKN3_SAMPLE("zkn3_sample.zkn3", false),
+		ZKN3_TRICKY_MARKDOWN("zkn3_tricky.zkn3", true);
 
 		public Settings settings;
 
