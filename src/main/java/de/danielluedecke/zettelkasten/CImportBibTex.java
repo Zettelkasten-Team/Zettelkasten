@@ -33,7 +33,7 @@
 package de.danielluedecke.zettelkasten;
 
 import bibtex.dom.BibtexEntry;
-import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.*;
@@ -68,19 +68,19 @@ public class CImportBibTex extends javax.swing.JDialog {
     /**
      *
      */
-    private Settings settingsObj;
+    private final Settings settingsObj;
     /**
      *
      */
-    private BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     /**
      *
      */
-    private Daten dataObj;
+    private final Daten dataObj;
     /**
-     * When the user wants to re-import bibtex-entries, abstracts/annotations of bibtex-entries that
+     * When the user wants to re-import BibTeX entries, abstracts/annotations of BibTeX entries that
      * create a new entry can be a) added as new entry, b) replace an existing entry that already
-     * has been created from a bibtex-abstract or c) added to that existing entry.
+     * has been created from a BibTeX abstract or c) added to that existing entry.
      * <br><br>
      * The user's choice, made in {@link #addSelectedAuthors() addSelectedAuthors()}, is stored in
      * this variable
@@ -97,18 +97,18 @@ public class CImportBibTex extends javax.swing.JDialog {
     public static final int BIBTEX_SOURCE_FILE = 1;
     public static final int BIBTEX_SOURCE_DB = 2;
 
-    private ZettelkastenView mainframe;
+    private final ZettelkastenView mainframe;
 
     /**
      * This array-list contains all entry-numbers of those entries that have been modified during
-     * the import-operation, e.g. if bibtex-entries contained abstracts and the user chose to modify
+     * the import-operation, e.g. if BibTeX entries contained abstracts and the user chose to modify
      * existing entries.
      */
     private ArrayList<Integer> modifiedEntries;
 
     /**
      * This array-list contains all entry-numbers of those entries that have been modified during
-     * the import-operation, e.g. if bibtex-entries contained abstracts and the user chose to modify
+     * the import-operation, e.g. if BibTeX entries contained abstracts and the user chose to modify
      * existing entries.
      *
      * @return all entry-numbers of those entries that have been modified during the
@@ -119,13 +119,13 @@ public class CImportBibTex extends javax.swing.JDialog {
     }
     /**
      * This variable stores the amount of entries that have been added during the import-operation
-     * (i.e. which are new), e.g. if bibtex-entries contained abstacts and the user chose to create
+     * (i.e. which are new), e.g. if BibTeX entries contained abstacts and the user chose to create
      * new entries.
      */
     private int newEntries = 0;
 
     /**
-     * In case any bibtex-entries have been imported, this method returns the count of new added /
+     * In case any BibTeX entries have been imported, this method returns the count of new added /
      * imported entries.
      *
      * @return The amount of imported entries.
@@ -141,7 +141,7 @@ public class CImportBibTex extends javax.swing.JDialog {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private org.jdesktop.application.ResourceMap resourceMap
+    private final org.jdesktop.application.ResourceMap resourceMap
             = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
             getContext().getResourceMap(CImportBibTex.class);
 
@@ -153,7 +153,7 @@ public class CImportBibTex extends javax.swing.JDialog {
      * @param bt
      * @param s
      */
-    public CImportBibTex(java.awt.Frame parent, ZettelkastenView mf, Daten d, BibTex bt, Settings s) {
+    public CImportBibTex(java.awt.Frame parent, ZettelkastenView mf, Daten d, BibTeX bt, Settings s) {
         super(parent);
         settingsObj = s;
         bibtexObj = bt;
@@ -208,13 +208,13 @@ public class CImportBibTex extends javax.swing.JDialog {
             // and set it as initial value to the textfield
             if (cuf != null && cuf.exists()) {
                 jTextFieldBibtexFilepath.setText(cuf.toString());
-                fillBibtexTable();
+                fillBibTeXTable();
             } else if (luf != null && luf.exists()) {
                 jTextFieldBibtexFilepath.setText(luf.toString());
-                fillBibtexTable();
+                fillBibTeXTable();
             }
         } else {
-            fillBibtexTable();
+            fillBibTeXTable();
         }
         jButtonRefresh.setEnabled(false);
     }
@@ -230,10 +230,10 @@ public class CImportBibTex extends javax.swing.JDialog {
     private void initTable() {
         // create new table sorter
         TableRowSorter<TableModel> sorter = new TableRowSorter<>();
-        // tell tgis jtable that it has an own sorter
+        // tell this jtable that it has an own sorter
         jTableBibEntries.setRowSorter(sorter);
         // and tell the sorter, which table model to sort.
-        sorter.setModel((DefaultTableModel) jTableBibEntries.getModel());
+        sorter.setModel(jTableBibEntries.getModel());
         // in this table, the first column needs a custom comparator.
         try {
             sorter.setComparator(0, new Comparer());
@@ -243,18 +243,18 @@ public class CImportBibTex extends javax.swing.JDialog {
         }
         // noe header re-ordering
         jTableBibEntries.getTableHeader().setReorderingAllowed(false);
-        // apply grid-settings and cellspacing
+        // apply grid-settings and cell spacing
         jTableBibEntries.setGridColor(settingsObj.getTableGridColor());
         jTableBibEntries.setShowHorizontalLines(settingsObj.getShowGridHorizontal());
         jTableBibEntries.setShowVerticalLines(settingsObj.getShowGridVertical());
         jTableBibEntries.setIntercellSpacing(settingsObj.getCellSpacing());
-        // get the default fontsize for tables and lists
+        // get the default font size for tables and lists
         int defaultsize = settingsObj.getTableFontSize();
-        // only set new fonts, when fontsize differs from the initial value
+        // only set new fonts, when font size differs from the initial value
         if (defaultsize > 0) {
             // get current font
             Font f = jTableBibEntries.getFont();
-            // create new font, add fontsize-value
+            // create new font, add font size value
             f = new Font(f.getName(), f.getStyle(), f.getSize() + defaultsize);
             // set new font
             jTableBibEntries.setFont(f);
@@ -262,19 +262,19 @@ public class CImportBibTex extends javax.swing.JDialog {
     }
 
     /**
-     * Here we set all available character-encodings for the bibtex-file. each reference-manager
+     * Here we set all available character-encodings for the BibTeX file. each reference manager
      * (jabref, refworks, citavi) has its own character-encoding, so we have to take this into
-     * account when importing bibtex-files.
+     * account when importing BibTeX files.
      */
     private void initComboBox() {
         // reset combobox
         jComboBoxEncoding.removeAllItems();
-        // add items that show the bibtex-encodings
+        // add items that show the BibTeX encodings
         for (String s : Constants.BIBTEX_DESCRIPTIONS) {
             jComboBoxEncoding.addItem(s);
         }
         try {
-            // auto-select last used format, when we auto-load the last used bibtex-file
+            // auto-select last used format, when we auto-load the last used BibTeX file
             jComboBoxEncoding.setSelectedIndex(settingsObj.getLastUsedBibtexFormat());
         } catch (IllegalArgumentException e) {
             Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
@@ -286,7 +286,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         jComboBoxCiteStyle.addItem(resourceMap.getString("citeStyleCBE"));
         jComboBoxCiteStyle.addItem(resourceMap.getString("citeStyleAPA"));
         try {
-            // auto-select last used cite style, when we auto-load the last used bibtex-file
+            // auto-select last used cite style, when we auto-load the last used BibTeX file
             jComboBoxCiteStyle.setSelectedIndex(bibtexObj.getCiteStyle());
         } catch (IllegalArgumentException e) {
             Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
@@ -297,7 +297,7 @@ public class CImportBibTex extends javax.swing.JDialog {
      * Init several listeners for the components.
      */
     private void initListeners() {
-        // these codelines add an escape-listener to the dialog. so, when the user
+        // these code lines add an escape-listener to the dialog. so, when the user
         // presses the escape-key, the same action is performed as if the user
         // presses the cancel button...
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
@@ -324,15 +324,15 @@ public class CImportBibTex extends javax.swing.JDialog {
                 if (jComboBoxCiteStyle.getSelectedIndex() != -1) {
                     // change cite-style-setting
                     bibtexObj.setCiteStyle(jComboBoxCiteStyle.getSelectedIndex());
-                    // if we already have any attached bibtex-file, upate table
-                    fillBibtexTable();
+                    // if we already have any attached BibTeX file, update table
+                    fillBibTeXTable();
                 }
             }
         });
         jComboBoxShowBibTex.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fillBibtexTable();
+                fillBibTeXTable();
             }
         });
         SelectionListener listener = new SelectionListener();
@@ -355,7 +355,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         jRadioButtonSourceDB.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fillBibtexTable();
+                fillBibTeXTable();
                 settingsObj.setLastUsedBibtexImportSource(BIBTEX_SOURCE_DB);
             }
         });
@@ -364,12 +364,12 @@ public class CImportBibTex extends javax.swing.JDialog {
         jRadioButtonSourceFile.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fillBibtexTable();
+                fillBibTeXTable();
                 settingsObj.setLastUsedBibtexImportSource(BIBTEX_SOURCE_FILE);
             }
         });
         // create action which should be executed when the user presses
-        // the enter-key
+        // the enter key
         AbstractAction a_enter = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -378,7 +378,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                 }
             }
         };
-        // put action to the textfield's actionmaps
+        // put action to the textfield's action maps
         jTextFieldFilterTable.getActionMap().put("EnterKeyPressed", a_enter);
         // associate enter-keystroke with that action
         KeyStroke ks = KeyStroke.getKeyStroke("ENTER");
@@ -393,7 +393,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                 }
             }
         };
-        // put action to the textfield's actionmaps
+        // put action to the textfield's action maps
         jTextFieldFilterTable.getActionMap().put("RegExEnterKeyPressed", a_regex_enter);
         // associate enter-keystroke with that action
         ks = KeyStroke.getKeyStroke("alt ENTER");
@@ -408,7 +408,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                 }
             }
         };
-        // put action to the tables' actionmaps
+        // put action to the tables' action maps
         jTableBibEntries.getActionMap().put("DeleteKeyPressed", a_delete);
         // check for os, and use appropriate controlKey
         ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS()) ? "BACK_SPACE" : "DELETE");
@@ -422,13 +422,13 @@ public class CImportBibTex extends javax.swing.JDialog {
         if (rows.length < 1) {
             return;
         }
-        // ask whether bibtex entries really should be removed
+        // ask whether BibTeX entries really should be removed
         int option = JOptionPane.showConfirmDialog(null, resourceMap.getString("removeBibtexEntryMsg"), resourceMap.getString("removeBibtexEntryTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
         // the user chose to cancel the operation, so return "null"
         if (JOptionPane.YES_OPTION == option) {
             // iterate all selected values
             for (int cnt = 0; cnt < rows.length; cnt++) {
-                // now to the bibey
+                // now to the bibkey
                 Object bibkey = jTableBibEntries.getValueAt(rows[cnt], 0);
                 // if we have any author, go on...
                 bibtexObj.removeEntry(bibkey.toString());
@@ -447,7 +447,7 @@ public class CImportBibTex extends javax.swing.JDialog {
             if (linkedtablelist != null && linkedtablelist.size() > 0) {
                 refreshList();
             } else {
-                fillBibtexTable();
+                fillBibTeXTable();
             }
         }
     }
@@ -455,7 +455,7 @@ public class CImportBibTex extends javax.swing.JDialog {
     private void filterList(boolean regEx) {
         // when we filter the table and want to restore it, we don't need to run the
         // time-consuming task that creates the author-list and related author-frequencies.
-        // instead, we simply copy the values from the linkedlist to the table-model, which is
+        // instead, we simply copy the values from the linked list to the table-model, which is
         // much faster. but therefore we have to apply all changes to the filtered-table
         // (like adding/changing values in a filtered list) to the linked list as well.
 
@@ -493,17 +493,17 @@ public class CImportBibTex extends javax.swing.JDialog {
         jButtonRefresh.setEnabled(true);
     }
 
-    private void fillBibtexTable() {
+    private void fillBibTeXTable() {
         if (jRadioButtonSourceFile.isSelected()) {
             // retrieve currently attached file
             File currentlyattachedfile = bibtexObj.getCurrentlyAttachedFile();
-            // if we have no currently attached bibtex-file, or the currently attached bibtex-file
-            // differs from the new selected file of the user, open the bibtex-file now
+            // if we have no currently attached BibTeX file, or the currently attached BibTeX file
+            // differs from the new selected file of the user, open the BibTeX file now
             if ((null == currentlyattachedfile) || (!currentlyattachedfile.toString().equals(bibtexObj.getFilePath().toString()))) {
                 // open selected file, using the character encoding of the related reference-manager (i.e.
                 // the programme that has exported the bib-tex-file).
                 bibtexObj.openAttachedFile(Constants.BIBTEX_ENCODINGS[jComboBoxEncoding.getSelectedIndex()], false);
-                // retrieve currently attached bibtex-file
+                // retrieve currently attached BibTeX file
                 currentlyattachedfile = bibtexObj.getCurrentlyAttachedFile();
             }
             // set filepath to textfield
@@ -542,17 +542,17 @@ public class CImportBibTex extends javax.swing.JDialog {
         jRadioButtonSourceFile.setEnabled(!block);
         // refresh button is either blockes (disabled) or enabled whether
         // we have any content in linkedtablelist.
-        jButtonRefresh.setEnabled((block) ? false : linkedtablelist != null);
+        jButtonRefresh.setEnabled((!block) && linkedtablelist != null);
     }
 
     @Action
     public Task addSelectedAuthors() {
         // check whether user wants to import existing entries as well, i.e. the user
-        // wants to import bibtex-abstracts AND automatically create entries from those
-        // abstracts, where existing entries will be replaced by new bibtex-updates.
+        // wants to import BibTeX abstracts AND automatically create entries from those
+        // abstracts, where existing entries will be replaced by new BibTeX updates.
         // in this case, the combo box's selected index must be greater than 0
         if (jComboBoxShowBibTex.getSelectedIndex() > 0) {
-            // create a JOptionPane with repalce/new/concat/cancel options
+            // create a JOptionPane with replace/new/concat/cancel options
             updateOption = JOptionPane.showOptionDialog(this,
                     resourceMap.getString("msgConfirmUpdateEntry"),
                     resourceMap.getString("msgConfirmUpdateEntryTitle"),
@@ -580,6 +580,9 @@ public class CImportBibTex extends javax.swing.JDialog {
     }
 
     private class addSelectedAuthorsTask extends org.jdesktop.application.Task<Object, Void> {
+
+        private Object au;
+        private Object bibkey;
 
         addSelectedAuthorsTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
@@ -614,7 +617,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                     if (bibkey != null) {
                         // retrieve bibkey position in author data base
                         bibkeypos = dataObj.getBibkeyPosition(bibkey.toString());
-                        // retrieve bibtex entry from attached file
+                        // retrieve BibTeX entry from attached file
                         BibtexEntry be = (jRadioButtonSourceDB.isSelected()) ? bibtexObj.getEntry(bibkey.toString()) : bibtexObj.getEntryFromAttachedFile(bibkey.toString());
                         // add to data base
                         bibtexObj.addEntry(be);
@@ -632,36 +635,10 @@ public class CImportBibTex extends javax.swing.JDialog {
                                 // and add it to the recently added author-value
                                 dataObj.setAuthorBibKey(pos, bibkey.toString());
                                 // if the user also wants to add imported literature as entries, do
-                                // this here. we then have to check whether the imported bibtex-entry
+                                // this here. we then have to check whether the imported BibTeX entry
                                 // has an abstract or annotation, and if so, we use this as content for
-                                // the new entry
-                                if (jCheckBoxAddAsEntry.isSelected()) {
-                                    // init variable
-                                    String[] keywords = null;
-                                    // if user also wants keywords, retrieve them now
-                                    if (jCheckBoxImportKeywords.isSelected()) {
-                                        keywords = (jRadioButtonSourceDB.isSelected()) ? bibtexObj.getKeywords(bibkey.toString()) : bibtexObj.getKeywordsFromAttachedFile(bibkey.toString());
-                                    }
-                                    // retrieve abstract (i.e. content for entry)
-                                    String content = (jRadioButtonSourceDB.isSelected()) ? bibtexObj.getAbstract(bibkey.toString()) : bibtexObj.getAbstractFromAttachedFile(bibkey.toString());
-                                    // only create content/new entry, if any abstract was found...
-                                    if (content != null && !content.isEmpty()) {
-                                        // finally, add entry to dataset
-                                        dataObj.addEntryFromBibTex("", content, new String[]{au.toString()}, keywords, Tools.getTimeStamp());
-                                        // and increase entry counter
-                                        newEntries++;
-                                    } // if nothing found, add at least the keywords
-                                    else if (keywords != null && keywords.length > 0) {
-                                        // add keywords to database
-                                        dataObj.addKeywordsToDatabase(keywords);
-                                    }
-                                } else if (jCheckBoxImportKeywords.isSelected()) {
-                                    String[] keywords = (jRadioButtonSourceDB.isSelected()) ? bibtexObj.getKeywords(bibkey.toString()) : bibtexObj.getKeywordsFromAttachedFile(bibkey.toString());
-                                    if (keywords != null && keywords.length > 0) {
-                                        // add keywords to database
-                                        dataObj.addKeywordsToDatabase(keywords);
-                                    }
-                                }
+                                // the new Zettel
+                                createZettelFromBibTeXAbstract(au, bibkey);
                             }
                         }
                     } // here we have an already existing bibkey and update the author-values...
@@ -671,7 +648,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                         // set new author value, i.e. overwrite existing author with new value
                         dataObj.setAuthor(bibkeypos, au.toString());
                         // if the user also wants to *update* imported literature as entries, we do
-                        // this here. we then have to check whether the imported bibtex-entry
+                        // this here. we then have to check whether the imported BibTeX entry
                         // has an abstract or annotation, and if so, we use this as content for
                         // the new entry or update an existing entry with this content
                         if (jCheckBoxAddAsEntry.isSelected() && bibkey != null) {
@@ -686,7 +663,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                                 boolean anyAbstractEntyrFound = false;
                                 // we now have to go through all entries and check whether they have an
                                 // attribute "fromBibTex" (we do this by calling the method
-                                // "CDaten.isContentFromBibTex(int pos)"). If an entry has this
+                                // "Daten.isContentFromBibTex(int pos)"). If an entry has this
                                 // this attribute set to true, we then check whether the entry's
                                 // author-value equals the imported author-value (author-index-number
                                 // has to equal "bibkeypos"). if both isContentFromBibTex is true and
@@ -694,16 +671,16 @@ public class CImportBibTex extends javax.swing.JDialog {
                                 // the entry's content. We do this according to the user's choice, which
                                 // is stored in "updateOption".
                                 for (int counter = 1; counter <= dataObj.getCount(Daten.ZKNCOUNT); counter++) {
-                                    // retrieve entry's bibtex-attribute. here we check, whether
+                                    // retrieve entry's BibTeX attribute. here we check, whether
                                     // the entry with the index-number "counter" has content from
-                                    // a bibtex file. only in this case we need to update the entry
+                                    // a BibTeX file. only in this case we need to update the entry
                                     if (dataObj.isContentFromBibTex(counter)) {
                                         // now we have to check, whether any of the entry's author-values
-                                        // has the same bibkey like the imported bibtex-entry...
+                                        // has the same bibkey like the imported BibTeX entry...
                                         // only in this case we need to update the content
                                         if (dataObj.existsInAuthors(bibkeypos, counter)) {
                                             // now we know, that the entry with the index-number "counter"
-                                            // - was created from a formerly bibtex-import
+                                            // - was created from a formerly BibTeX import
                                             // - has an author with the index-number "bibkeypos"
                                             // so it has to be updated or replaced, but only
                                             // if the content differs from the previous content
@@ -725,7 +702,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                                                         }
                                                         // finally, add entry to dataset
                                                         dataObj.addEntryFromBibTex("", content, new String[]{au.toString()}, keywords, Tools.getTimeStamp());
-                                                        // and delete bibtex-attribute from the *old* entry...
+                                                        // and delete BibTeX attribute from the *old* entry...
                                                         dataObj.setContentFromBibTexRemark(counter, false);
                                                         // update found-variable
                                                         anyAbstractEntyrFound = true;
@@ -759,7 +736,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                                                         keywords = (jRadioButtonSourceDB.isSelected()) ? bibtexObj.getKeywords(bibkey.toString()) : bibtexObj.getKeywordsFromAttachedFile(bibkey.toString());
                                                     }
                                                     // we have to check whether the new imported content *differs*
-                                                    // from the existing zettel-content
+                                                    // from the existing Zettel content
                                                     if (!content.equals(dataObj.getZettelContent(counter))) {
                                                         // change entry's content
                                                         dataObj.setZettelContent(counter, dataObj.getZettelContent(counter) + "[br][br]" + content, true);
@@ -771,6 +748,8 @@ public class CImportBibTex extends javax.swing.JDialog {
                                                     // store entry-number of modified entry
                                                     modifiedEntries.add(counter);
                                                     break;
+                                                default:
+                                                    throw new IllegalStateException("Unexpected value: " + updateOption);
                                             }
                                         }
                                     }
@@ -797,6 +776,38 @@ public class CImportBibTex extends javax.swing.JDialog {
                 setProgress(cnt, 0, rows.length);
             }
             return null;
+        }
+
+        private void createZettelFromBibTeXAbstract(Object au, Object bibkey) {
+            this.au = au;
+            this.bibkey = bibkey;
+            if (jCheckBoxAddAsEntry.isSelected()) {
+                // init variable
+                String[] keywords = null;
+                // if user also wants keywords, retrieve them now
+                if (jCheckBoxImportKeywords.isSelected()) {
+                    keywords = (jRadioButtonSourceDB.isSelected()) ? bibtexObj.getKeywords(bibkey.toString()) : bibtexObj.getKeywordsFromAttachedFile(bibkey.toString());
+                }
+                // retrieve abstract (i.e. content for entry)
+                String content = (jRadioButtonSourceDB.isSelected()) ? bibtexObj.getAbstract(bibkey.toString()) : bibtexObj.getAbstractFromAttachedFile(bibkey.toString());
+                // only create content/new entry, if any abstract was found...
+                if (content != null && !content.isEmpty()) {
+                    // finally, add entry to dataset
+                    dataObj.addEntryFromBibTex("", content, new String[]{au.toString()}, keywords, Tools.getTimeStamp());
+                    // and increase entry counter
+                    newEntries++;
+                } // if nothing found, add at least the keywords
+                else if (keywords != null && keywords.length > 0) {
+                    // add keywords to database
+                    dataObj.addKeywordsToDatabase(keywords);
+                }
+            } else if (jCheckBoxImportKeywords.isSelected()) {
+                String[] keywords = (jRadioButtonSourceDB.isSelected()) ? bibtexObj.getKeywords(bibkey.toString()) : bibtexObj.getKeywordsFromAttachedFile(bibkey.toString());
+                if (keywords != null && keywords.length > 0) {
+                    // add keywords to database
+                    dataObj.addKeywordsToDatabase(keywords);
+                }
+            }
         }
 
         @Override
@@ -881,10 +892,11 @@ public class CImportBibTex extends javax.swing.JDialog {
         protected Object doInBackground() {
             // retrieve count of entries
             int count = (jRadioButtonSourceFile.isSelected()) ? bibtexObj.getAttachedFileCount() : bibtexObj.getCount();
-            // iterate all entries of the bibtex file
+            // iterate all entries of the BibTeX file
             for (int cnt = 0; cnt < count; cnt++) {
-                String bibkey, au;
-                // check which bibtex data source we need
+                String bibkey;
+                String au;
+                // check which BibTeX data source we need
                 if (jRadioButtonSourceFile.isSelected()) {
                     // ...retrieve bibkey
                     bibkey = bibtexObj.getBibkeyFromAttachedFile(cnt);
@@ -893,7 +905,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                 } else {
                     // ...retrieve bibkey
                     bibkey = bibtexObj.getBibkey(cnt);
-                    // retrieve each bibtex-author
+                    // retrieve each BibTeX author
                     au = bibtexObj.getFormattedEntry(cnt);
                 }
                 // check whether *all* entries should be displayed or not
@@ -919,6 +931,8 @@ public class CImportBibTex extends javax.swing.JDialog {
                             rowdata.add(new String[]{bibkey, au});
                         }
                         break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + jComboBoxShowBibTex.getSelectedIndex());
                 }
                 setProgress(cnt, 0, count);
             }
@@ -934,12 +948,12 @@ public class CImportBibTex extends javax.swing.JDialog {
 
         @Override
         protected void finished() {
-            // get iterator for all rowdata
+            // get iterator for all row data
             Iterator<String[]> it = rowdata.iterator();
             // create table model for the table data, which is not editable
             DefaultTableModel tm = (DefaultTableModel) jTableBibEntries.getModel();
             tm.setRowCount(0);
-            // and iterate all loaded bibtex-entries
+            // and iterate all loaded BibTeX entries
             while (it.hasNext()) {
                 tm.addRow(it.next());
             }
@@ -953,7 +967,7 @@ public class CImportBibTex extends javax.swing.JDialog {
 
     @Action
     public void browseFile() {
-        // retrieve attached bibtex-file
+        // retrieve attached BibTeX file
         File selectedfile = bibtexObj.getCurrentlyAttachedFile();
         // if we have no attached file, set last used file as filepath
         if (null == selectedfile || !selectedfile.exists()) {
@@ -969,10 +983,10 @@ public class CImportBibTex extends javax.swing.JDialog {
                 resourceMap.getString("bibTexDesc"),
                 settingsObj);
         if (selectedfile != null) {
-            // set new bibtex-filepath
+            // set new BibTeX filepath
             bibtexObj.setFilePath(selectedfile);
             bibtexObj.detachCurrentlyAttachedFile();
-            fillBibtexTable();
+            fillBibTeXTable();
         }
     }
 
@@ -1080,17 +1094,19 @@ public class CImportBibTex extends javax.swing.JDialog {
                 "BibKey", "Literaturangabe"
             }
         ) {
-            Class[] types = new Class [] {
+            final Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class
             };
-            boolean[] canEdit = new boolean [] {
+            final boolean[] canEdit = new boolean [] {
                 false, false
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }

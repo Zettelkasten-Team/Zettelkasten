@@ -34,11 +34,12 @@
 package de.danielluedecke.zettelkasten.database;
 
 import de.danielluedecke.zettelkasten.util.Constants;
+import org.jdom2.Document;
+import org.jdom2.Element;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
-import org.jdom2.Document;
-import org.jdom2.Element;
 
 /**
  *
@@ -1389,7 +1390,7 @@ public class AcceleratorKeys {
     
     /**
      * This method sets an accelerator file. This method called from within the CSettings class
-     * where the data is loaded and the file/infiormation is passed to this method.
+     * where the data is loaded and the file/information is passed to this method.
      * 
      * Following constants should be used as parameters:<br>
      * MAINKEYS<br>

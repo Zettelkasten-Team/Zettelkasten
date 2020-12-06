@@ -48,7 +48,7 @@ public class EditorFrameTest extends SwingTestCase {
                 stenoData,
                 tasksData);
 
-        BibTex bibTex = new BibTex(zknFrame, s);
+        BibTeX bibTex = new BibTeX(zknFrame, s);
 
         this.emptyFrame = new EditorFrame(zknFrame,
                 new Daten(zknFrame, s, synonyms, bibTex),
@@ -64,20 +64,14 @@ public class EditorFrameTest extends SwingTestCase {
                 false,
                 false);
 
-       getTestFrame().getContentPane().add(this.emptyFrame.getRootPane(), BorderLayout.CENTER);
-       getTestFrame().pack();
-       getTestFrame().setVisible(true);
+        getTestFrame().getContentPane().add(this.emptyFrame.getRootPane(), BorderLayout.CENTER);
+        getTestFrame().pack();
+        getTestFrame().setVisible(true);
 
     }
 
     @Test
     public void testContentPaneShouldBeEnabled() {
-        //uncomment to see the window
-        /*try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
         assertTrue("Content pane should be enabled",
                 this.emptyFrame.getContentPane().getComponent(0).isEnabled());
     }

@@ -33,7 +33,7 @@
 package de.danielluedecke.zettelkasten.tasks;
 
 import de.danielluedecke.zettelkasten.ZettelkastenApp;
-import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -70,7 +70,7 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
      */
     private final DesktopData desktopObj;
     private final Synonyms synonymsObj;
-    private final BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     /**
      * Settings object, which contains the setting, for instance the file paths
      * etc...
@@ -93,7 +93,7 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
             = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
             getContext().getResourceMap(SaveFileTask.class);
 
-    SaveFileTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, Bookmarks bm, SearchRequests sr, DesktopData dk, Synonyms sy, Settings s, BibTex bib) {
+    SaveFileTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, Bookmarks bm, SearchRequests sr, DesktopData dk, Synonyms sy, Settings s, BibTeX bib) {
         // Runs on the EDT.  Copy GUI state that
         // doInBackground() depends on from parameters
         // to ImportFileTask fields, here.

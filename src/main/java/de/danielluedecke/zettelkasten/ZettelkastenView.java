@@ -144,7 +144,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     /**
      * A reference to the bibtex-class.
      */
-    private final BibTex bibtex;
+    private final BibTeX bibtex;
     /**
      * initiate the desktop class. this class stores and manages the desktop
      * data.
@@ -1071,11 +1071,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // store reference to steno data
         steno = stn;
         bookmarks = new Bookmarks(this, settings);
-        bibtex = new BibTex(this, settings);
+        bibtex = new BibTeX(this, settings);
         // init all those classes that rely on parameters and could not be initialised
         // before the constructor is called...
         data = new Daten(this, settings, synonyms, bibtex);
-        // init stream-logger, so we have the logging both to a file and a byte-array
+        // init stream logger, so we have the logging both to a file and a byte array
         StreamHandler sHandler = new StreamHandler(baos_log, new SimpleFormatter());
         Constants.zknlogger.addHandler(sHandler);
         // tell logger to log everything
@@ -1091,7 +1091,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     3,
                     // and no appending...
                     false);
-            // add filehandler to our global logger
+            // add file handler to our global logger
             Constants.zknlogger.addHandler(fh);
             // and use a simple formatting, so the log-file will be readable
             fh.setFormatter(new SimpleFormatter());
@@ -1136,15 +1136,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // the programme that has exported the bib-tex-file).
                 if (bibtex.openAttachedFile(Constants.BIBTEX_ENCODINGS[settings.getLastUsedBibtexFormat()], true)) {
                     // tell about success
-                    Constants.zknlogger.log(Level.INFO, "BibTex-File was successfully attached.");
+                    Constants.zknlogger.log(Level.INFO, "BibTeX file was successfully attached.");
                 } else {
                     // tell about fail
-                    Constants.zknlogger.log(Level.INFO, "BibTex-File could not be found nor attached.");
+                    Constants.zknlogger.log(Level.INFO, "BibTeX file could not be found nor attached.");
                 }
             }
         } else {
             // tell about fail
-            Constants.zknlogger.log(Level.INFO, "No BibTex-File specified yet.");
+            Constants.zknlogger.log(Level.INFO, "No BibTeX file specified yet.");
         }
         // tick checkbox menu item
         showHighlightKeywords.setSelected(settings.getHighlightKeywords());
@@ -1159,7 +1159,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // the two checkboxes above, to avoid triggering unnecessary actions.
         // furthermore, we init the selection listeners for the tables and lists here
         initListeners();
-        // init the searchbox for the toolbar
+        // init the search box for the toolbar
         createToolbarSearchbox();
         // if we have mac osx aqua-look, apply leopard style
         if (settings.isSeaGlass()) {
@@ -1383,7 +1383,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 // this listener should only react on left-mouse-button-clicks...
-                // if other button then left-button clicked, leeave...
+                // if other button then left-button clicked, leave...
                 if (evt.getButton() != MouseEvent.BUTTON1) {
                     return;
                 }
@@ -1679,6 +1679,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 }
                 // when the memory label is clicked, call the garbage collector.
                 if (1 == evt.getClickCount()) {
+                    //FIXME Which memory label?
                     System.gc();
                 }
             }
@@ -4181,8 +4182,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTextFieldFilterKeywords.setEnabled(jTableKeywords.getRowCount() > 0);
         // show amount of entries
         statusMsgLabel.setText("(" + String.valueOf(jTableKeywords.getRowCount()) + " " + getResourceMap().getString("statusTextKeywords") + ")");
-        // try to motivate garbage collector
-        System.gc();
     }
 
     public void updateZettelkasten(String updateBuildNr) {
@@ -4684,8 +4683,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         statusMsgLabel.setText("(" + String.valueOf(jTableKeywords.getRowCount()) + " " + getResourceMap().getString("statusTextKeywords") + ")");
                         // finally, update display
                         updateDisplay();
-                        // try to motivate garbage collector
-                        System.gc();
                     }
                 }
             } else {
@@ -4774,8 +4771,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // i.e. the constructor is not called (because the if-statement above is not true)
         informationDlg.dispose();
         informationDlg = null;
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -4812,8 +4807,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // dispose the window and clear the object
             taskDlg.dispose();
             taskDlg = null;
-            // try to motivate garbage collector
-            System.gc();
             // remove entries also from table and linked list
             linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyRemove(jTableKeywords, linkedkeywordlist, this);
             // show amount of entries
@@ -4946,8 +4939,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     }
                     rateEntryDlg.dispose();
                     rateEntryDlg = null;
-                    // try to motivate garbage collector
-                    System.gc();
                 } catch (NumberFormatException ex) {
                     // log error
                     Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
@@ -5139,8 +5130,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // dispose the window and clear the object
             taskDlg.dispose();
             taskDlg = null;
-            // try to motivate garbage collector
-            System.gc();
             // update the tables and the possible linked lists
             linkedauthorlist = ZettelkastenViewUtil.updateTableFrequencyRemove(jTableAuthors, linkedauthorlist, this);
             // show amount of entries
@@ -5404,8 +5393,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             if (searchResultsDlg != null) {
                 searchResultsDlg.updateComboBox(-1, -1);
             }
-            // try to motivate garbage collector
-            System.gc();
             // finally, update display
             updateDisplay();
             // entries deleted, so return true
@@ -5825,8 +5812,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     linkedauthorlist = taskinfo.getLinkedValues();
                     // show amount of entries
                     statusMsgLabel.setText("(" + String.valueOf(jTableAuthors.getRowCount()) + " " + getResourceMap().getString("statusTextAuthors") + ")");
-                    // try to motivate garbage collector
-                    System.gc();
                 }
                 // finally, update display
                 updateDisplay();
@@ -5841,7 +5826,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         if (setBibKeyDlg != null) {
             setBibKeyDlg.dispose();
             setBibKeyDlg = null;
-            System.gc();
         }
         // open an input-dialog, setting the selected value as default-value
         if (null == setBibKeyDlg) {
@@ -6107,8 +6091,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTextFieldFilterAttachments.setEnabled(jTableAttachments.getRowCount() > 0);
         // show amount of entries
         statusMsgLabel.setText("(" + String.valueOf(jTableAttachments.getRowCount()) + " " + getResourceMap().getString("statusTextAttachments") + ")");
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -6214,7 +6196,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         statusMsgLabel.setText("(" + String.valueOf(jTableAuthors.getRowCount()) + " " + getResourceMap().getString("statusTextAuthors") + ")");
         // show/enable related menu
         showTabMenu(viewMenuAuthors);
-        // if authorlist is up to date, leave method
+        // if author list is up to date, leave method
         if (data.isAuthorlistUpToDate()) {
             return;
         }
@@ -6242,15 +6224,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         if (newAddedAuthor != null) {
             // select recently added value
             TableUtils.selectValueInTable(jTableAuthors, newAddedAuthor, 0);
-            // and clear strimg
+            // and clear string
             newAddedAuthor = null;
         }
         // enable textfield only if we have more than 1 element in the jtable
         jTextFieldFilterAuthors.setEnabled(jTableAuthors.getRowCount() > 0);
         // show amount of entries
         statusMsgLabel.setText("(" + String.valueOf(jTableAuthors.getRowCount()) + " " + getResourceMap().getString("statusTextAuthors") + ")");
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -6292,7 +6272,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // if we don't have a valid selection, use current entry as reference
         if (-1 == entry) {
             updateDisplayParts(data.getCurrentZettelPos());
-        } // and if it was a avalid value, show entry
+        } // and if it was a valid value, show entry
         else {
             updateDisplayParts(entry);
         }
@@ -6313,7 +6293,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // if we don't have a valid selection, use current entry as reference
         if (-1 == entry) {
             updateDisplayParts(data.getCurrentZettelPos());
-        } // and if it was a avalid value, show entry
+        } // and if it was a valid value, show entry
         else {
             updateDisplayParts(entry);
         }
@@ -6686,8 +6666,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jButtonRefreshTitles.setEnabled(false);
         // enable textfield only if we have more than 1 element in the jtable
         jTextFieldFilterTitles.setEnabled(jTableTitles.getRowCount() > 0);
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -7325,8 +7303,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
         settingsDlg.dispose();
         settingsDlg = null;
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -8036,8 +8012,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // i.e. the constructor is not called (because the if-statement above is not true)
         exportWindow.dispose();
         exportWindow = null;
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -8053,8 +8027,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // clear memory allocation
         zknAboutBox.dispose();
         zknAboutBox = null;
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -8999,8 +8971,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // do the typical stuff like updating display,
         // setting toolbar etc.
         updateAfterOpen();
-        // try to motivate garbage collector
-        System.gc();
         // return success
         return true;
     }
@@ -9049,8 +9019,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         isSaving = false;
         // update the display and toolbar icons
         updateDisplay();
-        // try to motivate garbage collector
-        System.gc();
         // check whether saving was successfull.
         // if not, show error-icon
         if (!data.isSaveOk()) {
@@ -9250,43 +9218,28 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     /**
-     * This method imports literatur-entries from a given bibtex-file and adds
-     * the literatur as author-entries to the authorFile.xml-file of the
-     * data-file.
+     * This method imports literature entries/references from a given BibTeX file and
+     * adds the references as author entries to the authorFile.xml file of the data file.
+     * <br><br
+     * A new dialog is opened (see {@link CImportBibTex})
+     * where the user can select a BibTeX file to open, and
+     * a file format of that BibTeX file
+     * (which corresponds to the literature program that is used, e.g. Citavi, JabRef, Zotero, etc.).
      * <br><br>
-     * A new dialog is opened (see {@code CImportBibTex.java} fore more details)
-     * where the user can choose a bibtex-file to open, and a file-format (which
-     * corresponds to the literatur-program that is used, e.g. Citavi, JabRef,
-     * Zotero...) of that bibtex-file.
-     * <br><br>
-     * All bibtex-entries of that file are displayed in a table where the user
-     * can select those entries that should be imported. Entries that have
-     * already previously beeing imported are
-     * <i>not</i> listed in that tables (these entries are identified by their
-     * bibkeys, i.e. if an existing author-value has the same bibkey like an
-     * entry of that bibtex-file).
+     * All BibTeX entries of this file are displayed in a table where
+     * the user can select the entries to be imported.
+     * Entries that have already been imported before are <i>not</i> listed in this table
+     * (these entries are identified by their BibTeX keys,
+     * i.e. if an existing author value has the same key as an entry in this BibTeX file).
      * <br><br>
      * Beside importing the author-values, the user can optionally choose to
-     * create an entry for each imported bibtex-entry, in case the bibtex-entry
+     * create an entry for each imported BibTeX entry, in case the BibTeX entry
      * has an abstract.
      */
     @Action
     public void importAuthors() {
-        // if dialog window isn't already created, do this now
-        if (importBibTexDlg != null) {
-            // free memory and release all allocated components
-            importBibTexDlg.dispose();
-            importBibTexDlg = null;
-            // try to motivate garbage collector
-            System.gc();
-        }
-        // if dialog window isn't already created, do this now
-        if (null == importBibTexDlg) {
-            // create a new dialog window
-            importBibTexDlg = new CImportBibTex(getFrame(), this, data, bibtex, settings);
-            // center window
-            importBibTexDlg.setLocationRelativeTo(getFrame());
-        }
+        importBibTexDlg = new CImportBibTex(getFrame(), this, data, bibtex, settings);
+        importBibTexDlg.setLocationRelativeTo(getFrame());
         ZettelkastenApp.getApplication().show(importBibTexDlg);
     }
 
@@ -9339,7 +9292,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             Object encodingchoice = JOptionPane.showInputDialog(getFrame(), getResourceMap().getString("bibtexEncodingsMsg"), getResourceMap().getString("bibtexEncodingsTitle"), JOptionPane.PLAIN_MESSAGE, null, Constants.BIBTEX_DESCRIPTIONS, Constants.BIBTEX_DESCRIPTIONS[settings.getLastUsedBibtexFormat()]);
             // if user did not cancel the operation, go on and open the bibtex-file
             if (encodingchoice != null) {
-                // iterate all availabe bibtex-encodings.
+                // iterate all available BibTeX encodings.
                 // if the appropriate encoding that matched the user's choice was found,
                 // use that index-number to open the bibtex-file
                 for (int enc = 0; enc < Constants.BIBTEX_DESCRIPTIONS.length; enc++) {
@@ -9352,12 +9305,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // the programme that has exported the bib-tex-file).
                 if (bibtex.openAttachedFile(Constants.BIBTEX_ENCODINGS[settings.getLastUsedBibtexFormat()], false)) {
                     // tell about success
-                    Constants.zknlogger.log(Level.INFO, "BibTex-File was successfully attached.");
+                    Constants.zknlogger.log(Level.INFO, "BibTeX file was successfully attached.");
                     // tell user about success
                     JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("bibtexAttachOkMsg"), getResourceMap().getString("bibtexAttachOkTitle"), JOptionPane.PLAIN_MESSAGE);
                 } else {
                     // tell about fail
-                    Constants.zknlogger.log(Level.INFO, "BibTex-File could not be found nor attached.");
+                    Constants.zknlogger.log(Level.INFO, "BibTeX file could not be found nor attached.");
                 }
             }
         }
@@ -9391,11 +9344,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // update author list
                 showAuthors();
                 // tell about success
-                Constants.zknlogger.log(Level.INFO, "BibTex-File was successfully refreshed.");
+                Constants.zknlogger.log(Level.INFO, "BibTeX file was successfully refreshed.");
                 // Constants.zknlogger.log(Level.INFO, "{0}{1}", new Object[]{System.lineSeparator(), taskinfo.getUpdatedAuthors()});
             } else {
                 // tell about fail
-                Constants.zknlogger.log(Level.INFO, "BibTex-File could not be found nor refreshed.");
+                Constants.zknlogger.log(Level.INFO, "BibTeX file could not be found nor refreshed.");
             }
         }
     }
@@ -9921,8 +9874,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // dispose window after closing
         searchDlg.dispose();
         searchDlg = null;
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -9981,15 +9932,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // dispose dialogs
             replaceDlg.dispose();
             replaceDlg = null;
-            // try to motivate garbage collector
-            System.gc();
             return false;
         }
         // dispose dialogs
         replaceDlg.dispose();
         replaceDlg = null;
-        // try to motivate garbage collector
-        System.gc();
         // return true...
         return true;
     }
@@ -10126,8 +10073,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // display error message box that nothing was found
             JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("errNothingFoundMsg"),getResourceMap().getString("errNothingFoundTitle"),JOptionPane.PLAIN_MESSAGE);
         }
-        // try to motivate garbage collector
-        System.gc();
     }
 
     @Action(enabledProperty = "moreEntriesAvailable")
@@ -10242,8 +10187,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // enable window-menu-item, if we have loaded search results
             setSearchResultsAvailable(searchrequests.getCount()>0);
         }
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -10374,8 +10317,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     // dispose the window and clear the object
                     taskDlg.dispose();
                     taskDlg = null;
-                    // try to motivate garbage collector
-                    System.gc();
                     break;
                 // this is a desktop-search, that means the search results are *not* shown in
                 // the searchresults-window. instead, they are added to the desktop
@@ -10654,16 +10595,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         if (searchResultsDlg!=null) {
             searchResultsDlg.dispose();
             searchResultsDlg = null;
-            // try to motivate garbage collector
-            System.gc();
         }
         // dispose and clear the window, if we have a created instance of it
         // (we need to do this e.g. if we have opened data, and load a new data-file)
         if (desktopDlg!=null) {
             desktopDlg.dispose();
             desktopDlg = null;
-            // try to motivate garbage collector
-            System.gc();
         }
         // enable window-menu-item, if we have loaded search results
         setSearchResultsAvailable(searchrequests.getCount()>0);

@@ -33,7 +33,7 @@
 package de.danielluedecke.zettelkasten.tasks.export;
 
 import de.danielluedecke.zettelkasten.ZettelkastenApp;
-import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.util.Constants;
@@ -61,7 +61,7 @@ public class ExportToXmlTask extends org.jdesktop.application.Task<Object, Void>
      * Zettelkasten will be passed as parameter in the constructor, see below
      */
     private final Daten dataObj;
-    private final BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     /**
      *
      */
@@ -109,7 +109,7 @@ public class ExportToXmlTask extends org.jdesktop.application.Task<Object, Void>
             getContext().getResourceMap(ExportTask.class);
 
     public ExportToXmlTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label,
-            TasksData td, Daten d, BibTex bib, File fp, ArrayList<Object> ee, int part, boolean bibtex, boolean rft) {
+                           TasksData td, Daten d, BibTeX bib, File fp, ArrayList<Object> ee, int part, boolean bibtex, boolean rft) {
         super(app);
         dataObj = d;
         bibtexObj = bib;

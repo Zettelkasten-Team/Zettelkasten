@@ -33,8 +33,8 @@
 
 package de.danielluedecke.zettelkasten;
 
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
@@ -66,7 +66,7 @@ public class CDesktopExport extends javax.swing.JDialog {
     /**
      *
      */
-    private BibTex bibtexObj;
+    private BibTeX bibtexObj;
     /**
      * file path to export file
      */
@@ -123,7 +123,7 @@ public class CDesktopExport extends javax.swing.JDialog {
      * @param s
      * @param b 
      */
-    public CDesktopExport(java.awt.Frame parent, Settings s, BibTex b) {
+    public CDesktopExport(java.awt.Frame parent, Settings s, BibTeX b) {
         super(parent);
         settingsObj = s;
         bibtexObj = b;
