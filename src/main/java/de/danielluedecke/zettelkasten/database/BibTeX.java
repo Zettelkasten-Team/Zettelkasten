@@ -148,9 +148,10 @@ public class BibTeX {
     private int citestyle = Constants.BIBTEX_CITE_STYLE_GENERAL;
 
     private boolean modified;
-    private boolean updateExistingEntries;
+
     private String encoding;
     private boolean suppressNewEntryImport;
+    private boolean updateExistingEntries;
 
     public BibTeX(ZettelkastenView zkn, Settings s) {
         zknframe = zkn;
