@@ -617,7 +617,11 @@ public class BibTeX {
                 return false;
             }
         }
-        // check whether missing entries should be added
+        checkWhetherMissingEntriesShouldBeAdded(suppressNewEntryImport, updateExistingEntries);
+        return true;
+    }
+
+    private void checkWhetherMissingEntriesShouldBeAdded(boolean suppressNewEntryImport, boolean updateExistingEntries) {
         if (!updateExistingEntries && !suppressNewEntryImport) {
             // add all new entries to data base
             int newentries = addEntries(attachedbibtexentries);
@@ -626,7 +630,6 @@ public class BibTeX {
                 JOptionPane.showMessageDialog(null, resourceMap.getString("importMissingBibtexEntriesText", String.valueOf(newentries), 0 + ""), "BibTeX-Import", JOptionPane.PLAIN_MESSAGE);
             }
         }
-        return true;
     }
 
     /**
