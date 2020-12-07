@@ -574,10 +574,11 @@ public class BibTeX {
         if (null == getFilePath() || !getFilePath().exists()) {
             return false;
         }
-        BibtexParser bp = new BibtexParser(false);
-        InputStreamReader isr = null;
-        InputStream is = null;
+
         try {
+            BibtexParser bp = new BibtexParser(false);
+            InputStreamReader isr = null;
+            InputStream is = null;
             is = new FileInputStream(getFilePath());
             isr = new InputStreamReader(is, encoding);
             bibtexfile = new BibtexFile();
