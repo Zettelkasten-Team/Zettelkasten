@@ -10844,7 +10844,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // check, which part of the data file has unsaved changes and set the related
         // warning message and title strings.
         // check whether we have any changes at all
-        boolean anychanges = bibtex.isModified() | synonyms.isModified() | data.isMetaModified() | data.isModified() | searchrequests.isModified() | bookmarks.isModified() | desktop.isModified();
+        boolean anychanges;
+        if (bibtex.isModified() || synonyms.isModified() || data.isMetaModified() || data.isModified() || searchrequests.isModified() || bookmarks.isModified() || desktop.isModified())
+            anychanges = true;
+        else {
+            anychanges = false;
+        }
         // and then check, which parts of the data-file have been changed...
         if (data.isMetaModified()) {
             confirmText.append(getResourceMap().getString("msgSaveMeta"));
