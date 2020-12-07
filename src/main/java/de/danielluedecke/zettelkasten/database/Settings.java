@@ -1991,7 +1991,7 @@ public class Settings {
     /**
      * Retrieves the setting which java-look'n'feel the user wants to have set
      *
-     * @return the string for the look'n'feel's classname
+     * @return the string for the look'n'feel's class name
      */
     public String getLookAndFeel() {
         return genericStringGetter(SETTING_LAF, "");
