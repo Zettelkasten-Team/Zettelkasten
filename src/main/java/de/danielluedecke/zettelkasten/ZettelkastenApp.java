@@ -147,7 +147,17 @@ public class ZettelkastenApp extends SingleFrameApplication {
 
             }
         }
-        show(new ZettelkastenView(this, settings, accKeys, autoKorrekt, synonyms, steno, taskData));
+        try {
+            show(new ZettelkastenView(this, settings, accKeys, autoKorrekt, synonyms, steno, taskData));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

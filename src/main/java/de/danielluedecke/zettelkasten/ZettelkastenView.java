@@ -71,10 +71,6 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.awt.event.*;
 import java.io.*;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -91,6 +87,7 @@ import java.util.logging.StreamHandler;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static javax.swing.UIManager.getCrossPlatformLookAndFeelClassName;
 import static javax.swing.UIManager.setLookAndFeel;
 
 
@@ -1057,8 +1054,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * @param stn
      * @param td
      */
-    public ZettelkastenView(SingleFrameApplication app, Settings st, AcceleratorKeys ak, AutoKorrektur ac, Synonyms sy, StenoData stn, TasksData td) {
+    public ZettelkastenView(
+            SingleFrameApplication app,
+            Settings st,
+            AcceleratorKeys ak,
+            AutoKorrektur ac,
+            Synonyms sy,
+            StenoData stn,
+            TasksData td)
+            throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         super(app);
+        this.app = app;
         taskinfo = td;
         // store reference to settings-class
         settings = st;
@@ -1099,7 +1105,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
         }
         // before components are drawn, set the default look and feel for this application
-        setDefaultLookAndFeel();
+        try {
+            setDefaultLookAndFeel();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
         // setup the local for the default actions cut/copy/paste
         Tools.initLocaleForDefaultActions(org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(ZettelkastenView.class, this));
         // init all swing components
@@ -3336,7 +3352,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * drawn. This is needed in case the user has changed the default look and
      * feel and we need to set something different than the usual default.
      */
-    private void setDefaultLookAndFeel() {
+    private void setDefaultLookAndFeel() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         try {
             // Try to scale default font size according to screen resolution.
             Font fm = (Font) UIManager.getLookAndFeelDefaults().get("defaultFont");
@@ -3351,8 +3367,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
             setLookAndFeel(settings.getLookAndFeel());
 
+
         } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
+            setLookAndFeel(getCrossPlatformLookAndFeelClassName());
         }
     }
 
