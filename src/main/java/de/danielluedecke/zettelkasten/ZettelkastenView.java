@@ -11762,10 +11762,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     false, false, false, false
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit[columnIndex];
             }
@@ -11819,10 +11821,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     false, false, false
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit[columnIndex];
             }
@@ -11960,10 +11964,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     false, false
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit[columnIndex];
             }
@@ -12057,11 +12063,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             boolean[] canEdit = new boolean[]{
                     false, false
             };
-
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit[columnIndex];
             }
@@ -12171,10 +12178,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     false, false, false, false, false, false
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit[columnIndex];
             }
@@ -12346,10 +12355,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     false, false
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit[columnIndex];
             }
@@ -12423,10 +12434,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     false, false, false
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit[columnIndex];
             }
