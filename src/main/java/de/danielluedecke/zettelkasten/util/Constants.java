@@ -153,7 +153,7 @@ public class Constants {
      */
     public static final String desktopNotesFileName = "desktopnt.xml";
     /**
-     * Constant for the filname of archived desktop-files
+     * Constant for the file name of archived desktop-files
      */
     public static final String archivedDesktopFileName = "archivedDesktop.xml";
 

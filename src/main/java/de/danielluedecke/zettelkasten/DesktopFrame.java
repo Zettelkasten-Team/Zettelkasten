@@ -1097,7 +1097,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * single-selection-mode is set.
      */
     private void initTree() {
-        // get the treemodel
+        // get the tree model
         DefaultTreeModel dtm = (DefaultTreeModel) jTreeDesktop.getModel();
         // and first of all, clear the jTree
         dtm.setRoot(null);
@@ -2324,12 +2324,12 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     }
 
     /**
-     * This method adds a new header/bulletpoint to the desktop (and to the
+     * This method adds a new header/bullet point to the desktop (and to the
      * jtree). Bullets differ from "usual" note in such case, that they are
      * allowed to have children - in contrary to nodes that refer to entries,
      * which may not have children.
      * <br><br>
-     * New bullet are always addes to the end of a selected node's
+     * New bullet are always added to the end of a selected node's
      * children-list, while a new "entry-node" should be added <b>before</b>
      * bullets. Thus, in a children list, first come all entry-nodes, than all
      * bullet-nodes (always in this order).
@@ -2337,13 +2337,16 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     @Action(enabledProperty = "bulletSelected")
     public void addBullet() {
         // wait for user input
-        String newBullet = (String) JOptionPane.showInputDialog(null, resourceMap.getString("newBulletMsg"), resourceMap.getString("newBulletTitle"), JOptionPane.PLAIN_MESSAGE);
+        String newBullet = (String) JOptionPane.showInputDialog(null,
+                resourceMap.getString("newBulletMsg"),
+                resourceMap.getString("newBulletTitle"),
+                JOptionPane.PLAIN_MESSAGE);
         // if we have a valid input and no cancel-operation, go on
         if (newBullet != null && newBullet.length() > 0) {
             // now we have to check whether the name of "newBullet" already exists as a bullet on this
             // level of the outline/structure. Therefor, check whether "insert" is a selected entry or a node.
             // if it's an entry, thus the new bullet is located on the same level, retrieve the parent.
-            // then we go through all parent's children and check for the occurence of a bullet named
+            // then we go through all parent's children and check for the occurrence of a bullet named
             // "newBullet".
             if (checkIfBulletExists(newBullet)) {
                 return;
@@ -2353,7 +2356,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             // add bullet to xml-file. therefor, check whether selection is the root, then pass
             // "null" as parameter. in every other case, pass the bullet's timestamp as parameter
             String timestamp = desktopObj.addBullet((node.isRoot()) ? null : TreeUtil.getNodeTimestamp(node), newBullet);
-            // update treeview
+            // update tree view
             updateTreeView();
             // add new bullet to path and re-select new path...
             selectTreePath(timestamp);
@@ -2381,7 +2384,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // now we have to check whether the name of "newBullet" already exists as a bullet on this
         // level of the outline/structure. Therefor, check whether "insert" is a selected entry or a node.
         // if it's an entry, thus the new bullet is located on the same level, retrieve the parent.
-        // then we go through all parent's children and check for the occurence of a bullet named
+        // then we go through all parent's children and check for the occurrence of a bullet named
         // "newBullet".
         DefaultMutableTreeNode parent = ((insert.getAllowsChildren()) ? insert : (DefaultMutableTreeNode) insert.getParent());
         // got through all parent's children
@@ -2464,7 +2467,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * by header/bullet-nodes (that may have children).
      * <br><br>
      * An entry-node shall never be located <b>behind</b> a bullet/header node!
-     * <br><br><i>This method is separated in two parts!</i> The inital part can
+     * <br><br><i>This method is separated in two parts!</i> The initial part can
      * be found in the {@link #addEntry addEntry} method.
      *
      * @param newEntries
@@ -2505,7 +2508,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         DefaultMutableTreeNode insert = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
         // if we have selected an entry, make sure to get the parent as insert-point
         // else we have selected a parent (bullet/header). the entry should be inserted at
-        // first posiion after the bullet.
+        // first position after the bullet.
         if (!insert.getAllowsChildren()) {
             DefaultMutableTreeNode parent = (DefaultMutableTreeNode) insert.getParent();
             // get the index of the selected child (i.e. the selected entry)
@@ -2633,7 +2636,11 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // before adding new entries...
         while (desktopObj.getCount() < 1) {
             // ask user whether a new desktop should be created...
-            int option = JOptionPane.showConfirmDialog(null, resourceMap.getString("askForNewDesktopMsg"), resourceMap.getString("askForNewDesktopTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+            int option = JOptionPane.showConfirmDialog(null,
+                    resourceMap.getString("askForNewDesktopMsg"),
+                    resourceMap.getString("askForNewDesktopTitle"),
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.PLAIN_MESSAGE);
             // if no, leave method...
             if (JOptionPane.NO_OPTION == option) {
                 return;
@@ -2650,7 +2657,11 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // before adding new entries...
         while (!desktopObj.desktopHasBullets(desktopObj.getCurrentDesktopNr())) {
             // ask user whether a new bullet should be created...
-            int option = JOptionPane.showConfirmDialog(null, resourceMap.getString("askForNewBulletMsg"), resourceMap.getString("askForNewBulletTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+            int option = JOptionPane.showConfirmDialog(null,
+                    resourceMap.getString("askForNewBulletMsg"),
+                    resourceMap.getString("askForNewBulletTitle"),
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.PLAIN_MESSAGE);
             // if no, leave method
             if (JOptionPane.NO_OPTION == option) {
                 return;
@@ -2660,7 +2671,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         }
         // if a valid node is selected, add entries
         if (isNodeSelected()) {
-            // create a new stringbuilder
+            // create a new string builder
             StringBuilder sb = new StringBuilder("");
             // iterate the array with all entries
             for (int e : entries) {
@@ -3913,6 +3924,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 int[] entries = desktopObj.retrieveDesktopEntries();
                 LinkedList<String> remainingAuthors = new LinkedList<>();
                 // iterate entries
+                // FIXME NullPointerException
                 for (int e : entries) {
                     // get authors
                     String[] aus = dataObj.getAuthors(e);
