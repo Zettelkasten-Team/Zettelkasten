@@ -188,21 +188,9 @@ public class CImportBibTex extends javax.swing.JDialog {
         InitStatusbarForTasks isb = new InitStatusbarForTasks(statusLabel, null, null);
         // initially, disable apply button
         jButtonApply.setEnabled(false);
-        // if we have mac os x with aqua-look&feel, make certain components look like mac...
-        if (settingsObj.isSeaGlass()) {
-            // make button smaller...
-            jButtonSelectAll.putClientProperty("JButton.buttonType", "roundRect");
-            // textfield should look like search-textfield...
-            jTextFieldFilterTable.putClientProperty("JTextField.variant", "search");
-            if (settingsObj.isSeaGlass()) {
-                jButtonApply.putClientProperty("JComponent.sizeVariant", "small");
-                jButtonBrowseBibtex.putClientProperty("JComponent.sizeVariant", "small");
-                jButtonCancel.putClientProperty("JComponent.sizeVariant", "small");
-                jButtonSelectAll.putClientProperty("JComponent.sizeVariant", "small");
-            }
-        }
+        
         if (jRadioButtonSourceFile.isSelected()) {
-            // retrieve filepath of currently attached file, if any...
+            // retrieve file path of currently attached file, if any...
             File cuf = bibtexObj.getCurrentlyAttachedFile();
             File luf = bibtexObj.getFilePath();
             // and set it as initial value to the textfield
@@ -506,7 +494,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                 // retrieve currently attached BibTeX file
                 currentlyattachedfile = bibtexObj.getCurrentlyAttachedFile();
             }
-            // set filepath to textfield
+            // set file dpath to textfield
             jTextFieldBibtexFilepath.setText((currentlyattachedfile != null && currentlyattachedfile.exists()) ? currentlyattachedfile.toString() : "");
         }
         // block all components
