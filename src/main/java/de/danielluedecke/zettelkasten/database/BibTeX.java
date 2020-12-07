@@ -641,8 +641,9 @@ public class BibTeX {
 
     private void checkWhetherMissingEntriesShouldBeAdded(boolean suppressNewEntryImport,
                                                          boolean updateExistingEntries) {
+        this.suppressNewEntryImport = suppressNewEntryImport;
         this.updateExistingEntries = updateExistingEntries; // replace with entries from the attached BibTeX file
-        if (updateExistingEntries) {
+        if (!updateExistingEntries && !suppressNewEntryImport) {
             addEntries(attachedbibtexentries);
         }
     }
@@ -664,7 +665,7 @@ public class BibTeX {
     public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport) throws IOException {
         if (openAttachedFile(encoding,
                 suppressNewEntryImport,
-                // updateExistingEntries 
+                // updateExistingEntries
                 false)) {
             return true;
         } else {
