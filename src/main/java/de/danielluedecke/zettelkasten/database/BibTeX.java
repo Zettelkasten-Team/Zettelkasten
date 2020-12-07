@@ -51,17 +51,17 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 /**
- * This class is responsible for managing bibtex files.<br><br>
+ * This class is responsible for managing BibTeX files.<br><br>
  * Usually, first of all a file must be opened ("attached") using the
  * {@link #openAttachedFile(java.lang.String) openAttachedFile(java.lang.String)}
  * method. after that, all entries are stored in the variable
- * {@link #bibtexfile bibtexfile}, while the single bibtex entries are stored in
+ * {@link #bibtexfile bibtexfile}, while the single BibTeX entries are stored in
  * {@link #attachedbibtexentries}.
  * <br><br>
- * With this class, you can then retrieve single entries, retrieve bibtex
+ * With this class, you can then retrieve single entries, retrieve BibTeX
  * entries (i.e. author values) in a certain citation style etc.
  * <br><br>
- * This class is mainly used for importing literatur values from a bibtex file
+ * This class is mainly used for importing literature values from a BibTeX file
  * (see
  * <b>CImportBibTex</b>) or changing bibkey values from entry's author values
  * (see
@@ -675,7 +675,7 @@ public class BibTeX {
         if (null == is) {
             return false;
         }
-        // create a new bibtex-parser for parsing the BibTeX file
+        // create a new BibTeX parser for parsing the BibTeX file
         BibtexParser bp = new BibtexParser(false);
         // create stream-readers for reading the file
         InputStreamReader isr = null;
