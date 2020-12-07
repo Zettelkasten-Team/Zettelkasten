@@ -614,7 +614,6 @@ public class BibTeX {
                 }
             } catch (IOException e) {
                 Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-                return false;
             }
         }
         checkWhetherMissingEntriesShouldBeAdded(suppressNewEntryImport, updateExistingEntries);
