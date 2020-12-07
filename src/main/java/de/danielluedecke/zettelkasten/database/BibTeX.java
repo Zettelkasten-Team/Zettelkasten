@@ -144,7 +144,10 @@ public class BibTeX {
      * {@link #getFormattedEntry(bibtex.dom.BibtexEntry) getFormattedEntryFromAttachedFile()}).
      */
     private int citestyle = Constants.BIBTEX_CITE_STYLE_GENERAL;
+
     private boolean modified;
+    private boolean suppressNewEntryImport;
+    private boolean updateExistingEntries;
 
     public BibTeX(ZettelkastenView zkn, Settings s) {
         zknframe = zkn;
@@ -565,7 +568,7 @@ public class BibTeX {
      *                               ZKN3-Database. Use {@code false} if missing entries should be added.
      * @param updateExistingEntries  {@code true} whether entries with identical
      *                               bibkey that have already been imported into the internal data base should
-     *                               be updated (replaced) with entries from the attached bibtex file.
+     *                               be updated (replaced) with entries from the attached BibTeX file.
      * @return {@code true} if attached file was successfully opened,
      * {@code false} otherwise.
      */
@@ -615,17 +618,24 @@ public class BibTeX {
         return true;
     }
 
-    private void checkWhetherMissingEntriesShouldBeAdded(boolean suppressNewEntryImport, boolean updateExistingEntries) {
+    private void checkWhetherMissingEntriesShouldBeAdded(boolean suppressNewEntryImport,
+                                                         boolean updateExistingEntries) {
+        this.suppressNewEntryImport = suppressNewEntryImport; // missing entries should not be added
+        this.updateExistingEntries = updateExistingEntries; // entries with identical bibkey that have already been imported into the internal data base should be updated (replaced) with entries from the attached BibTeX file.
         if (!updateExistingEntries && !suppressNewEntryImport) {
             // add all new entries to data base
             int newentries = addEntries(attachedbibtexentries);
             // tell user
             if (newentries > 0) {
+                // FIXME Same MessageDialog as in RefreshBibTexTask > tellUser
+                char[] updateCount = new char[0];
                 JOptionPane.showMessageDialog(null,
-                        resourceMap.getString("importMissingBibtexEntriesText", String.valueOf(newentries), 0 + ""),
+                        resourceMap.getString("importMissingBibtexEntriesText",
+                                String.valueOf(newentries),
+                                String.valueOf(updateCount)),
                         "BibTeX-Import",
                         JOptionPane.PLAIN_MESSAGE);
-                // FIXME "Es wurden ..."
+                // FIXME "Es wurden <newentries> fehlende BibTeX-Einträg importiert und <updateCount> wurden aktualisiert."
             }
         }
     }

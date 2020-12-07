@@ -125,7 +125,15 @@ public class RefreshBibTexTask extends org.jdesktop.application.Task<Object, Voi
         }
         // add all new entries to data base
         int newentries = bibtexObj.addEntries(attachedbibtexentries);
-        // tell user
+
+        tellUser(updateCount, newentries);
+
+        // log info about updates authors
+        taskinfo.setUpdatedAuthors(updatedAuthors.toString());
+        return null;
+    }
+
+    private void tellUser(int updateCount, int newentries) {
         if (newentries > 0 || updateCount > 0) {
             JOptionPane.showMessageDialog(null,
                     resourceMap.getString("importMissingBibtexEntriesText",
@@ -134,9 +142,6 @@ public class RefreshBibTexTask extends org.jdesktop.application.Task<Object, Voi
                     "BibTeX-Import",
                     JOptionPane.PLAIN_MESSAGE);
         }
-        // log info about updates authors
-        taskinfo.setUpdatedAuthors(updatedAuthors.toString());
-        return null;
     }
 
     @Override
