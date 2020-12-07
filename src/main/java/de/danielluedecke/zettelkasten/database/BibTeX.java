@@ -132,10 +132,12 @@ public class BibTeX {
      * The main variable that stores the currently opened BibTeX file
      */
     private BibtexFile bibtexfile = new BibtexFile();
+
     /**
-     * Stores the file path to the currently opened bibtex file.
+     * Stores the file path to the currently opened BibTeX file.
      */
     private File currentlyattachedfile = null;
+
     /**
      * A variable indicating which citation-style is used when requesting a
      * formatted bibtex-entry (see
@@ -544,7 +546,7 @@ public class BibTeX {
         settingsObj.setLastUsedBibtexFormat(encoding);
     }
 
-    public boolean refreshBibTexFile(Settings settingsObj) {
+    public boolean refreshBibTexFile(Settings settingsObj) throws IOException {
         // attach new file
         boolean success = openAttachedFile(Constants.BIBTEX_ENCODINGS[settingsObj.getLastUsedBibtexFormat()], false, true);
         return success;
@@ -567,20 +569,12 @@ public class BibTeX {
      * @return {@code true} if attached file was successfully opened,
      * {@code false} otherwise.
      */
-    public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport, boolean updateExistingEntries) {
-        // reset currently attached file path
-        currentlyattachedfile = null;
-        // if we have no BibTeX file path, return false
-        if (null == getFilePath() || !getFilePath().exists()) {
-            return false;
-        }
+    public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport, boolean updateExistingEntries) throws IOException {
+        BibtexParser bp = new BibtexParser(false);
+        InputStream is = new FileInputStream(getFilePath());
+        InputStreamReader isr = new InputStreamReader(is, encoding);
 
         try {
-            BibtexParser bp = new BibtexParser(false);
-            InputStreamReader isr = null;
-            InputStream is = null;
-            is = new FileInputStream(getFilePath());
-            isr = new InputStreamReader(is, encoding);
             bibtexfile = new BibtexFile();
             bp.parse(bibtexfile, isr);
             // get all nodes (entries) from the BibTeX file, so we can
@@ -596,7 +590,7 @@ public class BibTeX {
                     attachedbibtexentries.add(be);
                     // now we have all entries from the specified BibTeX file
                     // parsed into a linked list, so we have easy access to each
-                    // single bibtex-entry via the list "bibtexentries"
+                    // single BibTeX entry via the list "bibtexentries"
                 }
             }
             // set new attached file path, so we can figure out whether we have any
@@ -627,7 +621,11 @@ public class BibTeX {
             int newentries = addEntries(attachedbibtexentries);
             // tell user
             if (newentries > 0) {
-                JOptionPane.showMessageDialog(null, resourceMap.getString("importMissingBibtexEntriesText", String.valueOf(newentries), 0 + ""), "BibTeX-Import", JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(null,
+                        resourceMap.getString("importMissingBibtexEntriesText", String.valueOf(newentries), 0 + ""),
+                        "BibTeX-Import",
+                        JOptionPane.PLAIN_MESSAGE);
+                // FIXME "Es wurden ..."
             }
         }
     }
@@ -646,7 +644,7 @@ public class BibTeX {
      * @return {@code true} if attachedfile was successfully opened,
      * {@code false} otherwise.
      */
-    public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport) {
+    public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport) throws IOException {
         return openAttachedFile(encoding, suppressNewEntryImport, false);
     }
 
@@ -659,11 +657,11 @@ public class BibTeX {
      * @param is
      * @param encoding the character encoding of the file. use values of the
      *                 array {@code Constants.BIBTEX_ENCODINGS} as parameter.
-     * @return {@code true} if attachedfile was successfully opened,
+     * @return {@code true} if attached file was successfully opened,
      * {@code false} otherwise.
      */
     public boolean openFile(InputStream is, String encoding) {
-        // if we have no BibTeX filepath, return false
+        // if we have no BibTeX file path, return false
         if (null == is) {
             return false;
         }
@@ -691,7 +689,7 @@ public class BibTeX {
                     bibtexentries.add((BibtexEntry) node);
                     // now we have all entries from the specified BibTeX file
                     // parsed into a linked list, so we have easy access to each
-                    // single bibtex-entry via the list "bibtexentries"
+                    // single BibTeX entry via the list "bibtexentries"
                 }
             }
         } catch (ParseException | IOException e) {

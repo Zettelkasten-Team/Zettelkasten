@@ -1064,7 +1064,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             Synonyms sy,
             StenoData stn,
             TasksData td)
-            throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+            throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException {
         super(app);
         this.app = app;
         taskinfo = td;
@@ -7755,7 +7755,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * task
      */
     @Action
-    public void importWindow() {
+    public void importWindow() throws IOException {
         // opens the Import Dialog. This Class is responsible
         // for getting the relevant import data. the import task
         // itself (background task) will be started as another dialog,
@@ -9258,7 +9258,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * has an abstract.
      */
     @Action
-    public void importAuthors() {
+    public void importAuthors() throws IOException {
         importBibTexDlg = new CImportBibTex(getFrame(), this, data, bibtex, settings);
         importBibTexDlg.setLocationRelativeTo(getFrame());
         ZettelkastenApp.getApplication().show(importBibTexDlg);
@@ -9288,7 +9288,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     @Action
-    public void attachBibtexFile() {
+    public void attachBibtexFile() throws IOException {
         // retrieve attached bibtex-file
         File selectedfile = bibtex.getCurrentlyAttachedFile();
         // if we have no attached file, set last used file as filepath
@@ -9341,7 +9341,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      *
      */
     @Action(enabledProperty = "bibtexFileLoaded")
-    public void refreshBibTexFile() {
+    public void refreshBibTexFile() throws IOException {
         // retrieve current filepath of bibtex file
         File bibfile = bibtex.getFilePath();
         // check whether file already exists

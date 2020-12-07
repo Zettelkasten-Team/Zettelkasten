@@ -42,6 +42,7 @@ import org.jdesktop.application.SingleFrameApplication;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 
 
@@ -156,6 +157,8 @@ public class ZettelkastenApp extends SingleFrameApplication {
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
