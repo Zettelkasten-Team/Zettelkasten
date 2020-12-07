@@ -3371,6 +3371,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
             setLookAndFeel(getCrossPlatformLookAndFeelClassName());
+            Constants.zknlogger.log(Level.INFO, "Using following LaF: {0}", getCrossPlatformLookAndFeelClassName());
         }
     }
 
