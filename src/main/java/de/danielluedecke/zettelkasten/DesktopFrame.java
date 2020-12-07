@@ -768,41 +768,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         jEditorPaneMain.setBackground(Color.white);
     }
 
-    /**
-     * This method applies some graphical stuff so the appearance of the program
-     * is even more mac-like...
-     */
-    private void setupMacOSXLeopardStyle() {
-        // <editor-fold defaultstate="collapsed" desc="This method applies some UI-stuff particular for Mac OS X">
-        // now we have to change back the background-color of all components in the mainpart of the
-        // frame, since the brush-metal-look applies to all components
-        //
-        // make searchfields look like mac
-        jTextFieldLiveSearch.putClientProperty("JTextField.variant", "search");
-        // other components become normal gray - which is, however, a little bit
-        // darker than the default gray
-        Color backcol = ColorUtil.getMacBackgroundColor();
-        // on Leopard (OS X 10.5), we have different rendering, thus we need these lines
-        if (PlatformUtil.isLeopard()) {
-            mainframe.getContentPane().setBackground(backcol);
-            jPanel1.setBackground(backcol);
-        }
-        jPanel3.setBackground(backcol);
-        jPanel4.setBackground(backcol);
-        jPanel5.setBackground(backcol);
-        jPanel6.setBackground(backcol);
-        jPanelLiveSearch.setBackground(backcol);
-        jSplitPaneDesktop1.setBackground(backcol);
-        jSplitPaneDesktop2.setBackground(backcol);
-        // get the toolbar-action
-        AbstractAction ac = (AbstractAction) org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(DesktopFrame.class, this).get("findCancel");
-        // and change the large-icon-property, which is applied to the toolbar-icons,
-        // to the new icon
-        ac.putValue(AbstractAction.LARGE_ICON_KEY, new ImageIcon(Toolkit.getDefaultToolkit().getImage("NSImage://NSStopProgressFreestandingTemplate").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-        ac.putValue(AbstractAction.SMALL_ICON, new ImageIcon(Toolkit.getDefaultToolkit().getImage("NSImage://NSStopProgressFreestandingTemplate").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-        // </editor-fold>
-    }
-
     private void makeSeaGlassToolbar() {
         Tools.makeTexturedToolBarButton(tb_newbullet, Tools.SEGMENT_POSITION_FIRST);
         if (settingsObj.getShowAllIcons()) {
