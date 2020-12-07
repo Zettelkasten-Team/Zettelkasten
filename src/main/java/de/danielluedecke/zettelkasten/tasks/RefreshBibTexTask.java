@@ -88,7 +88,7 @@ public class RefreshBibTexTask extends org.jdesktop.application.Task<Object, Voi
         // for progress bar
         int cnt = 0;
         int length = attachedbibtexentries.size();
-        // amount of upated entries
+        // amount of updated entries
         int updateCount = 0;
         StringBuilder updatedAuthors = new StringBuilder("");
         // iterate all new entries

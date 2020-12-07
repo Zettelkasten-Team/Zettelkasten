@@ -43,7 +43,6 @@ import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
 
-import javax.swing.*;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;
@@ -80,17 +79,20 @@ public class BibTeX {
     /**
      * A reference to the settings-class (CSettings)
      */
-    private final Settings settingsObj;
+    private Settings settingsObj;
+
     /**
-     * This array stores all single entries from the attached bibtex file
+     * This array stores all single entries from the attached BibTeX file
      * {@code bibtexfile}.
      */
     private final ArrayList<BibtexEntry> attachedbibtexentries = new ArrayList<>();
+
     /**
      * This array stores all single entries from the attached bibtex file
      * {@code bibtexfile}.
      */
     private final ArrayList<BibtexEntry> bibtexentries = new ArrayList<>();
+
     /**
      * Thi array stores bibtex entries that should be exported. Since bibtex
      * entries that should be exported may contain only a selection of all
@@ -146,8 +148,9 @@ public class BibTeX {
     private int citestyle = Constants.BIBTEX_CITE_STYLE_GENERAL;
 
     private boolean modified;
-    private boolean suppressNewEntryImport;
     private boolean updateExistingEntries;
+    private String encoding;
+    private boolean suppressNewEntryImport;
 
     public BibTeX(ZettelkastenView zkn, Settings s) {
         zknframe = zkn;
@@ -551,8 +554,18 @@ public class BibTeX {
     }
 
     public boolean refreshBibTexFile(Settings settingsObj) throws IOException {
+        this.settingsObj = settingsObj;
         // attach new file
-        boolean success = openAttachedFile(Constants.BIBTEX_ENCODINGS[settingsObj.getLastUsedBibtexFormat()], false, true);
+        boolean success;
+        if (openAttachedFile(Constants.BIBTEX_ENCODINGS[settingsObj.getLastUsedBibtexFormat()],
+                // suppressNewEntryImport
+                false,
+                // updateExistingEntries
+                true)) {
+            success = true;
+        } else {
+            success = false;
+        }
         return success;
     }
 
@@ -567,13 +580,18 @@ public class BibTeX {
      * @param suppressNewEntryImport {@code true} if missing entries should
      *                               <b>not</b> be added to the {@link #bibtexentries}, i.e. the
      *                               ZKN3-Database. Use {@code false} if missing entries should be added.
-     * @param updateExistingEntries  {@code true} whether entries with identical
-     *                               bibkey that have already been imported into the internal data base should
-     *                               be updated (replaced) with entries from the attached BibTeX file.
+     * @param updateExistingEntries  {@code true} update entries with identical BibTeX key
+     *                                           that have already been imported into the internal database, i.e.,
+     *                                           replace with entries from the attached BibTeX file
      * @return {@code true} if attached file was successfully opened,
      * {@code false} otherwise.
      */
     public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport, boolean updateExistingEntries) throws IOException {
+        this.encoding = encoding;
+        this.suppressNewEntryImport = suppressNewEntryImport;
+        this.updateExistingEntries = updateExistingEntries;
+        boolean result = true;
+
         BibtexParser bp = new BibtexParser(false);
         InputStream is = new FileInputStream(getFilePath());
         InputStreamReader isr = new InputStreamReader(is, encoding);
@@ -602,7 +620,7 @@ public class BibTeX {
             currentlyattachedfile = getFilePath();
         } catch (ParseException | IOException e) {
             Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-            return false;
+            result = false;
         } finally {
             try {
                 if (isr != null) {
@@ -615,29 +633,17 @@ public class BibTeX {
                 Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             }
         }
-        checkWhetherMissingEntriesShouldBeAdded(suppressNewEntryImport, updateExistingEntries);
-        return true;
+        if (result) {
+            checkWhetherMissingEntriesShouldBeAdded(suppressNewEntryImport, updateExistingEntries);
+        }
+        return result;
     }
 
     private void checkWhetherMissingEntriesShouldBeAdded(boolean suppressNewEntryImport,
                                                          boolean updateExistingEntries) {
-        this.suppressNewEntryImport = suppressNewEntryImport; // missing entries should not be added
-        this.updateExistingEntries = updateExistingEntries; // entries with identical bibkey that have already been imported into the internal data base should be updated (replaced) with entries from the attached BibTeX file.
-        if (!updateExistingEntries && !suppressNewEntryImport) {
-            // add all new entries to data base
-            int newentries = addEntries(attachedbibtexentries);
-            // tell user
-            if (newentries > 0) {
-                // FIXME Same MessageDialog as in RefreshBibTexTask > tellUser
-                char[] updateCount = new char[0];
-                JOptionPane.showMessageDialog(null,
-                        resourceMap.getString("importMissingBibtexEntriesText",
-                                String.valueOf(newentries),
-                                String.valueOf(updateCount)),
-                        "BibTeX-Import",
-                        JOptionPane.PLAIN_MESSAGE);
-                // FIXME "Es wurden <newentries> fehlende BibTeX-Einträg importiert und <updateCount> wurden aktualisiert."
-            }
+        this.updateExistingEntries = updateExistingEntries; // replace with entries from the attached BibTeX file
+        if (updateExistingEntries) {
+            addEntries(attachedbibtexentries);
         }
     }
 
@@ -656,7 +662,14 @@ public class BibTeX {
      * {@code false} otherwise.
      */
     public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport) throws IOException {
-        return openAttachedFile(encoding, suppressNewEntryImport, false);
+        if (openAttachedFile(encoding,
+                suppressNewEntryImport,
+                // updateExistingEntries 
+                false)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
