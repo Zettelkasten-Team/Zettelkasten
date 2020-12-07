@@ -465,18 +465,19 @@ public class BibTeX {
 
     /**
      * @param be
-     * @return
+     * @return result
      */
     public int addEntries(ArrayList<BibtexEntry> be) {
+        int result = 0;
         if (be != null) {
             int totalcount = 0;
             // iterate nodes
             for (BibtexEntry node : be) {
                 totalcount += addEntry(node);
             }
-            return totalcount;
+            result = totalcount;
         }
-        return 0;
+        return result;
     }
 
     /**
