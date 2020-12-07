@@ -108,6 +108,13 @@ public class PlatformUtil {
         return isMacOS() & System.getProperty("os.version").startsWith("10.11");
     }
     /**
+     * Indicates whether macOS Mojave Version 10.14.6 is running...
+     * @return {@code true} if current OS is mac os 10.14 (mojave)
+     */
+    public static boolean isMojave() {
+        return isMacOS() & System.getProperty("os.version").startsWith("10.14");
+    }
+    /**
      * Indicates whether the OS is a windows OS
      * @return {@code true} if current OS is a windows system
      */
