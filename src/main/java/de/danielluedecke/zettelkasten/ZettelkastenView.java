@@ -3403,7 +3403,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // clear all table contents
             clearTreesAndTables();
         } else {
-            // Here we set up alle the textfields and lists
+            // Here we set up all the text fields and lists
             updateDisplayParts(data.getCurrentZettelPos());
             statusOfEntryLabel.setText(getResourceMap().getString("entryOfText") + " " + String.valueOf(data.getCount(Daten.ZKNCOUNT)));
         }
@@ -9342,11 +9342,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      */
     @Action(enabledProperty = "bibtexFileLoaded")
     public void refreshBibTexFile() throws IOException {
-        // retrieve current filepath of bibtex file
+        // retrieve current file path of BibTeX file
         File bibfile = bibtex.getFilePath();
         // check whether file already exists
         if (bibfile != null && bibfile.exists()) {
-            // detach current bibtex file
+            // detach current BibTeX file
             bibtex.detachCurrentlyAttachedFile();
             // open selected file, using the character encoding of the related reference-manager (i.e.
             // the programme that has exported the bib-tex-file).
