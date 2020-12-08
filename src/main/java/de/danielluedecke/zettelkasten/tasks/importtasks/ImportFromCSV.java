@@ -153,19 +153,8 @@ public class ImportFromCSV extends org.jdesktop.application.Task<Object, Void> {
 
         // init of the xml element variables here, since they are
         // being used more often
-        Element zettelkasten;
-        Element zettel;
-        Element content;
-        Element keywords;
-        Element author;
-        Element manlinks;
-        Element remarks;
-        Element timestamp;
-        Element hyperlinks;
-        Element title;
-        Element luhmann;
 
-        // return value that indicates that an error occured
+        // return value that indicates that an error occurred
         taskinfo.setImportOk(false);
         try {
             CSVReader csvreader = new CSVReader(new FileReader(filepath), separatorchar, '\"');
