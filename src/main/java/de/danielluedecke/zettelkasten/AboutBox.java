@@ -36,7 +36,9 @@ package de.danielluedecke.zettelkasten;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.Version;
 
-import java.awt.Desktop;
+import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -44,9 +46,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.logging.Level;
-import javax.swing.JComponent;
-import javax.swing.KeyStroke;
-import javax.swing.event.HyperlinkEvent;
 
 /**
  *
