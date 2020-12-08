@@ -477,15 +477,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 
         jCheckBoxSynonym.addActionListener(evt -> setModified(true));
 
-        jCheckBoxSystray.addActionListener(new ActionListener() {
-            private ActionEvent evt;
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                this.evt = evt;
-                setModified(true);
-            }
-        });
+        jCheckBoxSystray.addActionListener(evt -> setModified(true));
 
         jCheckBoxFillNewEntries.addActionListener(evt -> setModified(true));
 
