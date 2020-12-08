@@ -120,12 +120,7 @@ public class CAutoKorrekturEdit extends JDialog {
         // set application icon
         setIconImage(Constants.zknicon.getImage());
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-        ActionListener cancelAction = new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                cancel();
-            }
-        };
+        ActionListener cancelAction = evt -> cancel();
         getRootPane().registerKeyboardAction(cancelAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
         // get the default font size for tables and lists
         int defaultsize = settingsObj.getTableFontSize();
