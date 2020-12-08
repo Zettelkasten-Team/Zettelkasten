@@ -1243,7 +1243,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             tS.execute(cfuT);
             tM.setForegroundTask(cfuT);
         }
-        // init autobackup-timer
+        // init auto backup-timer
         makeAutoBackupTimer = new Timer();
         // this timer should start after 5 minutes and update every 5 minutes
         makeAutoBackupTimer.schedule(new AutoBackupTimer(), Constants.autobackupUpdateStart, Constants.autobackupUpdateInterval);
