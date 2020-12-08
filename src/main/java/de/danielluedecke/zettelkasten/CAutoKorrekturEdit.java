@@ -32,20 +32,21 @@
  */
 package de.danielluedecke.zettelkasten;
 
-import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
-import de.danielluedecke.zettelkasten.util.Constants;
+import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.util.logging.Level;
+import de.danielluedecke.zettelkasten.util.Constants;
+import org.jdesktop.application.Action;
+
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import org.jdesktop.application.Action;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.util.logging.Level;
 
 /**
  *
@@ -111,7 +112,7 @@ public class CAutoKorrekturEdit extends JDialog {
          * public MatteBorder(int top, int left, int bottom, int right, Color matteColor)
          */
         jScrollPane1.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-        // these codelines add an escape-listener to the dialog. so, when the user
+        // these code lines add an escape-listener to the dialog. so, when the user
         // presses the escape-key, the same action is performed as if the user
         // presses the cancel button...
         // disable apply-button
@@ -126,18 +127,18 @@ public class CAutoKorrekturEdit extends JDialog {
             }
         };
         getRootPane().registerKeyboardAction(cancelAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
-        // get the default fontsize for tables and lists
+        // get the default font size for tables and lists
         int defaultsize = settingsObj.getTableFontSize();
-        // only set new fonts, when fontsize differs from the initial value
+        // only set new fonts, when font size differs from the initial value
         if (defaultsize > 0) {
             // get current font
             Font f = jTableAutoKorrektur.getFont();
-            // create new font, add fontsize-value
+            // create new font, add font size value
             f = new Font(f.getName(), f.getStyle(), f.getSize() + defaultsize);
             // set new font
             jTableAutoKorrektur.setFont(f);
         }
-        // create auto-sorter for tabel
+        // create auto-sorter for table
         jTableAutoKorrektur.setAutoCreateRowSorter(true);
         jTableAutoKorrektur.setGridColor(settingsObj.getTableGridColor());
         // init the table, i.e. fill it with all existing data
