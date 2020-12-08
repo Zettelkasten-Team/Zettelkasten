@@ -71,6 +71,10 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.awt.event.*;
 import java.io.*;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -1199,7 +1203,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         initAcceleratorTable();
         // init the icons of the toolbar, whether they are small, medium or large
         initToolbarIcons(true);
-        // FIXME if it runs on a Mac, we need an additional quit handler...
+        // when we have a mac, we need an extra quit-handler...
+        if (PlatformUtil.isMacOS()) {
+            setupMacOSXApplicationListener();
+        }
+
         // add an exit-listener, which offers saving etc. on
         // exit, when we have unsaved changes to the data file
         getApplication().addExitListener(new ConfirmExit());
@@ -10890,6 +10898,74 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
         // no changes, so everything is ok
         return true;
+    }
+
+    /**
+     * This is an application listener that is initialised when running the program
+     * on mac os x. by using this appListener, we can use the typical apple-menu bar
+     * which provides own about, preferences and quit-menu-items.
+     */
+    private void setupMacOSXApplicationListener() {
+    // <editor-fold defaultstate="collapsed" desc="Application-listener initiating the stuff for the Apple-menu.">
+        try {
+            // get mac os-x application class
+            Class appc = Class.forName("com.apple.eawt.Application");
+            // create a new instance for it.
+            Object app = appc.newInstance();
+            // get the application-listener class. here we can set our action to the apple menu
+            Class lc = Class.forName("com.apple.eawt.ApplicationListener");
+            Object listener = Proxy.newProxyInstance(lc.getClassLoader(), new Class[] { lc }, new InvocationHandler() {
+                @Override
+                public Object invoke(Object proxy, Method method, Object[] args) {
+                    if (method.getName().equals("handleQuit")) {
+                        // call the general exit-handler from the desktop-application-api
+                        // here we do all the stuff we need when exiting the application
+                        ZettelkastenApp.getApplication().exit();
+                    }
+                    if (method.getName().equals("handlePreferences")) {
+                        // show settings window
+                        settingsWindow();
+                    }
+                    if (method.getName().equals("handleAbout")) {
+                        // show own about box
+                        showAboutBox();
+                        try {
+                            // set handled to true, so other actions won't take place any more.
+                            // if we leave this out, a second, system-own aboutbox would be displayed
+                            setHandled(args[0], Boolean.TRUE);
+                        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
+                            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
+                        }
+                    }
+                    return null;
+                }
+                private void setHandled(Object event, Boolean val) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+                    Method handleMethod = event.getClass().getMethod("setHandled", new Class[] {boolean.class});
+                    handleMethod.invoke(event, new Object[] {val});
+                }
+            });
+            // tell about success
+            Constants.zknlogger.log(Level.INFO,"Apple Class Loader successfully initiated.");
+            try {
+                // add application listener that listens to actions on the apple menu items
+                Method m = appc.getMethod("addApplicationListener", lc);
+                m.invoke(app, listener);
+                // register that we want that Preferences menu. by default, only the about box is shown
+                // but no pref-menu-item
+                Method enablePreferenceMethod = appc.getMethod("setEnabledPreferencesMenu", new Class[] {boolean.class});
+                enablePreferenceMethod.invoke(app, new Object[] {Boolean.TRUE});
+                // tell about success
+                Constants.zknlogger.log(Level.INFO,"Apple Preference Menu successfully initiated.");
+            } catch (NoSuchMethodException | SecurityException | InvocationTargetException ex) {
+                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
+            }
+        }
+        catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+        }
+        // </editor-fold>
+
+    // </editor-fold>
     }
 
     // FIXME #292 Sea Glass Look and Feel For Swing » 0.2.1
