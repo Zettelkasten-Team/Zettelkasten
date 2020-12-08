@@ -1315,22 +1315,22 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         //
         // here we start with action listeners
         //
-        // this actionn for the checkbox toggles the setting whether the synonyms
-        // should be included in the keywordlist of the jtablekeywords or not
+        // this action for the checkbox toggles the setting whether the synonyms
+        // should be included in the keyword list of the jtablekeywords or not
         jCheckBoxShowSynonyms.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // change setting
                 settings.setShowSynonymsInTable(jCheckBoxShowSynonyms.isSelected());
-                // tell that keywordlist is no longer up to date
+                // tell that keyword list is no longer up to date
                 data.setKeywordlistUpToDate(false);
                 // refresh keyword list
                 showKeywords();
             }
         });
-        // this actionn for the checkbox toggles the setting whether all follower
+        // this action for the checkbox toggles the setting whether all follower
         // entries, including top-level parents, should be shown, or whether
-        // current entry is the root of the treeview
+        // current entry is the root of the tree view
         jCheckBoxShowAllLuhmann.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1348,7 +1348,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jCheckBoxCluster.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // tell that clusterlist is no longer up to date
+                // tell that cluster list is no longer up to date
                 data.setClusterlistUpToDate(false);
                 // refresh cluster list
                 showCluster();
@@ -1372,11 +1372,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jComboBoxAuthorType.setMaximumRowCount(jComboBoxAuthorType.getItemCount());
         // select the last active look and feel
         jComboBoxAuthorType.setSelectedIndex(0);
-        // init actionlistener
+        // init action listener
         jComboBoxAuthorType.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // authorlist needs update
+                // author list needs update
                 data.setAuthorlistUpToDate(false);
                 // show authors
                 showAuthors();
@@ -2414,7 +2414,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             tb_searchTextfield.setAlignmentY(java.awt.Component.CENTER_ALIGNMENT);
         }
         tb_searchTextfield.setToolTipText(getResourceMap().getString("searchfieldTooltip"));
-        // put action to the tables' actionmaps
+        // put action to the tables' action maps
         tb_searchTextfield.getActionMap().put("EnterKeyPressed", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -3227,7 +3227,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 }
             }
         };
-        // put action to the tables' actionmaps
+        // put action to the tables' action maps
         jTableAuthors.getActionMap().put("NewKeyPressed", a_new);
         jTableKeywords.getActionMap().put("NewKeyPressed", a_new);
         // check for os, and use appropriate controlKey
@@ -3242,7 +3242,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 searchLogOr();
             }
         };
-        // put action to the tables' actionmaps
+        // put action to the tables' action maps
         jTextFieldFilterKeywords.getActionMap().put("FindKeyPressed", a_find);
         jTextFieldFilterAuthors.getActionMap().put("FindKeyPressed", a_find);
         // check for os, and use appropriate controlKey
@@ -3265,7 +3265,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 }
             }
         };
-        // put action to the tables' actionmaps
+        // put action to the tables' action maps
         jTextFieldFilterKeywords.getActionMap().put("FindRegExKeyPressed", a_findregex);
         jTextFieldFilterAuthors.getActionMap().put("FindRegExKeyPressed", a_findregex);
         jTextFieldFilterTitles.getActionMap().put("FindRegExKeyPressed", a_findregex);
@@ -3286,7 +3286,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private void initTrees() {
         // create array with all jTrees of mainframe
         javax.swing.JTree[] trees = new javax.swing.JTree[]{jTreeLuhmann, jTreeCluster, jTreeKeywords};
-        // and iterate that arrea
+        // and iterate that area
         for (javax.swing.JTree tree : trees) {
             // remove icons from jTree
             DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer) tree.getCellRenderer();
@@ -6164,7 +6164,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 }
             }
         });
-        // show/enabke related menu
+        // show/enable related menu
         showTabMenu(viewMenuBookmarks);
         // show amount of entries
         statusMsgLabel.setText("(" + String.valueOf(jTableBookmarks.getRowCount()) + " " + getResourceMap().getString("statusTextBookmarks") + ")");
