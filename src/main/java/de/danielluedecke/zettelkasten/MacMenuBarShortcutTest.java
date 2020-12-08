@@ -25,6 +25,8 @@ public class MacMenuBarShortcutTest {
 
         JMenuBar menuBar = new JMenuBar();
 
+        testFrame.setJMenuBar(menuBar);
+
         Action action = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
