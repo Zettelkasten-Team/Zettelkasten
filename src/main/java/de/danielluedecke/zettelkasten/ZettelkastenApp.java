@@ -84,7 +84,7 @@ public class ZettelkastenApp extends SingleFrameApplication {
      * At startup create and show the main frame of the application.
      */
     @Override
-    protected void startup() throws NumberFormatException {
+    protected void startup() {
         // prepare the class which stores the accelerator keys. this is needed here,
         // because the CSettings-class loads and saves this information
         accKeys = new AcceleratorKeys();
