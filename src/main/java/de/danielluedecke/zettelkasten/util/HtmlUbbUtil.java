@@ -34,26 +34,24 @@ package de.danielluedecke.zettelkasten.util;
 
 import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.database.BibTeX;
-import de.danielluedecke.zettelkasten.util.misc.Comparer;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.tasks.export.ExportTools;
-import java.awt.Image;
+import de.danielluedecke.zettelkasten.util.misc.Comparer;
+import org.jdom2.Element;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import org.jdom2.Element;
 
 /**
  * This class is responsible for the creation of a html page of an zettelkasten
@@ -258,9 +256,7 @@ public class HtmlUbbUtil {
         // ***********************************************
         htmlrating.append(System.lineSeparator()).append("<div class=\"entryrating\">");
         htmlrating.append("<table ");
-        if (PlatformUtil.isJava7OnMac() || PlatformUtil.isJava7OnWindows()) {
-            htmlrating.append("cellspacing=\"0\" ");
-        }
+
         htmlrating.append("class=\"tabentryrating\"><tr>").append(System.lineSeparator());
         // ***********************************************
         // init entry heading with entry nr and word count
@@ -1641,7 +1637,8 @@ public class HtmlUbbUtil {
                             }
                         }
                     }
-                    // dummy = dummy.substring(0, pos)+"<table border=\"1\">"+tabelle.toString().replace("\\\\", "<br>")+"</table>"+dummy.substring(end+8);
+
+                    // FIXME Platform-Specific Desktop Features #302
                     String tableString = (PlatformUtil.isJava7OnMac() || PlatformUtil.isJava7OnWindows()) ? "<table cellspacing=\"0\">" : "<table>";
                     dummy = dummy.substring(0, pos) + tableString + tabelle.toString().replace("\\\\", "<br>") + "</table>" + dummy.substring(end + 8);
                     pos = pos + tabelle.toString().length();

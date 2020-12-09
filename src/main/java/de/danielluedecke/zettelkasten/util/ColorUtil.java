@@ -69,22 +69,12 @@ public class ColorUtil {
      * Color value, needed for setting the snow-leopard-style on mac os x
      * new Color(218,218,218)
      */
-    public static final Color colorNormalSnowGray = new Color(218, 218, 218); //MacColorUtils.EMPTY_COLOR
-    /**
-     * Color value, needed for setting the snow-leopard-style on mac os x
-     * new Color(218,218,218)
-     */
     public static final Color colorNormalElCapitanGray = new Color(236, 236, 236); //MacColorUtils.EMPTY_COLOR
     /**
      * Color value, needed for setting border-color of the matte-top and -bottom-border
      * Color(64,64,64);
      */
     public static final Color colorDarkLineGray = new Color(64, 64, 64);
-    /**
-     * Color value, needed for java 7 on mac os x
-     * Color(210,210,210)
-     */
-    public static final Color colorNormalJava7Gray = new Color(210, 210, 210); //MacColorUtils.EMPTY_COLOR
     /**
      * Color value, needed for jtree background on mac os x
      * Color(230,235,242)
@@ -135,11 +125,6 @@ public class ColorUtil {
      */
     public static final Color colorNoFocusGray = new Color(229, 229, 221);
     /**
-     * Color value, needed for setting the leopard-style on mac os x
-     * Color(206,206,206)
-     */
-    public static final Color colorNormalGray = new Color(206, 206, 206); // new Color(216,216,216); //MacColorUtils.EMPTY_COLOR
-    /**
      * Color value, needed for setting border-color of the matte-top and -bottom-border
      * new Color(158,158,158);
      */
@@ -158,17 +143,6 @@ public class ColorUtil {
             return colorDarkLineNimbusGray;
         }
         return colorDarkLineGray;
-    }
-
-    public static Color getMacBackgroundColor() {
-        if (PlatformUtil.isLeopard()) {
-            return colorNormalGray;
-//        } else if (PlatformUtil.isElCapitan() || PlatformUtil.isYosemite()) {
-//            return colorNormalElCapitanGray;
-        } else if (PlatformUtil.isJava6OnMac()) {
-            return colorNormalSnowGray;
-        }
-        return colorNormalJava7Gray;
     }
 
 }

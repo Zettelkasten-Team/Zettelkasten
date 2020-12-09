@@ -3844,9 +3844,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 sbWordCountDisplayTask.setLength(0);
                 // create the content for the html-page
                 sbDisplayTask.append("<table ");
-                if (PlatformUtil.isJava7OnMac() || PlatformUtil.isJava7OnWindows()) {
-                    sbDisplayTask.append("cellspacing=\"0\" ");
-                }
+
                 sbDisplayTask.append("class=\"maintable\">");
                 // check which display option is chosen
                 switch (settingsObj.getDesktopCommentDisplayOptions()) {
