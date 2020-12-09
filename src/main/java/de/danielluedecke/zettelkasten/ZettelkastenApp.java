@@ -150,18 +150,7 @@ public class ZettelkastenApp extends SingleFrameApplication {
             e.printStackTrace();
         }
     }
-
-    /**
-     * This method is to initialize the specified window by injecting resources.
-     * Windows shown in our application come fully initialized from the GUI
-     * builder, so this additional configuration is not needed.
-     *
-     * @param root
-     */
-    @Override
-    protected void configureWindow(java.awt.Window root) {
-    }
-
+    
     @Override
     protected void initialize(String[] args) {
 
