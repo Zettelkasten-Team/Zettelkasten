@@ -8044,7 +8044,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     /**
-     * Shows the about box and gives information about the programm and version
+     * Shows the about box and gives information about the program and version
      */
     @Action
     public void showAboutBox() {
@@ -10933,7 +10933,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                             // set handled to true, so other actions won't take place any more.
                             // if we leave this out, a second, system-own aboutbox would be displayed
                             setHandled(args[0], Boolean.TRUE);
-                        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
+                           } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
                             Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
                         }
                     }

@@ -84,7 +84,7 @@ public class ZettelkastenApp extends SingleFrameApplication {
      * At startup create and show the main frame of the application.
      */
     @Override
-    protected void startup() {
+    protected void startup() throws NumberFormatException {
         // prepare the class which stores the accelerator keys. this is needed here,
         // because the CSettings-class loads and saves this information
         accKeys = new AcceleratorKeys();
@@ -138,27 +138,15 @@ public class ZettelkastenApp extends SingleFrameApplication {
         }
         // check parameters for entry-number of loaded file
         for (String par : params) {
-            try {
-                int initalZettellNr = Integer.parseInt(par);
-                if (initalZettellNr > 0) {
-                    settings.setInitialParamZettel(initalZettellNr);
-                    break;
-                }
-            } catch (NumberFormatException ignored) {
-
+            int initalZettellNr = Integer.parseInt(par);
+            if (initalZettellNr > 0) {
+                settings.setInitialParamZettel(initalZettellNr);
+                break;
             }
         }
         try {
             show(new ZettelkastenView(this, settings, accKeys, autoKorrekt, synonyms, steno, taskData));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException | IllegalAccessException | IOException e) {
             e.printStackTrace();
         }
     }
