@@ -1588,7 +1588,7 @@ public class HtmlUbbUtil {
                     String tablecontent = dummy.substring(pos + 7, end);
                     // get table rows
                     String[] tablerows = tablecontent.split(Pattern.quote("<br>"));
-                    // init rowcounter
+                    // init row counter
                     int rowcnt = 0;
                     // iterate all table rows
                     for (String row : tablerows) {
