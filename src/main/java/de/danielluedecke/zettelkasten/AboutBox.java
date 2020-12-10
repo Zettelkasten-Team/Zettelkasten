@@ -105,11 +105,7 @@ public class AboutBox extends javax.swing.JDialog {
         jEditorPane1.setContentType(resourceMap.getString("jEditorPane1.contentType")); // NOI18N
         jEditorPane1.setEditable(false);
         jEditorPane1.setName("jEditorPane1"); // NOI18N
-        jEditorPane1.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
-            public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
-                jEditorPane1HyperlinkUpdate(evt);
-            }
-        });
+        jEditorPane1.addHyperlinkListener(evt -> jEditorPane1HyperlinkUpdate(evt));
         jScrollPane1.setViewportView(jEditorPane1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
