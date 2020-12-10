@@ -45,6 +45,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 
+import static javax.swing.UIManager.installLookAndFeel;
+
 
 /**
  * The main class of the application.
@@ -165,8 +167,8 @@ public class ZettelkastenApp extends SingleFrameApplication {
     @Override
     protected void initialize(String[] args) {
 
-        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo("Flat Light", FlatIntelliJLaf.class.getName()));
-        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo("Flat Dark", FlatDarculaLaf.class.getName()));
+        installLookAndFeel(new UIManager.LookAndFeelInfo("Flat Light", FlatIntelliJLaf.class.getName()));
+        installLookAndFeel(new UIManager.LookAndFeelInfo("Flat Dark", FlatDarculaLaf.class.getName()));
 
         if (System.getProperty("os.name").startsWith("Mac"))
             System.setProperty("apple.laf.useScreenMenuBar", "true");
