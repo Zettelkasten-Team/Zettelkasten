@@ -3736,7 +3736,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         statusDesktopEntryButton.setVisible(desktop.isEntryInAnyDesktop(displayedZettel) && (count > 0));
         statusDesktopEntryButton.setEnabled(desktop.isEntryInAnyDesktop(displayedZettel) && (count > 0));
         // retrieve modified data-files
-        setSaveEnabled(synonyms.isModified() | data.isMetaModified() | bibtex.isModified() | data.isModified() | bookmarks.isModified() | searchrequests.isModified() | desktop.isModified());
+        setSaveEnabled(synonyms.isModified() || data.isMetaModified() || bibtex.isModified() || data.isModified() || bookmarks.isModified() || searchrequests.isModified() || desktop.isModified());
         buttonHistoryBack.setEnabled(data.canHistoryBack());
         buttonHistoryFore.setEnabled(data.canHistoryFore());
         setHistoryBackAvailable(data.canHistoryBack());
@@ -10906,7 +10906,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * which provides own about, preferences and quit-menu-items.
      */
     private void setupMacOSXApplicationListener() {
-    // <editor-fold defaultstate="collapsed" desc="Application-listener initiating the stuff for the Apple-menu.">
+        // <editor-fold defaultstate="collapsed" desc="Application-listener initiating the stuff for the Apple-menu.">
         try {
             // get mac os-x application class
             Class appc = Class.forName("com.apple.eawt.Application");
@@ -10914,7 +10914,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             Object app = appc.newInstance();
             // get the application-listener class. here we can set our action to the apple menu
             Class lc = Class.forName("com.apple.eawt.ApplicationListener");
-            Object listener = Proxy.newProxyInstance(lc.getClassLoader(), new Class[] { lc }, new InvocationHandler() {
+            Object listener = Proxy.newProxyInstance(lc.getClassLoader(), new Class[]{lc}, new InvocationHandler() {
                 @Override
                 public Object invoke(Object proxy, Method method, Object[] args) {
                     if (method.getName().equals("handleQuit")) {
@@ -10933,39 +10933,39 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                             // set handled to true, so other actions won't take place any more.
                             // if we leave this out, a second, system-own aboutbox would be displayed
                             setHandled(args[0], Boolean.TRUE);
-                           } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
-                            Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
+                        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
+                            Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
                         }
                     }
                     return null;
                 }
+
                 private void setHandled(Object event, Boolean val) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-                    Method handleMethod = event.getClass().getMethod("setHandled", new Class[] {boolean.class});
-                    handleMethod.invoke(event, new Object[] {val});
+                    Method handleMethod = event.getClass().getMethod("setHandled", new Class[]{boolean.class});
+                    handleMethod.invoke(event, new Object[]{val});
                 }
             });
             // tell about success
-            Constants.zknlogger.log(Level.INFO,"Apple Class Loader successfully initiated.");
+            Constants.zknlogger.log(Level.INFO, "Apple Class Loader successfully initiated.");
             try {
                 // add application listener that listens to actions on the apple menu items
                 Method m = appc.getMethod("addApplicationListener", lc);
                 m.invoke(app, listener);
                 // register that we want that Preferences menu. by default, only the about box is shown
                 // but no pref-menu-item
-                Method enablePreferenceMethod = appc.getMethod("setEnabledPreferencesMenu", new Class[] {boolean.class});
-                enablePreferenceMethod.invoke(app, new Object[] {Boolean.TRUE});
+                Method enablePreferenceMethod = appc.getMethod("setEnabledPreferencesMenu", new Class[]{boolean.class});
+                enablePreferenceMethod.invoke(app, new Object[]{Boolean.TRUE});
                 // tell about success
-                Constants.zknlogger.log(Level.INFO,"Apple Preference Menu successfully initiated.");
+                Constants.zknlogger.log(Level.INFO, "Apple Preference Menu successfully initiated.");
             } catch (NoSuchMethodException | SecurityException | InvocationTargetException ex) {
-                Constants.zknlogger.log(Level.SEVERE,ex.getLocalizedMessage());
+                Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
             }
-        }
-        catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-            Constants.zknlogger.log(Level.SEVERE,e.getLocalizedMessage());
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
         }
         // </editor-fold>
 
-    // </editor-fold>
+        // </editor-fold>
     }
 
     // FIXME #292 Sea Glass Look and Feel For Swing » 0.2.1
@@ -12144,6 +12144,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             boolean[] canEdit = new boolean[]{
                     false, false
             };
+
             @Override
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
