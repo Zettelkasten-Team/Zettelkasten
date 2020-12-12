@@ -37,6 +37,7 @@ import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
+import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -64,7 +65,7 @@ public class CExport extends javax.swing.JDialog {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(CExport.class);
     /**
      * A reference to the settings class
@@ -303,19 +304,14 @@ public class CExport extends javax.swing.JDialog {
                     jCheckBoxHighlightKeywords.setSelected(false);
                 }
                 // set keyboard focus input
-                switch (selectedIndex) {
-                // when the user selectes csv-format as export-type,
-                    case TYPE_MD:
-                    case TYPE_TXT:
-                    case TYPE_TEX:
-                        jCheckBoxSeparateFile.requestFocusInWindow();
-                        break;
-                    case TYPE_CSV:
-                        jComboBoxCSVSeparator.requestFocusInWindow();
-                        break;
-                    default:
-                        jButtonBrowse.requestFocusInWindow();
-                        break;
+                if (TYPE_MD == selectedIndex || TYPE_TXT == selectedIndex || TYPE_TEX == selectedIndex) {
+                    jCheckBoxSeparateFile.requestFocusInWindow();
+                } // when the user selectes csv-format as export-type,
+                // enable the combobox for the csv-separator
+                else if (TYPE_CSV == selectedIndex) {
+                    jComboBoxCSVSeparator.requestFocusInWindow();
+                } else {
+                    jButtonBrowse.requestFocusInWindow();
                 }
                 // check whetehr the user changes the fileformat, then apply new file-extenstion
                 String filext = jTextFieldFilepath.getText();
@@ -462,7 +458,7 @@ public class CExport extends javax.swing.JDialog {
             
         } else {
             filepath = FileOperationsUtil.chooseFile(this,
-                    JFileChooser.SAVE_DIALOG,
+                    (settingsObj.isMacAqua()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG,
                     JFileChooser.FILES_ONLY,
                     (null == exportdir) ? null : exportdir.getPath(),
                     (null == exportdir) ? null : exportdir.getName(),
@@ -778,7 +774,7 @@ public class CExport extends javax.swing.JDialog {
         jCheckBoxExportBibTex = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CExport.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CExport.class);
         setTitle(resourceMap.getString("FormExportDialog.title")); // NOI18N
         setModal(true);
         setName("FormExportDialog"); // NOI18N
@@ -798,7 +794,7 @@ public class CExport extends javax.swing.JDialog {
         jLabelBrowseDir.setText(resourceMap.getString("jLabelBrowseDir.text")); // NOI18N
         jLabelBrowseDir.setName("jLabelBrowseDir"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CExport.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CExport.class, this);
         jButtonBrowse.setAction(actionMap.get("save")); // NOI18N
         jButtonBrowse.setName("jButtonBrowse"); // NOI18N
 

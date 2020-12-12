@@ -37,6 +37,7 @@ import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
+import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -68,7 +69,7 @@ public class CImport extends javax.swing.JDialog {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap = 
-        org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CImport.class);
     /**
      * file path to import file
@@ -251,7 +252,7 @@ public class CImport extends javax.swing.JDialog {
         File importdir = settingsObj.getLastOpenedImportDir();
         // let user choose filepath
         filepath = FileOperationsUtil.chooseFile(this,
-                                          JFileChooser.OPEN_DIALOG,
+                                          (settingsObj.isMacAqua())?FileDialog.LOAD:JFileChooser.OPEN_DIALOG,
                                           JFileChooser.FILES_ONLY,
                                           (null==importdir)?null:importdir.getPath(),
                                           (null==importdir)?null:importdir.getName(),
@@ -420,28 +421,26 @@ public class CImport extends javax.swing.JDialog {
                             jCheckBox1.requestFocusInWindow();
                             break;
                 }
-                switch (selected) {
-                    case Constants.TYPE_ZKN3:
-                        appendingpossible = false;
-                        jRadioButton1.setEnabled(false);
-                        jRadioButton2.setEnabled(false);
-                        jRadioButton2.setSelected(true);
-                        jLabel3.setEnabled(false);
-                        break;
-                    case Constants.TYPE_BIB:
-                        appendingpossible = false;
-                        jRadioButton1.setEnabled(false);
-                        jRadioButton2.setEnabled(false);
-                        jRadioButton2.setSelected(true);
-                        jLabel3.setEnabled(false);
-                        break;
-                    default:
-                        // when we want to import foreign-word or synonyms etc.,
-                        // we don't need append-option
-                        jRadioButton1.setEnabled(appendingpossible);
-                        jRadioButton2.setEnabled(appendingpossible);
-                        jLabel3.setEnabled(appendingpossible);
-                        break;
+                if (Constants.TYPE_ZKN3==selected) {
+                    appendingpossible = false;
+                    jRadioButton1.setEnabled(false);
+                    jRadioButton2.setEnabled(false);
+                    jRadioButton2.setSelected(true);
+                    jLabel3.setEnabled(false);
+                }
+                else if (Constants.TYPE_BIB==selected) {
+                    appendingpossible = false;
+                    jRadioButton1.setEnabled(false);
+                    jRadioButton2.setEnabled(false);
+                    jRadioButton2.setSelected(true);
+                    jLabel3.setEnabled(false);
+                }
+                else {
+                    // when we want to import foreign-word or synonyms etc.,
+                    // we don't need append-option
+                    jRadioButton1.setEnabled(appendingpossible);
+                    jRadioButton2.setEnabled(appendingpossible);
+                    jLabel3.setEnabled(appendingpossible);
                 }
             }
         });
@@ -571,7 +570,7 @@ public class CImport extends javax.swing.JDialog {
         jTextFieldCsvSeparator = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CImport.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CImport.class);
         setTitle(resourceMap.getString("FormImportDialog.title")); // NOI18N
         setModal(true);
         setName("FormImportDialog"); // NOI18N
@@ -591,7 +590,7 @@ public class CImport extends javax.swing.JDialog {
         jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CImport.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CImport.class, this);
         jButton1.setAction(actionMap.get("open")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 

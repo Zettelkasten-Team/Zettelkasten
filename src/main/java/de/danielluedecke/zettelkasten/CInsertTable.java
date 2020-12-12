@@ -35,6 +35,7 @@ package de.danielluedecke.zettelkasten;
 
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
+import com.explodingpixels.macwidgets.MacWidgetFactory;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -294,7 +295,7 @@ public class CInsertTable extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTable1 = (settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
         jCheckBoxTableHeader = new javax.swing.JCheckBox();
         jButtonApply = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
@@ -302,7 +303,7 @@ public class CInsertTable extends javax.swing.JDialog {
         jTextFieldCaption = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CInsertTable.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CInsertTable.class);
         setTitle(resourceMap.getString("FormCInsertTable.title")); // NOI18N
         setModal(true);
         setName("FormCInsertTable"); // NOI18N
@@ -319,7 +320,7 @@ public class CInsertTable extends javax.swing.JDialog {
         jCheckBoxTableHeader.setText(resourceMap.getString("jCheckBoxTableHeader.text")); // NOI18N
         jCheckBoxTableHeader.setName("jCheckBoxTableHeader"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CInsertTable.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CInsertTable.class, this);
         jButtonApply.setAction(actionMap.get("insertTable")); // NOI18N
         jButtonApply.setName("jButtonApply"); // NOI18N
 

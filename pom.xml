@@ -290,6 +290,7 @@
             <artifactId>appframework</artifactId>
             <version>1.0.3</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.explodingpixels/mac_widgets -->
         <dependency>
             <groupId>com.explodingpixels</groupId>
             <artifactId>mac_widgets</artifactId>

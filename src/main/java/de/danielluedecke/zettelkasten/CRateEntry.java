@@ -63,7 +63,7 @@ public class CRateEntry extends javax.swing.JDialog {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CRateEntry.class);
 
     /**
@@ -124,11 +124,11 @@ public class CRateEntry extends javax.swing.JDialog {
         // check which image to choose
         switch (ratingvalue) {
             // no rating point
-            case RATING_VALUE_NONE: imgURL = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/bullet_black.png"); break;
+            case RATING_VALUE_NONE: imgURL = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/bullet_black.png"); break;
             // half rating point
-            case RATING_VALUE_HALF: imgURL = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/bullet_yellow.png"); break;
+            case RATING_VALUE_HALF: imgURL = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/bullet_yellow.png"); break;
             // full rating point
-            case RATING_VALUE_FULL: imgURL = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/bullet_green.png"); break;
+            case RATING_VALUE_FULL: imgURL = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/bullet_green.png"); break;
         }
         // return result
         return new ImageIcon(imgURL);
@@ -242,7 +242,7 @@ public class CRateEntry extends javax.swing.JDialog {
         jLabelRatingCount = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CRateEntry.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CRateEntry.class);
         setTitle(resourceMap.getString("FormRateEntry.title")); // NOI18N
         setModal(true);
         setName("FormRateEntry"); // NOI18N
@@ -250,7 +250,7 @@ public class CRateEntry extends javax.swing.JDialog {
 
         jPanel1.setName("jPanel1"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CRateEntry.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CRateEntry.class, this);
         jButtonApply.setAction(actionMap.get("rateEntry")); // NOI18N
         jButtonApply.setName("jButtonApply"); // NOI18N
 

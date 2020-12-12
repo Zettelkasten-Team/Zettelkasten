@@ -32,20 +32,28 @@
  */
 package de.danielluedecke.zettelkasten;
 
+import com.explodingpixels.macwidgets.BottomBar;
+import com.explodingpixels.macwidgets.BottomBarSize;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
-import de.danielluedecke.zettelkasten.util.misc.EntryStringTransferHandler;
+import de.danielluedecke.zettelkasten.util.classes.EntryStringTransferHandler;
+import com.explodingpixels.macwidgets.MacUtils;
+import com.explodingpixels.macwidgets.MacWidgetFactory;
+import com.explodingpixels.macwidgets.UnifiedToolBar;
+import com.explodingpixels.widgets.WindowUtils;
 import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
 import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.util.misc.InitStatusbarForTasks;
+import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.StenoData;
+import de.danielluedecke.zettelkasten.mac.MacSourceDesktopTree;
 import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.database.Bookmarks;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.TasksData;
+import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
 import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
 import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
 import de.danielluedecke.zettelkasten.tasks.export.ExportTools;
@@ -53,9 +61,11 @@ import de.danielluedecke.zettelkasten.util.ColorUtil;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
 import de.danielluedecke.zettelkasten.util.PlatformUtil;
 import de.danielluedecke.zettelkasten.util.TreeUtil;
-import de.danielluedecke.zettelkasten.util.misc.TreeUserObject;
+import de.danielluedecke.zettelkasten.util.classes.TreeUserObject;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.IllegalComponentStateException;
@@ -82,16 +92,7 @@ import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JTree;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.AttributeSet;
@@ -250,7 +251,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * create a new stringbuilder that will contain the plain text of entries in
      * the editorpane, so we can count the words
      */
-    private final StringBuilder sbWordCountDisplayTask = new StringBuilder("");
+    private final StringBuilder sbWordCountDisplayTask = new StringBuilder();
     /**
      *
      */
@@ -269,13 +270,13 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(DesktopFrame.class);
     /**
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap toolbarResourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(ToolbarIcons.class);
 
     /**
@@ -312,6 +313,12 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             // log info
             Constants.zknlogger.log(Level.INFO, "Memory usage logged. Desktop Window opened.");
         }
+        // create brushed look for window, so toolbar and window-bar become a unit
+        if (settingsObj.isMacAqua()) {
+            MacUtils.makeWindowLeopardStyle(getRootPane());
+            // WindowUtils.createAndInstallRepaintWindowFocusListener(this);
+            WindowUtils.installJComponentRepainterOnWindowFocusChanged(this.getRootPane());
+        }
         // init all components
         initComponents();
         initListeners();
@@ -321,6 +328,10 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         luhmannIconVisible.setSelected(isLuhmannIconVisible);
         // set application icon
         setIconImage(Constants.zknicon.getImage());
+        // if we have mac os x with aqua, make the window look like typical cocoa-applications
+        if (settingsObj.isMacAqua()) {
+            setupMacOSXLeopardStyle();
+        }
         if (settingsObj.isSeaGlass()) {
             setupSeaGlassStyle();
         }
@@ -360,6 +371,13 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         if (settingsObj.isSeaGlass()) {
             jSplitPaneDesktop2.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
             jScrollPane1.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(settingsObj)));
+            jTextArea1.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea1.border.title"), settingsObj));
+            jTextArea2.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea2.border.title"), settingsObj));
+            jTextArea3.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea3.border.title"), settingsObj));
+        }
+        if (settingsObj.isMacAqua()) {
+            ZknMacWidgetFactory.updateSplitPane(jSplitPaneDesktop1);
+            ZknMacWidgetFactory.updateSplitPane(jSplitPaneDesktop2);
             jTextArea1.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea1.border.title"), settingsObj));
             jTextArea2.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea2.border.title"), settingsObj));
             jTextArea3.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea3.border.title"), settingsObj));
@@ -715,7 +733,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                         // if we have any dropped data, go on...
                         if (entries != null && entries.length > 0) {
                             // get converted entry
-                            StringBuilder text = new StringBuilder("");
+                            StringBuilder text = new StringBuilder();
                             for (String entrie : entries) {
                                 try {
                                     text.append(dataObj.getZettelContentAsHtml(Integer.parseInt(entrie)));
@@ -760,7 +778,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // and remove border from the main panel
         jPanel1.setBorder(null);
         // init toolbar button array
-        javax.swing.JButton toolbarButtons[] = new javax.swing.JButton[]{
+        javax.swing.JButton[] toolbarButtons = new javax.swing.JButton[]{
             tb_newbullet, tb_newentry, tb_modifyentry, tb_cut, tb_copy, tb_paste,
             tb_rename, tb_comment, tb_delete, tb_refresh, tb_addluhmann,
             tb_moveup, tb_movedown
@@ -803,6 +821,9 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             tb_addluhmann.setVisible(false);
             tb_rename.setVisible(false);
         }
+        if (settingsObj.isMacAqua()) {
+            makeMacToolbar();
+        }
         if (settingsObj.isSeaGlass()) {
             makeSeaGlassToolbar();
         }
@@ -840,8 +861,9 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         jPanelLiveSearch.setBackground(backcol);
         jSplitPaneDesktop1.setBackground(backcol);
         jSplitPaneDesktop2.setBackground(backcol);
+        MacWidgetFactory.makeEmphasizedLabel(jLabel1);
         // get the toolbar-action
-        AbstractAction ac = (AbstractAction) org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(DesktopFrame.class, this).get("findCancel");
+        AbstractAction ac = (AbstractAction) org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(DesktopFrame.class, this).get("findCancel");
         // and change the large-icon-property, which is applied to the toolbar-icons,
         // to the new icon
         ac.putValue(AbstractAction.LARGE_ICON_KEY, new ImageIcon(Toolkit.getDefaultToolkit().getImage("NSImage://NSStopProgressFreestandingTemplate").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
@@ -873,6 +895,63 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         Tools.makeTexturedToolBarButton(tb_refresh, Tools.SEGMENT_POSITION_ONLY);
         jToolBarDesktop.setPreferredSize(new java.awt.Dimension(jToolBarDesktop.getSize().width, Constants.seaGlassToolbarHeight));
         jToolBarDesktop.add(new javax.swing.JToolBar.Separator(), 0);
+    }
+
+    private void makeMacToolbar() {
+        // hide default toolbr
+        jToolBarDesktop.setVisible(false);
+        this.remove(jToolBarDesktop);
+        // and create mac toolbar
+        if (settingsObj.getShowIcons() || settingsObj.getShowIconText()) {
+
+            UnifiedToolBar mactoolbar = new UnifiedToolBar();
+
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_newbullet, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            if (settingsObj.getShowAllIcons()) {
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_newentry, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_addluhmann, MacToolbarButton.SEGMENT_POSITION_LAST));
+            } else {
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_newentry, MacToolbarButton.SEGMENT_POSITION_LAST));
+            }
+            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_modifyentry, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_cut, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_copy, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_paste, MacToolbarButton.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_moveup, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_movedown, MacToolbarButton.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
+            if (settingsObj.getShowAllIcons()) {
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_rename, MacToolbarButton.SEGMENT_POSITION_FIRST));
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_comment, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            } else {
+                mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_comment, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            }
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_delete, MacToolbarButton.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_refresh, MacToolbarButton.SEGMENT_POSITION_ONLY));
+
+            mactoolbar.installWindowDraggerOnWindow(this);
+            jPanel1.add(mactoolbar.getComponent(), BorderLayout.PAGE_START);
+        }
+        makeMacBottomBar();
+    }
+
+    private void makeMacBottomBar() {
+        jPanel7.setVisible(false);
+
+        BottomBar macbottombar = new BottomBar(BottomBarSize.LARGE);
+        macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(jLabel1));
+        macbottombar.addComponentToLeft(jComboBoxDesktop);
+        macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(jLabelWordCount));
+        macbottombar.addComponentToLeft(jButtonShowMultipleOccurencesDlg);
+        macbottombar.addComponentToRight(statusAnimationLabel);
+
+        jPanel2.remove(jPanel7);
+        jPanel2.setBorder(null);
+        jPanel2.setLayout(new BorderLayout());
+        jPanel2.add(macbottombar.getComponent(), BorderLayout.PAGE_START);
     }
 
     /**
@@ -918,7 +997,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         //
         // get the action map
         javax.swing.ActionMap actionMap
-                = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+                = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
                 getContext().getActionMap(DesktopFrame.class, this);
         // iterate the xml file with the accelerator keys for the main window
         for (int cnt = 1; cnt <= accKeys.getCount(AcceleratorKeys.DESKTOPKEYS); cnt++) {
@@ -946,21 +1025,23 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // ATTENTION! Mnemonic keys are NOT applied on Mac OS, see Apple guidelines for
         // further details:
         // http://developer.apple.com/DOCUMENTATION/Java/Conceptual/Java14Development/07-NativePlatformIntegration/NativePlatformIntegration.html#//apple_ref/doc/uid/TP40001909-211867-BCIBDHFJ
-        // init the variables
-        String menutext;
-        char mkey;
-        // the mnemonic key for the file menu
-        menutext = desktopMenuFile.getText();
-        mkey = menutext.charAt(0);
-        desktopMenuFile.setMnemonic(mkey);
-        // the mnemonic key for the edit menu
-        menutext = desktopMenuEdit.getText();
-        mkey = menutext.charAt(0);
-        desktopMenuEdit.setMnemonic(mkey);
-        // the mnemonic key for the view menu
-        menutext = desktopMenuView.getText();
-        mkey = menutext.charAt(0);
-        desktopMenuView.setMnemonic(mkey);
+        if (!settingsObj.isMacAqua()) {
+            // init the variables
+            String menutext;
+            char mkey;
+            // the mnemonic key for the file menu
+            menutext = desktopMenuFile.getText();
+            mkey = menutext.charAt(0);
+            desktopMenuFile.setMnemonic(mkey);
+            // the mnemonic key for the edit menu
+            menutext = desktopMenuEdit.getText();
+            mkey = menutext.charAt(0);
+            desktopMenuEdit.setMnemonic(mkey);
+            // the mnemonic key for the view menu
+            menutext = desktopMenuView.getText();
+            mkey = menutext.charAt(0);
+            desktopMenuView.setMnemonic(mkey);
+        }
         // on Mac OS, at least for the German locale, the File menu is called different
         // compared to windows or linux. Furthermore, we don't need the about and preferences
         // menu items, since these are locates on the program's menu item in the apple-menu-bar
@@ -1076,7 +1157,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         javax.swing.JEditorPane tmpPane = new javax.swing.JEditorPane();
         tmpPane.setEditorKit(jEditorPaneMain.getEditorKit());
         tmpPane.setContentType(jEditorPaneMain.getContentType());
-        StringBuilder sb = new StringBuilder("");
+        StringBuilder sb = new StringBuilder();
         sb.append(completePage);
         // if we have any content, insert html-header at the beginning...
         if (sb.length() > 0) {
@@ -1182,16 +1263,21 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         DefaultTreeModel dtm = (DefaultTreeModel) jTreeDesktop.getModel();
         // and first of all, clear the jTree
         dtm.setRoot(null);
-        // set cell renderer, for desktop icons
-        jTreeDesktop.setCellRenderer(new MyCommentRenderer(Constants.iconDesktopComment,
-                Constants.iconDesktopLuhmann,
-                settingsObj.getUseMacBackgroundColor()));
-        if (settingsObj.getUseMacBackgroundColor()) {
-            jTreeDesktop.setBackground(ColorUtil.colorJTreeLighterBackground);
-            jTreeDesktop.setForeground(ColorUtil.colorJTreeDarkText);
+        // macstyle beim jTree setzen
+        if (settingsObj.isMacAqua()) {
+            jTreeDesktop.setUI(new MacSourceDesktopTree(desktopObj, dataObj, settingsObj));
+        } else {
+            // set cell renderer, for desktop icons
+            jTreeDesktop.setCellRenderer(new MyCommentRenderer(Constants.iconDesktopComment,
+                    Constants.iconDesktopLuhmann,
+                    settingsObj.getUseMacBackgroundColor()));
+            if (settingsObj.getUseMacBackgroundColor()) {
+                jTreeDesktop.setBackground(ColorUtil.colorJTreeLighterBackground);
+                jTreeDesktop.setForeground(ColorUtil.colorJTreeDarkText);
+            }
+            // set tree-selection-mode
+            jTreeDesktop.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         }
-        // set tree-selection-mode
-        jTreeDesktop.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         // enable drag&drop
         jTreeDesktop.setDragEnabled(true);
         // init transfer handler for tree
@@ -1207,7 +1293,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 // and give information whether the dragged entry is a bullet or an entry
                 retval.append((selectedNode.getAllowsChildren()) ? Constants.DRAG_SOURCE_TYPE_BULLET + "\n" : Constants.DRAG_SOURCE_TYPE_ENTRIES + "\n");
                 // next line contains the entry-number, or -1 if a bullet was selected
-                retval.append(String.valueOf(getSelectedEntryNumber())).append("\n");
+                retval.append(getSelectedEntryNumber()).append("\n");
                 // retrieve treepath of dragged entry/bullet
                 TreePath tp = t.getSelectionPath();
                 // add each single path component to return string, new-line-separated
@@ -1303,13 +1389,13 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                         // if we have any entries left, i.e. not only double entries, add them now
                         if (entrynrs != null && entrynrs.length > 0) {
                             // create new string builder
-                            StringBuilder sb = new StringBuilder("");
+                            StringBuilder sb = new StringBuilder();
                             // iterate all moved/copied/pasted entrynumbers
                             for (int cnt = 0; cnt < entrynrs.length; cnt++) {
                                 // check whether entrynumber already exists
                                 if (!entryExists(entrynrs[cnt], selectedNode)) {
                                     // if not, add it.
-                                    sb.append(String.valueOf(entrynrs[cnt])).append(",");
+                                    sb.append(entrynrs[cnt]).append(",");
                                 }
                             }
                             // delete last comma
@@ -1364,7 +1450,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         }
         // go through all entries and check, whether they exists. if so, remove them from the list,
         // so only valid entries are dropped...
-        StringBuilder sb = new StringBuilder("");
+        StringBuilder sb = new StringBuilder();
         for (String singleentry1 : singleentry) {
             if (!entryExists(Integer.parseInt(singleentry1), parent)) {
                 sb.append(singleentry1).append(",");
@@ -1597,7 +1683,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         if (cDisplayTaskIsRunning) {
             return;
         }
-        Task cdT = displayTask();
+        Task<? extends Object, ? extends Void> cdT = displayTask();
         // get the application's context...
         ApplicationContext appC = Application.getInstance().getContext();
         // ...to get the TaskMonitor and TaskService
@@ -1845,7 +1931,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // the editorpane should scroll to. each found search term has a link-tag with
         // a consecutive numbering (<a name="hl1">, <a name="hl2"> etc...)
         // the variable "findlivepos" contains the number of the current references ankh
-        String ankh = "hl" + String.valueOf(findlivepos);
+        String ankh = "hl" + findlivepos;
         // scroll the the reference
         jEditorPaneMain.scrollToReference(ankh);
         // increase findlivepos to refer to the next reference
@@ -1867,7 +1953,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             findlivepos = findlivemax;
         }
         // create reference string
-        String ankh = "hl" + String.valueOf(findlivepos);
+        String ankh = "hl" + findlivepos;
         // and scroll to reference
         jEditorPaneMain.scrollToReference(ankh);
     }
@@ -1902,7 +1988,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             // if we found something...
             if (pos != -1) {
                 // insert linktag before.
-                newtext.insert(pos, "<a name=\"hl" + String.valueOf(counter++) + "\"></a>");
+                newtext.insert(pos, "<a name=\"hl" + counter++ + "\"></a>");
                 // and increase position-index, so we don't have an infinite loop that always finds
                 // the same <span>-tag
                 pos = pos + 40;
@@ -2058,7 +2144,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 // if the child is a bullet...
                 if (e.getName().equals("bullet")) {
                     // create new stringbuilder
-                    StringBuilder sb = new StringBuilder("");
+                    StringBuilder sb = new StringBuilder();
                     // append name of bullet point
                     sb.append(e.getAttributeValue("name"));
 //                    // and append unique id, which is the element's timestamp
@@ -2135,7 +2221,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                     // succeeds, we have an entry, if a NumberFormatException is thrown, we have a headline.
                     // to treat headline with numbers only as headlines, we add a char to be sure that every
                     // headline will throw an exception when parsing the array's elements to integer.
-                    liste.add("h" + String.valueOf(headerlevel) + e.getAttributeValue("name"));
+                    liste.add("h" + headerlevel + e.getAttributeValue("name"));
                 } else {
                     // now we know we have an entry. so get the entry number...
                     int nr = Integer.parseInt(e.getAttributeValue("id"));
@@ -2229,7 +2315,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     @Action
     public void newDesktop() {
         // user-input for new desktop-description
-        String newDesk = (String) JOptionPane.showInputDialog(null, resourceMap.getString("newDesktopMsg"), resourceMap.getString("newDesktopTitle"), JOptionPane.PLAIN_MESSAGE);
+        String newDesk = JOptionPane.showInputDialog(null, resourceMap.getString("newDesktopMsg"), resourceMap.getString("newDesktopTitle"), JOptionPane.PLAIN_MESSAGE);
         // if we have any valdi input, go on...
         if ((newDesk != null) && (newDesk.length() > 0)) {
             //  add the description as new element to the desktop-data-class
@@ -2418,7 +2504,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     @Action(enabledProperty = "bulletSelected")
     public void addBullet() {
         // wait for user input
-        String newBullet = (String) JOptionPane.showInputDialog(null, resourceMap.getString("newBulletMsg"), resourceMap.getString("newBulletTitle"), JOptionPane.PLAIN_MESSAGE);
+        String newBullet = JOptionPane.showInputDialog(null, resourceMap.getString("newBulletMsg"), resourceMap.getString("newBulletTitle"), JOptionPane.PLAIN_MESSAGE);
         // if we have a valid input and no cancel-operation, go on
         if (newBullet != null && newBullet.length() > 0) {
             // now we have to check whether the name of "newBullet" already exists as a bullet on this
@@ -2507,7 +2593,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     @Action(enabledProperty = "nodeSelected")
     public void addEntry() {
         // wait for user input
-        String newEntries = (String) JOptionPane.showInputDialog(null, resourceMap.getString("newEntryMsg"), resourceMap.getString("newEntryTitle"), JOptionPane.PLAIN_MESSAGE);
+        String newEntries = JOptionPane.showInputDialog(null, resourceMap.getString("newEntryMsg"), resourceMap.getString("newEntryTitle"), JOptionPane.PLAIN_MESSAGE);
         // if we have a valid input and no cancel-operation, go on
         if (newEntries != null && newEntries.length() > 0) {
             addEntries(newEntries);
@@ -2520,14 +2606,14 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         int nr = getSelectedEntryNumber();
         // when we have a valid selection, go on
         if (nr != -1) {
-            zknframe.openEditor(true, nr, false, false, -1);
+            zknframe.openEditWindow(true, nr, false, false, -1);
         }
     }
 
     @Action(enabledProperty = "nodeSelected")
     public void insertEntry() {
         zknframe.editEntryFromDesktop = true;
-        zknframe.openEditor(false, -1, false, false, getSelectedEntryNumber());
+        zknframe.openEditWindow(false, -1, false, false, getSelectedEntryNumber());
     }
 
     /**
@@ -2723,7 +2809,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
             newDesktop();
             // when the user added a new desktop, select it
             if (desktopObj.getCount() >= 1) {
-                TreePath tp = new TreePath((TreeNode) jTreeDesktop.getModel().getRoot());
+                TreePath tp = new TreePath(jTreeDesktop.getModel().getRoot());
                 jTreeDesktop.setSelectionPath(tp);
             }
         }
@@ -2742,11 +2828,11 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // if a valid node is selected, add entries
         if (isNodeSelected()) {
             // create a new stringbuilder
-            StringBuilder sb = new StringBuilder("");
+            StringBuilder sb = new StringBuilder();
             // iterate the array with all entries
             for (int e : entries) {
                 // append entry-number
-                sb.append(String.valueOf(e));
+                sb.append(e);
                 // and a comma
                 sb.append(",");
             }
@@ -2782,7 +2868,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     @Action(enabledProperty = "luhmannNodeSelected")
     public void addLuhmannComplete() {
         // init string builder
-        luhmannnumbers = new StringBuilder("");
+        luhmannnumbers = new StringBuilder();
         // get recursive Luhmann-Numbers
         fillLuhmannNumbers(getSelectedEntryNumber());
         // add them...
@@ -2901,7 +2987,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         File importdir = settingsObj.getFilePath();
         // let user choose filepath
         File filepath = FileOperationsUtil.chooseFile(this,
-                JFileChooser.OPEN_DIALOG,
+                (settingsObj.isMacAqua()) ? FileDialog.LOAD : JFileChooser.OPEN_DIALOG,
                 JFileChooser.FILES_ONLY,
                 (null == importdir) ? null : importdir.getPath(),
                 (null == importdir) ? null : importdir.getName(),
@@ -2959,33 +3045,29 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                 int result = desktopObj.importArchivedDesktop(archive);
                 // here we go on in case the desktop-name of the imported archive
                 // already exists. in this case, the user shoould rename the archive
-                switch (result) {
-                    case DesktopData.IMPORT_ARCHIVE_ERR_DESKTOPNAME_EXISTS:
-                        // desktop-name already existed, so desktop was not added...
-                        JOptionPane.showMessageDialog(this, resourceMap.getString("errDesktopNameExistsMsg", archive.getRootElement().getAttributeValue("name")), resourceMap.getString("errDesktopNameExistsTitle"), JOptionPane.PLAIN_MESSAGE);
-                        // user-input for new desktop-description
-                        String newDeskName = (String) JOptionPane.showInputDialog(this, resourceMap.getString("newDesktopMsg"), resourceMap.getString("newDesktopTitle"), JOptionPane.PLAIN_MESSAGE);
-                        // check for valid-return value, or if the user cancelled the action
-                        if (newDeskName != null && !newDeskName.isEmpty()) {
-                            // if everything was ok, set new name
-                            archive.getRootElement().setAttribute("name", newDeskName);
-                        } else {
-                            // else user has cancelled process
-                            JOptionPane.showMessageDialog(this, resourceMap.getString("openArchiveCancelled"), resourceMap.getString("openArchiveDlgTitle"), JOptionPane.PLAIN_MESSAGE);
-                            return;
-                        }   break;
-                    case DesktopData.IMPORT_ARCHIVE_ERR_OTHER:
-                        // tell user about problem
-                        JOptionPane.showMessageDialog(this, resourceMap.getString("openArchiveError"), resourceMap.getString("openArchiveDlgTitle"), JOptionPane.PLAIN_MESSAGE);
-                        // and show error log
-                        zknframe.showErrorIcon();
+                if (DesktopData.IMPORT_ARCHIVE_ERR_DESKTOPNAME_EXISTS == result) {
+                    // desktop-name already existed, so desktop was not added...
+                    JOptionPane.showMessageDialog(this, resourceMap.getString("errDesktopNameExistsMsg", archive.getRootElement().getAttributeValue("name")), resourceMap.getString("errDesktopNameExistsTitle"), JOptionPane.PLAIN_MESSAGE);
+                    // user-input for new desktop-description
+                    String newDeskName = JOptionPane.showInputDialog(this, resourceMap.getString("newDesktopMsg"), resourceMap.getString("newDesktopTitle"), JOptionPane.PLAIN_MESSAGE);
+                    // check for valid-return value, or if the user cancelled the action
+                    if (newDeskName != null && !newDeskName.isEmpty()) {
+                        // if everything was ok, set new name
+                        archive.getRootElement().setAttribute("name", newDeskName);
+                    } else {
+                        // else user has cancelled process
+                        JOptionPane.showMessageDialog(this, resourceMap.getString("openArchiveCancelled"), resourceMap.getString("openArchiveDlgTitle"), JOptionPane.PLAIN_MESSAGE);
                         return;
-                    case DesktopData.IMPORT_ARCHIVE_OK:
-                        // everything is ok, so quit while-loop
-                        finished = true;
-                        break;
-                    default:
-                        break;
+                    }
+                } else if (DesktopData.IMPORT_ARCHIVE_ERR_OTHER == result) {
+                    // tell user about problem
+                    JOptionPane.showMessageDialog(this, resourceMap.getString("openArchiveError"), resourceMap.getString("openArchiveDlgTitle"), JOptionPane.PLAIN_MESSAGE);
+                    // and show error log
+                    zknframe.showErrorIcon();
+                    return;
+                } else if (DesktopData.IMPORT_ARCHIVE_OK == result) {
+                    // everything is ok, so quit while-loop
+                    finished = true;
                 }
             }
             // show success
@@ -3017,7 +3099,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         File exportdir = new File(datafilepath);
         // here we open a swing filechooser, in case the os ist no mac aqua
         File filepath = FileOperationsUtil.chooseFile(this,
-                JFileChooser.SAVE_DIALOG,
+                (settingsObj.isMacAqua()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG,
                 JFileChooser.FILES_ONLY,
                 exportdir.getPath(),
                 exportdir.getName(),
@@ -3319,18 +3401,18 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         DefaultMutableTreeNode selection = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTreeDesktop.getLastSelectedPathComponent();
         // enumerate all children of the node's parent's children...
-        Enumeration<DefaultMutableTreeNode> children = (Enumeration<DefaultMutableTreeNode>) node.getParent().children();
+        Enumeration children = node.getParent().children();
         while (children.hasMoreElements()) {
             try {
                 // get each child
-                node = children.nextElement();
+                node = (DefaultMutableTreeNode) children.nextElement();
                 // if the child of the enumeration equals the selection...
                 if (node.equals(selection)) {
                     // get next node after selected entry
-                    node = children.nextElement();
+                    node = (DefaultMutableTreeNode) children.nextElement();
                     // if the selected entry has another entry behind, return false
                     // otherwise true
-                    return (!isBulletSelected()) ? (node.getAllowsChildren()) : false;
+                    return (!isBulletSelected()) && (node.getAllowsChildren());
                 }
             } catch (NoSuchElementException e) {
                 // if there is no entry after the selected one, return true
@@ -3932,8 +4014,8 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * @return the background task
      */
     @Action
-    public Task displayTask() {
-        return new createDisplayTask(org.jdesktop.application.Application.getInstance(ZettelkastenApp.class));
+    public Task<? extends Object, ? extends Void> displayTask() {
+        return new createDisplayTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
     }
 
     @SuppressWarnings("LeakingThisInConstructor")
@@ -3941,7 +4023,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 
         // create a new stringbuilder that will contain the final string, i.e.
         // the html-page which we set to the jeditorpane
-        StringBuilder sbDisplayTask = new StringBuilder("");
+        StringBuilder sbDisplayTask = new StringBuilder();
 
         createDisplayTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
@@ -4107,7 +4189,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                     }
                 }
                 // set count words to label
-                jLabelWordCount.setText("(" + String.valueOf(wordcount) + " " + resourceMap.getString("WordCount") + ", " + String.valueOf(sbWordCountDisplayTask.length()) + " " + resourceMap.getString("CharCount") + ")");
+                jLabelWordCount.setText("(" + wordcount + " " + resourceMap.getString("WordCount") + ", " + sbWordCountDisplayTask.length() + " " + resourceMap.getString("CharCount") + ")");
             }
             return null;
         }
@@ -4220,7 +4302,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         jPanel2 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jComboBoxDesktop = new javax.swing.JComboBox();
+        jComboBoxDesktop = new javax.swing.JComboBox<String>();
         statusAnimationLabel = new javax.swing.JLabel();
         jButtonShowMultipleOccurencesDlg = new javax.swing.JButton();
         jLabelWordCount = new javax.swing.JLabel();
@@ -4294,7 +4376,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 
         jPopupMenuDesktop.setName("jPopupMenuDesktop"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(DesktopFrame.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(DesktopFrame.class, this);
         popupNewBullet.setAction(actionMap.get("addBullet")); // NOI18N
         popupNewBullet.setName("popupNewBullet"); // NOI18N
         jPopupMenuDesktop.add(popupNewBullet);
@@ -4388,7 +4470,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         jPopupMenuCutCopyPaste.add(jMenuItemNotesPaste);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(DesktopFrame.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(DesktopFrame.class);
         setTitle(resourceMap.getString("FormDesktop.title")); // NOI18N
         setMinimumSize(new java.awt.Dimension(350, 250));
         setName("FormDesktop"); // NOI18N
@@ -4742,7 +4824,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 
-        jComboBoxDesktop.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxDesktop.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBoxDesktop.setName("jComboBoxDesktop"); // NOI18N
 
         statusAnimationLabel.setIcon(resourceMap.getIcon("statusAnimationLabel.icon")); // NOI18N
@@ -5449,7 +5531,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     private javax.swing.JButton jButtonLiveNext;
     private javax.swing.JButton jButtonLivePrev;
     private javax.swing.JButton jButtonShowMultipleOccurencesDlg;
-    private javax.swing.JComboBox jComboBoxDesktop;
+    private JComboBox<String> jComboBoxDesktop;
     private javax.swing.JEditorPane jEditorPaneMain;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelWordCount;

@@ -34,8 +34,7 @@
 package de.danielluedecke.zettelkasten.database;
 
 import de.danielluedecke.zettelkasten.ZettelkastenView;
-import de.danielluedecke.zettelkasten.tasks.StartSearchTask;
-import de.danielluedecke.zettelkasten.util.misc.Comparer;
+import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import de.danielluedecke.zettelkasten.util.Constants;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -141,7 +140,7 @@ public class SearchRequests {
 
     /**
      * This method saves the results (i.e. the entry-numbers as integer-array) of the latest search request.
-     * Use this method to indicate whether a search request (see {@link StartSearchTask StartSearchTask}
+     * Use this method to indicate whether a search request (see {@link de.danielluedecke.zettelkasten.tasks.StartSearchTask StartSearchTask}
      * had results or not. Use {@code null} if the search had no results.
      *
      * @param sr an integer array with entry-numbers of found entries that matched the search parameters,
@@ -152,7 +151,7 @@ public class SearchRequests {
     }
     /**
      * This method returns the results (i.e. the entry-numbers as integer-array) of the latest search request.
-     * Use this method to check whether a search request (see {@link StartSearchTask StartSearchTask}
+     * Use this method to check whether a search request (see {@link de.danielluedecke.zettelkasten.tasks.StartSearchTask StartSearchTask}
      * had results or not. Returns {@code null} if the search had no results.
      *
      * @return the found entries, with their numbers ad integer array, or {@code null} if nothing was found.

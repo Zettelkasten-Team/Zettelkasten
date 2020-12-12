@@ -33,12 +33,19 @@
 package de.danielluedecke.zettelkasten;
 
 import bibtex.dom.BibtexEntry;
-import de.danielluedecke.zettelkasten.util.*;
-import de.danielluedecke.zettelkasten.util.misc.InitStatusbarForTasks;
+import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.util.Tools;
+import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.util.misc.Comparer;
+import com.explodingpixels.macwidgets.MacWidgetFactory;
+import com.explodingpixels.widgets.TableUtils;
+import de.danielluedecke.zettelkasten.util.ColorUtil;
+import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
+import de.danielluedecke.zettelkasten.util.PlatformUtil;
+import de.danielluedecke.zettelkasten.util.classes.Comparer;
+import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -54,6 +61,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -150,7 +158,7 @@ public class CImportBibTex extends javax.swing.JDialog {
      * get the strings for file descriptions from the resource map
      */
     private org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(CImportBibTex.class);
 
     /**
@@ -197,7 +205,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         // initially, disable apply button
         jButtonApply.setEnabled(false);
         // if we have mac os x with aqua-look&feel, make certain components look like mac...
-        if (settingsObj.isSeaGlass()) {
+        if (settingsObj.isMacAqua() || settingsObj.isSeaGlass()) {
             // make button smaller...
             jButtonSelectAll.putClientProperty("JButton.buttonType", "roundRect");
             // textfield should look like search-textfield...
@@ -266,6 +274,18 @@ public class CImportBibTex extends javax.swing.JDialog {
             f = new Font(f.getName(), f.getStyle(), f.getSize() + defaultsize);
             // set new font
             jTableBibEntries.setFont(f);
+        }
+        // make extra table-sorter for itunes-tables
+        if (settingsObj.isMacAqua()) {
+            // make extra table-sorter for itunes-tables
+            TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
+                @Override
+                public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
+                }
+            };
+            TableUtils.makeSortable(jTableBibEntries, sortDelegate);
+            // set back default resize mode
+            jTableBibEntries.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
         }
     }
 
@@ -351,10 +371,10 @@ public class CImportBibTex extends javax.swing.JDialog {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 if (Tools.isNavigationKey(evt.getKeyCode())) {
                     // if user pressed navigation key, select next table entry
-                    TableUtils.navigateThroughList(jTableBibEntries, evt.getKeyCode());
+                    de.danielluedecke.zettelkasten.util.TableUtils.navigateThroughList(jTableBibEntries, evt.getKeyCode());
                 } else {
                     // select table-entry live, while the user is typing...
-                    TableUtils.selectByTyping(jTableBibEntries, jTextFieldFilterTable, 1);
+                    de.danielluedecke.zettelkasten.util.TableUtils.selectByTyping(jTableBibEntries, jTextFieldFilterTable, 1);
                 }
             }
         });
@@ -491,7 +511,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                 linkedtablelist.add(o);
             }
         }
-        TableUtils.filterTable(jTableBibEntries, dtm, text, new int[]{1}, regEx);
+        de.danielluedecke.zettelkasten.util.TableUtils.filterTable(jTableBibEntries, dtm, text, new int[]{1}, regEx);
         // reset textfield
         jTextFieldFilterTable.setText("");
         jTextFieldFilterTable.requestFocusInWindow();
@@ -584,7 +604,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         // disable components
         setComponentsBlocked(true);
         // return task
-        return new addSelectedAuthorsTask(org.jdesktop.application.Application.getInstance(ZettelkastenApp.class));
+        return new addSelectedAuthorsTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
     }
 
     private class addSelectedAuthorsTask extends org.jdesktop.application.Task<Object, Void> {
@@ -873,7 +893,7 @@ public class CImportBibTex extends javax.swing.JDialog {
 
     @Action
     public Task startImport() {
-        return new startImportTask(org.jdesktop.application.Application.getInstance(ZettelkastenApp.class));
+        return new startImportTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
     }
 
     private class startImportTask extends org.jdesktop.application.Task<Object, Void> {
@@ -970,7 +990,7 @@ public class CImportBibTex extends javax.swing.JDialog {
             selectedfile = bibtexObj.getFilePath();
         }
         selectedfile = FileOperationsUtil.chooseFile(this,
-                JFileChooser.OPEN_DIALOG,
+                (settingsObj.isMacAqua()) ? FileDialog.LOAD : JFileChooser.OPEN_DIALOG,
                 JFileChooser.FILES_ONLY,
                 (null == selectedfile) ? null : selectedfile.toString(),
                 (null == selectedfile) ? null : selectedfile.getName(),
@@ -1036,7 +1056,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jComboBoxCiteStyle = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTableBibEntries = new javax.swing.JTable();
+        jTableBibEntries = (settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jButtonSelectAll = new javax.swing.JButton();
         jButtonRefresh = new javax.swing.JButton();
@@ -1050,7 +1070,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         jRadioButtonSourceDB = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CImportBibTex.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CImportBibTex.class);
         setTitle(resourceMap.getString("FormCImportBibTex.title")); // NOI18N
         setMinimumSize(new java.awt.Dimension(100, 100));
         setName("FormCImportBibTex"); // NOI18N
@@ -1068,7 +1088,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         jCheckBoxImportKeywords.setToolTipText(resourceMap.getString("jCheckBoxImportKeywords.toolTipText")); // NOI18N
         jCheckBoxImportKeywords.setName("jCheckBoxImportKeywords"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CImportBibTex.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CImportBibTex.class, this);
         jButtonApply.setAction(actionMap.get("addSelectedAuthors")); // NOI18N
         jButtonApply.setName("jButtonApply"); // NOI18N
 

@@ -148,7 +148,7 @@ public class CInsertManualLink extends javax.swing.JDialog {
         jButtonApply = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CInsertManualLink.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CInsertManualLink.class);
         setTitle(resourceMap.getString("FormInsertQuerverweis.title")); // NOI18N
         setModal(true);
         setName("FormInsertQuerverweis"); // NOI18N
@@ -166,7 +166,7 @@ public class CInsertManualLink extends javax.swing.JDialog {
         jTextFieldNr.setToolTipText(resourceMap.getString("jTextFieldNr.toolTipText")); // NOI18N
         jTextFieldNr.setName("jTextFieldNr"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CInsertManualLink.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CInsertManualLink.class, this);
         jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
         jButtonCancel.setName("jButtonCancel"); // NOI18N
 

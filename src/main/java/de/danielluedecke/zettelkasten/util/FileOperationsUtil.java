@@ -32,12 +32,13 @@
  */
 package de.danielluedecke.zettelkasten.util;
 
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.Settings;
+import java.awt.FileDialog;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -105,6 +106,47 @@ public class FileOperationsUtil {
     }
 
     /**
+     * Creates a mac-aqua-like file dialog. Since the typical OS X dialog can
+     * not be created using the swing file chooser, we use the awt-FileDialog
+     * instead to get mac-like-look'n'feel.
+     *
+     * @param fc a reference to a FileDialog that should be initiated.
+     * @param dlgmode either {@code FileDialog.LOAD} or {@code FileDialog.SAVE}
+     * @param initdir the initial directory which can be set when the dialog is
+     * shown
+     * @param initfile the initial file which can be selected when the dialog is
+     * shown
+     * @param title the dialog's title
+     * @param acceptedext the accepted file extensions that will be accepted,
+     * i.e. the files that are selectable
+     * @return a reference to the created <i>and initiated</i> FileDialog which
+     * was passed as parameter {@code fc}.
+     */
+    static FileDialog getMacFileDialog(FileDialog fc, int dlgmode, String initdir, String initfile, String title, final String[] acceptedext) {
+        fc.setTitle(title);
+        fc.setMode(dlgmode);
+        fc.setDirectory(initdir);
+        fc.setFile(initfile);
+        fc.setFilenameFilter(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                if (acceptedext != null && acceptedext.length > 0) {
+                    boolean acc = false;
+                    for (String ext : acceptedext) {
+                        if (name.toLowerCase().endsWith(ext)) {
+                            acc = true;
+                        }
+                    }
+                    return acc;
+                } else {
+                    return true;
+                }
+            }
+        });
+        return fc;
+    }
+
+    /**
      *
      * @param f
      * @param ext
@@ -150,11 +192,20 @@ public class FileOperationsUtil {
      * @return The chosen file, or {@code null} if dialog was cancelled
      */
     public static File chooseFile(java.awt.Frame parent, int dlgmode, int filemode, String initdir, String initfile, String title, final String[] acceptedext, final String desc, Settings settings) {
-        File curdir = (null == initdir) ? null : new File(initdir);
-        JFileChooser fc = createFileChooser(title, filemode, curdir, acceptedext, desc);
-        int option = (JFileChooser.OPEN_DIALOG == dlgmode) ? fc.showOpenDialog(parent) : fc.showSaveDialog(parent);
-        if (JFileChooser.APPROVE_OPTION == option) {
-            return fc.getSelectedFile();
+        if (!settings.isMacAqua()) {
+            File curdir = (null == initdir) ? null : new File(initdir);
+            JFileChooser fc = createFileChooser(title, filemode, curdir, acceptedext, desc);
+            int option = (JFileChooser.OPEN_DIALOG == dlgmode) ? fc.showOpenDialog(parent) : fc.showSaveDialog(parent);
+            if (JFileChooser.APPROVE_OPTION == option) {
+                return fc.getSelectedFile();
+            }
+        } else {
+            FileDialog fd = getMacFileDialog(new FileDialog(parent), dlgmode, initdir, initfile, title, acceptedext);
+            fd.setVisible(true);
+            String file = fd.getFile();
+            if (file != null) {
+                return new File(fd.getDirectory() + fd.getFile());
+            }
         }
         return null;
     }
@@ -187,11 +238,20 @@ public class FileOperationsUtil {
      * @return The chosen file, or {@code null} if dialog was cancelled
      */
     public static File chooseFile(java.awt.Dialog parent, int dlgmode, int filemode, String initdir, String initfile, String title, final String[] acceptedext, final String desc, Settings settings) {
-        File curdir = (null == initdir) ? null : new File(initdir);
-        JFileChooser fc = createFileChooser(title, filemode, curdir, acceptedext, desc);
-        int option = (JFileChooser.OPEN_DIALOG == dlgmode) ? fc.showOpenDialog(parent) : fc.showSaveDialog(parent);
-        if (JFileChooser.APPROVE_OPTION == option) {
-            return fc.getSelectedFile();
+        if (!settings.isMacAqua()) {
+            File curdir = (null == initdir) ? null : new File(initdir);
+            JFileChooser fc = createFileChooser(title, filemode, curdir, acceptedext, desc);
+            int option = (JFileChooser.OPEN_DIALOG == dlgmode) ? fc.showOpenDialog(parent) : fc.showSaveDialog(parent);
+            if (JFileChooser.APPROVE_OPTION == option) {
+                return fc.getSelectedFile();
+            }
+        } else {
+            FileDialog fd = getMacFileDialog(new FileDialog(parent), dlgmode, initdir, initfile, title, acceptedext);
+            fd.setVisible(true);
+            String file = fd.getFile();
+            if (file != null) {
+                return new File(fd.getDirectory() + fd.getFile());
+            }
         }
         return null;
     }
@@ -453,7 +513,7 @@ public class FileOperationsUtil {
 
     public static boolean insertAttachments(Daten dataObj, Settings settingsObj, JFrame parentFrame, File[] sources, DefaultListModel lm) {
         org.jdesktop.application.ResourceMap resourceMap
-                = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+                = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
                 getContext().getResourceMap(FileOperationsUtil.class);
         if (lm != null) {
             linkListModel = lm;
@@ -535,155 +595,151 @@ public class FileOperationsUtil {
                     resourceMap.getString("optionFileCancel"),},
                 resourceMap.getString("optioneFileCopy"));
         // if the user wants to proceed, copy the image now
-        switch (msgOption) {
-            case ATT_COPY:
-            case ATT_MOVE:
-                // first, check whether we already have an attachment directory
-                // create the file-object with the necessary directory path
-                File attachmentdir = new File(destdir);
-                // if the directory does not exist, create it
-                if (!attachmentdir.exists()) {
-                    // create directory
-                    try {
-                        if (!attachmentdir.mkdir()) {
-                            // if it fails, show warning message and leave method
-                            // create a message string including the filepath of the directory
-                            // which could not be created
-                            JOptionPane.showMessageDialog(parentFrame, resourceMap.getString("errMsgCreateAttDirMsg", attachmentdir), resourceMap.getString("errMsgCreateDirTitle"), JOptionPane.PLAIN_MESSAGE);
-                            return false;
-                        }
-                    } catch (SecurityException e) {
-                        Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+        if (ATT_COPY == msgOption || ATT_MOVE == msgOption) {
+            // first, check whether we already have an attachment directory
+            // create the file-object with the necessary directory path
+            File attachmentdir = new File(destdir);
+            // if the directory does not exist, create it
+            if (!attachmentdir.exists()) {
+                // create directory
+                try {
+                    if (!attachmentdir.mkdir()) {
                         // if it fails, show warning message and leave method
                         // create a message string including the filepath of the directory
                         // which could not be created
                         JOptionPane.showMessageDialog(parentFrame, resourceMap.getString("errMsgCreateAttDirMsg", attachmentdir), resourceMap.getString("errMsgCreateDirTitle"), JOptionPane.PLAIN_MESSAGE);
                         return false;
                     }
-                }   // go through all selected files
-                for (File f : sources) {
-                    // store the fileextension for later use, see below
-                    String fileextension = FileOperationsUtil.getFileExtension(f);
-                    // create a string to replace german umlauts
-                    // we have to do this because it seems like the Java desktop-api
-                    // is buggy. Files with umlauts in their names or paths cannot be
-                    // opend by the desktop-api, although their path is correct
-                    String withoutumlauts = f.getName();
-                    // replace umlauts with normal alphabetical letters
-                    withoutumlauts = withoutumlauts.replace("ä", "ae")
-                            .replace("Ä", "Ae")
-                            .replace("ö", "oe")
-                            .replace("Ö", "Oe")
-                            .replace("ü", "ue")
-                            .replace("Ü", "Ue")
-                            .replace("ß", "ss")
-                            .replace("\"", "");
-                    // create destionation file
-                    File dest = new File(destdir + withoutumlauts);
-                    // create loop-indicator
-                    boolean dest_ok = false;
-                    // indicator whether further action is needed
-                    boolean copyneeded = true;
-                    // check whether the file exists. if yes, the user should enter another name
-                    while (!dest_ok) {
-                        // check whether file exists
-                        if (dest.exists()) {
-                            // tell user that file exist and ask whether file should be renamed, or
-                            // existing file should be used as value
-                            // create a JOptionPane with rename/use exiting file options
-                            int msgOpt = JOptionPane.showOptionDialog(parentFrame,
-                                    resourceMap.getString("msgFileExistsChoice"),
-                                    resourceMap.getString("msgFileExistsChoiceTitle"),
-                                    JOptionPane.YES_NO_CANCEL_OPTION,
-                                    JOptionPane.PLAIN_MESSAGE,
-                                    null,
-                                    new Object[]{
-                                        resourceMap.getString("optionFileRename"),
-                                        resourceMap.getString("optionFileUseExisting"),
-                                        resourceMap.getString("optionFileCancel"),},
-                                    resourceMap.getString("optionFileUseExisting"));
-                            // if action cancelled, quit
-                            if (ATT_CANCEL_RENAME == msgOpt) {
-                                return false;
-                            }
-                            // if existing attachment should be used, do this here
-                            if (ATT_USE_EXISTING == msgOpt) {
-                                // add copied/moves file to link list...
-                                linkListModel.addElement((String) dest.getName());
-                                addedValues.add((String) dest.getName());
-                                // set the modified state
-                                modified = true;
-                                // indicate that while-loop is over, destination is valid
-                                dest_ok = true;
-                                // no more copying needed
-                                copyneeded = false;
-                            } else if (ATT_RENAME == msgOpt) {
-                                // open an option dialog and let the user prompt a new filename
-                                Object fnobject = JOptionPane.showInputDialog(parentFrame, resourceMap.getString("msgFileExists"), resourceMap.getString("msgFileExistsTitle"), JOptionPane.PLAIN_MESSAGE, null, null, dest.getName());
-                                // if the user cancelled the dialog, quit method
-                                if (null == fnobject) {
-                                    return false;
-                                }
-                                // else copy object to string
-                                String newfilename = fnobject.toString();
-                                // check whether the user just typed in a name without extension
-                                // if so, add extension here
-                                if (!newfilename.endsWith("." + fileextension)) {
-                                    newfilename = newfilename.concat("." + fileextension);
-                                }
-                                // and create a new file
-                                dest = new File(destdir + newfilename);
-                            }
-                        } else {
-                            // indicate that while-loop is over, destination is valid
-                            dest_ok = true;
+                } catch (SecurityException e) {
+                    Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+                    // if it fails, show warning message and leave method
+                    // create a message string including the filepath of the directory
+                    // which could not be created
+                    JOptionPane.showMessageDialog(parentFrame, resourceMap.getString("errMsgCreateAttDirMsg", attachmentdir), resourceMap.getString("errMsgCreateDirTitle"), JOptionPane.PLAIN_MESSAGE);
+                    return false;
+                }
+            }
+            // go through all selected files
+            for (File f : sources) {
+                // store the fileextension for later use, see below
+                String fileextension = FileOperationsUtil.getFileExtension(f);
+                // create a string to replace german umlauts
+                // we have to do this because it seems like the Java desktop-api
+                // is buggy. Files with umlauts in their names or paths cannot be
+                // opend by the desktop-api, although their path is correct
+                String withoutumlauts = f.getName();
+                // replace umlauts with normal alphabetical letters
+                withoutumlauts = withoutumlauts.replace("ä", "ae")
+                        .replace("Ä", "Ae")
+                        .replace("ö", "oe")
+                        .replace("Ö", "Oe")
+                        .replace("ü", "ue")
+                        .replace("Ü", "Ue")
+                        .replace("ß", "ss")
+                        .replace("\"", "");
+                // create destionation file
+                File dest = new File(destdir + withoutumlauts);
+                // create loop-indicator
+                boolean dest_ok = false;
+                // indicator whether further action is needed
+                boolean copyneeded = true;
+                // check whether the file exists. if yes, the user should enter another name
+                while (!dest_ok) {
+                    // check whether file exists
+                    if (dest.exists()) {
+                        // tell user that file exist and ask whether file should be renamed, or
+                        // existing file should be used as value
+                        // create a JOptionPane with rename/use exiting file options
+                        int msgOpt = JOptionPane.showOptionDialog(parentFrame,
+                                resourceMap.getString("msgFileExistsChoice"),
+                                resourceMap.getString("msgFileExistsChoiceTitle"),
+                                JOptionPane.YES_NO_CANCEL_OPTION,
+                                JOptionPane.PLAIN_MESSAGE,
+                                null,
+                                new Object[]{
+                                    resourceMap.getString("optionFileRename"),
+                                    resourceMap.getString("optionFileUseExisting"),
+                                    resourceMap.getString("optionFileCancel"),},
+                                resourceMap.getString("optionFileUseExisting"));
+                        // if action cancelled, quit
+                        if (ATT_CANCEL_RENAME == msgOpt) {
+                            return false;
                         }
-                    }
-                    
-                    if (copyneeded) {
-                        try {
-                            // here we go when the user wants to *copy* the files
-                            if (ATT_COPY == msgOption) {
-                                // create and copy file...
-                                dest.createNewFile();
-                                // if we have a file which does not already exist, copy the source to the dest
-                                FileOperationsUtil.copyFile(f, dest, 1024);
-                            } // here we go when the user wants to *move* the files
-                            else if (ATT_MOVE == msgOption) {
-                                // if moving the file failed...
-                                if (!f.renameTo(dest)) {
-                                    // ... show error msg
-                                    JOptionPane.showMessageDialog(parentFrame, resourceMap.getString("errMsgFileMove"), resourceMap.getString("errMsgFileMoveTitle"), JOptionPane.PLAIN_MESSAGE);
-                                }
-                            }
+                        // if existing attachment should be used, do this here
+                        if (ATT_USE_EXISTING == msgOpt) {
                             // add copied/moves file to link list...
                             linkListModel.addElement((String) dest.getName());
                             addedValues.add((String) dest.getName());
                             // set the modified state
                             modified = true;
-                            // set new default directory
-                            settingsObj.setLastOpenedAttachmentDir(f);
-                        } catch (IOException ex) {
-                            Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
-                            JOptionPane.showMessageDialog(parentFrame, resourceMap.getString("errMsgFileCopy"), resourceMap.getString("errMsgFileCopyTitle"), JOptionPane.PLAIN_MESSAGE);
+                            // indicate that while-loop is over, destination is valid
+                            dest_ok = true;
+                            // no more copying needed
+                            copyneeded = false;
+                        } else if (ATT_RENAME == msgOpt) {
+                            // open an option dialog and let the user prompt a new filename
+                            Object fnobject = JOptionPane.showInputDialog(parentFrame, resourceMap.getString("msgFileExists"), resourceMap.getString("msgFileExistsTitle"), JOptionPane.PLAIN_MESSAGE, null, null, dest.getName());
+                            // if the user cancelled the dialog, quit method
+                            if (null == fnobject) {
+                                return false;
+                            }
+                            // else copy object to string
+                            String newfilename = fnobject.toString();
+                            // check whether the user just typed in a name without extension
+                            // if so, add extension here
+                            if (!newfilename.endsWith("." + fileextension)) {
+                                newfilename = newfilename.concat("." + fileextension);
+                            }
+                            // and create a new file
+                            dest = new File(destdir + newfilename);
                         }
+                    } else {
+                        // indicate that while-loop is over, destination is valid
+                        dest_ok = true;
                     }
-                }   break;
-        // do nothing...
-            case ATT_CANCEL:
-                break;
-            case ATT_REMAIN:
-                // else add the text to the keyword-list (JList)
-                for (File f : sources) {
-                    linkListModel.addElement((String) f.toString());
-                    addedValues.add((String) f.toString());
-                    // set new default directory
-                    settingsObj.setLastOpenedAttachmentDir(f);
-                }   // set the modified state
-                modified = true;
-                break;
-            default:
-                break;
+                }
+
+                if (copyneeded) {
+                    try {
+                        // here we go when the user wants to *copy* the files
+                        if (ATT_COPY == msgOption) {
+                            // create and copy file...
+                            dest.createNewFile();
+                            // if we have a file which does not already exist, copy the source to the dest
+                            FileOperationsUtil.copyFile(f, dest, 1024);
+                        } // here we go when the user wants to *move* the files
+                        else if (ATT_MOVE == msgOption) {
+                            // if moving the file failed...
+                            if (!f.renameTo(dest)) {
+                                // ... show error msg
+                                JOptionPane.showMessageDialog(parentFrame, resourceMap.getString("errMsgFileMove"), resourceMap.getString("errMsgFileMoveTitle"), JOptionPane.PLAIN_MESSAGE);
+                            }
+                        }
+                        // add copied/moves file to link list...
+                        linkListModel.addElement((String) dest.getName());
+                        addedValues.add((String) dest.getName());
+                        // set the modified state
+                        modified = true;
+                        // set new default directory
+                        settingsObj.setLastOpenedAttachmentDir(f);
+                    } catch (IOException ex) {
+                        Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
+                        JOptionPane.showMessageDialog(parentFrame, resourceMap.getString("errMsgFileCopy"), resourceMap.getString("errMsgFileCopyTitle"), JOptionPane.PLAIN_MESSAGE);
+                    }
+                }
+            }
+        } else if (ATT_CANCEL == msgOption) {
+            // do nothing...
+        } else if (ATT_REMAIN == msgOption) {
+            // else add the text to the keyword-list (JList)
+            for (File f : sources) {
+                linkListModel.addElement((String) f.toString());
+                addedValues.add((String) f.toString());
+                // set new default directory
+                settingsObj.setLastOpenedAttachmentDir(f);
+            }
+            // set the modified state
+            modified = true;
         }
         // convert list to string array
         addedAttachments = addedValues.toArray(new String[addedValues.size()]);

@@ -64,7 +64,7 @@ public class CFindReplaceDialog extends javax.swing.JDialog {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CFindReplaceDialog.class);
 
     /** 
@@ -153,7 +153,7 @@ public class CFindReplaceDialog extends javax.swing.JDialog {
         // always be re-arranged by the gui-designer
         // get the action map
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.
-            getInstance(ZettelkastenApp.class).getContext().
+            getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().
             getActionMap(CFindReplaceDialog.class, this);
         popupCCPcut.setAction(actionMap.get("cut"));
         popupCCPcopy.setAction(actionMap.get("copy"));
@@ -404,7 +404,7 @@ public class CFindReplaceDialog extends javax.swing.JDialog {
         jPopupMenuCCP.add(popupCCPpaste);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CFindReplaceDialog.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CFindReplaceDialog.class);
         setTitle(resourceMap.getString("CFindReplaceDialog.title")); // NOI18N
         setAlwaysOnTop(true);
         setName("CFindReplaceDialog"); // NOI18N
@@ -428,7 +428,7 @@ public class CFindReplaceDialog extends javax.swing.JDialog {
         jCheckBoxWholeWord.setText(resourceMap.getString("jCheckBoxWholeWord.text")); // NOI18N
         jCheckBoxWholeWord.setName("jCheckBoxWholeWord"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CFindReplaceDialog.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CFindReplaceDialog.class, this);
         jButtonFindNext.setAction(actionMap.get("findNext")); // NOI18N
         jButtonFindNext.setName("jButtonFindNext"); // NOI18N
 

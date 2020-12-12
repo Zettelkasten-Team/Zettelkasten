@@ -33,20 +33,40 @@
 
 package de.danielluedecke.zettelkasten;
 
-import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
-import de.danielluedecke.zettelkasten.database.AutoKorrektur;
 import de.danielluedecke.zettelkasten.database.Settings;
+import de.danielluedecke.zettelkasten.database.AutoKorrektur;
+import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
 import de.danielluedecke.zettelkasten.database.StenoData;
-import de.danielluedecke.zettelkasten.util.*;
-import org.jdesktop.application.Action;
-
-import javax.swing.*;
+import de.danielluedecke.zettelkasten.util.Tools;
+import de.danielluedecke.zettelkasten.util.Constants;
+import com.explodingpixels.macwidgets.MacUtils;
+import com.explodingpixels.macwidgets.MacWidgetFactory;
+import com.explodingpixels.macwidgets.UnifiedToolBar;
+import com.explodingpixels.widgets.WindowUtils;
+import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
+import de.danielluedecke.zettelkasten.util.ColorUtil;
+import de.danielluedecke.zettelkasten.util.NewEntryFrameUtil;
+import de.danielluedecke.zettelkasten.util.PlatformUtil;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JColorChooser;
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.undo.UndoManager;
-import java.awt.*;
-import java.awt.event.*;
+import org.jdesktop.application.Action;
 
 /**
  *
@@ -75,17 +95,17 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap = 
-        org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CModifyDesktopEntry.class);
 
     private final javax.swing.ActionMap actionMap =
-        org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getActionMap(CModifyDesktopEntry.class, this);
     /**
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap toolbarResourceMap = 
-        org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(ToolbarIcons.class);
 
     
@@ -98,6 +118,7 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
      * @param acc
      * @param content 
      */
+    @SuppressWarnings("LeakingThisInConstructor")
     public CModifyDesktopEntry(DesktopFrame parent, Settings s, AutoKorrektur ak, StenoData st, AcceleratorKeys acc, String content) {
 
         settingsObj = s;
@@ -106,8 +127,14 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
         accKeys = acc;
         desktopframe = parent;
 
+        // create brushed look for window, so toolbar and window-bar become a unit
+        if (settingsObj.isMacAqua()) {
+            MacUtils.makeWindowLeopardStyle(getRootPane());
+            // WindowUtils.createAndInstallRepaintWindowFocusListener(this);
+            WindowUtils.installJComponentRepainterOnWindowFocusChanged(this.getRootPane());
+        }
         // init locale for the default-actions cut/copy/paste
-        Tools.initLocaleForDefaultActions(org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CModifyDesktopEntry.class, this));
+        Tools.initLocaleForDefaultActions(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CModifyDesktopEntry.class, this));
         initComponents();
         // set application icon
         setIconImage(Constants.zknicon.getImage());
@@ -115,6 +142,10 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
         initBorders(settingsObj);
         initListeners();
         initActionMaps();
+        // if we have mac os x with aqua/leopard-style make window look like native leopard
+        if (settingsObj.isMacAqua()) {
+            setupMacOSXLeopardStyle();
+        }
         if (settingsObj.isSeaGlass()) {
             setupSeaGlassStyle();
         }
@@ -186,7 +217,7 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
         // the delete/backspace-key
         AbstractAction a_tab = new AbstractAction(){
             @Override public void actionPerformed(ActionEvent e) {
-                if (jTextArea1==e.getSource()) EditorFrameUtil.checkSteno(settingsObj,stenoObj,jTextArea1);
+                if (jTextArea1==e.getSource()) NewEntryFrameUtil.checkSteno(settingsObj,stenoObj,jTextArea1);
             }
         };
         jTextArea1.getActionMap().put("TabKeyPressed",a_tab);
@@ -352,8 +383,8 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
         undomanager.setLimit(1000);
         jTextArea1.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override public void keyReleased(java.awt.event.KeyEvent evt) {
-                EditorFrameUtil.checkSpelling(evt.getKeyCode(),jTextArea1,settingsObj,spellObj);
-                EditorFrameUtil.autoCompleteTags(jTextArea1, evt.getKeyChar());
+                NewEntryFrameUtil.checkSpelling(evt.getKeyCode(),jTextArea1,settingsObj,spellObj);
+                NewEntryFrameUtil.autoCompleteTags(jTextArea1, evt.getKeyChar());
             }
         });
         jTextArea1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -432,6 +463,7 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
             tb_selectall.setVisible(settingsObj.getShowAllIcons());
             tb_strike.setVisible(settingsObj.getShowAllIcons());
         }
+        if (settingsObj.isMacAqua()) makeMacToolbar();
         if (settingsObj.isSeaGlass()) makeSeaGlassToolbar();
     }
 
@@ -440,6 +472,25 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
         getRootPane().setBackground(ColorUtil.colorSeaGlassGray);
         jButtonApply.putClientProperty("JComponent.sizeVariant", "small");
         jButtonCancel.putClientProperty("JComponent.sizeVariant", "small");
+    }
+
+    /**
+     * This method applies some graphical stuff so the appearance of the program is even more
+     * mac-like...
+     */
+    private void setupMacOSXLeopardStyle() {
+        // now we have to change back the background-color of all components in the mainpart of the
+        // frame, since the brush-metal-look applies to all components
+        // we change the background-color of the main-area here...
+        //
+        // since snow-leopard has a different color-rendering, we need a different
+        // background-color for OS X 10.6
+        Color backcol = ColorUtil.getMacBackgroundColor();
+        // on Leopard (OS X 10.5), we have different rendering, thus we need these lines
+        if (PlatformUtil.isLeopard()) {
+            getContentPane().setBackground(backcol);
+            mainPanel.setBackground(backcol);
+        }
     }
 
     private void makeSeaGlassToolbar() {
@@ -456,6 +507,35 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
         jToolBar1.setPreferredSize(new java.awt.Dimension(jToolBar1.getSize().width,Constants.seaGlassToolbarHeight));
         jToolBar1.add(new javax.swing.JToolBar.Separator(), 0);
     }
+
+    
+    private void makeMacToolbar() {
+        // hide default toolbr
+        jToolBar1.setVisible(false);
+        // and create mac toolbar
+        if (settingsObj.getShowIcons() || settingsObj.getShowIconText()) {
+
+            UnifiedToolBar mactoolbar = new UnifiedToolBar();
+
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_cut, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_copy, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_paste, MacToolbarButton.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 0));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_selectall, MacToolbarButton.SEGMENT_POSITION_ONLY));
+            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 0));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_undo, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_redo, MacToolbarButton.SEGMENT_POSITION_LAST));
+            mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 0));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_bold, MacToolbarButton.SEGMENT_POSITION_FIRST));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_italic, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_underline, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+            mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_strike, MacToolbarButton.SEGMENT_POSITION_LAST));
+
+            mactoolbar.installWindowDraggerOnWindow(this);
+            mainPanel.add(mactoolbar.getComponent(),BorderLayout.PAGE_START);
+        }
+    }
+
 
     /**
      * This method retrieves the data from the textfields and adds a new entry respectively
@@ -1060,7 +1140,7 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
         jSeparator26.setName("jSeparator26"); // NOI18N
         jPopupMenuMain.add(jSeparator26);
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CModifyDesktopEntry.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CModifyDesktopEntry.class, this);
         popupMainSelectAll.setAction(actionMap.get("selectAllText")); // NOI18N
         popupMainSelectAll.setName("popupMainSelectAll"); // NOI18N
         jPopupMenuMain.add(popupMainSelectAll);
@@ -1079,7 +1159,7 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
         jSeparator20.setName("jSeparator20"); // NOI18N
         jPopupMenuMain.add(jSeparator20);
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CModifyDesktopEntry.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CModifyDesktopEntry.class);
         formatSubmenu.setText(resourceMap.getString("formatSubmenu.text")); // NOI18N
         formatSubmenu.setName("formatSubmenu"); // NOI18N
 

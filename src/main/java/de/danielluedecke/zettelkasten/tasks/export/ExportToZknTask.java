@@ -32,7 +32,6 @@
  */
 package de.danielluedecke.zettelkasten.tasks.export;
 
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.database.Bookmarks;
 import de.danielluedecke.zettelkasten.database.Daten;
@@ -97,7 +96,7 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(ExportTask.class);
 
     public ExportToZknTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label,
@@ -147,11 +146,7 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
         // check whether file already exists
         if (filepath.exists()) {
             // file exists, ask user to overwrite it...
-            int optionDocExists = JOptionPane.showConfirmDialog(null,
-                    resourceMap.getString("askForOverwriteFileMsg", "", filepath.getName()),
-                    resourceMap.getString("askForOverwriteFileTitle"),
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.PLAIN_MESSAGE);
+            int optionDocExists = JOptionPane.showConfirmDialog(null, resourceMap.getString("askForOverwriteFileMsg", "", filepath.getName()), resourceMap.getString("askForOverwriteFileTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
             // if the user does *not* choose to overwrite, quit...
             if (optionDocExists != JOptionPane.YES_OPTION) {
                 // don't show "export was OK" message in main frame

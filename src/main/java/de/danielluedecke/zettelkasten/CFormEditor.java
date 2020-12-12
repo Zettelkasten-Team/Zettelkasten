@@ -212,7 +212,7 @@ public class CFormEditor extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CFormEditor.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CFormEditor.class);
         setTitle(resourceMap.getString("Form.title")); // NOI18N
         setModal(true);
         setName("Form"); // NOI18N
@@ -241,7 +241,7 @@ public class CFormEditor extends javax.swing.JDialog {
         jCheckBoxReentry.setText(resourceMap.getString("jCheckBoxReentry.text")); // NOI18N
         jCheckBoxReentry.setName("jCheckBoxReentry"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CFormEditor.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CFormEditor.class, this);
         jButtonApply.setAction(actionMap.get("insertForm")); // NOI18N
         jButtonApply.setName("jButtonApply"); // NOI18N
 
