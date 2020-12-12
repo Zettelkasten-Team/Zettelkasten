@@ -2259,7 +2259,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         jSplitPaneSearch1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTableResults = (settingsObj.isMacStyle()) ? com.explodingpixels.macwidgets.MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+        jTableResults = (settingsObj.isMacAqua()) ? com.explodingpixels.macwidgets.MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
         jTextFieldFilterList = new javax.swing.JTextField();
         jButtonResetList = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
