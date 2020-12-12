@@ -244,7 +244,7 @@ public class Constants {
     public static final String DRAG_SOURCE_JTREELUHMANN = "jTreeLuhmann";
     public static final String ROOT_ID_NAME = "root";
 
-    // Here we have the formatting tags which are used in the NewEntryFrame
+    // Here we have the formatting tags which are used in the EditorFrame
     public static final String FORMAT_BOLD_OPEN = "[f]";
     public static final String FORMAT_BOLD_CLOSE = "[/f]";
     public static final String FORMAT_MD_BOLD_OPEN = "**";

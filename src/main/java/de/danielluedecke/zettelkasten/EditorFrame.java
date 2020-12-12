@@ -134,7 +134,7 @@ import org.jdom2.Element;
  *
  * @author danielludecke
  */
-public class NewEntryFrame extends javax.swing.JFrame implements WindowListener, DropTargetListener {
+public class EditorFrame extends javax.swing.JFrame implements WindowListener, DropTargetListener {
 
     /**
      * create a variable for a list model. this list model is used for the
@@ -198,7 +198,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
     private static boolean editmode;
 
     /**
-     * Determines whether the NewEntryFrame is used for a new entry or for
+     * Determines whether the EditorFrame is used for a new entry or for
      * editing an existing entry.
      *
      * @param val {@code true} if we want to edit an existing entry,
@@ -303,7 +303,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      */
     private final org.jdesktop.application.ResourceMap resourceMap
             = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-            getContext().getResourceMap(NewEntryFrame.class);
+            getContext().getResourceMap(EditorFrame.class);
     /**
      * get the strings for file descriptions from the resource map
      */
@@ -333,7 +333,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
      * @param isdel
      */
     @SuppressWarnings("LeakingThisInConstructor")
-    public NewEntryFrame(ZettelkastenView zkn, Daten d, TasksData td, AcceleratorKeys ak, Settings s, AutoKorrektur ac, Synonyms syn, StenoData stn, String content, boolean em, int en, boolean l, boolean isdel) {
+    public EditorFrame(ZettelkastenView zkn, Daten d, TasksData td, AcceleratorKeys ak, Settings s, AutoKorrektur ac, Synonyms syn, StenoData stn, String content, boolean em, int en, boolean l, boolean isdel) {
         mainframe = zkn;
 
         // init the variables from the parameters
@@ -363,7 +363,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         keywordStep1 = selectedKeywords = displayedKeywordList = remainingKeywords = null;
         stepcounter = 1;
         // init locale for the default-actions cut/copy/paste
-        Tools.initLocaleForDefaultActions(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(NewEntryFrame.class, this));
+        Tools.initLocaleForDefaultActions(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(EditorFrame.class, this));
         initComponents();
         // set application icon
         setIconImage(Constants.zknicon.getImage());
@@ -1247,7 +1247,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // get the action map
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.
                 getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().
-                getActionMap(NewEntryFrame.class, this);
+                getActionMap(EditorFrame.class, this);
         // finally, we have to manuall init the actions for the popup-menu, since the gui-builder always
         // puts the menu-items before the line where the action-map is initialised. we cannot change
         // this because it is in the protected area, and when changing it from outside, it will
@@ -1507,7 +1507,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         // get the action map
         javax.swing.ActionMap actionMap
                 = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-                getContext().getActionMap(NewEntryFrame.class, this);
+                getContext().getActionMap(EditorFrame.class, this);
         // iterate the xml file with the accelerator keys for the main window
         for (int cnt = 1; cnt <= accKeys.getCount(AcceleratorKeys.NEWENTRYKEYS); cnt++) {
             // get the action's name
@@ -5222,7 +5222,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jSeparator26.setName("jSeparator26"); // NOI18N
         jPopupMenuMain.add(jSeparator26);
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(NewEntryFrame.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(EditorFrame.class, this);
         popupMainSelectAll.setAction(actionMap.get("selecteAllText")); // NOI18N
         popupMainSelectAll.setName("popupMainSelectAll"); // NOI18N
         jPopupMenuMain.add(popupMainSelectAll);
@@ -5277,7 +5277,7 @@ public class NewEntryFrame extends javax.swing.JFrame implements WindowListener,
         jSeparator20.setName("jSeparator20"); // NOI18N
         jPopupMenuMain.add(jSeparator20);
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(NewEntryFrame.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(EditorFrame.class);
         formatSubmenu.setText(resourceMap.getString("formatSubmenu.text")); // NOI18N
         formatSubmenu.setName("formatSubmenu"); // NOI18N
 

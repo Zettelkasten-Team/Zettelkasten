@@ -39,11 +39,9 @@ package de.danielluedecke.zettelkasten;
 import com.explodingpixels.macwidgets.BottomBar;
 import com.explodingpixels.macwidgets.BottomBarSize;
 import com.explodingpixels.macwidgets.MacButtonFactory;
-import com.explodingpixels.macwidgets.MacUtils;
 import com.explodingpixels.macwidgets.MacWidgetFactory;
 import com.explodingpixels.macwidgets.UnifiedToolBar;
 import com.explodingpixels.widgets.TableUtils;
-import com.explodingpixels.widgets.WindowUtils;
 import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
 import de.danielluedecke.zettelkasten.database.BibTex;
@@ -8108,7 +8106,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             newEntryDlg.toFront();
         } // else create a new window and display it.
         else {
-            newEntryDlg = new NewEntryFrame(this, data, taskinfo, acceleratorKeys, settings, autoKorrekt, synonyms, steno, content, isEditing, entrynumber, isLuhmann, isDeleted);
+            newEntryDlg = new EditorFrame(this, data, taskinfo, acceleratorKeys, settings, autoKorrekt, synonyms, steno, content, isEditing, entrynumber, isLuhmann, isDeleted);
             newEntryDlg.setLocationRelativeTo(getFrame());
             ZettelkastenApp.getApplication().show(newEntryDlg);
             // edit window was initialized
@@ -15176,7 +15174,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JPanel jPanelSearchBox;
     private javax.swing.JLabel jLabelLupe;
     private TaskProgressDialog taskDlg;
-    private NewEntryFrame newEntryDlg;
+    private EditorFrame newEntryDlg;
     private CImport importWindow;
     private CUpdateInfoBox updateInfoDlg;
     private CExport exportWindow;
