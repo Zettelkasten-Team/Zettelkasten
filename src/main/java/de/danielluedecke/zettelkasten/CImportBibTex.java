@@ -33,9 +33,9 @@
 package de.danielluedecke.zettelkasten;
 
 import bibtex.dom.BibtexEntry;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
 import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.database.BibTex;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.database.Daten;
@@ -88,7 +88,7 @@ public class CImportBibTex extends javax.swing.JDialog {
     /**
      *
      */
-    private BibTex bibtexObj;
+    private BibTeX bibtexObj;
     /**
      *
      */
@@ -169,7 +169,7 @@ public class CImportBibTex extends javax.swing.JDialog {
      * @param bt
      * @param s
      */
-    public CImportBibTex(java.awt.Frame parent, ZettelkastenView mf, Daten d, BibTex bt, Settings s) {
+    public CImportBibTex(java.awt.Frame parent, ZettelkastenView mf, Daten d, BibTeX bt, Settings s) {
         super(parent);
         settingsObj = s;
         bibtexObj = bt;

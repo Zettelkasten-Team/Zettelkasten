@@ -1502,7 +1502,7 @@ public class Settings {
     /**
      * Retrieves the filepath of the last used bibtex-file. we need this path when exporting entries
      * (from the desktop or the export-method from the main frame), and the user wants to create a
-     * separate BibTex-File out of the authors that have been exported.
+     * separate BibTeX-File out of the authors that have been exported.
      *
      * @return the filepath of the last used bixb text file, or null if no path is saved
      */
@@ -1513,7 +1513,7 @@ public class Settings {
     /**
      * Sets the filepath of the last used bibtex-file. we need this path when exporting entries
      * (from the desktop or the export-method from the main frame), and the user wants to create a
-     * separate BibTex-File out of the authors that have been exported.
+     * separate BibTeX-File out of the authors that have been exported.
      *
      * @param fp the filepath of the last used bixb text file
      */

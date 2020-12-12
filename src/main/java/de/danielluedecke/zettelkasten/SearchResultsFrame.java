@@ -35,23 +35,18 @@ package de.danielluedecke.zettelkasten;
 
 import com.explodingpixels.macwidgets.BottomBar;
 import com.explodingpixels.macwidgets.BottomBarSize;
+import de.danielluedecke.zettelkasten.database.*;
 import de.danielluedecke.zettelkasten.mac.MacSourceList;
-import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
-import de.danielluedecke.zettelkasten.database.SearchRequests;
-import de.danielluedecke.zettelkasten.database.Synonyms;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.classes.DateComparer;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
-import de.danielluedecke.zettelkasten.database.Daten;
 import com.explodingpixels.macwidgets.MacUtils;
 import com.explodingpixels.macwidgets.MacWidgetFactory;
 import com.explodingpixels.macwidgets.UnifiedToolBar;
 import com.explodingpixels.widgets.TableUtils;
 import com.explodingpixels.widgets.WindowUtils;
-import de.danielluedecke.zettelkasten.database.BibTex;
-import de.danielluedecke.zettelkasten.database.DesktopData;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
 import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
 import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
@@ -130,7 +125,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
      * Reference to the settings class.
      */
     private final Settings settingsObj;
-    private final BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     /**
      *
      */
@@ -187,7 +182,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
      * @param bib 
      */
     @SuppressWarnings("LeakingThisInConstructor")
-    public SearchResultsFrame(ZettelkastenView zkn, Daten d, SearchRequests sr, DesktopData desk, Settings s, AcceleratorKeys ak, Synonyms syn, BibTex bib) {
+    public SearchResultsFrame(ZettelkastenView zkn, Daten d, SearchRequests sr, DesktopData desk, Settings s, AcceleratorKeys ak, Synonyms syn, BibTeX bib) {
         searchframe = this;
         // init variables from parameters
         dataObj=d;

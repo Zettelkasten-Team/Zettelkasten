@@ -44,7 +44,7 @@ import com.explodingpixels.macwidgets.UnifiedToolBar;
 import com.explodingpixels.widgets.TableUtils;
 import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
-import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Bookmarks;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.DesktopData;
@@ -221,7 +221,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     /**
      * A reference to the bibtex-class.
      */
-    private final BibTex bibtex;
+    private final BibTeX bibtex;
     /**
      * initiate the desktop class. this class stores and manages the desktop
      * data.
@@ -550,7 +550,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // store reference to steno data
         steno = stn;
         bookmarks = new Bookmarks(this, settings);
-        bibtex = new BibTex(this, settings);
+        bibtex = new BibTeX(this, settings);
         // init all those classes that rely on parameters and could not be initialised
         // befor the constructor is called...
         data = new Daten(this, settings, synonyms, bibtex);
@@ -617,15 +617,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // the programme that has exported the bib-tex-file).
                 if (bibtex.openAttachedFile(Constants.BIBTEX_ENCODINGS[settings.getLastUsedBibtexFormat()], true)) {
                     // tell about success
-                    Constants.zknlogger.log(Level.INFO, "BibTex-File was successfully attached.");
+                    Constants.zknlogger.log(Level.INFO, "BibTeX-File was successfully attached.");
                 } else {
                     // tell about fail
-                    Constants.zknlogger.log(Level.INFO, "BibTex-File could not be found nor attached.");
+                    Constants.zknlogger.log(Level.INFO, "BibTeX-File could not be found nor attached.");
                 }
             }
         } else {
             // tell about fail
-            Constants.zknlogger.log(Level.INFO, "No BibTex-File specified yet.");
+            Constants.zknlogger.log(Level.INFO, "No BibTeX-File specified yet.");
         }
         // tick checbox-menuitem
         showHighlightKeywords.setSelected(settings.getHighlightKeywords());
@@ -9286,12 +9286,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // the programme that has exported the bib-tex-file).
                 if (bibtex.openAttachedFile(Constants.BIBTEX_ENCODINGS[settings.getLastUsedBibtexFormat()], false)) {
                     // tell about success
-                    Constants.zknlogger.log(Level.INFO, "BibTex-File was successfully attached.");
+                    Constants.zknlogger.log(Level.INFO, "BibTeX-File was successfully attached.");
                     // tell user about success
                     JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("bibtexAttachOkMsg"), getResourceMap().getString("bibtexAttachOkTitle"), JOptionPane.PLAIN_MESSAGE);
                 } else {
                     // tell about fail
-                    Constants.zknlogger.log(Level.INFO, "BibTex-File could not be found nor attached.");
+                    Constants.zknlogger.log(Level.INFO, "BibTeX-File could not be found nor attached.");
                 }
             }
         }
@@ -9325,11 +9325,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 // update author list
                 showAuthors();
                 // tell about success
-                Constants.zknlogger.log(Level.INFO, "BibTex-File was successfully refreshed.");
+                Constants.zknlogger.log(Level.INFO, "BibTeX-File was successfully refreshed.");
                 // Constants.zknlogger.log(Level.INFO, "{0}{1}", new Object[]{System.lineSeparator(), taskinfo.getUpdatedAuthors()});
             } else {
                 // tell about fail
-                Constants.zknlogger.log(Level.INFO, "BibTex-File could not be found nor refreshed.");
+                Constants.zknlogger.log(Level.INFO, "BibTeX-File could not be found nor refreshed.");
             }
         }
     }

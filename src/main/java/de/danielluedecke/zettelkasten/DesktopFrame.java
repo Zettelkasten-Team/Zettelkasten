@@ -49,7 +49,7 @@ import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.StenoData;
 import de.danielluedecke.zettelkasten.mac.MacSourceDesktopTree;
-import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Bookmarks;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.TasksData;
@@ -144,7 +144,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
     /**
      *
      */
-    private final BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     /**
      *
      */
@@ -293,7 +293,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * @param auk
      */
     @SuppressWarnings("LeakingThisInConstructor")
-    public DesktopFrame(ZettelkastenView zkn, TasksData td, Daten d, Bookmarks bm, DesktopData dk, Settings s, AcceleratorKeys ak, BibTex bt, AutoKorrektur auk, StenoData st) {
+    public DesktopFrame(ZettelkastenView zkn, TasksData td, Daten d, Bookmarks bm, DesktopData dk, Settings s, AcceleratorKeys ak, BibTeX bt, AutoKorrektur auk, StenoData st) {
         // reference needed for fullscreen
         mainframe = this;
 

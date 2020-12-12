@@ -81,7 +81,7 @@ import javax.swing.JOptionPane;
  *
  * @author danielludecke
  */
-public class BibTex {
+public class BibTeX {
 
     /**
      * A reference to the settings-class (CSettings)
@@ -156,7 +156,7 @@ public class BibTex {
             = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(ZettelkastenView.class);
 
-    public BibTex(ZettelkastenView zkn, Settings s) {
+    public BibTeX(ZettelkastenView zkn, Settings s) {
         zknframe = zkn;
         settingsObj = s;
         modified = false;
@@ -646,7 +646,7 @@ public class BibTex {
             int newentries = addEntries(attachedbibtexentries);
             // tell user
             if (newentries > 0) {
-                JOptionPane.showMessageDialog(null, resourceMap.getString("importMissingBibtexEntriesText", String.valueOf(newentries)), "BibTex-Import", JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(null, resourceMap.getString("importMissingBibtexEntriesText", String.valueOf(newentries)), "BibTeX-Import", JOptionPane.PLAIN_MESSAGE);
             }
         }
         return true;

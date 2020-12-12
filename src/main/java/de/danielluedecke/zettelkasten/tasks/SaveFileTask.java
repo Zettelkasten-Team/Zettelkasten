@@ -32,7 +32,8 @@
  */
 package de.danielluedecke.zettelkasten.tasks;
 
-import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.database.*;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,13 +42,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.swing.JOptionPane;
 import org.jdom2.output.XMLOutputter;
-import de.danielluedecke.zettelkasten.database.Bookmarks;
 import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.database.SearchRequests;
-import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.database.Synonyms;
+
 import java.io.ByteArrayOutputStream;
 
 /**
@@ -69,7 +65,7 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
      */
     private final DesktopData desktopObj;
     private final Synonyms synonymsObj;
-    private final BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     /**
      * Settings object, which contains the setting, for instance the file paths
      * etc...
@@ -92,7 +88,7 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
             = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(SaveFileTask.class);
 
-    SaveFileTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, Bookmarks bm, SearchRequests sr, DesktopData dk, Synonyms sy, Settings s, BibTex bib) {
+    SaveFileTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, Bookmarks bm, SearchRequests sr, DesktopData dk, Synonyms sy, Settings s, BibTeX bib) {
         // Runs on the EDT.  Copy GUI state that
         // doInBackground() depends on from parameters
         // to ImportFileTask fields, here.

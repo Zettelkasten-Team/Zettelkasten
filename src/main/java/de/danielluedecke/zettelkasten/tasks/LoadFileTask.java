@@ -32,7 +32,8 @@
  */
 package de.danielluedecke.zettelkasten.tasks;
 
-import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.database.*;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -42,13 +43,7 @@ import java.util.zip.ZipInputStream;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
-import de.danielluedecke.zettelkasten.database.Bookmarks;
 import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.database.SearchRequests;
-import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.database.Synonyms;
 
 /**
  *
@@ -77,7 +72,7 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
      * etc...
      */
     private final Settings settingsObj;
-    private final BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     /**
      * SearchRequests object, which contains the XML data of the searchrequests
      * and -result that are related with this data file
@@ -105,7 +100,7 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
      * @param dk
      * @param s
      */
-    LoadFileTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, Bookmarks bm, SearchRequests sr, DesktopData dk, Synonyms sy, Settings s, BibTex bib) {
+    LoadFileTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, Bookmarks bm, SearchRequests sr, DesktopData dk, Synonyms sy, Settings s, BibTeX bib) {
         // Runs on the EDT.  Copy GUI state that
         // doInBackground() depends on from parameters
         // to ImportFileTask fields, here.

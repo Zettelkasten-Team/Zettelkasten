@@ -32,7 +32,7 @@
  */
 package de.danielluedecke.zettelkasten.tasks.export;
 
-import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Bookmarks;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.TasksData;
@@ -65,7 +65,7 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
      *
      */
     private final Bookmarks bookmarksObj;
-    private final BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     /**
      *
      */
@@ -100,7 +100,7 @@ public class ExportToZknTask extends org.jdesktop.application.Task<Object, Void>
             getContext().getResourceMap(ExportTask.class);
 
     public ExportToZknTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label,
-            TasksData td, Daten d, Bookmarks bm, BibTex bib, boolean exportBib, File fp, ArrayList<Object> ee) {
+                           TasksData td, Daten d, Bookmarks bm, BibTeX bib, boolean exportBib, File fp, ArrayList<Object> ee) {
         super(app);
         dataObj = d;
         bookmarksObj = bm;

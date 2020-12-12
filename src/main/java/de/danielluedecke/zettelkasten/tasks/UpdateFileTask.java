@@ -33,7 +33,7 @@
 
 package de.danielluedecke.zettelkasten.tasks;
 
-import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.DesktopData;
 
@@ -50,7 +50,7 @@ public class UpdateFileTask extends org.jdesktop.application.Task<Object, Void> 
      * DesktopData object, which contains the XML data of the desktop
      */
     private final DesktopData desktopObj;
-    private final BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     private final boolean resetFrequencies;
     private int updateType;
     
@@ -67,7 +67,7 @@ public class UpdateFileTask extends org.jdesktop.application.Task<Object, Void> 
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(UpdateFileTask.class);
 
-    UpdateFileTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, DesktopData dk, BibTex bib, boolean rf) {
+    UpdateFileTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, DesktopData dk, BibTeX bib, boolean rf) {
         // Runs on the EDT.  Copy GUI state that
         // doInBackground() depends on from parameters
         // to ImportFileTask fields, here.

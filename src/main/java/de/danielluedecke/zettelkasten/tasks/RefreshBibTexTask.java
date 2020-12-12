@@ -34,7 +34,7 @@
 package de.danielluedecke.zettelkasten.tasks;
 
 import bibtex.dom.BibtexEntry;
-import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.TasksData;
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class RefreshBibTexTask extends org.jdesktop.application.Task<Object, Voi
     /**
      * the table model from the main window's jtable, passed as parameter
      */
-    private final BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     private final TasksData taskinfo;
 
     private final javax.swing.JDialog parentDialog;
@@ -65,7 +65,7 @@ public class RefreshBibTexTask extends org.jdesktop.application.Task<Object, Voi
         getContext().getResourceMap(RefreshBibTexTask.class);
 
     RefreshBibTexTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, 
-            javax.swing.JLabel label, TasksData td, Daten d, BibTex bt) {
+            javax.swing.JLabel label, TasksData td, Daten d, BibTeX bt) {
         // Runs on the EDT.  Copy GUI state that
         // doInBackground() depends on from parameters
         // to createLinksTask fields, here.
@@ -129,7 +129,7 @@ public class RefreshBibTexTask extends org.jdesktop.application.Task<Object, Voi
                     resourceMap.getString("importMissingBibtexEntriesText", 
                             String.valueOf(newentries),
                             String.valueOf(updateCount)), 
-                    "BibTex-Import", 
+                    "BibTeX-Import",
                     JOptionPane.PLAIN_MESSAGE);
         }
         // log info about updates authors
