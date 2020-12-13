@@ -248,7 +248,7 @@ public class CTexExportSettings extends javax.swing.JDialog {
         jCheckBoxShowAuthor = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CTexExportSettings.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CTexExportSettings.class);
         setTitle(resourceMap.getString("FormLatexExportSettings.title")); // NOI18N
         setModal(true);
         setName("FormLatexExportSettings"); // NOI18N
@@ -266,7 +266,7 @@ public class CTexExportSettings extends javax.swing.JDialog {
         jCheckBoxCenterForm.setText(resourceMap.getString("jCheckBoxCenterForm.text")); // NOI18N
         jCheckBoxCenterForm.setName("jCheckBoxCenterForm"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CTexExportSettings.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CTexExportSettings.class, this);
         jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
         jButtonCancel.setName("jButtonCancel"); // NOI18N
 

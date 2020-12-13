@@ -89,7 +89,7 @@ public class CReplaceDialog extends javax.swing.JDialog {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CReplaceDialog.class);
     /**
      * Opens a find and replace dialog, where the user can specify find- and replace terms, as well as
@@ -142,11 +142,13 @@ public class CReplaceDialog extends javax.swing.JDialog {
     }
 
     private void initMnemonics() {
-        jLabel1.setDisplayedMnemonic(0);        
-        jLabel2.setDisplayedMnemonic(0);        
-        jCheckBoxRegEx.setDisplayedMnemonicIndex(0);
-        jCheckBoxMatchCase.setDisplayedMnemonicIndex(0);
-        jCheckBoxWholeWord.setDisplayedMnemonicIndex(0);
+        if (!settingsObj.isMacAqua()) {
+            jLabel1.setDisplayedMnemonic(0);        
+            jLabel2.setDisplayedMnemonic(0);        
+            jCheckBoxRegEx.setDisplayedMnemonicIndex(0);
+            jCheckBoxMatchCase.setDisplayedMnemonicIndex(0);
+            jCheckBoxWholeWord.setDisplayedMnemonicIndex(0);
+        }
     }
 
     private void initListeners() {
@@ -217,7 +219,7 @@ public class CReplaceDialog extends javax.swing.JDialog {
         // always be re-arranged by the gui-designer
         // get the action map
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.
-            getInstance(ZettelkastenApp.class).getContext().
+            getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().
             getActionMap(CReplaceDialog.class, this);
         popupCCPcut.setAction(actionMap.get("cut"));
         popupCCPcopy.setAction(actionMap.get("copy"));
@@ -385,7 +387,7 @@ public class CReplaceDialog extends javax.swing.JDialog {
         jPopupMenuCCP.add(popupCCPpaste);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CReplaceDialog.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CReplaceDialog.class);
         setTitle(resourceMap.getString("FormReplaceDialog.title")); // NOI18N
         setModal(true);
         setName("FormReplaceDialog"); // NOI18N
@@ -493,7 +495,7 @@ public class CReplaceDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CReplaceDialog.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CReplaceDialog.class, this);
         jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
         jButtonCancel.setName("jButtonCancel"); // NOI18N
 

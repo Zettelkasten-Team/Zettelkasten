@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.danielluedecke</groupId>
     <artifactId>Zettelkasten</artifactId>
-    <version>3.3.2</version>
+    <version>3.2.8</version>
     <name>Zettelkasten</name>
     <properties>
         <zkn.launch4jVersion>${project.version}.0</zkn.launch4jVersion>
@@ -290,6 +290,7 @@
             <artifactId>appframework</artifactId>
             <version>1.0.3</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.explodingpixels/mac_widgets -->
         <dependency>
             <groupId>com.explodingpixels</groupId>
             <artifactId>mac_widgets</artifactId>

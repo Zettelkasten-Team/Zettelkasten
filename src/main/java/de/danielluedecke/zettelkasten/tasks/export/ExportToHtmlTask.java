@@ -32,9 +32,11 @@
  */
 package de.danielluedecke.zettelkasten.tasks.export;
 
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
-import de.danielluedecke.zettelkasten.database.*;
 import de.danielluedecke.zettelkasten.database.BibTeX;
+import de.danielluedecke.zettelkasten.database.Daten;
+import de.danielluedecke.zettelkasten.database.DesktopData;
+import de.danielluedecke.zettelkasten.database.Settings;
+import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.Tools;
@@ -154,7 +156,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(ExportTask.class);
 
     public ExportToHtmlTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label,

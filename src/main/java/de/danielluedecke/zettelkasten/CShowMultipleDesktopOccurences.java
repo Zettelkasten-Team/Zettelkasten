@@ -52,7 +52,7 @@ public class CShowMultipleDesktopOccurences extends javax.swing.JDialog {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CShowMultipleDesktopOccurences.class);
     /**
      * Creates new form CShowMultipleDesktopOccurences
@@ -102,7 +102,7 @@ public class CShowMultipleDesktopOccurences extends javax.swing.JDialog {
         jCheckBoxShowThisDlg = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CShowMultipleDesktopOccurences.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CShowMultipleDesktopOccurences.class);
         setTitle(resourceMap.getString("CMultipleDesktopEntries.title")); // NOI18N
         setName("CMultipleDesktopEntries"); // NOI18N
 

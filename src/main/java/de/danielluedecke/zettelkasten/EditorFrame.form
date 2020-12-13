@@ -1773,6 +1773,9 @@
                           <Properties>
                             <Property name="name" type="java.lang.String" value="jTextFieldAddKeyword" noResource="true"/>
                           </Properties>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="(settingsObj.isMacAqua()) ? ZknMacWidgetFactory.createHudTreeTextField(resourceMap.getString(&quot;textFieldDefaultText&quot;)) : new javax.swing.JTextField()"/>
+                          </AuxValues>
                         </Component>
                       </SubComponents>
                     </Container>
@@ -1886,6 +1889,9 @@
                             <Property name="text" type="java.lang.String" resourceKey="jTextFieldAddLink.text"/>
                             <Property name="name" type="java.lang.String" value="jTextFieldAddLink" noResource="true"/>
                           </Properties>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="(settingsObj.isMacAqua()) ? ZknMacWidgetFactory.createHudTreeTextField(resourceMap.getString(&quot;textFieldDefaultText&quot;)) : new javax.swing.JTextField()"/>
+                          </AuxValues>
                         </Component>
                       </SubComponents>
                     </Container>

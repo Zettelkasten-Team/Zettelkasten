@@ -33,7 +33,6 @@
 package de.danielluedecke.zettelkasten.util;
 
 import de.danielluedecke.zettelkasten.ToolbarIcons;
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.database.*;
 import de.danielluedecke.zettelkasten.database.BibTeX;
@@ -53,22 +52,24 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringTokenizer;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import java.util.stream.Collectors;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.parser.ParserDelegator;
-
-import org.jdom2.Attribute;
-import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
@@ -91,13 +92,13 @@ public class Tools {
      * get the strings for file descriptions from the resource map
      */
     private final static org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(ZettelkastenView.class);
     /**
      * get the strings for file descriptions from the resource map
      */
     private final static org.jdesktop.application.ResourceMap toolbarResourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(ToolbarIcons.class);
     /**
      *
@@ -1934,24 +1935,5 @@ public class Tools {
             }
         }
         return false;
-    }
-
-    /**
-     * Returns the zettel of a document, arranged in a id to element map.
-     * @param doc the document of zettels
-     * @return a map where Zettel elements are mapped to their resp. id
-     */
-    public static HashMap<String, Element> retrieveAllZettelAsMap(Document doc) {
-        return (HashMap<String, Element>)doc.getRootElement().getContent()
-                .stream()
-                .filter(entry -> {
-                    Attribute attribute = ((Element)entry).getAttribute(Daten.ATTRIBUTE_ZETTEL_ID);
-                    return ((Element)entry).getAttribute(Daten.ATTRIBUTE_ZETTEL_ID)!=null
-                            && !attribute.getValue().isEmpty();
-                })
-                .collect(Collectors.toMap(
-                        entry -> ((Element)entry).getAttributeValue(Daten.ATTRIBUTE_ZETTEL_ID),
-                        entry -> (Element)entry));
-
     }
 }

@@ -33,10 +33,10 @@
 package de.danielluedecke.zettelkasten.util;
 
 import de.danielluedecke.zettelkasten.ZettelkastenView;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 
 /**
  * This class contains generic constant values that are used all over the
@@ -47,10 +47,10 @@ import java.util.logging.Logger;
  */
 public class Constants {
 
-    /*
+    /**
      * This variable stores the current programme and build version number
      */
-    // public static final String BUILD_VERSION = "3.2.8 (Build 20180603)";
+    public static final String BUILD_VERSION = "3.2.7 (Build 20151016)";
     /**
      * This constants stores the website-address where the Zettelkasten can be
      * downloaded:<br><br>
@@ -153,7 +153,7 @@ public class Constants {
      */
     public static final String desktopNotesFileName = "desktopnt.xml";
     /**
-     * Constant for the file name of archived desktop-files
+     * Constant for the filname of archived desktop-files
      */
     public static final String archivedDesktopFileName = "archivedDesktop.xml";
 
@@ -911,7 +911,7 @@ public class Constants {
 
     /**
      * A string array that contains the different encodings that are used by the
-     * different reference managers when exporting their data to a bibtex
+     * different reference- managers when exporting their data to a bibtext
      * file. use also {@link #BIBTEX_DESCRIPTIONS} to retrieve the programmes'
      * names associated with these encoding.<br><br>
      * 0: UTF-8 (Bibliographix)<br>
@@ -1185,6 +1185,4 @@ public class Constants {
         "EEEE, d. MMM yyyy (HH:mm)",
         "EEEE, d. MMMM yyyy (HH:mm)",
         "yyyy-MM-dd HH:mm:ss"};
-
-
 }

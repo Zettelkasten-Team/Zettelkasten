@@ -6,20 +6,23 @@
 package de.danielluedecke.zettelkasten.tasks.importtasks;
 
 import com.opencsv.CSVReader;
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
-import de.danielluedecke.zettelkasten.database.*;
+import de.danielluedecke.zettelkasten.database.Bookmarks;
+import de.danielluedecke.zettelkasten.database.Daten;
+import de.danielluedecke.zettelkasten.database.DesktopData;
+import de.danielluedecke.zettelkasten.database.SearchRequests;
+import de.danielluedecke.zettelkasten.database.Settings;
+import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.Tools;
-import org.jdom2.Document;
-import org.jdom2.Element;
-
-import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
+import javax.swing.JOptionPane;
+import org.jdom2.Document;
+import org.jdom2.Element;
 
 /**
  *
@@ -97,7 +100,7 @@ public class ImportFromCSV extends org.jdesktop.application.Task<Object, Void> {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(ImportTask.class);
 
     /**
@@ -153,6 +156,17 @@ public class ImportFromCSV extends org.jdesktop.application.Task<Object, Void> {
 
         // init of the xml element variables here, since they are
         // being used more often
+        Element zettelkasten;
+        Element zettel;
+        Element content;
+        Element keywords;
+        Element author;
+        Element manlinks;
+        Element remarks;
+        Element timestamp;
+        Element hyperlinks;
+        Element title;
+        Element luhmann;
 
         // return value that indicates that an error occurred
         taskinfo.setImportOk(false);

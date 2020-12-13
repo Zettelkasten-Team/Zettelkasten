@@ -69,7 +69,7 @@ public class CNewBookmark extends javax.swing.JDialog {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(CNewBookmark.class);
 
     /**
@@ -384,7 +384,7 @@ public class CNewBookmark extends javax.swing.JDialog {
         jButtonCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CNewBookmark.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CNewBookmark.class);
         setTitle(resourceMap.getString("FormNewBookmark.title")); // NOI18N
         setModal(true);
         setName("FormNewBookmark"); // NOI18N
@@ -401,7 +401,7 @@ public class CNewBookmark extends javax.swing.JDialog {
         jTextFieldNewCat.setText(resourceMap.getString("jTextFieldNewCat.text")); // NOI18N
         jTextFieldNewCat.setName("jTextFieldNewCat"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CNewBookmark.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CNewBookmark.class, this);
         jButtonAddCat.setAction(actionMap.get("addCat")); // NOI18N
         jButtonAddCat.setName("jButtonAddCat"); // NOI18N
 

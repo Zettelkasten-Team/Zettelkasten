@@ -136,6 +136,9 @@ public class ColorUtil {
      * @return 
      */
     public static Color getBorderGray(Settings settings) {
+        if (settings.isMacAqua()) {
+            return colorDarkBorderGray;
+        }
         if (settings.isSeaGlass()) {
             return colorSeaGlassLineGray;
         }

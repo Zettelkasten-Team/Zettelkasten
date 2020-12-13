@@ -35,6 +35,7 @@ package de.danielluedecke.zettelkasten;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.Synonyms;
 import de.danielluedecke.zettelkasten.util.Constants;
+import com.explodingpixels.macwidgets.MacWidgetFactory;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import java.awt.Color;
@@ -94,7 +95,7 @@ public class CSynonymsEdit extends javax.swing.JDialog {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(CSynonymsEdit.class);
 
     /**
@@ -131,7 +132,7 @@ public class CSynonymsEdit extends javax.swing.JDialog {
         };
         getRootPane().registerKeyboardAction(cancelAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
         // when we have aqua-style, change scrollbars
-        if (settingsObj.isSeaGlass()) {
+        if (settingsObj.isMacAqua() || settingsObj.isSeaGlass()) {
             jButtonFindNext.putClientProperty("JButton.buttonType", "segmentedRoundRect");
             jButtonFindNext.putClientProperty("JButton.segmentPosition", "only");
             jTextFieldFind.putClientProperty("JTextField.variant", "search");
@@ -357,14 +358,14 @@ public class CSynonymsEdit extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTable1 = (settingsObj.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
         jButtonCancel = new javax.swing.JButton();
         jButtonApply = new javax.swing.JButton();
         jTextFieldFind = new javax.swing.JTextField();
         jButtonFindNext = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CSynonymsEdit.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CSynonymsEdit.class);
         setTitle(resourceMap.getString("FormSynonymsEdit.title")); // NOI18N
         setMinimumSize(new java.awt.Dimension(200, 200));
         setModal(true);
@@ -379,7 +380,7 @@ public class CSynonymsEdit extends javax.swing.JDialog {
         jTable1.setName("jTable1"); // NOI18N
         jScrollPane1.setViewportView(jTable1);
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CSynonymsEdit.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CSynonymsEdit.class, this);
         jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
         jButtonCancel.setName("jButtonCancel"); // NOI18N
 

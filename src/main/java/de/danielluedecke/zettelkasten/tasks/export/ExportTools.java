@@ -38,7 +38,7 @@ import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.util.misc.Comparer;
+import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import de.danielluedecke.zettelkasten.util.Constants;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -70,8 +70,8 @@ public class ExportTools {
      * get the strings for file descriptions from the resource map
      */
     private static final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
-            getContext().getResourceMap(ExportTask.class);
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(de.danielluedecke.zettelkasten.tasks.export.ExportTask.class);
 
     /**
      * Creates a list of certain entry-values (keywords, authors, attachments)

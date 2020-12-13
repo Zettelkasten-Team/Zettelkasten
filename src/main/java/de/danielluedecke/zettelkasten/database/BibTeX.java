@@ -1,33 +1,33 @@
 /*
  * Zettelkasten - nach Luhmann
  * Copyright (C) 2001-2015 by Daniel Lüdecke (http://www.danielluedecke.de)
- *
+ * 
  * Homepage: http://zettelkasten.danielluedecke.de
- *
- *
+ * 
+ * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License as published by the Free Software Foundation; either version 3 of
+ * GNU General Public License as published by the Free Software Foundation; either version 3 of 
  * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * 
+ * 
  * Dieses Programm ist freie Software. Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation veröffentlicht, weitergeben
  * und/oder modifizieren, entweder gemäß Version 3 der Lizenz oder (wenn Sie möchten)
  * jeder späteren Version.
- *
- * Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein
- * wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder
- * der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der
+ * 
+ * Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein 
+ * wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder 
+ * der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der 
  * GNU General Public License.
- *
- * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm
+ * 
+ * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
 package de.danielluedecke.zettelkasten.database;
@@ -38,29 +38,42 @@ import bibtex.dom.BibtexFile;
 import bibtex.dom.BibtexNode;
 import bibtex.parser.BibtexParser;
 import bibtex.parser.ParseException;
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
-
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
 
 /**
- * This class is responsible for managing BibTeX files.<br><br>
+ * This class is responsible for managing bibtex files.<br><br>
  * Usually, first of all a file must be opened ("attached") using the
  * {@link #openAttachedFile(java.lang.String) openAttachedFile(java.lang.String)}
  * method. after that, all entries are stored in the variable
- * {@link #bibtexfile bibtexfile}, while the single BibTeX entries are stored in
+ * {@link #bibtexfile bibtexfile}, while the single bibtex entries are stored in
  * {@link #attachedbibtexentries}.
  * <br><br>
- * With this class, you can then retrieve single entries, retrieve BibTeX
+ * With this class, you can then retrieve single entries, retrieve bibtex
  * entries (i.e. author values) in a certain citation style etc.
  * <br><br>
- * This class is mainly used for importing literature values from a BibTeX file
+ * This class is mainly used for importing literatur values from a bibtex file
  * (see
  * <b>CImportBibTex</b>) or changing bibkey values from entry's author values
  * (see
@@ -71,28 +84,23 @@ import java.util.regex.Pattern;
 public class BibTeX {
 
     /**
-     * get the strings for file descriptions from the resource map
-     */
-    private final static org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
-            getContext().getResourceMap(ZettelkastenView.class);
-    /**
      * A reference to the settings-class (CSettings)
      */
-    private Settings settingsObj;
-
+    private final Settings settingsObj;
     /**
-     * This array stores all single entries from the attached BibTeX file
+     * The main variable that stors the currently opened bibtex-file
+     */
+    private BibtexFile bibtexfile = new BibtexFile();
+    /**
+     * This array stores all single entries from the attached bibtex file
      * {@code bibtexfile}.
      */
     private final ArrayList<BibtexEntry> attachedbibtexentries = new ArrayList<>();
-
     /**
      * This array stores all single entries from the attached bibtex file
      * {@code bibtexfile}.
      */
     private final ArrayList<BibtexEntry> bibtexentries = new ArrayList<>();
-
     /**
      * Thi array stores bibtex entries that should be exported. Since bibtex
      * entries that should be exported may contain only a selection of all
@@ -100,6 +108,10 @@ public class BibTeX {
      * to store export entrie.
      */
     private final ArrayList<BibtexEntry> outputbibtexentries = new ArrayList<>();
+    /**
+     * Stores the file path to the currently opened bibtex file.
+     */
+    private File currentlyattachedfile = null;
     /**
      * Stores the <b>general</b> citation style which is used as Zettelkasten
      * default.<br><br>
@@ -125,48 +137,30 @@ public class BibTeX {
      * selected citation style.
      */
     private final List<Map<String, String>> importtypesAPA = new ArrayList<>();
-    private final String editorToken = "°###°";
-    /**
-     * Reference to the main frame.
-     */
-    private final ZettelkastenView zknframe;
-    /**
-     * The main variable that stores the currently opened BibTeX file
-     */
-    private BibtexFile bibtexfile = new BibtexFile();
-
-    /**
-     * Stores the file path to the currently opened BibTeX file.
-     */
-    private File currentlyattachedfile = null;
-
     /**
      * A variable indicating which citation-style is used when requesting a
      * formatted bibtex-entry (see
      * {@link #getFormattedEntry(bibtex.dom.BibtexEntry) getFormattedEntryFromAttachedFile()}).
      */
     private int citestyle = Constants.BIBTEX_CITE_STYLE_GENERAL;
-
     private boolean modified;
-
-    private String encoding;
-    private boolean suppressNewEntryImport;
-    private boolean updateExistingEntries;
+    private final String editorToken = "°###°";
+    /**
+     * Reference to the main frame.
+     */
+    private final ZettelkastenView zknframe;
+    /**
+     * get the strings for file descriptions from the resource map
+     */
+    private final static org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(ZettelkastenView.class);
 
     public BibTeX(ZettelkastenView zkn, Settings s) {
         zknframe = zkn;
         settingsObj = s;
         modified = false;
         initStyles();
-    }
-
-    /**
-     * Checks whether the datafile is modified
-     *
-     * @return {@code true} if it is modified, false otherwise
-     */
-    public boolean isModified() {
-        return modified;
     }
 
     /**
@@ -180,6 +174,15 @@ public class BibTeX {
         modified = m;
         // update indicator for autobackup
         zknframe.setBackupNecessary();
+    }
+
+    /**
+     * Checks whether the datafile is modified
+     *
+     * @return {@code true} if it is modified, false otherwise
+     */
+    public boolean isModified() {
+        return modified;
     }
 
     private void initStyles() {
@@ -431,6 +434,18 @@ public class BibTeX {
     }
 
     /**
+     * Stores the style which should be used when e.g. importing authors into
+     * the database.
+     *
+     * @param style the style. use following constants:<br>
+     * {@code BIBTEX_CITE_STYLE_GENERAL}<br> {@code BIBTEX_CITE_STYLE_CBE}<br>
+     * {@code BIBTEX_CITE_STYLE_APA}
+     */
+    public void setCiteStyle(int style) {
+        citestyle = style;
+    }
+
+    /**
      * Retrieves the style which should be used when e.g. importing authors into
      * the database.
      *
@@ -443,18 +458,16 @@ public class BibTeX {
     }
 
     /**
-     * Stores the style which should be used when e.g. importing authors into
-     * the database.
+     * Sets the filepath to the latest used bibtex-file.
      *
-     * @param style the style. use following constants:<br>
-     *              {@code BIBTEX_CITE_STYLE_GENERAL}<br> {@code BIBTEX_CITE_STYLE_CBE}<br>
-     *              {@code BIBTEX_CITE_STYLE_APA}
+     * @param fp filepath to the current bibtex-file
      */
-    public void setCiteStyle(int style) {
-        citestyle = style;
+    public void setFilePath(File fp) {
+        settingsObj.setLastUsedBibTexFile(fp.toString());
     }
 
     /**
+     *
      * @param be
      * @return
      */
@@ -468,23 +481,24 @@ public class BibTeX {
     }
 
     /**
+     *
      * @param be
-     * @return result
+     * @return
      */
     public int addEntries(ArrayList<BibtexEntry> be) {
-        int result = 0;
         if (be != null) {
             int totalcount = 0;
             // iterate nodes
             for (BibtexEntry node : be) {
                 totalcount += addEntry(node);
             }
-            result = totalcount;
+            return totalcount;
         }
-        return result;
+        return 0;
     }
 
     /**
+     *
      * @param be
      * @return
      */
@@ -509,9 +523,9 @@ public class BibTeX {
     }
 
     /**
-     * Gets the path to the last used BibTeX file
+     * Gets the path to the last used bibtex-file
      *
-     * @return the path of the last used BibTeX file, or {@code null} if no such
+     * @return the path of the last used bibtex-file, or {@code null} if no such
      * path was specified nor does exist.
      */
     public File getFilePath() {
@@ -519,109 +533,100 @@ public class BibTeX {
     }
 
     /**
-     * Sets the filepath to the latest used BibTeX file.
-     *
-     * @param fp filepath to the current BibTeX file
-     */
-    public void setFilePath(File fp) {
-        settingsObj.setLastUsedBibTexFile(fp.toString());
-    }
-
-    /**
-     * Returns the currently attached BibTeX file. May be used to determine
-     * whether the user's chosen BibTeX file <i>is already</i> opened or <i>has
+     * Returns the currently attached bibtex-file. May be used to determine
+     * whether the user's chosen bibtex-file <i>is already</i> opened or <i>has
      * to be</i> opened.
      *
-     * @return the currently attached BibTeX file
+     * @return the currently attached bibtex-file
      */
     public File getCurrentlyAttachedFile() {
         return currentlyattachedfile;
     }
 
     /**
-     * "Detaches" the currently attached BibTeX file, which means that the
+     * "Detaches" the currently attached bibtex-file, which means that the
      * filepath to the currently attached file is set to {@code null}.
      */
     public void detachCurrentlyAttachedFile() {
         currentlyattachedfile = null;
     }
 
-    public int getEncoding() {
-        return settingsObj.getLastUsedBibtexFormat();
-    }
-
     public void setEncoding(int encoding) {
         settingsObj.setLastUsedBibtexFormat(encoding);
     }
 
-    public boolean refreshBibTexFile(Settings settingsObj) throws IOException {
-        this.settingsObj = settingsObj;
+    public int getEncoding() {
+        return settingsObj.getLastUsedBibtexFormat();
+    }
+
+    public boolean refreshBibTexFile(Settings settingsObj) {
         // attach new file
-        boolean success;
-        if (openAttachedFile(Constants.BIBTEX_ENCODINGS[settingsObj.getLastUsedBibtexFormat()],
-                // suppressNewEntryImport
-                false,
-                // updateExistingEntries
-                true)) {
-            success = true;
-        } else {
-            success = false;
-        }
+        boolean success = openAttachedFile(Constants.BIBTEX_ENCODINGS[settingsObj.getLastUsedBibtexFormat()], false, true);
         return success;
     }
 
     /**
-     * This method opens (and "attaches") a BibTeX file which is specified via
+     * This method opens (and "attaches") a bibtex-file which is specified via
      * the {@link #setFilePath(java.io.File) setFilePath(File)} method. The file
      * is parsed into the private variable {@code bibtexfile}, which can be
      * accessed via {@link #getFile() getFile()}.
      *
-     * @param encoding               the character encoding of the file. use values of the
-     *                               array {@code CConstants.BIBTEX_ENCODINGS} as parameter.
+     * @param encoding the character encoding of the file. use values of the
+     * array {@code CConstants.BIBTEX_ENCODINGS} as parameter.
      * @param suppressNewEntryImport {@code true} if missing entries should
-     *                               <b>not</b> be added to the {@link #bibtexentries}, i.e. the
-     *                               ZKN3-Database. Use {@code false} if missing entries should be added.
-     * @param updateExistingEntries  {@code true} update entries with identical BibTeX key
-     *                                           that have already been imported into the internal database, i.e.,
-     *                                           replace with entries from the attached BibTeX file
-     * @return {@code true} if attached file was successfully opened,
+     * <b>not</b> be added to the {@link #bibtexentries}, i.e. the
+     * ZKN3-Database. Use {@code false} if missing entries should be added.
+     * @param updateExistingEntries {@code true} whether entries with identical
+     * bibkey that have already been imported into the internal data base should
+     * be updated (replaced) with entries from the attached bibtex file.
+     *
+     * @return {@code true} if attachedfile was successfully opened,
      * {@code false} otherwise.
      */
-    public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport, boolean updateExistingEntries) throws IOException {
-        this.encoding = encoding;
-        this.suppressNewEntryImport = suppressNewEntryImport;
-        this.updateExistingEntries = updateExistingEntries;
-        boolean result = true;
-
+    public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport, boolean updateExistingEntries) {
+        // reset currently attached filepath
+        currentlyattachedfile = null;
+        // if we have no bibtex-filepath, return false
+        if (null == getFilePath() || !getFilePath().exists()) {
+            return false;
+        }
+        // create a new bibtex-parser for parsing the bibtex-file
         BibtexParser bp = new BibtexParser(false);
-        InputStream is = new FileInputStream(getFilePath());
-        InputStreamReader isr = new InputStreamReader(is, encoding);
-
+        // create stream-readers for reading the file
+        InputStreamReader isr = null;
+        InputStream is = null;
         try {
+            // create fileinput-stream
+            is = new FileInputStream(getFilePath());
+            // read the stream, using the related character encoding
+            isr = new InputStreamReader(is, encoding);
+            // create new bibtex-file
             bibtexfile = new BibtexFile();
+            // parse file into our bibtexfile-variable
             bp.parse(bibtexfile, isr);
-            // get all nodes (entries) from the BibTeX file, so we can
-            // prepare a linked list containing all entries of that BibTeX file
+            // get all nodes (entries) from the bibtex-file, so we can
+            // prepare a linked list containing all entries of that bibtex-file
             List<BibtexNode> bibNodes = bibtexfile.getEntries();
             // reset old linked list
             attachedbibtexentries.clear();
             // iterate nodes
             for (BibtexNode node : bibNodes) {
+                // check whether the node is of type "bibtexentry"
                 if (node instanceof BibtexEntry) {
                     BibtexEntry be = (BibtexEntry) node;
                     // if yes, add that entry to the linked list
                     attachedbibtexentries.add(be);
-                    // now we have all entries from the specified BibTeX file
+                    // now we have all entries from the specified bibtex-file
                     // parsed into a linked list, so we have easy access to each
-                    // single BibTeX entry via the list "bibtexentries"
+                    // single bibtex-entry via the list "bibtexentries"
                 }
             }
-            // set new attached file path, so we can figure out whether we have any
+            // set new attached filepath, so we can figure out whether we have any
             // attached file or not...
             currentlyattachedfile = getFilePath();
         } catch (ParseException | IOException e) {
             Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-            result = false;
+            return false;
         } finally {
             try {
                 if (isr != null) {
@@ -632,78 +637,70 @@ public class BibTeX {
                 }
             } catch (IOException e) {
                 Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+                return false;
             }
         }
-        if (result) {
-            checkWhetherMissingEntriesShouldBeAdded(suppressNewEntryImport, updateExistingEntries);
-        }
-        return result;
-    }
-
-    private void checkWhetherMissingEntriesShouldBeAdded(boolean suppressNewEntryImport,
-                                                         boolean updateExistingEntries) {
-        this.suppressNewEntryImport = suppressNewEntryImport;
-        this.updateExistingEntries = updateExistingEntries; // replace with entries from the attached BibTeX file
+        // check whether missing entries should be added
         if (!updateExistingEntries && !suppressNewEntryImport) {
-            addEntries(attachedbibtexentries);
+            // add all new entries to data base
+            int newentries = addEntries(attachedbibtexentries);
+            // tell user
+            if (newentries > 0) {
+                JOptionPane.showMessageDialog(null, resourceMap.getString("importMissingBibtexEntriesText", String.valueOf(newentries)), "BibTeX-Import", JOptionPane.PLAIN_MESSAGE);
+            }
         }
+        return true;
     }
 
     /**
-     * This method opens (and "attaches") a BibTeX file which is specified via
+     * This method opens (and "attaches") a bibtex-file which is specified via
      * the {@link #setFilePath(java.io.File) setFilePath(File)} method. The file
      * is parsed into the private variable {@code bibtexfile}, which can be
      * accessed via {@link #getFile() getFile()}.
      *
-     * @param encoding               the character encoding of the file. use values of the
-     *                               array {@code CConstants.BIBTEX_ENCODINGS} as parameter.
+     * @param encoding the character encoding of the file. use values of the
+     * array {@code CConstants.BIBTEX_ENCODINGS} as parameter.
      * @param suppressNewEntryImport {@code true} if missing entries should
-     *                               <b>not</b> be added to the {@link #bibtexentries}, i.e. the
-     *                               ZKN3-Database. Use {@code false} if missing entries should be added.
+     * <b>not</b> be added to the {@link #bibtexentries}, i.e. the
+     * ZKN3-Database. Use {@code false} if missing entries should be added.
+     *
      * @return {@code true} if attachedfile was successfully opened,
      * {@code false} otherwise.
      */
-    public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport) throws IOException {
-        if (openAttachedFile(encoding,
-                suppressNewEntryImport,
-                // updateExistingEntries
-                false)) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean openAttachedFile(String encoding, boolean suppressNewEntryImport) {
+        return openAttachedFile(encoding, suppressNewEntryImport, false);
     }
 
     /**
-     * This method opens (and "attaches") a BibTeX file which is specified via
+     * This method opens (and "attaches") a bibtex-file which is specified via
      * the {@link #setFilePath(java.io.File) setFilePath(File)} method. The file
      * is parsed into the private variable {@code bibtexfile}, which can be
      * accessed via {@link #getFile() getFile()}.
      *
      * @param is
      * @param encoding the character encoding of the file. use values of the
-     *                 array {@code Constants.BIBTEX_ENCODINGS} as parameter.
-     * @return {@code true} if attached file was successfully opened,
+     * array {@code Constants.BIBTEX_ENCODINGS} as parameter.
+     * @return {@code true} if attachedfile was successfully opened,
      * {@code false} otherwise.
      */
     public boolean openFile(InputStream is, String encoding) {
-        // if we have no BibTeX file path, return false
+        // if we have no bibtex-filepath, return false
         if (null == is) {
             return false;
         }
-        // create a new BibTeX parser for parsing the BibTeX file
+        // create a new bibtex-parser for parsing the bibtex-file
         BibtexParser bp = new BibtexParser(false);
         // create stream-readers for reading the file
         InputStreamReader isr = null;
         try {
             // read the stream, using the related character encoding
             isr = new InputStreamReader(is, encoding);
-            // create new BibTeX file
+            // create new bibtex-file
             bibtexfile = new BibtexFile();
             // parse file into our bibtexfile-variable
             bp.parse(bibtexfile, isr);
-            // get all nodes (entries) from the BibTeX file, so we can
-            // prepare a linked list containing all entries of that BibTeX file
+            // get all nodes (entries) from the bibtex-file, so we can
+            // prepare a linked list containing all entries of that bibtex-file
             List<BibtexNode> bibNodes = bibtexfile.getEntries();
             // reset old linked list
             bibtexentries.clear();
@@ -713,9 +710,9 @@ public class BibTeX {
                 if (node instanceof BibtexEntry) {
                     // if yes, add that entry to the linked list
                     bibtexentries.add((BibtexEntry) node);
-                    // now we have all entries from the specified BibTeX file
+                    // now we have all entries from the specified bibtex-file
                     // parsed into a linked list, so we have easy access to each
-                    // single BibTeX entry via the list "bibtexentries"
+                    // single bibtex-entry via the list "bibtexentries"
                 }
             }
         } catch (ParseException | IOException e) {
@@ -736,23 +733,23 @@ public class BibTeX {
     }
 
     public boolean appendFile(InputStream is, String encoding) {
-        // if we have no BibTeX filepath, return false
+        // if we have no bibtex-filepath, return false
         if (null == is) {
             return false;
         }
-        // create a new bibtex-parser for parsing the BibTeX file
+        // create a new bibtex-parser for parsing the bibtex-file
         BibtexParser bp = new BibtexParser(false);
         // create stream-readers for reading the file
         InputStreamReader isr = null;
         try {
             // read the stream, using the related character encoding
             isr = new InputStreamReader(is, encoding);
-            // create new BibTeX file
+            // create new bibtex-file
             BibtexFile appfile = new BibtexFile();
             // parse file into our bibtexfile-variable
             bp.parse(appfile, isr);
-            // get all nodes (entries) from the BibTeX file, so we can
-            // prepare a linked list containing all entries of that BibTeX file
+            // get all nodes (entries) from the bibtex-file, so we can
+            // prepare a linked list containing all entries of that bibtex-file
             List<BibtexNode> bibNodes = appfile.getEntries();
             // iterate nodes
             for (BibtexNode node : bibNodes) {
@@ -760,7 +757,7 @@ public class BibTeX {
                 if (node instanceof BibtexEntry) {
                     // if yes, add that entry to the linked list
                     addEntry((BibtexEntry) node);
-                    // now we have all entries from the specified BibTeX file
+                    // now we have all entries from the specified bibtex-file
                     // parsed into a linked list, so we have easy access to each
                     // single bibtex-entry via the list "bibtexentries"
                 }
@@ -834,6 +831,7 @@ public class BibTeX {
     }
 
     /**
+     *
      * @return
      */
     public BibtexFile getFile() {
@@ -841,7 +839,7 @@ public class BibTeX {
     }
 
     /**
-     * This method returns the file name of the last used BibTeX file.
+     * This method returns the file name of the last used bibtex-file.
      *
      * @return the name of the given file, excluding extension, or {@code null}
      * if an error occured.
@@ -852,9 +850,9 @@ public class BibTeX {
 
     /**
      * This method returns the imported entries of the original ("attached")
-     * BibTeX file.
+     * bibtex-file.
      * <br><br>
-     * Bibtex-entries that should be exported to a new created BibTeX file
+     * Bibtex-entries that should be exported to a new created bibtex-file
      * always use functions with the suffix "ForExport" (e.g.
      * {@link #addBibtexEntryForExport(bibtex.dom.BibtexEntry) addBibtexEntryForExport()}).
      *
@@ -865,9 +863,9 @@ public class BibTeX {
     }
 
     /**
-     * This method returns the entries of the BibTeX file in the ZKN3-Database.
+     * This method returns the entries of the bibtex-file in the ZKN3-Database.
      * <br><br>
-     * Bibtex-entries that should be exported to a new created BibTeX file
+     * Bibtex-entries that should be exported to a new created bibtex-file
      * always use functions with the suffix "ForExport" (e.g.
      * {@link #addBibtexEntryForExport(bibtex.dom.BibtexEntry) addBibtexEntryForExport()}).
      *
@@ -879,7 +877,7 @@ public class BibTeX {
 
     /**
      * Gets the bibtex-entry indicated by {@code nr} from the original
-     * (attached) BibTeX file.
+     * (attached) bibtex-file.
      *
      * @param nr the entry-number of the entry that should be returned
      * @return the related entry, or {@code null} if an error occured.
@@ -894,7 +892,7 @@ public class BibTeX {
 
     /**
      * Gets the bibtex-entry indicated by {@code nr} from the original
-     * BibTeX file in the ZKN3-Database.
+     * bibtex-file in the ZKN3-Database.
      *
      * @param nr the entry-number of the entry that should be returned
      * @return the related entry, or {@code null} if an error occured.
@@ -909,7 +907,7 @@ public class BibTeX {
 
     /**
      * Gets the bibtex-entry indicated by {@code bibkey} from the original
-     * (attached) BibTeX file.
+     * (attached) bibtex-file.
      *
      * @param bibkey the bibkey of the entry that should be returned
      * @return the related entry, or {@code null} if an error occured.
@@ -933,7 +931,7 @@ public class BibTeX {
 
     /**
      * Gets the bibtex-entry indicated by {@code bibkey} from the original
-     * BibTeX file in the ZKN3-Database.
+     * bibtex-file in the ZKN3-Database.
      *
      * @param bibkey the bibkey of the entry that should be returned
      * @return the related entry, or {@code null} if an error occured or nothing
@@ -970,11 +968,11 @@ public class BibTeX {
 
     /**
      * Sets (replaces) the bibtex-entry indicated by {@code bibkey} from the
-     * original BibTeX file in the ZKN3-Database with a new BibTexEntry
+     * original bibtex-file in the ZKN3-Database with a new BibTexEntry
      * {@code entry}.
      *
      * @param bibkey the bibkey of the entry that should be updated / set
-     * @param entry  the bibtexentry that should replace the old value
+     * @param entry the bibtexentry that should replace the old value
      */
     public void setEntry(String bibkey, BibtexEntry entry) {
         // do we have any entries?
@@ -998,7 +996,7 @@ public class BibTeX {
      * Removes the entry with the bibkey {@code bibkey} from the database.
      *
      * @param bibkey the bibkey value of the entry that should be removed from
-     *               the internal bibtex database.
+     * the internal bibtex database.
      * @return the removed bibtex-entry, or {@code null} of no entry was
      * removed.
      */
@@ -1020,7 +1018,7 @@ public class BibTeX {
     /**
      * Gets an bibtex-entry index-number from the bibtex-entry that is
      * associated with the bibkey-value {@code bibkey} from the original
-     * BibTeX file in the ZKN3-Database.
+     * bibtex-file in the ZKN3-Database.
      *
      * @param bibkey the bibkey of the entry which number should be returned
      * @return the related entry-number of the bibtex-entry that has the
@@ -1053,7 +1051,7 @@ public class BibTeX {
      * currently attached file.
      *
      * @param entrynr the entry-number of an entry within the currently attached
-     *                BibTeX file
+     * bibtex-file
      * @return the related bibkey, or null if no key or no such entry exists.
      */
     public String getBibkeyFromAttachedFile(int entrynr) {
@@ -1072,7 +1070,7 @@ public class BibTeX {
      * currently attached file.
      *
      * @param entrynr the entry-number of an entry within the currently attached
-     *                BibTeX file
+     * bibtex-file
      * @return the related bibkey, or null if no key or no such entry exists.
      */
     public String getBibkey(int entrynr) {
@@ -1160,7 +1158,7 @@ public class BibTeX {
      * {@code entrynr} from the currently attached file.
      *
      * @param entrynr the entry-number of an entry within the currently attached
-     *                BibTeX file
+     * bibtex-file
      * @return the related keywords as string-array, or null if no keywords or
      * no such entry exists.
      */
@@ -1228,6 +1226,7 @@ public class BibTeX {
     }
 
     /**
+     *
      * @param bibkey
      * @return
      */
@@ -1267,6 +1266,7 @@ public class BibTeX {
     }
 
     /**
+     *
      * @param be
      */
     public void addBibtexEntryForExport(BibtexEntry be) {
@@ -1295,9 +1295,9 @@ public class BibTeX {
      * {@link #addBibtexEntryForExport(bibtex.dom.BibtexEntry) addBibtexEntryForExport(bibtex.dom.BibtexEntry)}
      * to add new entries to this list that should be exported.
      *
-     * @param fp the filepath and filename of the new BibTeX file that should be
-     *           created, containing all entries which are currently saved to
-     *           {@link #outputbibtexentries outputbibtexentries}.
+     * @param fp the filepath and filename of the new bibtex-file that should be
+     * created, containing all entries which are currently saved to
+     * {@link #outputbibtexentries outputbibtexentries}.
      * @return {@code true} if entries have been successfully exported,
      * {@code false} otherwise.
      */
@@ -1341,7 +1341,7 @@ public class BibTeX {
 
     /**
      * This method returns a formatted string consisting of the author-, year-
-     * and title-value of an bibtex-entry of the currently attached BibTeX file.
+     * and title-value of an bibtex-entry of the currently attached bibtex-file.
      * The requested entry is specified by its {@code entrynr}.
      *
      * @param entrynr the number of the entry that should be retrieved
@@ -1356,7 +1356,7 @@ public class BibTeX {
 
     /**
      * This method returns a formatted string consisting of the author-, year-
-     * and title-value of an bibtex-entry of the currently attached BibTeX file.
+     * and title-value of an bibtex-entry of the currently attached bibtex-file.
      * The requested entry is specified by its {@code entrynr}.
      *
      * @param entrynr the number of the entry that should be retrieved
@@ -1371,7 +1371,7 @@ public class BibTeX {
 
     /**
      * This method returns a formatted string consisting of the author-, year-
-     * and title-value of an bibtex-entry of the currently attached BibTeX file.
+     * and title-value of an bibtex-entry of the currently attached bibtex-file.
      * The requested entry is specified by its {@code bibkey}.
      *
      * @param bibkey the bibkey of the entry that should be retrieved
@@ -1386,7 +1386,7 @@ public class BibTeX {
 
     /**
      * This method returns a formatted string consisting of the author-, year-
-     * and title-value of an bibtex-entry of the currently attached BibTeX file.
+     * and title-value of an bibtex-entry of the currently attached bibtex-file.
      * The requested entry is specified by its {@code entrynr}.
      *
      * @param entrynr the number of the entry that should be retrieved
@@ -1401,7 +1401,7 @@ public class BibTeX {
 
     /**
      * This method returns a formatted string consisting of the author-, year-
-     * and title-value of an bibtex-entry of the currently attached BibTeX file.
+     * and title-value of an bibtex-entry of the currently attached bibtex-file.
      * The requested entry is specified by its {@code bibkey}.
      *
      * @param bibkey the bibkey of the entry that should be retrieved
@@ -1416,7 +1416,7 @@ public class BibTeX {
 
     /**
      * This method returns a formatted string consisting of the author-, year-
-     * and title-value of an bibtex-entry of the currently attached BibTeX file.
+     * and title-value of an bibtex-entry of the currently attached bibtex-file.
      * This method does the work for both
      * {@link #getFormattedEntryFromAttachedFile(java.lang.String) getFormattedEntryFromAttachedFile(String)}
      * and
@@ -1436,7 +1436,7 @@ public class BibTeX {
      * year-value. The formatted year thus would be for instance <b>"
      * (2009):"</b>.
      *
-     * @param be               the BibtexEntry that should be formatted
+     * @param be the BibtexEntry that should be formatted
      * @param fromAttachedFile
      * @return the formatted output-string containing author, year and
      * title-information of the BibtexEntry {@code be}.
@@ -1536,7 +1536,7 @@ public class BibTeX {
                 if (dummy != null && !dummy.isEmpty()) {
                     // ...get the "format template"
                     String app = fields.get(f);
-                    // and replace the place holder with the associated value from the BibTeX file
+                    // and replace the place holder with the associated value from the bibtex-file
                     if (app != null) {
                         // first check, whether we have an author, because we need to split this
                         if (f.equalsIgnoreCase("author") || f.equalsIgnoreCase("editor")) {
@@ -1811,13 +1811,14 @@ public class BibTeX {
     }
 
     /**
+     *
      * @param dummy
      * @param fromAttachedFile
      * @return
      */
     private String convertEscapeChars(String dummy, boolean fromAttachedFile) {
         // check whether we have citavi- or mendeley-import. in such case, umlauts are "encoded" with
-        // backslash-quote (i.e. ä = \"a), so we have to re-convert it.
+        // backslah-quote (i.e. ä = \"a), so we have to re-cpnvert it.
         if ((fromAttachedFile && getEncoding() == Constants.BIBTEX_DESC_BIBDESK_INDEX) || !fromAttachedFile) {
             dummy = dummy.replace("{\\\"a}", "ä").replace("{\\\"A}", "Ä")
                     .replace("{\\\"o}", "ö").replace("{\\\"O}", "Ö")

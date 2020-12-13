@@ -205,7 +205,7 @@ public class CBiggerEditField extends javax.swing.JDialog {
         jTextAreaBigEdit.setName("jTextAreaBigEdit"); // NOI18N
         jScrollPane1.setViewportView(jTextAreaBigEdit);
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CBiggerEditField.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CBiggerEditField.class, this);
         jButton2.setAction(actionMap.get("cancelButton")); // NOI18N
         jButton2.setName("jButton2"); // NOI18N
 
@@ -214,7 +214,7 @@ public class CBiggerEditField extends javax.swing.JDialog {
 
         jPanel1.setName("jPanel1"); // NOI18N
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CBiggerEditField.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CBiggerEditField.class);
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 

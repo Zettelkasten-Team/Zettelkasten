@@ -32,7 +32,6 @@
  */
 package de.danielluedecke.zettelkasten.tasks;
 
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.TasksData;
 import java.util.LinkedList;
@@ -61,7 +60,7 @@ public class MergeAuthorsTask extends org.jdesktop.application.Task<Object, Void
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(MergeAuthorsTask.class);
 
     

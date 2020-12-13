@@ -34,28 +34,33 @@ package de.danielluedecke.zettelkasten.database;
 
 import de.danielluedecke.zettelkasten.CMakeFormImage;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
-import de.danielluedecke.zettelkasten.tasks.SaveFileTask;
-import de.danielluedecke.zettelkasten.tasks.export.ExportToZknTask;
+import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.Tools;
-import de.danielluedecke.zettelkasten.util.misc.Comparer;
-import org.jdom2.*;
-
-import javax.swing.*;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import javax.swing.JOptionPane;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.IllegalAddException;
+import org.jdom2.IllegalDataException;
+import org.jdom2.IllegalNameException;
 
 /**
  * This is the data class. This class stores all the programme data in a JDOM
  * XML Tree. It also provides typical methods like getters and setters, stores
  * the file path, the modified state and so on. All relevant operations need for
  * managing the data file can be found here, except loading (open file) and
- * saving operations. These can be found in {@link CLoadSave}.
+ * saving operations. These can be found in "CLoadSave.java".
  *
  * @author danielludecke
  */
@@ -6346,7 +6351,7 @@ public class Daten {
 
     /**
      * This method is used in the
-     * {@link ExportToZknTask} class
+     * {@link de.danielluedecke.zettelkasten.tasks.export.ExportToZknTask} class
      * to prepare the entries that should be exported. This method converts
      * entry-number-references into the related entry-IDs using the
      * {@link #getZettelID(int) getZettelID(int)} method.
@@ -7409,7 +7414,7 @@ public class Daten {
      * Use this method to indicate whether saving the data file was ok, or
      * whether an error occured. This method is typically used in the
      * saving-task, see
-     * {@link SaveFileTask SaveFileTask}.
+     * {@link de.danielluedecke.zettelkasten.tasks.SaveFileTask SaveFileTask}.
      *
      * @param val {@code true} when saving the data file was ok, {@code false}
      * if an error occured.
@@ -7421,7 +7426,7 @@ public class Daten {
     /**
      * Indicates whether saving the data file was ok, or whether an error
      * occured. See
-     * {@link SaveFileTask SaveFileTask}.
+     * {@link de.danielluedecke.zettelkasten.tasks.SaveFileTask SaveFileTask}.
      *
      * @return {@code true} when saving the data file was ok, {@code false} if
      * an error occured.

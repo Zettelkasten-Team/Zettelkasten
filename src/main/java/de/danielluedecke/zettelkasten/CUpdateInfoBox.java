@@ -114,7 +114,7 @@ public class CUpdateInfoBox extends javax.swing.JDialog {
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CUpdateInfoBox.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CUpdateInfoBox.class);
         setTitle(resourceMap.getString("FormUpdateInfoBox.title")); // NOI18N
         setModal(true);
         setName("FormUpdateInfoBox"); // NOI18N

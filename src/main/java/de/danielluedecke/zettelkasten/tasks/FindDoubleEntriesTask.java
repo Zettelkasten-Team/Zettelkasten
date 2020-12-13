@@ -33,12 +33,13 @@
 
 package de.danielluedecke.zettelkasten.tasks;
 
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
+import com.explodingpixels.macwidgets.MacWidgetFactory;
+import com.explodingpixels.widgets.TableUtils;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.util.misc.InitStatusbarForTasks;
+import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -79,7 +80,7 @@ public class FindDoubleEntriesTask extends javax.swing.JDialog {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(FindDoubleEntriesTask.class);
 
     /**
@@ -128,6 +129,15 @@ public class FindDoubleEntriesTask extends javax.swing.JDialog {
         // create auto-sorter for tabel
         jTable1.setAutoCreateRowSorter(false);
         jTable1.setGridColor(settingsObj.getTableGridColor());
+        // make extra table-sorter for itunes-tables
+        if (settingsObj.isMacAqua()) {
+            TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
+                @Override
+                public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
+                }
+            };
+            TableUtils.makeSortable(jTable1, sortDelegate);
+        }
         
         // disable table while thread is running
         jTable1.setEnabled(false);
@@ -211,7 +221,7 @@ public class FindDoubleEntriesTask extends javax.swing.JDialog {
     public Task findDoubleEntries() {
         // initiate the "statusbar" (the loading splash screen), giving visiual
         // feedback during open and save operations
-        return new FindDoubleEntryTask(org.jdesktop.application.Application.getInstance(ZettelkastenApp.class));
+        return new FindDoubleEntryTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
     }
 
     @SuppressWarnings("LeakingThisInConstructor")
@@ -359,14 +369,14 @@ public class FindDoubleEntriesTask extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTable1 = (settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         progressBar = new javax.swing.JProgressBar();
         statusAnimationLabel = new javax.swing.JLabel();
         msgLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(FindDoubleEntriesTask.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(FindDoubleEntriesTask.class);
         setTitle(resourceMap.getString("FormFindDoubleEntries.title")); // NOI18N
         setName("FormFindDoubleEntries"); // NOI18N
 

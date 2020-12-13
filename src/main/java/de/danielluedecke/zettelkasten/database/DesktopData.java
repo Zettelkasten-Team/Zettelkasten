@@ -33,7 +33,6 @@
 package de.danielluedecke.zettelkasten.database;
 
 import de.danielluedecke.zettelkasten.DesktopFrame;
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.Tools;
@@ -167,7 +166,7 @@ public class DesktopData {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(DesktopFrame.class);
 
     /**

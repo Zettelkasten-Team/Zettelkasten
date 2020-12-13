@@ -33,13 +33,20 @@
 package de.danielluedecke.zettelkasten.database;
 
 import de.danielluedecke.zettelkasten.ZettelkastenView;
+import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
-import de.danielluedecke.zettelkasten.util.misc.Comparer;
-import org.jdom2.*;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.IllegalAddException;
+import org.jdom2.IllegalDataException;
+import org.jdom2.IllegalNameException;
 
 /**
  *
@@ -529,7 +536,7 @@ public class Bookmarks {
         try {
             List<?> elementList = newbookmarks.getRootElement().getContent();
             try {
-                // iterate all imported bookmarks
+                // iterate all importet bookmakrs
                 for (int cnt = 0; cnt < newbookmarks.getContentSize(); cnt++) {
                     // retrieve each single bookmark-element
                     Element b = (Element) elementList.get(cnt);
@@ -548,7 +555,7 @@ public class Bookmarks {
                             if (cat != null && !cat.isEmpty()) {
                                 // retrieve possible comment
                                 String comment = b.getText();
-                                // and add new imported bookmark
+                                // and add new importet bookmark
                                 addBookmark(index, cat, comment);
                             }
                         }

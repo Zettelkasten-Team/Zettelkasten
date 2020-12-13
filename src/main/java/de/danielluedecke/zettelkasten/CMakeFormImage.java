@@ -74,7 +74,7 @@ public class CMakeFormImage {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap = 
-        org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(EditorFrame.class);
     
     public CMakeFormImage(Daten dat, Settings set, String ftag) {

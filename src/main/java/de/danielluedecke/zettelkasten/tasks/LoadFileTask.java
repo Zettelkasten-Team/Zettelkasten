@@ -32,7 +32,7 @@
  */
 package de.danielluedecke.zettelkasten.tasks;
 
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
+import de.danielluedecke.zettelkasten.database.*;
 import de.danielluedecke.zettelkasten.database.BibTeX;
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,13 +43,7 @@ import java.util.zip.ZipInputStream;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
-import de.danielluedecke.zettelkasten.database.Bookmarks;
 import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.database.SearchRequests;
-import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.database.Synonyms;
 
 /**
  *
@@ -92,7 +86,7 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(LoadFileTask.class);
 
     /**

@@ -35,18 +35,15 @@ package de.danielluedecke.zettelkasten.database;
 
 import de.danielluedecke.zettelkasten.CImportBibTex;
 import de.danielluedecke.zettelkasten.CSetBibKey;
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
-import de.danielluedecke.zettelkasten.util.*;
-import org.jdom2.Attribute;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.output.XMLOutputter;
-
-import javax.swing.*;
-import java.awt.*;
+import de.danielluedecke.zettelkasten.util.Constants;
+import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
+import de.danielluedecke.zettelkasten.util.Tools;
+import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
+import de.danielluedecke.zettelkasten.util.PlatformUtil;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -59,6 +56,17 @@ import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+import javax.swing.JOptionPane;
+import javax.swing.JSplitPane;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.UIManager;
+import org.jdom2.Attribute;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.XMLOutputter;
 
 /**
  *
@@ -118,7 +126,21 @@ public class Settings {
      * See method "loadSettings" below for more details.
      */
     private final List<String> dataFilesToLoad = new ArrayList<>();
-    
+    /**
+     * Indicates whether the programm is running on a mac with aqua-look and feel or not...
+     * @return {@code true}, if the programm is running on a mac with aqua-look and feel
+     */
+    public boolean isMacAqua() {
+        return PlatformUtil.isMacOS() & getLookAndFeel().contains("Aqua");
+    }
+    /**
+     * Indicates whether the programm is either running on a mac with aqua-look and feel.
+     * @return {@code true}, if the programm is running on a mac with aqua-look and feel
+     * @deprecated Use {@link #isMacAqua()} instead.
+     */
+    public boolean isMacStyle() {
+        return isMacAqua();
+    }
     public boolean isSeaGlass() {
         return getLookAndFeel().equals(Constants.seaGlassLookAndFeelClassName);
     }
@@ -323,7 +345,7 @@ public class Settings {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(ZettelkastenView.class);
 
     /**
@@ -533,6 +555,9 @@ public class Settings {
     }
 
     public Color getTableGridColor() {
+        if (isMacAqua()) {
+            return Constants.gridcolortransparent;
+        }
         return ((getShowGridHorizontal() || getShowGridVertical()) ? Constants.gridcolor : Constants.gridcolortransparent);
     }
 
@@ -983,6 +1008,7 @@ public class Settings {
                         if (entryname.equals(filesToLoad1)) {
                             try {
                                 SAXBuilder builder = new SAXBuilder();
+                                // Document doc = new Document();
                                 Document doc = builder.build(zip);
                                 // compare, which file we have retrieved, so we store the data
                                 // correctly on our data object
@@ -1039,6 +1065,7 @@ public class Settings {
                         if (entryname.equals(dataFilesToLoad1)) {
                             try {
                                 SAXBuilder builder = new SAXBuilder();
+                                // Document doc = new Document();
                                 Document doc = builder.build(zip);
                                 // compare, which file we have retrieved, so we store the data
                                 // correctly on our data-object
@@ -1215,12 +1242,10 @@ public class Settings {
      * @return the filepath of the last used main datafile, or null if no filepath was specified.
      */
     public File getFilePath() {
-        /*
-         We do this step by step rather that appending a ".getText()" to the line below, because
-         by doing so we can check whether the child element exists or not, and avoiding null pointer
-         exceptions
-         first, get the filepath, which is in relation to the zkn-path
-        */
+        // we do this step by step rather that appending a ".getText()" to the line below, because
+        // by doing so we can check whether the child element exists or not, and avoiding null pointer
+        // exceptions
+        // first, get the filepath, which is in relation to the zkn-path
         Element el = settingsFile.getRootElement().getChild(SETTING_FILEPATH);
         // create an empty string as return value
         String value = "";
@@ -5403,7 +5428,7 @@ public class Settings {
         // get default path
         String defpath = Constants.standardIconThemePath;
         // check whether we have os x
-        if (isSeaGlass()) {
+        if (isMacAqua() || isSeaGlass()) {
             defpath = defpath + "osx/";
         } else {
             defpath = defpath + Constants.iconThemes[theme];

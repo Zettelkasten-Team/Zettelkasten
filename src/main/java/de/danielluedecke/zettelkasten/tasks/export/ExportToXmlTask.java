@@ -32,7 +32,6 @@
  */
 package de.danielluedecke.zettelkasten.tasks.export;
 
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.TasksData;
@@ -105,7 +104,7 @@ public class ExportToXmlTask extends org.jdesktop.application.Task<Object, Void>
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(ExportTask.class);
 
     public ExportToXmlTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label,
@@ -259,9 +258,6 @@ public class ExportToXmlTask extends org.jdesktop.application.Task<Object, Void>
             Element zettel = dataObj.retrieveZettel(zettelnummer);
             // create new zettel-element for our final export file
             Element el_zettel = new Element(Daten.ELEMENT_ZETTEL);
-
-            el_zettel.setAttribute(Daten.ATTRIBUTE_ZETTEL_ID, ""+zettelnummer);
-
             // see whether the bit "EXPORT_TITLE" is set
             // in the exportparts-variabe. if so, export title
             if ((exportparts & Constants.EXPORT_TITLE) != 0) {

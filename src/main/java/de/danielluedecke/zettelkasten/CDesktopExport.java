@@ -33,11 +33,12 @@
 
 package de.danielluedecke.zettelkasten;
 
-import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Settings;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
+import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -57,7 +58,7 @@ public class CDesktopExport extends javax.swing.JDialog {
      * get the strings for file descriptions from the resource map
      */
     private org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CDesktopExport.class);
     /**
      *
@@ -252,7 +253,7 @@ public class CDesktopExport extends javax.swing.JDialog {
         File exportdir = settingsObj.getLastOpenedExportDir();
         // here we open a swing filechooser, in case the os ist no mac aqua
         filepath = FileOperationsUtil.chooseFile(this,
-                                          JFileChooser.SAVE_DIALOG,
+                                          (settingsObj.isMacAqua())?FileDialog.SAVE:JFileChooser.SAVE_DIALOG,
                                           JFileChooser.FILES_ONLY,
                                           (null==exportdir)?null:exportdir.getPath(),
                                           (null==exportdir)?null:exportdir.getName(),
@@ -395,7 +396,7 @@ public class CDesktopExport extends javax.swing.JDialog {
         jCheckBoxRemoveParaSpaces = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CDesktopExport.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CDesktopExport.class);
         setTitle(resourceMap.getString("FormDesktopExport.title")); // NOI18N
         setModal(true);
         setName("FormDesktopExport"); // NOI18N
@@ -415,7 +416,7 @@ public class CDesktopExport extends javax.swing.JDialog {
         jLabelBrowseDir.setText(resourceMap.getString("jLabelBrowseDir.text")); // NOI18N
         jLabelBrowseDir.setName("jLabelBrowseDir"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CDesktopExport.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CDesktopExport.class, this);
         jButtonBrowse.setAction(actionMap.get("save")); // NOI18N
         jButtonBrowse.setName("jButtonBrowse"); // NOI18N
 

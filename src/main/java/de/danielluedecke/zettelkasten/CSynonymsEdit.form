@@ -84,6 +84,9 @@
             <Property name="cellSelectionEnabled" type="boolean" value="true"/>
             <Property name="name" type="java.lang.String" value="jTable1" noResource="true"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="(settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable()"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

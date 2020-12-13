@@ -38,7 +38,7 @@ import de.danielluedecke.zettelkasten.util.ColorUtil;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.ListUtil;
-import de.danielluedecke.zettelkasten.util.misc.Comparer;
+import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -112,7 +112,7 @@ public class CFilterSearch extends javax.swing.JDialog {
         terms = t;
         Collections.sort(terms, new Comparer());
         // when we have aqua-style, change scrollbars
-        if (se.isSeaGlass()) {
+        if (se.isMacAqua() || se.isSeaGlass()) {
             jTextFieldFilter.putClientProperty("JTextField.variant", "search");
             if (se.isSeaGlass()) {
                 jButtonOk.putClientProperty("JComponent.sizeVariant", "small");
@@ -302,7 +302,7 @@ public class CFilterSearch extends javax.swing.JDialog {
         jButtonRefresh = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CFilterSearch.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CFilterSearch.class);
         setTitle(resourceMap.getString("FormFilterSearch.title")); // NOI18N
         setModal(true);
         setName("FormFilterSearch"); // NOI18N
@@ -362,7 +362,7 @@ public class CFilterSearch extends javax.swing.JDialog {
         jTextFieldFilter.setToolTipText(resourceMap.getString("jTextFieldFilter.toolTipText")); // NOI18N
         jTextFieldFilter.setName("jTextFieldFilter"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CFilterSearch.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CFilterSearch.class, this);
         jButtonRefresh.setAction(actionMap.get("refreshList")); // NOI18N
         jButtonRefresh.setIcon(resourceMap.getIcon("jButtonRefresh.icon")); // NOI18N
         jButtonRefresh.setBorderPainted(false);
