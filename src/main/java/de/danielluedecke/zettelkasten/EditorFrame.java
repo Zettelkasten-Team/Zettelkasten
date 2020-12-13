@@ -3892,7 +3892,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
             }
         }
         // tell mainframe that it has to update the content
-        mainframe.EditingFinishedEvent();
+        mainframe.editFinishedEvent();
         // check whether memory usage is logged. if so, tell logger that new entry windows was opened
         if (settingsObj.isMemoryUsageLogged) {
             // log info
@@ -3922,7 +3922,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
             return;
         }
         // tell mainframe that it has to update the content
-        mainframe.EditingFinishedEvent();
+        mainframe.editFinishedEvent();
         // check whether memory usage is logged. if so, tell logger that new entry windows was opened
         if (settingsObj.isMemoryUsageLogged) {
             // log info

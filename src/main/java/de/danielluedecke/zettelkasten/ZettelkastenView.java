@@ -6535,9 +6535,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
-    public void EditingFinishedEvent() {
-    }
-
     /**
      * This Action creates the links between of the currently displayed entry
      * with all other enries, based on matching keywords. These hyperlinks are
@@ -8123,7 +8120,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * This method is called from the CNewEntry-frame to indicate when an
      * edit.action has been finished.
      */
-    public void finishedEditing() {
+    public void editFinishedEvent() {
         // edit window was closed
         isEditModeActive = false;
         // if the user made changes to the datafile, e.g. adding new entries
