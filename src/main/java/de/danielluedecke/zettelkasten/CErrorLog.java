@@ -33,10 +33,8 @@
 package de.danielluedecke.zettelkasten;
 
 import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.util.ColorUtil;
-import de.danielluedecke.zettelkasten.util.Tools;
-import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
+import de.danielluedecke.zettelkasten.util.*;
+
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -107,7 +105,7 @@ public class CErrorLog extends javax.swing.JDialog {
                     Tools.flushSessionLog();
                     jTextArea2.setText("------------------------------"
                             + System.lineSeparator()
-                            + "Zettelkasten-Version: " + Constants.BUILD_VERSION
+                            + "Zettelkasten-Version: " + Version.get().getVersionString()
                             + System.lineSeparator()
                             + System.lineSeparator()
                             + Tools.getSystemInformation()
@@ -130,7 +128,7 @@ public class CErrorLog extends javax.swing.JDialog {
             // a separator line for a better overview
             sb.append("------------------------------").append(System.lineSeparator());
             // first, show programme-version
-            sb.append("Zettelkasten-Version: " + Constants.BUILD_VERSION).append(System.lineSeparator()).append(System.lineSeparator());
+            sb.append("Zettelkasten-Version: " + Version.get().getVersionString()).append(System.lineSeparator()).append(System.lineSeparator());
             // now show system-information (jre, os etc.)
             sb.append("System-Information:").append(System.lineSeparator()).append(Tools.getSystemInformation()).append(System.lineSeparator());
             // a separator line for a better overview

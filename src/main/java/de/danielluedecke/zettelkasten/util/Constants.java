@@ -35,6 +35,9 @@ package de.danielluedecke.zettelkasten.util;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 
@@ -47,10 +50,10 @@ import javax.swing.ImageIcon;
  */
 public class Constants {
 
-    /**
+    /*
      * This variable stores the current programme and build version number
      */
-    public static final String BUILD_VERSION = "3.2.7 (Build 20151016)";
+    // public static final String BUILD_VERSION = "3.2.8 (Build 20180603)";
     /**
      * This constants stores the website-address where the Zettelkasten can be
      * downloaded:<br><br>
@@ -244,7 +247,7 @@ public class Constants {
     public static final String DRAG_SOURCE_JTREELUHMANN = "jTreeLuhmann";
     public static final String ROOT_ID_NAME = "root";
 
-    // Here we have the formatting tags which are used in the EditorFrame
+    // Here we have the formatting tags which are used in the NewEntryFrame
     public static final String FORMAT_BOLD_OPEN = "[f]";
     public static final String FORMAT_BOLD_CLOSE = "[/f]";
     public static final String FORMAT_MD_BOLD_OPEN = "**";
@@ -1185,4 +1188,6 @@ public class Constants {
         "EEEE, d. MMM yyyy (HH:mm)",
         "EEEE, d. MMMM yyyy (HH:mm)",
         "yyyy-MM-dd HH:mm:ss"};
+
+
 }
