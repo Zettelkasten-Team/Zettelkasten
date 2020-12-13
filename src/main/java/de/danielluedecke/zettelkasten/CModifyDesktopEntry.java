@@ -479,18 +479,7 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
      * mac-like...
      */
     private void setupMacOSXLeopardStyle() {
-        // now we have to change back the background-color of all components in the mainpart of the
-        // frame, since the brush-metal-look applies to all components
-        // we change the background-color of the main-area here...
-        //
-        // since snow-leopard has a different color-rendering, we need a different
-        // background-color for OS X 10.6
-        Color backcol = ColorUtil.getMacBackgroundColor();
-        // on Leopard (OS X 10.5), we have different rendering, thus we need these lines
-        if (PlatformUtil.isLeopard()) {
-            getContentPane().setBackground(backcol);
-            mainPanel.setBackground(backcol);
-        }
+
     }
 
     private void makeSeaGlassToolbar() {

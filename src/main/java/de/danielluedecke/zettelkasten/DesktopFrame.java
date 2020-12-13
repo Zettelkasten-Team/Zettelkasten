@@ -840,27 +840,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      * is even more mac-like...
      */
     private void setupMacOSXLeopardStyle() {
-        // <editor-fold defaultstate="collapsed" desc="This method applies some UI-stuff particular for Mac OS X">
-        // now we have to change back the background-color of all components in the mainpart of the
-        // frame, since the brush-metal-look applies to all components
-        //
-        // make searchfields look like mac
-        jTextFieldLiveSearch.putClientProperty("JTextField.variant", "search");
-        // other components become normal gray - which is, however, a little bit
-        // darker than the default gray
-        Color backcol = ColorUtil.getMacBackgroundColor();
-        // on Leopard (OS X 10.5), we have different rendering, thus we need these lines
-        if (PlatformUtil.isLeopard()) {
-            mainframe.getContentPane().setBackground(backcol);
-            jPanel1.setBackground(backcol);
-        }
-        jPanel3.setBackground(backcol);
-        jPanel4.setBackground(backcol);
-        jPanel5.setBackground(backcol);
-        jPanel6.setBackground(backcol);
-        jPanelLiveSearch.setBackground(backcol);
-        jSplitPaneDesktop1.setBackground(backcol);
-        jSplitPaneDesktop2.setBackground(backcol);
+
         MacWidgetFactory.makeEmphasizedLabel(jLabel1);
         // get the toolbar-action
         AbstractAction ac = (AbstractAction) org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(DesktopFrame.class, this).get("findCancel");

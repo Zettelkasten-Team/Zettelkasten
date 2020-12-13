@@ -1279,29 +1279,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
      * is even more mac-like...
      */
     private void setupMacOSXLeopardStyle() {
-        // now we have to change back the background-color of all components in the mainpart of the
-        // frame, since the brush-metal-look applies to all components
-        // we change the background-color of the main-area here...
-        //
-        // since snow-leopard has a different color-rendering, we need a different
-        // background-color for OS X 10.6
-        Color backcol = ColorUtil.getMacBackgroundColor();
-        // on Leopard (OS X 10.5), we have different rendering, thus we need these lines
-        if (PlatformUtil.isLeopard()) {
-            getContentPane().setBackground(backcol);
-            newEntryMainPanel.setBackground(backcol);
-        }
-        jPanel2.setBackground(backcol);
-        jPanel3.setBackground(backcol);
-        jPanel5.setBackground(backcol);
-        jPanel7.setBackground(backcol);
-        jPanel8.setBackground(backcol);
-        jPanel9.setBackground(backcol);
-        jPanelQuickInput.setBackground(backcol);
-        jSplitPaneNewEntry1.setBackground(backcol);
-        jSplitPaneNewEntry2.setBackground(backcol);
-        jSplitPaneNewEntry3.setBackground(backcol);
-        jSplitPaneNewEntry4.setBackground(backcol);
+
         Color darkbackcol = ColorUtil.colorJTreeBackground;
         jPanel4.setBackground(darkbackcol);
         jPanel6.setBackground(darkbackcol);

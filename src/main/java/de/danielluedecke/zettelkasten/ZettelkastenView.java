@@ -6535,6 +6535,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
     }
 
+    public void EditingFinishedEvent() {
+    }
+
     /**
      * This Action creates the links between of the currently displayed entry
      * with all other enries, based on matching keywords. These hyperlinks are
@@ -11011,31 +11014,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         //
         // snow-leopard and java 6/7 have different color-rendering, we need a different
         // background-color for OS X 10.5 and above as well as java 6 and 7
-        Color backcol = ColorUtil.getMacBackgroundColor();
-        // on Leopard (OS X 10.5), we have different rendering, thus we need these lines
-        if (PlatformUtil.isLeopard()) {
-            mainPanel.setBackground(backcol);
-        }
-        jPanelMainRight.setBackground(backcol);
-        jSplitPaneMain1.setBackground(backcol);
-        jSplitPane1.setBackground(backcol);
-        jSplitPaneMain2.setBackground(backcol);
-        jSplitPaneLinks.setBackground(backcol);
-        jSplitPaneAuthors.setBackground(backcol);
-        jTabbedPaneMain.setBackground(backcol);
-        jPanel1.setBackground(backcol);
-        jPanel2.setBackground(backcol);
-        jPanel7.setBackground(backcol);
-        jPanel8.setBackground(backcol);
-        jPanel9.setBackground(backcol);
-        jPanel10.setBackground(backcol);
-        jPanel11.setBackground(backcol);
-        jPanel13.setBackground(backcol);
-        jPanel14.setBackground(backcol);
-        jPanel15.setBackground(backcol);
-        jPanelLiveSearch.setBackground(backcol);
-        jPanelManLinks.setBackground(backcol);
-        jPanelDispAuthor.setBackground(backcol);
+
         // make searchfields look like mac
         searchTextFieldVariants();
         // remove custim borders

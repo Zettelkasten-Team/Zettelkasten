@@ -371,26 +371,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
      * mac-like...
      */
     private void setupMacOSXLeopardStyle() {
-        // now we have to change back the background-color of all components in the mainpart of the
-        // frame, since the brush-metal-look applies to all components
-        //
-        // other components become normal gray - which is, however, a little bit
-        // darker than the default gray
-        //
-        // since snow-leopard has a different color-rendering, we need a different
-        // background-color for OS X 10.6
-        Color backcol = ColorUtil.getMacBackgroundColor();
-        // on Leopard (OS X 10.5), we have different rendering, thus we need these lines
-        if (PlatformUtil.isLeopard()) {
-            searchframe.getContentPane().setBackground(backcol);
-            searchMainPanel.setBackground(backcol);
-        }
-        jPanel1.setBackground(backcol);
-        jPanel2.setBackground(backcol);
-        jPanel3.setBackground(backcol);
-        jPanel4.setBackground(backcol);
-        jSplitPaneSearch1.setBackground(backcol);
-        jSplitPaneSearch2.setBackground(backcol);
+
         jTextFieldFilterList.putClientProperty("JTextField.variant", "search");
         MacWidgetFactory.makeEmphasizedLabel(jLabel1);
         MacWidgetFactory.makeEmphasizedLabel(jLabelHits);
