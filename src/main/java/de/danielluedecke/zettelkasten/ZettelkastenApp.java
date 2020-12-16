@@ -95,12 +95,16 @@ public class ZettelkastenApp extends SingleFrameApplication {
         String englishCountryCode = new Locale("en","","").getLanguage();
         String germanCountryCode = new Locale("de","","").getLanguage();
         String spanishCountryCode = new Locale("es","","").getLanguage();
+        String portugueseCountryCode = new Locale("pt", "", "").getLanguage();
         // create locale-variable
         Locale newLocale = new Locale("en","GB");
-        // check for defailt language and overwrite default-language-setting (which is UK)
-        if (deflang.equals(spanishCountryCode)) newLocale = new Locale("es","ES");
-        if (deflang.equals(germanCountryCode)) newLocale = new Locale("de","DE");
+        // check for default language and overwrite default-language-setting (which is UK)
         if (deflang.equals(englishCountryCode)) newLocale = new Locale("en","GB");
+        if (deflang.equals(germanCountryCode)) newLocale = new Locale("de","DE");
+        if (deflang.equals(spanishCountryCode)) newLocale = new Locale("es","ES");
+        if (deflang.equals(portugueseCountryCode)) newLocale = new Locale("pt","BR");
+
+
         // set default locale
         Locale.setDefault(newLocale);
         // check parameters for filepath of loaded file

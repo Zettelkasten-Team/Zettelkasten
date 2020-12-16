@@ -2519,7 +2519,7 @@ public class Settings {
     /**
      * Gets the setting for the default locale
      *
-     * @return a string with a lowercase-2-letter-country-code for the default languags
+     * @return a string with a lowercase-2-letter-country-code for the default languages
      */
     public String getLanguage() {
         return genericStringGetter(SETTING_LOCALE, Locale.getDefault().getLanguage());
@@ -2528,7 +2528,7 @@ public class Settings {
     /**
      * Sets the default language
      *
-     * @param lang a string with a lowercase-2-letter-country-code for the default languags
+     * @param lang a string with a lowercase-2-letter-country-code for the default languages
      */
     public void setLanguage(String lang) {
         genericStringSetter(SETTING_LOCALE, lang.toLowerCase());
