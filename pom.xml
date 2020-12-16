@@ -122,20 +122,32 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>de.perdian.maven.plugins</groupId>
-                <artifactId>macosappbundler-maven-plugin</artifactId>
-                <version>1.9.0</version>
-                <configuration>
-                    <plist>
-                        <JVMMainClassName>de.danielluedecke.zettelkasten.ZettelkastenApp</JVMMainClassName>
-                    </plist>
-                </configuration>
+                <groupId>io.github.fvarrui</groupId>
+                <artifactId>javapackager</artifactId>
+                <version>1.4.2</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
-                            <goal>bundle</goal>
+                            <goal>package</goal>
                         </goals>
+                        <configuration>
+                            <!-- mandatory -->
+                            <mainClass>de.danielluedecke.zettelkasten.ZettelkastenApp</mainClass>
+                            <!-- optional -->
+                            <bundleJre>false</bundleJre>
+                            <generateInstaller>true</generateInstaller>
+                            <administratorRequired>false</administratorRequired>
+                            <platform>auto</platform>
+                            <additionalResources>
+                                <additionalResource>file path</additionalResource>
+                                <additionalResource>folder path</additionalResource>
+                                <additionalResource>...</additionalResource>
+                            </additionalResources>
+                            <linuxConfig></linuxConfig>
+                            <macConfig></macConfig>
+                            <winConfig></winConfig>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -320,11 +332,10 @@
             <artifactId>AppleJavaExtensions</artifactId>
             <version>1.4</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/de.perdian.maven.plugins/macosappbundler-maven-plugin -->
         <dependency>
-            <groupId>de.perdian.maven.plugins</groupId>
-            <artifactId>macosappbundler-maven-plugin</artifactId>
-            <version>1.9.0</version>
+            <groupId>io.github.fvarrui</groupId>
+            <artifactId>javapackager</artifactId>
+            <version>1.4.2</version>
         </dependency>
     </dependencies>
     <repositories>
