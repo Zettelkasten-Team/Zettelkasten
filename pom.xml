@@ -122,11 +122,13 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>sh.tak.appbundler</groupId>
-                <artifactId>appbundle-maven-plugin</artifactId>
-                <version>1.2.0</version>
+                <groupId>de.perdian.maven.plugins</groupId>
+                <artifactId>macosappbundler-maven-plugin</artifactId>
+                <version>1.9.0</version>
                 <configuration>
-                    <mainClass>de.danielluedecke.zettelkasten.ZettelkastenApp</mainClass>
+                    <plist>
+                        <JVMMainClassName>de.danielluedecke.zettelkasten.ZettelkastenApp</JVMMainClassName>
+                    </plist>
                 </configuration>
                 <executions>
                     <execution>
@@ -318,11 +320,11 @@
             <artifactId>AppleJavaExtensions</artifactId>
             <version>1.4</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/sh.tak.appbundler/appbundle-maven-plugin -->
+        <!-- https://mvnrepository.com/artifact/de.perdian.maven.plugins/macosappbundler-maven-plugin -->
         <dependency>
-            <groupId>sh.tak.appbundler</groupId>
-            <artifactId>appbundle-maven-plugin</artifactId>
-            <version>1.2.0</version>
+            <groupId>de.perdian.maven.plugins</groupId>
+            <artifactId>macosappbundler-maven-plugin</artifactId>
+            <version>1.9.0</version>
         </dependency>
     </dependencies>
     <repositories>
