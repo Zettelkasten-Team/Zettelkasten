@@ -335,6 +335,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      *
      */
     private boolean isbnc = false;
+    private int nr;
+
     public boolean isBackupNecessary() { return isbnc; }
     public void backupNecessary(boolean val) { isbnc = val; }
     /**
@@ -3393,6 +3395,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * @return
      */
     private void displayZettelContent(int nr) {
+        this.nr = nr;
         // retrieve the string array of the first entry
         String disp = data.getEntryAsHtml(nr, (settings.getHighlightSegments()) ? retrieveSelectedKeywordsFromList() : null, Constants.FRAME_MAIN);
         // in case parsing was ok, display the entry
