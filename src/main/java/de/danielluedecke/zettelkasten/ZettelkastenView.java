@@ -1431,6 +1431,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 String fp = settings.getRecentDoc(3);
                 if (fp != null && !fp.isEmpty()) {
+                    // FIXME java.lang.IllegalArgumentException: bad position: 1
                     openDocument(fp);
                 }
             }
@@ -2914,7 +2915,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // clear all table contents
             clearTreesAndTables();
         } else {
-            // Here we set up alle the textfields and lists
+            // Here we set up all the text fields and lists
+            // FIXME java.lang.IllegalArgumentException: bad position: 1
             updateDisplayParts(data.getCurrentZettelPos());
             statusOfEntryLabel.setText(getResourceMap().getString("entryOfText") + " " + String.valueOf(data.getCount(Daten.ZKNCOUNT)));
         }
@@ -3348,8 +3350,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         } else {
             HtmlUbbUtil.setHighlighTerms(null, HtmlUbbUtil.HIGHLIGHT_STYLE_KEYWORDS, settings.getHighlightWholeWord());
         }
+
+        // FIXME java.lang.IllegalArgumentException: bad position: 1
         displayZettelContent(nr);
-        // Here we set up the keywordlist for the JList
+
+        // Here we set up the keyword list for the JList
         // retrieve the current keywords
         String[] kws = data.getKeywords(nr);
         // prepare the JList which will display the keywords
@@ -3405,9 +3410,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // and display clean content instead
             jEditorPaneEntry.setText(cleanedContent.toString());
         }
+
         // place caret, so content scrolls to top
+        // FIXME java.lang.IllegalArgumentException: bad position: 1
         jEditorPaneEntry.setCaretPosition(1);
-        // set entry number tzo textfield
+
+        // set entry number to textfield
         jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
     }
 
@@ -9601,6 +9609,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // go back through history
         data.historyBack();
         // and update the whole content
+        // FIXME java.lang.IllegalArgumentException: bad position: 1
         updateDisplay();
     }
 
