@@ -9,88 +9,88 @@ import java.util.Objects;
 
 /**
  * This class offers convenience access testable Zettelkasten objects.
- * 
- * @author Timm Heuss
  *
+ * @author Timm Heuss
  */
 public class TestObjectFactory {
 
-	/**
-	 * Implementation of a thread safe, synchronized singleton pattern
-	 * @see <a href="https://web.archive.org/web/20150910003303/http://de.wikibooks.org/wiki/Java_Standard:_Muster_Singleton">Java Standard: Muster Singleton [archived copy]</a>
-	 */
-	private static TestObjectFactory instance;
+    /**
+     * Implementation of a thread safe, synchronized singleton pattern
+     *
+     * @see <a href="https://web.archive.org/web/20150910003303/http://de.wikibooks.org/wiki/Java_Standard:_Muster_Singleton">Java Standard: Muster Singleton [archived copy]</a>
+     */
+    private static TestObjectFactory instance; // A (hidden) class variable of the type of the own class
+    private final AcceleratorKeys acceleratorKeys;
+    private final AutoKorrektur autoKorrektur;
+    private final Synonyms synonyms;
+    private final StenoData stenoData;
+    private final TasksData tasksData;
 
-	public static synchronized TestObjectFactory getInstance() throws Exception {
-		if (TestObjectFactory.instance == null) {
-			TestObjectFactory.instance = new TestObjectFactory();
-		}
-		return TestObjectFactory.instance;
-	}
+    private TestObjectFactory() {
+        acceleratorKeys = new AcceleratorKeys();
+        autoKorrektur = new AutoKorrektur();
+        synonyms = new Synonyms();
+        stenoData = new StenoData();
+        // FIXME Settings --> ZKN3Settings and Daten getDaten
+        tasksData = new TasksData();
+    }
 
-	private final AcceleratorKeys acceleratorKeys;
-	private final AutoKorrektur autoKorrektur;
-	private final Synonyms synonyms;
-	private final StenoData stenoData;
-	private final TasksData tasksData;
+    public static synchronized TestObjectFactory getInstance() throws Exception {
+        if (TestObjectFactory.instance == null) {
+            TestObjectFactory.instance = new TestObjectFactory();
+        }
+        return TestObjectFactory.instance;
+    }
 
-	private TestObjectFactory() {
-		acceleratorKeys = new AcceleratorKeys();
-		autoKorrektur = null;
-		synonyms = new Synonyms();
-		stenoData = null;
-		tasksData = null;
-	}
+    public static Daten getDaten(ZKN3Settings zkn3Settings) throws Exception {
+        Settings settings = zkn3Settings.settings;
 
-	/**
-	 * Abstracts sample files and settings
-	 */
-	public enum ZKN3Settings {
-		ZKN3_SAMPLE("zkn3_sample.zkn3", false),
-		ZKN3_TRICKY_MARKDOWN("zkn3_tricky.zkn3", true);
+        ZettelkastenView zettelkastenView = new ZettelkastenView(
+                new SingleFrameApplication() {
+                    @Override
+                    protected void startup() {
+                    }
+                }, settings, TestObjectFactory.getInstance().acceleratorKeys,
+                TestObjectFactory.getInstance().autoKorrektur,
+                TestObjectFactory.getInstance().synonyms,
+                TestObjectFactory.getInstance().stenoData,
+                TestObjectFactory.getInstance().tasksData);
+        return (Daten) getPrivateField(zettelkastenView, "data");
+    }
 
-		public Settings settings;
+    /**
+     * Helper to retrieve a private / protected field.
+     */
+    public static Object getPrivateField(Object instance, String fieldName)
+            throws Exception {
+        Field field = instance.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return field.get(instance);
+    }
 
-		ZKN3Settings(String file, boolean markdownActivated) {
-			try {
-				settings = new Settings(
-						TestObjectFactory.getInstance().acceleratorKeys,
-						TestObjectFactory.getInstance().autoKorrektur,
-						TestObjectFactory.getInstance().synonyms,
-						TestObjectFactory.getInstance().stenoData);
+    /**
+     * Abstracts sample files and settings
+     */
+    public enum ZKN3Settings {
+        ZKN3_SAMPLE("zkn3_sample.zkn3", false),
+        ZKN3_TRICKY_MARKDOWN("zkn3_tricky.zkn3", true);
 
-				settings.setFilePath(new File(Objects.requireNonNull(TestObjectFactory.class
-						.getClassLoader().getResource(file)).getPath()));
-				settings.setMarkdownActivated(markdownActivated);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
+        public Settings settings;
 
-	public static Daten getDaten(ZKN3Settings zkn3Settings) throws Exception {
-		Settings settings = zkn3Settings.settings;
+        ZKN3Settings(String file, boolean markdownActivated) {
+            try {
+                settings = new Settings(
+                        TestObjectFactory.getInstance().acceleratorKeys,
+                        TestObjectFactory.getInstance().autoKorrektur,
+                        TestObjectFactory.getInstance().synonyms,
+                        TestObjectFactory.getInstance().stenoData);
 
-		ZettelkastenView zettelkastenView = new ZettelkastenView(
-				new SingleFrameApplication() {
-					@Override
-					protected void startup() {
-					}
-				}, settings, TestObjectFactory.getInstance().acceleratorKeys,
-				TestObjectFactory.getInstance().autoKorrektur,
-				TestObjectFactory.getInstance().synonyms,
-				TestObjectFactory.getInstance().stenoData,
-				TestObjectFactory.getInstance().tasksData);
-		return (Daten) getPrivateField(zettelkastenView, "data");
-	}
-
-	/**
-	 * Helper to retrieve a private / protected field.
-	 */
-	public static Object getPrivateField(Object instance, String fieldName)
-			throws Exception {
-		Field field = instance.getClass().getDeclaredField(fieldName);
-		field.setAccessible(true);
-		return field.get(instance);
-	}
+                settings.setFilePath(new File(Objects.requireNonNull(TestObjectFactory.class
+                        .getClassLoader().getResource(file)).getPath()));
+                settings.setMarkdownActivated(markdownActivated);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }
