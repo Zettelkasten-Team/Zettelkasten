@@ -241,7 +241,7 @@
         <dependency>
             <groupId>org.kohsuke</groupId>
             <artifactId>github-api</artifactId>
-            <version>1.111</version>
+            <version>1.117</version>
         </dependency>
         <dependency>
             <groupId>com.opencsv</groupId>
