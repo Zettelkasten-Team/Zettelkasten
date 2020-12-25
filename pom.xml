@@ -199,7 +199,7 @@
                             <downloadUrl>http://java.com/download</downloadUrl>
                             <stayAlive>false</stayAlive>
                             <restartOnCrash>false</restartOnCrash>
-                            <manifest></manifest>
+                            <manifest/>
                             <icon>zkn2.ico</icon>
                             <jre>
                                 <minVersion>1.7.0</minVersion>
