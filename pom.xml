@@ -146,7 +146,6 @@
                         <useGenIsoImage>${zkn.useGenIsoImage}</useGenIsoImage>
                         <dmgFileName>${project.build.finalName}</dmgFileName>
                     </dmg>
-
                 </configuration>
                 <executions>
                     <execution>
@@ -233,7 +232,6 @@
         </plugins>
     </build>
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
@@ -318,7 +316,6 @@
             <version>1.18.16</version>
             <scope>provided</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.apple/AppleJavaExtensions -->
         <dependency>
             <groupId>com.apple</groupId>
             <artifactId>AppleJavaExtensions</artifactId>
