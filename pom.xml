@@ -124,7 +124,7 @@
             <plugin>
                 <groupId>de.perdian.maven.plugins</groupId>
                 <artifactId>macosappbundler-maven-plugin</artifactId>
-                <version>1.9.0</version>
+                <version>1.10.0</version>
                 <configuration>
                     <jdk>
                         <include>false</include>
