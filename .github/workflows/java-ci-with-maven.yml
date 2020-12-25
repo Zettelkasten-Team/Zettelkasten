@@ -40,8 +40,8 @@ jobs:
           java-version: 1.8
       - name: Build with Maven
         run: mvn -B package --file pom.xml
-      - run: mkdir staging && cp target/*.dmg target/*.pkg staging
+      - run: mkdir staging && cp target/*.dmg staging
       - uses: actions/upload-artifact@v2
         with:
-          name: Package (.dmg and .pkg)
+          name: Package (.dmg)
           path: staging
