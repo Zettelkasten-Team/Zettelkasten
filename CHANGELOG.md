@@ -1,7 +1,12 @@
+# [Unreleased]
+### Änderungen
+- pt-BR translation ([237](https://github.com/Zettelkasten-Team/Zettelkasten/issues/237))
+- Sea Glass Look and Feel For Swing rekonstruiert ([292](https://github.com/Zettelkasten-Team/Zettelkasten/issues/292))
+
 <a name="v3.3.1"></a>
 # [3.3.1](https://github.com/Zettelkasten-Team/Zettelkasten/compare/v3.3.0...v3.3.1) (2020-04-06)
 ### Fehlerbehebungen
-- Look-and-Feel Seaglass wurde entfernt, da es zu Kompatibilitätsproblemen mit JDK 11 führte ([210](https://github.com/Zettelkasten-Team/Zettelkasten/issues/210))
+- Look-and-Feel Sea Glass wurde entfernt, da es zu Kompatibilitätsproblemen mit JDK 11 führte ([210](https://github.com/Zettelkasten-Team/Zettelkasten/issues/210))
 
 <a name="v3.3.0"></a>
 # [3.3.0](https://github.com/Zettelkasten-Team/Zettelkasten/compare/3.2.7...v3.3.0) (2020-04-02)
