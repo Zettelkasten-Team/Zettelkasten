@@ -1268,7 +1268,6 @@ public class CImportBibTex extends javax.swing.JDialog {
     /**
      * This class sets up a selection listener for the tables. each table which shall react on
      * selections, e.g. by showing an entry, gets this selectionlistener in the method
-     * {@link #initSelectionListeners() initSelectionListeners()}.
      */
     private class SelectionListener implements ListSelectionListener {
 
