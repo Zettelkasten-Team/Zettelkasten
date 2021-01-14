@@ -760,6 +760,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                     false, false
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }
