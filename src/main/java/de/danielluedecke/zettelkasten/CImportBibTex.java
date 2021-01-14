@@ -859,8 +859,6 @@ public class CImportBibTex extends javax.swing.JDialog {
             // close window
             setVisible(false);
             dispose();
-            // call gc
-            System.gc();
         }
     }
 
@@ -1013,8 +1011,6 @@ public class CImportBibTex extends javax.swing.JDialog {
     public void cancel() {
         dispose();
         setVisible(false);
-        // call gc
-        System.gc();
     }
 
     /**

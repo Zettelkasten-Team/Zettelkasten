@@ -3212,8 +3212,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // i.e. the constructor is not called (because the if-statement above is not true)
         exportWindow.dispose();
         exportWindow = null;
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -3453,8 +3451,6 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         // dispose window
         dispose();
         setVisible(false);
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**

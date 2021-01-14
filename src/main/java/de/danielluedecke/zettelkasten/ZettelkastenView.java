@@ -1166,10 +1166,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 if (evt.getButton() != MouseEvent.BUTTON1) {
                     return;
                 }
-                // when the memory label is clicked, call the garbage collector.
-                if (1 == evt.getClickCount()) {
-                    System.gc();
-                }
             }
         });
         //
@@ -3728,8 +3724,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTextFieldFilterKeywords.setEnabled(jTableKeywords.getRowCount() > 0);
         // show amount of entries
         statusMsgLabel.setText("(" + String.valueOf(jTableKeywords.getRowCount()) + " " + getResourceMap().getString("statusTextKeywords") + ")");
-        // try to motivate garbage collector
-        System.gc();
     }
 
     public void updateZettelkasten(String updateBuildNr) {
@@ -4231,8 +4225,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                         statusMsgLabel.setText("(" + String.valueOf(jTableKeywords.getRowCount()) + " " + getResourceMap().getString("statusTextKeywords") + ")");
                         // finally, update display
                         updateDisplay();
-                        // try to motivate garbage collector
-                        System.gc();
                     }
                 }
             } else {
@@ -4321,8 +4313,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // i.e. the constructor is not called (because the if-statement above is not true)
         informationDlg.dispose();
         informationDlg = null;
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -4359,8 +4349,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // dispose the window and clear the object
             taskDlg.dispose();
             taskDlg = null;
-            // try to motivate garbage collector
-            System.gc();
             // remove entries also from table and linked list
             linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyRemove(jTableKeywords, linkedkeywordlist, this);
             // show amount of entries
@@ -4493,8 +4481,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     }
                     rateEntryDlg.dispose();
                     rateEntryDlg = null;
-                    // try to motivate garbage collector
-                    System.gc();
                 } catch (NumberFormatException ex) {
                     // log error
                     Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
@@ -4686,8 +4672,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // dispose the window and clear the object
             taskDlg.dispose();
             taskDlg = null;
-            // try to motivate garbage collector
-            System.gc();
             // update the tables and the possible linked lists
             linkedauthorlist = ZettelkastenViewUtil.updateTableFrequencyRemove(jTableAuthors, linkedauthorlist, this);
             // show amount of entries
@@ -4951,8 +4935,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             if (searchResultsDlg != null) {
                 searchResultsDlg.updateComboBox(-1, -1);
             }
-            // try to motivate garbage collector
-            System.gc();
             // finally, update display
             updateDisplay();
             // entries deleted, so return true
@@ -5372,8 +5354,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     linkedauthorlist = taskinfo.getLinkedValues();
                     // show amount of entries
                     statusMsgLabel.setText("(" + String.valueOf(jTableAuthors.getRowCount()) + " " + getResourceMap().getString("statusTextAuthors") + ")");
-                    // try to motivate garbage collector
-                    System.gc();
                 }
                 // finally, update display
                 updateDisplay();
@@ -5388,7 +5368,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         if (setBibKeyDlg != null) {
             setBibKeyDlg.dispose();
             setBibKeyDlg = null;
-            System.gc();
         }
         // open an input-dialog, setting the selected value as default-value
         if (null == setBibKeyDlg) {
@@ -5654,8 +5633,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTextFieldFilterAttachments.setEnabled(jTableAttachments.getRowCount() > 0);
         // show amount of entries
         statusMsgLabel.setText("(" + String.valueOf(jTableAttachments.getRowCount()) + " " + getResourceMap().getString("statusTextAttachments") + ")");
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -5796,8 +5773,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jTextFieldFilterAuthors.setEnabled(jTableAuthors.getRowCount() > 0);
         // show amount of entries
         statusMsgLabel.setText("(" + String.valueOf(jTableAuthors.getRowCount()) + " " + getResourceMap().getString("statusTextAuthors") + ")");
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -6237,8 +6212,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         jButtonRefreshTitles.setEnabled(false);
         // enable textfield only if we have more than 1 element in the jtable
         jTextFieldFilterTitles.setEnabled(jTableTitles.getRowCount() > 0);
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -7262,8 +7235,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
         settingsDlg.dispose();
         settingsDlg = null;
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -7812,8 +7783,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // i.e. the constructor is not called (because the if-statement above is not true)
         importWindow.dispose();
         importWindow = null;
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -7976,8 +7945,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // i.e. the constructor is not called (because the if-statement above is not true)
         exportWindow.dispose();
         exportWindow = null;
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -7993,8 +7960,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // clear memory allocation
         zknAboutBox.dispose();
         zknAboutBox = null;
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -8205,8 +8170,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // reset variable
         editEntryFromDesktop = false;
         editEntryFromSearchWindow = false;
-        // try to motivate garbage collector
-        System.gc();
     }
 
     /**
@@ -8942,8 +8905,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // do the typical stuff like updating display,
         // setting toolbar etc.
         updateAfterOpen();
-        // try to motivate garbage collector
-        System.gc();
         // return success
         return true;
     }
@@ -8992,8 +8953,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         isSaving = false;
         // update the display and toolbar icons
         updateDisplay();
-        // try to motivate garbage collector
-        System.gc();
         // check whether saving was successfull.
         // if not, show error-icon
         if (!data.isSaveOk()) {
@@ -9074,8 +9033,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             updateTitle();
             // update the display and toolbar icons
             updateDisplay();
-            // try to motivate garbage collector
-            System.gc();
             // check whether saving was successfull.
             // if not, show error-icon
             if (!data.isSaveOk()) {
@@ -9222,8 +9179,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // free memory and release all allocated components
             importBibTexDlg.dispose();
             importBibTexDlg = null;
-            // try to motivate garbage collector
-            System.gc();
         }
         // if dialog window isn't already created, do this now
         if (null == importBibTexDlg) {
@@ -9877,8 +9832,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // dispose window after closing
         searchDlg.dispose();
         searchDlg = null;
-        // try to motivate garbage collector
-        System.gc();
     }
 
 
@@ -9938,15 +9891,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // dispose dialogs
             replaceDlg.dispose();
             replaceDlg = null;
-            // try to motivate garbage collector
-            System.gc();
             return false;
         }
         // dispose dialogs
         replaceDlg.dispose();
         replaceDlg = null;
-        // try to motivate garbage collector
-        System.gc();
         // return true...
         return true;
     }
@@ -10076,8 +10025,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // display error message box that nothing was found
             JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("errNothingFoundMsg"),getResourceMap().getString("errNothingFoundTitle"),JOptionPane.PLAIN_MESSAGE);
         }
-        // try to motivate garbage collector
-        System.gc();
     }
 
 
@@ -10194,8 +10141,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // enable window-menu-item, if we have loaded search results
             setSearchResultsAvailable(searchrequests.getCount()>0);
         }
-        // try to motivate garbage collector
-        System.gc();
     }
 
 
@@ -10329,8 +10274,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     // dispose the window and clear the object
                     taskDlg.dispose();
                     taskDlg = null;
-                    // try to motivate garbage collector
-                    System.gc();
                     break;
                 // this is a desktop-search, that means the search results are *not* shown in
                 // the searchresults-window. instead, they are added to the desktop
@@ -10356,8 +10299,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             // display error message box that nothing was found
             JOptionPane.showMessageDialog(getFrame(),getResourceMap().getString("errNothingFoundMsg"),getResourceMap().getString("errNothingFoundTitle"),JOptionPane.PLAIN_MESSAGE);
         }
-        // try to motivate garbage collector
-        System.gc();
     }
 
 
@@ -10619,16 +10560,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         if (searchResultsDlg!=null) {
             searchResultsDlg.dispose();
             searchResultsDlg = null;
-            // try to motivate garbage collector
-            System.gc();
         }
         // dispose and clear the window, if we have a created instance of it
         // (we need to do this e.g. if we have opened data, and load a new data-file)
         if (desktopDlg!=null) {
             desktopDlg.dispose();
             desktopDlg = null;
-            // try to motivate garbage collector
-            System.gc();
         }
         // enable window-menu-item, if we have loaded search results
         setSearchResultsAvailable(searchrequests.getCount()>0);
