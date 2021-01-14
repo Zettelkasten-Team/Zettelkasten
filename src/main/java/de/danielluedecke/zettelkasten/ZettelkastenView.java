@@ -7667,7 +7667,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * task
      */
     @Action
-    public void importWindow() {
+    public void importWindow() throws IOException {
         // opens the Import Dialog. This Class is responsible
         // for getting the relevant import data. the import task
         // itself (background task) will be started as another dialog,
