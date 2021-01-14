@@ -30,10 +30,6 @@
  * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
-/**
- * Swing Application Framework PlugIn für NetBeans 7.x
- * http://plugins.netbeans.org/plugin/43836/swing-application-framework-support
- */
 package de.danielluedecke.zettelkasten;
 
 import com.explodingpixels.macwidgets.BottomBar;
