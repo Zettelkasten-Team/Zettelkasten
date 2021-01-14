@@ -570,7 +570,7 @@ public class CImport extends javax.swing.JDialog {
         jTextFieldCsvSeparator = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CImport.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(CImport.class);
         setTitle(resourceMap.getString("FormImportDialog.title")); // NOI18N
         setModal(true);
         setName("FormImportDialog"); // NOI18N
@@ -590,7 +590,7 @@ public class CImport extends javax.swing.JDialog {
         jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CImport.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance().getContext().getActionMap(CImport.class, this);
         jButton1.setAction(actionMap.get("open")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 
