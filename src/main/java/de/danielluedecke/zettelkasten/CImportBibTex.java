@@ -1,52 +1,56 @@
 /*
  * Zettelkasten - nach Luhmann
  * Copyright (C) 2001-2015 by Daniel Lüdecke (http://www.danielluedecke.de)
- * 
+ *
  * Homepage: http://zettelkasten.danielluedecke.de
- * 
- * 
+ *
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License as published by the Free Software Foundation; either version 3 of 
+ * GNU General Public License as published by the Free Software Foundation; either version 3 of
  * the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses/>.
- * 
- * 
+ *
+ *
  * Dieses Programm ist freie Software. Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation veröffentlicht, weitergeben
  * und/oder modifizieren, entweder gemäß Version 3 der Lizenz oder (wenn Sie möchten)
  * jeder späteren Version.
- * 
- * Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein 
- * wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder 
- * der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der 
+ *
+ * Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein
+ * wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder
+ * der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der
  * GNU General Public License.
- * 
- * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
+ *
+ * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
 package de.danielluedecke.zettelkasten;
 
 import bibtex.dom.BibtexEntry;
-import de.danielluedecke.zettelkasten.database.BibTeX;
-import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
-import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.util.Tools;
-import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.database.Daten;
 import com.explodingpixels.macwidgets.MacWidgetFactory;
 import com.explodingpixels.widgets.TableUtils;
-import de.danielluedecke.zettelkasten.util.ColorUtil;
-import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
-import de.danielluedecke.zettelkasten.util.PlatformUtil;
+import de.danielluedecke.zettelkasten.database.BibTeX;
+import de.danielluedecke.zettelkasten.database.Daten;
+import de.danielluedecke.zettelkasten.database.Settings;
+import de.danielluedecke.zettelkasten.util.*;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
-import java.awt.FileDialog;
-import java.awt.Font;
+import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
+import org.jdesktop.application.Action;
+import org.jdesktop.application.*;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -56,25 +60,21 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.logging.Level;
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
-import org.jdesktop.application.Action;
-import org.jdesktop.application.Application;
-import org.jdesktop.application.ApplicationContext;
-import org.jdesktop.application.Task;
-import org.jdesktop.application.TaskMonitor;
-import org.jdesktop.application.TaskService;
 
 /**
- *
  * @author danielludecke
  */
 public class CImportBibTex extends javax.swing.JDialog {
 
+    public static final int BIBTEX_SOURCE_FILE = 1;
+    public static final int BIBTEX_SOURCE_DB = 2;
+    /**
+     * The constants for the options stored in {@link #updateOption updateOption}.
+     */
+    private static final int UPDATE_OPTION_REPLACE = 0;
+    private static final int UPDATE_OPTION_NEW = 1;
+    private static final int UPDATE_OPTION_CONCAT = 2;
+    private static final int UPDATE_OPTION_CANCEL = 3;
     /**
      *
      */
@@ -96,17 +96,6 @@ public class CImportBibTex extends javax.swing.JDialog {
      * this variable
      */
     private int updateOption = -1;
-    /**
-     * The constants for the options stored in {@link #updateOption updateOption}.
-     */
-    private static final int UPDATE_OPTION_REPLACE = 0;
-    private static final int UPDATE_OPTION_NEW = 1;
-    private static final int UPDATE_OPTION_CONCAT = 2;
-    private static final int UPDATE_OPTION_CANCEL = 3;
-
-    public static final int BIBTEX_SOURCE_FILE = 1;
-    public static final int BIBTEX_SOURCE_DB = 2;
-
     private ZettelkastenView mainframe;
 
     /**
@@ -115,48 +104,47 @@ public class CImportBibTex extends javax.swing.JDialog {
      * existing entries.
      */
     private ArrayList<Integer> modifiedEntries;
-
-    /**
-     * This array-list contains all entry-numbers of those entries that have been modified during
-     * the import-operation, e.g. if BibTeX entries contained abstracts and the user chose to modify
-     * existing entries.
-     *
-     * @return all entry-numbers of those entries that have been modified during the
-     * import-operation
-     */
-    public ArrayList<Integer> getModifiedEntries() {
-        return modifiedEntries;
-    }
     /**
      * This variable stores the amount of entries that have been added during the import-operation
      * (i.e. which are new), e.g. if BibTeX entries contained abstacts and the user chose to create
      * new entries.
      */
     private int newEntries = 0;
-
-    /**
-     * In case any BibTeX entries have been imported, this method returns the count of new added /
-     * imported entries.
-     *
-     * @return The amount of imported entries.
-     */
-    public int getNewEntriesCount() {
-        return newEntries;
-    }
     /**
      *
      */
     private LinkedList<Object[]> linkedtablelist = null;
-
     /**
      * get the strings for file descriptions from the resource map
      */
     private org.jdesktop.application.ResourceMap resourceMap
             = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(CImportBibTex.class);
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JButton jButtonApply;
+    private javax.swing.JButton jButtonBrowseBibtex;
+    private javax.swing.JButton jButtonCancel;
+    private javax.swing.JButton jButtonRefresh;
+    private javax.swing.JButton jButtonSelectAll;
+    private javax.swing.JCheckBox jCheckBoxAddAsEntry;
+    private javax.swing.JCheckBox jCheckBoxImportKeywords;
+    private javax.swing.JComboBox jComboBoxCiteStyle;
+    private javax.swing.JComboBox jComboBoxEncoding;
+    private javax.swing.JComboBox jComboBoxShowBibTex;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabelEncoding;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JRadioButton jRadioButtonSourceDB;
+    private javax.swing.JRadioButton jRadioButtonSourceFile;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTableBibEntries;
+    private javax.swing.JTextField jTextFieldBibtexFilepath;
+    private javax.swing.JTextField jTextFieldFilterTable;
+    private javax.swing.JLabel statusLabel;
 
     /**
-     *
      * @param parent
      * @param mf
      * @param d
@@ -174,9 +162,9 @@ public class CImportBibTex extends javax.swing.JDialog {
         initBorders(settingsObj);
         // set combobox items
         jComboBoxShowBibTex.setModel(new javax.swing.DefaultComboBoxModel(new String[]{
-            resourceMap.getString("comboBoxItem1"),
-            resourceMap.getString("comboBoxItem2"),
-            resourceMap.getString("comboBoxItem3")
+                resourceMap.getString("comboBoxItem1"),
+                resourceMap.getString("comboBoxItem2"),
+                resourceMap.getString("comboBoxItem3")
         }));
         // set application icon
         setIconImage(Constants.zknicon.getImage());
@@ -227,6 +215,28 @@ public class CImportBibTex extends javax.swing.JDialog {
             fillBibtexTable();
         }
         jButtonRefresh.setEnabled(false);
+    }
+
+    /**
+     * This array-list contains all entry-numbers of those entries that have been modified during
+     * the import-operation, e.g. if BibTeX entries contained abstracts and the user chose to modify
+     * existing entries.
+     *
+     * @return all entry-numbers of those entries that have been modified during the
+     * import-operation
+     */
+    public ArrayList<Integer> getModifiedEntries() {
+        return modifiedEntries;
+    }
+
+    /**
+     * In case any BibTeX entries have been imported, this method returns the count of new added /
+     * imported entries.
+     *
+     * @return The amount of imported entries.
+     */
+    public int getNewEntriesCount() {
+        return newEntries;
     }
 
     private void initBorders(Settings settingsObj) {
@@ -582,10 +592,10 @@ public class CImportBibTex extends javax.swing.JDialog {
                     JOptionPane.PLAIN_MESSAGE,
                     null,
                     new Object[]{
-                        resourceMap.getString("optionReplace"),
-                        resourceMap.getString("optionNew"),
-                        resourceMap.getString("optionConcat"),
-                        resourceMap.getString("optionCancel"),},
+                            resourceMap.getString("optionReplace"),
+                            resourceMap.getString("optionNew"),
+                            resourceMap.getString("optionConcat"),
+                            resourceMap.getString("optionCancel"),},
                     resourceMap.getString("optioneReplace"));
             // if user closes or cancels the dialog, return...
             if (JOptionPane.CLOSED_OPTION == updateOption || updateOption == UPDATE_OPTION_CANCEL) {
@@ -600,6 +610,320 @@ public class CImportBibTex extends javax.swing.JDialog {
         // return task
         return new addSelectedAuthorsTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
     }
+
+    @Action
+    public void refreshList() {
+        // first check whether we have any saved values at all
+        if (linkedtablelist != null) {
+            // get table model
+            DefaultTableModel dtm = (DefaultTableModel) jTableBibEntries.getModel();
+            // delete all data from the author-table
+            dtm.setRowCount(0);
+            // create an iterator for the linked list
+            ListIterator<Object[]> iterator = linkedtablelist.listIterator();
+            // go through complete linked list and add each element to the table(model)
+            while (iterator.hasNext()) {
+                dtm.addRow(iterator.next());
+            }
+            // enable filter field
+            jTextFieldFilterTable.setEnabled(true);
+            // disable refresh button
+            jButtonRefresh.setEnabled(false);
+        }
+        linkedtablelist = null;
+    }
+
+    @Action
+    public void selectAllTableContent() {
+        jTableBibEntries.getSelectionModel().setSelectionInterval(0, jTableBibEntries.getRowCount() - 1);
+    }
+
+    @Action
+    public Task startImport() {
+        return new startImportTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
+    }
+
+    @Action
+    public void browseFile() {
+        // retrieve attached BibTeX file
+        File selectedfile = bibtexObj.getCurrentlyAttachedFile();
+        // if we have no attached file, set last used file as filepath
+        if (null == selectedfile || !selectedfile.exists()) {
+            selectedfile = bibtexObj.getFilePath();
+        }
+        selectedfile = FileOperationsUtil.chooseFile(this,
+                (settingsObj.isMacAqua()) ? FileDialog.LOAD : JFileChooser.OPEN_DIALOG,
+                JFileChooser.FILES_ONLY,
+                (null == selectedfile) ? null : selectedfile.toString(),
+                (null == selectedfile) ? null : selectedfile.getName(),
+                resourceMap.getString("fileChooserTitle"),
+                new String[]{".bib", ".txt"},
+                resourceMap.getString("bibTexDesc"),
+                settingsObj);
+        if (selectedfile != null) {
+            // set new BibTeX filepath
+            bibtexObj.setFilePath(selectedfile);
+            bibtexObj.detachCurrentlyAttachedFile();
+            fillBibtexTable();
+        }
+    }
+
+    /**
+     * Closes the window
+     */
+    @Action
+    public void cancel() {
+        dispose();
+        setVisible(false);
+    }
+
+    /**
+     * This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        jComboBoxEncoding = new javax.swing.JComboBox();
+        jLabelEncoding = new javax.swing.JLabel();
+        jCheckBoxAddAsEntry = new javax.swing.JCheckBox();
+        jCheckBoxImportKeywords = new javax.swing.JCheckBox();
+        jButtonApply = new javax.swing.JButton();
+        jButtonCancel = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jComboBoxCiteStyle = new javax.swing.JComboBox();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTableBibEntries = (settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        jButtonSelectAll = new javax.swing.JButton();
+        jButtonRefresh = new javax.swing.JButton();
+        jTextFieldFilterTable = new javax.swing.JTextField();
+        jComboBoxShowBibTex = new javax.swing.JComboBox();
+        statusLabel = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jButtonBrowseBibtex = new javax.swing.JButton();
+        jTextFieldBibtexFilepath = new javax.swing.JTextField();
+        jRadioButtonSourceFile = new javax.swing.JRadioButton();
+        jRadioButtonSourceDB = new javax.swing.JRadioButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CImportBibTex.class);
+        setTitle(resourceMap.getString("FormCImportBibTex.title")); // NOI18N
+        setMinimumSize(new java.awt.Dimension(100, 100));
+        setName("FormCImportBibTex"); // NOI18N
+
+        jComboBoxEncoding.setName("jComboBoxEncoding"); // NOI18N
+
+        jLabelEncoding.setText(resourceMap.getString("jLabelEncoding.text")); // NOI18N
+        jLabelEncoding.setName("jLabelEncoding"); // NOI18N
+
+        jCheckBoxAddAsEntry.setText(resourceMap.getString("jCheckBoxAddAsEntry.text")); // NOI18N
+        jCheckBoxAddAsEntry.setToolTipText(resourceMap.getString("jCheckBoxAddAsEntry.toolTipText")); // NOI18N
+        jCheckBoxAddAsEntry.setName("jCheckBoxAddAsEntry"); // NOI18N
+
+        jCheckBoxImportKeywords.setText(resourceMap.getString("jCheckBoxImportKeywords.text")); // NOI18N
+        jCheckBoxImportKeywords.setToolTipText(resourceMap.getString("jCheckBoxImportKeywords.toolTipText")); // NOI18N
+        jCheckBoxImportKeywords.setName("jCheckBoxImportKeywords"); // NOI18N
+
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CImportBibTex.class, this);
+        jButtonApply.setAction(actionMap.get("addSelectedAuthors")); // NOI18N
+        jButtonApply.setName("jButtonApply"); // NOI18N
+
+        jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
+        jButtonCancel.setName("jButtonCancel"); // NOI18N
+
+        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setName("jLabel1"); // NOI18N
+
+        jComboBoxCiteStyle.setName("jComboBoxCiteStyle"); // NOI18N
+
+        jScrollPane1.setBorder(null);
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(25, 25));
+        jScrollPane1.setName("jScrollPane1"); // NOI18N
+
+        jTableBibEntries.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{
+
+                },
+                new String[]{
+                        "BibKey", "Literaturangabe"
+                }
+        ) {
+            Class[] types = new Class[]{
+                    java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean[]{
+                    false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        });
+        jTableBibEntries.setName("jTableBibEntries"); // NOI18N
+        jTableBibEntries.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(jTableBibEntries);
+        if (jTableBibEntries.getColumnModel().getColumnCount() > 0) {
+            jTableBibEntries.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableBibEntries.columnModel.title0")); // NOI18N
+            jTableBibEntries.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableBibEntries.columnModel.title1")); // NOI18N
+        }
+
+        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
+        jLabel2.setName("jLabel2"); // NOI18N
+
+        jButtonSelectAll.setAction(actionMap.get("selectAllTableContent")); // NOI18N
+        jButtonSelectAll.setName("jButtonSelectAll"); // NOI18N
+
+        jButtonRefresh.setAction(actionMap.get("refreshList")); // NOI18N
+        jButtonRefresh.setIcon(resourceMap.getIcon("jButtonRefresh.icon")); // NOI18N
+        jButtonRefresh.setBorderPainted(false);
+        jButtonRefresh.setContentAreaFilled(false);
+        jButtonRefresh.setFocusPainted(false);
+        jButtonRefresh.setName("jButtonRefresh"); // NOI18N
+        jButtonRefresh.setPreferredSize(new java.awt.Dimension(22, 22));
+
+        jTextFieldFilterTable.setToolTipText(resourceMap.getString("jTextFieldFilterTable.toolTipText")); // NOI18N
+        jTextFieldFilterTable.setName("jTextFieldFilterTable"); // NOI18N
+
+        jComboBoxShowBibTex.setName("jComboBoxShowBibTex"); // NOI18N
+
+        statusLabel.setIcon(resourceMap.getIcon("statusLabel.icon")); // NOI18N
+        statusLabel.setText(resourceMap.getString("statusLabel.text")); // NOI18N
+        statusLabel.setName("statusLabel"); // NOI18N
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel1.border.title"))); // NOI18N
+        jPanel1.setName("jPanel1"); // NOI18N
+
+        jButtonBrowseBibtex.setAction(actionMap.get("browseFile")); // NOI18N
+        jButtonBrowseBibtex.setName("jButtonBrowseBibtex"); // NOI18N
+
+        jTextFieldBibtexFilepath.setEditable(false);
+        jTextFieldBibtexFilepath.setName("jTextFieldBibtexFilepath"); // NOI18N
+
+        buttonGroup1.add(jRadioButtonSourceFile);
+        jRadioButtonSourceFile.setText(resourceMap.getString("jRadioButtonSourceFile.text")); // NOI18N
+        jRadioButtonSourceFile.setName("jRadioButtonSourceFile"); // NOI18N
+
+        buttonGroup1.add(jRadioButtonSourceDB);
+        jRadioButtonSourceDB.setText(resourceMap.getString("jRadioButtonSourceDB.text")); // NOI18N
+        jRadioButtonSourceDB.setName("jRadioButtonSourceDB"); // NOI18N
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(jRadioButtonSourceFile)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jTextFieldBibtexFilepath)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jButtonBrowseBibtex))
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(jRadioButtonSourceDB)
+                                                .addGap(0, 0, Short.MAX_VALUE)))
+                                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jTextFieldBibtexFilepath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jButtonBrowseBibtex)
+                                        .addComponent(jRadioButtonSourceFile))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jRadioButtonSourceDB)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jCheckBoxAddAsEntry, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jTextFieldFilterTable)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jButtonRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jButtonCancel)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jButtonApply)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(statusLabel))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                        .addComponent(jLabelEncoding)
+                                                                        .addComponent(jLabel1))
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                        .addComponent(jComboBoxCiteStyle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                        .addComponent(jComboBoxEncoding, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                        .addComponent(jCheckBoxImportKeywords))
+                                                .addGap(0, 0, Short.MAX_VALUE))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                                .addComponent(jComboBoxShowBibTex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel2)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(jButtonSelectAll)))
+                                .addContainerGap())
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabelEncoding)
+                                        .addComponent(jComboBoxEncoding, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel1)
+                                        .addComponent(jComboBoxCiteStyle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jCheckBoxAddAsEntry)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jCheckBoxImportKeywords)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jButtonSelectAll)
+                                        .addComponent(jComboBoxShowBibTex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jButtonRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(jTextFieldFilterTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jButtonCancel)
+                                                .addComponent(jButtonApply))
+                                        .addComponent(statusLabel))
+                                .addGap(3, 3, 3))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
 
     private class addSelectedAuthorsTask extends org.jdesktop.application.Task<Object, Void> {
 
@@ -697,7 +1021,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                         // has an abstract or annotation, and if so, we use this as content for
                         // the new entry or update an existing entry with this content
                         if (jCheckBoxAddAsEntry.isSelected() && bibkey != null) {
-                            // before we check whether 
+                            // before we check whether
                             // retrieve abstract (i.e. content for entry)
                             String content = (jRadioButtonSourceDB.isSelected()) ? bibtexObj.getAbstract(bibkey.toString()) : bibtexObj.getAbstractFromAttachedFile(bibkey.toString());
                             // only create content/new entry, if any abstract was found...
@@ -856,38 +1180,6 @@ public class CImportBibTex extends javax.swing.JDialog {
         }
     }
 
-    @Action
-    public void refreshList() {
-        // first check whether we have any saved values at all
-        if (linkedtablelist != null) {
-            // get table model
-            DefaultTableModel dtm = (DefaultTableModel) jTableBibEntries.getModel();
-            // delete all data from the author-table
-            dtm.setRowCount(0);
-            // create an iterator for the linked list
-            ListIterator<Object[]> iterator = linkedtablelist.listIterator();
-            // go through complete linked list and add each element to the table(model)
-            while (iterator.hasNext()) {
-                dtm.addRow(iterator.next());
-            }
-            // enable filter field
-            jTextFieldFilterTable.setEnabled(true);
-            // disable refresh button
-            jButtonRefresh.setEnabled(false);
-        }
-        linkedtablelist = null;
-    }
-
-    @Action
-    public void selectAllTableContent() {
-        jTableBibEntries.getSelectionModel().setSelectionInterval(0, jTableBibEntries.getRowCount() - 1);
-    }
-
-    @Action
-    public Task startImport() {
-        return new startImportTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
-    }
-
     private class startImportTask extends org.jdesktop.application.Task<Object, Void> {
 
         ArrayList<String[]> rowdata = new ArrayList<>();
@@ -973,40 +1265,6 @@ public class CImportBibTex extends javax.swing.JDialog {
         }
     }
 
-    @Action
-    public void browseFile() {
-        // retrieve attached BibTeX file
-        File selectedfile = bibtexObj.getCurrentlyAttachedFile();
-        // if we have no attached file, set last used file as filepath
-        if (null == selectedfile || !selectedfile.exists()) {
-            selectedfile = bibtexObj.getFilePath();
-        }
-        selectedfile = FileOperationsUtil.chooseFile(this,
-                (settingsObj.isMacAqua()) ? FileDialog.LOAD : JFileChooser.OPEN_DIALOG,
-                JFileChooser.FILES_ONLY,
-                (null == selectedfile) ? null : selectedfile.toString(),
-                (null == selectedfile) ? null : selectedfile.getName(),
-                resourceMap.getString("fileChooserTitle"),
-                new String[]{".bib", ".txt"},
-                resourceMap.getString("bibTexDesc"),
-                settingsObj);
-        if (selectedfile != null) {
-            // set new BibTeX filepath
-            bibtexObj.setFilePath(selectedfile);
-            bibtexObj.detachCurrentlyAttachedFile();
-            fillBibtexTable();
-        }
-    }
-
-    /**
-     * Closes the window
-     */
-    @Action
-    public void cancel() {
-        dispose();
-        setVisible(false);
-    }
-
     /**
      * This class sets up a selection listener for the tables. each table which shall react on
      * selections, e.g. by showing an entry, gets this selectionlistener in the method
@@ -1025,278 +1283,6 @@ public class CImportBibTex extends javax.swing.JDialog {
             jLabel2.setText(resourceMap.getString("jLabel2num", String.valueOf(jTableBibEntries.getSelectedRowCount()), String.valueOf(jTableBibEntries.getRowCount())));
         }
     }
-
-
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        buttonGroup1 = new javax.swing.ButtonGroup();
-        jComboBoxEncoding = new javax.swing.JComboBox();
-        jLabelEncoding = new javax.swing.JLabel();
-        jCheckBoxAddAsEntry = new javax.swing.JCheckBox();
-        jCheckBoxImportKeywords = new javax.swing.JCheckBox();
-        jButtonApply = new javax.swing.JButton();
-        jButtonCancel = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jComboBoxCiteStyle = new javax.swing.JComboBox();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTableBibEntries = (settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
-        jLabel2 = new javax.swing.JLabel();
-        jButtonSelectAll = new javax.swing.JButton();
-        jButtonRefresh = new javax.swing.JButton();
-        jTextFieldFilterTable = new javax.swing.JTextField();
-        jComboBoxShowBibTex = new javax.swing.JComboBox();
-        statusLabel = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        jButtonBrowseBibtex = new javax.swing.JButton();
-        jTextFieldBibtexFilepath = new javax.swing.JTextField();
-        jRadioButtonSourceFile = new javax.swing.JRadioButton();
-        jRadioButtonSourceDB = new javax.swing.JRadioButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CImportBibTex.class);
-        setTitle(resourceMap.getString("FormCImportBibTex.title")); // NOI18N
-        setMinimumSize(new java.awt.Dimension(100, 100));
-        setName("FormCImportBibTex"); // NOI18N
-
-        jComboBoxEncoding.setName("jComboBoxEncoding"); // NOI18N
-
-        jLabelEncoding.setText(resourceMap.getString("jLabelEncoding.text")); // NOI18N
-        jLabelEncoding.setName("jLabelEncoding"); // NOI18N
-
-        jCheckBoxAddAsEntry.setText(resourceMap.getString("jCheckBoxAddAsEntry.text")); // NOI18N
-        jCheckBoxAddAsEntry.setToolTipText(resourceMap.getString("jCheckBoxAddAsEntry.toolTipText")); // NOI18N
-        jCheckBoxAddAsEntry.setName("jCheckBoxAddAsEntry"); // NOI18N
-
-        jCheckBoxImportKeywords.setText(resourceMap.getString("jCheckBoxImportKeywords.text")); // NOI18N
-        jCheckBoxImportKeywords.setToolTipText(resourceMap.getString("jCheckBoxImportKeywords.toolTipText")); // NOI18N
-        jCheckBoxImportKeywords.setName("jCheckBoxImportKeywords"); // NOI18N
-
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CImportBibTex.class, this);
-        jButtonApply.setAction(actionMap.get("addSelectedAuthors")); // NOI18N
-        jButtonApply.setName("jButtonApply"); // NOI18N
-
-        jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
-        jButtonCancel.setName("jButtonCancel"); // NOI18N
-
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
-
-        jComboBoxCiteStyle.setName("jComboBoxCiteStyle"); // NOI18N
-
-        jScrollPane1.setBorder(null);
-        jScrollPane1.setMinimumSize(new java.awt.Dimension(25, 25));
-        jScrollPane1.setName("jScrollPane1"); // NOI18N
-
-        jTableBibEntries.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "BibKey", "Literaturangabe"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jTableBibEntries.setName("jTableBibEntries"); // NOI18N
-        jTableBibEntries.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jTableBibEntries);
-        if (jTableBibEntries.getColumnModel().getColumnCount() > 0) {
-            jTableBibEntries.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableBibEntries.columnModel.title0")); // NOI18N
-            jTableBibEntries.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableBibEntries.columnModel.title1")); // NOI18N
-        }
-
-        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
-        jLabel2.setName("jLabel2"); // NOI18N
-
-        jButtonSelectAll.setAction(actionMap.get("selectAllTableContent")); // NOI18N
-        jButtonSelectAll.setName("jButtonSelectAll"); // NOI18N
-
-        jButtonRefresh.setAction(actionMap.get("refreshList")); // NOI18N
-        jButtonRefresh.setIcon(resourceMap.getIcon("jButtonRefresh.icon")); // NOI18N
-        jButtonRefresh.setBorderPainted(false);
-        jButtonRefresh.setContentAreaFilled(false);
-        jButtonRefresh.setFocusPainted(false);
-        jButtonRefresh.setName("jButtonRefresh"); // NOI18N
-        jButtonRefresh.setPreferredSize(new java.awt.Dimension(22, 22));
-
-        jTextFieldFilterTable.setToolTipText(resourceMap.getString("jTextFieldFilterTable.toolTipText")); // NOI18N
-        jTextFieldFilterTable.setName("jTextFieldFilterTable"); // NOI18N
-
-        jComboBoxShowBibTex.setName("jComboBoxShowBibTex"); // NOI18N
-
-        statusLabel.setIcon(resourceMap.getIcon("statusLabel.icon")); // NOI18N
-        statusLabel.setText(resourceMap.getString("statusLabel.text")); // NOI18N
-        statusLabel.setName("statusLabel"); // NOI18N
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel1.border.title"))); // NOI18N
-        jPanel1.setName("jPanel1"); // NOI18N
-
-        jButtonBrowseBibtex.setAction(actionMap.get("browseFile")); // NOI18N
-        jButtonBrowseBibtex.setName("jButtonBrowseBibtex"); // NOI18N
-
-        jTextFieldBibtexFilepath.setEditable(false);
-        jTextFieldBibtexFilepath.setName("jTextFieldBibtexFilepath"); // NOI18N
-
-        buttonGroup1.add(jRadioButtonSourceFile);
-        jRadioButtonSourceFile.setText(resourceMap.getString("jRadioButtonSourceFile.text")); // NOI18N
-        jRadioButtonSourceFile.setName("jRadioButtonSourceFile"); // NOI18N
-
-        buttonGroup1.add(jRadioButtonSourceDB);
-        jRadioButtonSourceDB.setText(resourceMap.getString("jRadioButtonSourceDB.text")); // NOI18N
-        jRadioButtonSourceDB.setName("jRadioButtonSourceDB"); // NOI18N
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jRadioButtonSourceFile)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldBibtexFilepath)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonBrowseBibtex))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jRadioButtonSourceDB)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldBibtexFilepath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonBrowseBibtex)
-                    .addComponent(jRadioButtonSourceFile))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButtonSourceDB)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jCheckBoxAddAsEntry, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextFieldFilterTable)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonCancel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonApply)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(statusLabel))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabelEncoding)
-                                    .addComponent(jLabel1))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBoxCiteStyle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jComboBoxEncoding, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jCheckBoxImportKeywords))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jComboBoxShowBibTex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonSelectAll)))
-                .addContainerGap())
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelEncoding)
-                    .addComponent(jComboBoxEncoding, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jComboBoxCiteStyle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBoxAddAsEntry)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBoxImportKeywords)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonSelectAll)
-                    .addComponent(jComboBoxShowBibTex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextFieldFilterTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButtonCancel)
-                        .addComponent(jButtonApply))
-                    .addComponent(statusLabel))
-                .addGap(3, 3, 3))
-        );
-
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JButton jButtonApply;
-    private javax.swing.JButton jButtonBrowseBibtex;
-    private javax.swing.JButton jButtonCancel;
-    private javax.swing.JButton jButtonRefresh;
-    private javax.swing.JButton jButtonSelectAll;
-    private javax.swing.JCheckBox jCheckBoxAddAsEntry;
-    private javax.swing.JCheckBox jCheckBoxImportKeywords;
-    private javax.swing.JComboBox jComboBoxCiteStyle;
-    private javax.swing.JComboBox jComboBoxEncoding;
-    private javax.swing.JComboBox jComboBoxShowBibTex;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabelEncoding;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JRadioButton jRadioButtonSourceDB;
-    private javax.swing.JRadioButton jRadioButtonSourceFile;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTableBibEntries;
-    private javax.swing.JTextField jTextFieldBibtexFilepath;
-    private javax.swing.JTextField jTextFieldFilterTable;
-    private javax.swing.JLabel statusLabel;
     // End of variables declaration//GEN-END:variables
 
 }
