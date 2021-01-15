@@ -1,43 +1,43 @@
 <a name="v3.3.1"></a>
 # [3.3.1](https://github.com/Zettelkasten-Team/Zettelkasten/compare/3.3.0...v3.3.1) (2020-04-06)
-### Fehlerbehebungen
-- Look-and-Feel Seaglass wurde entfernt, da es zu Kompatibilitätsproblemen mit JDK 11 führte ([210](https://github.com/Zettelkasten-Team/Zettelkasten/issues/210))
+### Bug fixes
+- Look-and-Feel Seaglass was removed, due to compatibiity issues with JDK 11 ([210](https://github.com/Zettelkasten-Team/Zettelkasten/issues/210)).
 
 <a name="v3.3.0"></a>
 # [3.3.0](https://github.com/Zettelkasten-Team/Zettelkasten/compare/3.2.7...v3.3.0) (2020-04-02)
-### Änderungen
-- Registrierung der Dateiendung ".zkn3" wurde temporär deaktiviert.
-- Die Schriftgröße der Benutzeroberfläche wurde an höhere Bildschirmauflösungen angepasst.
-- Der Programmcode wurde optimiert.
-### Fehlerbehebungen
-- Beim XML-Export wurden die Zettel-IDs nicht mit exportiert ([171](https://github.com/Zettelkasten-Team/Zettelkasten/issues/171)).
-- Falls die Option "Beim Programmstart: Zuletzt ausgewählten Zettel anzeigen" aktiviert war, konnte es in bestimmten Situationen dazu kommen, dass der Zettelkasten nicht mehr startete (siehe [178](https://github.com/Zettelkasten-Team/Zettelkasten/issues/178)). 
+### Changes
+- Registration of ".zkn3" file ending temprarily deactivated.
+- Font size of GUI adapted to high resolution screens.
+- Code optimizations.
+### Bug fixes 
+- Note-IDs were missing in XML exports ([171](https://github.com/Zettelkasten-Team/Zettelkasten/issues/171)).
+- The preference setting "At program startup: Show last displayed note" lead in certain situtations to program startup issues (compare [178](https://github.com/Zettelkasten-Team/Zettelkasten/issues/178)). 
 <a name="3.2.7"></a>
 # [3.2.7](https://github.com/Zettelkasten-Team/Zettelkasten/compare/3.2.6...3.2.7) (2015-10-16)
 
-### Neue Funktionen
-- In der Registerkarte _Überschriften_ werden jetzt Zettel als Ausgangsfolgezettel oder Folgezettel markiert ([#96](https://github.com/Zettelkasten-Team/Zettelkasten/issues/96)). Die Sortierung der Spalte _Folgezettel_ in der Registerkarte _Überschriften_ ist per Voreinstellung deakitiviert, da der erstmalige Aufbau der Tabelle länger dauern kann. Die Sortierung kann in den Einstellungen _Tabellen und Listen_ aktiviert werden.
-- Der Export von Zetteln ins Markdown-, Text- und LaTex-Format kann jetzt auch jeden Zettel als einzelne Datei exportieren ([#13](https://github.com/Zettelkasten-Team/Zettelkasten/issues/13) und [#77](https://github.com/Zettelkasten-Team/Zettelkasten/issues/77)).
-- Literaturfußnoten können jetzt auch den Bibkey statt der Nummer des Literatureintrags enthalten (`[fn luhsozsys:123]` würde z.B. umgewandelt in `Luhmann 1984: 123`).
-- Das automatische Einklammern von Literaturfußnoten kann in den Einstellungen abgestellt werden ([#91](https://github.com/Zettelkasten-Team/Zettelkasten/issues/91)).
-- Über das Menü _Suchen_ (Untermenü _Zettel_) können jetzt Zettel gesucht werden, die Teil einer Folgezettelsequenz sind (entweder Ausgangs- oder Folgezettel).
-- Über das Menü _Suchen_ (Untermenü _Zettel_) können jetzt Zettel gesucht werden, die _keine_ Querverweise enthalten (und auf die nicht durch Querverweise verwiesen wird) ([#34](https://github.com/Zettelkasten-Team/Zettelkasten/issues/34)).
-- Die Sortierung der Tabellenspalten wird gespeichert, sodass diese beim erneuten Programmstart wiederhergestellt wird ([#72](https://github.com/Zettelkasten-Team/Zettelkasten/issues/72)).
-- Neue Einstellung, um Formatierungs-Tags bei einer Suche _nicht_ zu entfernen. Dadurch wird die Suchgeschwindigkeit erhöht, jedoch werden Wörter, die durch Formatierungen unterbrochen werden, nicht gefunden (eine Suche nach `Zettelkasten` findet dann nicht `[f]Zettel[/f]kasten`).
-### Änderungen
-- Beim Export ins Markdown-, Text- und LaTex-Format werden Fußnoten durch formatierte Autorenangaben ersetzt (sofern die Literatur mit Bibkey verknüpft ist).
-- Verbesserte Stabilität aller Lese- und Schreib-Operationen von Daten (Import, Export, Laden, Speichern, Auto-Backup...).
-- Geschwindigkeitsverbesserungen der Suchfunktionen ([#95](https://github.com/Zettelkasten-Team/Zettelkasten/issues/95)).
-- Im englischen Interface wurden _trails_ in _note sequences_ und _entry_ in _note_ umbenannt.
-- Literatur, die während der Neueingabe oder Bearbeiten eines Zettels als Literaturfußnote im Text referenziert wird, wird beim Beenden der Eingabe automatisch als Autorenangabe zum Zettel hinzugefügt, falls dies noch nicht geschehen ist.
-### Fehlerbehebungen
-- Bei Dateien, die im Neueingabefenster per Drag'n'Drop ins Textfeld gezogen wurden, kam keine Abfrage zum Verschieben oder Kopieren der Dateien.
-- Änderung [#82](https://github.com/Zettelkasten-Team/Zettelkasten/issues/82) wurde rückgängig gemacht, da es Probleme mit URLs in BibTex-Autorenangaben gab.
-- In der Registerkarte _Literatur_ wurden _Buchkapitel_ und _Artikel in Büchern_ bei der Filterfunktion vertauscht ([#90](https://github.com/Zettelkasten-Team/Zettelkasten/issues/90)).
-- Dateinamen mit Unterstrichen kollidierten mit Markdowninterpretation ([#26](https://github.com/Zettelkasten-Team/Zettelkasten/issues/26)).
-- Schreibtischexport ins Markdown deklarierte keine Überschriften ([#56](https://github.com/Zettelkasten-Team/Zettelkasten/issues/56)).
-- Im Exportfenster konnten beim Export ins Textformat keine Zettelelemente ausgewählt werden.
-- Bei Fußnoten ohne Bibkey wurde die Seitenzahl nicht angezeigt ([#74](https://github.com/Zettelkasten-Team/Zettelkasten/issues/74)).
+### New functions
+- Start and member notes of note sequences are indicated in the _Titles_ tab ([#96](https://github.com/Zettelkasten-Team/Zettelkasten/issues/96)). The order of the column _Note sequence_ in the _Titles_ tab is deactivated by default, since the frist initialization of the table takes a while. The order can be activated via the preference setting _Table and Listviews_.
+- The export of notes in Markdown, text, or LaTeX can now create single files for each note ([#13](https://github.com/Zettelkasten-Team/Zettelkasten/issues/13) and [#77](https://github.com/Zettelkasten-Team/Zettelkasten/issues/77)).
+- Literature foot notes can use the Bibkey instead of the number of the literature reference (i.e.`[fn luhsozsys:123]`is converted into `Luhmann 1984: 123`).
+- The bracketing of literature foot notes can be turned of in the preferences ([#91](https://github.com/Zettelkasten-Team/Zettelkasten/issues/91)).
+- Via the menu _Search_ (Sub menu _Notes_) member notes of a notes sequence can be searched for, even if they are member notes or starting notes of a notes sequence.
+- Via the menu _Search_ (Sub menu _Notes_) notes can be search for which do _not_ contain links (and which are not referred by links themselves) ([#34](https://github.com/Zettelkasten-Team/Zettelkasten/issues/34)).
+- The order of the table columns is preserved for the next program startup ([#72](https://github.com/Zettelkasten-Team/Zettelkasten/issues/72)).
+- New preferences, to _not_ remove format tags during a search. This benefits the search performance, but removes format-interrupted words rom the search results (i.e. a search for `Zettelkasten` does not find `[f]Zettel[/f]kasten`).
+### Changes
+- In the export into Markdown, text, or LaTeX, the footnotes are replaced by formated author references (if case the literature is linked with Bibkey).
+- Stability improvements of all read and write operations of files (Import, Export, Laden, Save, Auto-Backup...).
+- Performance improvements of the search function ([#95](https://github.com/Zettelkasten-Team/Zettelkasten/issues/95)).
+- Renamed _trails_ into _note sequences_ and _entry_ into _note_ in the English UI.
+- If not already listed, literature, which is referenced while the creation or the editing of a note as a reference foot note in the text, is automatically added to the authors list of the note after finishing the editing.
+### Bug fixes
+- For file which were drag'n'droped into the text field of the New Entry window, no notification for moving or copying of the file existed.
+- [#82](https://github.com/Zettelkasten-Team/Zettelkasten/issues/82) was reverted, due to problems with URLs in the BibTex author listing.
+- In the tab _Authors_,  _Chapters_ and _Articles in books_ were swaped in the filter function ([#90](https://github.com/Zettelkasten-Team/Zettelkasten/issues/90)).
+- File names with underscores conflicted with the Markdown interpreter ([#26](https://github.com/Zettelkasten-Team/Zettelkasten/issues/26)).
+- Desk export into markdown did not declare Titles ([#56](https://github.com/Zettelkasten-Team/Zettelkasten/issues/56)).
+- In the export window for text import, no note elements could be selected.
+- Page number was not indicated for footnotes without Bibkey ([#74](https://github.com/Zettelkasten-Team/Zettelkasten/issues/74)).
 
 <a name="3.2.6"></a>
 # [3.2.6](https://github.com/Zettelkasten-Team/Zettelkasten/compare/3.2.5...3.2.6) (2015-09-25)
