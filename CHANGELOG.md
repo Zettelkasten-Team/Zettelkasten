@@ -42,34 +42,34 @@
 <a name="3.2.6"></a>
 # [3.2.6](https://github.com/Zettelkasten-Team/Zettelkasten/compare/3.2.5...3.2.6) (2015-09-25)
 
-### Neue Funktionen
-- In der Registerkarte _Folgezettel_ kann jetzt die gesamte Zettelfolge inklusive übergeordneter Ausgangszettel angezeigt werden.
-- Über das Suchen-Menü bzw. das Menü _Folgezettel_ können jetzt Ausgangszettel (_Stammzettel_) von Folgezetteln gesucht werden ([#61](https://github.com/Zettelkasten-Team/Zettelkasten/issues/61)).
-- Im Schreibtischfenster können jetzt nur die direkten Folgezettel eines Zettels, oder aber alle Folgezettel inkl. Unterfolgezettel eingefügt werden.
-- Zettel im Schreibtischfenster, die einen Folgezettel enthalten, werden durch ein eigenes Symbol in der Baumansicht hervorgehoben. Dies kann im Menü _Ansicht_ deaktiviert werden.
-- Erweiterte LaTex-Exportoptionen: Erstellen der Präambel und Konvertieren von Umlauten ist optional ([#1](https://github.com/Zettelkasten-Team/Zettelkasten/issues/1) und [#62](https://github.com/Zettelkasten-Team/Zettelkasten/issues/62)).
-- Literaturfußnoten können jetzt auch Seitenzahlen beinhalten. Diese müssen durch einen `:` von der Literatur-Indexnummer getrennt werden, bspw. `[fn 666:31]` wird zu `Luhmann 1984, S.31`.
-- Seitenzahlen in Literaturfußnoten werden beim LaTex-Export berücksichtigt, bspw. `[fn 666:31]` wird zu `\cite[S.31]{luhmann1984sozsys}`.
-- Die Funktion _BibTex-Datei neu laden_ aktualisiert automatisch vorhandene Literatureinträge ([#75](https://github.com/Zettelkasten-Team/Zettelkasten/issues/75)).
+### New functions
+- In the tab _note sequence_ the full note sequence as well as the starting note is shown.
+- _Origin of sequence_ is accessible via the  search menu as well as the menu item _Note sequences_  for note sequences ([#61](https://github.com/Zettelkasten-Team/Zettelkasten/issues/61)).
+- In the _Outliner_ window the option to show only the directly following notes or the complete note sequence including sub-note sequences can be inserted.
+- Notes in the _Outliner_ window, which have a subsequent note, are highlighted by a symbol in the tree view. This feature can be deactivated in the _View_ menu item.
+- Extented LaTeX export options: Preamble creation and umlatu convertion is optional ([#1](https://github.com/Zettelkasten-Team/Zettelkasten/issues/1) und [#62](https://github.com/Zettelkasten-Team/Zettelkasten/issues/62)).
+- Literature foot notes can contain page numbers as well. The page number must be seperated from the literature index number with a `:` , i.e. `[fn 666:31]` is replaced by `Luhmann 1984, S.31`.
+- Page numbers are included during the LaTeX export, i.e. `[fn 666:31]` becomes `\cite[S.31]{luhmann1984sozsys}`.
+- The function _Reload BibTex file_ updates existing literture items automatically ([#75](https://github.com/Zettelkasten-Team/Zettelkasten/issues/75)).
 
-### Änderungen
-- Die manuelle Sortierung von Zetteln (z.B. das Verschieben in der Registerkarte _Überschriften_) wurde entfernt, da diese Funktion den Im- und Export zu fehleranfällig machte.
-- Folgezettel in der Registerkarte können jetzt standardmäßig nur bis zu einer bestimmten Ebene aufgeklappt werden ([#73](https://github.com/Zettelkasten-Team/Zettelkasten/issues/73)).
-- Fußnoten-Zitierstil beim LaTex-Export verwendet nun `\footcite` statt `footnote{\cite}` ([#63](https://github.com/Zettelkasten-Team/Zettelkasten/issues/63)).
-- Beim Einfügen von Literaturfußnoten werden automatisch Klammern um die Referenzen gesetzt. Beim Export ins LaTex-Format mit der Option `footcite` werden diese Klammern automatisch entfernt ([#65](https://github.com/Zettelkasten-Team/Zettelkasten/issues/65)).
-- Die Suche im Zettel aktualisiert die Zettelansicht (Hervorheben der gefundenen Suchstellen) erst nach drücken der Eingabetaste. Dies verhindert bei längeren Zetteln, dass die Suchbegriffeingabe nicht hakt ([#70](https://github.com/Zettelkasten-Team/Zettelkasten/issues/70)).
+### Changes
+- The manual sorting of notes (i.e. by moving in the tab _Titles_ ) was removed, since it resulted in an error-prone import and export.
+- In the tab, note sequences can be extented up to a certain level by default ([#73](https://github.com/Zettelkasten-Team/Zettelkasten/issues/73)).
+- In the LaTeX export, footnotes are created as `\footcite` instead of `footnote{\cite}` ([#63](https://github.com/Zettelkasten-Team/Zettelkasten/issues/63)).
+- During the insert of literature footnotes, the references are inserted automatically in brackets. During the LaTeX export, with the option `footcite` the brakets are removed automatically ([#65](https://github.com/Zettelkasten-Team/Zettelkasten/issues/65)).
+- The search within a note updates the view (highlighting of the search results) only after pressing the return key. This prevents lagging during the search for long notes. ([#70](https://github.com/Zettelkasten-Team/Zettelkasten/issues/70)).
 
-### Fehlerbehebungen
-- Schlagwörter importieren von BibTex-Einträgen (ohne neuen Eintrag zu erstellen) funktionierte nicht ([#33](https://github.com/Zettelkasten-Team/Zettelkasten/issues/33)).
-- Querverweise mit Tooltips mit Anführungszeichen funktionierten nicht ([#53](https://github.com/Zettelkasten-Team/Zettelkasten/issues/53)).
-- Bildpfade beim LaTex-Export wurden nicht korrekt übersetzt ([#51](https://github.com/Zettelkasten-Team/Zettelkasten/issues/51)).
-- Schwierigkeiten bei vertikaler Größenveränderung von Feldern unter OS X wurden behoben, der mit der Maus ziehbare Bereich vergrößert ([#49](https://github.com/Zettelkasten-Team/Zettelkasten/issues/49)).
-- Dateipfade für das Einfügen von Bildern, Anhängen etc. wurden vergessen ([#20](https://github.com/Zettelkasten-Team/Zettelkasten/issues/20)).
-- Beim Exportieren wurden nicht alle Format-Tags entfernt.
-- Tooltips bei Querverweisen wurden im Schreibtisch- und Suchergebnisfenster nicht angezeigt ([#69](https://github.com/Zettelkasten-Team/Zettelkasten/issues/69)).
-- Wenn Zettel im Schreibtisch per Drag'n'Drop verschoben wurden, wurden Kommentare gelöscht ([#68](https://github.com/Zettelkasten-Team/Zettelkasten/issues/68)).
-- Bei bestimmten BibTex-Einträgen wurden Herausgeber nicht korrekt dargestellt.
-- URL's mit eckigen Klammer wurden nicht korrekt verlinkt ([#82](https://github.com/Zettelkasten-Team/Zettelkasten/issues/82)).
+### Bug fixes
+- The keyword import from BibTex entries (without creating a new entry) did not work ([#33](https://github.com/Zettelkasten-Team/Zettelkasten/issues/33)).
+- Links with tooltips with quotes did not work ([#53](https://github.com/Zettelkasten-Team/Zettelkasten/issues/53)).
+- Image paths were not translated correctly in the LaTeX export ([#51](https://github.com/Zettelkasten-Team/Zettelkasten/issues/51)).
+- Difficulties during the vertical scaling of fields for the OS X version corrected, the draggable area for the mouse enlarged ([#49](https://github.com/Zettelkasten-Team/Zettelkasten/issues/49)).
+- File paths for the insertion of images, attachments, etc. were missing ([#20](https://github.com/Zettelkasten-Team/Zettelkasten/issues/20)).
+- Not all format tags were removed during the export.
+- Link tool tips were not shown in the _Outliner_ and _Search_ windows ([#69](https://github.com/Zettelkasten-Team/Zettelkasten/issues/69)).
+- Moving notes by drag and drop removed comments in the _Outliner_ ([#68](https://github.com/Zettelkasten-Team/Zettelkasten/issues/68)).
+- In some BibTex entires the publisher was not indicated correctly.
+- URLs with square brackets were not linked correctly ([#82](https://github.com/Zettelkasten-Team/Zettelkasten/issues/82)).
 
 <a name="3.2.5.1"></a>
 # 3.2.5.1 (2015-05-29)
