@@ -74,14 +74,14 @@
 <a name="3.2.5.1"></a>
 # 3.2.5.1 (2015-05-29)
 
-### Änderungen
-- Mehrfachformatierungen während der Neueingabe wurden vereinfacht durch Beibehalten der Textauswahl. Damit lässt sich ein Wort oder Absatz schneller mit mehreren Formatierungen hintereinander auszeichnen ([#39](https://github.com/Zettelkasten-Team/Zettelkasten/issues/39)).
-- `[code]` formatiert Code-Blocks mit eingerückten Leerzeichen (d.h. wandelt `[code]` in `<pre>` um). Inline-Code wird jetzt durch ` ausgezeichnet (`code`) ([#48](https://github.com/Zettelkasten-Team/Zettelkasten/issues/48)).
-- Aktualisierung der [JDOM](http://www.jdom.org)\- und [OpenCSV](http://opencsv.sourceforge.net)-Bibliotheken.
+### Changes
+- The mult-formating during the create of new notes was simplified by keeping the font setting. Thus, a word or a paragraph can faster be declared with multiple sequential settings ([#39](https://github.com/Zettelkasten-Team/Zettelkasten/issues/39)).
+- `[code]` formates code blocks with indentions (changes  `[code]` to `<pre>`). Inline code can be declared with ` (`code`) ([#48](https://github.com/Zettelkasten-Team/Zettelkasten/issues/48)).
+- Update of [JDOM](http://www.jdom.org)\- and [OpenCSV](http://opencsv.sourceforge.net) libraries.
 
-### Fehlerbehebungen
-- Mehrere Suchbegriffe im Suchfenster, durch Kommata getrennt, werden jetzt von Leerzeichen bereinigt ([#27](https://github.com/Zettelkasten-Team/Zettelkasten/issues/27)).
-- Markdown-Zitat werden jetzt korrekt nach LaTeX exportiert ([#31](https://github.com/Zettelkasten-Team/Zettelkasten/issues/31)).
-- Doppelte Zeilenumbrüche entfernen bei Neueingabe wird jetzt nur auf Auswahl angewendet ([#16](https://github.com/Zettelkasten-Team/Zettelkasten/issues/16)).
-- Literaturangaben waren nicht bearbeitbar, wenn lediglich Groß- in Kleinbuchstaben oder umgekehrt geändert wurden. Fehler behoben, ändern von Groß-/Kleinschreibung in Literaturangaben jetzt über die Registerkarte _Literatur_ möglich ([#47](https://github.com/Zettelkasten-Team/Zettelkasten/issues/47)).
-- Querverweise auf einen gelöschten Zettel ließen sich nicht entfernen ([#38](https://github.com/Zettelkasten-Team/Zettelkasten/issues/38)).
+### Bug fixes
+- In the search window, spaces in comma-separated search terms are removed ([#27](https://github.com/Zettelkasten-Team/Zettelkasten/issues/27)).
+- Markdown citation are correctly exported into LaTeX ([#31](https://github.com/Zettelkasten-Team/Zettelkasten/issues/31)).
+- Double line break are removed during the note creation only if the option is selected ([#16](https://github.com/Zettelkasten-Team/Zettelkasten/issues/16)).
+- Literature references could not be changed if only the capitalization was changed. Bug fixed, capitalization in literature references can now changed in the _Literature_ tab ([#47](https://github.com/Zettelkasten-Team/Zettelkasten/issues/47)).
+- Links to deleted notes could not be removed ([#38](https://github.com/Zettelkasten-Team/Zettelkasten/issues/38)).
