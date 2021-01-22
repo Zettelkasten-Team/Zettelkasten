@@ -21,7 +21,7 @@
 </p>
 
 
-The digital <i>Zettelkassten</i> (German for slip-box) is a program for knowledge management. It is inspired by the note-taking system of Niklas Luhmann. The official website can be found under [http://zettelkasten.danielluedecke.de](http://zettelkasten.danielluedecke.de)(German).
+The digital <i>Zettelkasten</i> (German for slip-box) is a program for knowledge management. It is inspired by the note-taking system of Niklas Luhmann. The official website can be found under [http://zettelkasten.danielluedecke.de](http://zettelkasten.danielluedecke.de)(German).
 <br/>
 <br/>
 ![screenshot](http://zettelkasten.danielluedecke.de/img/gallery/zkn1.png)
