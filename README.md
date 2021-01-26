@@ -1,4 +1,4 @@
-# Zettelkasten - nach Luhmann 
+# Zettelkasten - after Luhmann 
 <img src="src/main/resources/de/danielluedecke/zettelkasten/resources/icons/zkn3-256x256.png" height="128" align="right"/>
 
 <p>
@@ -21,29 +21,29 @@
 </p>
 
 
-Der elektronische Zettelkasten ist ein Programm, das sich am Arbeitsprinzip des Zettelkastens von Niklas Luhmann orientiert. Die offizielle Homepage zum Programm ist [http://zettelkasten.danielluedecke.de](http://zettelkasten.danielluedecke.de).
+The digital <i>Zettelkasten</i> (German for slip-box) is a program for knowledge management. It is inspired by the note-taking system of Niklas Luhmann. The official website can be found under [http://zettelkasten.danielluedecke.de](http://zettelkasten.danielluedecke.de)(German).
 <br/>
 <br/>
 ![screenshot](http://zettelkasten.danielluedecke.de/img/gallery/zkn1.png)
 
 ## Download
-Die aktuellste Programmversion [kann hier heruntergeladen](https://github.com/Zettelkasten-Team/Zettelkasten/releases) werden.
+The latest release can be found [here](https://github.com/Zettelkasten-Team/Zettelkasten/releases).
 
-## Zettelkasten bauen
+## <i>Zettelkasten</i> build
 
-Zum Bauen des Zettelkasten wird das Java Development Kit (JDK) 8 oder höher benötigt, empfohlen wird aber für zukünftige Versionen das JDK 11.
-Zusätzlich wird Maven 3 verwendet. 
+For the build, the Java Development Kit (JDK) 8 or higher is required. For future versions, JDK 11 is recommended.
+Additionally, Maven 3 is used. 
 
-Zum Klonen des Repositories wird außerdem Git benötigt.
+To clone a local repository Git is used.
 
 `git clone git@github.com:Zettelkasten-Team/Zettelkasten.git`
 
-Anschließend kann das Projekt mit folgendem Befehl gebaut werden:
+In a next step, the project can be build with:
 
 * `mvn clean package`
 
-Die Build-Ergebnisse befinden sich dann im `target`-Ordner
+The finished build can be found in the `target`-folder
 
 
-## Lizenz
-Lizensiert unter der GPLv3. Für mehr Informationen siehe die LICENSE.md
+## License
+The GPLv3 applies. For detail information see LICENSE.md
