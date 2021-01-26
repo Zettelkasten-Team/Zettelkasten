@@ -1,3 +1,8 @@
+# [Unreleased]
+### Changes
+- pt-BR translation ([237](https://github.com/Zettelkasten-Team/Zettelkasten/issues/237))
+- Sea Glass Look and Feel For Swing reconstructed ([292](https://github.com/Zettelkasten-Team/Zettelkasten/issues/292))
+
 <a name="v3.3.1"></a>
 # [3.3.1](https://github.com/Zettelkasten-Team/Zettelkasten/compare/3.3.0...v3.3.1) (2020-04-06)
 ### Bug fixes
