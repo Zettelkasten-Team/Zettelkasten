@@ -1640,7 +1640,7 @@ public class HtmlUbbUtil {
                             }
                         }
                     }
-                    // dummy = dummy.substring(0, pos)+"<table border=\"1\">"+tabelle.toString().replace("\\\\", "<br>")+"</table>"+dummy.substring(end+8);
+
                     String tableString = (PlatformUtil.isJava7OnMac() || PlatformUtil.isJava7OnWindows()) ? "<table cellspacing=\"0\">" : "<table>";
                     dummy = dummy.substring(0, pos) + tableString + tabelle.toString().replace("\\\\", "<br>") + "</table>" + dummy.substring(end + 8);
                     pos = pos + tabelle.toString().length();
