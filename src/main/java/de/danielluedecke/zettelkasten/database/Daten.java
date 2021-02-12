@@ -1752,7 +1752,7 @@ public class Daten {
      * keyword-/author-element is not completely removed, but only the text is
      * removed.
      *
-     * @param the xml-document (either <i>keywordFile</i> or <i>authorFile</i>)
+     * @param doc the xml-document (either <i>keywordFile</i> or <i>authorFile</i>)
      * @return the number of the first empty element, or -1 if no empty element
      * was found
      */
@@ -1790,11 +1790,12 @@ public class Daten {
      * keyword-/author-element is not completely removed, but only the text is
      * removed.
      *
-     * @param the xml-document (either <i>keywordFile</i> or <i>authorFile</i>)
+     * zknfile: the xml-document (either <i>keywordFile</i> or <i>authorFile</i>)
      * @return the number of the first empty element, or -1 if no empty element
      * was found
      */
     private int retrieveFirstEmptyEntry() {
+        int result = -1;
         // create a list of all elements from the given xml file
         try {
             List<?> elementList = zknFile.getRootElement().getContent();
@@ -1808,17 +1809,17 @@ public class Daten {
                 if (el.getChild(ELEMENT_TITLE).getText().isEmpty()
                         && el.getChild(ELEMENT_CONTENT).getText().isEmpty()
                         && el.getChild(ELEMENT_AUTHOR).getText().isEmpty()) {
-                    return cnt;
+                    result = cnt;
+                    break;
                 }
                 // else increase counter
                 cnt++;
             }
             // if no author was found, return -1
-            return -1;
         } catch (IllegalStateException e) {
             Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-            return -1;
         }
+        return result;
     }
 
     /**
@@ -3456,7 +3457,7 @@ public class Daten {
         }
         // append the addvalue
         sb.append(String.valueOf(addvalue));
-        
+
         // and set the new string to the luhmann-tag
         zettel.getChild(ELEMENT_TRAILS).setText(sb.toString());
         // addvalue was successfully added
@@ -4478,7 +4479,7 @@ public class Daten {
                     // and not for instance reset values.
                     if (ratingcnt > 0 && ratingvalue > 0.0) {
                         // calulate new rating
-                        float newrating = (float) (((ratingvalue * ratingcnt) + rate) / (ratingcnt + 1));
+                        float newrating = ((ratingvalue * ratingcnt) / (ratingcnt + 1)) + (rate / (ratingcnt + 1));
                         // set back new values
                         entry.setAttribute(ATTRIBUTE_RATING, String.valueOf(newrating));
                         entry.setAttribute(ATTRIBUTE_RATINGCOUNT, String.valueOf(ratingcnt + 1));
