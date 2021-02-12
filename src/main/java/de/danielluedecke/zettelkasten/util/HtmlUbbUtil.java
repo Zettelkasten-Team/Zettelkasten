@@ -542,10 +542,10 @@ public class HtmlUbbUtil {
      * This method creates a html page of the parameters passed to this class
      * constructor It is easier to keep the overview over the layout style when
      * the html page, which is responsible for the "look'n'feel" of an entry, is
-     * being created in a separate class rather than in the CDaten class
+     * being created in a separate class rather than in the Daten class
      *
-     * @param settings a reference to the CSettings-class
-     * @param dataObj a reference to the CDaten-class
+     * @param settings a reference to the Settings-class
+     * @param dataObj a reference to the Daten-class
      * @param bibtexObj
      * @param entrynr the entry-number of the entry that should be converted
      * into HTML
