@@ -3780,8 +3780,9 @@ public class Daten {
                     }
                     // and update manual links of the referred entry
                     setManualLinks(mlparamentry, sb.toString());
-                } catch (NumberFormatException e) {
-                    Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
+                } catch (NumberFormatException|NullPointerException e) {
+                    Constants.zknlogger.log(Level.WARNING,
+                            e.getLocalizedMessage());
                 }
             }
         }
