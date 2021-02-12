@@ -39,11 +39,7 @@ import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.Tools;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1935,7 +1931,7 @@ public class Daten {
             zettel.getChild(ELEMENT_REMARKS).setText("");
             zettel.getChild(ELEMENT_TRAILS).setText("");
             zettel.getChild(ELEMENT_ATTACHMENTS).removeContent();
-//            zettel.getChild(ELEMENT_LUHMANN_NUMBER).setText("");
+
             // remove timestamp by setting creation and last modification timestamp
             // to empty strings
             setTimestamp(zettel, "", "");
@@ -2824,7 +2820,7 @@ public class Daten {
             // retrieve empty element
             zettel = retrieveElement(zknFile, emptypos);
             // and remove former content, so we can add new content
-            zettel.removeContent();
+            Objects.requireNonNull(zettel).removeContent();
         }
         try {
             // add unique ID
@@ -3460,39 +3456,7 @@ public class Daten {
         }
         // append the addvalue
         sb.append(String.valueOf(addvalue));
-
-        /*
-         // the the string buffer contains at least two values, we want to sort them
-         if (sb.indexOf(",")!=-1) {
-         // copy all values of the buffer to an string array
-         String[] dummy = sb.toString().split(",");
-         // create integer array, because when we sort a string-array,
-         // the value "12" would be smaller than "5".
-         int[] intdummy = new int[dummy.length];
-         // iterate array
-         for (int cnt=0; cnt<intdummy.length; cnt++) {
-         try {
-         // convert all strings to integer
-         intdummy[cnt] = Integer.parseInt(dummy[cnt]);
-         }
-         catch (NumberFormatException ex) {
-         CConstants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-         }
-         }
-         // sort the array
-         if (intdummy!=null && intdummy.length>0) Arrays.sort(intdummy);
-         // reset the string buffer
-         sb.setLength(0);
-         // iterate the sorted array
-         for (int cnt=0; cnt<intdummy.length; cnt++) {
-         // and append all values to the string buffer
-         sb.append(String.valueOf(intdummy[cnt]));
-         sb.append(",");
-         }
-         // finallay, remove the last ","
-         if (sb.length()>1) sb.setLength(sb.length()-1);
-         }
-         */
+        
         // and set the new string to the luhmann-tag
         zettel.getChild(ELEMENT_TRAILS).setText(sb.toString());
         // addvalue was successfully added
@@ -3802,14 +3766,13 @@ public class Daten {
                     // from the referred entry's manual links, given in the array "backlinks"
                     String curentry = String.valueOf(zpos);
                     // go through all manual links of the referred entry
-                    for (String bl : backlinks) {
-                        // if the manual link of the referred entry is *not* the current entry...
+                    // if the manual link of the referred entry is *not* the current entry...
+                    for (String bl : backlinks)
                         if (!bl.equals(curentry)) {
                             // append it to the string builder
                             sb.append(bl);
                             sb.append(",");
                         }
-                    }
                     // delete last comma
                     if (sb.length() > 1) {
                         sb.setLength(sb.length() - 1);
@@ -4003,6 +3966,7 @@ public class Daten {
      * {@code pos} refers to, or {@code null} if no entry-numbers exist...
      */
     public String[] getManualLinksAsString(int pos) {
+        String[] result = null;
         // get the entry
         Element zettel = retrieveElement(zknFile, pos);
         // if it exists...
@@ -4010,20 +3974,15 @@ public class Daten {
             // get manual links
             String ml = zettel.getChild(ELEMENT_MANLINKS).getText();
             // if no manual links there, quit...
-            if (ml.isEmpty()) {
-                return null;
+            if (!ml.isEmpty()) {// else split them into an array...
+                String[] manlinks = ml.split(",");// if we have no manual links, return null...
+                if ((null != manlinks) && manlinks.length >= 1) {// return the content of the luhmann-child-element
+                    result = manlinks;
+                }
             }
-            // else split them into an array...
-            String[] manlinks = ml.split(",");
-            // if we have no manual links, return null...
-            if ((null == manlinks) || manlinks.length < 1) {
-                return null;
-            }
-            // return the content of the luhmann-child-element
-            return manlinks;
-        }
-        // return result
-        return null;
+        } // return result
+
+        return result;
     }
 
     /**

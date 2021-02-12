@@ -3407,7 +3407,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
 
         // place caret, so content scrolls to top
-        // FIXME java.lang.IllegalArgumentException: bad position: 1
         jEditorPaneEntry.setCaretPosition(0);
 
         // set entry number to textfield
