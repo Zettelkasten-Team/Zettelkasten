@@ -88,7 +88,7 @@ public class Daten {
     /**
      * XML Document that Stores the main data
      */
-    private Document zknFile;
+    private static Document zknFile;
     /**
      * XML Document that Stores the data of entries that should be exported to .zkn3-format
      */
@@ -1214,6 +1214,11 @@ public class Daten {
      */
     public static Element retrieveElement(Document doc, int pos) {
         Element result = null;
+        result = createListOfElementsFromXML(doc, pos, result);
+        return result;
+    }
+
+    private static Element createListOfElementsFromXML(Document doc, int pos, Element result) {
         // create a list of all elements from the given xml file
         try {
             List<?> elementList = doc.getRootElement().getContent();
@@ -3967,7 +3972,7 @@ public class Daten {
      * @return an string-array containing the entry-numbers where the entry
      * {@code pos} refers to, or {@code null} if no entry-numbers exist...
      */
-    public String[] getManualLinksAsString(int pos) {
+    public static String[] getManualLinksAsString(int pos) {
         String[] result = null;
         // get the entry
         Element zettel = retrieveElement(zknFile, pos);

@@ -4,6 +4,7 @@ import ch.dreyeck.zettelkasten.xml.Zettel;
 import ch.dreyeck.zettelkasten.xml.Zettelkasten;
 import junit.framework.TestCase;
 import org.jdom2.Document;
+import org.jdom2.Element;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -78,19 +79,25 @@ public class DatenTest {
 
     @Test
     void getManualLinksAsSingleString() {
-        final String manlinks = new Zettel().getManlinks();
+        int pos = 0;
+        Daten.getManualLinksAsString(pos);
 
     }
 
     @Test
     void retrieveElement() {
+        final Element element;
         Document doc = new org.jdom2.Document();
         java.lang.System.out.println(doc);
         // [Document:  No DOCTYPE declaration,  No root element]
 
         Daten.retrieveElement(doc,0);
         Daten.retrieveElement(doc,1);
+        Daten.retrieveElement(doc, -1);
         //WARNING: Root element not set
+        //         Root should be [Element: <zettelkasten/>]
+
+        // See getManualLinksAsString
     }
 
 }
