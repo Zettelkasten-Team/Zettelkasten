@@ -1213,19 +1213,19 @@ public class Daten {
      * @return the element if a match was found, otherwise {@code null}
      */
     public static Element retrieveElement(Document doc, int pos) {
+        Element result = null;
         // create a list of all elements from the given xml file
         try {
             List<?> elementList = doc.getRootElement().getContent();
             // and return the requested Element
             try {
-                return (Element) elementList.get(pos - 1);
+                result = (Element) elementList.get(pos - 1);
             } catch (IndexOutOfBoundsException e) {
-                return null;
             }
         } catch (IllegalStateException e) {
             Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-            return null;
         }
+        return result;
     }
 
     /**
