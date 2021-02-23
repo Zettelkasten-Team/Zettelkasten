@@ -1212,7 +1212,7 @@ public class Daten {
      * {@link #getCount(int) getCount()}.
      * @return the element if a match was found, otherwise {@code null}
      */
-    private Element retrieveElement(Document doc, int pos) {
+    public static Element retrieveElement(Document doc, int pos) {
         // create a list of all elements from the given xml file
         try {
             List<?> elementList = doc.getRootElement().getContent();
@@ -3988,14 +3988,15 @@ public class Daten {
     }
 
     /**
-     * This method returns the manual links for an entry as siingle string with
+     * This method returns the manual links for an entry as single string with
      * comma separated values
      *
      * @param pos the position of the entry which manual links we want to have
-     * @return siingle string with comma separated values where the entry
+     * @return single string with comma separated values where the entry
      * {@code pos} refers to, or {@code null} if no entry-numbers exist...
      */
     public String getManualLinksAsSingleString(int pos) {
+        String result = null;
         // get the entry
         Element zettel = retrieveElement(zknFile, pos);
         // if it exists...
@@ -4003,15 +4004,13 @@ public class Daten {
             // get manual links
             String ml = zettel.getChild(ELEMENT_MANLINKS).getText();
             // if no manual links there, quit...
-            if (ml.isEmpty()) {
-                return null;
+            if (!ml.isEmpty()) {// else split them into an array...
+// return the content of the luhmann-child-element
+                result = ml;
             }
-            // else split them into an array...
-            // return the content of the luhmann-child-element
-            return ml;
-        }
-        // return result
-        return null;
+        } // return result
+
+        return result;
     }
 
     /**
