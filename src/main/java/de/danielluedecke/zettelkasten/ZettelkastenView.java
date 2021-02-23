@@ -8790,7 +8790,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 int option = JOptionPane.showConfirmDialog(getFrame(), getResourceMap().getString("newerBackupMsg"), getResourceMap().getString("newerBackupTitle"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 // the user chose to cancel the operation, so return "null"
                 if (JOptionPane.CANCEL_OPTION == option || JOptionPane.CLOSED_OPTION == option /*User pressed cancel key*/) {
-                    // clear filepath, so the data-file won't be accidently overwritten...
+                    // clear filepath, so the data-file won't be accidentally overwritten...
                     settings.setFilePath(null);
                     // return result
                     return false;

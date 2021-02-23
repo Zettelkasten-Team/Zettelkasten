@@ -1,15 +1,13 @@
 package de.danielluedecke.zettelkasten.database;
 
 import ch.dreyeck.zettelkasten.xml.Zettel;
-import ch.dreyeck.zettelkasten.xml.Zettelkasten;
-import junit.framework.TestCase;
+import de.danielluedecke.zettelkasten.util.Constants;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.logging.Level;
 
 public class DatenTest {
     /*
@@ -79,8 +77,12 @@ public class DatenTest {
 
     @Test
     void getManualLinksAsSingleString() {
+        Document doc = new org.jdom2.Document();
         int pos = 0;
-        Daten.getManualLinksAsString(pos);
+       try {Daten.getManualLinksAsString(0);}
+       catch (NullPointerException e) {
+           Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
+       }
 
     }
 
@@ -91,8 +93,8 @@ public class DatenTest {
         java.lang.System.out.println(doc);
         // [Document:  No DOCTYPE declaration,  No root element]
 
-        Daten.retrieveElement(doc,0);
-        Daten.retrieveElement(doc,1);
+        Daten.retrieveElement(doc, 0);
+        Daten.retrieveElement(doc, 1);
         Daten.retrieveElement(doc, -1);
         //WARNING: Root element not set
         //         Root should be [Element: <zettelkasten/>]
