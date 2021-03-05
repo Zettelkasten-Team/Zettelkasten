@@ -54,30 +54,30 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
     /**
      * Daten object, which contains the XML data of the Zettelkasten
      */
-    private final Daten dataObj;
+    private final Daten daten;
     /**
      * CBookmark object, which contains the XML data of the entries' bookmarks
      */
-    private final Bookmarks bookmarkObj;
+    private final Bookmarks bookmarks;
     /**
      * CBookmark object, which contains the XML data of the entries' bookmarks
      */
-    private final Synonyms synonymsObj;
+    private final Synonyms synonyms;
     /**
      * DesktopData object, which contains the XML data of the desktop
      */
-    private final DesktopData desktopObj;
+    private final DesktopData desktopData;
     /**
      * Settings object, which contains the setting, for instance the file paths
      * etc...
      */
-    private final Settings settingsObj;
-    private final BibTeX bibtexObj;
+    private final Settings settings;
+    private final BibTeX bibTeX;
     /**
      * SearchRequests object, which contains the XML data of the searchrequests
      * and -result that are related with this data file
      */
-    private final SearchRequests searchrequestsObj;
+    private final SearchRequests searchRequests;
 
     private final javax.swing.JDialog parentDialog;
     private final javax.swing.JLabel msgLabel;
@@ -114,13 +114,13 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
         // doInBackground() depends on from parameters
         // to ImportFileTask fields, here.
         super(app);
-        dataObj = d;
-        bibtexObj = bib;
-        bookmarkObj = bm;
-        synonymsObj = sy;
-        searchrequestsObj = sr;
-        desktopObj = dk;
-        settingsObj = s;
+        daten = d;
+        bibTeX = bib;
+        bookmarks = bm;
+        synonyms = sy;
+        searchRequests = sr;
+        desktopData = dk;
+        settings = s;
         parentDialog = parent;
         msgLabel = label;
         // init status text
@@ -137,7 +137,7 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
         // init status text
         msgLabel.setText(resourceMap.getString("msg1"));
         // get the file path from the data file which has to be opened
-        File fp = settingsObj.getFilePath();
+        File fp = settings.getFilePath();
         // if no file exists, exit task
         if (null == fp || !fp.exists()) {
             // log error
@@ -147,17 +147,17 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
         ZipInputStream zip;
         try {
             // reset the zettelkasten-data-files
-            dataObj.initZettelkasten();
-            desktopObj.clear();
-            bookmarkObj.clear();
-            searchrequestsObj.clear();
+            daten.initZettelkasten();
+            desktopData.clear();
+            bookmarks.clear();
+            searchRequests.clear();
             // log file path
             Constants.zknlogger.log(Level.INFO, "Opening file {0}", fp.toString());
             // it looks like the SAXBuilder is closing an input stream. So we have to
             // re-open the ZIP-file each time we want to retrieve an XML-file from it
             // this is necessary, because we want tot retrieve the zipped xml-files
             // *without* temporarily saving them to harddisk
-            for (int cnt = 0; cnt < dataObj.getFilesToLoadCount(); cnt++) {
+            for (int cnt = 0; cnt < daten.getFilesToLoadCount(); cnt++) {
                 // show status text
                 switch (cnt) {
                     case 0:
@@ -193,9 +193,9 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
                         // get filename of zip-entry
                         String entryname = entry.getName();
                         // if the found file matches the requested one, start the SAXBuilder
-                        if (entryname.equals(dataObj.getFileToLoad(cnt))) {
+                        if (entryname.equals(daten.getFileToLoad(cnt))) {
                             if (entryname.equals(Constants.bibTexFileName)) {
-                                bibtexObj.openFile(zip, "UTF-8");
+                                bibTeX.openFile(zip, "UTF-8");
                                 Constants.zknlogger.log(Level.INFO, "{0} data successfully opened.", entryname);
                                 break;
                             } else {
@@ -206,34 +206,34 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
                                     // compare, which file we have retrieved, so we store the data
                                     // correctly on our data-object
                                     if (entryname.equals(Constants.metainfFileName)) {
-                                        dataObj.setMetaInformationData(doc);
+                                        daten.setMetaInformationData(doc);
                                     }
                                     if (entryname.equals(Constants.zknFileName)) {
-                                        dataObj.setZknData(doc);
+                                        daten.setZknData(doc);
                                     }
                                     if (entryname.equals(Constants.authorFileName)) {
-                                        dataObj.setAuthorData(doc);
+                                        daten.setAuthorData(doc);
                                     }
                                     if (entryname.equals(Constants.keywordFileName)) {
-                                        dataObj.setKeywordData(doc);
+                                        daten.setKeywordData(doc);
                                     }
                                     if (entryname.equals(Constants.bookmarksFileName)) {
-                                        bookmarkObj.setBookmarkData(doc);
+                                        bookmarks.setBookmarkData(doc);
                                     }
                                     if (entryname.equals(Constants.searchrequestsFileName)) {
-                                        searchrequestsObj.setSearchData(doc);
+                                        searchRequests.setSearchData(doc);
                                     }
                                     if (entryname.equals(Constants.desktopFileName)) {
-                                        desktopObj.setDesktopData(doc);
+                                        desktopData.setDesktopData(doc);
                                     }
                                     if (entryname.equals(Constants.desktopModifiedEntriesFileName)) {
-                                        desktopObj.setDesktopModifiedEntriesData(doc);
+                                        desktopData.setDesktopModifiedEntriesData(doc);
                                     }
                                     if (entryname.equals(Constants.desktopNotesFileName)) {
-                                        desktopObj.setDesktopNotesData(doc);
+                                        desktopData.setDesktopNotesData(doc);
                                     }
                                     if (entryname.equals(Constants.synonymsFileName)) {
-                                        synonymsObj.setDocument(doc);
+                                        synonyms.setDocument(doc);
                                     }
                                     // tell about success
                                     Constants.zknlogger.log(Level.INFO, "{0} data successfully opened.", entryname);
@@ -269,13 +269,13 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
         // the result computed by doInBackground().
 
         // after opening a new file, set modified state to false
-        dataObj.setModified(false);
-        dataObj.setMetaModified(false);
-        searchrequestsObj.setModified(false);
-        desktopObj.setModified(false);
-        bookmarkObj.setModified(false);
-        synonymsObj.setModified(false);
-        bibtexObj.setModified(false);
+        daten.setModified(false);
+        daten.setMetaModified(false);
+        searchRequests.setModified(false);
+        desktopData.setModified(false);
+        bookmarks.setModified(false);
+        synonyms.setModified(false);
+        bibTeX.setModified(false);
     }
 
     @Override
