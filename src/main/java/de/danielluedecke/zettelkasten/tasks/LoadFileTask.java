@@ -100,7 +100,16 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
      * @param dk
      * @param s
      */
-    LoadFileTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, Bookmarks bm, SearchRequests sr, DesktopData dk, Synonyms sy, Settings s, BibTeX bib) {
+    LoadFileTask(org.jdesktop.application.Application app,
+                 javax.swing.JDialog parent,
+                 javax.swing.JLabel label,
+                 Daten d,
+                 Bookmarks bm,
+                 SearchRequests sr,
+                 DesktopData dk,
+                 Synonyms sy,
+                 Settings s,
+                 BibTeX bib) {
         // Runs on the EDT.  Copy GUI state that
         // doInBackground() depends on from parameters
         // to ImportFileTask fields, here.
