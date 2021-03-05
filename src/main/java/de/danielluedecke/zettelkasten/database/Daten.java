@@ -3068,7 +3068,7 @@ public class Daten {
     }
 
     /**
-     * This method adds a new entry to the datafile, from an importet
+     * This method adds a new entry to the datafile, from an imported
      * bibtex-file. This is the case, if a bibtex-entry has annotations or
      * abstracts, and the user wants automatically to create a new entry from
      * that bibtex-entry.
@@ -3915,20 +3915,18 @@ public class Daten {
      * entry refers to, or {@code null} if no entry-numbers exist...
      */
     public int[] getManualLinks(int pos) {
+        int[] result = null;
         // get Manual Links as String Array
         String[] manlinks = getManualLinksAsString(pos);
         // if we have no manual links, return null...
-        if ((null == manlinks) || manlinks.length < 1) {
-            return null;
+        if ((null != manlinks) && manlinks.length >= 1) {// create return value
+            int[] retval = new int[manlinks.length];// copy all string-numbers to int-array
+            for (int cnt = 0; cnt < manlinks.length; cnt++) {
+                retval[cnt] = Integer.parseInt(manlinks[cnt]);
+            }// return the content of the luhmann-child-element
+            result = retval;
         }
-        // create return value
-        int[] retval = new int[manlinks.length];
-        // copy all string-numbers to int-array
-        for (int cnt = 0; cnt < manlinks.length; cnt++) {
-            retval[cnt] = Integer.parseInt(manlinks[cnt]);
-        }
-        // return the content of the luhmann-child-element
-        return retval;
+        return result;
     }
 
     /**
