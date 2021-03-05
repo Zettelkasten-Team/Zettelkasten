@@ -146,17 +146,17 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
         }
         ZipInputStream zip;
         try {
-            // reset the zettelkasten-data-files
+            // Reset the Zettelkasten data files
             daten.initZettelkasten();
             desktopData.clear();
             bookmarks.clear();
             searchRequests.clear();
             // log file path
             Constants.zknlogger.log(Level.INFO, "Opening file {0}", fp.toString());
-            // it looks like the SAXBuilder is closing an input stream. So we have to
-            // re-open the ZIP-file each time we want to retrieve an XML-file from it
-            // this is necessary, because we want tot retrieve the zipped xml-files
-            // *without* temporarily saving them to harddisk
+            // It looks like the SAXBuilder is closing an input stream. So we have to
+            // reopen the ZIP file every time we want to retrieve an XML file from it.
+            // This is necessary, because we want to retrieve the zipped XML files
+            // *without* temporarily saving them to disk.
             for (int cnt = 0; cnt < daten.getFilesToLoadCount(); cnt++) {
                 // show status text
                 switch (cnt) {
@@ -201,7 +201,7 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
                             } else {
                                 try {
                                     SAXBuilder builder = new SAXBuilder();
-                                    // Document doc = new Document();
+
                                     Document doc = builder.build(zip);
                                     // compare, which file we have retrieved, so we store the data
                                     // correctly on our data-object
