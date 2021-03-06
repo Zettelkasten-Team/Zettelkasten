@@ -2568,6 +2568,7 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="actionMap.get(&quot;copy&quot;)" type="code"/>
                 </Property>
+                <Property name="text" type="java.lang.String" resourceKey="viewKeywordsCopy.text"/>
                 <Property name="name" type="java.lang.String" value="viewKeywordsCopy" noResource="true"/>
               </Properties>
             </MenuItem>
@@ -2731,8 +2732,12 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="actionMap.get(&quot;copy&quot;)" type="code"/>
                 </Property>
+                <Property name="text" type="java.lang.String" resourceKey="viewAuthorsCopy.text"/>
                 <Property name="name" type="java.lang.String" value="viewAuthorsCopy" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewAuthorsCopyActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JSeparator" name="jSeparator28">
               <Properties>
@@ -2960,6 +2965,7 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="actionMap.get(&quot;copy&quot;)" type="code"/>
                 </Property>
+                <Property name="text" type="java.lang.String" resourceKey="viewTitlesCopy.text"/>
                 <Property name="name" type="java.lang.String" value="viewTitlesCopy" noResource="true"/>
               </Properties>
             </MenuItem>

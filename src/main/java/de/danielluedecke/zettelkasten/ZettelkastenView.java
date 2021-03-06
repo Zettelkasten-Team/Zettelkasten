@@ -13279,6 +13279,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             viewMenuKeywords.setName("viewMenuKeywords"); // NOI18N
 
             viewKeywordsCopy.setAction(actionMap.get("copy"));
+            viewKeywordsCopy.setText(resourceMap.getString("viewKeywordsCopy.text")); // NOI18N
             viewKeywordsCopy.setName("viewKeywordsCopy"); // NOI18N
             viewMenuKeywords.add(viewKeywordsCopy);
 
@@ -13365,7 +13366,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             viewMenuAuthors.setName("viewMenuAuthors"); // NOI18N
 
             viewAuthorsCopy.setAction(actionMap.get("copy"));
+            viewAuthorsCopy.setText(resourceMap.getString("viewAuthorsCopy.text")); // NOI18N
             viewAuthorsCopy.setName("viewAuthorsCopy"); // NOI18N
+            viewAuthorsCopy.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    viewAuthorsCopyActionPerformed(evt);
+                }
+            });
             viewMenuAuthors.add(viewAuthorsCopy);
 
             jSeparator28.setName("jSeparator28"); // NOI18N
@@ -13488,6 +13495,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             viewMenuTitles.setName("viewMenuTitles"); // NOI18N
 
             viewTitlesCopy.setAction(actionMap.get("copy"));
+            viewTitlesCopy.setText(resourceMap.getString("viewTitlesCopy.text")); // NOI18N
             viewTitlesCopy.setName("viewTitlesCopy"); // NOI18N
             viewMenuTitles.add(viewTitlesCopy);
 
@@ -14475,6 +14483,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             setStatusBar(statusPanel);
             setToolBar(toolBar);
         }// </editor-fold>//GEN-END:initComponents
+
+    private void viewAuthorsCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewAuthorsCopyActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_viewAuthorsCopyActionPerformed
 
 
 /**
