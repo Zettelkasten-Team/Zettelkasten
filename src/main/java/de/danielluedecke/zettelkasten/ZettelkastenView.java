@@ -12811,6 +12811,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             fileMenu.add(jSeparatorExit);
 
             exitMenuItem.setAction(actionMap.get("quit")); // NOI18N
+            exitMenuItem.setText(resourceMap.getString("exitMenuItem.text")); // NOI18N
             exitMenuItem.setName("exitMenuItem"); // NOI18N
             fileMenu.add(exitMenuItem);
 
