@@ -313,16 +313,17 @@ public class HtmlUbbUtil {
         htmlrating.append("</a>");
         // close tag
         htmlrating.append("</td></tr>").append(System.lineSeparator());
+
         // check whether entry has manual links
-        String[] manlinks = dataObj.getManualLinksAsString(entrynr);
-        if (manlinks != null && manlinks.length > 0) {
+        String[] manualLinksAsString = dataObj.getManualLinksAsString(entrynr);
+        if (manualLinksAsString != null && manualLinksAsString.length > 0) {
             // append manual links
             htmlrating.append("<tr><td class=\"crtitle\" valign=\"top\"><a href=\"#crt\">");
             htmlrating.append(resourceMap.getString("crossRefText")).append(":</a>&nbsp;</td><td class=\"mlink\" colspan=\"3\">");
             // create string builder
             StringBuilder crossrefs = new StringBuilder("");
             // iterate string array
-            for (String ml : manlinks) {
+            for (String ml : manualLinksAsString) {
                 String title = "";
                 try {
                     title = dataObj.getZettelTitle(Integer.parseInt(ml));
@@ -337,6 +338,7 @@ public class HtmlUbbUtil {
             htmlrating.append(crossrefs.toString().substring(0, crossrefs.length() - 10));
             htmlrating.append("</td></tr>").append(System.lineSeparator());
         }
+
         htmlrating.append("</table></div>").append(System.lineSeparator());
         // return result
         return htmlrating.toString();
