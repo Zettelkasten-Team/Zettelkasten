@@ -11432,8 +11432,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             quickNewEntryMenuItem = new javax.swing.JMenuItem();
             quickNewTitleEntryMenuItem = new javax.swing.JMenuItem();
             jSeparator1 = new javax.swing.JSeparator();
-            duplicateEntryMenuItem = new javax.swing.JMenuItem();
-            jSeparator79 = new javax.swing.JSeparator();
             openMenuItem = new javax.swing.JMenuItem();
             recentDocsSubMenu = new javax.swing.JMenu();
             recentDoc1 = new javax.swing.JMenuItem();
@@ -11874,7 +11872,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
             jEditorPaneEntry.setEditable(false);
             jEditorPaneEntry.setBorder(null);
-            org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(ZettelkastenView.class);
+            org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(ZettelkastenView.class);
             jEditorPaneEntry.setContentType(resourceMap.getString("jEditorPaneEntry.contentType")); // NOI18N
             jEditorPaneEntry.setName("jEditorPaneEntry"); // NOI18N
             jScrollPane1.setViewportView(jEditorPaneEntry);
@@ -11885,7 +11883,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jTextFieldLiveSearch.setToolTipText(resourceMap.getString("jTextFieldLiveSearch.toolTipText")); // NOI18N
             jTextFieldLiveSearch.setName("jTextFieldLiveSearch"); // NOI18N
 
-            javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(ZettelkastenView.class, this);
+            javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance().getContext().getActionMap(ZettelkastenView.class, this);
             jButton1.setAction(actionMap.get("findLiveCancel")); // NOI18N
             jButton1.setIcon(resourceMap.getIcon("jButton1.icon")); // NOI18N
             jButton1.setBorderPainted(false);
@@ -12735,13 +12733,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
             jSeparator1.setName("jSeparator1"); // NOI18N
             fileMenu.add(jSeparator1);
-
-            duplicateEntryMenuItem.setAction(actionMap.get("duplicateEntry")); // NOI18N
-            duplicateEntryMenuItem.setName("duplicateEntryMenuItem"); // NOI18N
-            fileMenu.add(duplicateEntryMenuItem);
-
-            jSeparator79.setName("jSeparator79"); // NOI18N
-            fileMenu.add(jSeparator79);
 
             openMenuItem.setAction(actionMap.get("openDocument")); // NOI18N
             openMenuItem.setName("openMenuItem"); // NOI18N
@@ -14533,7 +14524,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JMenuItem copyPlainMenuItem;
     private javax.swing.JMenuItem deleteKwFromListMenuItem;
     private javax.swing.JMenuItem deleteZettelMenuItem;
-    private javax.swing.JMenuItem duplicateEntryMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem editMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
@@ -14721,7 +14711,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JSeparator jSeparator76;
     private javax.swing.JSeparator jSeparator77;
     private javax.swing.JSeparator jSeparator78;
-    private javax.swing.JSeparator jSeparator79;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator80;
     private javax.swing.JSeparator jSeparator81;
