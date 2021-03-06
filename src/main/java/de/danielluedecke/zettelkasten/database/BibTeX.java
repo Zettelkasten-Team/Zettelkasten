@@ -89,7 +89,7 @@ public class BibTeX {
      */
     private final Settings settingsObj;
     /**
-     * The main variable that stors the currently opened bibtex-file
+     * The main variable that stores the currently opened bibtex-file
      */
     private BibtexFile bibtexfile = new BibtexFile();
     /**

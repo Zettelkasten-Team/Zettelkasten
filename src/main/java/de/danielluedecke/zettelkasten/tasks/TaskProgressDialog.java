@@ -922,7 +922,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @param fp
      * @param ee
      * @param part
-     * @param allinone
+     * @param bibtex
      * @param removeformattags
      * @return
      */
@@ -1011,8 +1011,12 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 
     /**
      *
-     * @param et
-     * @param dtm
+     * @param eqi
+     * @param step
+     * @param sel
+     * @param rest
+     * @param ffs
+     * @param t
      * @return
      */
     private Task keywordSuggestions(int eqi, int step, LinkedList<String> sel, LinkedList<String> rest, LinkedList<String> ffs, String t) {
@@ -1084,7 +1088,6 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 
     /**
      *
-     * @param et
      * @param dtm
      * @return
      */
@@ -1154,7 +1157,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @return
      */
     private Task loadFile() {
-        // initiate the "statusbar" (the loading splash screen), giving visiual
+        // initiate the "statusbar" (the loading splash screen), giving visual
         // feedback during open and save operations
         return new LoadFileTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
                 this, msgLabel, dataObj, bookmarkObj, searchrequestsObj, desktopObj, synonymsObj, settingsObj, bibtexObj);

@@ -51,36 +51,16 @@ import de.danielluedecke.zettelkasten.util.Constants;
  */
 public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
 
-    /**
-     * Daten object, which contains the XML data of the Zettelkasten
-     */
-    private final Daten daten;
-    /**
-     * CBookmark object, which contains the XML data of the entries' bookmarks
-     */
-    private final Bookmarks bookmarks;
-    /**
-     * CBookmark object, which contains the XML data of the entries' bookmarks
-     */
-    private final Synonyms synonyms;
-    /**
-     * DesktopData object, which contains the XML data of the desktop
-     */
-    private final DesktopData desktopData;
-    /**
-     * Settings object, which contains the setting, for instance the file paths
-     * etc...
-     */
-    private final Settings settings;
-    private final BibTeX bibTeX;
-    /**
-     * SearchRequests object, which contains the XML data of the searchrequests
-     * and -result that are related with this data file
-     */
-    private final SearchRequests searchRequests;
-
     private final javax.swing.JDialog parentDialog;
     private final javax.swing.JLabel msgLabel;
+
+    private final Daten daten;
+    private final Bookmarks bookmarks;
+    private final SearchRequests searchRequests;
+    private final DesktopData desktopData;
+    private final Synonyms synonyms;
+    private final Settings settings;
+    private final BibTeX bibTeX;
 
     /**
      * get the strings for file descriptions from the resource map
@@ -89,17 +69,6 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
             = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(LoadFileTask.class);
 
-    /**
-     *
-     * @param app
-     * @param parent
-     * @param label
-     * @param d
-     * @param bm
-     * @param sr
-     * @param dk
-     * @param s
-     */
     LoadFileTask(org.jdesktop.application.Application app,
                  javax.swing.JDialog parent,
                  javax.swing.JLabel label,
@@ -110,21 +79,24 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
                  Synonyms sy,
                  Settings s,
                  BibTeX bib) {
+
         // Runs on the EDT.  Copy GUI state that
         // doInBackground() depends on from parameters
         // to ImportFileTask fields, here.
         super(app);
-        daten = d;
-        bibTeX = bib;
-        bookmarks = bm;
-        synonyms = sy;
-        searchRequests = sr;
-        desktopData = dk;
-        settings = s;
+
         parentDialog = parent;
         msgLabel = label;
         // init status text
-        msgLabel.setText(resourceMap.getString("msg1"));
+        msgLabel.setText(resourceMap.getString("msg1")); // FIXME msg1 ?
+
+        daten = d;
+        bookmarks = bm;
+        searchRequests = sr;
+        desktopData = dk;
+        synonyms = sy;
+        settings = s;
+        bibTeX = bib;
     }
 
     @Override
@@ -136,11 +108,11 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
 
         // init status text
         msgLabel.setText(resourceMap.getString("msg1"));
+
         // get the file path from the data file which has to be opened
         File fp = settings.getFilePath();
         // if no file exists, exit task
         if (null == fp || !fp.exists()) {
-            // log error
             Constants.zknlogger.log(Level.WARNING, "Filepath is null or does not exist!");
             return null;
         }
@@ -151,8 +123,10 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
             desktopData.clear();
             bookmarks.clear();
             searchRequests.clear();
+
             // log file path
-            Constants.zknlogger.log(Level.INFO, "Opening file {0}", fp.toString());
+            Constants.zknlogger.log(Level.INFO, "Opening file {0}", fp);
+
             // It looks like the SAXBuilder is closing an input stream. So we have to
             // reopen the ZIP file every time we want to retrieve an XML file from it.
             // This is necessary, because we want to retrieve the zipped XML files
@@ -184,6 +158,7 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
                         msgLabel.setText(resourceMap.getString("msg1"));
                         break;
                 }
+
                 // open the zip-file
                 zip = new ZipInputStream(new FileInputStream(fp));
                 ZipEntry entry;
@@ -200,7 +175,7 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
                                 break;
                             } else {
                                 try {
-                                    SAXBuilder builder = new SAXBuilder();
+                                    SAXBuilder builder = new SAXBuilder(); // FIXME Disable access to external entities in XML parsing.
 
                                     Document doc = builder.build(zip);
                                     // compare, which file we have retrieved, so we store the data
@@ -248,19 +223,17 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
                     Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                 } finally {
                     try {
-                        zip.close();
+                            zip.close();
                     } catch (IOException e) {
                         Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                     }
                 }
             }
-            // tell about success
             Constants.zknlogger.log(Level.INFO, "Complete data file successfully opened.");
         } catch (IOException e) {
             Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
         }
-
-        return null;  // return your result
+        return null;
     }
 
     @Override

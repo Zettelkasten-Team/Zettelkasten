@@ -79,10 +79,11 @@ public class DatenTest {
     void getManualLinksAsSingleString() {
         Document doc = new org.jdom2.Document();
         int pos = 0;
-       try {Daten.getManualLinksAsString(0);}
-       catch (NullPointerException e) {
-           Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-       }
+        try {
+            Daten.getManualLinksAsString(0);
+        } catch (NullPointerException e) {
+            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
+        }
 
     }
 
