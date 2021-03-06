@@ -7954,52 +7954,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     /**
-     * This method duplicates the currently displayed entry and adds it to the
-     * end of the Zettelkasten database.
-     */
-    @Action(enabledProperty = "entriesAvailable")
-    public void duplicateEntry() {
-        duplicateEntry(displayedZettel);
-    }
-
-    /**
-     * This method duplicates the entry {@code nr} and adds it to the end of the
-     * Zettelkasten database.
-     *
-     * @param nr the entry-number of that entry that should be duplicated.
-     */
-    public void duplicateEntry(int nr) {
-        // first, retrieve the entry's authors, so we can update the table jTableAuthors,
-        // by increasing the frequencies...
-        String[] aus = data.getAuthors(nr);
-        if (aus != null) {
-            for (String a : aus) {
-                linkedauthorlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableAuthors, linkedauthorlist, a, 1);
-            }
-        }
-        // then, retrieve the entry's keywords, so we can update the table jTableKeywords,
-        // by increasing the frequencies...
-        String[] kws = data.getKeywords(nr);
-        if (kws != null) {
-            for (String k : kws) {
-                linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableKeywords, linkedkeywordlist, k, 1);
-            }
-        }
-        // finally, duplicate entry
-        if (!data.duplicateEntry(nr)) {
-            // tell user about problem
-            JOptionPane.showMessageDialog(getFrame(),
-                    getResourceMap().getString("errDuplicateEntryMsg"),
-                    getResourceMap().getString("errDuplicateEntryTitle"),
-                    JOptionPane.PLAIN_MESSAGE);
-            showErrorIcon();
-        } else {
-            // update display if everything ok
-            updateDisplay();
-        }
-    }
-
-    /**
      * This method opens the window for editing new entries. All the stuff like
      * saving the data to the main-data-object is done within the class
      * "CNewEntry.java"
