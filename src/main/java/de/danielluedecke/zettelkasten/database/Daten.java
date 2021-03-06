@@ -108,7 +108,7 @@ public class Daten {
     /**
      * Stores the index number of the currently displayed entry
      */
-    private int zettelPos;
+    private int zettel;
     /**
      * state variable that tracks changes to the data file
      */
@@ -390,7 +390,7 @@ public class Daten {
         settings = s;
         synonymsObj = syn;
         bibtexObj = bib;
-        zettelPos = 1;
+        zettel = 1;
         initZettelkasten();
     }
 
@@ -445,7 +445,7 @@ public class Daten {
         Element imgpath = new Element(ELEMENT_IMAGE_PATH);
         metainfFile.getRootElement().addContent(imgpath);
         // init zettel-position-index
-        zettelPos = 1;
+        zettel = 1;
         // here we add all files which are stored in the zipped data-file in a list-array
         filesToLoad.clear();
         filesToLoad.add(Constants.metainfFileName);
@@ -1071,23 +1071,23 @@ public class Daten {
      * This method duplicates an entry and inserts it at the end or the next
      * empty place in the data file
      *
-     * @param nr the number of the entry that should be duplicated
+     * @param zettel the number of the entry that should be duplicated
      * @return
      */
-    public boolean duplicateEntry(int nr) {
-        // first of all, we duplicate all authors and keywords frequencies from the existing entry.
+    public boolean duplicateEntry(int zettel) {
+        // First, we duplicate all authors and keywords frequencies from the existing entry.
         // therefore, we first retrieve all author-index-numbers from that entry
-        changeFrequencies(nr, 1);
+        changeFrequencies(zettel, 1);
         // retrieve entry that should be duplicated
-        Element oldzettel = retrieveElement(zknFile, nr);
+        Element oldzettel = retrieveElement(zknFile, zettel);
         // create new zettel
         Element zettel = new Element(ELEMENT_ZETTEL);
         // check whether we have any empty elements in between where we can insert the new entry
-        int emptypos = retrieveFirstEmptyEntry();
+        int emptyEntry = retrieveFirstEmptyEntry();
         // if we have any empty elements...
-        if (emptypos != -1 && settings.getInsertNewEntryAtEmpty()) {
+        if (emptyEntry != -1 && settings.getInsertNewEntryAtEmpty()) {
             // retrieve empty element
-            zettel = retrieveElement(zknFile, emptypos);
+            zettel = retrieveElement(zknFile, emptyEntry);
             // and remove former content, so we can add new content
             zettel.removeContent();
         }
@@ -1178,14 +1178,13 @@ public class Daten {
             // complete datafile
             //
             // if we have any empty elements, go on here
-            if (emptypos != -1 && settings.getInsertNewEntryAtEmpty()) {
-                // return the empty-position, which is now filled with the new author-value
-                zettelPos = emptypos;
-            } else {
+            // return the empty entry, which is now filled with the new author value
+            if (emptyEntry != -1 && settings.getInsertNewEntryAtEmpty()) this.zettel = emptyEntry;
+            else {
                 // finally, add the whole element to the data file
                 zknFile.getRootElement().addContent(zettel);
                 // set the zettel-position to the new entry
-                zettelPos = getCount(ZKNCOUNT);
+                this.zettel = getCount(ZKNCOUNT);
             }
             // titles have to be updated.
             setTitlelistUpToDate(false);
@@ -2985,12 +2984,12 @@ public class Daten {
             // if we have any empty elements, go on here
             if (emptypos != -1 && settings.getInsertNewEntryAtEmpty()) {
                 // return the empty-position, which is now filled with the new author-value
-                zettelPos = emptypos;
+                this.zettel = emptypos;
             } else {
                 // finally, add the whole element to the data file
                 zknFile.getRootElement().addContent(zettel);
                 // set the zettel-position to the new entry
-                zettelPos = getCount(ZKNCOUNT);
+                this.zettel = getCount(ZKNCOUNT);
             }
             // and add the new position to the history...
             addToHistory();
@@ -3004,7 +3003,7 @@ public class Daten {
         // of the related entry (which number is passed in the luhmann variable)
         if (luhmann != -1) {
             // try to add luhmann number
-            if (addLuhmannNumber(luhmann, zettelPos)) {
+            if (addLuhmannNumber(luhmann, this.zettel)) {
                 // if it was successful, we can insert this entry
                 // after the "parent" entry
                 retval = ADD_LUHMANNENTRY_OK;
@@ -3017,7 +3016,7 @@ public class Daten {
         // create back-references for manual links
         // we can do this here first, because we need
         // "zettelPos" as reference, which is not available earlier
-        addManualLink(manlinks, zettelPos);
+        addManualLink(manlinks, this.zettel);
         // entry successfully added
         return retval;
     }
@@ -3107,7 +3106,7 @@ public class Daten {
         if (succeeded == ADD_ENTRY_OK || succeeded == ADD_LUHMANNENTRY_OK) {
             // ... set a remark to that entry that it was added from a bibtex-file
             // we might need this in case we want to update this entry from a revised bibtex-file later
-            setContentFromBibTexRemark(zettelPos, true);
+            setContentFromBibTexRemark(zettel, true);
         }
         return succeeded;
     }
@@ -3372,7 +3371,7 @@ public class Daten {
             // manual links here...
             //
             // update the current zettel-position
-            zettelPos = entrynumber;
+            this.zettel = entrynumber;
             // and add the new position to the history...
             addToHistory();
             // set modified state
@@ -3819,7 +3818,7 @@ public class Daten {
      * removed...
      */
     public void deleteManualLinks(String[] manlinks) {
-        deleteManualLinks(manlinks, zettelPos);
+        deleteManualLinks(manlinks, zettel);
     }
 
     /**
@@ -4048,7 +4047,7 @@ public class Daten {
      * entry refers to, or null if no entry-numbers exist...
      */
     public int[] getCurrentManualLinks() {
-        return getManualLinks(zettelPos);
+        return getManualLinks(zettel);
     }
 
     /**
@@ -4059,7 +4058,7 @@ public class Daten {
      * entry refers to, or null if no entry-numbers exist...
      */
     public String[] getCurrentManualLinksAsString() {
-        return getManualLinksAsString(zettelPos);
+        return getManualLinksAsString(zettel);
     }
 
     /**
@@ -5069,7 +5068,7 @@ public class Daten {
      * entry
      */
     public String[] getCurrentKeywords() {
-        return getKeywords(zettelPos);
+        return getKeywords(zettel);
     }
 
     /**
@@ -5294,7 +5293,7 @@ public class Daten {
      * go back and fore to previous selected entries.
      */
     private void addToHistory() {
-        addToHistory(zettelPos);
+        addToHistory(zettel);
     }
 
     /**
@@ -5362,7 +5361,7 @@ public class Daten {
             // if yes, decrease history position counter
             historyPosition--;
             // and set new zettel-position
-            zettelPos = history[historyPosition];
+            zettel = history[historyPosition];
         }
     }
 
@@ -5376,7 +5375,7 @@ public class Daten {
             // if yes, increase history position counter
             historyPosition++;
             // and set new zettel-position
-            zettelPos = history[historyPosition];
+            zettel = history[historyPosition];
         }
     }
 
@@ -5392,11 +5391,11 @@ public class Daten {
     public boolean gotoEntry(int nr) {
         // check whether it's out of bounds
         // and leave method if it is...
-        if (!zettelExists(zettelPos) || isDeleted(nr)) {
+        if (!zettelExists(zettel) || isDeleted(nr)) {
             return false;
         }
         // else set the counter for the currently displayed entry
-        zettelPos = nr;
+        zettel = nr;
         // update History
         addToHistory();
         // and give positive feedback
@@ -5408,10 +5407,10 @@ public class Daten {
      */
     public void nextEntry() {
         // increase counter for currently display entry
-        zettelPos++;
+        zettel++;
         // check whether it's out of bounds
-        if (zettelPos > getCount(ZKNCOUNT) || -1 == zettelPos) {
-            zettelPos = 1;
+        if (zettel > getCount(ZKNCOUNT) || -1 == zettel) {
+            zettel = 1;
         }
         // update History
         addToHistory();
@@ -5422,10 +5421,10 @@ public class Daten {
      */
     public void prevEntry() {
         // decrease counter for currently display entry
-        zettelPos--;
+        zettel--;
         // check whether it's out of bounds
-        if (zettelPos < 1) {
-            zettelPos = getCount(ZKNCOUNT);
+        if (zettel < 1) {
+            zettel = getCount(ZKNCOUNT);
         }
         // update History
         addToHistory();
@@ -5437,7 +5436,7 @@ public class Daten {
      */
     public void firstEntry() {
         // set counter for currently display entry to 1
-        zettelPos = 1;
+        zettel = 1;
         // update History
         addToHistory();
     }
@@ -5448,7 +5447,7 @@ public class Daten {
      */
     public void lastEntry() {
         // set counter for currently display entry to last element
-        zettelPos = getCount(ZKNCOUNT);
+        zettel = getCount(ZKNCOUNT);
         // update History
         addToHistory();
     }
@@ -5895,7 +5894,7 @@ public class Daten {
      * @param nr
      */
     public void setCurrentZettelPos(int nr) {
-        zettelPos = nr;
+        zettel = nr;
     }
 
     /**
@@ -5915,7 +5914,7 @@ public class Daten {
      */
     public int getCurrentZettelPos() {
         // and return the value
-        return zettelPos;
+        return zettel;
     }
 
     /**

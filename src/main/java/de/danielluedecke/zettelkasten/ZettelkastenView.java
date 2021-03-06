@@ -3282,11 +3282,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * <i>activated</i>. e.g. by double-clicking on an entry in on of the tabbed
      * pane's tables.
      *
-     * @param nr the number of the entry that should be displayed
+     * @param zettel the number of the entry that should be displayed
      */
-    public void updateDisplayParts(int nr) {
+    public void updateDisplayParts(int zettel) {
         // if we have an invalid number, leave
-        if (nr < 1) {
+        if (zettel < 1) {
             return;
         }
         // set the number of the displayed zettel...
@@ -3295,12 +3295,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // CDaten-class' getCurrentZettelPos. When an entry is displayed, the content of the
         // jEditorPane's is updated. However, when an entry is also *activated* the entry's related
         // content in the tabbed pane's tables is updated as well
-        displayedZettel = nr;
+        displayedZettel = zettel;
         // if the user wants to add all displayed entries to the history, including those that are
         // not only activated, but also displayed, do this here...
         if (settings.getAddAllToHistory()) {
             // add displayed zettel to history
-            data.addToHistory(nr);
+            data.addToHistory(zettel);
             // update buttons for navigating through history
             buttonHistoryBack.setEnabled(data.canHistoryBack());
             buttonHistoryFore.setEnabled(data.canHistoryFore());
@@ -3346,28 +3346,30 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
 
         // FIXME java.lang.IllegalArgumentException: bad position: 1
-        displayZettelContent(nr);
+        displayZettelContent(zettel);
 
         // Here we set up the keyword list for the JList
         // retrieve the current keywords
-        String[] kws = data.getKeywords(nr);
+        String[] dataKeywords = data.getKeywords(zettel);
+
         // prepare the JList which will display the keywords
         keywordListModel.clear();
+
         // check whether any keywords have been found
-        if (kws != null) {
+        if (dataKeywords != null) {
             // sort the array
-            if (kws.length > 0) {
-                Arrays.sort(kws, new Comparer());
+            if (dataKeywords.length > 0) {
+                Arrays.sort(dataKeywords, new Comparer());
             }
-            // iterate the string array and add its content to the list model
-            for (String kw : kws) {
+            // iterate the dataKeywords string array and add its content to the list model
+            for (String kw : dataKeywords) {
                 keywordListModel.addElement(kw);
             }
         }
-        // create new stringbuilder for border-text. we set the amount of keywords
+        // create new string builder for border-text. we set the amount of keywords
         // as new border-title
         StringBuilder bordertext = new StringBuilder("");
-        // get localalised description
+        // get localised description
         bordertext.append(getResourceMap().getString("jListEntryKeywords.border.title"));
         // if we have any keywords...
         // copy amount of keywords behind description
@@ -3381,28 +3383,22 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         setCurrentEntryShown(displayedZettel != data.getCurrentZettelPos());
     }
 
-    /**
-     *
-     * @param nr
-     * @return
-     */
-    private void displayZettelContent(int nr) {
-        this.nr = nr;
-        // retrieve the string array of the first entry
-        String disp = data.getEntryAsHtml(nr, (settings.getHighlightSegments()) ? retrieveSelectedKeywordsFromList() : null, Constants.FRAME_MAIN);
-        // in case parsing was ok, display the entry
-        if (Tools.isValidHTML(disp, nr)) {
-            // set entry information in the main textfield
-            jEditorPaneEntry.setText(disp);
-        } // else show error message box to user and tell him what to do
+    private void displayZettelContent(int zettel) {
+        this.nr = zettel;
+
+        String dataEntryAsHtml = data.getEntryAsHtml(zettel, (settings.getHighlightSegments()) ? retrieveSelectedKeywordsFromList() : null, Constants.FRAME_MAIN);
+
+        if (Tools.isValidHTML(dataEntryAsHtml, zettel)) {
+            jEditorPaneEntry.setText(dataEntryAsHtml);
+        }
         else {
             StringBuilder cleanedContent = new StringBuilder("");
             cleanedContent.append("<body><div style=\"margin:5px;padding:5px;background-color:#dddddd;color:#800000;\">");
             URL imgURL = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/error.png");
             cleanedContent.append("<img border=\"0\" src=\"").append(imgURL).append("\">&#8195;");
             cleanedContent.append(getResourceMap().getString("incorrectNestedTagsText"));
-            cleanedContent.append("</div>").append(data.getCleanZettelContent(nr)).append("</body>");
-            // and display clean content instead
+            cleanedContent.append("</div>").append(data.getCleanZettelContent(zettel)).append("</body>");
+            // display clean content instead
             jEditorPaneEntry.setText(cleanedContent.toString());
         }
 
@@ -8883,7 +8879,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // get the setting what we want to show at startup
         int getstarttupvalue = settings.getShowAtStartup();
         int paramentry = settings.getInitialParamZettel();
-        // and set the related entrynumber
+        // and set the related entry number
         // in case we have retrieved an entry-number as parameter, set this entry number right now
         if (paramentry != -1 && paramentry <= data.getCount(Daten.ZKNCOUNT)) {
             shownr = paramentry;

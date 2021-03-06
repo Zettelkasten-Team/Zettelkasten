@@ -155,10 +155,12 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         settingsObj = s;
 
         initComponents();
+
         // set application icon
         setIconImage(Constants.zknicon.getImage());
+
         // init the progress bar and status icon for
-        // the swingworker background thread
+        // the swing worker background thread
         // creates a new class object. This variable is not used, it just associates task monitors to
         // the background tasks. furthermore, by doing this, this class object also animates the
         // busy icon and the progress bar of this frame.
@@ -175,14 +177,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         startTask();
     }
 
-    /**
-     * 
-     * @param parent
-     * @param task_id
-     * @param td
-     * @param d
-     * @param bib
-     */
+
     public TaskProgressDialog(java.awt.Frame parent, int task_id, TasksData td, Daten d, BibTeX bib) {
         super(parent);
         dataObj = d;
@@ -249,13 +244,6 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         startTask();
     }
 
-    /**
-     *
-     * @param parent
-     * @param task_id
-     * @param d
-     * @param messageOptions
-     */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, int messageOptions) {
         super(parent);
         dataObj = d;
@@ -480,14 +468,6 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         startTask();
     }
 
-    /**
-     *
-     * @param parent
-     * @param task_id
-     * @param d
-     * @param entries
-     * @param insertpos
-     */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, int[] entries, int insertpos) {
         super(parent);
         dataObj = d;
@@ -641,19 +621,6 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         startTask();
     }
 
-    /**
-     *
-     * @param parent
-     * @param task_id
-     * @param d
-     * @param td
-     * @param oldvalue
-     * @param newvalue
-     * @param newbibkey
-     * @param table
-     * @param selectedrow
-     * @param linkedvalues
-     */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, TasksData td, String oldvalue, String newvalue, String newbibkey, JTable table, int selectedrow, LinkedList<Object[]> linkedvalues) {
         super(parent);
         dataObj = d;
@@ -840,9 +807,6 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         startTask();
     }
 
-    /**
-     *
-     */
     private void startTask() {
         // get the application's context...
         ApplicationContext appC = Application.getInstance().getContext();
@@ -855,18 +819,6 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         tM.setForegroundTask(foregroundTask);
     }
 
-    /**
-     *
-     * @param fp
-     * @param ee
-     * @param type
-     * @param part
-     * @param n
-     * @param bibtex
-     * @param ihv
-     * @param numberprefix
-     * @return
-     */
     private Task exportDataToTxt(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix, boolean separateFile) {
         return new ExportToTxtTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
                 this, msgLabel, taskinfo, dataObj, desktopObj, settingsObj, bibtexObj,
@@ -879,90 +831,33 @@ public class TaskProgressDialog extends javax.swing.JDialog {
                 fp, ee, type, part, n, bibtex, ihv, numberprefix, separateFile);
     }
 
-    /**
-     *
-     * @param fp
-     * @param ee
-     * @param type
-     * @param part
-     * @param n
-     * @param bibtex
-     * @param ihv
-     * @param numberprefix
-     * @return
-     */
     private Task exportDataToTex(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix, boolean contenttable, boolean separateFile) {
         return new ExportToTexTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
                 this, msgLabel, taskinfo, dataObj, desktopObj, settingsObj, bibtexObj,
                 fp, ee, type, part, n, bibtex, ihv, numberprefix, contenttable, separateFile);
     }
 
-    /**
-     *
-     * @param fp
-     * @param ee
-     * @param type
-     * @param part
-     * @param n
-     * @param bibtex
-     * @param ihv
-     * @param hkws
-     * @param numberprefix
-     * @param toc
-     * @return
-     */
     private Task exportDataToHtml(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean hkws, boolean numberprefix, boolean toc) {
         return new ExportToHtmlTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
                 this, msgLabel, taskinfo, dataObj, desktopObj, settingsObj, bibtexObj,
                 fp, ee, type, part, n, bibtex, ihv, hkws, numberprefix, toc);
     }
 
-    /**
-     *
-     * @param fp
-     * @param ee
-     * @param part
-     * @param bibtex
-     * @param removeformattags
-     * @return
-     */
     private Task exportDataToXml(File fp, ArrayList<Object> ee, int part, boolean bibtex, boolean removeformattags) {
         return new ExportToXmlTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
                 this, msgLabel, taskinfo, dataObj, bibtexObj, fp, ee, part, bibtex, removeformattags);
     }
 
-    /**
-     *
-     * @param fp
-     * @param ee
-     * @param part
-     * @param sep
-     * @param removeformattags
-     * @param bibtex
-     * @return
-     */
     private Task exportDataToCsv(File fp, ArrayList<Object> ee, int part, char sep, boolean removeformattags, boolean bibtex) {
         return new ExportToCsvTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
                 this, msgLabel, taskinfo, dataObj, bibtexObj, fp, ee, part, sep, removeformattags, bibtex);
     }
 
-    /**
-     *
-     * @param fp
-     * @param ee
-     * @return
-     */
     private Task exportDataToZkn(File fp, ArrayList<Object> ee, boolean bibtex) {
         return new ExportToZknTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
                 this, msgLabel, taskinfo, dataObj, bookmarkObj, bibtexObj, bibtex, fp, ee);
     }
 
-    /**
-     *
-     * @param fp
-     * @param defaulttimestamp
-     * @return
-     */
     private Task importFromZkx(File fp, String defaulttimestamp) {
         return new ImportFromZkx(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
                 this, msgLabel, taskinfo, dataObj, bookmarkObj, desktopObj, searchrequestsObj,
