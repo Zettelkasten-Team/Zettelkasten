@@ -3195,6 +3195,7 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="actionMap.get(&quot;copy&quot;)" type="code"/>
                 </Property>
+                <Property name="text" type="java.lang.String" resourceKey="viewAttachmentsCopy.text"/>
                 <Property name="name" type="java.lang.String" value="viewAttachmentsCopy" noResource="true"/>
               </Properties>
             </MenuItem>

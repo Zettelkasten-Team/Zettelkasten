@@ -13618,6 +13618,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             viewMenuAttachments.setName("viewMenuAttachments"); // NOI18N
 
             viewAttachmentsCopy.setAction(actionMap.get("copy"));
+            viewAttachmentsCopy.setText(resourceMap.getString("viewAttachmentsCopy.text")); // NOI18N
             viewAttachmentsCopy.setName("viewAttachmentsCopy"); // NOI18N
             viewMenuAttachments.add(viewAttachmentsCopy);
 
