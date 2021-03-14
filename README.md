@@ -1,4 +1,4 @@
-# Zettelkasten - after Luhmann 
+# Zettelkasten – Luhmann style
 <img src="src/main/resources/de/danielluedecke/zettelkasten/resources/icons/zkn3-256x256.png" height="128" align="right"/>
 
 <p>
@@ -19,9 +19,9 @@
     </a>
     <img src="https://github.com/Zettelkasten-Team/Zettelkasten/workflows/Java%20CI%20with%20Maven/badge.svg" alt="build status"/>
 </p>
+ 
 
-
-The digital <i>Zettelkasten</i> (German for slip-box) is a program for knowledge management. It is inspired by the note-taking system of Niklas Luhmann. The official website can be found under [http://zettelkasten.danielluedecke.de](http://zettelkasten.danielluedecke.de)(German).
+The digital <i>Zettelkasten</i> (German for slip-box) is a program for knowledge management. It is inspired by the note-taking system of Niklas Luhmann. The official website can be found under [http://zettelkasten.danielluedecke.de](http://zettelkasten.danielluedecke.de) (German).
 <br/>
 <br/>
 ![screenshot](http://zettelkasten.danielluedecke.de/img/gallery/zkn1.png)
