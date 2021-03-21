@@ -534,7 +534,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * @param td
      */
     @SuppressWarnings("LeakingThisInConstructor")
-    public ZettelkastenView(SingleFrameApplication app, Settings st, AcceleratorKeys ak, AutoKorrektur ac, Synonyms sy, StenoData stn, TasksData td) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+    public ZettelkastenView(SingleFrameApplication app, Settings st, AcceleratorKeys ak, AutoKorrektur ac, Synonyms sy, StenoData stn, TasksData td) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException {
         super(app);
         taskinfo = td;
         // store reference to settings-class
@@ -9146,7 +9146,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     @Action
-    public void attachBibtexFile() {
+    public void attachBibtexFile() throws IOException {
         // retrieve attached bibtex-file
         File selectedfile = bibtex.getCurrentlyAttachedFile();
         // if we have no attached file, set last used file as filepath
@@ -9199,7 +9199,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      *
      */
     @Action(enabledProperty = "bibtexFileLoaded")
-    public void refreshBibTexFile() {
+    public void refreshBibTexFile() throws IOException {
         // retrieve current filepath of bibtex file
         File bibfile = bibtex.getFilePath();
         // check whether file already exists

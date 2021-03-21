@@ -41,6 +41,7 @@ import de.danielluedecke.zettelkasten.database.Synonyms;
 import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.util.Constants;
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
@@ -136,7 +137,7 @@ public class ZettelkastenApp extends SingleFrameApplication {
         }
         try {
             show(new ZettelkastenView(this, settings, accKeys, autoKorrekt,synonyms,steno,taskdata));
-        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException | IllegalAccessException e) {
+        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException | IllegalAccessException | IOException e) {
             e.printStackTrace();
         }
     }
