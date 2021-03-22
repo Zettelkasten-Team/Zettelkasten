@@ -1160,13 +1160,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
                 this, msgLabel, dataObj, bookmarkObj, searchrequestsObj, desktopObj, synonymsObj, settingsObj, bibtexObj);
     }
 
-    /**
-     *
-     * @return
-     */
     private Task refreshBibTex() {
-        // initiate the "statusbar" (the loading splash screen), giving visiual
-        // feedback during open and save operations
         return new RefreshBibTexTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
                 this, msgLabel, taskinfo, dataObj, bibtexObj);
     }

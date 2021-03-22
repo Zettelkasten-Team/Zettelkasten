@@ -641,16 +641,29 @@ public class BibTeX {
                 return false;
             }
         }
+        checkWhetherMissingEntriesShouldBeAdded(suppressNewEntryImport, updateExistingEntries);
+        return true;
+    }
+
+    private void checkWhetherMissingEntriesShouldBeAdded(boolean suppressNewEntryImport, boolean updateExistingEntries) {
         // check whether missing entries should be added
         if (!updateExistingEntries && !suppressNewEntryImport) {
             // add all new entries to data base
             int newentries = addEntries(attachedbibtexentries);
-            // tell user
-            if (newentries > 0) {
-                JOptionPane.showMessageDialog(null, resourceMap.getString("importMissingBibtexEntriesText", String.valueOf(newentries), 0+""), "BibTeX-Import", JOptionPane.PLAIN_MESSAGE);
-            }
+            tellUser(newentries);
         }
-        return true;
+    }
+
+    private void tellUser(int newentries) {
+        // tell user
+        if (newentries > 0) {
+            JOptionPane.showMessageDialog(null,
+                    resourceMap.getString("importMissingBibtexEntriesText",
+                            String.valueOf(newentries),
+                            0+""),
+                    "BibTeX-Import",
+                    JOptionPane.PLAIN_MESSAGE);
+        }
     }
 
     /**
