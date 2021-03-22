@@ -897,15 +897,20 @@ public class CImportBibTex extends javax.swing.JDialog {
             }
             // update display, since we have new authors and possibly new entries as well
             mainframe.updateDisplay();
-            // tell user about success
-            JOptionPane.showMessageDialog(null,
-                    resourceMap.getString("authorImportOkMsg", String.valueOf(getNewEntriesCount()), String.valueOf((getModifiedEntries() != null) ? getModifiedEntries().size() : 0)),
-                    resourceMap.getString("authorImportOkTitle"),
-                    JOptionPane.PLAIN_MESSAGE);
+
+            tellUser();
+
             // close window
             setVisible(false);
             dispose();
         }
+    }
+
+    private void tellUser() {
+        JOptionPane.showMessageDialog(null,
+                resourceMap.getString("authorImportOkMsg", String.valueOf(getNewEntriesCount()), String.valueOf((getModifiedEntries() != null) ? getModifiedEntries().size() : 0)),
+                resourceMap.getString("authorImportOkTitle"),
+                JOptionPane.PLAIN_MESSAGE);
     }
 
     private class startImportTask extends org.jdesktop.application.Task<Object, Void> {
