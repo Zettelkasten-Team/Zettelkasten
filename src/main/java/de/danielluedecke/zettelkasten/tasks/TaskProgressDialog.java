@@ -69,39 +69,38 @@ public class TaskProgressDialog extends javax.swing.JDialog {
     /**
      * Daten object, which contains the XML data of the Zettelkasten
      */
-    private Daten dataObj;
+    private final Daten daten;
     /**
      *
      */
-    private TasksData taskinfo;
+    private TasksData tasksData;
     /**
      * CBookmark object, which contains the XML data of the entries' bookmarks
      */
-    private Bookmarks bookmarkObj;
+    private Bookmarks bookmarks;
     /**
      * DesktopData object, which contains the XML data of the desktop
      */
-    private DesktopData desktopObj;
+    private DesktopData desktopData;
     /**
      * Settings object, which contains the setting, for instance the file paths
      * etc...
      */
-    private Settings settingsObj;
+    private Settings settings;
     /**
      * Settings object, which contains the setting, for instance the file paths
      * etc...
      */
-    private Synonyms synonymsObj;
+    private Synonyms synonyms;
     /**
      * Searchequests object, which contains the XML data of the searchrequests
      * and -result that are related with this data file
      */
-    private SearchRequests searchrequestsObj;
-    private BibTeX bibtexObj;
+    private SearchRequests searchRequests;
+    private BibTeX bibTeX;
 
-    private TaskMonitor tM;
-    private TaskService tS;
-    private Task foregroundTask;
+    private TaskMonitor taskMonitor;
+    private Task foregroundTask; //FIXME Provide the parametrized type for this generic.
 
     public static final int TASK_LOAD = 1;
     public static final int TASK_SAVE = 2;
@@ -136,23 +135,23 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      * @param task_id the task-id, identifying which task should be started, in
      * case this constructor is used for more than one task. See above which
      * task-id to use.
-     * @param d a reference to the Daten-class.
-     * @param bm
-     * @param sr
-     * @param dk
-     * @param sy
-     * @param s
-     * @param bib
+     * @param daten a reference to the Daten-class.
+     * @param bookmarks
+     * @param searchRequests
+     * @param desktopData
+     * @param synonyms
+     * @param settings
+     * @param bibTeX
      */
-    public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, Bookmarks bm, SearchRequests sr, DesktopData dk, Synonyms sy, Settings s, BibTeX bib) {
+    public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten daten, Bookmarks bookmarks, SearchRequests searchRequests, DesktopData desktopData, Synonyms synonyms, Settings settings, BibTeX bibTeX) {
         super(parent);
-        dataObj = d;
-        synonymsObj = sy;
-        bibtexObj = bib;
-        bookmarkObj = bm;
-        searchrequestsObj = sr;
-        desktopObj = dk;
-        settingsObj = s;
+        this.daten = daten;
+        this.bookmarks = bookmarks;
+        this.searchRequests = searchRequests;
+        this.desktopData = desktopData;
+        this.synonyms = synonyms;
+        this.settings = settings;
+        this.bibTeX = bibTeX;
 
         initComponents();
 
@@ -164,7 +163,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         // creates a new class object. This variable is not used, it just associates task monitors to
         // the background tasks. furthermore, by doing this, this class object also animates the
         // busy icon and the progress bar of this frame.
-        InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
+        InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null); //FIXME Remove this unused "isb" local variable.
         // check which task was requested and start that task
         switch (task_id) {
             case TASK_LOAD:
@@ -180,9 +179,9 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 
     public TaskProgressDialog(java.awt.Frame parent, int task_id, TasksData td, Daten d, BibTeX bib) {
         super(parent);
-        dataObj = d;
-        bibtexObj = bib;
-        taskinfo = td;
+        daten = d;
+        bibTeX = bib;
+        tasksData = td;
 
         initComponents();
         // set application icon
@@ -221,10 +220,10 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, Settings s, Daten d, DesktopData dk, BibTeX bib, boolean rf) {
         super(parent);
-        dataObj = d;
-        settingsObj = s;
-        desktopObj = dk;
-        bibtexObj = bib;
+        daten = d;
+        settings = s;
+        desktopData = dk;
+        bibTeX = bib;
 
         initComponents();
         // set application icon
@@ -246,7 +245,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 
     public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, int messageOptions) {
         super(parent);
-        dataObj = d;
+        daten = d;
 
         initComponents();
         // set application icon
@@ -297,8 +296,8 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, TasksData td, Daten d, String fs, String rs, int[] re, int w, boolean ww, boolean mc, boolean rex) {
         super(parent);
-        dataObj = d;
-        taskinfo = td;
+        daten = d;
+        tasksData = td;
 
         initComponents();
         // set application icon
@@ -357,10 +356,10 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, Synonyms s, BibTeX bt, Settings set, boolean is, int et, DefaultTableModel dtm, boolean mls) {
         super(parent);
-        dataObj = d;
-        bibtexObj = bt;
-        synonymsObj = s;
-        settingsObj = set;
+        daten = d;
+        bibTeX = bt;
+        synonyms = s;
+        settings = set;
 
         initComponents();
         // set application icon
@@ -406,7 +405,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, String[] values) {
         super(parent);
-        dataObj = d;
+        daten = d;
 
         initComponents();
         // set application icon
@@ -447,8 +446,8 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, SearchRequests s, int[] entries) {
         super(parent);
-        dataObj = d;
-        searchrequestsObj = s;
+        daten = d;
+        searchRequests = s;
 
         initComponents();
         // set application icon
@@ -470,7 +469,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 
     public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, int[] entries, int insertpos) {
         super(parent);
-        dataObj = d;
+        daten = d;
 
         initComponents();
         // set application icon
@@ -529,10 +528,10 @@ public class TaskProgressDialog extends javax.swing.JDialog {
             int extendedQuickInput, int quickstep, LinkedList<String> selectedKeywords, LinkedList<String> remainingKeywords,
             LinkedList<String> fromFirstStep, String entrytext) {
         super(parent);
-        dataObj = d;
-        taskinfo = td;
-        synonymsObj = syn;
-        settingsObj = set;
+        daten = d;
+        tasksData = td;
+        synonyms = syn;
+        settings = set;
 
         initComponents();
         // set application icon
@@ -599,9 +598,9 @@ public class TaskProgressDialog extends javax.swing.JDialog {
             String fr, String to, int tsi, boolean donly, boolean rt) {
         super(parent);
 
-        dataObj = d;
-        synonymsObj = sy;
-        searchrequestsObj = sr;
+        daten = d;
+        synonyms = sy;
+        searchRequests = sr;
 
         initComponents();
         // set application icon
@@ -623,8 +622,8 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 
     public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, TasksData td, String oldvalue, String newvalue, String newbibkey, JTable table, int selectedrow, LinkedList<Object[]> linkedvalues) {
         super(parent);
-        dataObj = d;
-        taskinfo = td;
+        daten = d;
+        tasksData = td;
 
         initComponents();
         // set application icon
@@ -703,13 +702,13 @@ public class TaskProgressDialog extends javax.swing.JDialog {
                               boolean separateFiles, boolean notag, boolean bibtex, boolean highlightkws, boolean ct, boolean ihv, boolean numberprefix) {
         super(parent);
         // store parameters
-        dataObj = d;
-        settingsObj = s;
-        bibtexObj = bto;
-        taskinfo = td;
-        desktopObj = dt;
-        bookmarkObj = bm;
-        synonymsObj = syn;
+        daten = d;
+        settings = s;
+        bibTeX = bto;
+        tasksData = td;
+        desktopData = dt;
+        bookmarks = bm;
+        synonyms = syn;
 
         initComponents();
         // set application icon
@@ -770,12 +769,12 @@ public class TaskProgressDialog extends javax.swing.JDialog {
             int type, File fp, String sepchar, boolean atou, boolean appendit, String dts, URL url) {
         super(parent);
         // store parameters
-        dataObj = d;
-        settingsObj = s;
-        taskinfo = td;
-        desktopObj = dt;
-        bookmarkObj = bm;
-        searchrequestsObj = sr;
+        daten = d;
+        settings = s;
+        tasksData = td;
+        desktopData = dt;
+        bookmarks = bm;
+        searchRequests = sr;
 
         initComponents();
         // set application icon
@@ -811,69 +810,69 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         // get the application's context...
         ApplicationContext appC = Application.getInstance().getContext();
         // ...to get the TaskMonitor and TaskService
-        tM = appC.getTaskMonitor();
-        tS = appC.getTaskService();
+        taskMonitor = appC.getTaskMonitor();
+        TaskService taskService = appC.getTaskService();
         // with these we can execute the task and bring it to the foreground
         // i.e. making the animated progressbar and busy icon visible
-        tS.execute(foregroundTask);
-        tM.setForegroundTask(foregroundTask);
+        taskService.execute(foregroundTask);
+        taskMonitor.setForegroundTask(foregroundTask);
     }
 
     private Task exportDataToTxt(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix, boolean separateFile) {
         return new ExportToTxtTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, taskinfo, dataObj, desktopObj, settingsObj, bibtexObj,
+                this, msgLabel, tasksData, daten, desktopData, settings, bibTeX,
                 fp, ee, type, part, n, bibtex, ihv, numberprefix, separateFile);
     }
 
     private Task exportDataToMd(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix, boolean separateFile) {
         return new ExportToMdTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, taskinfo, dataObj, desktopObj, settingsObj, bibtexObj,
+                this, msgLabel, tasksData, daten, desktopData, settings, bibTeX,
                 fp, ee, type, part, n, bibtex, ihv, numberprefix, separateFile);
     }
 
     private Task exportDataToTex(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix, boolean contenttable, boolean separateFile) {
         return new ExportToTexTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, taskinfo, dataObj, desktopObj, settingsObj, bibtexObj,
+                this, msgLabel, tasksData, daten, desktopData, settings, bibTeX,
                 fp, ee, type, part, n, bibtex, ihv, numberprefix, contenttable, separateFile);
     }
 
     private Task exportDataToHtml(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean hkws, boolean numberprefix, boolean toc) {
         return new ExportToHtmlTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, taskinfo, dataObj, desktopObj, settingsObj, bibtexObj,
+                this, msgLabel, tasksData, daten, desktopData, settings, bibTeX,
                 fp, ee, type, part, n, bibtex, ihv, hkws, numberprefix, toc);
     }
 
     private Task exportDataToXml(File fp, ArrayList<Object> ee, int part, boolean bibtex, boolean removeformattags) {
         return new ExportToXmlTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, taskinfo, dataObj, bibtexObj, fp, ee, part, bibtex, removeformattags);
+                this, msgLabel, tasksData, daten, bibTeX, fp, ee, part, bibtex, removeformattags);
     }
 
     private Task exportDataToCsv(File fp, ArrayList<Object> ee, int part, char sep, boolean removeformattags, boolean bibtex) {
         return new ExportToCsvTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, taskinfo, dataObj, bibtexObj, fp, ee, part, sep, removeformattags, bibtex);
+                this, msgLabel, tasksData, daten, bibTeX, fp, ee, part, sep, removeformattags, bibtex);
     }
 
     private Task exportDataToZkn(File fp, ArrayList<Object> ee, boolean bibtex) {
         return new ExportToZknTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, taskinfo, dataObj, bookmarkObj, bibtexObj, bibtex, fp, ee);
+                this, msgLabel, tasksData, daten, bookmarks, bibTeX, bibtex, fp, ee);
     }
 
     private Task importFromZkx(File fp, String defaulttimestamp) {
         return new ImportFromZkx(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, taskinfo, dataObj, bookmarkObj, desktopObj, searchrequestsObj,
+                this, msgLabel, tasksData, daten, bookmarks, desktopData, searchRequests,
                 fp, defaulttimestamp);
     }
 
     private Task importFromZkn(File fp, boolean asciiToUnicode, boolean appendit, String defaulttimestamp) {
         return new ImportFromZkn(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, taskinfo, dataObj, bookmarkObj, desktopObj, searchrequestsObj,
-                settingsObj, fp, asciiToUnicode, appendit, defaulttimestamp);
+                this, msgLabel, tasksData, daten, bookmarks, desktopData, searchRequests,
+                settings, fp, asciiToUnicode, appendit, defaulttimestamp);
     }
 
     private Task importFromCSV(File fp, String sepchar, boolean asciiToUnicode, boolean appendit, String defaulttimestamp) {
         return new ImportFromCSV(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, taskinfo, dataObj, bookmarkObj, desktopObj, searchrequestsObj,
-                settingsObj, fp, sepchar, asciiToUnicode, appendit, defaulttimestamp);
+                this, msgLabel, tasksData, daten, bookmarks, desktopData, searchRequests,
+                settings, fp, sepchar, asciiToUnicode, appendit, defaulttimestamp);
     }
 
     /**
@@ -887,7 +886,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task mergeAuthors(String oldauthors, String newauthors, String newbibkey, JTable authortable, int selectedrow, LinkedList<Object[]> linkedauthors) {
         return new MergeAuthorsTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, dataObj, taskinfo, oldauthors, newauthors, newbibkey, authortable, selectedrow, linkedauthors);
+                this, msgLabel, daten, tasksData, oldauthors, newauthors, newbibkey, authortable, selectedrow, linkedauthors);
     }
 
     /**
@@ -901,7 +900,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task mergeKeywords(String oldkeywords, String newkeywords, JTable kwtable, int selectedrow, LinkedList<Object[]> linkedkeywords) {
         return new MergeKeywordsTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, dataObj, taskinfo, oldkeywords, newkeywords, kwtable, selectedrow, linkedkeywords);
+                this, msgLabel, daten, tasksData, oldkeywords, newkeywords, kwtable, selectedrow, linkedkeywords);
     }
 
     /**
@@ -916,7 +915,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task keywordSuggestions(int eqi, int step, LinkedList<String> sel, LinkedList<String> rest, LinkedList<String> ffs, String t) {
         return new KeywordSuggestionsTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, taskinfo, dataObj, synonymsObj, settingsObj, eqi, step, sel, rest, ffs, t);
+                this, msgLabel, tasksData, daten, synonyms, settings, eqi, step, sel, rest, ffs, t);
     }
 
     /**
@@ -926,7 +925,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task setFirstLineAsTitle(int mo) {
         return new SetFirstLineAsTitleTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, dataObj, mo);
+                this, msgLabel, daten, mo);
     }
 
     /**
@@ -936,7 +935,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task deleteEntry(int[] entries) {
         return new DeleteEntryTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, dataObj, searchrequestsObj, entries);
+                this, msgLabel, daten, searchRequests, entries);
     }
 
     /**
@@ -947,7 +946,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task entriesToLuhmann(int[] entries, int insertpos) {
         return new EntriesToLuhmannTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, dataObj, entries, insertpos);
+                this, msgLabel, daten, entries, insertpos);
     }
 
     /**
@@ -957,7 +956,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task deleteAuthors(String[] authors) {
         return new DeleteAuthorsTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, dataObj, authors);
+                this, msgLabel, daten, authors);
     }
 
     /**
@@ -967,7 +966,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task deleteKeywords(String[] keywords) {
         return new DeleteKeywordsTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, dataObj, keywords);
+                this, msgLabel, daten, keywords);
     }
 
     /**
@@ -978,7 +977,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task showAuthors(int et, DefaultTableModel dtm) {
         return new ShowAuthorListTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, dataObj, bibtexObj, et, dtm);
+                this, msgLabel, daten, bibTeX, et, dtm);
     }
 
     /**
@@ -988,7 +987,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task showAttachments(DefaultTableModel dtm) {
         return new ShowAttachmentListTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, dataObj, settingsObj, dtm);
+                this, msgLabel, daten, settings, dtm);
     }
 
     /**
@@ -1004,7 +1003,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task replace(String fs, String rs, int[] re, int w, boolean ww, boolean mc, boolean rex) {
         return new ReplaceTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, taskinfo, dataObj, fs, rs, re, w, ww, mc, rex);
+                this, msgLabel, tasksData, daten, fs, rs, re, w, ww, mc, rex);
     }
 
     /**
@@ -1014,7 +1013,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task showKeywords(boolean includeSynonyms, DefaultTableModel dtm) {
         return new ShowKeywordListTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, dataObj, synonymsObj, includeSynonyms, dtm);
+                this, msgLabel, daten, synonyms, includeSynonyms, dtm);
     }
 
     /**
@@ -1024,7 +1023,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task convertFormatTags(int conv) {
         return new ConvertFormatTagsTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, dataObj, conv);
+                this, msgLabel, daten, conv);
     }
 
     /**
@@ -1034,7 +1033,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task showTitles(DefaultTableModel dtm, boolean mls) {
         return new ShowTitleListTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, dataObj, dtm, mls);
+                this, msgLabel, daten, dtm, mls);
     }
 
     /**
@@ -1044,7 +1043,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task updateFile(boolean resetFreq) {
         return new UpdateFileTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, dataObj, desktopObj, bibtexObj, resetFreq);
+                this, msgLabel, daten, desktopData, bibTeX, resetFreq);
     }
 
     /**
@@ -1055,12 +1054,12 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         // initiate the "statusbar" (the loading splash screen), giving visual
         // feedback during open and save operations
         return new LoadFileTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, dataObj, bookmarkObj, searchrequestsObj, desktopObj, synonymsObj, settingsObj, bibtexObj);
+                this, msgLabel, daten, bookmarks, searchRequests, desktopData, synonyms, settings, bibTeX);
     }
 
     private Task refreshBibTex() {
         return new RefreshBibTexTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, taskinfo, dataObj, bibtexObj);
+                this, msgLabel, tasksData, daten, bibTeX);
     }
 
     /**
@@ -1069,7 +1068,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     private Task saveFile() {
         return new SaveFileTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, dataObj, bookmarkObj, searchrequestsObj, desktopObj, synonymsObj, settingsObj, bibtexObj);
+                this, msgLabel, daten, bookmarks, searchRequests, desktopData, synonyms, settings, bibTeX);
     }
 
     /**
@@ -1101,7 +1100,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
         // initiate the "statusbar" (the loading splash screen), giving visiual
         // feedback during open and save operations
         return new StartSearchTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-                this, msgLabel, dataObj, searchrequestsObj, synonymsObj, tos, s, se, w, l, ww, mc, syn, rex, ts, fr, to, tsi, donly, rt);
+                this, msgLabel, daten, searchRequests, synonyms, tos, s, se, w, l, ww, mc, syn, rex, ts, fr, to, tsi, donly, rt);
     }
 
     /**
@@ -1109,8 +1108,8 @@ public class TaskProgressDialog extends javax.swing.JDialog {
      */
     @Action
     public void cancel() {
-        if ((tM.getForegroundTask() != null) && !tM.getForegroundTask().isDone()) {
-            tM.getForegroundTask().cancel(true);
+        if ((taskMonitor.getForegroundTask() != null) && !taskMonitor.getForegroundTask().isDone()) {
+            taskMonitor.getForegroundTask().cancel(true);
         }
     }
 
