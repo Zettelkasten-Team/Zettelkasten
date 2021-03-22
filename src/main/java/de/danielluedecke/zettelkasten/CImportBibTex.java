@@ -306,7 +306,7 @@ public class CImportBibTex extends javax.swing.JDialog {
      * Init several listeners for the components.
      */
     private void initListeners() {
-        // these code lines add an escape-listener to the dialog. so, when the user
+        // These code lines add an escape-listener to the dialog. So, when the user
         // presses the escape-key, the same action is performed as if the user
         // presses the cancel button...
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);

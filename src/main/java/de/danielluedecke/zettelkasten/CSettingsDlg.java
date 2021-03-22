@@ -663,7 +663,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
             JFileChooser fc = new JFileChooser();
             // set dialog's title
             fc.setDialogTitle(resourceMap.getString("fileChooserTitle"));
-            // restrict all files as chooseable
+            // restrict all files as selectable
             fc.setAcceptAllFileFilterUsed(false);
             // only directories should be selected
             fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);

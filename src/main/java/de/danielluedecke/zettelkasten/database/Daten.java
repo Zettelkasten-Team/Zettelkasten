@@ -643,11 +643,11 @@ public class Daten {
     }
 
     /**
-     * Returns the filename of the xml-datafiles we want to retrieve from our
+     * Returns the filename of the XML data files we want to retrieve from our
      * compressed main-datafile. See class CLoadDialog.java for more details.
      *
      * @param index (the element which should be retrieved)
-     * @return (the string containing the filename of the xml-file we want to
+     * @return (the string containing the filename of the XML file we want to
      * have)
      */
     public String getFileToLoad(int index) {
@@ -676,9 +676,9 @@ public class Daten {
     }
 
     /**
-     * This method checks whether the current fileformat is of a <b>newer</b>
+     * This method checks whether the current file format is of a <b>newer</b>
      * version than the loaded data-file. if so, we have to convert the data
-     * into the new fileformat. use {@link #getVersionInfo() getVersionInfo()}
+     * into the new file format. use {@link #getVersionInfo() getVersionInfo()}
      * and {@link #getCurrentVersionInfo() getCurrentVersionInfo()} to retrieve
      * the version numbers of the loaded and current file-format.<br><br>
      * <b>Important!</b> Use {@link #updateVersionInfo() updateVersionInfo()} to
@@ -706,7 +706,7 @@ public class Daten {
     }
 
     /**
-     * This method checks whether the current fileformat is of an <b>older</b>
+     * This method checks whether the current file format is of an <b>older</b>
      * version than the loaded data-file. This might be the case, if the loaded
      * data-file was saved with a newer program-version than the currently used
      * program.<br><br>
@@ -724,7 +724,7 @@ public class Daten {
         if (verinfo != null && !verinfo.isEmpty()) {
             // get data-version of loaded file
             float lv = Float.parseFloat(verinfo);
-            // get current fileversion
+            // get current file version
             float cv = Float.parseFloat(currentVersion);
             // check whether the current data-version is newer than the loaded one
             return (lv > cv);
