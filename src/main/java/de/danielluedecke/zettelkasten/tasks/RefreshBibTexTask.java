@@ -88,7 +88,7 @@ public class RefreshBibTexTask extends org.jdesktop.application.Task<Object, Voi
         int length = attachedbibtexentries.size();
         // amount of upated entries
         int updateCount = 0;
-        StringBuilder updatedAuthors = new StringBuilder("");
+        StringBuilder updatedAuthors = new StringBuilder();
         // iterate all new entries
         for (BibtexEntry attachedbibtexentry : attachedbibtexentries) {
             // do we have this entry?
