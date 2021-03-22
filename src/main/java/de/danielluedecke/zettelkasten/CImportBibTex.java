@@ -515,7 +515,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                 // retrieve currently attached BibTeX file
                 currentlyattachedfile = bibtexObj.getCurrentlyAttachedFile();
             }
-            // set filepath to textfield
+            // set file path to text field
             jTextFieldBibtexFilepath.setText((currentlyattachedfile != null && currentlyattachedfile.exists()) ? currentlyattachedfile.toString() : "");
         }
         // block all components
@@ -549,7 +549,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         jTextFieldFilterTable.setEnabled(!block);
         jRadioButtonSourceDB.setEnabled(!block);
         jRadioButtonSourceFile.setEnabled(!block);
-        // refresh button is either blockes (disabled) or enabled whether
+        // refresh button is either blocked (disabled) or enabled whether
         // we have any content in linkedtablelist.
         jButtonRefresh.setEnabled((block) ? false : linkedtablelist != null);
     }
