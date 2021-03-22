@@ -48,15 +48,14 @@ public class RefreshBibTexTask extends org.jdesktop.application.Task<Object, Voi
     /**
      * Reference to the main data class
      */
-    private final Daten dataObj;
+    private final Daten daten;
     /**
      * the table model from the main window's jtable, passed as parameter
      */
-    private final BibTeX bibtexObj;
-    private final TasksData taskinfo;
+    private final BibTeX bibTeX;
+    private final TasksData tasksData;
 
     private final javax.swing.JDialog parentDialog;
-    private final javax.swing.JLabel msgLabel;
     /**
      * get the strings for file descriptions from the resource map
      */
@@ -65,49 +64,48 @@ public class RefreshBibTexTask extends org.jdesktop.application.Task<Object, Voi
         getContext().getResourceMap(RefreshBibTexTask.class);
 
     RefreshBibTexTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, 
-            javax.swing.JLabel label, TasksData td, Daten d, BibTeX bt) {
+            javax.swing.JLabel label, TasksData tasksData, Daten daten, BibTeX bibTeX) {
         // Runs on the EDT.  Copy GUI state that
         // doInBackground() depends on from parameters
         // to createLinksTask fields, here.
         super(app);
 
-        dataObj = d;
-        bibtexObj = bt;
-        taskinfo = td;
+        this.daten = daten;
+        this.bibTeX = bibTeX;
+        this.tasksData = tasksData;
         parentDialog = parent;
-        msgLabel = label;
         // init status text
-        msgLabel.setText(resourceMap.getString("msgBibTexRefresh"));
+        label.setText(resourceMap.getString("msgBibTexRefresh"));
     }
 
     @Override protected Object doInBackground() {
         // get attached entries
-        ArrayList<BibtexEntry> attachedbibtexentries = bibtexObj.getEntriesFromAttachedFile();
+        ArrayList<BibtexEntry> attachedbibtexentries = bibTeX.getEntriesFromAttachedFile();
         // for progress bar
         int cnt = 0;
         int length = attachedbibtexentries.size();
-        // amount of upated entries
+        // amount of updated entries
         int updateCount = 0;
         StringBuilder updatedAuthors = new StringBuilder();
         // iterate all new entries
         for (BibtexEntry attachedbibtexentry : attachedbibtexentries) {
             // do we have this entry?
             String bibkey = attachedbibtexentry.getEntryKey();
-            if (bibtexObj.hasEntry(bibkey)) {
+            if (bibTeX.hasEntry(bibkey)) {
                 // if yes, update it
-                bibtexObj.setEntry(bibkey, attachedbibtexentry);
+                bibTeX.setEntry(bibkey, attachedbibtexentry);
                 // retrieve author position 
-                int aupos = dataObj.getAuthorBibKeyPosition(bibkey);
+                int aupos = daten.getAuthorBibKeyPosition(bibkey);
                 // check if we have author already
                 if (aupos != -1) {
                     // get current author
-                    String oldAuthor = dataObj.getAuthor(aupos);
+                    String oldAuthor = daten.getAuthor(aupos);
                     // get formatted author
-                    String updatedAuthor = bibtexObj.getFormattedEntry(attachedbibtexentry, true);
+                    String updatedAuthor = bibTeX.getFormattedEntry(attachedbibtexentry, true);
                     // update author data, if it differs
                     if (!oldAuthor.equals(updatedAuthor)) {
                         // update author in data base
-                        dataObj.setAuthor(aupos, updatedAuthor);
+                        daten.setAuthor(aupos, updatedAuthor);
                         // copy info to string
                         updatedAuthors.append(updatedAuthor)
                                 .append(" (bibkey: ")
@@ -122,12 +120,12 @@ public class RefreshBibTexTask extends org.jdesktop.application.Task<Object, Voi
             setProgress(cnt++, 0, length);
         }
         // add all new entries to data base
-        int newentries = bibtexObj.addEntries(attachedbibtexentries);
+        int newentries = bibTeX.addEntries(attachedbibtexentries);
 
         tellUser(updateCount, newentries);
 
         // log info about updates authors
-        taskinfo.setUpdatedAuthors(updatedAuthors.toString());
+        tasksData.setUpdatedAuthors(updatedAuthors.toString());
         return null;
     }
 
@@ -143,7 +141,7 @@ public class RefreshBibTexTask extends org.jdesktop.application.Task<Object, Voi
     }
 
     @Override protected void succeeded(Object result) {
-        dataObj.setAuthorlistUpToDate(false);
+        daten.setAuthorlistUpToDate(false);
     }
 
     @Override
