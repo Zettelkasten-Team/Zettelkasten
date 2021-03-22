@@ -1424,15 +1424,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
             mainframe.openEditWindow(true,Integer.parseInt(jTableResults.getValueAt(row, 0).toString()),false,false,-1);
         }
     }
-
-    @Action
-    public void duplicateEntry() {
-        // get selected entry
-        int row = jTableResults.getSelectedRow();
-        // when we have a valid selection, go on
-        if (row!=-1) mainframe.duplicateEntry(Integer.parseInt(jTableResults.getValueAt(row, 0).toString()));
-    }
-
+    
     @Action
     public void duplicateSearch() {
         searchrequest.duplicateSearchRequest();

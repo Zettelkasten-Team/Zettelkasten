@@ -1553,19 +1553,6 @@
                 <Property name="name" type="java.lang.String" value="jSeparator1" noResource="true"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="duplicateEntryMenuItem">
-              <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="duplicateEntry" methodName="duplicateEntry"/>
-                </Property>
-                <Property name="name" type="java.lang.String" value="duplicateEntryMenuItem" noResource="true"/>
-              </Properties>
-            </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator79">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="jSeparator79" noResource="true"/>
-              </Properties>
-            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="openMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
@@ -1708,6 +1695,7 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="org.jdesktop.application.Application" id="quit" methodName="quit"/>
                 </Property>
+                <Property name="text" type="java.lang.String" resourceKey="exitMenuItem.text"/>
                 <Property name="name" type="java.lang.String" value="exitMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
@@ -2580,6 +2568,7 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="actionMap.get(&quot;copy&quot;)" type="code"/>
                 </Property>
+                <Property name="text" type="java.lang.String" resourceKey="viewKeywordsCopy.text"/>
                 <Property name="name" type="java.lang.String" value="viewKeywordsCopy" noResource="true"/>
               </Properties>
             </MenuItem>
@@ -2743,8 +2732,12 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="actionMap.get(&quot;copy&quot;)" type="code"/>
                 </Property>
+                <Property name="text" type="java.lang.String" resourceKey="viewAuthorsCopy.text"/>
                 <Property name="name" type="java.lang.String" value="viewAuthorsCopy" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewAuthorsCopyActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JSeparator" name="jSeparator28">
               <Properties>
@@ -2972,6 +2965,7 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="actionMap.get(&quot;copy&quot;)" type="code"/>
                 </Property>
+                <Property name="text" type="java.lang.String" resourceKey="viewTitlesCopy.text"/>
                 <Property name="name" type="java.lang.String" value="viewTitlesCopy" noResource="true"/>
               </Properties>
             </MenuItem>
@@ -3201,6 +3195,7 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="actionMap.get(&quot;copy&quot;)" type="code"/>
                 </Property>
+                <Property name="text" type="java.lang.String" resourceKey="viewAttachmentsCopy.text"/>
                 <Property name="name" type="java.lang.String" value="viewAttachmentsCopy" noResource="true"/>
               </Properties>
             </MenuItem>

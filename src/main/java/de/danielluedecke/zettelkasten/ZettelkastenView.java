@@ -534,7 +534,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * @param td
      */
     @SuppressWarnings("LeakingThisInConstructor")
-    public ZettelkastenView(SingleFrameApplication app, Settings st, AcceleratorKeys ak, AutoKorrektur ac, Synonyms sy, StenoData stn, TasksData td) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+    public ZettelkastenView(SingleFrameApplication app, Settings st, AcceleratorKeys ak, AutoKorrektur ac, Synonyms sy, StenoData stn, TasksData td) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException {
         super(app);
         taskinfo = td;
         // store reference to settings-class
@@ -3282,11 +3282,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * <i>activated</i>. e.g. by double-clicking on an entry in on of the tabbed
      * pane's tables.
      *
-     * @param nr the number of the entry that should be displayed
+     * @param zettel the number of the entry that should be displayed
      */
-    public void updateDisplayParts(int nr) {
+    public void updateDisplayParts(int zettel) {
         // if we have an invalid number, leave
-        if (nr < 1) {
+        if (zettel < 1) {
             return;
         }
         // set the number of the displayed zettel...
@@ -3295,12 +3295,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // CDaten-class' getCurrentZettelPos. When an entry is displayed, the content of the
         // jEditorPane's is updated. However, when an entry is also *activated* the entry's related
         // content in the tabbed pane's tables is updated as well
-        displayedZettel = nr;
+        displayedZettel = zettel;
         // if the user wants to add all displayed entries to the history, including those that are
         // not only activated, but also displayed, do this here...
         if (settings.getAddAllToHistory()) {
             // add displayed zettel to history
-            data.addToHistory(nr);
+            data.addToHistory(zettel);
             // update buttons for navigating through history
             buttonHistoryBack.setEnabled(data.canHistoryBack());
             buttonHistoryFore.setEnabled(data.canHistoryFore());
@@ -3346,28 +3346,30 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
 
         // FIXME java.lang.IllegalArgumentException: bad position: 1
-        displayZettelContent(nr);
+        displayZettelContent(zettel);
 
         // Here we set up the keyword list for the JList
         // retrieve the current keywords
-        String[] kws = data.getKeywords(nr);
+        String[] dataKeywords = data.getKeywords(zettel);
+
         // prepare the JList which will display the keywords
         keywordListModel.clear();
+
         // check whether any keywords have been found
-        if (kws != null) {
+        if (dataKeywords != null) {
             // sort the array
-            if (kws.length > 0) {
-                Arrays.sort(kws, new Comparer());
+            if (dataKeywords.length > 0) {
+                Arrays.sort(dataKeywords, new Comparer());
             }
-            // iterate the string array and add its content to the list model
-            for (String kw : kws) {
+            // iterate the dataKeywords string array and add its content to the list model
+            for (String kw : dataKeywords) {
                 keywordListModel.addElement(kw);
             }
         }
-        // create new stringbuilder for border-text. we set the amount of keywords
+        // create new string builder for border-text. we set the amount of keywords
         // as new border-title
         StringBuilder bordertext = new StringBuilder("");
-        // get localalised description
+        // get localised description
         bordertext.append(getResourceMap().getString("jListEntryKeywords.border.title"));
         // if we have any keywords...
         // copy amount of keywords behind description
@@ -3381,33 +3383,26 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         setCurrentEntryShown(displayedZettel != data.getCurrentZettelPos());
     }
 
-    /**
-     *
-     * @param nr
-     * @return
-     */
-    private void displayZettelContent(int nr) {
-        this.nr = nr;
-        // retrieve the string array of the first entry
-        String disp = data.getEntryAsHtml(nr, (settings.getHighlightSegments()) ? retrieveSelectedKeywordsFromList() : null, Constants.FRAME_MAIN);
-        // in case parsing was ok, display the entry
-        if (Tools.isValidHTML(disp, nr)) {
-            // set entry information in the main textfield
-            jEditorPaneEntry.setText(disp);
-        } // else show error message box to user and tell him what to do
+    private void displayZettelContent(int zettel) {
+        this.nr = zettel;
+
+        String dataEntryAsHtml = data.getEntryAsHtml(zettel, (settings.getHighlightSegments()) ? retrieveSelectedKeywordsFromList() : null, Constants.FRAME_MAIN);
+
+        if (Tools.isValidHTML(dataEntryAsHtml, zettel)) {
+            jEditorPaneEntry.setText(dataEntryAsHtml);
+        }
         else {
             StringBuilder cleanedContent = new StringBuilder("");
             cleanedContent.append("<body><div style=\"margin:5px;padding:5px;background-color:#dddddd;color:#800000;\">");
             URL imgURL = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/error.png");
             cleanedContent.append("<img border=\"0\" src=\"").append(imgURL).append("\">&#8195;");
             cleanedContent.append(getResourceMap().getString("incorrectNestedTagsText"));
-            cleanedContent.append("</div>").append(data.getCleanZettelContent(nr)).append("</body>");
-            // and display clean content instead
+            cleanedContent.append("</div>").append(data.getCleanZettelContent(zettel)).append("</body>");
+            // display clean content instead
             jEditorPaneEntry.setText(cleanedContent.toString());
         }
 
         // place caret, so content scrolls to top
-        // FIXME java.lang.IllegalArgumentException: bad position: 1
         jEditorPaneEntry.setCaretPosition(0);
 
         // set entry number to textfield
@@ -7959,52 +7954,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     /**
-     * This method duplicates the currently displayed entry and adds it to the
-     * end of the Zettelkasten database.
-     */
-    @Action(enabledProperty = "entriesAvailable")
-    public void duplicateEntry() {
-        duplicateEntry(displayedZettel);
-    }
-
-    /**
-     * This method duplicates the entry {@code nr} and adds it to the end of the
-     * Zettelkasten database.
-     *
-     * @param nr the entry-number of that entry that should be duplicated.
-     */
-    public void duplicateEntry(int nr) {
-        // first, retrieve the entry's authors, so we can update the table jTableAuthors,
-        // by increasing the frequencies...
-        String[] aus = data.getAuthors(nr);
-        if (aus != null) {
-            for (String a : aus) {
-                linkedauthorlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableAuthors, linkedauthorlist, a, 1);
-            }
-        }
-        // then, retrieve the entry's keywords, so we can update the table jTableKeywords,
-        // by increasing the frequencies...
-        String[] kws = data.getKeywords(nr);
-        if (kws != null) {
-            for (String k : kws) {
-                linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableKeywords, linkedkeywordlist, k, 1);
-            }
-        }
-        // finally, duplicate entry
-        if (!data.duplicateEntry(nr)) {
-            // tell user about problem
-            JOptionPane.showMessageDialog(getFrame(),
-                    getResourceMap().getString("errDuplicateEntryMsg"),
-                    getResourceMap().getString("errDuplicateEntryTitle"),
-                    JOptionPane.PLAIN_MESSAGE);
-            showErrorIcon();
-        } else {
-            // update display if everything ok
-            updateDisplay();
-        }
-    }
-
-    /**
      * This method opens the window for editing new entries. All the stuff like
      * saving the data to the main-data-object is done within the class
      * "CNewEntry.java"
@@ -8791,7 +8740,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 int option = JOptionPane.showConfirmDialog(getFrame(), getResourceMap().getString("newerBackupMsg"), getResourceMap().getString("newerBackupTitle"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 // the user chose to cancel the operation, so return "null"
                 if (JOptionPane.CANCEL_OPTION == option || JOptionPane.CLOSED_OPTION == option /*User pressed cancel key*/) {
-                    // clear filepath, so the data-file won't be accidently overwritten...
+                    // clear filepath, so the data-file won't be accidentally overwritten...
                     settings.setFilePath(null);
                     // return result
                     return false;
@@ -8884,7 +8833,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // get the setting what we want to show at startup
         int getstarttupvalue = settings.getShowAtStartup();
         int paramentry = settings.getInitialParamZettel();
-        // and set the related entrynumber
+        // and set the related entry number
         // in case we have retrieved an entry-number as parameter, set this entry number right now
         if (paramentry != -1 && paramentry <= data.getCount(Daten.ZKNCOUNT)) {
             shownr = paramentry;
@@ -9197,7 +9146,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
     @Action
-    public void attachBibtexFile() {
+    public void attachBibtexFile() throws IOException {
         // retrieve attached bibtex-file
         File selectedfile = bibtex.getCurrentlyAttachedFile();
         // if we have no attached file, set last used file as filepath
@@ -9250,7 +9199,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      *
      */
     @Action(enabledProperty = "bibtexFileLoaded")
-    public void refreshBibTexFile() {
+    public void refreshBibTexFile() throws IOException {
         // retrieve current filepath of bibtex file
         File bibfile = bibtex.getFilePath();
         // check whether file already exists
@@ -11483,8 +11432,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             quickNewEntryMenuItem = new javax.swing.JMenuItem();
             quickNewTitleEntryMenuItem = new javax.swing.JMenuItem();
             jSeparator1 = new javax.swing.JSeparator();
-            duplicateEntryMenuItem = new javax.swing.JMenuItem();
-            jSeparator79 = new javax.swing.JSeparator();
             openMenuItem = new javax.swing.JMenuItem();
             recentDocsSubMenu = new javax.swing.JMenu();
             recentDoc1 = new javax.swing.JMenuItem();
@@ -11925,7 +11872,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
             jEditorPaneEntry.setEditable(false);
             jEditorPaneEntry.setBorder(null);
-            org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(ZettelkastenView.class);
+            org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(ZettelkastenView.class);
             jEditorPaneEntry.setContentType(resourceMap.getString("jEditorPaneEntry.contentType")); // NOI18N
             jEditorPaneEntry.setName("jEditorPaneEntry"); // NOI18N
             jScrollPane1.setViewportView(jEditorPaneEntry);
@@ -11936,7 +11883,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jTextFieldLiveSearch.setToolTipText(resourceMap.getString("jTextFieldLiveSearch.toolTipText")); // NOI18N
             jTextFieldLiveSearch.setName("jTextFieldLiveSearch"); // NOI18N
 
-            javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(ZettelkastenView.class, this);
+            javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance().getContext().getActionMap(ZettelkastenView.class, this);
             jButton1.setAction(actionMap.get("findLiveCancel")); // NOI18N
             jButton1.setIcon(resourceMap.getIcon("jButton1.icon")); // NOI18N
             jButton1.setBorderPainted(false);
@@ -12787,13 +12734,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jSeparator1.setName("jSeparator1"); // NOI18N
             fileMenu.add(jSeparator1);
 
-            duplicateEntryMenuItem.setAction(actionMap.get("duplicateEntry")); // NOI18N
-            duplicateEntryMenuItem.setName("duplicateEntryMenuItem"); // NOI18N
-            fileMenu.add(duplicateEntryMenuItem);
-
-            jSeparator79.setName("jSeparator79"); // NOI18N
-            fileMenu.add(jSeparator79);
-
             openMenuItem.setAction(actionMap.get("openDocument")); // NOI18N
             openMenuItem.setName("openMenuItem"); // NOI18N
             fileMenu.add(openMenuItem);
@@ -12871,6 +12811,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             fileMenu.add(jSeparatorExit);
 
             exitMenuItem.setAction(actionMap.get("quit")); // NOI18N
+            exitMenuItem.setText(resourceMap.getString("exitMenuItem.text")); // NOI18N
             exitMenuItem.setName("exitMenuItem"); // NOI18N
             fileMenu.add(exitMenuItem);
 
@@ -13338,6 +13279,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             viewMenuKeywords.setName("viewMenuKeywords"); // NOI18N
 
             viewKeywordsCopy.setAction(actionMap.get("copy"));
+            viewKeywordsCopy.setText(resourceMap.getString("viewKeywordsCopy.text")); // NOI18N
             viewKeywordsCopy.setName("viewKeywordsCopy"); // NOI18N
             viewMenuKeywords.add(viewKeywordsCopy);
 
@@ -13424,7 +13366,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             viewMenuAuthors.setName("viewMenuAuthors"); // NOI18N
 
             viewAuthorsCopy.setAction(actionMap.get("copy"));
+            viewAuthorsCopy.setText(resourceMap.getString("viewAuthorsCopy.text")); // NOI18N
             viewAuthorsCopy.setName("viewAuthorsCopy"); // NOI18N
+            viewAuthorsCopy.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    viewAuthorsCopyActionPerformed(evt);
+                }
+            });
             viewMenuAuthors.add(viewAuthorsCopy);
 
             jSeparator28.setName("jSeparator28"); // NOI18N
@@ -13547,6 +13495,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             viewMenuTitles.setName("viewMenuTitles"); // NOI18N
 
             viewTitlesCopy.setAction(actionMap.get("copy"));
+            viewTitlesCopy.setText(resourceMap.getString("viewTitlesCopy.text")); // NOI18N
             viewTitlesCopy.setName("viewTitlesCopy"); // NOI18N
             viewMenuTitles.add(viewTitlesCopy);
 
@@ -13669,6 +13618,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             viewMenuAttachments.setName("viewMenuAttachments"); // NOI18N
 
             viewAttachmentsCopy.setAction(actionMap.get("copy"));
+            viewAttachmentsCopy.setText(resourceMap.getString("viewAttachmentsCopy.text")); // NOI18N
             viewAttachmentsCopy.setName("viewAttachmentsCopy"); // NOI18N
             viewMenuAttachments.add(viewAttachmentsCopy);
 
@@ -14535,6 +14485,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             setToolBar(toolBar);
         }// </editor-fold>//GEN-END:initComponents
 
+    private void viewAuthorsCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewAuthorsCopyActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_viewAuthorsCopyActionPerformed
+
 
 /**
  * This event catches mouse-cicks which occur when the user clicks a hyperlink
@@ -14584,7 +14538,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JMenuItem copyPlainMenuItem;
     private javax.swing.JMenuItem deleteKwFromListMenuItem;
     private javax.swing.JMenuItem deleteZettelMenuItem;
-    private javax.swing.JMenuItem duplicateEntryMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem editMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
@@ -14772,7 +14725,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JSeparator jSeparator76;
     private javax.swing.JSeparator jSeparator77;
     private javax.swing.JSeparator jSeparator78;
-    private javax.swing.JSeparator jSeparator79;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator80;
     private javax.swing.JSeparator jSeparator81;

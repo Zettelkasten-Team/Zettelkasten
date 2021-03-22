@@ -39,11 +39,7 @@ import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.Tools;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -92,7 +88,7 @@ public class Daten {
     /**
      * XML Document that Stores the main data
      */
-    private Document zknFile;
+    private static Document zknFile;
     /**
      * XML Document that Stores the data of entries that should be exported to .zkn3-format
      */
@@ -112,7 +108,7 @@ public class Daten {
     /**
      * Stores the index number of the currently displayed entry
      */
-    private int zettelPos;
+    private int zettel;
     /**
      * state variable that tracks changes to the data file
      */
@@ -394,7 +390,7 @@ public class Daten {
         settings = s;
         synonymsObj = syn;
         bibtexObj = bib;
-        zettelPos = 1;
+        zettel = 1;
         initZettelkasten();
     }
 
@@ -449,7 +445,7 @@ public class Daten {
         Element imgpath = new Element(ELEMENT_IMAGE_PATH);
         metainfFile.getRootElement().addContent(imgpath);
         // init zettel-position-index
-        zettelPos = 1;
+        zettel = 1;
         // here we add all files which are stored in the zipped data-file in a list-array
         filesToLoad.clear();
         filesToLoad.add(Constants.metainfFileName);
@@ -806,7 +802,7 @@ public class Daten {
                                 try {
                                     int authorNr = getAuthorNumberFromID(fn);
                                     // replace author number with author ID inside footnote
-                                    content = content.substring(0, pos + 4) + String.valueOf(authorNr) + content.substring(end);
+                                    content = content.substring(0, pos + 4) + authorNr + content.substring(end);
                                 } catch (NumberFormatException ex) {
                                     // log error
                                     Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
@@ -840,7 +836,7 @@ public class Daten {
                                 try {
                                     int zetNr = getZettelNumberFromID(ml);
                                     // replace author number with author ID inside footnote
-                                    content = content.substring(0, pos + 3) + String.valueOf(zetNr) + content.substring(end);
+                                    content = content.substring(0, pos + 3) + zetNr + content.substring(end);
                                 } catch (NumberFormatException ex) {
                                     // log error
                                     Constants.zknlogger.log(Level.WARNING, "Could not convert entry ID into related manual link number!");
@@ -1072,137 +1068,6 @@ public class Daten {
     }
 
     /**
-     * This method duplicates an entry and inserts it at the end or the next
-     * empty place in the data file
-     *
-     * @param nr the number of the entry that should be duplicated
-     * @return
-     */
-    public boolean duplicateEntry(int nr) {
-        // first of all, we duplicate all authors and keywords frequencies from the existing entry.
-        // therefore, we first retrieve all author-index-numbers from that entry
-        changeFrequencies(nr, 1);
-        // retrieve entry that should be duplicated
-        Element oldzettel = retrieveElement(zknFile, nr);
-        // create new zettel
-        Element zettel = new Element(ELEMENT_ZETTEL);
-        // check whether we have any empty elements in between where we can insert the new entry
-        int emptypos = retrieveFirstEmptyEntry();
-        // if we have any empty elements...
-        if (emptypos != -1 && settings.getInsertNewEntryAtEmpty()) {
-            // retrieve empty element
-            zettel = retrieveElement(zknFile, emptypos);
-            // and remove former content, so we can add new content
-            zettel.removeContent();
-        }
-        try {
-            setZettelID(zettel);
-            //
-            // add title
-            //
-            // create child element with title information
-            Element t = new Element(ELEMENT_TITLE);
-            // and add it to the zettel-element
-            zettel.addContent(t);
-            // set value of the child element
-            t.setText(oldzettel.getChild(ELEMENT_TITLE).getText());
-            //
-            // add content
-            //
-            // create child element with content information
-            Element c = new Element(ELEMENT_CONTENT);
-            // and add it to the zettel-element
-            zettel.addContent(c);
-            // set value of the content element
-            c.setText(oldzettel.getChild(ELEMENT_CONTENT).getText());
-            //
-            // add author
-            //
-            // create child element with author information
-            Element a = new Element(ELEMENT_AUTHOR);
-            // and add it to the zettel-element
-            zettel.addContent(a);
-            // set value of author element
-            a.setText(oldzettel.getChild(ELEMENT_AUTHOR).getText());
-            //
-            // add keywords
-            //
-            // create child element with keyword information
-            Element k = new Element(ELEMENT_KEYWORD);
-            // and add it to the zettel-element
-            zettel.addContent(k);
-            // store keyword index numbers
-            k.setText(oldzettel.getChild(ELEMENT_KEYWORD).getText());
-            //
-            // now comes the manual links to other entries
-            //
-            Element m = new Element(ELEMENT_MANLINKS);
-            zettel.addContent(m);
-            m.setText("");
-            //
-            // add hyperlinks
-            //
-            // create child element with link information
-            Element h = new Element(ELEMENT_ATTACHMENTS);
-            // and add it to the zettel-element
-            zettel.addContent(h);
-            // add each hyperlink. therefor, iterate the array
-            List<Element> links = oldzettel.getChild(ELEMENT_ATTACHMENTS).getChildren();
-            Iterator<Element> i = links.iterator();
-            while (i.hasNext()) {
-                // create a new subchuld-element
-                Element sublink = new Element(ELEMENT_ATTCHILD);
-                Element le = i.next();
-                // and add the link-string from the array
-                sublink.setText(le.getText());
-                h.addContent(sublink);
-            }
-            //
-            // add remarks
-            //
-            // create child element with content information
-            Element r = new Element(ELEMENT_REMARKS);
-            // and add it to the zettel-element
-            zettel.addContent(r);
-            // set value of the content element
-            r.setText(oldzettel.getChild(ELEMENT_REMARKS).getText());
-            //
-            // add timestamp
-            //
-            // set creation timestamp, but set no text for edit timestamp
-            // since the entry is not edited
-            setTimestamp(zettel, Tools.getTimeStamp(), "");
-            //
-            // now comes the luhmann number
-            //
-            Element l = new Element(ELEMENT_TRAILS);
-            zettel.addContent(l);
-            l.setText(oldzettel.getChild(ELEMENT_TRAILS).getText());
-            //
-            // complete datafile
-            //
-            // if we have any empty elements, go on here
-            if (emptypos != -1 && settings.getInsertNewEntryAtEmpty()) {
-                // return the empty-position, which is now filled with the new author-value
-                zettelPos = emptypos;
-            } else {
-                // finally, add the whole element to the data file
-                zknFile.getRootElement().addContent(zettel);
-                // set the zettel-position to the new entry
-                zettelPos = getCount(ZKNCOUNT);
-            }
-            // titles have to be updated.
-            setTitlelistUpToDate(false);
-            // set modified state
-            setModified(true);
-        } catch (IllegalAddException | IllegalDataException ex) {
-            Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * This function retrieves an element of a xml document at a given position.
      * used for other methods like getAuthor or getKeyword.<br><br>
      * <b>Caution!</b> The position {@code pos} is a value from <b>1</b> to
@@ -1216,20 +1081,26 @@ public class Daten {
      * {@link #getCount(int) getCount()}.
      * @return the element if a match was found, otherwise {@code null}
      */
-    private Element retrieveElement(Document doc, int pos) {
+    public static Element retrieveElement(Document doc, int pos) {
+        Element result = null;
+        result = createListOfElementsFromXML(doc, pos, result);
+        return result;
+    }
+
+    private static Element createListOfElementsFromXML(Document doc, int pos, Element result)
+    {
         // create a list of all elements from the given xml file
         try {
             List<?> elementList = doc.getRootElement().getContent();
             // and return the requested Element
             try {
-                return (Element) elementList.get(pos - 1);
+                result = (Element) elementList.get(pos - 1);
             } catch (IndexOutOfBoundsException e) {
-                return null;
             }
         } catch (IllegalStateException e) {
             Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-            return null;
         }
+        return result;
     }
 
     /**
@@ -1425,7 +1296,7 @@ public class Daten {
                 } catch (IndexOutOfBoundsException ex) {
                     kwid = kw;
                 }
-                updateKeywordTimestampAndID(k, freq, Tools.getTimeStampWithMilliseconds(), String.valueOf(emptypos) + kwid + Tools.getTimeStampWithMilliseconds());
+                updateKeywordTimestampAndID(k, freq, Tools.getTimeStampWithMilliseconds(), emptypos + kwid + Tools.getTimeStampWithMilliseconds());
                 // change list-up-to-date-state
                 setKeywordlistUpToDate(false);
                 // change modified state
@@ -1459,7 +1330,7 @@ public class Daten {
                     } catch (IndexOutOfBoundsException ex) {
                         kwid = kw;
                     }
-                    updateKeywordTimestampAndID(newKeyword, freq, Tools.getTimeStampWithMilliseconds(), String.valueOf(keywordFile.getRootElement().getContent().size()) + kwid + Tools.getTimeStampWithMilliseconds());
+                    updateKeywordTimestampAndID(newKeyword, freq, Tools.getTimeStampWithMilliseconds(), keywordFile.getRootElement().getContent().size() + kwid + Tools.getTimeStampWithMilliseconds());
                     // change list-up-to-date-state
                     setKeywordlistUpToDate(false);
                     // change modified state
@@ -1589,7 +1460,7 @@ public class Daten {
                         } catch (IndexOutOfBoundsException ex) {
                             kwid = kw;
                         }
-                        updateKeywordTimestampAndID(k, 0, Tools.getTimeStampWithMilliseconds(), String.valueOf(emptypos) + kwid + Tools.getTimeStampWithMilliseconds());
+                        updateKeywordTimestampAndID(k, 0, Tools.getTimeStampWithMilliseconds(), emptypos + kwid + Tools.getTimeStampWithMilliseconds());
                         // change list-up-to-date-state
                         setKeywordlistUpToDate(false);
                         // change modified state
@@ -1619,7 +1490,7 @@ public class Daten {
                         } catch (IndexOutOfBoundsException ex) {
                             kwid = kw;
                         }
-                        updateKeywordTimestampAndID(newKeyword, 0, Tools.getTimeStampWithMilliseconds(), String.valueOf(keywordFile.getRootElement().getContent().size()) + kwid + Tools.getTimeStampWithMilliseconds());
+                        updateKeywordTimestampAndID(newKeyword, 0, Tools.getTimeStampWithMilliseconds(), keywordFile.getRootElement().getContent().size() + kwid + Tools.getTimeStampWithMilliseconds());
                         // change list-up-to-date-state
                         setKeywordlistUpToDate(false);
                         // change modified state
@@ -1756,7 +1627,7 @@ public class Daten {
      * keyword-/author-element is not completely removed, but only the text is
      * removed.
      *
-     * @param the xml-document (either <i>keywordFile</i> or <i>authorFile</i>)
+     * @param doc the xml-document (either <i>keywordFile</i> or <i>authorFile</i>)
      * @return the number of the first empty element, or -1 if no empty element
      * was found
      */
@@ -1794,11 +1665,12 @@ public class Daten {
      * keyword-/author-element is not completely removed, but only the text is
      * removed.
      *
-     * @param the xml-document (either <i>keywordFile</i> or <i>authorFile</i>)
+     * zknfile: the xml-document (either <i>keywordFile</i> or <i>authorFile</i>)
      * @return the number of the first empty element, or -1 if no empty element
      * was found
      */
     private int retrieveFirstEmptyEntry() {
+        int result = -1;
         // create a list of all elements from the given xml file
         try {
             List<?> elementList = zknFile.getRootElement().getContent();
@@ -1812,17 +1684,17 @@ public class Daten {
                 if (el.getChild(ELEMENT_TITLE).getText().isEmpty()
                         && el.getChild(ELEMENT_CONTENT).getText().isEmpty()
                         && el.getChild(ELEMENT_AUTHOR).getText().isEmpty()) {
-                    return cnt;
+                    result = cnt;
+                    break;
                 }
                 // else increase counter
                 cnt++;
             }
             // if no author was found, return -1
-            return -1;
         } catch (IllegalStateException e) {
             Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-            return -1;
         }
+        return result;
     }
 
     /**
@@ -1843,7 +1715,7 @@ public class Daten {
             // therefore, get the keyword's index-number as string (for comparison below)
             String nr = String.valueOf(pos);
             // create new string buffer
-            StringBuilder newKw = new StringBuilder("");
+            StringBuilder newKw = new StringBuilder();
             // and delete this index-number from all entries
             for (int cnt = 1; cnt <= getCount(ZKNCOUNT); cnt++) {
                 // get each element
@@ -1935,7 +1807,7 @@ public class Daten {
             zettel.getChild(ELEMENT_REMARKS).setText("");
             zettel.getChild(ELEMENT_TRAILS).setText("");
             zettel.getChild(ELEMENT_ATTACHMENTS).removeContent();
-//            zettel.getChild(ELEMENT_LUHMANN_NUMBER).setText("");
+
             // remove timestamp by setting creation and last modification timestamp
             // to empty strings
             setTimestamp(zettel, "", "");
@@ -1969,7 +1841,7 @@ public class Daten {
             // check whether we have any author index numbers at all
             if ((entryaus != null) && (entryaus.length > 0)) {
                 // init string buffer
-                StringBuilder newau = new StringBuilder("");
+                StringBuilder newau = new StringBuilder();
                 // iterate array of entry-authors
                 for (int cnt = 0; cnt < entryaus.length; cnt++) {
                     // init found-indicator
@@ -1985,7 +1857,7 @@ public class Daten {
                     // if no author, that should be deleted, was found...
                     if (!found) {
                         // append the author-index-number to the stringbuffer
-                        newau.append(String.valueOf(entryaus[cnt]));
+                        newau.append(entryaus[cnt]);
                         newau.append(",");
                     }
                 }
@@ -2035,7 +1907,7 @@ public class Daten {
             // check whether we have any keywords at all...
             if ((entrykws != null) && (entrykws.length > 0)) {
                 // init string buffer
-                StringBuilder newkw = new StringBuilder("");
+                StringBuilder newkw = new StringBuilder();
                 // iterate array of entry-keywords
                 for (int cnt = 0; cnt < entrykws.length; cnt++) {
                     // init found-indicator
@@ -2051,7 +1923,7 @@ public class Daten {
                     // if no keyword, that should be deleted, was found...
                     if (!found) {
                         // append the keyword-number to the stringbuffer
-                        newkw.append(String.valueOf(entrykws[cnt]));
+                        newkw.append(entrykws[cnt]);
                         newkw.append(",");
                     }
                 }
@@ -2416,7 +2288,7 @@ public class Daten {
             return;
         }
         // create empty stringbuffer
-        StringBuilder sb = new StringBuilder("");
+        StringBuilder sb = new StringBuilder();
         // append keywords
         sb.append(el.getChild(ELEMENT_KEYWORD).getText());
         // append new separator, but only if we already have keywords
@@ -2428,7 +2300,7 @@ public class Daten {
         // only proceed when success
         if (pos != -1) {
             // append index-number of the keyword which should be added
-            sb.append(String.valueOf(pos));
+            sb.append(pos);
             // set the new keyword-index-numbers
             el.getChild(ELEMENT_KEYWORD).setText(sb.toString());
             // finally, change modified state
@@ -2471,7 +2343,7 @@ public class Daten {
                 return null;
             }
             // create empty stringbuffer
-            StringBuilder sb = new StringBuilder("");
+            StringBuilder sb = new StringBuilder();
             // append keywords
             sb.append(el.getChild(ELEMENT_KEYWORD).getText());
             // append new separator, but only if we already have keywords
@@ -2488,7 +2360,7 @@ public class Daten {
                     int pos = addKeyword(kw, freq);
                     // append index-number of the keyword which should be added
                     if (pos != -1) {
-                        sb.append(String.valueOf(pos)).append(",");
+                        sb.append(pos).append(",");
                     }
                 }
             }
@@ -2538,7 +2410,7 @@ public class Daten {
             return;
         }
         // create empty stringbuffer
-        StringBuilder sb = new StringBuilder("");
+        StringBuilder sb = new StringBuilder();
         // append author
         sb.append(el.getChild(ELEMENT_AUTHOR).getText());
         // append new separator, but only if we already have authors
@@ -2550,7 +2422,7 @@ public class Daten {
         // only proceed when valid value
         if (pos != -1) {
             // append index-number of the author which should be added
-            sb.append(String.valueOf(pos));
+            sb.append(pos);
             // set the new author-index-numbers
             el.getChild(ELEMENT_AUTHOR).setText(sb.toString());
             // finally, change modified state
@@ -2699,7 +2571,7 @@ public class Daten {
                 updateAuthorTimestampAndID(au,
                         freq,
                         Tools.getTimeStampWithMilliseconds(),
-                        String.valueOf(emptypos) + auid + Tools.getTimeStampWithMilliseconds());
+                        emptypos + auid + Tools.getTimeStampWithMilliseconds());
                 // change list-up-to-date-state
                 setAuthorlistUpToDate(false);
                 // change modified state
@@ -2735,7 +2607,7 @@ public class Daten {
                     } catch (IndexOutOfBoundsException ex) {
                         auid = auth;
                     }
-                    updateAuthorTimestampAndID(newAuthor, freq, Tools.getTimeStampWithMilliseconds(), String.valueOf(authorFile.getRootElement().getContent().size()) + auid + Tools.getTimeStampWithMilliseconds());
+                    updateAuthorTimestampAndID(newAuthor, freq, Tools.getTimeStampWithMilliseconds(), authorFile.getRootElement().getContent().size() + auid + Tools.getTimeStampWithMilliseconds());
                     // change list-up-to-date-state
                     setAuthorlistUpToDate(false);
                     // change modified state
@@ -2824,7 +2696,7 @@ public class Daten {
             // retrieve empty element
             zettel = retrieveElement(zknFile, emptypos);
             // and remove former content, so we can add new content
-            zettel.removeContent();
+            Objects.requireNonNull(zettel).removeContent();
         }
         try {
             // add unique ID
@@ -2858,7 +2730,7 @@ public class Daten {
             zettel.addContent(a);
             // create empty string buffer which stores the index numbers
             // of the converted authors
-            StringBuilder newau = new StringBuilder("");
+            StringBuilder newau = new StringBuilder();
             // check whether we have authors at all
             if ((authors != null) && (authors.length > 0)) {
                 // iterate the array and get the index number of each author string
@@ -2871,7 +2743,7 @@ public class Daten {
                         // add author
                         int authorPos = addAuthor(aut, 1);
                         // append the index number in the string buffer
-                        newau.append(String.valueOf(authorPos));
+                        newau.append(authorPos);
                         // separator for the the index numbers, since more authors
                         // and thus more index numbers might be stored in the author element
                         newau.append(",");
@@ -2896,7 +2768,7 @@ public class Daten {
             zettel.addContent(k);
             // create empty string buffer which stores the index numbers
             // of the converted keywords
-            StringBuilder newkw = new StringBuilder("");
+            StringBuilder newkw = new StringBuilder();
             // check whether we have keywords at all
             if ((keywords != null) && (keywords.length > 0)) {
                 // iterate the array and get the index number of each keyword string
@@ -2911,7 +2783,7 @@ public class Daten {
                         // variable keywordPos
                         int keywordPos = addKeyword(keyw, 1);
                         // append the index number in the string buffer
-                        newkw.append(String.valueOf(keywordPos));
+                        newkw.append(keywordPos);
                         // separator for the the index numbers, since more keywords
                         // and thus more index numbers might be stored in the keyword element
                         newkw.append(",");
@@ -2982,12 +2854,12 @@ public class Daten {
             // if we have any empty elements, go on here
             if (emptypos != -1 && settings.getInsertNewEntryAtEmpty()) {
                 // return the empty-position, which is now filled with the new author-value
-                zettelPos = emptypos;
+                this.zettel = emptypos;
             } else {
                 // finally, add the whole element to the data file
                 zknFile.getRootElement().addContent(zettel);
                 // set the zettel-position to the new entry
-                zettelPos = getCount(ZKNCOUNT);
+                this.zettel = getCount(ZKNCOUNT);
             }
             // and add the new position to the history...
             addToHistory();
@@ -3001,7 +2873,7 @@ public class Daten {
         // of the related entry (which number is passed in the luhmann variable)
         if (luhmann != -1) {
             // try to add luhmann number
-            if (addLuhmannNumber(luhmann, zettelPos)) {
+            if (addLuhmannNumber(luhmann, this.zettel)) {
                 // if it was successful, we can insert this entry
                 // after the "parent" entry
                 retval = ADD_LUHMANNENTRY_OK;
@@ -3014,7 +2886,7 @@ public class Daten {
         // create back-references for manual links
         // we can do this here first, because we need
         // "zettelPos" as reference, which is not available earlier
-        addManualLink(manlinks, zettelPos);
+        addManualLink(manlinks, this.zettel);
         // entry successfully added
         return retval;
     }
@@ -3065,7 +2937,7 @@ public class Daten {
     }
 
     /**
-     * This method adds a new entry to the datafile, from an importet
+     * This method adds a new entry to the datafile, from an imported
      * bibtex-file. This is the case, if a bibtex-entry has annotations or
      * abstracts, and the user wants automatically to create a new entry from
      * that bibtex-entry.
@@ -3104,7 +2976,7 @@ public class Daten {
         if (succeeded == ADD_ENTRY_OK || succeeded == ADD_LUHMANNENTRY_OK) {
             // ... set a remark to that entry that it was added from a bibtex-file
             // we might need this in case we want to update this entry from a revised bibtex-file later
-            setContentFromBibTexRemark(zettelPos, true);
+            setContentFromBibTexRemark(zettel, true);
         }
         return succeeded;
     }
@@ -3246,7 +3118,7 @@ public class Daten {
             }
             // create empty string buffer which stores the index numbers
             // of the converted authors
-            StringBuilder newau = new StringBuilder("");
+            StringBuilder newau = new StringBuilder();
             // check whether we have authors at all
             if ((authors != null) && (authors.length > 0)) {
                 // iterate the array and get the index number of each author string
@@ -3261,7 +3133,7 @@ public class Daten {
                         // variable authorPos
                         int authorPos = addAuthor(aut, 1);
                         // append the index number in the string buffer
-                        newau.append(String.valueOf(authorPos));
+                        newau.append(authorPos);
                         // separator for the the index numbers, since more authors
                         // and thus more index numbers might be stored in the author element
                         newau.append(",");
@@ -3289,7 +3161,7 @@ public class Daten {
             }
             // create empty string buffer which stores the index numbers
             // of the converted keywords
-            StringBuilder newkw = new StringBuilder("");
+            StringBuilder newkw = new StringBuilder();
             // check whether we have keywords at all
             if ((keywords != null) && (keywords.length > 0)) {
                 // iterate the array and get the index number of each keyword string
@@ -3304,7 +3176,7 @@ public class Daten {
                         // variable keywordPos
                         int keywordPos = addKeyword(keyw, 1);
                         // append the index number in the string buffer
-                        newkw.append(String.valueOf(keywordPos));
+                        newkw.append(keywordPos);
                         // separator for the the index numbers, since more keywords
                         // and thus more index numbers might be stored in the keyword element
                         newkw.append(",");
@@ -3369,7 +3241,7 @@ public class Daten {
             // manual links here...
             //
             // update the current zettel-position
-            zettelPos = entrynumber;
+            this.zettel = entrynumber;
             // and add the new position to the history...
             addToHistory();
             // set modified state
@@ -3459,40 +3331,8 @@ public class Daten {
             sb.append(",");
         }
         // append the addvalue
-        sb.append(String.valueOf(addvalue));
+        sb.append(addvalue);
 
-        /*
-         // the the string buffer contains at least two values, we want to sort them
-         if (sb.indexOf(",")!=-1) {
-         // copy all values of the buffer to an string array
-         String[] dummy = sb.toString().split(",");
-         // create integer array, because when we sort a string-array,
-         // the value "12" would be smaller than "5".
-         int[] intdummy = new int[dummy.length];
-         // iterate array
-         for (int cnt=0; cnt<intdummy.length; cnt++) {
-         try {
-         // convert all strings to integer
-         intdummy[cnt] = Integer.parseInt(dummy[cnt]);
-         }
-         catch (NumberFormatException ex) {
-         CConstants.zknlogger.log(Level.WARNING,ex.getLocalizedMessage());
-         }
-         }
-         // sort the array
-         if (intdummy!=null && intdummy.length>0) Arrays.sort(intdummy);
-         // reset the string buffer
-         sb.setLength(0);
-         // iterate the sorted array
-         for (int cnt=0; cnt<intdummy.length; cnt++) {
-         // and append all values to the string buffer
-         sb.append(String.valueOf(intdummy[cnt]));
-         sb.append(",");
-         }
-         // finallay, remove the last ","
-         if (sb.length()>1) sb.setLength(sb.length()-1);
-         }
-         */
         // and set the new string to the luhmann-tag
         zettel.getChild(ELEMENT_TRAILS).setText(sb.toString());
         // addvalue was successfully added
@@ -3593,7 +3433,7 @@ public class Daten {
             sb.append(",");
         }
         // append the add value
-        sb.append(String.valueOf(addvalue));
+        sb.append(addvalue);
         // the the string buffer contains at least two values, we want to sort them
         if (sb.indexOf(",") != -1) {
             // copy all values of the buffer to an string array
@@ -3619,7 +3459,7 @@ public class Daten {
             // iterate the sorted array
             for (int cnt = 0; cnt < intdummy.length; cnt++) {
                 // and append all values to the string buffer
-                sb.append(String.valueOf(intdummy[cnt]));
+                sb.append(intdummy[cnt]);
                 sb.append(",");
             }
             // finallay, remove the last ","
@@ -3658,7 +3498,7 @@ public class Daten {
             // copy all values to an array
             String[] lnrs = lnr.split(",");
             // create new string buffer for the final values
-            StringBuilder sb = new StringBuilder("");
+            StringBuilder sb = new StringBuilder();
             // convert remove-value to string, so we can compare
             String removenr = String.valueOf(removevalue);
             // go through array of current luhmann-numbers
@@ -3740,7 +3580,7 @@ public class Daten {
                 luhmannnrs.add(String.valueOf(insertnr));
             }
             // create stringbuilder
-            StringBuilder sb = new StringBuilder("");
+            StringBuilder sb = new StringBuilder();
             for (String luhmannnr : luhmannnrs) {
                 sb.append(luhmannnr).append(",");
             }
@@ -3797,34 +3637,34 @@ public class Daten {
                     // therefore, get the manual links from the referred entry "mlparam"
                     String[] backlinks = getManualLinksAsString(mlparamentry);
                     // create new stringbuilder
-                    StringBuilder sb = new StringBuilder("");
+                    StringBuilder sb = new StringBuilder();
                     // get current entry position as string. we need to remove this value
                     // from the referred entry's manual links, given in the array "backlinks"
                     String curentry = String.valueOf(zpos);
                     // go through all manual links of the referred entry
-                    for (String bl : backlinks) {
-                        // if the manual link of the referred entry is *not* the current entry...
+                    // if the manual link of the referred entry is *not* the current entry...
+                    for (String bl : backlinks)
                         if (!bl.equals(curentry)) {
                             // append it to the string builder
                             sb.append(bl);
                             sb.append(",");
                         }
-                    }
                     // delete last comma
                     if (sb.length() > 1) {
                         sb.setLength(sb.length() - 1);
                     }
                     // and update manual links of the referred entry
                     setManualLinks(mlparamentry, sb.toString());
-                } catch (NumberFormatException e) {
-                    Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
+                } catch (NumberFormatException|NullPointerException e) {
+                    Constants.zknlogger.log(Level.WARNING,
+                            e.getLocalizedMessage());
                 }
             }
         }
         // now we have all remaining manual links in the linked list "l". we now copy
         // each element of that list to a string-builder and set that string as new ELEMENT_MANLINKS
         // value for the current entry...
-        StringBuilder sb = new StringBuilder("");
+        StringBuilder sb = new StringBuilder();
         // create an iterator
         Iterator<String> i = l.iterator();
         // go through list
@@ -3848,7 +3688,7 @@ public class Daten {
      * removed...
      */
     public void deleteManualLinks(String[] manlinks) {
-        deleteManualLinks(manlinks, zettelPos);
+        deleteManualLinks(manlinks, zettel);
     }
 
     /**
@@ -3944,20 +3784,18 @@ public class Daten {
      * entry refers to, or {@code null} if no entry-numbers exist...
      */
     public int[] getManualLinks(int pos) {
+        int[] result = null;
         // get Manual Links as String Array
         String[] manlinks = getManualLinksAsString(pos);
         // if we have no manual links, return null...
-        if ((null == manlinks) || manlinks.length < 1) {
-            return null;
+        if ((null != manlinks) && manlinks.length >= 1) {// create return value
+            int[] retval = new int[manlinks.length];// copy all string-numbers to int-array
+            for (int cnt = 0; cnt < manlinks.length; cnt++) {
+                retval[cnt] = Integer.parseInt(manlinks[cnt]);
+            }// return the content of the luhmann-child-element
+            result = retval;
         }
-        // create return value
-        int[] retval = new int[manlinks.length];
-        // copy all string-numbers to int-array
-        for (int cnt = 0; cnt < manlinks.length; cnt++) {
-            retval[cnt] = Integer.parseInt(manlinks[cnt]);
-        }
-        // return the content of the luhmann-child-element
-        return retval;
+        return result;
     }
 
     /**
@@ -3978,11 +3816,11 @@ public class Daten {
                 zettel.addContent(new Element(ELEMENT_MANLINKS));
             }
             // create stringbuilder
-            StringBuilder sb = new StringBuilder("");
+            StringBuilder sb = new StringBuilder();
             // iterate int-array
             for (int ml : manlinks) {
                 // and copy all int-values to array
-                sb.append(String.valueOf(ml));
+                sb.append(ml);
                 sb.append(",");
             }
             // delete last comma
@@ -4002,7 +3840,8 @@ public class Daten {
      * @return an string-array containing the entry-numbers where the entry
      * {@code pos} refers to, or {@code null} if no entry-numbers exist...
      */
-    public String[] getManualLinksAsString(int pos) {
+    public static String[] getManualLinksAsString(int pos) throws NullPointerException {
+        String[] result = null;
         // get the entry
         Element zettel = retrieveElement(zknFile, pos);
         // if it exists...
@@ -4010,31 +3849,27 @@ public class Daten {
             // get manual links
             String ml = zettel.getChild(ELEMENT_MANLINKS).getText();
             // if no manual links there, quit...
-            if (ml.isEmpty()) {
-                return null;
+            if (!ml.isEmpty()) {// else split them into an array...
+                String[] manlinks = ml.split(",");// if we have no manual links, return null...
+                if ((null != manlinks) && manlinks.length >= 1) {// return the content of the luhmann-child-element
+                    result = manlinks;
+                }
             }
-            // else split them into an array...
-            String[] manlinks = ml.split(",");
-            // if we have no manual links, return null...
-            if ((null == manlinks) || manlinks.length < 1) {
-                return null;
-            }
-            // return the content of the luhmann-child-element
-            return manlinks;
-        }
-        // return result
-        return null;
+        } // return result
+
+        return result;
     }
 
     /**
-     * This method returns the manual links for an entry as siingle string with
+     * This method returns the manual links for an entry as single string with
      * comma separated values
      *
      * @param pos the position of the entry which manual links we want to have
-     * @return siingle string with comma separated values where the entry
+     * @return single string with comma separated values where the entry
      * {@code pos} refers to, or {@code null} if no entry-numbers exist...
      */
     public String getManualLinksAsSingleString(int pos) {
+        String result = null;
         // get the entry
         Element zettel = retrieveElement(zknFile, pos);
         // if it exists...
@@ -4042,15 +3877,13 @@ public class Daten {
             // get manual links
             String ml = zettel.getChild(ELEMENT_MANLINKS).getText();
             // if no manual links there, quit...
-            if (ml.isEmpty()) {
-                return null;
+            if (!ml.isEmpty()) {// else split them into an array...
+// return the content of the luhmann-child-element
+                result = ml;
             }
-            // else split them into an array...
-            // return the content of the luhmann-child-element
-            return ml;
-        }
-        // return result
-        return null;
+        } // return result
+
+        return result;
     }
 
     /**
@@ -4084,7 +3917,7 @@ public class Daten {
      * entry refers to, or null if no entry-numbers exist...
      */
     public int[] getCurrentManualLinks() {
-        return getManualLinks(zettelPos);
+        return getManualLinks(zettel);
     }
 
     /**
@@ -4095,7 +3928,7 @@ public class Daten {
      * entry refers to, or null if no entry-numbers exist...
      */
     public String[] getCurrentManualLinksAsString() {
-        return getManualLinksAsString(zettelPos);
+        return getManualLinksAsString(zettel);
     }
 
     /**
@@ -4279,7 +4112,7 @@ public class Daten {
             // therefore, get the author's index-number as string (for comparison below)
             String nr = String.valueOf(pos);
             // create new string buffer
-            StringBuilder newau = new StringBuilder("");
+            StringBuilder newau = new StringBuilder();
             // and delete this index-number from all entries
             for (int cnt = 1; cnt <= getCount(ZKNCOUNT); cnt++) {
                 // get each element
@@ -4519,7 +4352,7 @@ public class Daten {
                     // and not for instance reset values.
                     if (ratingcnt > 0 && ratingvalue > 0.0) {
                         // calulate new rating
-                        float newrating = (float) (((ratingvalue * ratingcnt) + rate) / (ratingcnt + 1));
+                        float newrating = ((ratingvalue * ratingcnt) / (ratingcnt + 1)) + (rate / (ratingcnt + 1));
                         // set back new values
                         entry.setAttribute(ATTRIBUTE_RATING, String.valueOf(newrating));
                         entry.setAttribute(ATTRIBUTE_RATINGCOUNT, String.valueOf(ratingcnt + 1));
@@ -5105,7 +4938,7 @@ public class Daten {
      * entry
      */
     public String[] getCurrentKeywords() {
-        return getKeywords(zettelPos);
+        return getKeywords(zettel);
     }
 
     /**
@@ -5286,7 +5119,7 @@ public class Daten {
             retval[cnt] = getAuthor(auid);
             // prepare suffix
             String bibkey = getAuthorBibKeyValue(auid);
-            String suffix = " [ID " + String.valueOf(auid) + ((bibkey != null && !bibkey.isEmpty()) ? ", bibkey: " + bibkey : "") + "]";
+            String suffix = " [ID " + auid + ((bibkey != null && !bibkey.isEmpty()) ? ", bibkey: " + bibkey : "") + "]";
             // append suffix
             retval[cnt] = retval[cnt] + suffix;
         }
@@ -5330,7 +5163,7 @@ public class Daten {
      * go back and fore to previous selected entries.
      */
     private void addToHistory() {
-        addToHistory(zettelPos);
+        addToHistory(zettel);
     }
 
     /**
@@ -5398,7 +5231,7 @@ public class Daten {
             // if yes, decrease history position counter
             historyPosition--;
             // and set new zettel-position
-            zettelPos = history[historyPosition];
+            zettel = history[historyPosition];
         }
     }
 
@@ -5412,7 +5245,7 @@ public class Daten {
             // if yes, increase history position counter
             historyPosition++;
             // and set new zettel-position
-            zettelPos = history[historyPosition];
+            zettel = history[historyPosition];
         }
     }
 
@@ -5428,11 +5261,11 @@ public class Daten {
     public boolean gotoEntry(int nr) {
         // check whether it's out of bounds
         // and leave method if it is...
-        if (!zettelExists(zettelPos) || isDeleted(nr)) {
+        if (!zettelExists(zettel) || isDeleted(nr)) {
             return false;
         }
         // else set the counter for the currently displayed entry
-        zettelPos = nr;
+        zettel = nr;
         // update History
         addToHistory();
         // and give positive feedback
@@ -5444,10 +5277,10 @@ public class Daten {
      */
     public void nextEntry() {
         // increase counter for currently display entry
-        zettelPos++;
+        zettel++;
         // check whether it's out of bounds
-        if (zettelPos > getCount(ZKNCOUNT) || -1 == zettelPos) {
-            zettelPos = 1;
+        if (zettel > getCount(ZKNCOUNT) || -1 == zettel) {
+            zettel = 1;
         }
         // update History
         addToHistory();
@@ -5458,10 +5291,10 @@ public class Daten {
      */
     public void prevEntry() {
         // decrease counter for currently display entry
-        zettelPos--;
+        zettel--;
         // check whether it's out of bounds
-        if (zettelPos < 1) {
-            zettelPos = getCount(ZKNCOUNT);
+        if (zettel < 1) {
+            zettel = getCount(ZKNCOUNT);
         }
         // update History
         addToHistory();
@@ -5473,7 +5306,7 @@ public class Daten {
      */
     public void firstEntry() {
         // set counter for currently display entry to 1
-        zettelPos = 1;
+        zettel = 1;
         // update History
         addToHistory();
     }
@@ -5484,7 +5317,7 @@ public class Daten {
      */
     public void lastEntry() {
         // set counter for currently display entry to last element
-        zettelPos = getCount(ZKNCOUNT);
+        zettel = getCount(ZKNCOUNT);
         // update History
         addToHistory();
     }
@@ -5931,7 +5764,7 @@ public class Daten {
      * @param nr
      */
     public void setCurrentZettelPos(int nr) {
-        zettelPos = nr;
+        zettel = nr;
     }
 
     /**
@@ -5951,7 +5784,7 @@ public class Daten {
      */
     public int getCurrentZettelPos() {
         // and return the value
-        return zettelPos;
+        return zettel;
     }
 
     /**
@@ -5996,7 +5829,7 @@ public class Daten {
         }
         // calculate ratio
         int keylen = kws.length;
-        double ratio = (double) 100.0 * keycnt / keylen;
+        double ratio = 100.0 * keycnt / keylen;
         // return result
         return (int) ratio;
     }
@@ -6150,7 +5983,7 @@ public class Daten {
         // retrieve entry's content
         String preparestring = el.getChild(ELEMENT_CONTENT).getText();
         // create dummy-string-builder
-        StringBuilder buf = new StringBuilder("");
+        StringBuilder buf = new StringBuilder();
         // iterate each char of the string
         for (int i = 0; i < preparestring.length(); i++) {
             // retrieve char
@@ -6367,7 +6200,7 @@ public class Daten {
             for (Integer entrynumber : entrynumbers) {
                 // create new zettel element
                 // and clone content from requested zettel to our element
-                Element zettel = (Element) retrieveZettel(entrynumber).clone();
+                Element zettel = retrieveZettel(entrynumber).clone();
                 // retrieve content of entry and convert all author footnotes, which
                 // contain author-index-numbers, into the related author-IDs.
                 String content = zettel.getChild(ELEMENT_CONTENT).getText();
@@ -6532,7 +6365,7 @@ public class Daten {
             if (zettel != null && !hasZettelID(cnt)) {
                 // if not, set unique ID-attribute to entry
                 // init variable
-                StringBuilder id = new StringBuilder("");
+                StringBuilder id = new StringBuilder();
                 // retrieve timestamp
                 String[] ts = getTimestamp(cnt);
                 // check for valid entry
@@ -6543,7 +6376,7 @@ public class Daten {
                     // else, if entry has no create-timestamp, add manual timestamp
                     id.append(Tools.getTimeStampWithMilliseconds());
                 }
-                id.append(String.valueOf(cnt)).append(settings.getFileName()).append(String.valueOf(cnt));
+                id.append(cnt).append(settings.getFileName()).append(cnt);
                 // now add id to zettel-element
                 zettel.setAttribute(ATTRIBUTE_ZETTEL_ID, id.toString());
             }
@@ -6569,9 +6402,9 @@ public class Daten {
             if (author != null && !hasAuthorID(cnt)) {
                 // if not, set unique ID-attribute to entry
                 // init variable
-                StringBuilder id = new StringBuilder("");
+                StringBuilder id = new StringBuilder();
                 // add manual timestamp
-                id.append(Tools.getTimeStampWithMilliseconds()).append(settings.getFileName()).append(String.valueOf(cnt));
+                id.append(Tools.getTimeStampWithMilliseconds()).append(settings.getFileName()).append(cnt);
                 // now add id to zettel-element
                 author.setAttribute(ATTRIBUTE_AUTHOR_ID, id.toString());
                 // and add timestamp attribute
@@ -6587,9 +6420,9 @@ public class Daten {
             if (keyword != null && !hasKeywordID(cnt)) {
                 // if not, set unique ID-attribute to entry
                 // init variable
-                StringBuilder id = new StringBuilder("");
+                StringBuilder id = new StringBuilder();
                 // add manual timestamp
-                id.append(Tools.getTimeStampWithMilliseconds()).append(settings.getFileName()).append(String.valueOf(cnt));
+                id.append(Tools.getTimeStampWithMilliseconds()).append(settings.getFileName()).append(cnt);
                 // now add id to zettel-element
                 keyword.setAttribute(ATTRIBUTE_KEYWORD_ID, id.toString());
                 // and add timestamp attribute
@@ -6732,7 +6565,7 @@ public class Daten {
                     // split them into an array...
                     String[] luhmann = luh.split(",");
                     // prepare string builder
-                    StringBuilder sb = new StringBuilder("");
+                    StringBuilder sb = new StringBuilder();
                     // if we have trailing numbers, go on
                     if (luhmann != null && luhmann.length > 0) {
                         for (String luhmann1 : luhmann) {
@@ -6792,7 +6625,7 @@ public class Daten {
             // first, retrieve list of IDs
             String[] values = zettel.getChild(attr).getText().split(",");
             // create variable with re-converted values
-            StringBuilder final_values = new StringBuilder("");
+            StringBuilder final_values = new StringBuilder();
             // check for valid values                            
             if (values.length > 0) {
                 // iterate all numbers, which are at the moment
@@ -6804,7 +6637,7 @@ public class Daten {
                     // check whether ID was found
                     if (nr != -1) {
                         // append number to stringbuilder
-                        final_values.append(String.valueOf(nr)).append(",");
+                        final_values.append(nr).append(",");
                     }
                 }
                 // check whether we have any values in the stringbuilder
@@ -7347,9 +7180,7 @@ public class Daten {
             // now add id to zettel-element
             String id = zettel.getAttributeValue(ATTRIBUTE_ZETTEL_ID);
             // check for valid value
-            if (id != null && !id.isEmpty()) {
-                return true;
-            }
+            return id != null && !id.isEmpty();
         }
         return false;
     }
@@ -7375,9 +7206,7 @@ public class Daten {
             // now add id to author-element
             String id = author.getAttributeValue(ATTRIBUTE_AUTHOR_ID);
             // check for valid value
-            if (id != null && !id.isEmpty()) {
-                return true;
-            }
+            return id != null && !id.isEmpty();
         }
         return false;
     }
@@ -7403,9 +7232,7 @@ public class Daten {
             // now add id to keyword-element
             String id = keyword.getAttributeValue(ATTRIBUTE_KEYWORD_ID);
             // check for valid value
-            if (id != null && !id.isEmpty()) {
-                return true;
-            }
+            return id != null && !id.isEmpty();
         }
         return false;
     }
@@ -7782,10 +7609,10 @@ public class Daten {
             Integer[] i = manlinknumbers.toArray(new Integer[manlinknumbers.size()]);
             // sort array
             Arrays.sort(i);
-            StringBuilder sb = new StringBuilder("");
+            StringBuilder sb = new StringBuilder();
             // and add it
             for (int ml : i) {
-                sb.append(String.valueOf(ml)).append(",");
+                sb.append(ml).append(",");
             }
             // remove last comma
             if (sb.length() > 1) {

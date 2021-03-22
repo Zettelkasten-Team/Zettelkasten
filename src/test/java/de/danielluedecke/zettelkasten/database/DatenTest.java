@@ -1,884 +1,106 @@
 package de.danielluedecke.zettelkasten.database;
 
-import org.junit.jupiter.api.AfterEach;
+import ch.dreyeck.zettelkasten.xml.Zettel;
+import de.danielluedecke.zettelkasten.util.Constants;
+import org.jdom2.Document;
+import org.jdom2.Element;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.logging.Level;
 
-class DatenTest {
+public class DatenTest {
+    /*
+     startup:138, ZettelkastenApp
+     <init>:690, ZettelkastenView
+     loadDocument:8902, ZettelkastenView
+     updateAfterOpen:10561, ZettelkastenView
+     updateDisplay:2914, ZettelkastenView
+     updateDisplayParts:3349, ZettelkastenView
+     displayZettelContent:3392, ZettelkastenView
+     getEntryAsHtml:43287, Daten
+     getEntryAsHTML: 584, HtmlUbbUtil
+     getEntryHeadline:317, HtmlUbbUtil
+     getManualLinksAsString:3971, Daten
+    */
+
 
     @BeforeEach
-    void setUp() {
-    }
-
-    @AfterEach
-    void tearDown() {
-    }
-
-    @Test
-    void initZettelkasten() {
-    }
-
-    @Test
-    void getVersionInfo() {
-    }
-
-    @Test
-    void getUserAttachmentPath() {
-    }
-
-    @Test
-    void setUserAttachmentPath() {
-    }
-
-    @Test
-    void getUserImagePath() {
-    }
-
-    @Test
-    void setUserImagePath() {
-    }
-
-    @Test
-    void getCurrentVersionInfo() {
-    }
-
-    @Test
-    void isMetaModified() {
-    }
-
-    @Test
-    void setMetaModified() {
-    }
-
-    @Test
-    void isModified() {
-    }
-
-    @Test
-    void setModified() {
-    }
-
-    @Test
-    void getFilesToLoadCount() {
-    }
-
-    @Test
-    void getFileToLoad() {
-    }
-
-    @Test
-    void setZknData() {
-    }
-
-    @Test
-    void getZknData() {
-    }
-
-    @Test
-    void isNewVersion() {
-    }
-
-    @Test
-    void isIncompatibleFile() {
-    }
-
-    @Test
-    void appendZknData() {
-    }
-
-    @Test
-    void setAuthorData() {
-    }
-
-    @Test
-    void getAuthorData() {
-    }
-
-    @Test
-    void setKeywordData() {
-    }
-
-    @Test
-    void getKeywordData() {
-    }
-
-    @Test
-    void setMetaInformationData() {
-    }
-
-    @Test
-    void getMetaInformationData() {
-    }
-
-    @Test
-    void setCompleteZknData() {
-    }
-
-    @Test
-    void getZknDescription() {
-    }
-
-    @Test
-    void setZknDescription() {
-    }
-
-    @Test
-    void addZknDescription() {
-    }
-
-    @Test
-    void duplicateEntry() {
-    }
-
-    @Test
-    void updateVersionInfo() {
-    }
-
-    @Test
-    void retrieveZettel() {
-    }
-
-    @Test
-    void retrieveNonexistingKeywords() {
-    }
-
-    @Test
-    void retrieveExportDocument() {
-    }
-
-
-    @Test
-    void findKeywordInDatabase() {
-    }
-
-    @Test
-    void getKeywordPosition() {
-    }
-
-    @Test
-    void getBibkeyPosition() {
-    }
-
-    @Test
-    void addKeyword() {
-    }
-
-    @Test
-    void addKeywordsToDatabase() {
-    }
-
-    @Test
-    void getKeyword() {
-    }
-
-    @Test
-    void setKeyword() {
-    }
-
-    @Test
-    void testSetKeyword() {
-    }
-
-    @Test
-    void deleteKeyword() {
-    }
-
-    @Test
-    void deleteZettel() {
-    }
-
-    @Test
-    void deleteAuthorsFromEntry() {
-    }
-
-    @Test
-    void deleteKeywordsFromEntry() {
-    }
-
-    @Test
-    void existsInKeywords() {
-    }
-
-    @Test
-    void testExistsInKeywords() {
-    }
-
-    @Test
-    void existsInAuthors() {
-    }
-
-    @Test
-    void testExistsInAuthors() {
-    }
-
-    @Test
-    void mergeKeywords() {
-    }
-
-    @Test
-    void mergeAuthors() {
-    }
-
-    @Test
-    void addKeywordToEntry() {
-    }
-
-    @Test
-    void addKeywordsToEntry() {
-    }
-
-    @Test
-    void addAuthorToEntry() {
-    }
-
-    @Test
-    void findAuthorInDatabase() {
-    }
-
-    @Test
-    void getAuthorPosition() {
-    }
-
-    @Test
-    void getAuthorBibKeyPosition() {
-    }
-
-    @Test
-    void addAuthor() {
-    }
-
-    @Test
-    void addEntry() {
-    }
-
-    @Test
-    void testAddEntry() {
-    }
-
-    @Test
-    void addEntryFromBibTex() {
-    }
-
-    @Test
-    void setContentFromBibTexRemark() {
-    }
-
-    @Test
-    void isContentFromBibTex() {
-    }
-
-    @Test
-    void changeEntry() {
-    }
-
-    @Test
-    void addLuhmannNumber() {
-    }
-
-    @Test
-    void addManualLink() {
-    }
-
-    @Test
-    void testAddManualLink() {
-    }
-
-    @Test
-    void testAddManualLink1() {
-    }
-
-    @Test
-    void deleteLuhmannNumber() {
-    }
-
-    @Test
-    void insertLuhmannNumber() {
-    }
-
-    @Test
-    void deleteManualLinks() {
-    }
-
-    @Test
-    void testDeleteManualLinks() {
-    }
-
-    @Test
-    void getLuhmannNumbers() {
-    }
-
-    @Test
-    void getLuhmannNumbersAsString() {
-    }
-
-    @Test
-    void getLuhmannNumbersAsInteger() {
-    }
-
-    @Test
-    void getManualLinks() {
-    }
-
-    @Test
-    void setManualLinks() {
-    }
-
-    @Test
-    void getManualLinksAsString() {
-    }
-
-    @Test
-    void getManualLinksAsSingleString() {
-    }
-
-    @Test
-    void testSetManualLinks() {
-    }
-
-    @Test
-    void getCurrentManualLinks() {
-    }
-
-    @Test
-    void getCurrentManualLinksAsString() {
-    }
-
-    @Test
-    void getAuthor() {
-    }
-
-    @Test
-    void setAuthor() {
-    }
-
-    @Test
-    void testSetAuthor() {
-    }
-
-    @Test
-    void testSetAuthor1() {
-    }
-
-    @Test
-    void testSetAuthor2() {
-    }
-
-    @Test
-    void deleteAuthor() {
+    public void setUp() {
+        String document = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
+                + "<zettelkasten firstzettel=\"1\" lastzettel=\"1\">"
+                + "<zettel>"
+                + "<title>Verschlagwortung und alphanumerische anstatt thematische Ordnung</title>"
+                + "<content />"
+                + "<author>1</author>"
+                + "<keywords>1,2,1216,1983</keywords>"
+                + "<manlinks />"
+                + "<links />"
+                + "<misc>feste Stellordnung</misc>"
+                + "<luhmann>4,10,61,161,1771,3622</luhmann>"
+                + "</zettel>"
+                + "</zettelkasten>";
     }
 
     @Test
     void getEntryAsHtml() {
-        // "converts" the data into a certain html layout
+        // TEST retrieve the title, content and author of an entry and
+        //  "convert" the data into a certain html layout then
+        //  appear in the main window's textfield (jEditorPane).
     }
 
     @Test
-    void getZettelContent() {
-        // plain entry content as it is stored in the XML-file, without htnml-conversion.
-    }
-
-    @Test
-    void getZettelContentAsHtml() {
-        // content is returned in HTML-format
-    }
-
-    @Test
-    void getZettelRating() {
-    }
-
-    @Test
-    void getZettelRatingCount() {
-    }
-
-    @Test
-    void getZettelRatingAsString() {
-    }
-
-    @Test
-    void addZettelRating() {
-    }
-
-    @Test
-    void resetZettelRating() {
-    }
-
-    @Test
-    void isEmpty() {
-    }
-
-    @Test
-    void testIsEmpty() {
-    }
-
-    @Test
-    void isDeleted() {
-    }
-
-    @Test
-    void testIsDeleted() {
-    }
-
-    @Test
-    void hasEntriesExcludingDeleted() {
-    }
-
-    @Test
-    void getTimestamp() {
-    }
-
-    @Test
-    void testGetTimestamp() {
-    }
-
-    @Test
-    void getTimestampEdited() {
-    }
-
-    @Test
-    void testGetTimestampEdited() {
-    }
-
-    @Test
-    void getTimestampCreated() {
-    }
-
-    @Test
-    void testGetTimestampCreated() {
-    }
-
-    @Test
-    void getAttachments() {
-    }
-
-    @Test
-    void hasAttachments() {
-    }
-
-    @Test
-    void hasAuthors() {
-    }
-
-    @Test
-    void hasKeywords() {
-    }
-
-    @Test
-    void hasRemarks() {
-    }
-
-    @Test
-    void getAttachmentsAsString() {
-    }
-
-    @Test
-    void setAttachments() {
-    }
-
-    @Test
-    void addAttachments() {
-    }
-
-    @Test
-    void changeAttachment() {
-    }
-
-    @Test
-    void deleteAttachment() {
-    }
-
-    @Test
-    void getRemarks() {
-    }
-
-    @Test
-    void setRemarks() {
-    }
-
-    @Test
-    void getCleanRemarks() {
-    }
-
-    @Test
-    void getCurrentKeywords() {
-    }
-
-    @Test
-    void getKeywords() {
-    }
-
-    @Test
-    void testGetKeywords() {
-    }
-
-    @Test
-    void getSeparatedKeywords() {
-    }
-
-    @Test
-    void getAuthors() {
-    }
-
-    @Test
-    void getAuthorsWithIDandBibKey() {
-    }
-
-    @Test
-    void getCount() {
-    }
-
-    @Test
-    void addToHistory() {
-    }
-
-    @Test
-    void canHistoryBack() {
-    }
-
-    @Test
-    void canHistoryFore() {
-    }
-
-    @Test
-    void historyBack() {
-    }
-
-    @Test
-    void historyFore() {
-    }
-
-    @Test
-    void gotoEntry() {
-    }
-
-    @Test
-    void nextEntry() {
-    }
-
-    @Test
-    void prevEntry() {
-    }
-
-    @Test
-    void firstEntry() {
-    }
-
-    @Test
-    void lastEntry() {
-    }
-
-    @Test
-    void getKeywordIndexNumbers() {
-    }
-
-    @Test
-    void setKeywordIndexNumbers() {
-    }
-
-    @Test
-    void setAuthorIndexNumbers() {
-    }
-
-    @Test
-    void getAuthorIndexNumbers() {
-    }
-
-    @Test
-    void getKeywordFrequencies() {
-    }
-
-    @Test
-    void testGetKeywordFrequencies() {
-    }
-
-    @Test
-    void getKeywordFrequency() {
-    }
-
-    @Test
-    void getAuthorFrequencies() {
-    }
-
-    @Test
-    void testGetAuthorFrequencies() {
-    }
-
-    @Test
-    void getAuthorFrequency() {
-    }
-
-    @Test
-    void getAuthorBibKey() {
-    }
-
-    @Test
-    void testGetAuthorBibKey() {
-    }
-
-    @Test
-    void setAuthorBibKey() {
-    }
-
-    @Test
-    void testSetAuthorBibKey() {
-    }
-
-    @Test
-    void setCurrentZettelPos() {
-    }
-
-    @Test
-    void setInitialHistoryPos() {
-    }
-
-    @Test
-    void getCurrentZettelPos() {
-    }
-
-    @Test
-    void getLinkStrength() {
-    }
-
-    @Test
-    void getZettelTitle() {
-    }
-
-    @Test
-    void setZettelTitle() {
-    }
-
-    @Test
-    void changeEditTimeStamp() {
-    }
-
-    @Test
-    void setZettelContent() {
-    }
-
-    @Test
-    void getZettelContentUbbTagsRemoved() {
-        // cleaned content of an entry
-    }
-
-    @Test
-    void setKeywordlistUpToDate() {
-    }
-
-    @Test
-    void isKeywordlistUpToDate() {
-    }
-
-    @Test
-    void setClusterlistUpToDate() {
-    }
-
-    @Test
-    void isClusterlistUpToDate() {
-    }
-
-    @Test
-    void setAuthorlistUpToDate() {
-    }
-
-    @Test
-    void isAuthorlistUpToDate() {
-    }
-
-    @Test
-    void setTitlelistUpToDate() {
-    }
-
-    @Test
-    void isTitlelistUpToDate() {
-    }
-
-    @Test
-    void setAttachmentlistUpToDate() {
-    }
-
-    @Test
-    void isAttachmentlistUpToDate() {
-    }
-
-    @Test
-    void createExportEntries() {
-    }
-
-
-    @Test
-    void fixWrongEditTags() {
-    }
-
-    @Test
-    void db_updateZettelIDs() {
-    }
-
-    @Test
-    void db_updateAuthorAndKeywordIDs() {
-    }
-
-    @Test
-    void db_updateTimestampAttributes() {
-    }
-
-    @Test
-    void db_updateRemoveZettelPosElements() {
-    }
-
-    @Test
-    void db_updateInlineCodeFormatting() {
-    }
-
-    @Test
-    void setTimestamp() {
-    }
+    void deleteManualLinks() {
+        // TEST remove one or more manual links from the current entry
+        //FIXME There are two methods with the same name deleteManualLinks
+        // The second method has a second parameter zettelPos, which stores
+        // the index number of the currently displayed entry
 
-    @Test
-    void setTimestampEdited() {
-    }
-
-    @Test
-    void setTimestampCreated() {
-    }
-
-    @Test
-    void testSetTimestampEdited() {
-    }
-
-    @Test
-    void testSetTimestampCreated() {
-    }
-
-    @Test
-    void testSetTimestamp() {
-    }
-
-    @Test
-    void setZettelID() {
-    }
-
-    @Test
-    void testSetZettelID() {
-    }
-
-    @Test
-    void getZettelID() {
-    }
-
-    @Test
-    void testGetZettelID() {
-    }
-
-    @Test
-    void setLastAddedZettelID() {
-    }
-
-    @Test
-    void getLastAddedZettelID() {
-    }
-
-    @Test
-    void getAuthorID() {
-    }
-
-    @Test
-    void testGetAuthorID() {
-    }
-
-    @Test
-    void getKeywordID() {
-    }
-
-    @Test
-    void testGetKeywordID() {
-    }
+        // There is one comment stating "if it exists, remove it."
+        // Bug #330 showed up with a non-existing Zettel manlink.
 
-    @Test
-    void findZettelFromID() {
-    }
-
-    @Test
-    void findAuthorFromID() {
-    }
-
-    @Test
-    void findKeywordFromID() {
-    }
-
-    @Test
-    void getZettelNumberFromID() {
-    }
-
-    @Test
-    void getAuthorNumberFromID() {
-    }
-
-    @Test
-    void getKeywordNumberFromID() {
-    }
-
-    @Test
-    void zettelExists() {
-    }
-
-    @Test
-    void testZettelExists() {
-    }
-
-    @Test
-    void keywordExists() {
-    }
-
-    @Test
-    void authorExists() {
-    }
-
-    @Test
-    void hasAuthorID() {
-    }
+        //TODO concept backlinks: getManualLinksAsString(mlparamentry)
 
-    @Test
-    void hasKeywordID() {
     }
 
     @Test
-    void setSaveOk() {
-    }
+    void getManualLinks() {
+        // TEST return the manual links for an entry as integer-array.
 
-    @Test
-    void isSaveOk() {
     }
 
     @Test
-    void getZettelForms() {
-    }
+    void getManualLinksAsString() {
+        final String manlinks = new Zettel().getManlinks();
 
-    @Test
-    void isTopLevelLuhmann() {
     }
 
     @Test
-    void findParentlLuhmann() {
-    }
+    void getManualLinksAsSingleString() {
+        Document doc = new org.jdom2.Document();
+        int pos = 0;
+        try {
+            Daten.getManualLinksAsString(0);
+        } catch (NullPointerException e) {
+            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
+        }
 
-    @Test
-    void getAllLuhmannNumbers() {
     }
 
     @Test
-    void testGetAllLuhmannNumbers() {
-    }
+    void retrieveElement() {
+        final Element element;
+        Document doc = new org.jdom2.Document();
+        java.lang.System.out.println(doc);
+        // [Document:  No DOCTYPE declaration,  No root element]
 
-    @Test
-    void getAllManualLinks() {
-    }
+        Daten.retrieveElement(doc, 0);
+        Daten.retrieveElement(doc, 1);
+        Daten.retrieveElement(doc, -1);
+        //WARNING: Root element not set
+        //         Root should be [Element: <zettelkasten/>]
 
-    @Test
-    void hasLuhmannNumbers() {
+        // See getManualLinksAsString
     }
 
-    @Test
-    void hasManLinks() {
-    }
 }

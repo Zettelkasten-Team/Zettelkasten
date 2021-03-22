@@ -313,16 +313,17 @@ public class HtmlUbbUtil {
         htmlrating.append("</a>");
         // close tag
         htmlrating.append("</td></tr>").append(System.lineSeparator());
+
         // check whether entry has manual links
-        String[] manlinks = dataObj.getManualLinksAsString(entrynr);
-        if (manlinks != null && manlinks.length > 0) {
+        String[] manualLinksAsString = dataObj.getManualLinksAsString(entrynr);
+        if (manualLinksAsString != null && manualLinksAsString.length > 0) {
             // append manual links
             htmlrating.append("<tr><td class=\"crtitle\" valign=\"top\"><a href=\"#crt\">");
             htmlrating.append(resourceMap.getString("crossRefText")).append(":</a>&nbsp;</td><td class=\"mlink\" colspan=\"3\">");
             // create string builder
             StringBuilder crossrefs = new StringBuilder("");
             // iterate string array
-            for (String ml : manlinks) {
+            for (String ml : manualLinksAsString) {
                 String title = "";
                 try {
                     title = dataObj.getZettelTitle(Integer.parseInt(ml));
@@ -337,6 +338,7 @@ public class HtmlUbbUtil {
             htmlrating.append(crossrefs.toString().substring(0, crossrefs.length() - 10));
             htmlrating.append("</td></tr>").append(System.lineSeparator());
         }
+
         htmlrating.append("</table></div>").append(System.lineSeparator());
         // return result
         return htmlrating.toString();
@@ -542,10 +544,10 @@ public class HtmlUbbUtil {
      * This method creates a html page of the parameters passed to this class
      * constructor It is easier to keep the overview over the layout style when
      * the html page, which is responsible for the "look'n'feel" of an entry, is
-     * being created in a separate class rather than in the CDaten class
+     * being created in a separate class rather than in the Daten class
      *
-     * @param settings a reference to the CSettings-class
-     * @param dataObj a reference to the CDaten-class
+     * @param settings a reference to the Settings-class
+     * @param dataObj a reference to the Daten-class
      * @param bibtexObj
      * @param entrynr the entry-number of the entry that should be converted
      * into HTML
@@ -1640,7 +1642,7 @@ public class HtmlUbbUtil {
                             }
                         }
                     }
-                    // dummy = dummy.substring(0, pos)+"<table border=\"1\">"+tabelle.toString().replace("\\\\", "<br>")+"</table>"+dummy.substring(end+8);
+
                     String tableString = (PlatformUtil.isJava7OnMac() || PlatformUtil.isJava7OnWindows()) ? "<table cellspacing=\"0\">" : "<table>";
                     dummy = dummy.substring(0, pos) + tableString + tabelle.toString().replace("\\\\", "<br>") + "</table>" + dummy.substring(end + 8);
                     pos = pos + tabelle.toString().length();

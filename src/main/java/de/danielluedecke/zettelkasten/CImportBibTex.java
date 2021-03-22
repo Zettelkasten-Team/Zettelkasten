@@ -55,6 +55,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -128,7 +129,7 @@ public class CImportBibTex extends javax.swing.JDialog {
      * @param bt
      * @param s
      */
-    public CImportBibTex(java.awt.Frame parent, ZettelkastenView mf, Daten d, BibTeX bt, Settings s) {
+    public CImportBibTex(java.awt.Frame parent, ZettelkastenView mf, Daten d, BibTeX bt, Settings s) throws IOException {
         super(parent);
         settingsObj = s;
         bibtexObj = bt;
@@ -334,14 +335,22 @@ public class CImportBibTex extends javax.swing.JDialog {
                     // change cite-style-setting
                     bibtexObj.setCiteStyle(jComboBoxCiteStyle.getSelectedIndex());
                     // if we already have any attached BibTeX file, update table
-                    fillBibtexTable();
+                    try {
+                        fillBibtexTable();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
         jComboBoxShowBibTex.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fillBibtexTable();
+                try {
+                    fillBibtexTable();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
         SelectionListener listener = new SelectionListener();
@@ -364,7 +373,11 @@ public class CImportBibTex extends javax.swing.JDialog {
         jRadioButtonSourceDB.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fillBibtexTable();
+                try {
+                    fillBibtexTable();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 settingsObj.setLastUsedBibtexImportSource(BIBTEX_SOURCE_DB);
             }
         });
@@ -373,7 +386,11 @@ public class CImportBibTex extends javax.swing.JDialog {
         jRadioButtonSourceFile.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fillBibtexTable();
+                try {
+                    fillBibtexTable();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 settingsObj.setLastUsedBibtexImportSource(BIBTEX_SOURCE_FILE);
             }
         });
@@ -456,7 +473,11 @@ public class CImportBibTex extends javax.swing.JDialog {
             if (linkedtablelist != null && linkedtablelist.size() > 0) {
                 refreshList();
             } else {
-                fillBibtexTable();
+                try {
+                    fillBibtexTable();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -502,7 +523,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         jButtonRefresh.setEnabled(true);
     }
 
-    private void fillBibtexTable() {
+    private void fillBibtexTable() throws IOException {
         if (jRadioButtonSourceFile.isSelected()) {
             // retrieve currently attached file
             File currentlyattachedfile = bibtexObj.getCurrentlyAttachedFile();
@@ -641,7 +662,11 @@ public class CImportBibTex extends javax.swing.JDialog {
             // set new BibTeX filepath
             bibtexObj.setFilePath(selectedfile);
             bibtexObj.detachCurrentlyAttachedFile();
-            fillBibtexTable();
+            try {
+                fillBibtexTable();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
