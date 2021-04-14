@@ -1,6 +1,5 @@
 package de.danielluedecke.zettelkasten.database;
 
-import ch.dreyeck.zettelkasten.xml.Zettel;
 import de.danielluedecke.zettelkasten.util.Constants;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -71,8 +70,6 @@ public class DatenTest {
 
     @Test
     void getManualLinksAsString() {
-        final String manlinks = new Zettel().getManlinks();
-
     }
 
     @Test
