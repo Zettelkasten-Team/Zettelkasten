@@ -243,7 +243,7 @@ public class CInsertTable extends javax.swing.JDialog {
         tabledata.append(System.lineSeparator());
         // retrieve all table rows
         for (int row=0; row<tm.getRowCount()-1; row++) {
-            // clear tablerow
+            // clear table row
             tablerow.clear();
             // go through all columns
             for (int col=0; col<tm.getColumnCount()-1; col++) {

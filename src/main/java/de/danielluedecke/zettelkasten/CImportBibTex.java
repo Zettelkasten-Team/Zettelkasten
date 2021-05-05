@@ -307,7 +307,7 @@ public class CImportBibTex extends javax.swing.JDialog {
      * Init several listeners for the components.
      */
     private void initListeners() {
-        // these code lines add an escape-listener to the dialog. so, when the user
+        // These code lines add an escape-listener to the dialog. So, when the user
         // presses the escape-key, the same action is performed as if the user
         // presses the cancel button...
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
@@ -536,7 +536,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                 // retrieve currently attached BibTeX file
                 currentlyattachedfile = bibtexObj.getCurrentlyAttachedFile();
             }
-            // set filepath to textfield
+            // set file path to text field
             jTextFieldBibtexFilepath.setText((currentlyattachedfile != null && currentlyattachedfile.exists()) ? currentlyattachedfile.toString() : "");
         }
         // block all components
@@ -570,7 +570,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         jTextFieldFilterTable.setEnabled(!block);
         jRadioButtonSourceDB.setEnabled(!block);
         jRadioButtonSourceFile.setEnabled(!block);
-        // refresh button is either blockes (disabled) or enabled whether
+        // refresh button is either blocked (disabled) or enabled whether
         // we have any content in linkedtablelist.
         jButtonRefresh.setEnabled((block) ? false : linkedtablelist != null);
     }
@@ -922,15 +922,20 @@ public class CImportBibTex extends javax.swing.JDialog {
             }
             // update display, since we have new authors and possibly new entries as well
             mainframe.updateDisplay();
-            // tell user about success
-            JOptionPane.showMessageDialog(null,
-                    resourceMap.getString("authorImportOkMsg", String.valueOf(getNewEntriesCount()), String.valueOf((getModifiedEntries() != null) ? getModifiedEntries().size() : 0)),
-                    resourceMap.getString("authorImportOkTitle"),
-                    JOptionPane.PLAIN_MESSAGE);
+
+            tellUser();
+
             // close window
             setVisible(false);
             dispose();
         }
+    }
+
+    private void tellUser() {
+        JOptionPane.showMessageDialog(null,
+                resourceMap.getString("authorImportOkMsg", String.valueOf(getNewEntriesCount()), String.valueOf((getModifiedEntries() != null) ? getModifiedEntries().size() : 0)),
+                resourceMap.getString("authorImportOkTitle"),
+                JOptionPane.PLAIN_MESSAGE);
     }
 
     private class startImportTask extends org.jdesktop.application.Task<Object, Void> {
