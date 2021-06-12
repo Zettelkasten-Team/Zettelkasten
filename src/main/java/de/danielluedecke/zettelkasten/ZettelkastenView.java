@@ -8737,11 +8737,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             if (modifiedOriginal < modifiedBackup) {
                 // ask the user whether he wants to load the original file,
                 // the newer backup-file or cancel the complete load-operation...
-                int option = JOptionPane.showConfirmDialog(getFrame(),
+
+                // create customized options
+                Object[] options = {getResourceMap().getString("newerBackupOptionsBackup"), getResourceMap().getString("newerBackupOptionsDatafile"), getResourceMap().getString("newerBackupOptionsCancel")};
+                int option = JOptionPane.showOptionDialog(getFrame(),
                         getResourceMap().getString("newerBackupMsg"),
                         getResourceMap().getString("newerBackupTitle"),
                         JOptionPane.YES_NO_CANCEL_OPTION,
-                        JOptionPane.PLAIN_MESSAGE);
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        options,
+                        options[0]);
                 // the user chose to cancel the operation, so return "null"
                 if (JOptionPane.CANCEL_OPTION == option || JOptionPane.CLOSED_OPTION == option /*User pressed cancel key*/) {
                     // clear filepath, so the data-file won't be accidentally overwritten...
@@ -8750,7 +8756,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     return false;
                 }
                 // here the user wants to open the backup-file instead of the older file...
-                if (JOptionPane.NO_OPTION == option) {
+                if (JOptionPane.YES_OPTION == option) {
                     try {
                         // in case the user already created a backup, we concatenate a trainling
                         // backup-counter-number to avoid overwriting existing backup-files
