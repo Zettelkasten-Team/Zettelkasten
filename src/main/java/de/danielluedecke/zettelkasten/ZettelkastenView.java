@@ -8965,12 +8965,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             if (modifiedOriginal < modifiedBackup) {
                 // ask the user whether he wants to load the original file,
                 // the newer backup-file or cancel the complete load-operation...
-                // create customized options
-                Object[] options = {getResourceMap().getString("newerBackupOptionsBackup"), getResourceMap().getString("newerBackupOptionsDatafile"), getResourceMap().getString("newerBackupOptionsCancel")};
+                // first create customized options
+                Object[] options = {getResourceMap().getString("newerBackupOptionsBackup"), // YES_OPTION
+                  getResourceMap().getString("newerBackupOptionsDatafile"), // NO_OPTION
+                  getResourceMap().getString("newerBackupOptionsCancel")}; // CANCEL_OPTION
                 int option = JOptionPane.showOptionDialog(getFrame(),
                   getResourceMap().getString("newerBackupMsg"),
                   getResourceMap().getString("newerBackupTitle"),
-                  JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
+                  JOptionPane.YES_NO_CANCEL_OPTION,
+                  JOptionPane.PLAIN_MESSAGE,
                   null,
                   options,
                   options[0]);
