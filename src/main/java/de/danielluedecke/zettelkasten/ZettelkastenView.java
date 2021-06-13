@@ -2870,7 +2870,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     UIManager.getLookAndFeelDefaults().put("defaultFont", fm.deriveFont(fm.getSize2D() * Toolkit.getDefaultToolkit().getScreenResolution() / 96));
                 }
             } catch (HeadlessException e) {
-            }            
+            }
 
             String laf = settings.getLookAndFeel();
 
@@ -8737,17 +8737,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             if (modifiedOriginal < modifiedBackup) {
                 // ask the user whether he wants to load the original file,
                 // the newer backup-file or cancel the complete load-operation...
-
                 // create customized options
-                Object[] options = {getResourceMap().getString("newerBackupOptionsBackup"), getResourceMap().getString("newerBackupOptionsDatafile"), getResourceMap().getString("newerBackupOptionsCancel")};
+                Object[] options = {getResourceMap().getString("newerBackupOptionsBackup"), // YES_OPTION
+                    getResourceMap().getString("newerBackupOptionsDatafile"), // NO_OPTION
+                    getResourceMap().getString("newerBackupOptionsCancel")}; // CANCEL_OPTION
                 int option = JOptionPane.showOptionDialog(getFrame(),
-                        getResourceMap().getString("newerBackupMsg"),
-                        getResourceMap().getString("newerBackupTitle"),
-                        JOptionPane.YES_NO_CANCEL_OPTION,
-                        JOptionPane.PLAIN_MESSAGE,
-                        null,
-                        options,
-                        options[0]);
+                    getResourceMap().getString("newerBackupMsg"),
+                    getResourceMap().getString("newerBackupTitle"),
+                    JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    options,
+                    options[0]);
                 // the user chose to cancel the operation, so return "null"
                 if (JOptionPane.CANCEL_OPTION == option || JOptionPane.CLOSED_OPTION == option /*User pressed cancel key*/) {
                     // clear filepath, so the data-file won't be accidentally overwritten...
