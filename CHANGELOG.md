@@ -1,5 +1,6 @@
 # [Unreleased]
 ### Changes
+- Dialog "Newer backup file exists" should be more intuitive ([361](https://github.com/Zettelkasten-Team/Zettelkasten/issues/361))
 - Revised BibTeX import ([257](https://github.com/Zettelkasten-Team/Zettelkasten/issues/257))
 - Remove duplicateEntry ([339](https://github.com/Zettelkasten-Team/Zettelkasten/issues/339))
 - pt-BR translation ([237](https://github.com/Zettelkasten-Team/Zettelkasten/issues/237))
