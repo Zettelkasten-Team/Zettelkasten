@@ -1,18 +1,18 @@
 /*
  * Zettelkasten - nach Luhmann
  * Copyright (C) 2001-2015 by Daniel Lüdecke (http://www.danielluedecke.de)
- * 
+ *
  * Homepage: http://zettelkasten.danielluedecke.de
- * 
- * 
+ *
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License as published by the Free Software Foundation; either version 3 of 
+ * GNU General Public License as published by the Free Software Foundation; either version 3 of
  * the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses/>.
  * 
@@ -21,17 +21,18 @@
  * General Public License, wie von der Free Software Foundation veröffentlicht, weitergeben
  * und/oder modifizieren, entweder gemäß Version 3 der Lizenz oder (wenn Sie möchten)
  * jeder späteren Version.
- * 
- * Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein 
- * wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder 
- * der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der 
+ *
+ * Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein
+ * wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder
+ * der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der
  * GNU General Public License.
- * 
- * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
+ *
+ * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
 package de.danielluedecke.zettelkasten.tasks.importtasks;
 
+import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.database.Bookmarks;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.DesktopData;
@@ -42,6 +43,7 @@ import de.danielluedecke.zettelkasten.util.Tools;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
@@ -94,7 +96,7 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
             getContext().getResourceMap(ImportTask.class);
 
     /**
@@ -165,7 +167,7 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
             // open the zip-file
             ZipInputStream zip = null;
             try {
-                zip = new ZipInputStream(new FileInputStream(filepath));                    
+                zip = new ZipInputStream(new FileInputStream(filepath));
                 ZipEntry zentry;
                 // now iterate the zip-file, searching for the requested file in it
                 while ((zentry = zip.getNextEntry()) != null) {
@@ -257,7 +259,7 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
         // remove all entries with identical ID, because we can't have these entries twice
         // in the database. if the user wants to update entries (with same IDs), the synch feature
         // can be used.
-        removeDoubleEntries(zkn3Doc);
+        handleDoubleEntries(zkn3Doc);
         // get the length of the data
         final int len = zkn3Doc.getRootElement().getContentSize();
         // reset the progressbar
@@ -356,7 +358,7 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
         // now that all entries are converted, append the data to the existing file
         dataObj.appendZknData(zkn3Doc);
         // TODO append desktop-data
-        // TODO append search-data                        
+        // TODO append search-data
         // append bookmarks
         bookmarksObj.appendBookmarks(dataObj, bookmark3Doc);
         return null;  // return your result
@@ -387,14 +389,16 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
      *
      * @param zdoc
      */
-    private void removeDoubleEntries(Document zdoc) {
+    private void handleDoubleEntries(Document zdoc) {
         // set new import message, telling that data conversion is proceeded
         msgLabel.setText(resourceMap.getString("importDlgMsgRemoveDouble"));
         // create a list of all elements from the given xml file
         List<?> elementList = zdoc.getRootElement().getContent();
         // reset the progressbar
         setProgress(0, 0, elementList.size());
-        // the outer loop for the imported data
+
+        HashMap<String, Element> documentElements = Tools.retrieveAllZettelAsMap(dataObj.getZknData());
+
         for (int cnt = 0; cnt < elementList.size(); cnt++) {
             // get element of imported data file
             Element importentry = (Element) elementList.get(cnt);
@@ -404,9 +408,10 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
             if (id != null && !id.isEmpty()) {
                 // check whether Zettel with unique ID already exists
                 // in the current database
-                if (dataObj.findZettelFromID(id) != -1) {
-                    // if yes, remove double entry from imported document
-                    zdoc.getRootElement().getContent().remove(cnt);
+                if (documentElements.containsKey(id)) {
+                    // if yes, create new id for entry with duplicated id from imported document
+                    importentry.setAttribute(Daten.ATTRIBUTE_ZETTEL_ID, Tools.createZknID(filepath.getName()));
+                    //     zdoc.getRootElement().getContent().remove(cnt);
                     // add number of removed entry to list. remember that
                     // the entry-number adds on to our counter, which starts
                     // at zero.
