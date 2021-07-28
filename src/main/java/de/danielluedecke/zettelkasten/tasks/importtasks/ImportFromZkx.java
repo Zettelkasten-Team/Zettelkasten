@@ -54,6 +54,8 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
+import static de.danielluedecke.zettelkasten.util.Tools.retrieveAllZettelAsMap;
+
 // TODO beim Import alter Daten und bei default-timestamp auch sek. und millisek. setzen
 
 /**
@@ -397,7 +399,7 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
         // reset the progressbar
         setProgress(0, 0, elementList.size());
 
-        HashMap<String, Element> documentElements = Tools.retrieveAllZettelAsMap(dataObj.getZknData());
+        HashMap<String, Element> documentElements = retrieveAllZettelAsMap(dataObj.getZknData());
 
         for (int cnt = 0; cnt < elementList.size(); cnt++) {
             // get element of imported data file
