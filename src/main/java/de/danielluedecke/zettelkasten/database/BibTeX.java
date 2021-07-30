@@ -1619,7 +1619,7 @@ public class BibTeX {
                                     }
                                 } // else the given name comes first, so we
                                 // separate each full author-name at space-sign, so we can
-                                // retieve sur- and given-name
+                                // retrieve sur- and given-name
                                 else {
                                     // retrieve sur and given name of author
                                     String[] names = aunames.trim().split(" ");
