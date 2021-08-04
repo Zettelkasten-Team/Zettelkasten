@@ -2371,9 +2371,9 @@ public class Settings {
     }
 
     /**
-     * Gets the setting for the autobackup-option.
+     * Gets the setting for the show icon text option.
      *
-     * @return {@code true} if autobackup should be activated
+     * @return {@code true} if show icon text should be activated
      */
     public boolean getShowIconText() {
         Element el = settingsFile.getRootElement().getChild(SETTING_SHOWICONTEXT);
@@ -2384,9 +2384,9 @@ public class Settings {
     }
 
     /**
-     * Sets the setting for the autobackup-option
+     * Sets the setting for the show icon text option
      *
-     * @param val true if the autobackup should be activated
+     * @param val true if the show icon text should be activated
      */
     public void setShowIconText(boolean val) {
         Element el = settingsFile.getRootElement().getChild(SETTING_SHOWICONTEXT);
