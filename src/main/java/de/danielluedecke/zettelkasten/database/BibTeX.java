@@ -74,7 +74,7 @@ import javax.swing.JOptionPane;
  * With this class, you can then retrieve single entries, retrieve bibtex
  * entries (i.e. author values) in a certain citation style etc.
  * <br><br>
- * This class is mainly used for importing literatur values from a bibtex file
+ * This class is mainly used for importing literature values from a bibtex file
  * (see
  * <b>CImportBibTex</b>) or changing bibkey values from entry's author values
  * (see
@@ -103,10 +103,10 @@ public class BibTeX {
      */
     private final ArrayList<BibtexEntry> bibtexentries = new ArrayList<>();
     /**
-     * Thi array stores bibtex entries that should be exported. Since bibtex
+     * This array stores bibtex entries that should be exported. Since bibtex
      * entries that should be exported may contain only a selection of all
      * bibtex entries of the currently opened bibtex file, we use an extra array
-     * to store export entrie.
+     * to store export entries.
      */
     private final ArrayList<BibtexEntry> outputbibtexentries = new ArrayList<>();
     /**

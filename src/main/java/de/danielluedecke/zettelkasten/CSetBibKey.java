@@ -149,6 +149,7 @@ public class CSetBibKey extends javax.swing.JDialog {
         }
         // set last settings
         jComboBoxShowBibTex.setSelectedIndex(settingsObj.getLastUsedSetBibyKeyType());
+
         // change layout style if user wishes itunes-like scrollbars...
         if (settingsObj.isMacAqua()) {
             // make extra table-sorter for itunes-tables
@@ -161,6 +162,7 @@ public class CSetBibKey extends javax.swing.JDialog {
             // set back default resize mode
             jTablePreview.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
         }
+
         // in case we have mac os x with aqua look&feel, make components look more mac-like...
         if (settingsObj.isMacAqua() || settingsObj.isSeaGlass()) {
             // textfield should look like search-textfield...
