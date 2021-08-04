@@ -1,8 +1,6 @@
 package de.danielluedecke.zettelkasten.database;
 
 import bibtex.dom.BibtexEntry;
-import de.danielluedecke.zettelkasten.EditorFrameTest;
-import de.danielluedecke.zettelkasten.SwingTestCase;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import junit.extensions.RepeatedTest;
 import junit.framework.TestSuite;
