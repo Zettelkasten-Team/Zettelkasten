@@ -165,20 +165,19 @@ public class BibTeX {
     }
 
     /**
-     * sets the modified state. should be called whenever changes have been made
-     * to the desktopfile (set it to true) or when the data has been saved (set
-     * it to false)
+     * Set the change status (modified state).
+     * Should be called whenever changes have been made to the desktop file (set to true)
+     * or when the data has been saved (set to false).
      *
      * @param m true when changes are unsaved, false otherwise
      */
     public void setModified(boolean m) {
         modified = m;
-        // update indicator for autobackup
         zknframe.setBackupNecessary();
     }
 
     /**
-     * Checks whether the datafile is modified
+     * Check if the data file has been changed (modified)
      *
      * @return {@code true} if it is modified, false otherwise
      */
