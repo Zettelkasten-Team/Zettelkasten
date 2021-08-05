@@ -2,16 +2,27 @@ package de.danielluedecke.zettelkasten.database;
 
 public class Document {
 
-    void getAuthor() {
-        // Create the class with stubbed-out methods.
+    String author;
+    String title;
+    String year;
+
+    // Create a class constructor for the Document class
+    public Document(String author, String title, String year){
+        this.author = author;
+        this.title = title;
+        this.year = year;
     }
 
-    void getTitle() {
-        // Create the class with stubbed-out methods.
+     String getAuthor() {
+        return author;
     }
 
-    void getYear() {
-        // Create the class with stubbed-out methods.
+    String getTitle() {
+        return title;
+    }
+
+    String getYear() {
+        return year;
     }
 
 }
