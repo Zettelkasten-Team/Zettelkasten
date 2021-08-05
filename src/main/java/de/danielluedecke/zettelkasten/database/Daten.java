@@ -3984,8 +3984,8 @@ public class Daten {
     /**
      * This methods returns the author of a given position in the
      * <b>author-datafile</b>.<br><br>
-     * This method is used for creating the literatur list which is displayed in
-     * a table on the JTabbedPane of the main window.<br><br>
+     * This method is used for creating the literature list,
+     * which is displayed in a table in the JTabbedPane of the main window.<br><br>
      * <b>Caution!</b> The position {@code pos} is a value from <b>1</b> to
      * {@link #getCount(int) getCount(AUCOUNT)} - in contrary to usual array
      * handling where the range is from 0 to (size-1).
