@@ -12,6 +12,8 @@ import org.junit.Test;
 import javax.swing.*;
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class BibTeXTest {
 
     // TODO: maybe we should use the TestObjectFactory here.
