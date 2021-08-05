@@ -70,7 +70,7 @@ public class BibTeXTest {
     @Test
     public void testEmptyResult() {
         Result r = new Result();
-        Assert.assertEquals(0, r.getCount());
+        Assert.assertEquals("count=0 for empty result", 0, r.getCount());
     }
 
 }
