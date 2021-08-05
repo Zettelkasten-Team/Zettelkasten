@@ -2,6 +2,8 @@ unresolved method declaration - SwingTestCase - /Users/rgb/Projects/Zettelkasten
 unresolved method declaration - setUp - /Users/rgb/Projects/Zettelkasten/src/test/java/de/danielluedecke/zettelkasten/SwingTestCase.java - line 16
 unresolved method declaration - tearDown - /Users/rgb/Projects/Zettelkasten/src/test/java/de/danielluedecke/zettelkasten/SwingTestCase.java - line 20
 unresolved method declaration - getTestFrame - /Users/rgb/Projects/Zettelkasten/src/test/java/de/danielluedecke/zettelkasten/SwingTestCase.java - line 28
+unresolved method declaration - BibTeXTest - /Users/rgb/Projects/Zettelkasten/src/test/java/de/danielluedecke/zettelkasten/database/BibTeXTest.java - line 18
+unresolved method declaration - setUp - /Users/rgb/Projects/Zettelkasten/src/test/java/de/danielluedecke/zettelkasten/database/BibTeXTest.java - line 51
 unresolved method declaration - EditorFrameTest - /Users/rgb/Projects/Zettelkasten/src/test/java/de/danielluedecke/zettelkasten/EditorFrameTest.java - line 17
 unresolved method declaration - setUp - /Users/rgb/Projects/Zettelkasten/src/test/java/de/danielluedecke/zettelkasten/EditorFrameTest.java - line 25
 unresolved method declaration - tearDown - /Users/rgb/Projects/Zettelkasten/src/test/java/de/danielluedecke/zettelkasten/EditorFrameTest.java - line 79
@@ -555,9 +557,9 @@ unresolved method declaration - replaceListElements - /Users/rgb/Projects/Zettel
 unresolved method declaration - ImportFromCSV - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/tasks/importtasks/ImportFromCSV.java - line 106
 unresolved method declaration - doInBackground - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/tasks/importtasks/ImportFromCSV.java - line 152
 unresolved method declaration - succeeded - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/tasks/importtasks/ImportFromCSV.java - line 204
-unresolved method declaration - ImportFromZkx - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/tasks/importtasks/ImportFromZkx.java - line 100
-unresolved method declaration - doInBackground - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/tasks/importtasks/ImportFromZkx.java - line 135
-unresolved method declaration - succeeded - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/tasks/importtasks/ImportFromZkx.java - line 365
+unresolved method declaration - ImportFromZkx - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/tasks/importtasks/ImportFromZkx.java - line 104
+unresolved method declaration - doInBackground - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/tasks/importtasks/ImportFromZkx.java - line 139
+unresolved method declaration - succeeded - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/tasks/importtasks/ImportFromZkx.java - line 369
 unresolved method declaration - ShowAttachmentListTask - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/tasks/ShowAttachmentListTask.java - line 73
 unresolved method declaration - doInBackground - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/tasks/ShowAttachmentListTask.java - line 87
 unresolved method declaration - succeeded - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/tasks/ShowAttachmentListTask.java - line 129
@@ -640,19 +642,19 @@ unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkast
 unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSynonymsEdit.java - line 396
 unresolved method declaration - jButtonFindNextActionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSynonymsEdit.java - line 434
 unresolved method declaration - CSetBibKey - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 106
-unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 274
-unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 283
-unresolved method declaration - changedUpdate - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 296
-unresolved method declaration - insertUpdate - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 301
-unresolved method declaration - removeUpdate - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 306
-unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 314
-unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 326
-unresolved method declaration - keyReleased - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 332
-unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 346
-unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 361
-unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 376
-unresolved method declaration - valueChanged - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 669
-unresolved method declaration - getColumnClass - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 764
+unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 276
+unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 285
+unresolved method declaration - changedUpdate - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 298
+unresolved method declaration - insertUpdate - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 303
+unresolved method declaration - removeUpdate - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 308
+unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 316
+unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 328
+unresolved method declaration - keyReleased - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 334
+unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 348
+unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 363
+unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 378
+unresolved method declaration - valueChanged - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 671
+unresolved method declaration - getColumnClass - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CSetBibKey.java - line 766
 unresolved method declaration - CExportEntries - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CExportEntries.java - line 55
 unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CExportEntries.java - line 79
 unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CExportEntries.java - line 165
@@ -791,44 +793,45 @@ unresolved method declaration - retrieveNodeTitle - /Users/rgb/Projects/Zettelka
 unresolved method declaration - selectByTyping - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/TreeUtil.java - line 285
 unresolved method declaration - navigateThroughList - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/ListUtil.java - line 44
 unresolved method declaration - selectByTyping - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/ListUtil.java - line 85
-unresolved method declaration - getSystemInformation - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 108
-unresolved method declaration - replaceUbbToUnicode - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 123
-unresolved method declaration - replaceUnicodeToUbb - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 145
-unresolved method declaration - removeHyperlink - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 173
-unresolved method declaration - openHyperlink - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 205
-unresolved method declaration - launchFile - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 327
-unresolved method declaration - isValidHTML - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 464
-unresolved method declaration - handleError - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 483
-unresolved method declaration - cleanHTML - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 507
-unresolved method declaration - getProperDate - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 521
-unresolved method declaration - getProperShortDate - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 592
-unresolved method declaration - retrieveEntryNumbersFromInput - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 641
-unresolved method declaration - retrieveEntryNumbersFromTransferHandler - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 728
-unresolved method declaration - retrieveDoubleEntries - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 785
-unresolved method declaration - prepareDoubleEntriesMessage - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 857
-unresolved method declaration - replaceSynonymsWithKeywords - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 948
-unresolved method declaration - initLocaleForDefaultActions - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1015
-unresolved method declaration - retrieveSeparatedKeywords - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1038
-unresolved method declaration - getKeywordsAndSynonymsParts - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1104
-unresolved method declaration - hasRegExChars - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1159
-unresolved method declaration - convertMarkDown2UBB - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1184
-unresolved method declaration - convertUBB2MarkDown - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1228
-unresolved method declaration - getImageResizeValues - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1273
-unresolved method declaration - removeUbbFromString - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1299
-unresolved method declaration - copyPlain - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1434
-unresolved method declaration - getTimeStamp - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1481
-unresolved method declaration - getTimeStampWithMilliseconds - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1496
-unresolved method declaration - createZknID - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1512
-unresolved method declaration - lineWrapText - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1527
-unresolved method declaration - convertSeparatorChars - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1576
-unresolved method declaration - mergeSynonyms - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1603
-unresolved method declaration - isValidJDOMChars - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1681
-unresolved method declaration - getFormsFromString - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1706
-unresolved method declaration - retrieveXMLFileAsString - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1747
-unresolved method declaration - extractFootnotesFromContent - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1802
-unresolved method declaration - makeTexturedToolBarButton - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1842
-unresolved method declaration - getFootnoteIDs - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1855
-unresolved method declaration - containsIgnoreCase - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1905
+unresolved method declaration - getSystemInformation - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 106
+unresolved method declaration - replaceUbbToUnicode - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 121
+unresolved method declaration - replaceUnicodeToUbb - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 143
+unresolved method declaration - removeHyperlink - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 171
+unresolved method declaration - openHyperlink - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 203
+unresolved method declaration - launchFile - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 325
+unresolved method declaration - isValidHTML - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 462
+unresolved method declaration - handleError - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 481
+unresolved method declaration - cleanHTML - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 505
+unresolved method declaration - getProperDate - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 519
+unresolved method declaration - getProperShortDate - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 590
+unresolved method declaration - retrieveEntryNumbersFromInput - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 639
+unresolved method declaration - retrieveEntryNumbersFromTransferHandler - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 726
+unresolved method declaration - retrieveDoubleEntries - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 783
+unresolved method declaration - prepareDoubleEntriesMessage - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 855
+unresolved method declaration - replaceSynonymsWithKeywords - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 946
+unresolved method declaration - initLocaleForDefaultActions - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1013
+unresolved method declaration - retrieveSeparatedKeywords - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1036
+unresolved method declaration - getKeywordsAndSynonymsParts - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1102
+unresolved method declaration - hasRegExChars - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1157
+unresolved method declaration - convertMarkDown2UBB - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1182
+unresolved method declaration - convertUBB2MarkDown - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1226
+unresolved method declaration - getImageResizeValues - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1271
+unresolved method declaration - removeUbbFromString - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1297
+unresolved method declaration - copyPlain - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1432
+unresolved method declaration - getTimeStamp - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1479
+unresolved method declaration - getTimeStampWithMilliseconds - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1494
+unresolved method declaration - createZknID - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1510
+unresolved method declaration - lineWrapText - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1525
+unresolved method declaration - convertSeparatorChars - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1574
+unresolved method declaration - mergeSynonyms - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1601
+unresolved method declaration - isValidJDOMChars - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1679
+unresolved method declaration - getFormsFromString - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1704
+unresolved method declaration - retrieveXMLFileAsString - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1745
+unresolved method declaration - extractFootnotesFromContent - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1800
+unresolved method declaration - makeTexturedToolBarButton - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1840
+unresolved method declaration - getFootnoteIDs - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1853
+unresolved method declaration - containsIgnoreCase - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1903
+unresolved method declaration - retrieveAllZettelAsMap - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/Tools.java - line 1938
 unresolved method declaration - checkSteno - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/NewEntryFrameUtil.java - line 48
 unresolved method declaration - checkSpelling - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/NewEntryFrameUtil.java - line 94
 unresolved method declaration - autoCompleteTags - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/util/NewEntryFrameUtil.java - line 129
@@ -1224,25 +1227,12 @@ Null pointer exception in jdt core when getting the value of annotation instance
 Null pointer exception in jdt core when getting the value of annotation instance attribute null
 Null pointer exception in jdt core when getting the value of annotation instance attribute null
 Null pointer exception in jdt core when getting the value of annotation instance attribute null
-unresolved method declaration - importAuthors - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 9099
+unresolved method declaration - importAuthors - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 9110
 Null pointer exception in jdt core when getting the value of annotation instance attribute null
-unresolved method declaration - attachBibtexFile - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 9148
-unresolved method declaration - refreshBibTexFile - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 9198
+unresolved method declaration - attachBibtexFile - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 9159
+unresolved method declaration - refreshBibTexFile - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 9209
 Null pointer exception in jdt core when getting the value of annotation instance attribute null
-unresolved method declaration - exportList - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 9259
-Null pointer exception in jdt core when getting the value of annotation instance attribute null
-Null pointer exception in jdt core when getting the value of annotation instance attribute null
-Null pointer exception in jdt core when getting the value of annotation instance attribute null
-Null pointer exception in jdt core when getting the value of annotation instance attribute null
-Null pointer exception in jdt core when getting the value of annotation instance attribute null
-Null pointer exception in jdt core when getting the value of annotation instance attribute null
-Null pointer exception in jdt core when getting the value of annotation instance attribute null
-Null pointer exception in jdt core when getting the value of annotation instance attribute null
-Null pointer exception in jdt core when getting the value of annotation instance attribute null
-Null pointer exception in jdt core when getting the value of annotation instance attribute null
-Null pointer exception in jdt core when getting the value of annotation instance attribute null
-unresolved method declaration - find - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 9733
-unresolved method declaration - replace - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 9770
+unresolved method declaration - exportList - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 9270
 Null pointer exception in jdt core when getting the value of annotation instance attribute null
 Null pointer exception in jdt core when getting the value of annotation instance attribute null
 Null pointer exception in jdt core when getting the value of annotation instance attribute null
@@ -1254,33 +1244,46 @@ Null pointer exception in jdt core when getting the value of annotation instance
 Null pointer exception in jdt core when getting the value of annotation instance attribute null
 Null pointer exception in jdt core when getting the value of annotation instance attribute null
 Null pointer exception in jdt core when getting the value of annotation instance attribute null
-Null pointer exception in jdt core when getting the value of annotation instance attribute null
-Null pointer exception in jdt core when getting the value of annotation instance attribute null
-unresolved method declaration - startSearch - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 10110
-unresolved method declaration - retrieveSelectedKeywordsFromList - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 10237
-Null pointer exception in jdt core when getting the value of annotation instance attribute null
+unresolved method declaration - find - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 9744
+unresolved method declaration - replace - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 9781
 Null pointer exception in jdt core when getting the value of annotation instance attribute null
 Null pointer exception in jdt core when getting the value of annotation instance attribute null
 Null pointer exception in jdt core when getting the value of annotation instance attribute null
 Null pointer exception in jdt core when getting the value of annotation instance attribute null
 Null pointer exception in jdt core when getting the value of annotation instance attribute null
-unresolved method declaration - askForSaveChanges - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 10703
-unresolved method declaration - canExit - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 10771
-unresolved method declaration - willExit - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 10794
-unresolved method declaration - invoke - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 10827
-unresolved method declaration - setHandled - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 10851
-unresolved method declaration - SelectionListener - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 11073
-unresolved method declaration - valueChanged - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 11076
-unresolved method declaration - getToolTipText - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 11360
-unresolved method declaration - getColumnClass - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 11977
-unresolved method declaration - getColumnClass - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 12034
-unresolved method declaration - getColumnClass - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 12175
-unresolved method declaration - getColumnClass - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 12273
-unresolved method declaration - getColumnClass - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 12386
-unresolved method declaration - getColumnClass - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 12561
-unresolved method declaration - getColumnClass - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 12638
-unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 13372
-unresolved method declaration - viewAuthorsCopyActionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 14488
+Null pointer exception in jdt core when getting the value of annotation instance attribute null
+Null pointer exception in jdt core when getting the value of annotation instance attribute null
+Null pointer exception in jdt core when getting the value of annotation instance attribute null
+Null pointer exception in jdt core when getting the value of annotation instance attribute null
+Null pointer exception in jdt core when getting the value of annotation instance attribute null
+Null pointer exception in jdt core when getting the value of annotation instance attribute null
+Null pointer exception in jdt core when getting the value of annotation instance attribute null
+Null pointer exception in jdt core when getting the value of annotation instance attribute null
+unresolved method declaration - startSearch - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 10121
+unresolved method declaration - retrieveSelectedKeywordsFromList - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 10248
+Null pointer exception in jdt core when getting the value of annotation instance attribute null
+Null pointer exception in jdt core when getting the value of annotation instance attribute null
+Null pointer exception in jdt core when getting the value of annotation instance attribute null
+Null pointer exception in jdt core when getting the value of annotation instance attribute null
+Null pointer exception in jdt core when getting the value of annotation instance attribute null
+Null pointer exception in jdt core when getting the value of annotation instance attribute null
+unresolved method declaration - askForSaveChanges - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 10714
+unresolved method declaration - canExit - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 10782
+unresolved method declaration - willExit - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 10805
+unresolved method declaration - invoke - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 10838
+unresolved method declaration - setHandled - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 10862
+unresolved method declaration - SelectionListener - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 11084
+unresolved method declaration - valueChanged - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 11087
+unresolved method declaration - getToolTipText - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 11371
+unresolved method declaration - getColumnClass - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 11988
+unresolved method declaration - getColumnClass - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 12045
+unresolved method declaration - getColumnClass - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 12186
+unresolved method declaration - getColumnClass - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 12284
+unresolved method declaration - getColumnClass - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 12397
+unresolved method declaration - getColumnClass - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 12572
+unresolved method declaration - getColumnClass - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 12649
+unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 13383
+unresolved method declaration - viewAuthorsCopyActionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/ZettelkastenView.java - line 14499
 unresolved method declaration - CImport - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CImport.java - line 119
 unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CImport.java - line 158
 unresolved method declaration - actionPerformed - /Users/rgb/Projects/Zettelkasten/src/main/java/de/danielluedecke/zettelkasten/CImport.java - line 371
