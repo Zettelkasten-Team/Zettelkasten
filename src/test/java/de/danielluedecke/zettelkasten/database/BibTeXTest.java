@@ -5,6 +5,7 @@ import de.danielluedecke.zettelkasten.ZettelkastenView;
 import junit.extensions.RepeatedTest;
 import junit.framework.TestSuite;
 import org.jdesktop.application.SingleFrameApplication;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,13 +14,6 @@ import java.io.IOException;
 
 public class BibTeXTest {
 
-    public BibTeXTest() throws UnsupportedLookAndFeelException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-    }
-
-    public static junit.framework.Test suite() {
-        return new RepeatedTest(new TestSuite(BibTeXTest.class), 1);
-    }
-
     // TODO: maybe we should use the TestObjectFactory here.
     AcceleratorKeys acceleratorKeys = new AcceleratorKeys();
     AutoKorrektur autoKorrektur = new AutoKorrektur();
@@ -27,14 +21,12 @@ public class BibTeXTest {
     StenoData stenoData = new StenoData();
     Settings s = new Settings(acceleratorKeys, autoKorrektur, synonyms, stenoData);
     TasksData tasksData = new TasksData();
-
     SingleFrameApplication singleFrameApplication = new SingleFrameApplication() {
         @Override
         protected void startup() {
 
         }
     };
-
     ZettelkastenView zknFrame = new ZettelkastenView(
             singleFrameApplication,
             s,
@@ -43,8 +35,14 @@ public class BibTeXTest {
             synonyms,
             stenoData,
             tasksData);
-
     BibTeX bibTeX = new BibTeX(zknFrame, s);
+
+    public BibTeXTest() throws UnsupportedLookAndFeelException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+    }
+
+    public static junit.framework.Test suite() {
+        return new RepeatedTest(new TestSuite(BibTeXTest.class), 1);
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -67,6 +65,12 @@ public class BibTeXTest {
         assertEquals("a", d.getAuthor());
         assertEquals("t", d.getTitle());
         assertEquals("y", d.getYear());
+    }
+
+    @Test
+    public void testEmptyResult() {
+        Result r = new Result();
+        Assert.assertEquals(0, r.getCount());
     }
 
 }
