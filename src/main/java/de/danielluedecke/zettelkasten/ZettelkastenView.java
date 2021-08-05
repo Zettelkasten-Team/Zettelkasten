@@ -8559,7 +8559,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
         // init variable
         int randomnumber = -1;
-        // create randomnumber and check, whether the entry with the created random number
+        // create a random number and check, whether the entry with the created random number
         // is deleted or not
         while (-1 == randomnumber || data.isDeleted(randomnumber)) {
             // create new random number until we have found a valid, non-deleted entry
