@@ -157,7 +157,7 @@ public class AcceleratorKeys {
             ctrlkey="control";
         }
         // We separate the initialisation of the accelerator tables for each 
-        // window to keep an better overiew.
+        // window to keep an better overview.
         initMainKeys();
         initNewEntryKeys();
         initDesktopKeys();
