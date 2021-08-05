@@ -61,5 +61,12 @@ public class BibTeXTest {
         BibtexEntry entry = bibTeX.getEntry(1);
     }
 
+    @Test
+    public void testDocument() {
+        Document d = new Document("a", "t", "y");
+        assertEquals("a", d.getAuthor());
+        assertEquals("t", d.getTitle());
+        assertEquals("y", d.getYear());
+    }
 
 }
