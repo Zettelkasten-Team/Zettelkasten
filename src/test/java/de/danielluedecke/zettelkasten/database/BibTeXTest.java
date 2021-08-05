@@ -62,6 +62,11 @@ public class BibTeXTest {
     }
 
     @Test
+    public void testGetFormattedEntry(){
+        bibTeX.getFormattedEntry(bibTeX.getEntry(1), true );
+    }
+
+    @Test
     public void testDocument() {
         Document d = new Document("a", "t", "y");
         assertEquals("a", d.getAuthor());
