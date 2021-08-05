@@ -424,7 +424,7 @@ public class Daten {
         titlelistUpToDate = true;
         clusterlistUpToDate = true;
         attachmentlistUpToDate = true;
-        // create "empty" XML JDom objects
+        // Create "empty" XML JDOM objects
         zknFile = new Document(new Element(DOCUMENT_ZETTELKASTEN));
         authorFile = new Document(new Element(DOCUMENT_AUTHORS));
         keywordFile = new Document(new Element(DOCUMENT_KEYWORDS));
