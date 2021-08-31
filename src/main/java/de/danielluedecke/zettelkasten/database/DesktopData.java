@@ -110,9 +110,9 @@ import java.util.logging.Level;
  */
 public class DesktopData {
 
-    private Document desktop;
-    private Document modifiedEntries;
-    private Document desktopNotes;
+    private org.jdom2.Document desktop;
+    private org.jdom2.Document modifiedEntries;
+    private org.jdom2.Document desktopNotes;
     private int currentDesktop;
     private boolean modified;
     private int timestampid = 0;
@@ -182,9 +182,9 @@ public class DesktopData {
      */
     public final void clear() {
         // create empty documents
-        desktop = new Document(new Element("desktops"));
-        modifiedEntries = new Document(new Element("modifiedEntries"));
-        desktopNotes = new Document(new Element("desktopNotes"));
+        desktop = new org.jdom2.Document(new Element("desktops"));
+        modifiedEntries = new org.jdom2.Document(new Element("modifiedEntries"));
+        desktopNotes = new org.jdom2.Document(new Element("desktopNotes"));
         currentDesktop = -1;
         modified = false;
     }
@@ -195,7 +195,7 @@ public class DesktopData {
      *
      * @param doc an xml-file containing the desktop-data
      */
-    public void setDesktopData(Document doc) {
+    public void setDesktopData(org.jdom2.Document doc) {
         desktop = doc;
     }
 
@@ -204,7 +204,7 @@ public class DesktopData {
      *
      * @return an xml-file containing the desktop-data
      */
-    public Document getDesktopData() {
+    public org.jdom2.Document getDesktopData() {
         return desktop;
     }
 
@@ -214,7 +214,7 @@ public class DesktopData {
      *
      * @param doc an xml-file containing the desktop-data
      */
-    public void setDesktopModifiedEntriesData(Document doc) {
+    public void setDesktopModifiedEntriesData(org.jdom2.Document doc) {
         modifiedEntries = doc;
     }
 
@@ -223,7 +223,7 @@ public class DesktopData {
      *
      * @return an xml-file containing the desktop-data
      */
-    public Document getDesktopModifiedEntriesData() {
+    public org.jdom2.Document getDesktopModifiedEntriesData() {
         return modifiedEntries;
     }
 
@@ -233,7 +233,7 @@ public class DesktopData {
      *
      * @param doc an xml-file containing the desktop-data
      */
-    public void setDesktopNotesData(Document doc) {
+    public void setDesktopNotesData(org.jdom2.Document doc) {
         desktopNotes = doc;
     }
 
@@ -242,7 +242,7 @@ public class DesktopData {
      *
      * @return an xml-file containing the desktop-data
      */
-    public Document getDesktopNotesData() {
+    public org.jdom2.Document getDesktopNotesData() {
         return desktopNotes;
     }
 
@@ -2147,9 +2147,9 @@ public class DesktopData {
      * @return the archived document as XML-focument, or {@code null} if an
      * error occured.
      */
-    public Document archiveDesktop(String name) {
+    public org.jdom2.Document archiveDesktop(String name) {
         // create new document
-        Document archive = new Document(new Element("archivedDesktop"));
+        org.jdom2.Document archive = new org.jdom2.Document(new Element("archivedDesktop"));
         // add desktop-element of desktop that should be archived
         Element deskel = getDesktopElement(name);
         // if we found a valid value, go on
@@ -2222,7 +2222,7 @@ public class DesktopData {
      * @return the archived document as XML-document, or {@code null} if an
      * error occured.
      */
-    public Document archiveDesktop(int desktopnr) {
+    public org.jdom2.Document archiveDesktop(int desktopnr) {
         return archiveDesktop(getDesktopName(desktopnr));
     }
 
@@ -2243,8 +2243,8 @@ public class DesktopData {
      * general error occured</li>
      * </ul>
      */
-    public int importArchivedDesktop(Document archive) {
-        // get imported desktopname
+    public int importArchivedDesktop(org.jdom2.Document archive) {
+        // get imported desktop name
         String name = archive.getRootElement().getAttributeValue("name");
         // check whether we have any name at all. if not, return false
         if (null == name || name.isEmpty()) {
@@ -2252,7 +2252,7 @@ public class DesktopData {
         }
         // first of all, go through all desktops and check whether the name
         // already exist, to avoid double naming...
-        // when such a desktopname as "name" already exists, return false
+        // when such a desktop name as "name" already exists, return false
         for (int cnt = 0; cnt < getCount(); cnt++) {
             if (name.equalsIgnoreCase(getDesktopName(cnt))) {
                 return IMPORT_ARCHIVE_ERR_DESKTOPNAME_EXISTS;
