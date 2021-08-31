@@ -43,68 +43,23 @@ import java.util.*;
 import java.util.logging.Level;
 
 /**
- * The root-element is names "desktops". For each desktop, a new child named
- * "desktop" is created. This child holds the content for one desktop.
+ * DesktopData is an XML structure. The root element is named "desktops".
+ * A new child element is created with the name "desktop". This child contains the content for a desktop.
  *
  * The first Element is always "bullet", a bullet-point. Bullet-points do always
  * have the attribute "name" which holds the name of the bullet-point that is
  * displayed in the jTree. Furthermore, each bullet-element automatically
  * creates a child-element "comment", even if a bullet-point has no comments.
  *
- * "comment" is therefor always the first child-element of "bullet".
+ * "comment" is therefore always the first child-element of "bullet".
  *
- * Futher child-elements are the entries, named "entry". Each entry-element has
+ * Further child-elements are the entries, named "entry". Each entry-element has
  * an id with the related entry-number from the main-datafile (see CDaten-class)
  * and a timestamp which indicates when this entry was added to the desktop.
  *
  * After the entries, each bullet has possible new bullet-elements as
  * child-elements. These bullet-element indicate the next level of the outline,
  * repeating the structure described here and above.
- *
- * &lt;desktops&gt;<br>
- * &nbsp;&nbsp;&lt;desktop name="MyFirstDesktop"&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;bullet name="Name of Bullet point"&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;omment&gt;The comment of this
- * bullet&lt;/comment&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="4"
- * timestamp="0901155107"&gt;A possible comment to the entry&lt;/entry&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="11" timestamp="0901153112"
- * /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="17"
- * timestamp="0901155313"&gt;A possible comment to the entry&lt;/entry&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;bullet name="Name of Bullet
- * Point"&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;comment /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="14"
- * timestamp="0902114301" /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="1"
- * timestamp="0901121313"&gt;A possible comment to the entry&lt;/entry&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="23"
- * timestamp="0901453208" /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="35"
- * timestamp="0902251714" /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;bullet name="Name of
- * Bullet Point"&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;comment
- * /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="40"
- * timestamp="0902114301" /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="44"
- * timestamp="0902114301" /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bullet&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;bullet name="Name of
- * Bullet Point"&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;comment
- * /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="50"
- * timestamp="0902114301" /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="54"
- * timestamp="0902114301" /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bullet&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bullet&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;/bullet&gt;<br>
- * &nbsp;&nbsp;&lt;/desktop&gt;<br>
- * &lt;/desktops&gt;
  *
  * @author danielludecke
  */
