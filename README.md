@@ -29,6 +29,10 @@ The digital <i>Zettelkasten</i> (German for slip-box) is a program for knowledge
 ## Download
 The latest release can be found [here](https://github.com/Zettelkasten-Team/Zettelkasten/releases).
 
+## <i>Zettelkasten</i> run
+
+On the shell you need to type `java -jar Zettelkasten-3.3.1.jar`.
+
 ## <i>Zettelkasten</i> build
 
 For the build, the Java Development Kit (JDK) 8 or higher is required. For future versions, JDK 11 is recommended.
