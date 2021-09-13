@@ -31,7 +31,7 @@ The latest release can be found [here](https://github.com/Zettelkasten-Team/Zett
 
 ## <i>Zettelkasten</i> run
 
-On the shell you need to type `java -jar Zettelkasten-3.3.1.jar`.
+On the shell you need to type `java -jar Zettelkasten-X.Y.Z.jar` (replace `X.Y.Z` with the current version number please).
 
 ## <i>Zettelkasten</i> build
 
