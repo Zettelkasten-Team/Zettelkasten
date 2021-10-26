@@ -107,7 +107,7 @@ public class CDesktopMultipleExport extends javax.swing.JDialog {
     }
 
     private void initListeners() {
-        // these codelines add an escape-listener to the dialog. so, when the user
+        // these code lines add an escape-listener to the dialog. so, when the user
         // presses the escape-key, the same action is performed as if the user
         // presses the cancel button...
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
@@ -174,7 +174,7 @@ public class CDesktopMultipleExport extends javax.swing.JDialog {
         jButtonCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CDesktopMultipleExport.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CDesktopMultipleExport.class);
         setTitle(resourceMap.getString("FormDeskMultipleExport.title")); // NOI18N
         setModal(true);
         setName("FormDeskMultipleExport"); // NOI18N
@@ -185,7 +185,7 @@ public class CDesktopMultipleExport extends javax.swing.JDialog {
         jList1.setName("jList1"); // NOI18N
         jScrollPane1.setViewportView(jList1);
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CDesktopMultipleExport.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CDesktopMultipleExport.class, this);
         jButtonApply.setAction(actionMap.get("apply")); // NOI18N
         jButtonApply.setName("jButtonApply"); // NOI18N
 

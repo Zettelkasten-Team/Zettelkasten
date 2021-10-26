@@ -33,7 +33,7 @@
 package de.danielluedecke.zettelkasten.util;
 
 import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.util.misc.TreeUserObject;
+import de.danielluedecke.zettelkasten.util.classes.TreeUserObject;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;

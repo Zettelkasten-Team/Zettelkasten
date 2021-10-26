@@ -6,7 +6,6 @@
 package de.danielluedecke.zettelkasten.tasks.importtasks;
 
 import com.opencsv.CSVReader;
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.database.Bookmarks;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.DesktopData;
@@ -101,7 +100,7 @@ public class ImportFromCSV extends org.jdesktop.application.Task<Object, Void> {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(ImportTask.class);
 
     /**
@@ -169,7 +168,7 @@ public class ImportFromCSV extends org.jdesktop.application.Task<Object, Void> {
         Element title;
         Element luhmann;
 
-        // return value that indicates that an error occured
+        // return value that indicates that an error occurred
         taskinfo.setImportOk(false);
         try {
             CSVReader csvreader = new CSVReader(new FileReader(filepath), separatorchar, '\"');

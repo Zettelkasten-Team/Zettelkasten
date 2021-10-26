@@ -33,8 +33,7 @@
 package de.danielluedecke.zettelkasten.tasks.export;
 
 import com.opencsv.CSVWriter;
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
-import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.util.Constants;
@@ -64,7 +63,7 @@ public class ExportToCsvTask extends org.jdesktop.application.Task<Object, Void>
     /**
      *
      */
-    private final BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     /**
      *
      */
@@ -113,12 +112,12 @@ public class ExportToCsvTask extends org.jdesktop.application.Task<Object, Void>
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(ExportTask.class);
 
     public ExportToCsvTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label,
-            TasksData td, Daten d, BibTex bto, File fp, ArrayList<Object> ee, int part, char csep,
-            boolean notag, boolean bibtex) {
+                           TasksData td, Daten d, BibTeX bto, File fp, ArrayList<Object> ee, int part, char csep,
+                           boolean notag, boolean bibtex) {
         super(app);
         dataObj = d;
         bibtexObj = bto;

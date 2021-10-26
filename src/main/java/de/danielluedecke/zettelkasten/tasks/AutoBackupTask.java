@@ -5,15 +5,9 @@
  */
 package de.danielluedecke.zettelkasten.tasks;
 
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
-import de.danielluedecke.zettelkasten.database.BibTex;
-import de.danielluedecke.zettelkasten.database.Bookmarks;
-import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.database.SearchRequests;
-import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.database.Synonyms;
+import de.danielluedecke.zettelkasten.database.*;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
 import java.io.ByteArrayOutputStream;
@@ -39,7 +33,7 @@ public class AutoBackupTask extends org.jdesktop.application.Task<Object, Void> 
     private final Daten dataObj;
     private final Settings settingsObj;
     private final Bookmarks bookmarksObj;
-    private final BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     private final Synonyms synonymsObj;
     private final SearchRequests searchObj;
     private final DesktopData desktopObj;
@@ -53,12 +47,12 @@ public class AutoBackupTask extends org.jdesktop.application.Task<Object, Void> 
     private String oldmsg;
     private final javax.swing.JLabel statusMsgLabel;
     private final org.jdesktop.application.ResourceMap rm
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(ZettelkastenView.class);
 
     public AutoBackupTask(org.jdesktop.application.Application app, ZettelkastenView zkn,
             javax.swing.JLabel ml, Daten d, 
-            DesktopData desk, Settings s, SearchRequests sr, Synonyms sy, Bookmarks bm, BibTex bt) {
+            DesktopData desk, Settings s, SearchRequests sr, Synonyms sy, Bookmarks bm, BibTeX bt) {
         // Runs on the EDT.  Copy GUI state that
         // doInBackground() depends on from parameters
         // to ImportFileTask fields, here.

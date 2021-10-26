@@ -118,7 +118,7 @@ public class CInsertHyperlink extends javax.swing.JDialog {
     
     
     private void initListeners() {
-        // these codelines add an escape-listener to the dialog. so, when the user
+        // these code lines add an escape-listener to the dialog. so, when the user
         // presses the escape-key, the same action is performed as if the user
         // presses the cancel button...
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
@@ -190,7 +190,7 @@ public class CInsertHyperlink extends javax.swing.JDialog {
         jButtonCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CInsertHyperlink.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CInsertHyperlink.class);
         setTitle(resourceMap.getString("FormInsertHyperlink.title")); // NOI18N
         setModal(true);
         setName("FormInsertHyperlink"); // NOI18N
@@ -208,7 +208,7 @@ public class CInsertHyperlink extends javax.swing.JDialog {
         jTextFieldDescription.setText(resourceMap.getString("jTextFieldDescription.text")); // NOI18N
         jTextFieldDescription.setName("jTextFieldDescription"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CInsertHyperlink.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CInsertHyperlink.class, this);
         jButtonApply.setAction(actionMap.get("insertHyperlink")); // NOI18N
         jButtonApply.setName("jButtonApply"); // NOI18N
 

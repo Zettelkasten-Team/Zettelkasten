@@ -35,7 +35,6 @@ package de.danielluedecke.zettelkasten.database;
 
 import de.danielluedecke.zettelkasten.CImportBibTex;
 import de.danielluedecke.zettelkasten.CSetBibKey;
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
@@ -127,12 +126,23 @@ public class Settings {
      * See method "loadSettings" below for more details.
      */
     private final List<String> dataFilesToLoad = new ArrayList<>();
-
-    //TODO needs to be removed
+    /**
+     * Indicates whether the programm is running on a mac with aqua-look and feel or not...
+     * @return {@code true}, if the programm is running on a mac with aqua-look and feel
+     */
+    public boolean isMacAqua() {
+        return PlatformUtil.isMacOS() & getLookAndFeel().contains("Aqua");
+    }
+    /**
+     * Indicates whether the programm is either running on a mac with aqua-look and feel.
+     * @return {@code true}, if the programm is running on a mac with aqua-look and feel
+     * @deprecated Use {@link #isMacAqua()} instead.
+     */
+    public boolean isMacStyle() {
+        return isMacAqua();
+    }
     public boolean isSeaGlass() {
-        return false;
-        //seaglass plugin is not compatible with modules
-        //getLookAndFeel().equals(Constants.seaGlassLookAndFeelClassName);
+        return getLookAndFeel().equals(Constants.seaGlassLookAndFeelClassName);
     }
     public boolean isNimbus() {
         return getLookAndFeel().contains("nimbus");
@@ -335,7 +345,7 @@ public class Settings {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(ZettelkastenView.class);
 
     /**
@@ -545,6 +555,9 @@ public class Settings {
     }
 
     public Color getTableGridColor() {
+        if (isMacAqua()) {
+            return Constants.gridcolortransparent;
+        }
         return ((getShowGridHorizontal() || getShowGridVertical()) ? Constants.gridcolor : Constants.gridcolortransparent);
     }
 
@@ -977,18 +990,18 @@ public class Settings {
         // if file exists, go on...
         if (filepath != null && filepath.exists()) {
             // first of all, we load the basic-settings. when we have done this, we load
-            // the meta-data, like spellchecking-data, synonyms and foreignwords. these files
-            // are not related to a certain zettelkasten-data-file, but general. thus, they are
+            // the meta-data, like spellchecking-data, synonyms and foreign words. these files
+            // are not related to a certain Zettelkasten data file, but general. thus, they are
             // not stored in the .zkn3-files. however, these meta-data is not only pure settings.
             // it is better to have them separated, in the base-zkn-directory (zkn-path) if possible,
             // so whenever the user removes the program directory, the other data is still there.
             for (String filesToLoad1 : filesToLoad) {
                 ZipInputStream zip = null;
-                // open the zip-file
+                // open the zip file
                 try {
                     zip = new ZipInputStream(new FileInputStream(filepath));
                     ZipEntry entry;
-                    // now iterate the zip-file, searching for the requested file in it
+                    // now iterate the zip file, searching for the requested file in it
                     while ((entry = zip.getNextEntry()) != null) {
                         String entryname = entry.getName();
                         // if the found file matches the requested one, start the SAXBuilder
@@ -998,7 +1011,7 @@ public class Settings {
                                 // Document doc = new Document();
                                 Document doc = builder.build(zip);
                                 // compare, which file we have retrieved, so we store the data
-                                // correctly on our data-object
+                                // correctly on our data object
                                 if (entryname.equals(Constants.settingsFileName)) {
                                     settingsFile = doc;
                                 }
@@ -1098,12 +1111,12 @@ public class Settings {
         // initial value
         boolean saveok = true;
         ZipOutputStream zip = null;
-        // open the outputstream
+        // open the output stream
         try {
             zip = new ZipOutputStream(new FileOutputStream(filepath));
             // I first wanted to use a pretty output format, so advanced users who
             // extract the data file can better watch the xml-files. but somehow, this
-            // lead to an error within the method "retrieveElement" in the class "CDaten.java",
+            // lead to an error within the method "retrieveElement" in the class "Daten.java",
             // saying the a org.jdom.text cannot be converted to org.jdom.element?!?
             // XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
             XMLOutputter out = new XMLOutputter();
@@ -1111,7 +1124,7 @@ public class Settings {
             zip.putNextEntry(new ZipEntry(Constants.settingsFileName));
             out.output(settingsFile, zip);
             // save settings
-            // here we retrieve the acceleratorkey-file for the mainwindow
+            // here we retrieve the accelerator key file for the main window
             zip.putNextEntry(new ZipEntry(Constants.acceleratorKeysMainName));
             out.output(acceleratorKeys.getDocument(AcceleratorKeys.MAINKEYS), zip);
             // save settings
@@ -1141,8 +1154,8 @@ public class Settings {
                 Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             }
         }
-        // first, create temporary backup of data-file
-        // therefor, create tmp-file-path
+        // first, create temporary backup of data file
+        // therefor, create tmp file path
         File tmpdatafp = new File(datafilepath.toString() + ".tmp");
         // check whether we have any saved data at all
         if (datafilepath.exists()) {
@@ -1163,12 +1176,12 @@ public class Settings {
         }
         // save original data-file. in case we get an error here, we can copy
         // back the temporary saved file...
-        // open the outputstream
+        // open the output stream
         try {
             zip = new ZipOutputStream(new FileOutputStream(datafilepath));
             // I first wanted to use a pretty output format, so advanced users who
             // extract the data file can better watch the xml-files. but somehow, this
-            // lead to an error within the method "retrieveElement" in the class "CDaten.java",
+            // lead to an error within the method "retrieveElement" in the class "Daten.java",
             // saying the a org.jdom.text cannot be converted to org.jdom.element?!?
             // XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
             XMLOutputter out = new XMLOutputter();
@@ -1196,7 +1209,7 @@ public class Settings {
             tmpdatafp.renameTo(checkbackup);
             // log path.
             Constants.zknlogger.log(Level.INFO, "A backup of the meta-data was saved to {0}", checkbackup.toString());
-            // tell user that an error occured
+            // tell user that an error occurred
             JOptionPane.showMessageDialog(null, resourceMap.getString("metadataSaveErrMsg", "\"" + checkbackup.getName() + "\""),
                     resourceMap.getString("metadataSaveErrTitle"),
                     JOptionPane.PLAIN_MESSAGE);
@@ -1302,7 +1315,7 @@ public class Settings {
                 if (sk != null && sk.size() > 0) {
                     // get first element
                     RowSorter.SortKey ssk = sk.get(0);
-                    // set sortcolumn and sort order
+                    // set sort column and sort order
                     String value = String.valueOf(ssk.getColumn()) + "," + ssk.getSortOrder().toString();
                     el.setAttribute(t.getName(), value);
                 }
@@ -1338,7 +1351,7 @@ public class Settings {
                                 so = SortOrder.UNSORTED;
                                 break;
                         }
-                        // create and return sortkey
+                        // create and return sort key
                         return new RowSorter.SortKey(col, so);
                     }
                 }
@@ -1487,9 +1500,9 @@ public class Settings {
     }
 
     /**
-     * Retrieves the filepath of the last used bibtex-file. we need this path when exporting entries
+     * Retrieves the filepath of the last used BibTeX file. we need this path when exporting entries
      * (from the desktop or the export-method from the main frame), and the user wants to create a
-     * separate BibTex-File out of the authors that have been exported.
+     * separate BibTeX-File out of the authors that have been exported.
      *
      * @return the filepath of the last used bixb text file, or null if no path is saved
      */
@@ -1498,11 +1511,11 @@ public class Settings {
     }
 
     /**
-     * Sets the filepath of the last used bibtex-file. we need this path when exporting entries
+     * Sets the filepath of the last used BibTeX file. we need this path when exporting entries
      * (from the desktop or the export-method from the main frame), and the user wants to create a
-     * separate BibTex-File out of the authors that have been exported.
+     * separate BibTeX-File out of the authors that have been exported.
      *
-     * @param fp the filepath of the last used bixb text file
+     * @param fp the filepath of the last used BibTeX file
      */
     public void setLastUsedBibTexFile(String fp) {
         // try to find filepath-element
@@ -1517,7 +1530,7 @@ public class Settings {
 
     /**
      * Retrieves the image path, where images used in entries are stored. This is typically the
-     * directory "img", which is a subdirectroy of the filepath directory.
+     * directory "img", which is a sub directory of the filepath directory.
      *
      * @param userpath a path to the user-defined directory for storing images. as default, use the
      * {@code Daten.getUserImagePath()} method to retrieve this path.
@@ -1530,7 +1543,7 @@ public class Settings {
 
     /**
      * Retrieves the image path, where images used in entries are stored. This is typically the
-     * directory "forms", which is a subdirectroy of the filepath directory.
+     * directory "forms", which is a sub directory of the filepath directory.
      *
      * @param userpath a path to the user-defined directory for storing images. as default, use the
      * {@code Daten.getUserImagePath()} method to retrieve this path.
@@ -1562,7 +1575,7 @@ public class Settings {
             if (null == f) {
                 return "";
             }
-            // create a new image path from the basdir plus appending "/img/" directory
+            // create a new image path from the base dir plus appending "/img/" directory
             retval.append(f.getPath()).append(File.separatorChar).append(subdir);
         }
         // check whether a trailing separator char should be added
@@ -1580,7 +1593,7 @@ public class Settings {
             }
         } // if no trailing separator char requested, delete it, if any
         else {
-            // indicates whether we already have a trailing seperator char
+            // indicates whether we already have a trailing separator char
             boolean sepcharalreadyexists = false;
             // if so, check whether we don't already have such a trailing separator char
             try {
@@ -1602,7 +1615,7 @@ public class Settings {
 
     /**
      * Retrieves the image path, where attachments used in entries are stored. This is typically the
-     * directory "attachments", which is a subdirectroy of the filepath directory.
+     * directory "attachments", which is a sub directory of the filepath directory.
      *
      * @param userpath
      * @param trailingSeparator if true, a file-separator-char will be appended, if false not
@@ -1614,7 +1627,7 @@ public class Settings {
         // check whether we have a user-defined attachment path. if yes,
         // use this as attachment-path, else get the base directory
         if (userpath != null && userpath.exists()) {
-            // get userpath
+            // get user path
             retval.append(userpath.toString());
         } else {
             // get base dir
@@ -1623,7 +1636,7 @@ public class Settings {
             if (null == f) {
                 return "";
             }
-            // create a new attachment path from the basdir plus appending "/attachment/" directory
+            // create a new attachment path from the base dir plus appending "/attachment/" directory
             retval.append(f.getPath()).append(File.separatorChar).append("attachments");
         }
         // check whether a trailing separator char should be added
@@ -1641,7 +1654,7 @@ public class Settings {
             }
         } // if no trailing separator char requested, delete it, if any
         else {
-            // indicates whether we already have a trailing seperator char
+            // indicates whether we already have a trailing separator char
             boolean sepcharalreadyexists = false;
             // if so, check whether we don't already have such a trailing separator char
             try {
@@ -2003,7 +2016,7 @@ public class Settings {
     /**
      * Retrieves the setting which java-look'n'feel the user wants to have set
      *
-     * @return the string for the look'n'feel's classname
+     * @return the string for the look'n'feel's class name
      */
     public String getLookAndFeel() {
         return genericStringGetter(SETTING_LAF, "");
@@ -2506,7 +2519,7 @@ public class Settings {
     /**
      * Gets the setting for the default locale
      *
-     * @return a string with a lowercase-2-letter-country-code for the default languags
+     * @return a string with a lowercase-2-letter-country-code for the default languages
      */
     public String getLanguage() {
         return genericStringGetter(SETTING_LOCALE, Locale.getDefault().getLanguage());
@@ -2515,7 +2528,7 @@ public class Settings {
     /**
      * Sets the default language
      *
-     * @param lang a string with a lowercase-2-letter-country-code for the default languags
+     * @param lang a string with a lowercase-2-letter-country-code for the default languages
      */
     public void setLanguage(String lang) {
         genericStringSetter(SETTING_LOCALE, lang.toLowerCase());
@@ -5261,7 +5274,7 @@ public class Settings {
 
     /**
      * @return returns the last used bibtex-format, i.e. the format (encoding) of the currently
-     * attached bibtex-file. following constants are used:<br>
+     * attached BibTeX file. following constants are used:<br>
      * 0: UTF-8 (Bibliographix)<br>
      * 1: UTF-8 (Citavi)<br>
      * 2: ISO8859_1 (Emacs with AucTex/RefTex)<br>
@@ -5274,10 +5287,10 @@ public class Settings {
     }
 
     /**
-     * Sets the character-encoding of the currently attached bibtex-file.
+     * Sets the character-encoding of the currently attached BibTeX file.
      *
-     * @param value set the last used bibtex-format, i.e. the format (encoding) of the currently
-     * attached bibtex-file. following constants are used:<br>
+     * @param value set the last used BibTeX format, i.e. the format (encoding) of the currently
+     * attached BibTeX file. The following constants are used:<br>
      * 0: UTF-8 (Bibliographix)<br>
      * 1: UTF-8 (Citavi)<br>
      * 2: ISO8859_1 (Emacs with AucTex/RefTex)<br>
@@ -5415,7 +5428,7 @@ public class Settings {
         // get default path
         String defpath = Constants.standardIconThemePath;
         // check whether we have os x
-        if (isSeaGlass()) {
+        if (isMacAqua() || isSeaGlass()) {
             defpath = defpath + "osx/";
         } else {
             defpath = defpath + Constants.iconThemes[theme];

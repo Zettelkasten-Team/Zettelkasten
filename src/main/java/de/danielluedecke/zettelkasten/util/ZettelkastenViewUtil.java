@@ -35,12 +35,8 @@ package de.danielluedecke.zettelkasten.util;
 import de.danielluedecke.zettelkasten.CBiggerEditField;
 import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
-import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
-import de.danielluedecke.zettelkasten.database.BibTex;
-import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.database.SearchRequests;
-import de.danielluedecke.zettelkasten.database.Settings;
+import de.danielluedecke.zettelkasten.database.*;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
 import java.awt.Desktop;
 import java.io.File;
@@ -166,8 +162,8 @@ public class ZettelkastenViewUtil {
      * This method updates a jTable and a possible linked list which holds
      * filtered values from the jTable, by adding new values to the table and
      * list. this method is called when new e.g. authors were edited (see
-     * {@link #newAuthor() newAuthor()} or
-     * {@link #finishedEditing() finishedEditing()}).
+     * {@link ZettelkastenView#newAuthor() newAuthor()} or
+     * {@link ZettelkastenView#editFinishedEvent() editFinishedEvent()}).
      *
      * @param table the table were we have to add a new value with frequency
      * @param list the possible linked list were we have to add a new value with
@@ -351,7 +347,7 @@ public class ZettelkastenViewUtil {
      * @param bibtex
      * @param displayedZettel
      */
-    public static void hiddenFeatures(ZettelkastenView mainframe, javax.swing.JTextField jTextFieldEntryNumber, Daten data, SearchRequests searchrequests, DesktopData desktop, Settings settings, AcceleratorKeys acceleratorKeys, BibTex bibtex, int displayedZettel) {
+    public static void hiddenFeatures(ZettelkastenView mainframe, javax.swing.JTextField jTextFieldEntryNumber, Daten data, SearchRequests searchrequests, DesktopData desktop, Settings settings, AcceleratorKeys acceleratorKeys, BibTeX bibtex, int displayedZettel) {
         // here we have some "hidden features".
         String t = jTextFieldEntryNumber.getText();
         // the "?" shows a random entry
@@ -527,7 +523,7 @@ public class ZettelkastenViewUtil {
                     try {
                         // create a new dialog with the bigger edit-field, passing some initial values
                         StringBuilder bibinfo = new StringBuilder("");
-                        bibinfo.append("BibTex-Daten (").append(String.valueOf(bibtex.getCount())).append(" Einträge)");
+                        bibinfo.append("BibTeX-Daten (").append(String.valueOf(bibtex.getCount())).append(" Einträge)");
                         biggerEditDlg = new CBiggerEditField(mainframe.getFrame(), settings, bibinfo.toString(), bibtex.saveFile().toString("UTF-8"), "", Constants.EDIT_OTHER);
                         // center window
                         biggerEditDlg.setLocationRelativeTo(mainframe.getFrame());

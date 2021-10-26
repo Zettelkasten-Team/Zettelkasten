@@ -32,12 +32,16 @@
  */
 package de.danielluedecke.zettelkasten;
 
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.util.*;
-import de.danielluedecke.zettelkasten.database.BibTex;
-import de.danielluedecke.zettelkasten.util.misc.Comparer;
+import de.danielluedecke.zettelkasten.util.Tools;
+import de.danielluedecke.zettelkasten.util.Constants;
+import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import de.danielluedecke.zettelkasten.database.Daten;
-
+import com.explodingpixels.macwidgets.MacWidgetFactory;
+import com.explodingpixels.widgets.TableUtils;
+import de.danielluedecke.zettelkasten.util.ColorUtil;
+import de.danielluedecke.zettelkasten.util.PlatformUtil;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,6 +55,7 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.DocumentEvent;
@@ -68,7 +73,7 @@ import org.jdesktop.application.Action;
  */
 public class CSetBibKey extends javax.swing.JDialog {
 
-    private BibTex bibtexObj;
+    private BibTeX bibtexObj;
     private Settings settingsObj;
     private Daten dataObj;
 
@@ -95,7 +100,7 @@ public class CSetBibKey extends javax.swing.JDialog {
      * get the strings for file descriptions from the resource map
      */
     private org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(CSetBibKey.class);
 
     /**
@@ -112,7 +117,7 @@ public class CSetBibKey extends javax.swing.JDialog {
      * import/export of bibtex-files
      * @param s a reference to the {@code CSettings}-class
      */
-    public CSetBibKey(java.awt.Frame parent, ZettelkastenView mf, Daten d, BibTex bt, Settings s) {
+    public CSetBibKey(java.awt.Frame parent, ZettelkastenView mf, Daten d, BibTeX bt, Settings s) {
         super(parent);
         // copy parameters to our global variables
         bibtexObj = bt;
@@ -144,8 +149,20 @@ public class CSetBibKey extends javax.swing.JDialog {
         }
         // set last settings
         jComboBoxShowBibTex.setSelectedIndex(settingsObj.getLastUsedSetBibyKeyType());
+        // change layout style if user wishes itunes-like scrollbars...
+        if (settingsObj.isMacAqua()) {
+            // make extra table-sorter for itunes-tables
+            TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
+                @Override
+                public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
+                }
+            };
+            TableUtils.makeSortable(jTablePreview, sortDelegate);
+            // set back default resize mode
+            jTablePreview.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+        }
         // in case we have mac os x with aqua look&feel, make components look more mac-like...
-        if (settingsObj.isSeaGlass()) {
+        if (settingsObj.isMacAqua() || settingsObj.isSeaGlass()) {
             // textfield should look like search-textfield...
             jTextFieldFilterTable.putClientProperty("JTextField.variant", "search");
             if (settingsObj.isSeaGlass()) {
@@ -249,7 +266,7 @@ public class CSetBibKey extends javax.swing.JDialog {
      * Init several listeners for the components.
      */
     private void initListeners() {
-        // these codelines add an escape-listener to the dialog. so, when the user
+        // these code lines add an escape-listener to the dialog. so, when the user
         // presses the escape-key, the same action is performed as if the user
         // presses the cancel button...
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
@@ -316,10 +333,10 @@ public class CSetBibKey extends javax.swing.JDialog {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 if (Tools.isNavigationKey(evt.getKeyCode())) {
                     // if user pressed navigation key, select next table entry
-                    TableUtils.navigateThroughList(jTablePreview, evt.getKeyCode());
+                    de.danielluedecke.zettelkasten.util.TableUtils.navigateThroughList(jTablePreview, evt.getKeyCode());
                 } else {
                     // select table-entry live, while the user is typing...
-                    TableUtils.selectByTyping(jTablePreview, jTextFieldFilterTable, 1);
+                    de.danielluedecke.zettelkasten.util.TableUtils.selectByTyping(jTablePreview, jTextFieldFilterTable, 1);
                 }
             }
         });
@@ -401,7 +418,7 @@ public class CSetBibKey extends javax.swing.JDialog {
                 linkedtablelist.add(o);
             }
         }
-        TableUtils.filterTable(jTablePreview, dtm, text, new int[]{1}, regEx);
+        de.danielluedecke.zettelkasten.util.TableUtils.filterTable(jTablePreview, dtm, text, new int[]{1}, regEx);
         // reset textfield
         jTextFieldFilterTable.setText("");
         jTextFieldFilterTable.requestFocusInWindow();
@@ -686,7 +703,7 @@ public class CSetBibKey extends javax.swing.JDialog {
         jButtonCancel = new javax.swing.JButton();
         jButtonApply = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTablePreview = new javax.swing.JTable();
+        jTablePreview = (settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
         jLabelTitle = new javax.swing.JLabel();
         jButtonRefreshView = new javax.swing.JButton();
         jTextFieldFilterTable = new javax.swing.JTextField();
@@ -694,7 +711,7 @@ public class CSetBibKey extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CSetBibKey.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CSetBibKey.class);
         setTitle(resourceMap.getString("CFormSetBibKey.title")); // NOI18N
         setName("CFormSetBibKey"); // NOI18N
 
@@ -715,13 +732,14 @@ public class CSetBibKey extends javax.swing.JDialog {
         jRadioButtonFileBibkey.setToolTipText(resourceMap.getString("jRadioButtonFileBibkey.toolTipText")); // NOI18N
         jRadioButtonFileBibkey.setName("jRadioButtonFileBibkey"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CSetBibKey.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CSetBibKey.class, this);
         jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
         jButtonCancel.setName("jButtonCancel"); // NOI18N
 
         jButtonApply.setAction(actionMap.get("applyChanges")); // NOI18N
         jButtonApply.setName("jButtonApply"); // NOI18N
 
+        jScrollPane1.setBorder(null);
         jScrollPane1.setName("jScrollPane1"); // NOI18N
         jScrollPane1.setPreferredSize(new java.awt.Dimension(100, 100));
 
@@ -755,10 +773,8 @@ public class CSetBibKey extends javax.swing.JDialog {
         jTablePreview.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jTablePreview.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jTablePreview);
-        if (jTablePreview.getColumnModel().getColumnCount() > 0) {
-            jTablePreview.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTablePreview.columnModel.title0")); // NOI18N
-            jTablePreview.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTablePreview.columnModel.title1")); // NOI18N
-        }
+        jTablePreview.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTablePreview.columnModel.title0")); // NOI18N
+        jTablePreview.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTablePreview.columnModel.title1")); // NOI18N
 
         jLabelTitle.setText(resourceMap.getString("jLabelTitle.text")); // NOI18N
         jLabelTitle.setName("jLabelTitle"); // NOI18N
@@ -774,7 +790,7 @@ public class CSetBibKey extends javax.swing.JDialog {
         jTextFieldFilterTable.setToolTipText(resourceMap.getString("jTextFieldFilterTable.toolTipText")); // NOI18N
         jTextFieldFilterTable.setName("jTextFieldFilterTable"); // NOI18N
 
-        jComboBoxShowBibTex.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nur neue BibTex-Einträge anzeigen", "Nur vorhandene BibTex-Einträge anzeigen", "Alle BibTex-Einträge anzeigen" }));
+        jComboBoxShowBibTex.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nur neue BibTeX-Einträge anzeigen", "Nur vorhandene BibTeX-Einträge anzeigen", "Alle BibTeX-Einträge anzeigen" }));
         jComboBoxShowBibTex.setName("jComboBoxShowBibTex"); // NOI18N
 
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N

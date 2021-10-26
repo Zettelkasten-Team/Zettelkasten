@@ -146,7 +146,7 @@ public class CExportEntries extends javax.swing.JDialog {
         jButtonCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CExportEntries.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CExportEntries.class);
         setTitle(resourceMap.getString("FormExportEntriesChoice.title")); // NOI18N
         setModal(true);
         setName("FormExportEntriesChoice"); // NOI18N
@@ -178,7 +178,7 @@ public class CExportEntries extends javax.swing.JDialog {
 
         jTextFieldSelection.setName("jTextFieldSelection"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CExportEntries.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CExportEntries.class, this);
         jButtonApply.setAction(actionMap.get("applyExport")); // NOI18N
         jButtonApply.setName("jButtonApply"); // NOI18N
 

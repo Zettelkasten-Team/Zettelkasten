@@ -32,8 +32,8 @@
  */
 package de.danielluedecke.zettelkasten.tasks;
 
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
-import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.database.*;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -43,13 +43,7 @@ import java.util.zip.ZipInputStream;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
-import de.danielluedecke.zettelkasten.database.Bookmarks;
 import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.database.SearchRequests;
-import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.database.Synonyms;
 
 /**
  *
@@ -57,71 +51,52 @@ import de.danielluedecke.zettelkasten.database.Synonyms;
  */
 public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
 
-    /**
-     * Daten object, which contains the XML data of the Zettelkasten
-     */
-    private final Daten dataObj;
-    /**
-     * CBookmark object, which contains the XML data of the entries' bookmarks
-     */
-    private final Bookmarks bookmarkObj;
-    /**
-     * CBookmark object, which contains the XML data of the entries' bookmarks
-     */
-    private final Synonyms synonymsObj;
-    /**
-     * DesktopData object, which contains the XML data of the desktop
-     */
-    private final DesktopData desktopObj;
-    /**
-     * Settings object, which contains the setting, for instance the file paths
-     * etc...
-     */
-    private final Settings settingsObj;
-    private final BibTex bibtexObj;
-    /**
-     * SearchRequests object, which contains the XML data of the searchrequests
-     * and -result that are related with this data file
-     */
-    private final SearchRequests searchrequestsObj;
-
     private final javax.swing.JDialog parentDialog;
     private final javax.swing.JLabel msgLabel;
+
+    private final Daten daten;
+    private final Bookmarks bookmarks;
+    private final SearchRequests searchRequests;
+    private final DesktopData desktopData;
+    private final Synonyms synonyms;
+    private final Settings settings;
+    private final BibTeX bibTeX;
 
     /**
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(LoadFileTask.class);
 
-    /**
-     *
-     * @param app
-     * @param parent
-     * @param label
-     * @param d
-     * @param bm
-     * @param sr
-     * @param dk
-     * @param s
-     */
-    LoadFileTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, Bookmarks bm, SearchRequests sr, DesktopData dk, Synonyms sy, Settings s, BibTex bib) {
+    LoadFileTask(org.jdesktop.application.Application app,
+                 javax.swing.JDialog parent,
+                 javax.swing.JLabel label,
+                 Daten d,
+                 Bookmarks bm,
+                 SearchRequests sr,
+                 DesktopData dk,
+                 Synonyms sy,
+                 Settings s,
+                 BibTeX bib) {
+
         // Runs on the EDT.  Copy GUI state that
         // doInBackground() depends on from parameters
         // to ImportFileTask fields, here.
         super(app);
-        dataObj = d;
-        bibtexObj = bib;
-        bookmarkObj = bm;
-        synonymsObj = sy;
-        searchrequestsObj = sr;
-        desktopObj = dk;
-        settingsObj = s;
+
         parentDialog = parent;
         msgLabel = label;
         // init status text
-        msgLabel.setText(resourceMap.getString("msg1"));
+        msgLabel.setText(resourceMap.getString("msg1")); // FIXME msg1 ?
+
+        daten = d;
+        bookmarks = bm;
+        searchRequests = sr;
+        desktopData = dk;
+        synonyms = sy;
+        settings = s;
+        bibTeX = bib;
     }
 
     @Override
@@ -133,28 +108,30 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
 
         // init status text
         msgLabel.setText(resourceMap.getString("msg1"));
+
         // get the file path from the data file which has to be opened
-        File fp = settingsObj.getFilePath();
+        File fp = settings.getFilePath();
         // if no file exists, exit task
         if (null == fp || !fp.exists()) {
-            // log error
             Constants.zknlogger.log(Level.WARNING, "Filepath is null or does not exist!");
             return null;
         }
         ZipInputStream zip;
         try {
-            // reset the zettelkasten-data-files
-            dataObj.initZettelkasten();
-            desktopObj.clear();
-            bookmarkObj.clear();
-            searchrequestsObj.clear();
+            // Reset the Zettelkasten data files
+            daten.initZettelkasten();
+            desktopData.clear();
+            bookmarks.clear();
+            searchRequests.clear();
+
             // log file path
-            Constants.zknlogger.log(Level.INFO, "Opening file {0}", fp.toString());
-            // it looks like the SAXBuilder is closing an input stream. So we have to
-            // re-open the ZIP-file each time we want to retrieve an XML-file from it
-            // this is necessary, because we want tot retrieve the zipped xml-files
-            // *without* temporarily saving them to harddisk
-            for (int cnt = 0; cnt < dataObj.getFilesToLoadCount(); cnt++) {
+            Constants.zknlogger.log(Level.INFO, "Opening file {0}", fp);
+
+            // It looks like the SAXBuilder is closing an input stream. So we have to
+            // reopen the ZIP file every time we want to retrieve an XML file from it.
+            // This is necessary, because we want to retrieve the zipped XML files
+            // *without* temporarily saving them to disk.
+            for (int cnt = 0; cnt < daten.getFilesToLoadCount(); cnt++) {
                 // show status text
                 switch (cnt) {
                     case 0:
@@ -181,6 +158,7 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
                         msgLabel.setText(resourceMap.getString("msg1"));
                         break;
                 }
+
                 // open the zip-file
                 zip = new ZipInputStream(new FileInputStream(fp));
                 ZipEntry entry;
@@ -190,47 +168,47 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
                         // get filename of zip-entry
                         String entryname = entry.getName();
                         // if the found file matches the requested one, start the SAXBuilder
-                        if (entryname.equals(dataObj.getFileToLoad(cnt))) {
+                        if (entryname.equals(daten.getFileToLoad(cnt))) {
                             if (entryname.equals(Constants.bibTexFileName)) {
-                                bibtexObj.openFile(zip, "UTF-8");
+                                bibTeX.openFile(zip, "UTF-8");
                                 Constants.zknlogger.log(Level.INFO, "{0} data successfully opened.", entryname);
                                 break;
                             } else {
                                 try {
-                                    SAXBuilder builder = new SAXBuilder();
-                                    // Document doc = new Document();
+                                    SAXBuilder builder = new SAXBuilder(); // FIXME Disable access to external entities in XML parsing.
+
                                     Document doc = builder.build(zip);
                                     // compare, which file we have retrieved, so we store the data
                                     // correctly on our data-object
                                     if (entryname.equals(Constants.metainfFileName)) {
-                                        dataObj.setMetaInformationData(doc);
+                                        daten.setMetaInformationData(doc);
                                     }
                                     if (entryname.equals(Constants.zknFileName)) {
-                                        dataObj.setZknData(doc);
+                                        daten.setZknData(doc);
                                     }
                                     if (entryname.equals(Constants.authorFileName)) {
-                                        dataObj.setAuthorData(doc);
+                                        daten.setAuthorData(doc);
                                     }
                                     if (entryname.equals(Constants.keywordFileName)) {
-                                        dataObj.setKeywordData(doc);
+                                        daten.setKeywordData(doc);
                                     }
                                     if (entryname.equals(Constants.bookmarksFileName)) {
-                                        bookmarkObj.setBookmarkData(doc);
+                                        bookmarks.setBookmarkData(doc);
                                     }
                                     if (entryname.equals(Constants.searchrequestsFileName)) {
-                                        searchrequestsObj.setSearchData(doc);
+                                        searchRequests.setSearchData(doc);
                                     }
                                     if (entryname.equals(Constants.desktopFileName)) {
-                                        desktopObj.setDesktopData(doc);
+                                        desktopData.setDesktopData(doc);
                                     }
                                     if (entryname.equals(Constants.desktopModifiedEntriesFileName)) {
-                                        desktopObj.setDesktopModifiedEntriesData(doc);
+                                        desktopData.setDesktopModifiedEntriesData(doc);
                                     }
                                     if (entryname.equals(Constants.desktopNotesFileName)) {
-                                        desktopObj.setDesktopNotesData(doc);
+                                        desktopData.setDesktopNotesData(doc);
                                     }
                                     if (entryname.equals(Constants.synonymsFileName)) {
-                                        synonymsObj.setDocument(doc);
+                                        synonyms.setDocument(doc);
                                     }
                                     // tell about success
                                     Constants.zknlogger.log(Level.INFO, "{0} data successfully opened.", entryname);
@@ -245,19 +223,17 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
                     Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                 } finally {
                     try {
-                        zip.close();
+                            zip.close();
                     } catch (IOException e) {
                         Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
                     }
                 }
             }
-            // tell about success
             Constants.zknlogger.log(Level.INFO, "Complete data file successfully opened.");
         } catch (IOException e) {
             Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
         }
-
-        return null;  // return your result
+        return null;
     }
 
     @Override
@@ -266,13 +242,13 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
         // the result computed by doInBackground().
 
         // after opening a new file, set modified state to false
-        dataObj.setModified(false);
-        dataObj.setMetaModified(false);
-        searchrequestsObj.setModified(false);
-        desktopObj.setModified(false);
-        bookmarkObj.setModified(false);
-        synonymsObj.setModified(false);
-        bibtexObj.setModified(false);
+        daten.setModified(false);
+        daten.setMetaModified(false);
+        searchRequests.setModified(false);
+        desktopData.setModified(false);
+        bookmarks.setModified(false);
+        synonyms.setModified(false);
+        bibTeX.setModified(false);
     }
 
     @Override

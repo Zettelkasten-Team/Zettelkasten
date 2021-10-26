@@ -33,24 +33,14 @@
 package de.danielluedecke.zettelkasten.database;
 
 import de.danielluedecke.zettelkasten.DesktopFrame;
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.Tools;
+import org.jdom2.*;
+
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
-import org.jdom2.Content;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.IllegalAddException;
-import org.jdom2.IllegalDataException;
-import org.jdom2.IllegalNameException;
-import org.jdom2.Parent;
 
 /**
  * The root-element is names "desktops". For each desktop, a new child named
@@ -176,7 +166,7 @@ public class DesktopData {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(DesktopFrame.class);
 
     /**
@@ -932,7 +922,7 @@ public class DesktopData {
      * {@code null} if an error occured.
      */
     public String addBullet(String timestamp, String name) {
-        // find the bulletgroup that is described in the treepath
+        // find the bullet group that is described in the tree path
         Element parentb = (timestamp != null) ? findEntryElementFromTimestamp(getCurrentDesktopElement(), timestamp) : getCurrentDesktopElement();
         String newts;
         // if we have a valid bullet-group, add the new bullet to the xml-file
@@ -945,7 +935,7 @@ public class DesktopData {
                 b.setAttribute("treefold", TREE_FOLDING_EXPANDED);
                 // create timestamp
                 newts = Tools.getTimeStampWithMilliseconds();
-                // check whether timestamp already exists. this is particulary the
+                // check whether timestamp already exists. this is particularly the
                 // case when a user adds several entries at once.
                 while (timeStampExists(newts)) {
                     newts = Tools.getTimeStampWithMilliseconds();
@@ -955,11 +945,11 @@ public class DesktopData {
                 // add a "comment" to that bullet. remember, that each bullet
                 // automatically gets a child-element called "comment"
                 b.addContent(new Element(ATTR_COMMENT));
-                // add new bullet to the bulletgroup
+                // add new bullet to the bullet group
                 parentb.addContent(b);
                 // change modified state
                 setModified(true);
-                // return timestamp of addes bullet
+                // return timestamp of added bullet
                 return newts;
             } catch (IllegalNameException | IllegalDataException | IllegalAddException ex) {
                 Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());

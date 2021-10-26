@@ -1,49 +1,52 @@
 /*
  * Zettelkasten - nach Luhmann
  * Copyright (C) 2001-2015 by Daniel Lüdecke (http://www.danielluedecke.de)
- *
+ * 
  * Homepage: http://zettelkasten.danielluedecke.de
- *
- *
+ * 
+ * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License as published by the Free Software Foundation; either version 3 of
+ * GNU General Public License as published by the Free Software Foundation; either version 3 of 
  * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * 
+ * 
  * Dieses Programm ist freie Software. Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation veröffentlicht, weitergeben
  * und/oder modifizieren, entweder gemäß Version 3 der Lizenz oder (wenn Sie möchten)
  * jeder späteren Version.
- *
- * Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein
- * wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder
- * der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der
+ * 
+ * Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein 
+ * wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder 
+ * der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der 
  * GNU General Public License.
- *
- * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm
+ * 
+ * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
 
 package de.danielluedecke.zettelkasten;
 
-import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatIntelliJLaf;
-import de.danielluedecke.zettelkasten.database.*;
+import de.danielluedecke.zettelkasten.database.Settings;
+import de.danielluedecke.zettelkasten.database.AutoKorrektur;
+import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
+import de.danielluedecke.zettelkasten.database.StenoData;
+import de.danielluedecke.zettelkasten.database.Synonyms;
+import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.util.Constants;
+import java.io.File;
+import java.io.IOException;
+import java.util.Locale;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
 import javax.swing.*;
-import java.io.File;
-import java.util.Locale;
-
 
 /**
  * The main class of the application.
@@ -58,32 +61,14 @@ public class ZettelkastenApp extends SingleFrameApplication {
     AutoKorrektur autoKorrekt;
     Synonyms synonyms;
     StenoData steno;
+    TasksData taskdata;
 
     private String[] params;
 
     /**
-     * A convenient static getter for the application instance.
-     *
-     * @return the instance of ZettelkastenApp
-     */
-    public static ZettelkastenApp getApplication() {
-        return Application.getInstance(ZettelkastenApp.class);
-    }
-
-    /**
-     * Main method launching the application.
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-        launch(ZettelkastenApp.class, args);
-    }
-
-    /**
      * At startup create and show the main frame of the application.
      */
-    @Override
-    protected void startup() {
+    @Override protected void startup() {
         // prepare the class which stores the accelerator keys. this is needed here,
         // because the CSettings-class loads and saves this information
         accKeys = new AcceleratorKeys();
@@ -98,27 +83,29 @@ public class ZettelkastenApp extends SingleFrameApplication {
         steno = new StenoData();
         // prepare the class which stores information that are returned
         // from several tasks
-        TasksData taskData = new TasksData();
+        taskdata = new TasksData();
         // create new instance of the settings-class here,
         // so we can load and save settings directly on startup and just before
         // shutdown
-        settings = new Settings(accKeys, autoKorrekt, synonyms, steno);
+        settings = new Settings(accKeys,autoKorrekt,synonyms,steno);
         // load settings
         settings.loadSettings();
         // retrieve the current default language
-        String defLang = settings.getLanguage();
+        String deflang = settings.getLanguage();
         // get country-coded
-        String englishCountryCode = new Locale("en", "", "").getLanguage();
-        String germanCountryCode = new Locale("de", "", "").getLanguage();
-        String spanishCountryCode = new Locale("es", "", "").getLanguage();
+        String englishCountryCode = new Locale("en","","").getLanguage();
+        String germanCountryCode = new Locale("de","","").getLanguage();
+        String spanishCountryCode = new Locale("es","","").getLanguage();
         String portugueseCountryCode = new Locale("pt", "", "").getLanguage();
         // create locale-variable
-        Locale newLocale = new Locale("en", "GB");
+        Locale newLocale = new Locale("en","GB");
         // check for default language and overwrite default-language-setting (which is UK)
-        if (defLang.equals(portugueseCountryCode)) newLocale = new Locale("pt", "BR");
-        if (defLang.equals(spanishCountryCode)) newLocale = new Locale("es", "ES");
-        if (defLang.equals(germanCountryCode)) newLocale = new Locale("de", "DE");
-        if (defLang.equals(englishCountryCode)) newLocale = new Locale("en", "GB");
+        if (deflang.equals(englishCountryCode)) newLocale = new Locale("en","GB");
+        if (deflang.equals(germanCountryCode)) newLocale = new Locale("de","DE");
+        if (deflang.equals(spanishCountryCode)) newLocale = new Locale("es","ES");
+        if (deflang.equals(portugueseCountryCode)) newLocale = new Locale("pt","BR");
+
+
         // set default locale
         Locale.setDefault(newLocale);
         // check parameters for filepath of loaded file
@@ -139,36 +126,51 @@ public class ZettelkastenApp extends SingleFrameApplication {
         for (String par : params) {
             try {
                 int initalZettellNr = Integer.parseInt(par);
-                if (initalZettellNr > 0) {
+                if (initalZettellNr>0) {
                     settings.setInitialParamZettel(initalZettellNr);
                     break;
                 }
-            } catch (NumberFormatException ignored) {
+            }
+            catch (NumberFormatException ex) {
 
             }
         }
-        show(new ZettelkastenView(this, settings, accKeys, autoKorrekt, synonyms, steno, taskData));
+        try {
+            show(new ZettelkastenView(this, settings, accKeys, autoKorrekt,synonyms,steno,taskdata));
+        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException | IllegalAccessException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
+    
     /**
      * This method is to initialize the specified window by injecting resources.
      * Windows shown in our application come fully initialized from the GUI
      * builder, so this additional configuration is not needed.
-     *
      * @param root
      */
-    @Override
-    protected void configureWindow(java.awt.Window root) {
+    @Override protected void configureWindow(java.awt.Window root) {
+    }
+
+    
+    /**
+     * A convenient static getter for the application instance.
+     * @return the instance of ZettelkastenApp
+     */
+    public static ZettelkastenApp getApplication() {
+        return Application.getInstance(ZettelkastenApp.class);
+    }
+
+    /**
+     * Main method launching the application.
+     * @param args
+     */
+    public static void main(String[] args) {
+        launch(ZettelkastenApp.class, args);
     }
 
     @Override
     protected void initialize(String[] args) {
-
-        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo( "Flat Light", FlatIntelliJLaf.class.getName()));
-        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo( "Flat Dark", FlatDarculaLaf.class.getName()));
-
-        if (System.getProperty("os.name").startsWith("Mac"))
-            System.setProperty("apple.laf.useScreenMenuBar", "true");
         this.params = args;
         super.initialize(args);
     }

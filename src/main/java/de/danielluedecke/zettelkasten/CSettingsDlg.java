@@ -1,57 +1,74 @@
 /*
  * Zettelkasten - nach Luhmann
  * Copyright (C) 2001-2015 by Daniel Lüdecke (http://www.danielluedecke.de)
- *
+ * 
  * Homepage: http://zettelkasten.danielluedecke.de
- *
- *
+ * 
+ * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License as published by the Free Software Foundation; either version 3 of
+ * GNU General Public License as published by the Free Software Foundation; either version 3 of 
  * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * 
+ * 
  * Dieses Programm ist freie Software. Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation veröffentlicht, weitergeben
  * und/oder modifizieren, entweder gemäß Version 3 der Lizenz oder (wenn Sie möchten)
  * jeder späteren Version.
- *
- * Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein
- * wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder
- * der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der
+ * 
+ * Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein 
+ * wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder 
+ * der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der 
  * GNU General Public License.
- *
- * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm
+ * 
+ * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
 package de.danielluedecke.zettelkasten;
 
-import de.danielluedecke.zettelkasten.database.*;
+import at.jta.Key;
+import at.jta.NotSupportedOSException;
+import at.jta.RegistryErrorException;
+import at.jta.Regor;
+import de.danielluedecke.zettelkasten.database.AutoKorrektur;
+import de.danielluedecke.zettelkasten.database.Daten;
+import de.danielluedecke.zettelkasten.database.Settings;
+import de.danielluedecke.zettelkasten.database.StenoData;
+import de.danielluedecke.zettelkasten.database.Synonyms;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.PlatformUtil;
-import org.jdesktop.application.Action;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.SystemTray;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
+import javax.swing.JColorChooser;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
+import javax.swing.UIManager;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import org.jdesktop.application.Action;
+
+import static java.awt.event.KeyEvent.VK_ESCAPE;
 
 /**
+ *
  * @author danielludecke
  */
 public class CSettingsDlg extends javax.swing.JDialog {
@@ -77,15 +94,15 @@ public class CSettingsDlg extends javax.swing.JDialog {
      */
     private final Synonyms synonyms;
     /**
-     * get the strings for file descriptions from the resource map
-     */
-    private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
-            getContext().getResourceMap(CSettingsDlg.class);
-    /**
      * Used to retrieve all installed look'n'feels...
      */
     private UIManager.LookAndFeelInfo installed_laf[];
+    /**
+     * get the strings for file descriptions from the resource map
+     */
+    private final org.jdesktop.application.ResourceMap resourceMap
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
+            getContext().getResourceMap(CSettingsDlg.class);
     /**
      * The different fonts, used to retrieve the font settings and for the
      * font-chooser-dialog
@@ -167,118 +184,9 @@ public class CSettingsDlg extends javax.swing.JDialog {
      */
     private boolean userPathChanges = false;
     private boolean pandocPathChanges = false;
-    private boolean modified = false;
-    private boolean synmodified = false;
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonApply;
-    private javax.swing.JButton jButtonBrowseAttachmentPath;
-    private javax.swing.JButton jButtonBrowseBackup;
-    private javax.swing.JButton jButtonBrowseImagePath;
-    private javax.swing.JButton jButtonBrowsePandoc;
-    private javax.swing.JButton jButtonCancel;
-    private javax.swing.JButton jButtonDesktopCSS;
-    private javax.swing.JButton jButtonDesktopFont;
-    private javax.swing.JButton jButtonEditAutokorrekt;
-    private javax.swing.JButton jButtonEditSteno;
-    private javax.swing.JButton jButtonEntryCss;
-    private javax.swing.JButton jButtonFont;
-    private javax.swing.JButton jButtonFontcolor;
-    private javax.swing.JButton jButtonHighlightKeywordStyle;
-    private javax.swing.JButton jButtonHighlightLivesearchStyle;
-    private javax.swing.JButton jButtonHighlightStyle;
-    private javax.swing.JButton jButtonListFont;
-    private javax.swing.JButton jButtonResetDesktopCSS;
-    private javax.swing.JButton jButtonResetEntryCSS;
-    private javax.swing.JButton jButtonSynonymEdit;
-    private javax.swing.JButton jButtonTableBackgroundColor;
-    private javax.swing.JCheckBox jCheckBoxAllToHist;
-    private javax.swing.JCheckBox jCheckBoxAutoCompleteTags;
-    private javax.swing.JCheckBox jCheckBoxAutoUpdate;
-    private javax.swing.JCheckBox jCheckBoxAutobackup;
-    private javax.swing.JCheckBox jCheckBoxAutocorrect;
-    private javax.swing.JCheckBox jCheckBoxCheckNightly;
-    private javax.swing.JCheckBox jCheckBoxDesktopCSS;
-    private javax.swing.JCheckBox jCheckBoxEntryCSS;
-    private javax.swing.JCheckBox jCheckBoxExtraBackup;
-    private javax.swing.JCheckBox jCheckBoxFillNewEntries;
-    private javax.swing.JCheckBox jCheckBoxFootnote;
-    private javax.swing.JCheckBox jCheckBoxFootnoteBraces;
-    private javax.swing.JCheckBox jCheckBoxIconText;
-    private javax.swing.JCheckBox jCheckBoxImgResize;
-    private javax.swing.JCheckBox jCheckBoxJumpToTab;
-    private javax.swing.JCheckBox jCheckBoxLuhmannColSortable;
-    private javax.swing.JCheckBox jCheckBoxRegistry;
-    private javax.swing.JCheckBox jCheckBoxSearchWithoutFormatTags;
-    private javax.swing.JCheckBox jCheckBoxShowAllIcons;
-    private javax.swing.JCheckBox jCheckBoxShowEntryHeadline;
-    private javax.swing.JCheckBox jCheckBoxShowHorGrid;
-    private javax.swing.JCheckBox jCheckBoxShowTableBorder;
-    private javax.swing.JCheckBox jCheckBoxShowToolbar;
-    private javax.swing.JCheckBox jCheckBoxShowVerGrid;
-    private javax.swing.JCheckBox jCheckBoxSteno;
-    private javax.swing.JCheckBox jCheckBoxSynonym;
-    private javax.swing.JCheckBox jCheckBoxSystray;
-    private javax.swing.JCheckBox jCheckBoxUseMacBackgroundColor;
-    private javax.swing.JCheckBox jCheckBoxUseMarkdown;
-    private javax.swing.JCheckBox jCheckBoxUseXDGOpen;
-    private javax.swing.JComboBox jComboBoxBackgroundColors;
-    private javax.swing.JComboBox jComboBoxFonts;
-    private javax.swing.JComboBox jComboBoxIconTheme;
-    private javax.swing.JComboBox jComboBoxLAF;
-    private javax.swing.JComboBox jComboBoxLocale;
-    private javax.swing.JComboBox jComboBoxManualTimestamp;
-    private javax.swing.JComboBox jComboBoxShowAtStartup;
-    private javax.swing.JFormattedTextField jFormattedTextFieldImgHeight;
-    private javax.swing.JFormattedTextField jFormattedTextFieldImgWidth;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabelFontDeskLayout;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JLabel jLabelColor;
-    private javax.swing.JLabel jLabelTableColor;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JSlider jSliderDesktopFontSize;
-    private javax.swing.JSlider jSliderFontSize;
-    private javax.swing.JSlider jSliderTextfields;
-    private javax.swing.JSpinner jSpinnerDistHor;
-    private javax.swing.JSpinner jSpinnerDistVer;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextFieldAttachmentPath;
-    private javax.swing.JTextField jTextFieldBackupPath;
-    private javax.swing.JTextField jTextFieldImagePath;
-    private javax.swing.JTextField jTextFieldPandoc;
-    private CFontChooser fontDlg;
-    private CAutoKorrekturEdit autoKorrektEdit;
-    private CStenoEdit stenoEdit;
-    private CHighlightSearchSettings highlightSettingsDlg;
-    private CSynonymsEdit synonymsDlg;
-    private CBiggerEditField biggerEditDlg;
+
     /**
+     *
      * @param parent
      * @param s
      * @param d
@@ -325,12 +233,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
         } else {
             jCheckBoxSystray.setSelected(settings.getMinimizeToTray());
         }
-
         // en- and disable checkboxes depending on the os
-        //TODO: Disabled until #198 is fixed.
-        // jCheckBoxRegistry.setEnabled(System.getProperty("os.name").toLowerCase().startsWith("windows"));
-        jCheckBoxRegistry.setEnabled(false);
-
+        jCheckBoxRegistry.setEnabled(System.getProperty("os.name").toLowerCase().startsWith("windows"));
         // init mainfont
         mainfont = settings.getMainFont();
         mainfontcolor = settings.getMainfont(Settings.FONTCOLOR);
@@ -477,94 +381,43 @@ public class CSettingsDlg extends javax.swing.JDialog {
     }
 
     private void initListeners() {
-        // these codelines add an escape-listener to the dialog. so, when the user
+        // these code lines add an escape-listener to the dialog. so, when the user
         // presses the escape-key, the same action is performed as if the user
         // presses the cancel button...
-        KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-        ActionListener cancelAction = new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                cancelWindow();
-            }
-        };
+        KeyStroke stroke = KeyStroke.getKeyStroke(VK_ESCAPE, 0);
+
+        ActionListener cancelAction = evt -> cancelWindow();
+
         getRootPane().registerKeyboardAction(cancelAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+
         // init selection
         jComboBoxShowAtStartup.setSelectedIndex(settings.getShowAtStartup());
-        // add listener for combobox-showatstartup
-        jComboBoxShowAtStartup.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                // whenever the user changes something, set "modifedLook" state to true
-                // so the apply-button becomes enabled (this variable is connected to
-                // the button's action)
-                setModified(true);
-            }
+
+        jComboBoxShowAtStartup.addActionListener(evt -> setModified(true));
+
+        jComboBoxIconTheme.addActionListener(evt -> {
+            setModified(true);
+            needsupdate = true;
         });
-        // add listener for combobox-showatstartup
-        jComboBoxIconTheme.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                // whenever the user changes something, set "modifedLook" state to true
-                // so the apply-button becomes enabled (this variable is connected to
-                // the button's action)
-                setModified(true);
-                needsupdate = true;
-            }
+
+        jComboBoxLocale.addActionListener(evt -> {
+            setModified(true);
+            lafupdate = true;
         });
-        // add listener for combobox-locale
-        jComboBoxLocale.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                // whenever the user changes something, set "modifedLook" state to true
-                // so the apply-button becomes enabled (this variable is connected to
-                // the button's action)
-                setModified(true);
-                lafupdate = true;
-            }
+
+        jComboBoxLAF.addActionListener(evt -> {
+            setModified(true);
+            lafupdate = true;
         });
-        // add action listener to combo box
-        jComboBoxLAF.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                // whenever the user changes something, set "modifedLook" state to true
-                // so the apply-button becomes enabled (this variable is connected to
-                // the button's action)
-                setModified(true);
-                lafupdate = true;
-            }
-        });
-        // add listener for combobox-showatstartup
-        jComboBoxManualTimestamp.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                // whenever the user changes something, set "modifedLook" state to true
-                // so the apply-button becomes enabled (this variable is connected to
-                // the button's action)
-                setModified(true);
-            }
-        });
-        // add action listener to combo box
-        jComboBoxFonts.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                // whenever the user changes something, set "modifedLook" state to true
-                // so the apply-button becomes enabled (this variable is connected to
-                // the button's action)
-                jLabelColor.setBackground(getFontColor());
-            }
-        });
+
+        jComboBoxManualTimestamp.addActionListener(evt -> setModified(true));
+
+        jComboBoxFonts.addActionListener(evt -> jLabelColor.setBackground(getFontColor()));
         jComboBoxFonts.setSelectedIndex(0);
-        // add action listener to combo box
-        jComboBoxBackgroundColors.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                // whenever the user changes something, set "modifedLook" state to true
-                // so the apply-button becomes enabled (this variable is connected to
-                // the button's action)
-                jLabelTableColor.setBackground(getBackgroundColor());
-            }
-        });
+
+        jComboBoxBackgroundColors.addActionListener(evt -> jLabelTableColor.setBackground(getBackgroundColor()));
         jComboBoxBackgroundColors.setSelectedIndex(0);
+
         jTextFieldAttachmentPath.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void changedUpdate(DocumentEvent e) {
@@ -581,6 +434,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
                 checkPath(jTextFieldAttachmentPath);
             }
         });
+
         jTextFieldImagePath.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void changedUpdate(DocumentEvent e) {
@@ -597,6 +451,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
                 checkPath(jTextFieldImagePath);
             }
         });
+
         jTextFieldPandoc.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void changedUpdate(DocumentEvent e) {
@@ -616,137 +471,76 @@ public class CSettingsDlg extends javax.swing.JDialog {
                 setModified(true);
             }
         });
-        jCheckBoxAutobackup.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setModified(true);
-            }
+
+        jCheckBoxAutobackup.addActionListener(evt -> setModified(true));
+
+        jCheckBoxShowTableBorder.addActionListener(evt -> {
+            setModified(true);
+            displayupdate = true;
         });
-        jCheckBoxShowTableBorder.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setModified(true);
-                displayupdate = true;
-            }
+
+        jCheckBoxAutocorrect.addActionListener(evt -> setModified(true));
+
+        jCheckBoxSteno.addActionListener(evt -> setModified(true));
+
+        jCheckBoxShowEntryHeadline.addActionListener(evt -> {
+            setModified(true);
+            displayupdate = true;
         });
-        jCheckBoxAutocorrect.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setModified(true);
-            }
+
+        jCheckBoxSynonym.addActionListener(evt -> setModified(true));
+
+        jCheckBoxSystray.addActionListener(evt -> setModified(true));
+
+        jCheckBoxFillNewEntries.addActionListener(evt -> setModified(true));
+
+        jCheckBoxAutoUpdate.addActionListener(evt -> {
+            setModified(true);
+            jCheckBoxCheckNightly.setEnabled(jCheckBoxAutoUpdate.isSelected());
         });
-        jCheckBoxSteno.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setModified(true);
-            }
+
+        jCheckBoxCheckNightly.addActionListener(evt -> setModified(true));
+
+        jCheckBoxJumpToTab.addActionListener(evt -> setModified(true));
+
+        jCheckBoxUseMarkdown.addActionListener(evt -> {
+            displayupdate = true;
+            setModified(true);
         });
-        jCheckBoxShowEntryHeadline.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setModified(true);
-                displayupdate = true;
-            }
+
+        jCheckBoxUseMacBackgroundColor.addActionListener(evt -> {
+            displayupdate = true;
+            setModified(true);
         });
-        jCheckBoxSynonym.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setModified(true);
-            }
+
+        jCheckBoxShowHorGrid.addActionListener(evt -> setModified(true));
+
+        jCheckBoxShowVerGrid.addActionListener(evt -> setModified(true));
+
+        jCheckBoxAllToHist.addActionListener(evt -> setModified(true));
+
+        jSpinnerDistHor.addChangeListener(evt -> {
+            needsupdate = true;
+            setModified(true);
         });
-        jCheckBoxSystray.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setModified(true);
-            }
+
+        jSpinnerDistVer.addChangeListener(evt -> {
+            needsupdate = true;
+            setModified(true);
         });
-        jCheckBoxFillNewEntries.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setModified(true);
-            }
+
+        jSliderFontSize.addChangeListener(evt -> {
+            needsupdate = true;
+            setModified(true);
+            lafupdate = true;
         });
-        jCheckBoxAutoUpdate.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setModified(true);
-                jCheckBoxCheckNightly.setEnabled(jCheckBoxAutoUpdate.isSelected());
-            }
+
+        jSliderDesktopFontSize.addChangeListener(evt -> {
+            needsupdate = true;
+            setModified(true);
+            lafupdate = true;
         });
-        jCheckBoxCheckNightly.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setModified(true);
-            }
-        });
-        jCheckBoxJumpToTab.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setModified(true);
-            }
-        });
-        jCheckBoxUseMarkdown.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                displayupdate = true;
-                setModified(true);
-            }
-        });
-        jCheckBoxUseMacBackgroundColor.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                displayupdate = true;
-                setModified(true);
-            }
-        });
-        jCheckBoxShowHorGrid.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setModified(true);
-            }
-        });
-        jCheckBoxShowVerGrid.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setModified(true);
-            }
-        });
-        jCheckBoxAllToHist.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setModified(true);
-            }
-        });
-        jSpinnerDistHor.addChangeListener(new javax.swing.event.ChangeListener() {
-            @Override
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                needsupdate = true;
-                setModified(true);
-            }
-        });
-        jSpinnerDistVer.addChangeListener(new javax.swing.event.ChangeListener() {
-            @Override
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                needsupdate = true;
-                setModified(true);
-            }
-        });
-        jSliderFontSize.addChangeListener(new javax.swing.event.ChangeListener() {
-            @Override
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                needsupdate = true;
-                setModified(true);
-                lafupdate = true;
-            }
-        });
-        jSliderDesktopFontSize.addChangeListener(new javax.swing.event.ChangeListener() {
-            @Override
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                needsupdate = true;
-                setModified(true);
-                lafupdate = true;
-            }
-        });
+
         jFormattedTextFieldImgWidth.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -754,6 +548,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
                 setModified(true);
             }
         });
+
         jFormattedTextFieldImgHeight.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -761,364 +556,278 @@ public class CSettingsDlg extends javax.swing.JDialog {
                 setModified(true);
             }
         });
-        jCheckBoxFootnote.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                displayupdate = true;
+
+        jCheckBoxFootnote.addActionListener(evt -> {
+            displayupdate = true;
+            setModified(true);
+        });
+
+        jCheckBoxFootnoteBraces.addActionListener(evt -> setModified(true));
+
+        jCheckBoxSearchWithoutFormatTags.addActionListener(evt -> setModified(true));
+
+        jCheckBoxLuhmannColSortable.addActionListener(evt -> {
+            setModified(true);
+            dataObj.setTitlelistUpToDate(false);
+        });
+
+        jCheckBoxUseXDGOpen.addActionListener(evt -> setModified(true));
+
+        jCheckBoxAutoCompleteTags.addActionListener(evt -> setModified(true));
+
+        jCheckBoxIconText.addActionListener(evt -> {
+            needsupdate = true;
+            setModified(true);
+        });
+
+        jCheckBoxShowToolbar.addActionListener(evt -> {
+            needsupdate = true;
+            setModified(true);
+            jCheckBoxShowAllIcons.setEnabled(jCheckBoxShowToolbar.isSelected());
+        });
+
+        jCheckBoxShowAllIcons.addActionListener(evt -> {
+            needsupdate = true;
+            setModified(true);
+        });
+
+        jCheckBoxEntryCSS.addActionListener(evt -> {
+            lafupdate = true;
+            setModified(true);
+        });
+
+        jCheckBoxDesktopCSS.addActionListener(evt -> {
+            lafupdate = true;
+            setModified(true);
+        });
+
+        jButtonEditAutokorrekt.addActionListener(evt -> {
+            // the button for editing the spellchecking-words was pressed,
+            // so open the window for editing them...
+            if (null == autoKorrektEdit) {
+                // get parent und init window
+                autoKorrektEdit = new CAutoKorrekturEdit(null, autokorrekt, settings);
+                // center window
+                autoKorrektEdit.setLocationRelativeTo(null);
+            }
+            ZettelkastenApp.getApplication().show(autoKorrektEdit);
+            // change modified state and enable apply-button
+            if (autoKorrektEdit.isModified()) {
                 setModified(true);
             }
+            autoKorrektEdit.dispose();
+            autoKorrektEdit = null;
         });
-        jCheckBoxFootnoteBraces.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setModified(true);
+
+        jButtonListFont.addActionListener(evt -> {
+            // get the selected font
+            Font f = tablefont;
+            // create font-chooser dialog
+            if (null == fontDlg) {
+                fontDlg = new CFontChooser(null, f);
+                fontDlg.setLocationRelativeTo(null);
             }
-        });
-        jCheckBoxSearchWithoutFormatTags.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            ZettelkastenApp.getApplication().show(fontDlg);
+            // if the user has chosen a font, set it
+            if (fontDlg.selectedFont != null) {
+                tablefont = fontDlg.selectedFont;
                 setModified(true);
-            }
-        });
-        jCheckBoxLuhmannColSortable.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setModified(true);
-                dataObj.setTitlelistUpToDate(false);
-            }
-        });
-        jCheckBoxUseXDGOpen.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setModified(true);
-            }
-        });
-        jCheckBoxAutoCompleteTags.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setModified(true);
-            }
-        });
-        jCheckBoxIconText.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                needsupdate = true;
-                setModified(true);
-            }
-        });
-        jCheckBoxShowToolbar.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                needsupdate = true;
-                setModified(true);
-                jCheckBoxShowAllIcons.setEnabled(jCheckBoxShowToolbar.isSelected());
-            }
-        });
-        jCheckBoxShowAllIcons.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                needsupdate = true;
-                setModified(true);
-            }
-        });
-        jCheckBoxEntryCSS.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 lafupdate = true;
-                setModified(true);
             }
+            // close and dispose the font-dialog
+            fontDlg.dispose();
+            fontDlg = null;
         });
-        jCheckBoxDesktopCSS.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+        jButtonDesktopFont.addActionListener(evt -> {
+            // get the selected font
+            Font f = desktopfont;
+            // create font-chooser dialog
+            if (null == fontDlg) {
+                fontDlg = new CFontChooser(null, f);
+                fontDlg.setLocationRelativeTo(null);
+            }
+            ZettelkastenApp.getApplication().show(fontDlg);
+            // if the user has chosen a font, set it
+            if (fontDlg.selectedFont != null) {
+                desktopfont = fontDlg.selectedFont;
+                setModified(true);
                 lafupdate = true;
+            }
+            // close and dispose the font-dialog
+            fontDlg.dispose();
+            fontDlg = null;
+        });
+
+        jButtonBrowseBackup.addActionListener(evt -> {
+            JFileChooser fc = new JFileChooser();
+            // set dialog's title
+            fc.setDialogTitle(resourceMap.getString("fileChooserTitle"));
+            // restrict all files as selectable
+            fc.setAcceptAllFileFilterUsed(false);
+            // only directories should be selected
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int option = fc.showOpenDialog(null);
+            // if a file was chosen, set the file path
+            if (JFileChooser.APPROVE_OPTION == option) {
+                // get the file path...
+                jTextFieldBackupPath.setText(fc.getSelectedFile().toString());
                 setModified(true);
             }
         });
-        jButtonEditAutokorrekt.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                // the button for editing the spellchecking-words was pressed,
-                // so open the window for edting them...
-                if (null == autoKorrektEdit) {
-                    // get parent und init window
-                    autoKorrektEdit = new CAutoKorrekturEdit(null, autokorrekt, settings);
-                    // center window
-                    autoKorrektEdit.setLocationRelativeTo(null);
-                }
-                ZettelkastenApp.getApplication().show(autoKorrektEdit);
-                // change modified state and enable apply-button
-                if (autoKorrektEdit.isModified()) {
-                    setModified(true);
-                }
-                autoKorrektEdit.dispose();
-                autoKorrektEdit = null;
-            }
-        });
-        jButtonListFont.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                // get the selected font
-                Font f = tablefont;
-                // create font-chooser dialog
-                if (null == fontDlg) {
-                    fontDlg = new CFontChooser(null, f);
-                    fontDlg.setLocationRelativeTo(null);
-                }
-                ZettelkastenApp.getApplication().show(fontDlg);
-                // if the user has chosen a font, set it
-                if (fontDlg.selectedFont != null) {
-                    tablefont = fontDlg.selectedFont;
-                    // whenever the user changes something, set "modifedLook" state to true
-                    // so the apply-button becomes enabled (this variable is connected to
-                    // the button's action)
-                    setModified(true);
-                    lafupdate = true;
-                }
-                // close and dispose the font-dialog
-                fontDlg.dispose();
-                fontDlg = null;
-            }
-        });
-        jButtonDesktopFont.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                // get the selected font
-                Font f = desktopfont;
-                // create font-chooser dialog
-                if (null == fontDlg) {
-                    fontDlg = new CFontChooser(null, f);
-                    fontDlg.setLocationRelativeTo(null);
-                }
-                ZettelkastenApp.getApplication().show(fontDlg);
-                // if the user has chosen a font, set it
-                if (fontDlg.selectedFont != null) {
-                    desktopfont = fontDlg.selectedFont;
-                    // whenever the user changes something, set "modifedLook" state to true
-                    // so the apply-button becomes enabled (this variable is connected to
-                    // the button's action)
-                    setModified(true);
-                    lafupdate = true;
-                }
-                // close and dispose the font-dialog
-                fontDlg.dispose();
-                fontDlg = null;
-            }
-        });
-        jButtonBrowseBackup.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                JFileChooser fc = new JFileChooser();
-                // set dialog's title
-                fc.setDialogTitle(resourceMap.getString("fileChooserTitle"));
-                // restrict all files as choosable
-                fc.setAcceptAllFileFilterUsed(false);
-                // only directories should be selected
-                fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                int option = fc.showOpenDialog(null);
-                // if a file was chosen, set the filepath
-                if (JFileChooser.APPROVE_OPTION == option) {
-                    // get the filepath...
-                    jTextFieldBackupPath.setText(fc.getSelectedFile().toString());
-                    setModified(true);
-                }
-            }
-        });
-        jButtonBrowseAttachmentPath.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                JFileChooser fc = new JFileChooser();
-                // set dialog's title
-                fc.setDialogTitle(resourceMap.getString("fileChooserTitle"));
-                // restrict all files as choosable
-                fc.setAcceptAllFileFilterUsed(false);
-                // only directories should be selected
-                fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                int option = fc.showOpenDialog(null);
-                // if a file was chosen, set the filepath
-                if (JFileChooser.APPROVE_OPTION == option) {
-                    // get the filepath...
-                    jTextFieldAttachmentPath.setText(fc.getSelectedFile().toString());
-                    setModified(true);
-                }
-            }
-        });
-        jButtonBrowsePandoc.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                JFileChooser fc = new JFileChooser();
-                // set dialog's title
-                fc.setDialogTitle(resourceMap.getString("fileChooserTitle"));
-                // restrict all files as choosable
-                fc.setAcceptAllFileFilterUsed(false);
-                // only directories should be selected
-                fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                int option = fc.showOpenDialog(null);
-                // if a file was chosen, set the filepath
-                if (JFileChooser.APPROVE_OPTION == option) {
-                    // get the filepath...
-                    jTextFieldPandoc.setText(fc.getSelectedFile().toString());
-                    setModified(true);
-                }
-            }
-        });
-        jButtonBrowseImagePath.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                JFileChooser fc = new JFileChooser();
-                // set dialog's title
-                fc.setDialogTitle(resourceMap.getString("fileChooserTitle"));
-                // restrict all files as choosable
-                fc.setAcceptAllFileFilterUsed(false);
-                // only directories should be selected
-                fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                int option = fc.showOpenDialog(null);
-                // if a file was chosen, set the filepath
-                if (JFileChooser.APPROVE_OPTION == option) {
-                    // get the filepath...
-                    jTextFieldImagePath.setText(fc.getSelectedFile().toString());
-                    setModified(true);
-                }
-            }
-        });
-        jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                cancelWindow();
-            }
-        });
-        jButtonEntryCss.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                editCSS(Settings.CUSTOM_CSS_ENTRY);
-            }
-        });
-        jButtonDesktopCSS.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                editCSS(Settings.CUSTOM_CSS_DESKTOP);
-            }
-        });
-        jButtonResetEntryCSS.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                resetCSS(Settings.CUSTOM_CSS_ENTRY);
-            }
-        });
-        jButtonResetDesktopCSS.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                resetCSS(Settings.CUSTOM_CSS_DESKTOP);
-            }
-        });
-        jCheckBoxImgResize.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                setModified(true);
-                displayupdate = true;
-                jFormattedTextFieldImgWidth.setEnabled(jCheckBoxImgResize.isSelected());
-                jFormattedTextFieldImgHeight.setEnabled(jCheckBoxImgResize.isSelected());
-            }
-        });
-        jCheckBoxExtraBackup.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                jTextFieldBackupPath.setEnabled(jCheckBoxExtraBackup.isSelected());
-                jButtonBrowseBackup.setEnabled(jCheckBoxExtraBackup.isSelected());
+
+        jButtonBrowseAttachmentPath.addActionListener(evt -> {
+            JFileChooser fc = new JFileChooser();
+            // set dialog's title
+            fc.setDialogTitle(resourceMap.getString("fileChooserTitle"));
+            // restrict all files as chooseable
+            fc.setAcceptAllFileFilterUsed(false);
+            // only directories should be selected
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int option = fc.showOpenDialog(null);
+            // if a file was chosen, set the file path
+            if (JFileChooser.APPROVE_OPTION == option) {
+                // get the file path...
+                jTextFieldAttachmentPath.setText(fc.getSelectedFile().toString());
                 setModified(true);
             }
         });
-        jCheckBoxRegistry.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
+
+        jButtonBrowsePandoc.addActionListener(evt -> {
+            JFileChooser fc = new JFileChooser();
+            // set dialog's title
+            fc.setDialogTitle(resourceMap.getString("fileChooserTitle"));
+            // restrict all files as chooseable
+            fc.setAcceptAllFileFilterUsed(false);
+            // only directories should be selected
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int option = fc.showOpenDialog(null);
+            // if a file was chosen, set the file path
+            if (JFileChooser.APPROVE_OPTION == option) {
+                // get the file path...
+                jTextFieldPandoc.setText(fc.getSelectedFile().toString());
                 setModified(true);
-                registryChanges = true;
             }
         });
-        jButtonEditSteno.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                // the button for editing the spellchecking-words was pressed,
-                // so open the window for edting them...
-                if (null == stenoEdit) {
-                    // get parent und init window
-                    stenoEdit = new CStenoEdit(null, stenoObj, settings);
-                    // center window
-                    stenoEdit.setLocationRelativeTo(null);
-                }
-                ZettelkastenApp.getApplication().show(stenoEdit);
-                // change modified state and enable apply-button
-                if (stenoEdit.isModified()) {
-                    setModified(true);
-                }
-                stenoEdit.dispose();
-                stenoEdit = null;
+
+        jButtonBrowseImagePath.addActionListener(evt -> {
+            JFileChooser fc = new JFileChooser();
+            // set dialog's title
+            fc.setDialogTitle(resourceMap.getString("fileChooserTitle"));
+            // restrict all files as chooseable
+            fc.setAcceptAllFileFilterUsed(false);
+            // only directories should be selected
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int option = fc.showOpenDialog(null);
+            // if a file was chosen, set the file path
+            if (JFileChooser.APPROVE_OPTION == option) {
+                // get the file path...
+                jTextFieldImagePath.setText(fc.getSelectedFile().toString());
+                setModified(true);
             }
         });
-        jButtonHighlightStyle.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                if (null == highlightSettingsDlg) {
-                    highlightSettingsDlg = new CHighlightSearchSettings(null, settings, HtmlUbbUtil.HIGHLIGHT_STYLE_SEARCHRESULTS);
-                    highlightSettingsDlg.setLocationRelativeTo(null);
-                }
-                ZettelkastenApp.getApplication().show(highlightSettingsDlg);
-                if (!highlightSettingsDlg.isCancelled()) {
-                    setModified(true);
-                    lafupdate = true;
-                }
-                highlightSettingsDlg.dispose();
-                highlightSettingsDlg = null;
-            }
+
+        jButtonCancel.addActionListener(evt -> cancelWindow());
+
+        jButtonEntryCss.addActionListener(evt -> editCSS(Settings.CUSTOM_CSS_ENTRY));
+
+        jButtonDesktopCSS.addActionListener(evt -> editCSS(Settings.CUSTOM_CSS_DESKTOP));
+
+        jButtonResetEntryCSS.addActionListener(evt -> resetCSS(Settings.CUSTOM_CSS_ENTRY));
+
+        jButtonResetDesktopCSS.addActionListener(evt -> resetCSS(Settings.CUSTOM_CSS_DESKTOP));
+
+        jCheckBoxImgResize.addActionListener(evt -> {
+            setModified(true);
+            displayupdate = true;
+            jFormattedTextFieldImgWidth.setEnabled(jCheckBoxImgResize.isSelected());
+            jFormattedTextFieldImgHeight.setEnabled(jCheckBoxImgResize.isSelected());
         });
-        jButtonHighlightKeywordStyle.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                if (null == highlightSettingsDlg) {
-                    highlightSettingsDlg = new CHighlightSearchSettings(null, settings, HtmlUbbUtil.HIGHLIGHT_STYLE_KEYWORDS);
-                    highlightSettingsDlg.setLocationRelativeTo(null);
-                }
-                ZettelkastenApp.getApplication().show(highlightSettingsDlg);
-                if (!highlightSettingsDlg.isCancelled()) {
-                    setModified(true);
-                    lafupdate = true;
-                }
-                highlightSettingsDlg.dispose();
-                highlightSettingsDlg = null;
-            }
+
+        jCheckBoxExtraBackup.addActionListener(evt -> {
+            jTextFieldBackupPath.setEnabled(jCheckBoxExtraBackup.isSelected());
+            jButtonBrowseBackup.setEnabled(jCheckBoxExtraBackup.isSelected());
+            setModified(true);
         });
-        jButtonHighlightLivesearchStyle.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                if (null == highlightSettingsDlg) {
-                    highlightSettingsDlg = new CHighlightSearchSettings(null, settings, HtmlUbbUtil.HIGHLIGHT_STYLE_LIVESEARCH);
-                    highlightSettingsDlg.setLocationRelativeTo(null);
-                }
-                ZettelkastenApp.getApplication().show(highlightSettingsDlg);
-                if (!highlightSettingsDlg.isCancelled()) {
-                    setModified(true);
-                    lafupdate = true;
-                }
-                highlightSettingsDlg.dispose();
-                highlightSettingsDlg = null;
-            }
+
+        jCheckBoxRegistry.addActionListener(evt -> {
+            setModified(true);
+            registryChanges = true;
         });
-        jButtonSynonymEdit.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                if (null == synonymsDlg) {
-                    synonymsDlg = new CSynonymsEdit(null, synonyms, settings, dataObj);
-                    synonymsDlg.setLocationRelativeTo(null);
-                }
-                ZettelkastenApp.getApplication().show(synonymsDlg);
-                // change modified state and enable apply-button
-                if (synonymsDlg.isModified()) {
-                    setModified(true);
-                    setSynModified(true);
-                }
-                synonymsDlg.dispose();
-                synonymsDlg = null;
+
+        jButtonEditSteno.addActionListener(evt -> {
+            // the button for editing the spellchecking-words was pressed,
+            // so open the window for editing them...
+            if (null == stenoEdit) {
+                // get parent und init window
+                stenoEdit = new CStenoEdit(null, stenoObj, settings);
+                // center window
+                stenoEdit.setLocationRelativeTo(null);
             }
+            ZettelkastenApp.getApplication().show(stenoEdit);
+            // change modified state and enable apply-button
+            if (stenoEdit.isModified()) {
+                setModified(true);
+            }
+            stenoEdit.dispose();
+            stenoEdit = null;
+        });
+
+        jButtonHighlightStyle.addActionListener(evt -> {
+            if (null == highlightSettingsDlg) {
+                highlightSettingsDlg = new CHighlightSearchSettings(null, settings, HtmlUbbUtil.HIGHLIGHT_STYLE_SEARCHRESULTS);
+                highlightSettingsDlg.setLocationRelativeTo(null);
+            }
+            ZettelkastenApp.getApplication().show(highlightSettingsDlg);
+            if (!highlightSettingsDlg.isCancelled()) {
+                setModified(true);
+                lafupdate = true;
+            }
+            highlightSettingsDlg.dispose();
+            highlightSettingsDlg = null;
+        });
+
+        jButtonHighlightKeywordStyle.addActionListener(evt -> {
+            if (null == highlightSettingsDlg) {
+                highlightSettingsDlg = new CHighlightSearchSettings(null, settings, HtmlUbbUtil.HIGHLIGHT_STYLE_KEYWORDS);
+                highlightSettingsDlg.setLocationRelativeTo(null);
+            }
+            ZettelkastenApp.getApplication().show(highlightSettingsDlg);
+            if (!highlightSettingsDlg.isCancelled()) {
+                setModified(true);
+                lafupdate = true;
+            }
+            highlightSettingsDlg.dispose();
+            highlightSettingsDlg = null;
+        });
+
+        jButtonHighlightLivesearchStyle.addActionListener(evt -> {
+            if (null == highlightSettingsDlg) {
+                highlightSettingsDlg = new CHighlightSearchSettings(null, settings, HtmlUbbUtil.HIGHLIGHT_STYLE_LIVESEARCH);
+                highlightSettingsDlg.setLocationRelativeTo(null);
+            }
+            ZettelkastenApp.getApplication().show(highlightSettingsDlg);
+            if (!highlightSettingsDlg.isCancelled()) {
+                setModified(true);
+                lafupdate = true;
+            }
+            highlightSettingsDlg.dispose();
+            highlightSettingsDlg = null;
+        });
+
+        jButtonSynonymEdit.addActionListener(evt -> {
+            if (null == synonymsDlg) {
+                synonymsDlg = new CSynonymsEdit(null, synonyms, settings, dataObj);
+                synonymsDlg.setLocationRelativeTo(null);
+            }
+            ZettelkastenApp.getApplication().show(synonymsDlg);
+            // change modified state and enable apply-button
+            if (synonymsDlg.isModified()) {
+                setModified(true);
+                setSynModified(true);
+            }
+            synonymsDlg.dispose();
+            synonymsDlg = null;
         });
     }
 
@@ -1140,10 +849,10 @@ public class CSettingsDlg extends javax.swing.JDialog {
                 lafselection = cnt;
             }
         }
-      //  jComboBoxLAF.addItem(Constants.seaGlassLookAndFeelClassName);
-      /*  if (settings.isSeaGlass()) {
+        jComboBoxLAF.addItem(Constants.seaGlassLookAndFeelClassName);
+        if (settings.isSeaGlass()) {
             lafselection = installed_laf.length;
-        }*/
+        }
         // select the last active look and feel
         jComboBoxLAF.setSelectedIndex(lafselection);
     }
@@ -1179,11 +888,12 @@ public class CSettingsDlg extends javax.swing.JDialog {
     }
 
     /**
+     *
      * @param what Use one of
-     *             <ul>
-     *             <li>Settings.CUSTOM_CSS_ENTRY</li>
-     *             <li>Settings.CUSTOM_CSS_DESKTOP</li>
-     *             </ul>
+     * <ul>
+     * <li>Settings.CUSTOM_CSS_ENTRY</li>
+     * <li>Settings.CUSTOM_CSS_DESKTOP</li>
+     * </ul>
      */
     private void editCSS(int what) {
         // get css
@@ -1229,11 +939,12 @@ public class CSettingsDlg extends javax.swing.JDialog {
     }
 
     /**
+     *
      * @param what Use one of
-     *             <ul>
-     *             <li>Settings.CUSTOM_CSS_ENTRY</li>
-     *             <li>Settings.CUSTOM_CSS_DESKTOP</li>
-     *             </ul>
+     * <ul>
+     * <li>Settings.CUSTOM_CSS_ENTRY</li>
+     * <li>Settings.CUSTOM_CSS_DESKTOP</li>
+     * </ul>
      */
     private void resetCSS(int what) {
         // remember state
@@ -1333,20 +1044,19 @@ public class CSettingsDlg extends javax.swing.JDialog {
     }
 
     private boolean initRegCheckBox() {
-   /*    try {
+        try {
             Regor winreg = new Regor();
             return (winreg.openKey(Regor.HKEY_CLASSES_ROOT, ".zkn3") != null && winreg.openKey(Regor.HKEY_CLASSES_ROOT, "zkn3_auto_file\\shell\\Open\\command") != null);
         } catch (RegistryErrorException e) {
             Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
         } catch (NotSupportedOSException e) {
             Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-        }*/
+        }
         return false;
-
     }
 
     private void registerFileExtension() {
-      /*  try {
+        try {
             Regor winreg = new Regor();
             if (jCheckBoxRegistry.isSelected()) {
                 Key regkey = winreg.openKey(Regor.HKEY_CLASSES_ROOT, ".zkn3");
@@ -1357,7 +1067,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 
                 }
                 if (regkey != null) {
-                    winreg.saveValue(regkey, "", "zkn3_auto_file");
+                    winreg.setValue(regkey, "", "zkn3_auto_file");
                     winreg.closeKey(regkey);
                     regkey = winreg.openKey(Regor.HKEY_CLASSES_ROOT, "zkn3_auto_file\\shell\\Open\\command");
                     if (null == regkey) {
@@ -1366,7 +1076,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
                         regkey = winreg.openKey(Regor.HKEY_CLASSES_ROOT, "zkn3_auto_file\\shell\\Open\\command");
                     }
                     if (regkey != null) {
-                        winreg.saveValue(regkey, "", "\"" + System.getProperty("java.class.path") + "\" \"%1\"");
+                        winreg.setValue(regkey, "", "\"" + System.getProperty("java.class.path") + "\" \"%1\"");
                         winreg.closeKey(regkey);
                     }
                 }
@@ -1380,13 +1090,16 @@ public class CSettingsDlg extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, resourceMap.getString("errorRegistryMsg"), resourceMap.getString("errorRegistryTitle"), JOptionPane.PLAIN_MESSAGE);
         } catch (NotSupportedOSException e) {
             Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-        }*/
+        }
     }
 
     /**
      * This method creates a string-description for the font-settings, which are
      * used for the font's combobox.
      *
+     * @param name
+     * @param size
+     * @param style
      * @return a prepared string containing a description of the font-settings
      */
     private String getFontDataForCombobox(Font f) {
@@ -1489,65 +1202,6 @@ public class CSettingsDlg extends javax.swing.JDialog {
     }
 
     /**
-     * Sets the font color for the chosen font
-     *
-     * @param c the new color value, received from the color-chooser and
-     *          converted to a hex-string
-     */
-    private void setFontColor(String c) {
-        // get the color-value from the selectet font
-        switch (jComboBoxFonts.getSelectedIndex()) {
-            case 0:
-                mainfontcolor = c;
-                break;
-            case 1:
-                authorfontcolor = c;
-                break;
-            case 2:
-                remarksfontcolor = c;
-                break;
-            case 3:
-                titlefontcolor = c;
-                break;
-            case 4:
-                headerfont1color = c;
-                break;
-            case 5:
-                headerfont2color = c;
-                break;
-            case 6:
-                desktopheaderfontcolor = c;
-                break;
-            case 7:
-                desktopcommentfontcolor = c;
-                break;
-            case 8:
-                desktopitemheaderfontcolor = c;
-                break;
-            case 9:
-                desktopitemfontcolor = c;
-                break;
-            case 10:
-                quotefontcolor = c;
-                break;
-            case 11:
-                entryheaderfontcolor = c;
-                break;
-            case 12:
-                appendixheaderfontcolor = c;
-                break;
-            case 13:
-                codefontcolor = c;
-                break;
-            default:
-                mainfontcolor = c;
-                break;
-        }
-        setModified(true);
-        displayupdate = true;
-    }
-
-    /**
      * This methods gets the color-value of the selected font. while the
      * original value is stored as string, this method converts the hex-string
      * into a rgb-Color-value.
@@ -1608,7 +1262,66 @@ public class CSettingsDlg extends javax.swing.JDialog {
      * Sets the font color for the chosen font
      *
      * @param c the new color value, received from the color-chooser and
-     *          converted to a hex-string
+     * converted to a hex-string
+     */
+    private void setFontColor(String c) {
+        // get the color-value from the selectet font
+        switch (jComboBoxFonts.getSelectedIndex()) {
+            case 0:
+                mainfontcolor = c;
+                break;
+            case 1:
+                authorfontcolor = c;
+                break;
+            case 2:
+                remarksfontcolor = c;
+                break;
+            case 3:
+                titlefontcolor = c;
+                break;
+            case 4:
+                headerfont1color = c;
+                break;
+            case 5:
+                headerfont2color = c;
+                break;
+            case 6:
+                desktopheaderfontcolor = c;
+                break;
+            case 7:
+                desktopcommentfontcolor = c;
+                break;
+            case 8:
+                desktopitemheaderfontcolor = c;
+                break;
+            case 9:
+                desktopitemfontcolor = c;
+                break;
+            case 10:
+                quotefontcolor = c;
+                break;
+            case 11:
+                entryheaderfontcolor = c;
+                break;
+            case 12:
+                appendixheaderfontcolor = c;
+                break;
+            case 13:
+                codefontcolor = c;
+                break;
+            default:
+                mainfontcolor = c;
+                break;
+        }
+        setModified(true);
+        displayupdate = true;
+    }
+
+    /**
+     * Sets the font color for the chosen font
+     *
+     * @param c the new color value, received from the color-chooser and
+     * converted to a hex-string
      */
     private void setBackgroundColor(String c) {
         // get the color-value from the selectet font
@@ -2099,7 +1812,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
      * CSS-definitions...
      *
      * @param f the font from which we want to retrieve the style-properties in
-     *          CSS-values
+     * CSS-values
      * @return a string array with two fields: field one holding the
      * css-font-style-property, and the second field holding the the
      * css-font-weight-property.
@@ -2127,9 +1840,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
 
         return retval;
     }
-
-    /**
-     * This method is called from within the constructor to
+    
+    /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
@@ -2221,7 +1933,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jSliderTextfields = new javax.swing.JSlider();
         jLabel16 = new javax.swing.JLabel();
         jButtonListFont = new javax.swing.JButton();
-        jLabelFontDeskLayout = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
         jButtonDesktopFont = new javax.swing.JButton();
         jLabel23 = new javax.swing.JLabel();
         jSliderDesktopFontSize = new javax.swing.JSlider();
@@ -2242,7 +1954,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jCheckBoxCheckNightly = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CSettingsDlg.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CSettingsDlg.class);
         setTitle(resourceMap.getString("FormSettingsDlg.title")); // NOI18N
         setModal(true);
         setName("FormSettingsDlg"); // NOI18N
@@ -2250,7 +1962,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 
         jPanel1.setName("jPanel1"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CSettingsDlg.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CSettingsDlg.class, this);
         jButtonApply.setAction(actionMap.get("applyChanges")); // NOI18N
         jButtonApply.setName("jButtonApply"); // NOI18N
 
@@ -2327,86 +2039,86 @@ public class CSettingsDlg extends javax.swing.JDialog {
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
-                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jCheckBoxSystray)
-                                        .addComponent(jCheckBoxRegistry)
-                                        .addGroup(jPanel3Layout.createSequentialGroup()
-                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jCheckBoxSteno)
-                                                        .addComponent(jCheckBoxAutocorrect)
-                                                        .addGroup(jPanel3Layout.createSequentialGroup()
-                                                                .addGap(21, 21, 21)
-                                                                .addComponent(jLabel13)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jTextFieldBackupPath, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jButtonEditAutokorrekt, javax.swing.GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(jButtonEditSteno, javax.swing.GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(jButtonBrowseBackup, javax.swing.GroupLayout.Alignment.TRAILING)))
-                                        .addComponent(jCheckBoxExtraBackup)
-                                        .addComponent(jCheckBoxAutobackup)
-                                        .addGroup(jPanel3Layout.createSequentialGroup()
-                                                .addComponent(jLabel3)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jComboBoxShowAtStartup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(jPanel3Layout.createSequentialGroup()
-                                                .addComponent(jCheckBoxSynonym)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButtonSynonymEdit))
-                                        .addComponent(jCheckBoxFillNewEntries)
-                                        .addComponent(jCheckBoxSearchWithoutFormatTags)
-                                        .addComponent(jCheckBoxAllToHist)
-                                        .addComponent(jCheckBoxAutoCompleteTags)
-                                        .addComponent(jCheckBoxUseMarkdown))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBoxSystray)
+                    .addComponent(jCheckBoxRegistry)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBoxSteno)
+                            .addComponent(jCheckBoxAutocorrect)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addComponent(jLabel13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldBackupPath, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonEditAutokorrekt, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButtonEditSteno, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButtonBrowseBackup, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addComponent(jCheckBoxExtraBackup)
+                    .addComponent(jCheckBoxAutobackup)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBoxShowAtStartup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jCheckBoxSynonym)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonSynonymEdit))
+                    .addComponent(jCheckBoxFillNewEntries)
+                    .addComponent(jCheckBoxSearchWithoutFormatTags)
+                    .addComponent(jCheckBoxAllToHist)
+                    .addComponent(jCheckBoxAutoCompleteTags)
+                    .addComponent(jCheckBoxUseMarkdown))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
-                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel3)
-                                        .addComponent(jComboBoxShowAtStartup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addComponent(jCheckBoxAutobackup)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxExtraBackup)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jTextFieldBackupPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel13)
-                                        .addComponent(jButtonBrowseBackup))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jCheckBoxAutocorrect)
-                                        .addComponent(jButtonEditAutokorrekt))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jCheckBoxSteno)
-                                        .addComponent(jButtonEditSteno))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxAutoCompleteTags)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxUseMarkdown)
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jCheckBoxSynonym)
-                                        .addComponent(jButtonSynonymEdit))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxSearchWithoutFormatTags)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxFillNewEntries)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxAllToHist)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxRegistry)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxSystray)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jComboBoxShowAtStartup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jCheckBoxAutobackup)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxExtraBackup)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldBackupPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13)
+                    .addComponent(jButtonBrowseBackup))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBoxAutocorrect)
+                    .addComponent(jButtonEditAutokorrekt))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBoxSteno)
+                    .addComponent(jButtonEditSteno))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxAutoCompleteTags)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxUseMarkdown)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBoxSynonym)
+                    .addComponent(jButtonSynonymEdit))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxSearchWithoutFormatTags)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxFillNewEntries)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxAllToHist)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxRegistry)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxSystray)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel3.TabConstraints.tabTitle"), jPanel3); // NOI18N
@@ -2449,7 +2161,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 
         jComboBoxManualTimestamp.setName("jComboBoxManualTimestamp"); // NOI18N
 
-        jComboBoxLocale.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"English", "German (Deutsch)", "Spanish (Espanol)", "Portuguese (Brazil)"}));
+        jComboBoxLocale.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "English", "German (Deutsch)", "Spanish (Espanol)", "Portuguese (Brazil)" }));
         jComboBoxLocale.setName("jComboBoxLocale"); // NOI18N
 
         jLabel15.setText(resourceMap.getString("jLabel15.text")); // NOI18N
@@ -2481,99 +2193,99 @@ public class CSettingsDlg extends javax.swing.JDialog {
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
-                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBoxFootnoteBraces)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addComponent(jCheckBoxShowAllIcons))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBoxManualTimestamp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jCheckBoxIconText)
+                    .addComponent(jCheckBoxShowToolbar)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBoxIconTheme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBoxLAF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel15)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBoxLocale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBoxShowTableBorder)
+                            .addComponent(jCheckBoxFootnote)
+                            .addComponent(jCheckBoxJumpToTab))
                         .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jCheckBoxFootnoteBraces)
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addGap(29, 29, 29)
-                                                .addComponent(jCheckBoxShowAllIcons))
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addComponent(jLabel12)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jComboBoxManualTimestamp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(jCheckBoxIconText)
-                                        .addComponent(jCheckBoxShowToolbar)
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addComponent(jLabel10)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jComboBoxIconTheme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addComponent(jLabel1)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jComboBoxLAF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addComponent(jLabel15)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jComboBoxLocale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jCheckBoxShowTableBorder)
-                                                        .addComponent(jCheckBoxFootnote)
-                                                        .addComponent(jCheckBoxJumpToTab))
-                                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                                        .addGap(27, 27, 27)
-                                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                .addComponent(jLabel4)
-                                                                .addComponent(jLabel6))
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                .addComponent(jFormattedTextFieldImgWidth, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addComponent(jFormattedTextFieldImgHeight, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                .addComponent(jCheckBoxImgResize))
-                                        .addComponent(jCheckBoxShowEntryHeadline)
-                                        .addComponent(jCheckBoxUseMacBackgroundColor))
-                                .addContainerGap())
+                            .addGap(27, 27, 27)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel4)
+                                .addComponent(jLabel6))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jFormattedTextFieldImgWidth, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jFormattedTextFieldImgHeight, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jCheckBoxImgResize))
+                    .addComponent(jCheckBoxShowEntryHeadline)
+                    .addComponent(jCheckBoxUseMacBackgroundColor))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
-                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel15)
-                                        .addComponent(jComboBoxLocale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel1)
-                                        .addComponent(jComboBoxLAF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxUseMacBackgroundColor)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel12)
-                                        .addComponent(jComboBoxManualTimestamp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxShowToolbar)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxShowAllIcons)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxIconText)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel10)
-                                        .addComponent(jComboBoxIconTheme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxImgResize)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel4)
-                                        .addComponent(jFormattedTextFieldImgWidth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel6)
-                                        .addComponent(jFormattedTextFieldImgHeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxShowEntryHeadline)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxShowTableBorder)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxFootnote)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxFootnoteBraces)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxJumpToTab)
-                                .addContainerGap())
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel15)
+                    .addComponent(jComboBoxLocale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jComboBoxLAF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxUseMacBackgroundColor)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(jComboBoxManualTimestamp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxShowToolbar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxShowAllIcons)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxIconText)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jComboBoxIconTheme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxImgResize)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jFormattedTextFieldImgWidth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jFormattedTextFieldImgHeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxShowEntryHeadline)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxShowTableBorder)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxFootnote)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxFootnoteBraces)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxJumpToTab)
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
@@ -2657,90 +2369,90 @@ public class CSettingsDlg extends javax.swing.JDialog {
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
-                jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel5Layout.createSequentialGroup()
-                                                .addGap(10, 10, 10)
-                                                .addComponent(jLabel19)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jComboBoxBackgroundColors, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabelTableColor, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButtonTableBackgroundColor, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(jPanel5Layout.createSequentialGroup()
-                                                .addGap(10, 10, 10)
-                                                .addComponent(jLabel2)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jComboBoxFonts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabelColor, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButtonFont, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButtonFontcolor, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(jPanel5Layout.createSequentialGroup()
-                                                .addContainerGap()
-                                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jLabel5)
-                                                        .addComponent(jLabel20)
-                                                        .addComponent(jLabel21)
-                                                        .addComponent(jCheckBoxEntryCSS)
-                                                        .addComponent(jCheckBoxDesktopCSS))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jButtonDesktopCSS)
-                                                        .addComponent(jButtonEntryCss)
-                                                        .addComponent(jButtonHighlightStyle)
-                                                        .addComponent(jButtonHighlightKeywordStyle)
-                                                        .addComponent(jButtonHighlightLivesearchStyle)
-                                                        .addComponent(jButtonResetEntryCSS)
-                                                        .addComponent(jButtonResetDesktopCSS))))
-                                .addContainerGap())
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel19)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBoxBackgroundColors, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelTableColor, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonTableBackgroundColor, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBoxFonts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelColor, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonFont, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonFontcolor, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel20)
+                            .addComponent(jLabel21)
+                            .addComponent(jCheckBoxEntryCSS)
+                            .addComponent(jCheckBoxDesktopCSS))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonDesktopCSS)
+                            .addComponent(jButtonEntryCss)
+                            .addComponent(jButtonHighlightStyle)
+                            .addComponent(jButtonHighlightKeywordStyle)
+                            .addComponent(jButtonHighlightLivesearchStyle)
+                            .addComponent(jButtonResetEntryCSS)
+                            .addComponent(jButtonResetDesktopCSS))))
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
-                jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                                        .addComponent(jLabel2)
-                                        .addComponent(jComboBoxFonts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jButtonFont)
-                                        .addComponent(jButtonFontcolor)
-                                        .addComponent(jLabelColor, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                .addComponent(jLabel19)
-                                                .addComponent(jComboBoxBackgroundColors, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(jLabelTableColor, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jButtonTableBackgroundColor, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel5)
-                                        .addComponent(jButtonHighlightStyle))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel20)
-                                        .addComponent(jButtonHighlightKeywordStyle))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel21)
-                                        .addComponent(jButtonHighlightLivesearchStyle))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jCheckBoxEntryCSS)
-                                        .addComponent(jButtonEntryCss))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonResetEntryCSS)
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jCheckBoxDesktopCSS)
-                                        .addComponent(jButtonDesktopCSS))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonResetDesktopCSS)
-                                .addContainerGap())
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel2)
+                    .addComponent(jComboBoxFonts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonFont)
+                    .addComponent(jButtonFontcolor)
+                    .addComponent(jLabelColor, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel19)
+                        .addComponent(jComboBoxBackgroundColors, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabelTableColor, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonTableBackgroundColor, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jButtonHighlightStyle))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel20)
+                    .addComponent(jButtonHighlightKeywordStyle))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel21)
+                    .addComponent(jButtonHighlightLivesearchStyle))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBoxEntryCSS)
+                    .addComponent(jButtonEntryCss))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonResetEntryCSS)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBoxDesktopCSS)
+                    .addComponent(jButtonDesktopCSS))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonResetDesktopCSS)
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel5.TabConstraints.tabTitle"), jPanel5); // NOI18N
@@ -2791,8 +2503,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jButtonListFont.setText(resourceMap.getString("jButtonListFont.text")); // NOI18N
         jButtonListFont.setName("jButtonListFont"); // NOI18N
 
-        jLabelFontDeskLayout.setText(resourceMap.getString("jLabelFontDeskLayout.text")); // NOI18N
-        jLabelFontDeskLayout.setName("jLabelFontDeskLayout"); // NOI18N
+        jLabel22.setText(resourceMap.getString("jLabel22.text")); // NOI18N
+        jLabel22.setName("jLabel22"); // NOI18N
 
         jButtonDesktopFont.setText(resourceMap.getString("jButtonDesktopFont.text")); // NOI18N
         jButtonDesktopFont.setName("jButtonDesktopFont"); // NOI18N
@@ -2814,75 +2526,75 @@ public class CSettingsDlg extends javax.swing.JDialog {
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
         jPanel11Layout.setHorizontalGroup(
-                jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel11Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel9)
-                                        .addComponent(jLabel23)
-                                        .addGroup(jPanel11Layout.createSequentialGroup()
-                                                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jLabel8)
-                                                        .addComponent(jLabel7))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jSpinnerDistHor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(jSpinnerDistVer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addComponent(jCheckBoxShowHorGrid)
-                                        .addComponent(jCheckBoxShowVerGrid)
-                                        .addComponent(jSliderFontSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jSliderTextfields, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(jPanel11Layout.createSequentialGroup()
-                                                .addComponent(jLabel16)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButtonListFont))
-                                        .addGroup(jPanel11Layout.createSequentialGroup()
-                                                .addComponent(jLabelFontDeskLayout)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButtonDesktopFont))
-                                        .addComponent(jLabel11)
-                                        .addComponent(jSliderDesktopFontSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jCheckBoxLuhmannColSortable))
-                                .addContainerGap())
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel23)
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel7))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSpinnerDistHor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSpinnerDistVer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jCheckBoxShowHorGrid)
+                    .addComponent(jCheckBoxShowVerGrid)
+                    .addComponent(jSliderFontSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSliderTextfields, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addComponent(jLabel16)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonListFont))
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addComponent(jLabel22)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonDesktopFont))
+                    .addComponent(jLabel11)
+                    .addComponent(jSliderDesktopFontSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCheckBoxLuhmannColSortable))
+                .addContainerGap())
         );
         jPanel11Layout.setVerticalGroup(
-                jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel11Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jCheckBoxShowHorGrid)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxShowVerGrid)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxLuhmannColSortable)
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jSpinnerDistHor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jSpinnerDistVer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel9)
-                                .addGap(0, 0, 0)
-                                .addComponent(jSliderFontSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel23)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSliderDesktopFontSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel11)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSliderTextfields, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel16)
-                                        .addComponent(jButtonListFont))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabelFontDeskLayout)
-                                        .addComponent(jButtonDesktopFont))
-                                .addGap(17, 17, 17))
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCheckBoxShowHorGrid)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxShowVerGrid)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxLuhmannColSortable)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSpinnerDistHor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSpinnerDistVer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel9)
+                .addGap(0, 0, 0)
+                .addComponent(jSliderFontSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel23)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSliderDesktopFontSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSliderTextfields, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(jButtonListFont))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel22)
+                    .addComponent(jButtonDesktopFont))
+                .addGap(17, 17, 17))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel11.TabConstraints.tabTitle"), jPanel11); // NOI18N
@@ -2919,52 +2631,52 @@ public class CSettingsDlg extends javax.swing.JDialog {
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
-                jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel7Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel7Layout.createSequentialGroup()
-                                                .addGap(6, 6, 6)
-                                                .addComponent(jCheckBoxUseXDGOpen))
-                                        .addGroup(jPanel7Layout.createSequentialGroup()
-                                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jLabel17)
-                                                        .addComponent(jLabel14)
-                                                        .addComponent(jLabel18))
-                                                .addGap(18, 18, 18)
-                                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jTextFieldAttachmentPath, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                                                        .addComponent(jTextFieldImagePath, javax.swing.GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(jTextFieldPandoc, javax.swing.GroupLayout.Alignment.TRAILING))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                .addComponent(jButtonBrowseAttachmentPath, javax.swing.GroupLayout.Alignment.TRAILING)
-                                                                .addComponent(jButtonBrowseImagePath, javax.swing.GroupLayout.Alignment.TRAILING))
-                                                        .addComponent(jButtonBrowsePandoc))))
-                                .addContainerGap())
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jCheckBoxUseXDGOpen))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel17)
+                            .addComponent(jLabel14)
+                            .addComponent(jLabel18))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldAttachmentPath, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                            .addComponent(jTextFieldImagePath, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jTextFieldPandoc, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jButtonBrowseAttachmentPath, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jButtonBrowseImagePath, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(jButtonBrowsePandoc))))
+                .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
-                jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel7Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jTextFieldAttachmentPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel17)
-                                        .addComponent(jButtonBrowseAttachmentPath))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jTextFieldImagePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel18)
-                                        .addComponent(jButtonBrowseImagePath))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel14)
-                                        .addComponent(jTextFieldPandoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jButtonBrowsePandoc))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxUseXDGOpen)
-                                .addContainerGap())
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldAttachmentPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17)
+                    .addComponent(jButtonBrowseAttachmentPath))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldImagePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel18)
+                    .addComponent(jButtonBrowseImagePath))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(jTextFieldPandoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonBrowsePandoc))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxUseXDGOpen)
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel7.TabConstraints.tabTitle"), jPanel7); // NOI18N
@@ -2980,24 +2692,24 @@ public class CSettingsDlg extends javax.swing.JDialog {
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
-                jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel4Layout.createSequentialGroup()
-                                                .addGap(27, 27, 27)
-                                                .addComponent(jCheckBoxCheckNightly))
-                                        .addComponent(jCheckBoxAutoUpdate))
-                                .addContainerGap())
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(jCheckBoxCheckNightly))
+                    .addComponent(jCheckBoxAutoUpdate))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
-                jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jCheckBoxAutoUpdate)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxCheckNightly)
-                                .addContainerGap())
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCheckBoxAutoUpdate)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxCheckNightly)
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel4.TabConstraints.tabTitle"), jPanel4); // NOI18N
@@ -3005,92 +2717,201 @@ public class CSettingsDlg extends javax.swing.JDialog {
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jTabbedPane1)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                .addGap(0, 0, Short.MAX_VALUE)
-                                                .addComponent(jButtonCancel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButtonApply)))
-                                .addContainerGap())
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTabbedPane1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButtonCancel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonApply)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jButtonCancel)
-                                        .addComponent(jButtonApply))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonCancel)
+                    .addComponent(jButtonApply))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private boolean modified = false;
     public boolean isModified() {
         return modified;
     }
-
     public final void setModified(boolean b) {
         boolean old = isModified();
         this.modified = b;
         firePropertyChange("modified", old, isModified());
     }
-    // End of variables declaration//GEN-END:variables
-
+    private boolean synmodified = false;
     public boolean isSynModified() {
         return synmodified;
     }
-
     public final void setSynModified(boolean b) {
         synmodified = b;
     }
-
+    
     /**
-     * @return
+     * 
+     * @return 
      */
     public boolean isSaveSettingsOk() {
         return savesettingok;
     }
-
     /**
      * return value for the main window so we know whether we have to update the display.
-     *
+     * 
      * @return
      */
     public boolean getNeedsUpdate() {
         return needsupdate;
     }
-
     public boolean getDisplayUpdate() {
         return displayupdate;
     }
-
     /**
-     * @return
+     * 
+     * @return 
      */
     public boolean getNeedsLafUpdate() {
         return lafupdate;
     }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonApply;
+    private javax.swing.JButton jButtonBrowseAttachmentPath;
+    private javax.swing.JButton jButtonBrowseBackup;
+    private javax.swing.JButton jButtonBrowseImagePath;
+    private javax.swing.JButton jButtonBrowsePandoc;
+    private javax.swing.JButton jButtonCancel;
+    private javax.swing.JButton jButtonDesktopCSS;
+    private javax.swing.JButton jButtonDesktopFont;
+    private javax.swing.JButton jButtonEditAutokorrekt;
+    private javax.swing.JButton jButtonEditSteno;
+    private javax.swing.JButton jButtonEntryCss;
+    private javax.swing.JButton jButtonFont;
+    private javax.swing.JButton jButtonFontcolor;
+    private javax.swing.JButton jButtonHighlightKeywordStyle;
+    private javax.swing.JButton jButtonHighlightLivesearchStyle;
+    private javax.swing.JButton jButtonHighlightStyle;
+    private javax.swing.JButton jButtonListFont;
+    private javax.swing.JButton jButtonResetDesktopCSS;
+    private javax.swing.JButton jButtonResetEntryCSS;
+    private javax.swing.JButton jButtonSynonymEdit;
+    private javax.swing.JButton jButtonTableBackgroundColor;
+    private javax.swing.JCheckBox jCheckBoxAllToHist;
+    private javax.swing.JCheckBox jCheckBoxAutoCompleteTags;
+    private javax.swing.JCheckBox jCheckBoxAutoUpdate;
+    private javax.swing.JCheckBox jCheckBoxAutobackup;
+    private javax.swing.JCheckBox jCheckBoxAutocorrect;
+    private javax.swing.JCheckBox jCheckBoxCheckNightly;
+    private javax.swing.JCheckBox jCheckBoxDesktopCSS;
+    private javax.swing.JCheckBox jCheckBoxEntryCSS;
+    private javax.swing.JCheckBox jCheckBoxExtraBackup;
+    private javax.swing.JCheckBox jCheckBoxFillNewEntries;
+    private javax.swing.JCheckBox jCheckBoxFootnote;
+    private javax.swing.JCheckBox jCheckBoxFootnoteBraces;
+    private javax.swing.JCheckBox jCheckBoxIconText;
+    private javax.swing.JCheckBox jCheckBoxImgResize;
+    private javax.swing.JCheckBox jCheckBoxJumpToTab;
+    private javax.swing.JCheckBox jCheckBoxLuhmannColSortable;
+    private javax.swing.JCheckBox jCheckBoxRegistry;
+    private javax.swing.JCheckBox jCheckBoxSearchWithoutFormatTags;
+    private javax.swing.JCheckBox jCheckBoxShowAllIcons;
+    private javax.swing.JCheckBox jCheckBoxShowEntryHeadline;
+    private javax.swing.JCheckBox jCheckBoxShowHorGrid;
+    private javax.swing.JCheckBox jCheckBoxShowTableBorder;
+    private javax.swing.JCheckBox jCheckBoxShowToolbar;
+    private javax.swing.JCheckBox jCheckBoxShowVerGrid;
+    private javax.swing.JCheckBox jCheckBoxSteno;
+    private javax.swing.JCheckBox jCheckBoxSynonym;
+    private javax.swing.JCheckBox jCheckBoxSystray;
+    private javax.swing.JCheckBox jCheckBoxUseMacBackgroundColor;
+    private javax.swing.JCheckBox jCheckBoxUseMarkdown;
+    private javax.swing.JCheckBox jCheckBoxUseXDGOpen;
+    private javax.swing.JComboBox jComboBoxBackgroundColors;
+    private javax.swing.JComboBox jComboBoxFonts;
+    private javax.swing.JComboBox jComboBoxIconTheme;
+    private javax.swing.JComboBox jComboBoxLAF;
+    private javax.swing.JComboBox jComboBoxLocale;
+    private javax.swing.JComboBox jComboBoxManualTimestamp;
+    private javax.swing.JComboBox jComboBoxShowAtStartup;
+    private javax.swing.JFormattedTextField jFormattedTextFieldImgHeight;
+    private javax.swing.JFormattedTextField jFormattedTextFieldImgWidth;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelColor;
+    private javax.swing.JLabel jLabelTableColor;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JSlider jSliderDesktopFontSize;
+    private javax.swing.JSlider jSliderFontSize;
+    private javax.swing.JSlider jSliderTextfields;
+    private javax.swing.JSpinner jSpinnerDistHor;
+    private javax.swing.JSpinner jSpinnerDistVer;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField jTextFieldAttachmentPath;
+    private javax.swing.JTextField jTextFieldBackupPath;
+    private javax.swing.JTextField jTextFieldImagePath;
+    private javax.swing.JTextField jTextFieldPandoc;
+    // End of variables declaration//GEN-END:variables
+
+    private CFontChooser fontDlg;
+    private CAutoKorrekturEdit autoKorrektEdit;
+    private CStenoEdit stenoEdit;
+    private CHighlightSearchSettings highlightSettingsDlg;
+    private CSynonymsEdit synonymsDlg;
+    private CBiggerEditField biggerEditDlg;
 }
