@@ -184,7 +184,7 @@ public class CDesktopDisplayItems extends javax.swing.JDialog {
         jButtonCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CDesktopDisplayItems.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CDesktopDisplayItems.class);
         setTitle(resourceMap.getString("FormDesktopDisplayItems.title")); // NOI18N
         setModal(true);
         setName("FormDesktopDisplayItems"); // NOI18N
@@ -227,7 +227,7 @@ public class CDesktopDisplayItems extends javax.swing.JDialog {
             }
         });
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CDesktopDisplayItems.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CDesktopDisplayItems.class, this);
         jButtonApply.setAction(actionMap.get("applyChanges")); // NOI18N
         jButtonApply.setText(resourceMap.getString("jButtonApply.text")); // NOI18N
         jButtonApply.setName("jButtonApply"); // NOI18N

@@ -33,7 +33,6 @@
 
 package de.danielluedecke.zettelkasten.tasks;
 
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.SearchRequests;
 import de.danielluedecke.zettelkasten.database.Synonyms;
@@ -74,7 +73,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(StartSearchTask.class);
     /**
      * The search terms, passed as an array.
@@ -403,12 +402,11 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
                         // now we have searched through all parts and can see whether this entry
                         // is a search-result or not...
                         //
-                        // if we have logical-and-search, go on here...
+                        // if we have logica-and-search, go on here...
                         if (Constants.LOG_AND == logical) {
                             // we then need to have at least the same amount of matches as
                             // the length of the searchterm-array
                             // if this is true, append entry-number to stringbuffer
-                            //TODO: this can't be right. Not the number must match, but the items
                             if (foundCounter >= searchTerms.length) {
                                 finalresults.add(searchnr);
                             }

@@ -33,7 +33,6 @@
 
 package de.danielluedecke.zettelkasten.tasks;
 
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.database.Daten;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -61,7 +60,7 @@ public class ShowTitleListTask extends org.jdesktop.application.Task<Object, Voi
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(ShowTitleListTask.class);
 
     private final javax.swing.JDialog parentDialog;

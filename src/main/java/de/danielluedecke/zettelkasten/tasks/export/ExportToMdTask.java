@@ -32,12 +32,8 @@
  */
 package de.danielluedecke.zettelkasten.tasks.export;
 
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
-import de.danielluedecke.zettelkasten.database.BibTex;
-import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.database.TasksData;
+import de.danielluedecke.zettelkasten.database.*;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
@@ -63,7 +59,7 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
     /**
      *
      */
-    private final BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     /**
      *
      */
@@ -134,7 +130,7 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(ExportTask.class);
 
     /**
@@ -146,7 +142,7 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
      * @param d a reference to the Daten-class
      * @param dt a reference to the DesktopData-class
      * @param s a reference to the Settings-class
-     * @param bto a refrence to the BibTex-class
+     * @param bto a refrence to the BibTeX-class
      * @param fp the filepath and -name of the export-file
      * @param ee an integer-array of those entries that should be exported. use {
      * @null} to export all entries
@@ -177,8 +173,8 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
      * @param sf whether each note should be saved as separate file
      */
     public ExportToMdTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label,
-            TasksData td, Daten d, DesktopData dt, Settings s, BibTex bto, File fp, ArrayList<Object> ee, int type, int part,
-            DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix, boolean sf) {
+                          TasksData td, Daten d, DesktopData dt, Settings s, BibTeX bto, File fp, ArrayList<Object> ee, int type, int part,
+                          DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix, boolean sf) {
         super(app);
         dataObj = d;
         settingsObj = s;

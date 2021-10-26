@@ -242,7 +242,7 @@ public class CSearchDlg extends javax.swing.JDialog {
      * get the strings for file descriptions from the resource map
      */
     private org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CSearchDlg.class);
     
     
@@ -311,23 +311,25 @@ public class CSearchDlg extends javax.swing.JDialog {
 
     
     private void setMnemonicKeys() {
-        // init the variables
-        String text;
-        char mkey;
-        // set mnemonic key
-        text = jLabel1.getText();
-        mkey = text.charAt(1);
-        jLabel1.setDisplayedMnemonic(mkey);
-        jLabel1.setLabelFor(jTextFieldSearchTerm);
-        // set mnemonic key
-        jCheckBoxRegEx.setDisplayedMnemonicIndex(0);
-        jCheckBoxSTitles.setDisplayedMnemonicIndex(1);
-        jCheckBoxSContent.setDisplayedMnemonicIndex(0);
-        jCheckBoxSKeywords.setDisplayedMnemonicIndex(0);
-        jCheckBoxSAuthors.setDisplayedMnemonicIndex(0);
-        jCheckBoxWholeWord.setDisplayedMnemonicIndex(0);
-        jCheckBoxMatchCase.setDisplayedMnemonicIndex(0);
-        jCheckBoxSynonyms.setDisplayedMnemonicIndex(1);
+        if (!settingsObj.isMacAqua()) {
+            // init the variables
+            String text;
+            char mkey;
+            // set mnemonic key
+            text = jLabel1.getText();
+            mkey = text.charAt(1);
+            jLabel1.setDisplayedMnemonic(mkey);
+            jLabel1.setLabelFor(jTextFieldSearchTerm);
+            // set mnemonic key
+            jCheckBoxRegEx.setDisplayedMnemonicIndex(0);
+            jCheckBoxSTitles.setDisplayedMnemonicIndex(1);
+            jCheckBoxSContent.setDisplayedMnemonicIndex(0);
+            jCheckBoxSKeywords.setDisplayedMnemonicIndex(0);
+            jCheckBoxSAuthors.setDisplayedMnemonicIndex(0);
+            jCheckBoxWholeWord.setDisplayedMnemonicIndex(0);
+            jCheckBoxMatchCase.setDisplayedMnemonicIndex(0);
+            jCheckBoxSynonyms.setDisplayedMnemonicIndex(1);
+        }
     }
     
 
@@ -409,7 +411,7 @@ public class CSearchDlg extends javax.swing.JDialog {
         // always be re-arranged by the gui-designer
         // get the action map
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.
-            getInstance(ZettelkastenApp.class).getContext().
+            getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().
             getActionMap(CSearchDlg.class, this);
         popupCCPcut.setAction(actionMap.get("cut"));
         popupCCPcopy.setAction(actionMap.get("copy"));
@@ -608,7 +610,7 @@ public class CSearchDlg extends javax.swing.JDialog {
         jPopupMenuCCP.add(popupCCPpaste);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CSearchDlg.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CSearchDlg.class);
         setTitle(resourceMap.getString("FormSearchDialog.title")); // NOI18N
         setModal(true);
         setName("FormSearchDialog"); // NOI18N
@@ -757,7 +759,7 @@ public class CSearchDlg extends javax.swing.JDialog {
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CSearchDlg.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CSearchDlg.class, this);
         jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
         jButtonCancel.setName("jButtonCancel"); // NOI18N
 

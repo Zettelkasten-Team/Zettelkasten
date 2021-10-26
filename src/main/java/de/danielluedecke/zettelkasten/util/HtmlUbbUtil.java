@@ -32,9 +32,8 @@
  */
 package de.danielluedecke.zettelkasten.util;
 
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
-import de.danielluedecke.zettelkasten.database.BibTex;
-import de.danielluedecke.zettelkasten.util.misc.Comparer;
+import de.danielluedecke.zettelkasten.database.BibTeX;
+import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.tasks.export.ExportTools;
@@ -67,7 +66,7 @@ public class HtmlUbbUtil {
      * get the strings for file descriptions from the resource map
      */
     private static final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(HtmlUbbUtil.class);
 
     private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().startsWith("windows");
@@ -108,15 +107,15 @@ public class HtmlUbbUtil {
         switch (ratingvalue) {
             // no rating point
             case RATING_VALUE_NONE:
-                imgURL = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/bullet_black.png");
+                imgURL = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/bullet_black.png");
                 break;
             // half rating point
             case RATING_VALUE_HALF:
-                imgURL = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/bullet_yellow.png");
+                imgURL = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/bullet_yellow.png");
                 break;
             // full rating point
             case RATING_VALUE_FULL:
-                imgURL = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/bullet_green.png");
+                imgURL = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/bullet_green.png");
                 break;
         }
         // append image-src
@@ -314,16 +313,17 @@ public class HtmlUbbUtil {
         htmlrating.append("</a>");
         // close tag
         htmlrating.append("</td></tr>").append(System.lineSeparator());
+
         // check whether entry has manual links
-        String[] manlinks = dataObj.getManualLinksAsString(entrynr);
-        if (manlinks != null && manlinks.length > 0) {
+        String[] manualLinksAsString = dataObj.getManualLinksAsString(entrynr);
+        if (manualLinksAsString != null && manualLinksAsString.length > 0) {
             // append manual links
             htmlrating.append("<tr><td class=\"crtitle\" valign=\"top\"><a href=\"#crt\">");
             htmlrating.append(resourceMap.getString("crossRefText")).append(":</a>&nbsp;</td><td class=\"mlink\" colspan=\"3\">");
             // create string builder
             StringBuilder crossrefs = new StringBuilder("");
             // iterate string array
-            for (String ml : manlinks) {
+            for (String ml : manualLinksAsString) {
                 String title = "";
                 try {
                     title = dataObj.getZettelTitle(Integer.parseInt(ml));
@@ -338,6 +338,7 @@ public class HtmlUbbUtil {
             htmlrating.append(crossrefs.toString().substring(0, crossrefs.length() - 10));
             htmlrating.append("</td></tr>").append(System.lineSeparator());
         }
+
         htmlrating.append("</table></div>").append(System.lineSeparator());
         // return result
         return htmlrating.toString();
@@ -543,10 +544,10 @@ public class HtmlUbbUtil {
      * This method creates a html page of the parameters passed to this class
      * constructor It is easier to keep the overview over the layout style when
      * the html page, which is responsible for the "look'n'feel" of an entry, is
-     * being created in a separate class rather than in the CDaten class
+     * being created in a separate class rather than in the Daten class
      *
-     * @param settings a reference to the CSettings-class
-     * @param dataObj a reference to the CDaten-class
+     * @param settings a reference to the Settings-class
+     * @param dataObj a reference to the Daten-class
      * @param bibtexObj
      * @param entrynr the entry-number of the entry that should be converted
      * into HTML
@@ -559,7 +560,7 @@ public class HtmlUbbUtil {
      */
     public static String getEntryAsHTML(Settings settings,
             Daten dataObj,
-            BibTex bibtexObj,
+            BibTeX bibtexObj,
             int entrynr,
             String[] segmentKeywords,
             int sourceframe) {
@@ -891,7 +892,7 @@ public class HtmlUbbUtil {
      * @param createHTMLFootnotes
      * @return a converted string with html-tags instead of ubb-tags
      */
-    public static String convertUbbToHtml(Settings settings, Daten dataObj, BibTex bibtexObj, String c, int sourceframe, boolean isExport, boolean createHTMLFootnotes) {
+    public static String convertUbbToHtml(Settings settings, Daten dataObj, BibTeX bibtexObj, String c, int sourceframe, boolean isExport, boolean createHTMLFootnotes) {
         // create new string
         String dummy = replaceUbbToHtml(c, settings.getMarkdownActivated(), (Constants.FRAME_DESKTOP == sourceframe), isExport);
         // add title attributes to manual links
@@ -996,11 +997,11 @@ public class HtmlUbbUtil {
      * @param content
      * @return 
      */
-    public static String convertFootnotesToPlain(Daten data, BibTex bibtexObj, Settings settings, String content) {
+    public static String convertFootnotesToPlain(Daten data, BibTeX bibtexObj, Settings settings, String content) {
         return convertFootnotes(data, bibtexObj, settings, content, false, false);
     }
     
-    private static String convertFootnotes(Daten data, BibTex bibtexObj, Settings settings, String content, boolean isLatex, boolean asHtml) {
+    private static String convertFootnotes(Daten data, BibTeX bibtexObj, Settings settings, String content, boolean isLatex, boolean asHtml) {
         if (isLatex) {
             content = content.replaceAll("\\[fn ([^\\[]*)\\]", "(FN $1)");
         } else {
@@ -1641,7 +1642,7 @@ public class HtmlUbbUtil {
                             }
                         }
                     }
-                    // dummy = dummy.substring(0, pos)+"<table border=\"1\">"+tabelle.toString().replace("\\\\", "<br>")+"</table>"+dummy.substring(end+8);
+
                     String tableString = (PlatformUtil.isJava7OnMac() || PlatformUtil.isJava7OnWindows()) ? "<table cellspacing=\"0\">" : "<table>";
                     dummy = dummy.substring(0, pos) + tableString + tabelle.toString().replace("\\\\", "<br>") + "</table>" + dummy.substring(end + 8);
                     pos = pos + tabelle.toString().length();
@@ -2023,7 +2024,7 @@ public class HtmlUbbUtil {
      * @param removeNonStandardTags
      * @return a converted string with html-tags instead of ubb-tags
      */
-    public static String convertUbbToTex(Settings settings, Daten dataObj, BibTex bibtexObj, String c, boolean useFootnoteRef, boolean createFormTag, boolean isDesktop, boolean removeNonStandardTags) {
+    public static String convertUbbToTex(Settings settings, Daten dataObj, BibTeX bibtexObj, String c, boolean useFootnoteRef, boolean createFormTag, boolean isDesktop, boolean removeNonStandardTags) {
         // here we create a path to our image folder. this is needed for
         // converting image tags, since the image ae copied to an own local folder,
         // but the source-information only stores the file name, not the path information.
@@ -2778,7 +2779,7 @@ public class HtmlUbbUtil {
      * @param createHtmlFootnotes
      * @return a string with the html-page-content
      */
-    public static String getHtmlContentForDesktop(Daten dataObj, BibTex bibtexObj, Settings settings, int nr, boolean isHeadingVisible, boolean isEntryNumberVisible, boolean isExport, boolean createHtmlFootnotes) {
+    public static String getHtmlContentForDesktop(Daten dataObj, BibTeX bibtexObj, Settings settings, int nr, boolean isHeadingVisible, boolean isEntryNumberVisible, boolean isExport, boolean createHtmlFootnotes) {
         // get the zettelcontent
         return getHtmlContentForDesktop(dataObj,
                 bibtexObj,
@@ -2856,7 +2857,7 @@ public class HtmlUbbUtil {
      * @param createHtmlFootnotes
      * @return a string with the html-page-content
      */
-    public static String getHtmlContentForDesktop(Daten dataObj, BibTex bibtexObj, Settings settings, String zettelcontent, int nr, boolean isHeadingVisible, boolean isEntryNumberVisible, boolean isExport, boolean createHtmlFootnotes) {
+    public static String getHtmlContentForDesktop(Daten dataObj, BibTeX bibtexObj, Settings settings, String zettelcontent, int nr, boolean isHeadingVisible, boolean isEntryNumberVisible, boolean isExport, boolean createHtmlFootnotes) {
         // create an empty string buffer. this buffer contains the html-string
         // which is being display in the desktop window's main textfield
         StringBuilder retval = new StringBuilder("");

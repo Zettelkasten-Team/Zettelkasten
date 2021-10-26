@@ -32,11 +32,10 @@
  */
 package de.danielluedecke.zettelkasten.tasks;
 
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
-import de.danielluedecke.zettelkasten.database.BibTex;
+import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.util.misc.Comparer;
+import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
@@ -57,7 +56,7 @@ public class ShowAuthorListTask extends org.jdesktop.application.Task<Object, Vo
     /**
      * the table model from the main window's jtable, passed as parameter
      */
-    private final BibTex bibtexObj;
+    private final BibTeX bibtexObj;
     private int entrytype = -1;
 
     private final DefaultTableModel tableModel;
@@ -70,10 +69,10 @@ public class ShowAuthorListTask extends org.jdesktop.application.Task<Object, Vo
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(ShowAuthorListTask.class);
 
-    ShowAuthorListTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, BibTex bt, int et, DefaultTableModel dtm) {
+    ShowAuthorListTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, BibTeX bt, int et, DefaultTableModel dtm) {
         // Runs on the EDT.  Copy GUI state that
         // doInBackground() depends on from parameters
         // to createLinksTask fields, here.

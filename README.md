@@ -1,4 +1,4 @@
-# Zettelkasten - after Luhmann 
+# Zettelkasten – Luhmann style
 <img src="src/main/resources/de/danielluedecke/zettelkasten/resources/icons/zkn3-256x256.png" height="128" align="right"/>
 
 <p>

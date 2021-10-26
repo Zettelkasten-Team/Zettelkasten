@@ -35,13 +35,20 @@ package de.danielluedecke.zettelkasten;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
 import de.danielluedecke.zettelkasten.util.Constants;
+import com.explodingpixels.macwidgets.MacWidgetFactory;
+import com.explodingpixels.widgets.TableUtils;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.logging.Level;
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.KeyStroke;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -51,7 +58,7 @@ import org.jdesktop.application.Action;
  *
  * @author danielludecke
  */
-public class CAutoKorrekturEdit extends JDialog {
+public class CAutoKorrekturEdit extends javax.swing.JDialog {
 
     /**
      * A reference to the auto-correction class
@@ -73,7 +80,7 @@ public class CAutoKorrekturEdit extends JDialog {
      * get the strings for file descriptions from the resource map
      */
     private final org.jdesktop.application.ResourceMap resourceMap
-            = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).
+            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
             getContext().getResourceMap(CAutoKorrekturEdit.class);
 
     /**
@@ -140,6 +147,18 @@ public class CAutoKorrekturEdit extends JDialog {
         // create auto-sorter for tabel
         jTableAutoKorrektur.setAutoCreateRowSorter(true);
         jTableAutoKorrektur.setGridColor(settingsObj.getTableGridColor());
+        // make extra table-sorter for itunes-tables
+        if (settingsObj.isMacAqua()) {
+            TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
+                @Override
+                public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
+                }
+            };
+            TableUtils.makeSortable(jTableAutoKorrektur, sortDelegate);
+            // change back default column-resize-behaviour when we have itunes-tables,
+            // since the default for those is "auto resize off"
+            jTableAutoKorrektur.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+        }
         // init the table, i.e. fill it with all existing data
         tm = (DefaultTableModel) jTableAutoKorrektur.getModel();
         tm.setRowCount(0);
@@ -275,12 +294,12 @@ public class CAutoKorrekturEdit extends JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTableAutoKorrektur = new javax.swing.JTable();
+        jTableAutoKorrektur = (settingsObj.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
         jButtonCancel = new javax.swing.JButton();
         jButtonApply = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getResourceMap(CAutoKorrekturEdit.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CAutoKorrekturEdit.class);
         setTitle(resourceMap.getString("FormAutokorrektur.title")); // NOI18N
         setModal(true);
         setName("FormAutokorrektur"); // NOI18N
@@ -310,12 +329,10 @@ public class CAutoKorrekturEdit extends JDialog {
         jTableAutoKorrektur.setCellSelectionEnabled(true);
         jTableAutoKorrektur.setName("jTableAutoKorrektur"); // NOI18N
         jScrollPane1.setViewportView(jTableAutoKorrektur);
-        if (jTableAutoKorrektur.getColumnModel().getColumnCount() > 0) {
-            jTableAutoKorrektur.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableAutoKorrektur.columnModel.title0")); // NOI18N
-            jTableAutoKorrektur.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableAutoKorrektur.columnModel.title1")); // NOI18N
-        }
+        jTableAutoKorrektur.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableAutoKorrektur.columnModel.title0")); // NOI18N
+        jTableAutoKorrektur.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableAutoKorrektur.columnModel.title1")); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(ZettelkastenApp.class).getContext().getActionMap(CAutoKorrekturEdit.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CAutoKorrekturEdit.class, this);
         jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
         jButtonCancel.setName("jButtonCancel"); // NOI18N
 
