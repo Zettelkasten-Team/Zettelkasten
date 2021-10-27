@@ -1951,75 +1951,77 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private void initToolbarIcons(boolean bottomBarNeedsUdpate) {
         statusErrorButton.setVisible(false);
         statusDesktopEntryButton.setVisible(false);
+
         // check whether the toolbar should be displayed at all...
-        if (!settings.getShowIcons() && !settings.getShowIconText()) {
+        if (settings.getShowIcons() || settings.getShowIconText()) {// set toolbar visible
+            toolBar.setVisible(true);
+            // and remove border from the main panel
+            mainPanel.setBorder(null);
+
+            // init toolbar button array
+            JButton toolbarButtons[] = new JButton[]{
+                    tb_open, tb_save, tb_first, tb_next, tb_prev, tb_copy, tb_paste, tb_newEntry,
+                    tb_edit, tb_find, tb_addtodesktop, tb_addbookmark, tb_delete, tb_addluhmann,
+                    tb_addmanlinks, tb_selectall, tb_last
+            };
+            String[] buttonNames = new String[]{"tb_openText", "tb_saveText", "tb_firstText",
+                    "tb_nextText", "tb_prevText", "tb_copyText",
+                    "tb_pasteText", "tb_newEntryText", "tb_editText",
+                    "tb_findText", "tb_addtodesktopText", "tb_addbookmarkText",
+                    "tb_deleteText", "tb_addluhmannText", "tb_addmanlinksText",
+                    "tb_selectallText", "tb_lastText"
+            };
+            String[] iconNames = new String[]{"openIcon", "saveIcon", "showFirstEntryIcon",
+                    "showNextEntryIcon", "showPrevEntryIcon", "copyIcon",
+                    "pasteIcon", "newEntryIcon", "editEntryIcon",
+                    "findIcon", "addDesktopIcon", "addBookmarksIcon",
+                    "deleteIcon", "addLuhmannIcon", "addManLinksIcon",
+                    "selectAllIcon", "showLastEntryIcon"
+            };
+
+            // Show icon names ?
+            if (settings.getShowIconText()) {
+                for (int cnt = 0; cnt < toolbarButtons.length; cnt++) {
+                    toolbarButtons[cnt].setText(toolbarResourceMap.getString(buttonNames[cnt]));
+                }
+            } else {
+                for (JButton tbb : toolbarButtons) {
+                    tbb.setText("");
+                }
+            }
+            // Show icons ?
+            if (settings.getShowIcons()) {
+                // retrieve icon theme path
+                String icontheme = settings.getIconThemePath();
+                for (int cnt = 0; cnt < toolbarButtons.length; cnt++) {
+                    toolbarButtons[cnt].setIcon(new ImageIcon(ZettelkastenView.class.getResource(icontheme + toolbarResourceMap.getString(iconNames[cnt]))));
+                }
+            } else {
+                for (JButton tbb : toolbarButtons) {
+                    tbb.setIcon(null);
+                }
+            }
+            // check if all toolbar icons should be displayed or not
+            if (settings.getShowIcons()) {
+                tb_edit.setVisible(settings.getShowAllIcons());
+                tb_delete.setVisible(settings.getShowAllIcons());
+                tb_selectall.setVisible(settings.getShowAllIcons());
+                tb_addtodesktop.setVisible(settings.getShowAllIcons());
+                tb_find.setVisible(settings.getShowAllIcons());
+            }
+            if (settings.isMacAqua() && bottomBarNeedsUdpate) {
+                makeMacToolbar();
+            }
+            if (settings.isSeaGlass()) {
+                makeSeaGlassToolbar();
+            }
+        } else {
             // if not, hide it and leave.
             toolBar.setVisible(false);
             // and set a border to the main panel, because the toolbar's dark border is hidden
             // and remove border from the main panel
             mainPanel.setBorder(new MatteBorder(1, 0, 0, 0, ColorUtil.colorDarkLineGray));
             return;
-        }
-        // set toolbar visible
-        toolBar.setVisible(true);
-        // and remove border from the main panel
-        mainPanel.setBorder(null);
-        // init toolbar button array
-        javax.swing.JButton toolbarButtons[] = new javax.swing.JButton[]{
-            tb_open, tb_save, tb_first, tb_next, tb_prev, tb_copy, tb_paste, tb_newEntry,
-            tb_edit, tb_find, tb_addtodesktop, tb_addbookmark, tb_delete, tb_addluhmann,
-            tb_addmanlinks, tb_selectall, tb_last
-        };
-        String[] buttonNames = new String[]{"tb_openText", "tb_saveText", "tb_firstText",
-            "tb_nextText", "tb_prevText", "tb_copyText",
-            "tb_pasteText", "tb_newEntryText", "tb_editText",
-            "tb_findText", "tb_addtodesktopText", "tb_addbookmarkText",
-            "tb_deleteText", "tb_addluhmannText", "tb_addmanlinksText",
-            "tb_selectallText", "tb_lastText"
-        };
-        String[] iconNames = new String[]{"openIcon", "saveIcon", "showFirstEntryIcon",
-            "showNextEntryIcon", "showPrevEntryIcon", "copyIcon",
-            "pasteIcon", "newEntryIcon", "editEntryIcon",
-            "findIcon", "addDesktopIcon", "addBookmarksIcon",
-            "deleteIcon", "addLuhmannIcon", "addManLinksIcon",
-            "selectAllIcon", "showLastEntryIcon"
-        };
-
-        // set toolbar-icons' text
-        if (settings.getShowIconText()) {
-            for (int cnt = 0; cnt < toolbarButtons.length; cnt++) {
-                toolbarButtons[cnt].setText(toolbarResourceMap.getString(buttonNames[cnt]));
-            }
-        } else {
-            for (javax.swing.JButton tbb : toolbarButtons) {
-                tbb.setText("");
-            }
-        }
-        // show icons, if requested
-        if (settings.getShowIcons()) {
-            // retrieve icon theme path
-            String icontheme = settings.getIconThemePath();
-            for (int cnt = 0; cnt < toolbarButtons.length; cnt++) {
-                toolbarButtons[cnt].setIcon(new ImageIcon(ZettelkastenView.class.getResource(icontheme + toolbarResourceMap.getString(iconNames[cnt]))));
-            }
-        } else {
-            for (javax.swing.JButton tbb : toolbarButtons) {
-                tbb.setIcon(null);
-            }
-        }
-        // check if all toolbar icons should be displayed or not
-        if (settings.getShowIcons()) {
-            tb_edit.setVisible(settings.getShowAllIcons());
-            tb_delete.setVisible(settings.getShowAllIcons());
-            tb_selectall.setVisible(settings.getShowAllIcons());
-            tb_addtodesktop.setVisible(settings.getShowAllIcons());
-            tb_find.setVisible(settings.getShowAllIcons());
-        }
-        if (settings.isMacAqua() && bottomBarNeedsUdpate) {
-            makeMacToolbar();
-        }
-        if (settings.isSeaGlass()) {
-            makeSeaGlassToolbar();
         }
     }
 
@@ -2768,7 +2770,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
     /**
      * Method to init the jTrees components. Removes all elements, sets the root
-     * and th selection-mode
+     * and the selection-mode
      */
     private void initTrees() {
         // in case we have mac os x with aqua look&feel, make JTrees look
@@ -8557,7 +8559,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         }
         // init variable
         int randomnumber = -1;
-        // create randomnumber and check, whether the entry with the created random number
+        // create a random number and check, whether the entry with the created random number
         // is deleted or not
         while (-1 == randomnumber || data.isDeleted(randomnumber)) {
             // create new random number until we have found a valid, non-deleted entry
@@ -10941,10 +10943,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jTextFieldFilterAttachments.putClientProperty("JTextField.variant", "search");
         }
     }
+
     private void makeSeaGlassToolbar() {
         Tools.makeTexturedToolBarButton(tb_newEntry, Tools.SEGMENT_POSITION_FIRST);
         Tools.makeTexturedToolBarButton(tb_open, Tools.SEGMENT_POSITION_MIDDLE);
         Tools.makeTexturedToolBarButton(tb_save, Tools.SEGMENT_POSITION_LAST);
+
         if (settings.getShowAllIcons()) {
             Tools.makeTexturedToolBarButton(tb_edit, Tools.SEGMENT_POSITION_FIRST);
             Tools.makeTexturedToolBarButton(tb_delete, Tools.SEGMENT_POSITION_MIDDLE);
@@ -10956,8 +10960,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             Tools.makeTexturedToolBarButton(tb_copy, Tools.SEGMENT_POSITION_FIRST);
             Tools.makeTexturedToolBarButton(tb_paste, Tools.SEGMENT_POSITION_LAST);
         }
+
         Tools.makeTexturedToolBarButton(tb_addmanlinks, Tools.SEGMENT_POSITION_FIRST);
         Tools.makeTexturedToolBarButton(tb_addluhmann, Tools.SEGMENT_POSITION_MIDDLE);
+
         if (settings.getShowAllIcons()) {
             Tools.makeTexturedToolBarButton(tb_addbookmark, Tools.SEGMENT_POSITION_MIDDLE);
             Tools.makeTexturedToolBarButton(tb_addtodesktop, Tools.SEGMENT_POSITION_LAST);
@@ -10965,6 +10971,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         else {
             Tools.makeTexturedToolBarButton(tb_addbookmark, Tools.SEGMENT_POSITION_LAST);
         }
+
         if (settings.getShowAllIcons()) {
             Tools.makeTexturedToolBarButton(tb_find, Tools.SEGMENT_POSITION_FIRST);
             Tools.makeTexturedToolBarButton(tb_first, Tools.SEGMENT_POSITION_MIDDLE);
@@ -10972,9 +10979,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         else {
             Tools.makeTexturedToolBarButton(tb_first, Tools.SEGMENT_POSITION_FIRST);
         }
+
         Tools.makeTexturedToolBarButton(tb_prev, Tools.SEGMENT_POSITION_MIDDLE);
         Tools.makeTexturedToolBarButton(tb_next, Tools.SEGMENT_POSITION_MIDDLE);
         Tools.makeTexturedToolBarButton(tb_last, Tools.SEGMENT_POSITION_LAST);
+
         toolBar.setPreferredSize(new java.awt.Dimension(toolBar.getSize().width,Constants.seaGlassToolbarHeight));
         toolBar.add(new javax.swing.JToolBar.Separator(), 0);
     }
@@ -10985,7 +10994,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
      * GUI-updates, e.g. from settings window, use {@code false} as parameter.
      */
     private void makeMacToolbar() {
-        // hide default toolbr
+        // hide default toolbar
         toolBar.setVisible(false);
         getFrame().remove(toolBar);
         // and create mac toolbar

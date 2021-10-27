@@ -74,7 +74,7 @@ import javax.swing.JOptionPane;
  * With this class, you can then retrieve single entries, retrieve bibtex
  * entries (i.e. author values) in a certain citation style etc.
  * <br><br>
- * This class is mainly used for importing literatur values from a bibtex file
+ * This class is mainly used for importing literature values from a bibtex file
  * (see
  * <b>CImportBibTex</b>) or changing bibkey values from entry's author values
  * (see
@@ -103,10 +103,10 @@ public class BibTeX {
      */
     private final ArrayList<BibtexEntry> bibtexentries = new ArrayList<>();
     /**
-     * Thi array stores bibtex entries that should be exported. Since bibtex
+     * This array stores bibtex entries that should be exported. Since bibtex
      * entries that should be exported may contain only a selection of all
      * bibtex entries of the currently opened bibtex file, we use an extra array
-     * to store export entrie.
+     * to store export entries.
      */
     private final ArrayList<BibtexEntry> outputbibtexentries = new ArrayList<>();
     /**
@@ -165,20 +165,19 @@ public class BibTeX {
     }
 
     /**
-     * sets the modified state. should be called whenever changes have been made
-     * to the desktopfile (set it to true) or when the data has been saved (set
-     * it to false)
+     * Set the change status (modified state).
+     * Should be called whenever changes have been made to the desktop file (set to true)
+     * or when the data has been saved (set to false).
      *
      * @param m true when changes are unsaved, false otherwise
      */
     public void setModified(boolean m) {
         modified = m;
-        // update indicator for autobackup
         zknframe.setBackupNecessary();
     }
 
     /**
-     * Checks whether the datafile is modified
+     * Check if the data file has been changed (modified)
      *
      * @return {@code true} if it is modified, false otherwise
      */
@@ -1619,7 +1618,7 @@ public class BibTeX {
                                     }
                                 } // else the given name comes first, so we
                                 // separate each full author-name at space-sign, so we can
-                                // retieve sur- and given-name
+                                // retrieve sur- and given-name
                                 else {
                                     // retrieve sur and given name of author
                                     String[] names = aunames.trim().split(" ");
