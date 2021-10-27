@@ -43,17 +43,17 @@ import java.util.*;
 import java.util.logging.Level;
 
 /**
- * The root-element is names "desktops". For each desktop, a new child named
- * "desktop" is created. This child holds the content for one desktop.
+ * DesktopData is an XML structure. The root element is named "desktops".
+ * A new child element is created with the name "desktop". This child contains the content for a desktop.
  *
  * The first Element is always "bullet", a bullet-point. Bullet-points do always
  * have the attribute "name" which holds the name of the bullet-point that is
  * displayed in the jTree. Furthermore, each bullet-element automatically
  * creates a child-element "comment", even if a bullet-point has no comments.
  *
- * "comment" is therefor always the first child-element of "bullet".
+ * "comment" is therefore always the first child-element of "bullet".
  *
- * Futher child-elements are the entries, named "entry". Each entry-element has
+ * Further child-elements are the entries, named "entry". Each entry-element has
  * an id with the related entry-number from the main-datafile (see CDaten-class)
  * and a timestamp which indicates when this entry was added to the desktop.
  *
@@ -61,58 +61,13 @@ import java.util.logging.Level;
  * child-elements. These bullet-element indicate the next level of the outline,
  * repeating the structure described here and above.
  *
- * &lt;desktops&gt;<br>
- * &nbsp;&nbsp;&lt;desktop name="MyFirstDesktop"&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;bullet name="Name of Bullet point"&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;omment&gt;The comment of this
- * bullet&lt;/comment&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="4"
- * timestamp="0901155107"&gt;A possible comment to the entry&lt;/entry&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="11" timestamp="0901153112"
- * /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="17"
- * timestamp="0901155313"&gt;A possible comment to the entry&lt;/entry&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;bullet name="Name of Bullet
- * Point"&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;comment /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="14"
- * timestamp="0902114301" /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="1"
- * timestamp="0901121313"&gt;A possible comment to the entry&lt;/entry&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="23"
- * timestamp="0901453208" /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="35"
- * timestamp="0902251714" /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;bullet name="Name of
- * Bullet Point"&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;comment
- * /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="40"
- * timestamp="0902114301" /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="44"
- * timestamp="0902114301" /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bullet&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;bullet name="Name of
- * Bullet Point"&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;comment
- * /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="50"
- * timestamp="0902114301" /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;entry id="54"
- * timestamp="0902114301" /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bullet&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bullet&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;/bullet&gt;<br>
- * &nbsp;&nbsp;&lt;/desktop&gt;<br>
- * &lt;/desktops&gt;
- *
  * @author danielludecke
  */
 public class DesktopData {
 
-    private Document desktop;
-    private Document modifiedEntries;
-    private Document desktopNotes;
+    private org.jdom2.Document desktop;
+    private org.jdom2.Document modifiedEntries;
+    private org.jdom2.Document desktopNotes;
     private int currentDesktop;
     private boolean modified;
     private int timestampid = 0;
@@ -182,9 +137,9 @@ public class DesktopData {
      */
     public final void clear() {
         // create empty documents
-        desktop = new Document(new Element("desktops"));
-        modifiedEntries = new Document(new Element("modifiedEntries"));
-        desktopNotes = new Document(new Element("desktopNotes"));
+        desktop = new org.jdom2.Document(new Element("desktops"));
+        modifiedEntries = new org.jdom2.Document(new Element("modifiedEntries"));
+        desktopNotes = new org.jdom2.Document(new Element("desktopNotes"));
         currentDesktop = -1;
         modified = false;
     }
@@ -195,7 +150,7 @@ public class DesktopData {
      *
      * @param doc an xml-file containing the desktop-data
      */
-    public void setDesktopData(Document doc) {
+    public void setDesktopData(org.jdom2.Document doc) {
         desktop = doc;
     }
 
@@ -204,7 +159,7 @@ public class DesktopData {
      *
      * @return an xml-file containing the desktop-data
      */
-    public Document getDesktopData() {
+    public org.jdom2.Document getDesktopData() {
         return desktop;
     }
 
@@ -214,7 +169,7 @@ public class DesktopData {
      *
      * @param doc an xml-file containing the desktop-data
      */
-    public void setDesktopModifiedEntriesData(Document doc) {
+    public void setDesktopModifiedEntriesData(org.jdom2.Document doc) {
         modifiedEntries = doc;
     }
 
@@ -223,7 +178,7 @@ public class DesktopData {
      *
      * @return an xml-file containing the desktop-data
      */
-    public Document getDesktopModifiedEntriesData() {
+    public org.jdom2.Document getDesktopModifiedEntriesData() {
         return modifiedEntries;
     }
 
@@ -233,7 +188,7 @@ public class DesktopData {
      *
      * @param doc an xml-file containing the desktop-data
      */
-    public void setDesktopNotesData(Document doc) {
+    public void setDesktopNotesData(org.jdom2.Document doc) {
         desktopNotes = doc;
     }
 
@@ -242,7 +197,7 @@ public class DesktopData {
      *
      * @return an xml-file containing the desktop-data
      */
-    public Document getDesktopNotesData() {
+    public org.jdom2.Document getDesktopNotesData() {
         return desktopNotes;
     }
 
@@ -2147,9 +2102,9 @@ public class DesktopData {
      * @return the archived document as XML-focument, or {@code null} if an
      * error occured.
      */
-    public Document archiveDesktop(String name) {
+    public org.jdom2.Document archiveDesktop(String name) {
         // create new document
-        Document archive = new Document(new Element("archivedDesktop"));
+        org.jdom2.Document archive = new org.jdom2.Document(new Element("archivedDesktop"));
         // add desktop-element of desktop that should be archived
         Element deskel = getDesktopElement(name);
         // if we found a valid value, go on
@@ -2222,7 +2177,7 @@ public class DesktopData {
      * @return the archived document as XML-document, or {@code null} if an
      * error occured.
      */
-    public Document archiveDesktop(int desktopnr) {
+    public org.jdom2.Document archiveDesktop(int desktopnr) {
         return archiveDesktop(getDesktopName(desktopnr));
     }
 
@@ -2243,8 +2198,8 @@ public class DesktopData {
      * general error occured</li>
      * </ul>
      */
-    public int importArchivedDesktop(Document archive) {
-        // get imported desktopname
+    public int importArchivedDesktop(org.jdom2.Document archive) {
+        // get imported desktop name
         String name = archive.getRootElement().getAttributeValue("name");
         // check whether we have any name at all. if not, return false
         if (null == name || name.isEmpty()) {
@@ -2252,7 +2207,7 @@ public class DesktopData {
         }
         // first of all, go through all desktops and check whether the name
         // already exist, to avoid double naming...
-        // when such a desktopname as "name" already exists, return false
+        // when such a desktop name as "name" already exists, return false
         for (int cnt = 0; cnt < getCount(); cnt++) {
             if (name.equalsIgnoreCase(getDesktopName(cnt))) {
                 return IMPORT_ARCHIVE_ERR_DESKTOPNAME_EXISTS;
