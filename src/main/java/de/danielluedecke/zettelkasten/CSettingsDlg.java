@@ -1938,6 +1938,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jLabel23 = new javax.swing.JLabel();
         jSliderDesktopFontSize = new javax.swing.JSlider();
         jCheckBoxLuhmannColSortable = new javax.swing.JCheckBox();
+        jLabelFontDeskLayout = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
         jTextFieldAttachmentPath = new javax.swing.JTextField();
@@ -1954,7 +1955,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jCheckBoxCheckNightly = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CSettingsDlg.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(CSettingsDlg.class);
         setTitle(resourceMap.getString("FormSettingsDlg.title")); // NOI18N
         setModal(true);
         setName("FormSettingsDlg"); // NOI18N
@@ -1962,7 +1963,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 
         jPanel1.setName("jPanel1"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CSettingsDlg.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance().getContext().getActionMap(CSettingsDlg.class, this);
         jButtonApply.setAction(actionMap.get("applyChanges")); // NOI18N
         jButtonApply.setName("jButtonApply"); // NOI18N
 
@@ -2161,7 +2162,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 
         jComboBoxManualTimestamp.setName("jComboBoxManualTimestamp"); // NOI18N
 
-        jComboBoxLocale.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "English", "German (Deutsch)", "Spanish (Espanol)", "Portuguese (Brazil)" }));
+        jComboBoxLocale.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "English", "German (Deutsch)", "Spanish (Espanol)" }));
         jComboBoxLocale.setName("jComboBoxLocale"); // NOI18N
 
         jLabel15.setText(resourceMap.getString("jLabel15.text")); // NOI18N
@@ -2503,7 +2504,6 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jButtonListFont.setText(resourceMap.getString("jButtonListFont.text")); // NOI18N
         jButtonListFont.setName("jButtonListFont"); // NOI18N
 
-        jLabel22.setText(resourceMap.getString("jLabel22.text")); // NOI18N
         jLabel22.setName("jLabel22"); // NOI18N
 
         jButtonDesktopFont.setText(resourceMap.getString("jButtonDesktopFont.text")); // NOI18N
@@ -2523,38 +2523,45 @@ public class CSettingsDlg extends javax.swing.JDialog {
         jCheckBoxLuhmannColSortable.setToolTipText(resourceMap.getString("jCheckBoxLuhmannColSortable.toolTipText")); // NOI18N
         jCheckBoxLuhmannColSortable.setName("jCheckBoxLuhmannColSortable"); // NOI18N
 
+        jLabelFontDeskLayout.setText(resourceMap.getString("jLabelFontDeskLayout.text")); // NOI18N
+        jLabelFontDeskLayout.setName("jLabelFontDeskLayout"); // NOI18N
+
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
         jPanel11Layout.setHorizontalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel23)
                     .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel7))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSpinnerDistHor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSpinnerDistVer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jCheckBoxShowHorGrid)
-                    .addComponent(jCheckBoxShowVerGrid)
-                    .addComponent(jSliderFontSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSliderTextfields, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel11Layout.createSequentialGroup()
-                        .addComponent(jLabel16)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonListFont))
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel23)
+                            .addGroup(jPanel11Layout.createSequentialGroup()
+                                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel7))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jSpinnerDistHor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jSpinnerDistVer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jCheckBoxShowHorGrid)
+                            .addComponent(jCheckBoxShowVerGrid)
+                            .addComponent(jSliderFontSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSliderTextfields, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel11Layout.createSequentialGroup()
+                                .addComponent(jLabel16)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonListFont))
+                            .addComponent(jLabel11)
+                            .addComponent(jSliderDesktopFontSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jCheckBoxLuhmannColSortable)))
                     .addGroup(jPanel11Layout.createSequentialGroup()
                         .addComponent(jLabel22)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonDesktopFont))
-                    .addComponent(jLabel11)
-                    .addComponent(jSliderDesktopFontSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jCheckBoxLuhmannColSortable))
+                        .addComponent(jLabelFontDeskLayout)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonDesktopFont)))
                 .addContainerGap())
         );
         jPanel11Layout.setVerticalGroup(
@@ -2593,7 +2600,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel22)
-                    .addComponent(jButtonDesktopFont))
+                    .addComponent(jButtonDesktopFont)
+                    .addComponent(jLabelFontDeskLayout))
                 .addGap(17, 17, 17))
         );
 
@@ -2880,6 +2888,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabelFontDeskLayout;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
