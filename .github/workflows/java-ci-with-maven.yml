@@ -5,9 +5,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ develop, 'feature/**', 'release/**' ]
+    branches: [ master, 'release/**' ]
   pull_request:
-    branches: [ develop ]
+    branches: [ master ]
 
 jobs:
   build-on-ubuntu-latest:
