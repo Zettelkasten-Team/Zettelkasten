@@ -16,28 +16,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BibTeXTest {
 
-    // TODO: maybe we should use the TestObjectFactory here.
-    AcceleratorKeys acceleratorKeys = new AcceleratorKeys();
-    AutoKorrektur autoKorrektur = new AutoKorrektur();
-    Synonyms synonyms = new Synonyms();
-    StenoData stenoData = new StenoData();
-    Settings s = new Settings(acceleratorKeys, autoKorrektur, synonyms, stenoData);
-    TasksData tasksData = new TasksData();
-    SingleFrameApplication singleFrameApplication = new SingleFrameApplication() {
-        @Override
-        protected void startup() {
-
-        }
-    };
-    ZettelkastenView zknFrame = new ZettelkastenView(
-            singleFrameApplication,
-            s,
-            acceleratorKeys,
-            autoKorrektur,
-            synonyms,
-            stenoData,
-            tasksData);
-    BibTeX bibTeX = new BibTeX(zknFrame, s);
+    AcceleratorKeys acceleratorKeys;
+    AutoKorrektur autoKorrektur;
+    Synonyms synonyms;
+    StenoData stenoData;
+    Settings settings;
+    TasksData tasksData;
+    SingleFrameApplication singleFrameApplication;
+    ZettelkastenView zknFrame;
+    BibTeX bibTeX;
 
     public BibTeXTest() throws UnsupportedLookAndFeelException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
     }
@@ -48,12 +35,28 @@ public class BibTeXTest {
 
     @Before
     public void setUp() throws Exception {
-        AcceleratorKeys acceleratorKeys = new AcceleratorKeys();
-        AutoKorrektur autoKorrektur = new AutoKorrektur();
-        Synonyms synonyms = new Synonyms();
-        StenoData stenoData = new StenoData();
-        Settings s = new Settings(acceleratorKeys, autoKorrektur, synonyms, stenoData);
-        TasksData tasksData = new TasksData();
+        // TODO: use TestObjectFactory ?
+        this.acceleratorKeys = new AcceleratorKeys();
+        this.autoKorrektur = new AutoKorrektur();
+        this.synonyms = new Synonyms();
+        this.stenoData = new StenoData();
+        this.settings = new Settings(this.acceleratorKeys, this.autoKorrektur, this.synonyms, this.stenoData);
+        this.tasksData = new TasksData();
+        this.singleFrameApplication = new SingleFrameApplication() {
+            @Override
+            protected void startup() {
+
+            }
+        };
+        this.zknFrame = new ZettelkastenView(
+                this.singleFrameApplication,
+                this.settings,
+                this.acceleratorKeys,
+                this.autoKorrektur,
+                this.synonyms,
+                this.stenoData,
+                this.tasksData);
+        this.bibTeX = new BibTeX(this.zknFrame, this.settings);
     }
 
     @Test
@@ -62,8 +65,8 @@ public class BibTeXTest {
     }
 
     @Test
-    public void testGetFormattedEntry(){
-        bibTeX.getFormattedEntry(bibTeX.getEntry(1), true );
+    public void testGetFormattedEntry() {
+        bibTeX.getFormattedEntry(bibTeX.getEntry(1), true);
     }
 
     @Test

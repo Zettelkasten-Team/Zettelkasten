@@ -363,14 +363,14 @@
 					"__type" : "time",
 					"time" : {
 						"__type" : "dateAndTime",
-						"dateAndTimeString" : "2021-06-09T06:57:25.875408+02:00"
+						"dateAndTimeString" : "2021-11-06T08:12:13.285916+01:00"
 					}
 				},
 				"uid" : {
 					"__type" : "uid",
 					"uidString" : "YxJ1NpWADQC9AURlDbXdVg=="
 				},
-				"code" : "\"Load the Zettelkasten MSE file into a FAMIX model.\"\rmodel := MooseModel new importMSEFromFile: '/Users/rgb/Projects/Zettelkasten/Zettelkasten.mse' asFileReference"
+				"code" : "\"Load the Zette\tlkasten MSE file into a FAMIX model.\"\rmodel := MooseModel new importMSEFromFile: '/Users/rgb/Projects/Zettelkasten/Zettelkasten.mse' asFileReference"
 			},
 			{
 				"__type" : "pharoSnippet",
