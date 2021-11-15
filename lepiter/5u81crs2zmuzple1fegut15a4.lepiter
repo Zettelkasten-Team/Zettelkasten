@@ -299,6 +299,43 @@
 					"__type" : "textStyle"
 				},
 				"string" : "* Repeat from the top.\n"
+			},
+			{
+				"__type" : "githubIssueSnippet",
+				"children" : {
+					"__type" : "snippets",
+					"items" : [ ]
+				},
+				"createEmail" : {
+					"__type" : "email",
+					"emailString" : "<unknown>"
+				},
+				"createTime" : {
+					"__type" : "time",
+					"time" : {
+						"__type" : "dateAndTime",
+						"dateAndTimeString" : "2021-11-15T12:00:25.768675+01:00"
+					}
+				},
+				"editEmail" : {
+					"__type" : "email",
+					"emailString" : "<unknown>"
+				},
+				"editTime" : {
+					"__type" : "time",
+					"time" : {
+						"__type" : "dateAndTime",
+						"dateAndTimeString" : "2021-11-15T12:00:25.768675+01:00"
+					}
+				},
+				"uid" : {
+					"__type" : "uid",
+					"uidString" : "Vb/4czONDQC5wNxQDScnsg=="
+				},
+				"ownerName" : "Zettelkasten-Team",
+				"projectName" : "Zettelkasten",
+				"responseCacheName" : "attachments/ajp0t1ql9ak8rcwthfws8j9gx/github-response-cache.json",
+				"issueNumber" : "391"
 			}
 		]
 	},
