@@ -943,7 +943,7 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
      */
     @Action
     public void removeTabChars() {
-        // repalce tabs
+        // replace tabs
         removeReplacement("\t","");
     }
 
