@@ -83,4 +83,14 @@ public class BibTeXTest {
         Assert.assertEquals("count=0 for empty result", 0, r.getCount());
     }
 
+    @Test
+    public void testResultWithTwoDocuments() {
+        Document d1 = new Document("a1", "t1", "y1");
+        Document d2 = new Document("a2", "t2", "y2");
+        Result r = new Result(new Document[]{d1, d2});
+        assert (r.getCount() == 2);
+        assert (r.getItem(0) == d1);
+        assert (r.getItem(1) == d2);
+    }
+
 }
