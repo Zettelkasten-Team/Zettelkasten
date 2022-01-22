@@ -904,38 +904,44 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabel9" alignment="0" min="-2" max="-2" attributes="1"/>
-                              <Component id="jLabel23" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                              <Component id="jLabel22" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jSpinnerDistHor" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jSpinnerDistVer" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel9" alignment="0" min="-2" max="-2" attributes="1"/>
+                                      <Component id="jLabel23" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="jSpinnerDistHor" alignment="1" min="-2" max="-2" attributes="0"/>
+                                              <Component id="jSpinnerDistVer" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <Component id="jCheckBoxShowHorGrid" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jCheckBoxShowVerGrid" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jSliderFontSize" alignment="0" min="-2" max="-2" attributes="1"/>
+                                      <Component id="jSliderTextfields" alignment="0" min="-2" max="-2" attributes="1"/>
+                                      <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="1"/>
+                                      <Component id="jSliderDesktopFontSize" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jCheckBoxLuhmannColSortable" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="jLabelFontDeskLayout" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="jLabel16" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                              <Component id="jButtonDesktopFont" max="32767" attributes="0"/>
+                                              <Component id="jButtonListFont" max="32767" attributes="0"/>
+                                          </Group>
+                                      </Group>
                                   </Group>
                               </Group>
-                              <Component id="jCheckBoxShowHorGrid" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="jCheckBoxShowVerGrid" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="jSliderFontSize" alignment="0" min="-2" max="-2" attributes="1"/>
-                              <Component id="jSliderTextfields" alignment="0" min="-2" max="-2" attributes="1"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jButtonListFont" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jLabel22" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jButtonDesktopFont" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="1"/>
-                              <Component id="jSliderDesktopFontSize" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="jCheckBoxLuhmannColSortable" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -979,10 +985,12 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel22" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabelFontDeskLayout" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jButtonDesktopFont" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel22" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1074,7 +1082,6 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel22">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="jLabel22.text"/>
                     <Property name="name" type="java.lang.String" value="jLabel22" noResource="true"/>
                   </Properties>
                 </Component>
@@ -1105,6 +1112,12 @@
                     <Property name="text" type="java.lang.String" resourceKey="jCheckBoxLuhmannColSortable.text"/>
                     <Property name="toolTipText" type="java.lang.String" resourceKey="jCheckBoxLuhmannColSortable.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="jCheckBoxLuhmannColSortable" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="jLabelFontDeskLayout">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="jLabelFontDeskLayout.text"/>
+                    <Property name="name" type="java.lang.String" value="jLabelFontDeskLayout" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
