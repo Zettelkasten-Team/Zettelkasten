@@ -99,12 +99,12 @@
 		"__type" : "time",
 		"time" : {
 			"__type" : "dateAndTime",
-			"dateAndTimeString" : "2022-02-01T09:19:25.26589+01:00"
+			"dateAndTimeString" : "2022-02-01T09:24:11.063635+01:00"
 		}
 	},
 	"pageType" : {
 		"__type" : "namedPage",
-		"title" : "BibTex- Import aus Zotero #387"
+		"title" : "BibTex-Import aus Zotero #387"
 	},
 	"uid" : {
 		"__type" : "uuid",
