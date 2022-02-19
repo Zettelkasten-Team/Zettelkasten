@@ -1761,10 +1761,10 @@ public class Daten {
     }
 
     /**
-     * This method deletes an entry at thegiven position. since an
+     * This method deletes an entry at the given position. Since an
      * entry-index-number should never change to ensure that each entry always
      * keeps its index-number, we don't completely remove the element from the
-     * xml-file. rather, we simply delete the content by setting empty values,
+     * xml-file. Rather, we simply delete the content by setting empty values,
      * so we have an "empty" element.
      *
      * @param pos the position of the entry which should be deleted
@@ -3254,16 +3254,16 @@ public class Daten {
     }
 
     /**
-     * This method adds a new follower- or sub-entry index-number to an entry.
-     * Followers', or sub-entries', index-numbers are stored in the luhmann-tag.
+     * This method adds a new follower or sub-entry index-number to an entry.
+     * Followers', or sub-entries', index-numbers are stored in the Luhmann-tag.
      * <br><br>
      * It is similar to a typical tree: we have one "parent"-entry and several
-     * child-entries (sub-entries or followers). each of these child-elements
+     * child-entries (sub-entries or followers). Each of these child-elements
      * can have their own child-elements again (whereby the child-element itself
-     * is then again understood as "parent"-entry).
+     * is then again understood as a "parent"-entry).
      * <br><br>
      * So, the Luhmann-numbers of an entry only have one subordinated level of
-     * sub-entries. the tree- structure comes from those sub-entries, that might
+     * sub-entries. The tree- structure comes from those sub-entries, that might
      * have their own sub-entries again.
      *
      * @param entry the entry where the related insert-entry-index-number should
@@ -3977,7 +3977,6 @@ public class Daten {
                 found = (entry == checkvalue);
             }
         }
-        // return result
         return found;
     }
 
@@ -5234,7 +5233,7 @@ public class Daten {
             zettel = history[historyPosition];
         }
     }
-
+    
     /**
      * This methods goes fore through the history and sets the current entry to
      * the related entry in the history...
@@ -5319,6 +5318,22 @@ public class Daten {
         // set counter for currently display entry to last element
         zettel = getCount(ZKNCOUNT);
         // update History
+        addToHistory();
+    }
+    
+    /**
+     * This methods goes to the first parent entry of the current entry.
+     */
+    public void goToFirstParentEntry() {
+    	int firstParentEntry = findParentlLuhmann(zettel, /*firstParent=*/true);
+    	if (firstParentEntry == -1) {
+    		// No valid parent entry, do nothing.
+    		return;
+    	}
+    	// Set counter for currently display entry to the first parent entry of the current entry.
+    	zettel = firstParentEntry;
+
+        // Update History.
         addToHistory();
     }
 
@@ -7304,7 +7319,7 @@ public class Daten {
 
     /**
      * This method tries to find a top-level entry of a trailing entries
-     * sequence, i.e. this methoc checks whether the entry with the number
+     * sequence, i.e. this method checks whether the entry with the number
      * {@code nr} has follwers, but is itself no follower.
      *
      * <br/><br/>

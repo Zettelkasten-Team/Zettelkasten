@@ -9515,6 +9515,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // FIXME java.lang.IllegalArgumentException: bad position: 1
         updateDisplay();
     }
+    
+    /**
+     * This methods changes the current entry to be the first parent of the current entry.
+     */
+    @Action
+    public void goToFirstParentEntry() {
+    	Constants.zknlogger.log(Level.SEVERE, "goToFirstParentEntry called");
+        // go back through history
+        data.goToFirstParentEntry();
+        // and update the whole content
+        // FIXME java.lang.IllegalArgumentException: bad position: 1
+        updateDisplay();
+    }
 
     /**
      * This methods goes fore through the history and sets the current entry to
@@ -11541,6 +11554,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jSeparator111 = new javax.swing.JPopupMenu.Separator();
             historyForMenuItem = new javax.swing.JMenuItem();
             histroyBackMenuItem = new javax.swing.JMenuItem();
+            goToFirstParentEntryMenuItem = new javax.swing.JMenuItem();
             jSeparator112 = new javax.swing.JPopupMenu.Separator();
             gotoEntryMenuItem = new javax.swing.JMenuItem();
             viewMenu = new javax.swing.JMenu();
@@ -13083,6 +13097,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             histroyBackMenuItem.setName("histroyBackMenuItem"); // NOI18N
             findMenu.add(histroyBackMenuItem);
 
+            goToFirstParentEntryMenuItem.setAction(actionMap.get("goToFirstParentEntry")); // NOI18N
+            goToFirstParentEntryMenuItem.setText(resourceMap.getString("goToFirstParentEntryMenuItem.text")); // NOI18N
+            goToFirstParentEntryMenuItem.setName("goToFirstParentEntryMenuItem"); // NOI18N
+            findMenu.add(goToFirstParentEntryMenuItem);
+
             jSeparator112.setName("jSeparator112"); // NOI18N
             findMenu.add(jSeparator112);
 
@@ -14585,6 +14604,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JCheckBoxMenuItem highlightSegmentsMenuItem;
     private javax.swing.JMenuItem historyForMenuItem;
     private javax.swing.JMenuItem histroyBackMenuItem;
+    private javax.swing.JMenuItem goToFirstParentEntryMenuItem;
     private javax.swing.JMenuItem homeMenuItem;
     private javax.swing.JMenuItem importMenuItem;
     private javax.swing.JMenuItem insertEntryMenuItem;
