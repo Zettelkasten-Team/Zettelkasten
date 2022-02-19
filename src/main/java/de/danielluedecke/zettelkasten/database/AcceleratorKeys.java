@@ -440,6 +440,14 @@ public class AcceleratorKeys {
             acckey.setText(mask+" "+pluskey);
             acceleratorKeysMain.getRootElement().addContent(acckey);
         }
+
+        // the accelerator for the "goToFirstParentEntry" action
+        if (!findElement(MAINKEYS,"goToFirstParentEntry")) {
+            acckey=new Element("key");
+            acckey.setAttribute("action", "goToFirstParentEntry");
+            acckey.setText(historykey+" UP");
+            acceleratorKeysMain.getRootElement().addContent(acckey);
+        }
         
         
         //

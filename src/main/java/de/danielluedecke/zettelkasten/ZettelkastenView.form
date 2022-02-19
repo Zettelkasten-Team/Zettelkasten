@@ -2163,6 +2163,15 @@
                 <Property name="name" type="java.lang.String" value="histroyBackMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="goToFirstParentEntryMenuItem">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="goToFirstParentEntry" methodName="goToFirstParentEntry"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="goToFirstParentEntryMenuItem.text"/>
+                <Property name="name" type="java.lang.String" value="goToFirstParentEntryMenuItem" noResource="true"/>
+              </Properties>
+            </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator112">
               <Properties>
                 <Property name="name" type="java.lang.String" value="jSeparator112" noResource="true"/>
