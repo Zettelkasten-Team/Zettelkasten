@@ -9516,18 +9516,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         updateDisplay();
     }
     
-    /**
-     * This methods changes the current entry to be the first parent of the current entry.
-     */
-    @Action
-    public void goToFirstParentEntry() {
-    	Constants.zknlogger.log(Level.SEVERE, "goToFirstParentEntry called");
-        // go back through history
-        data.goToFirstParentEntry();
-        // and update the whole content
-        // FIXME java.lang.IllegalArgumentException: bad position: 1
-        updateDisplay();
-    }
+	/**
+	 * goToFirstParentEntry goes to the first parent entry of the current entry. If
+	 * the current entry is invalid or does not have a parent entry, it does
+	 * nothing.
+	 */
+	@Action
+	public void goToFirstParentEntry() {
+		data.goToFirstParentEntry();
+		// FIXME java.lang.IllegalArgumentException: bad position: 1
+		// Update the whole content.
+		updateDisplay();
+	}
 
     /**
      * This methods goes fore through the history and sets the current entry to
