@@ -3,9 +3,16 @@ package de.danielluedecke.zettelkasten.database;
 import de.danielluedecke.zettelkasten.util.Constants;
 import org.jdom2.Document;
 import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.logging.Level;
 
 public class DatenTest {
@@ -23,11 +30,15 @@ public class DatenTest {
      getManualLinksAsString:3971, Daten
     */
 
+	/**
+	 * Common test document. See setUp().
+	 */
+	public Document document;
 
     @BeforeEach
-    public void setUp() {
-        String document = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
-                + "<zettelkasten firstzettel=\"1\" lastzettel=\"1\">"
+    public void setUp() throws JDOMException, IOException {
+        String xmlString = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
+                + "<zettelkasten firstzettel=\"1\" lastzettel=\"2\">"
                 + "<zettel>"
                 + "<title>Verschlagwortung und alphanumerische anstatt thematische Ordnung</title>"
                 + "<content />"
@@ -38,7 +49,19 @@ public class DatenTest {
                 + "<misc>feste Stellordnung</misc>"
                 + "<luhmann>4,10,61,161,1771,3622</luhmann>"
                 + "</zettel>"
+                + "<zettel>"
+                + "<title>Zettel entry that is the first parent of the Zettel entry #1</title>"
+                + "<content />"
+                + "<author />"
+                + "<keywords />"
+                + "<manlinks />"
+                + "<links />"
+                + "<misc />"
+                + "<luhmann>1</luhmann>"
+                + "</zettel>"
                 + "</zettelkasten>";
+  	  SAXBuilder builder = new SAXBuilder();
+  	  document = builder.build(new ByteArrayInputStream(xmlString.getBytes()));
     }
 
     @Test
@@ -98,6 +121,20 @@ public class DatenTest {
         //         Root should be [Element: <zettelkasten/>]
 
         // See getManualLinksAsString
+    }
+
+    @Test
+    void testGoToFirstParentEntryParent() {
+        // daten by default has current entry == 1. 
+        Daten daten = new Daten(document);
+        
+		// the first (and only) parent of entry 1 is entry 2.
+        daten.goToFirstParentEntry();
+        assertEquals(daten.getCurrentZettelPos(), 2);
+        
+        // Entry 2 doesn't have a parent. Keep at the same Zettel number.
+        daten.goToFirstParentEntry();
+        assertEquals(daten.getCurrentZettelPos(), 2);
     }
 
 }
