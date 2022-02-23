@@ -1,5 +1,6 @@
 # [Unreleased]
 ### Changes
+- Add Go to first parent note action
 - Importing zkx3 files with ID duplicates was unreliable ([215](https://github.com/Zettelkasten-Team/Zettelkasten/issues/215))
 - Dialog "Newer backup file exists" should be more intuitive ([361](https://github.com/Zettelkasten-Team/Zettelkasten/issues/361))
 - Revised BibTeX import ([257](https://github.com/Zettelkasten-Team/Zettelkasten/issues/257))
