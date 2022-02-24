@@ -27,7 +27,7 @@ The digital <i>Zettelkasten</i> (German for slip-box) is a program for knowledge
 ![screenshot](http://zettelkasten.danielluedecke.de/img/gallery/zkn1.png)
 
 ## Download
-The latest release can be found [here](https://github.com/Zettelkasten-Team/Zettelkasten/releases).
+Find the latest release [here](https://github.com/Zettelkasten-Team/Zettelkasten/releases).
 
 ## <i>Zettelkasten</i> build
 
@@ -35,11 +35,15 @@ To make <i>Zettelkasten</i>, you need at least a Java Development Kit (JDK) 8 an
 
 To get a local repository, use Git:
 
-`git clone git@github.com:Zettelkasten-Team/Zettelkasten.git`
+```shell
+git clone git@github.com:Zettelkasten-Team/Zettelkasten.git
+```
 
 Then, in the root directory of the local repository, run the following command line:
 
-* `mvn clean package`
+```shell
+mvn clean package
+```
 
 Find the build result in your `target` directory.
 
