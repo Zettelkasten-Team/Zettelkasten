@@ -29,7 +29,7 @@ The digital <i>Zettelkasten</i> (German for slip-box) is a program for knowledge
 ## Download
 Find the latest release [here](https://github.com/Zettelkasten-Team/Zettelkasten/releases).
 
-## <i>Zettelkasten</i> build
+## <i>Zettelkasten</i> Build
 
 To make <i>Zettelkasten</i>, you need at least a Java Development Kit (JDK) 8 and Maven 3.  
 
