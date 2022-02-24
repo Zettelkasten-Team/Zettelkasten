@@ -31,18 +31,17 @@ The latest release can be found [here](https://github.com/Zettelkasten-Team/Zett
 
 ## <i>Zettelkasten</i> build
 
-For the build, the Java Development Kit (JDK) 8 or higher is required. For future versions, JDK 11 is recommended.
-Additionally, Maven 3 is used. 
+To make <i>Zettelkasten</i>, you need at least a Java Development Kit (JDK) 8 and Maven 3.  
 
-To clone a local repository Git is used.
+To get a local repository, use Git:
 
 `git clone git@github.com:Zettelkasten-Team/Zettelkasten.git`
 
-In a next step, the project can be build with:
+Then, in the root directory of the local repository, run the following command line:
 
 * `mvn clean package`
 
-The finished build can be found in the `target`-folder
+Find the build result in your `target` directory.
 
 
 ## License
