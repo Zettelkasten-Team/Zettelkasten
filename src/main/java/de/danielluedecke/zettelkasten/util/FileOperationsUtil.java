@@ -423,6 +423,31 @@ public class FileOperationsUtil {
             }
         }
     }
+    
+	/**
+	 * createFileCopyIfExists copies sourceFile to newFile. It does nothing if
+	 * sourceFile doesn't exist. It returns true if the sourceFile doesn't exist or
+	 * the copy was a success; false otherwise.
+	 * 
+	 */
+	public static boolean createFileCopyIfExists(File sourceFile, File newFile) {
+		if (!sourceFile.exists()) {
+			// Do nothing is there is no existing Zettelkasten Data file.
+			return true;
+		}
+		try {
+			// Delete existing temporary file.
+			if (newFile.exists()) {
+				newFile.delete();
+			}
+			// Make copy of existing Zettelkasten Data file.
+			FileOperationsUtil.copyFile(sourceFile, newFile, 1024);
+		} catch (IOException | SecurityException e) {
+			Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+			return false;
+		}
+		return true;
+	}
 
     /**
      * This merthod creates a FileChooser Dialog, initiates it (based on the
