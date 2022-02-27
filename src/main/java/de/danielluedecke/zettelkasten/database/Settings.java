@@ -46,6 +46,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -92,12 +93,14 @@ public class Settings {
 	private final StenoData steno;
 	/**
 	 * Stores the filepath of the currently in use settings file
-	 * ("zettelkasten-settings.zks3").
+	 * ("zettelkasten-settings.zks3"). This file is a zip-container with the
+	 * file-extension ".zks3" and contains several XML-Files.
 	 */
 	private final File zettelkastenSettingsFilepath;
 	/**
 	 * Stores the filepath of the currently in use metadata file
-	 * ("zettelkasten-data.zkd3").
+	 * ("zettelkasten-data.zkd3"). This file is a zip-container with the
+	 * file-extension ".zkd3" and contains several XML-Files.
 	 */
 	private final File zettelkastenDataFilepath;
 	/**
@@ -108,30 +111,6 @@ public class Settings {
 	 * XML-Document that stores the foreign-words
 	 */
 	private Document foreignWordsFile;
-	/**
-	 * Stores the files which we want to retrieve from the settings-file
-	 * (zettelkasten-settings.zks3). This file is a zip-container with the
-	 * file-extension ".zks3" and contains several XML-Files. We cannot retrieve
-	 * those file simply with the method "zip.getNextEntry()", since the SAXBuilder
-	 * closes the zip-inputstream. To retrieve all XML-files from within the
-	 * zip-file, without saving them temporarily to harddisk(!), we need to re-open
-	 * the zip-container again for each file.
-	 * 
-	 * See method "loadSettings" below for more details.
-	 */
-	private final List<String> filesToLoad = new ArrayList<>();
-	/**
-	 * Stores the files which we want to retrieve from the meta-data-file
-	 * (zettelkasten-data.zkd3). This file is a zip-container with the
-	 * file-extension ".zkd3" and contains several XML-Files. We cannot retrieve
-	 * those file simply with the method "zip.getNextEntry()", since the SAXBuilder
-	 * closes the zip-inputstream. To retrieve all XML-files from within the
-	 * zip-file, without saving them temporarily to harddisk(!), we need to re-open
-	 * the zip-container again for each file.
-	 * 
-	 * See method "loadSettings" below for more details.
-	 */
-	private final List<String> dataFilesToLoad = new ArrayList<>();
 
 	/**
 	 * Indicates whether the programm is running on a mac with aqua-look and feel or
@@ -382,25 +361,11 @@ public class Settings {
 	 * @param stn
 	 */
 	public Settings(AcceleratorKeys ak, AutoKorrektur ac, Synonyms syn, StenoData stn) {
-		// first of all, store the reference to the CAcceleratorKeys-class, because we
-		// are loading information from this class and pass them to the accKeys class
 		acceleratorKeys = ak;
 		autoKorrekt = ac;
 		synonyms = syn;
 		steno = stn;
-		// here we add all files which are stored in the zipped settings-file in a
-		// list-array
-		filesToLoad.add(Constants.settingsFileName);
-		filesToLoad.add(Constants.acceleratorKeysMainName);
-		filesToLoad.add(Constants.acceleratorKeysNewEntryName);
-		filesToLoad.add(Constants.acceleratorKeysDesktopName);
-		filesToLoad.add(Constants.acceleratorKeysSearchResultsName);
-		// here we add all files which are stored in the zipped meta-data-file in a
-		// list-array
-		dataFilesToLoad.add(Constants.foreignWordsName);
-		dataFilesToLoad.add(Constants.synonymsFileName);
-		dataFilesToLoad.add(Constants.autoKorrekturFileName);
-		dataFilesToLoad.add(Constants.stenoFileName);
+
 		// create file path to settings file
 		zettelkastenSettingsFilepath = createFilePath("zettelkasten-settings.zks3");
 		zettelkastenDataFilepath = createFilePath("zettelkasten-data.zkd3");
@@ -458,7 +423,7 @@ public class Settings {
 	public File getMetaFilePath() {
 		return zettelkastenDataFilepath;
 	}
-	
+
 	/**
 	 * @return the filepath to the zettelkasten-settings.zks3 file.
 	 */
@@ -1021,128 +986,85 @@ public class Settings {
 		}
 	}
 
-	/**
-	 * Loads the settings file
-	 */
-	public void loadSettings() {
-		// if file exists, go on...
-		if (zettelkastenSettingsFilepath != null && zettelkastenSettingsFilepath.exists()) {
-			// first of all, we load the basic-settings. when we have done this, we load
-			// the meta-data, like spellchecking-data, synonyms and foreign words. these
-			// files
-			// are not related to a certain Zettelkasten data file, but general. thus, they
-			// are
-			// not stored in the .zkn3-files. however, these meta-data is not only pure
-			// settings.
-			// it is better to have them separated, in the base-zkn-directory (zkn-path) if
-			// possible,
-			// so whenever the user removes the program directory, the other data is still
-			// there.
-			for (String filesToLoad1 : filesToLoad) {
-				ZipInputStream zip = null;
-				// open the zip file
-				try {
-					zip = new ZipInputStream(new FileInputStream(zettelkastenSettingsFilepath));
-					ZipEntry entry;
-					// now iterate the zip file, searching for the requested file in it
-					while ((entry = zip.getNextEntry()) != null) {
-						String entryname = entry.getName();
-						// if the found file matches the requested one, start the SAXBuilder
-						if (entryname.equals(filesToLoad1)) {
-							try {
-								SAXBuilder builder = new SAXBuilder();
-								// Document doc = new Document();
-								Document doc = builder.build(zip);
-								// compare, which file we have retrieved, so we store the data
-								// correctly on our data object
-								if (entryname.equals(Constants.settingsFileName)) {
-									settingsFile = doc;
-								}
-								if (entryname.equals(Constants.acceleratorKeysMainName)) {
-									acceleratorKeys.setDocument(AcceleratorKeys.MAINKEYS, doc);
-								}
-								if (entryname.equals(Constants.acceleratorKeysNewEntryName)) {
-									acceleratorKeys.setDocument(AcceleratorKeys.NEWENTRYKEYS, doc);
-								}
-								if (entryname.equals(Constants.acceleratorKeysDesktopName)) {
-									acceleratorKeys.setDocument(AcceleratorKeys.DESKTOPKEYS, doc);
-								}
-								if (entryname.equals(Constants.acceleratorKeysSearchResultsName)) {
-									acceleratorKeys.setDocument(AcceleratorKeys.SEARCHRESULTSKEYS, doc);
-								}
-								break;
-							} catch (JDOMException e) {
-								Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-							}
-						}
-					}
-				} catch (IOException e) {
-					Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-				} finally {
-					try {
-						if (zip != null) {
-							zip.close();
-						}
-					} catch (IOException e) {
-						Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-					}
+	private Document readXMLFileFromZipFile(File zipFile, String filename) throws Exception {
+		try (ZipInputStream zip = new ZipInputStream(new FileInputStream(zipFile))) {
+			ZipEntry entry;
+			while ((entry = zip.getNextEntry()) != null) {
+				// Keep moving through the entries to find filenameToLoad.
+				if (entry.getName().equals(filename)) {
+					SAXBuilder builder = new SAXBuilder();
+					// Document doc = new Document();
+					Document doc = builder.build(zip);
+					return doc;
 				}
-				// now fill/create all child-elements that do not already exist
-				fillElements();
-				acceleratorKeys.initAcceleratorKeys();
 			}
+		}
+		throw new Exception(String.format("Filename %s not found in zip file %s", filename, zipFile.getPath()));
+	}
+
+	private void loadZettelkastenSettingsFile() {
+		if (zettelkastenSettingsFilepath == null) {
+			Constants.zknlogger.log(Level.SEVERE, "Could not open settings file: filepath is null.");
+			return;
+		}
+		if (!zettelkastenSettingsFilepath.exists()) {
+			Constants.zknlogger.log(Level.WARNING,
+					String.format("Could not open settings file: filepath [%s] does not exist.",
+							zettelkastenSettingsFilepath.getPath()));
+			return;
+		}
+		Constants.zknlogger.log(Level.INFO,
+				String.format("Found settings file [%s]", zettelkastenSettingsFilepath.getPath()));
+
+		try {
+			settingsFile = readXMLFileFromZipFile(zettelkastenSettingsFilepath, Constants.settingsFileName);
+			acceleratorKeys.setDocument(AcceleratorKeys.MAINKEYS,
+					readXMLFileFromZipFile(zettelkastenSettingsFilepath, Constants.acceleratorKeysMainName));
+			acceleratorKeys.setDocument(AcceleratorKeys.NEWENTRYKEYS,
+					readXMLFileFromZipFile(zettelkastenSettingsFilepath, Constants.acceleratorKeysNewEntryName));
+			acceleratorKeys.setDocument(AcceleratorKeys.DESKTOPKEYS,
+					readXMLFileFromZipFile(zettelkastenSettingsFilepath, Constants.acceleratorKeysDesktopName));
+			acceleratorKeys.setDocument(AcceleratorKeys.SEARCHRESULTSKEYS,
+					readXMLFileFromZipFile(zettelkastenSettingsFilepath, Constants.acceleratorKeysSearchResultsName));
+		} catch (Exception e) {
+			Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
 		}
 
-		if (zettelkastenDataFilepath != null && zettelkastenDataFilepath.exists()) {
-			// now we load the meta-data. see comment above for more information...
-			for (String dataFilesToLoad1 : dataFilesToLoad) {
-				ZipInputStream zip = null;
-				// open the zip-file
-				try {
-					zip = new ZipInputStream(new FileInputStream(zettelkastenDataFilepath));
-					ZipEntry entry;
-					// now iterate the zip-file, searching for the requested file in it
-					while ((entry = zip.getNextEntry()) != null) {
-						String entryname = entry.getName();
-						// if the found file matches the requested one, start the SAXBuilder
-						if (entryname.equals(dataFilesToLoad1)) {
-							try {
-								SAXBuilder builder = new SAXBuilder();
-								// Document doc = new Document();
-								Document doc = builder.build(zip);
-								// compare, which file we have retrieved, so we store the data
-								// correctly on our data-object
-								if (entryname.equals(Constants.foreignWordsName)) {
-									foreignWordsFile = doc;
-								}
-								if (entryname.equals(Constants.synonymsFileName)) {
-									synonyms.setDocument(doc);
-								}
-								if (entryname.equals(Constants.autoKorrekturFileName)) {
-									autoKorrekt.setDocument(doc);
-								}
-								if (entryname.equals(Constants.stenoFileName)) {
-									steno.setDocument(doc);
-								}
-								break;
-							} catch (JDOMException e) {
-								Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-							}
-						}
-					}
-				} catch (IOException e) {
-					Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-				} finally {
-					try {
-						if (zip != null) {
-							zip.close();
-						}
-					} catch (IOException e) {
-						Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-					}
-				}
-			}
+		// now fill/create all child-elements that do not already exist
+		fillElements();
+		acceleratorKeys.initAcceleratorKeys();
+	}
+
+	private void loadZettelkastenDataFile() {
+		if (zettelkastenDataFilepath == null) {
+			Constants.zknlogger.log(Level.SEVERE, "Could not open metadata file: filepath is null.");
+			return;
 		}
+		if (!zettelkastenDataFilepath.exists()) {
+			Constants.zknlogger.log(Level.WARNING, String.format(
+					"Could not open metadata file: filepath [%s] does not exist.", zettelkastenDataFilepath.getPath()));
+			return;
+		}
+		Constants.zknlogger.log(Level.INFO,
+				String.format("Found metadata file [%s]", zettelkastenDataFilepath.getPath()));
+
+		try {
+			foreignWordsFile = readXMLFileFromZipFile(zettelkastenDataFilepath, Constants.foreignWordsName);
+			synonyms.setDocument(readXMLFileFromZipFile(zettelkastenDataFilepath, Constants.synonymsFileName));
+			autoKorrekt.setDocument(readXMLFileFromZipFile(zettelkastenDataFilepath, Constants.autoKorrekturFileName));
+			steno.setDocument(readXMLFileFromZipFile(zettelkastenDataFilepath, Constants.stenoFileName));
+		} catch (Exception e) {
+			Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+		}
+	}
+
+	/**
+	 * Loads the settings file: zettelkastenSettingsFilepath and
+	 * zettelkastenDataFilepath.
+	 */
+	public void loadSettings() {
+		loadZettelkastenSettingsFile();
+		loadZettelkastenDataFile();
 	}
 
 	/**
