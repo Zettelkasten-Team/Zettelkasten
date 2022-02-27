@@ -431,6 +431,13 @@ public class Settings {
 		return zettelkastenSettingsFilepath;
 	}
 
+	/*
+	 * getAcceleratorKeys is used for testing.
+	 */
+	public AcceleratorKeys getAcceleratorKeys() {
+		return acceleratorKeys;
+	}
+
 	/**
 	 * Inits all documents, i.e. creates new document elements
 	 */
@@ -439,7 +446,7 @@ public class Settings {
 		settingsFile = new Document(new Element("settings"));
 		foreignWordsFile = new Document(new Element("foreignwords"));
 		// now fill the initoal elements
-		fillElements();
+		initDefaultSettingsIfMissing();
 	}
 
 	/**
@@ -584,14 +591,15 @@ public class Settings {
 	}
 
 	/**
-	 * This method creates all the settings-child-elements, but only, if they don't
-	 * already exist. We do this because when loading older
-	 * settings-xml-document-structures, we might have new elements that would not
-	 * be initialised. but now we can call this method after loading the
-	 * xml-document, and create elements and default values for all new elements.
-	 * This ensures compatibility to older/news settings-file-versions.
+	 * initDefaultSettingsIfMissing creates all the used XML elements in
+	 * settingsFile, setting them to the default value if missing.
+	 * 
+	 * We do this because when loading old settings file, it might be missing new
+	 * settings elements. This ensures some compatibility to older/news
+	 * settings-file-versions.
 	 */
-	public void fillElements() {
+	public void initDefaultSettingsIfMissing() {
+
 		for (int cnt = 0; cnt < recentDocCount; cnt++) {
 			// create field-identifier
 			String fi = SETTING_RECENT_DOC + String.valueOf(cnt + 1);
@@ -1015,9 +1023,8 @@ public class Settings {
 			Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
 		}
 
-		// now fill/create all child-elements that do not already exist
-		fillElements();
-		acceleratorKeys.initAcceleratorKeys();
+		initDefaultSettingsIfMissing();
+		acceleratorKeys.initDefaultAcceleratorKeysIfMissing();
 	}
 
 	private void loadZettelkastenDataFile() {

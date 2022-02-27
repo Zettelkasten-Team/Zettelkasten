@@ -418,7 +418,7 @@ public class ZettelkastenViewUtil {
                 jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
                 break;
             case "ra":
-                acceleratorKeys.initAcceleratorKeys();
+                acceleratorKeys.initDefaultAcceleratorKeysIfMissing();
                 jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
                 break;
             case "s":
