@@ -1056,32 +1056,17 @@ public class Settings {
 		loadZettelkastenDataFile();
 	}
 
-	/**
-	 * saveZettelkastenSettingsFile saves the Zettelkasten Settings file to
-	 * zettelkastenSettingsFilepath and returns true on success. On failure, returns
-	 * false and, if existing file might have been corrupted, a message dialog
-	 * informs the user where to find the backup file of the original existing
-	 * Zettelkasten Data file.
+	/*
+	 * createZettelkastenSettingsZipFile is responsible for creating the
+	 * Zettelkasten Settings zip file. Returns true iff successful.
 	 * 
-	 * The Zettelkasten Data file is a zip file with the following files inside:
+	 * The Zettelkasten Settings file is a zip file with the following files inside:
 	 * Constants.settingsFileName, Constants.acceleratorKeysMainName,
 	 * Constants.acceleratorKeysNewEntryName, Constants.acceleratorKeysDesktopName,
 	 * and Constants.acceleratorKeysSearchResultsName.
 	 */
-	private boolean saveZettelkastenSettingsFile() {
-		// Before the main save action, create a temporary backup in case of any error
-		// during save.
-		File tmpDataFile = new File(zettelkastenSettingsFilepath.toString() + ".tmp");
-		boolean ok = FileOperationsUtil.createFileCopyIfExists(zettelkastenSettingsFilepath, tmpDataFile);
-		if (!ok) {
-			// Avoid attempting to save file if we failed to create temporary backup. Return
-			// error.
-			return false;
-		}
-
-		ZipOutputStream zip = null;
-		try {
-			zip = new ZipOutputStream(new FileOutputStream(zettelkastenSettingsFilepath));
+	private boolean createZettelkastenSettingsZipFile() {
+		try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(zettelkastenSettingsFilepath))) {
 			XMLOutputter out = new XMLOutputter();
 
 			// Add settings file.
@@ -1099,65 +1084,81 @@ public class Settings {
 			// Add Search Results accelerator keys.
 			zip.putNextEntry(new ZipEntry(Constants.acceleratorKeysSearchResultsName));
 			out.output(acceleratorKeys.getDocument(AcceleratorKeys.SEARCHRESULTSKEYS), zip);
-
-			zip.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-
-			// On failure, rename temporary file to a .backup file and tell user. The
-			// temporary backup file might not exist due to a missing original file.
-			if (tmpDataFile.exists()) {
-				File checkbackup = FileOperationsUtil.getBackupFilePath(zettelkastenSettingsFilepath);
-				tmpDataFile.renameTo(checkbackup);
-
-				Constants.zknlogger.log(Level.INFO, "A backup of the settings was saved to {0}",
-						checkbackup.toString());
-				// Tell user that an error occurred.
-				JOptionPane.showMessageDialog(null,
-						resourceMap.getString("settingsSaveErrMsg", "\"" + checkbackup.getName() + "\""),
-						resourceMap.getString("settingsSaveErrTitle"), JOptionPane.PLAIN_MESSAGE);
-			}
 			return false;
-		}
-
-		// In case of success, delete temporary backup file created in the beginning of
-		// the function.
-		if (tmpDataFile.exists()) {
-			try {
-				tmpDataFile.delete();
-			} catch (SecurityException e) {
-				Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-			}
 		}
 		return true;
 	}
 
 	/**
-	 * saveZettelkastenDataFile saves the Zettelkasten Data file to
-	 * zettelkastenDataFilepath and returns true on success. On failure, returns
-	 * false and, if existing file might have been corrupted, a message dialog
-	 * informs the user where to find the backup file of the original existing
-	 * Zettelkasten Data file.
+	 * saveZettelkastenSettingsFile saves the Zettelkasten Settings file to
+	 * zettelkastenSettingsFilepath and returns true iff successful. On failure, if
+	 * existing file might have been corrupted, a message dialog informs the user
+	 * where to find the backup file of the original existing Zettelkasten Settings
+	 * file.
 	 * 
-	 * The Zettelkasten Data file is a zip file with a separate file for the current
-	 * state of each of the following class member variables: foreignWordsFile,
-	 * synonyms, steno, and autoKorrekt.
-	 * 
+	 * Zip creation is handled by createZettelkastenSettingsZipFile.
 	 */
-	private boolean saveZettelkastenDataFile() {
-		// Before the main save action, create a temporary backup in case of any error
-		// during save.
-		File tmpDataFile = new File(zettelkastenDataFilepath.toString() + ".tmp");
-		boolean ok = FileOperationsUtil.createFileCopyIfExists(zettelkastenDataFilepath, tmpDataFile);
+	private boolean saveZettelkastenSettingsFile() {
+		// Before creating the new zip file, create a temporary backup in case of any
+		// error
+		// during the creation.
+		File tmpDataFile = new File(zettelkastenSettingsFilepath.toString() + ".tmp");
+		boolean ok = FileOperationsUtil.createFileCopyIfExists(zettelkastenSettingsFilepath, tmpDataFile);
 		if (!ok) {
 			// Avoid attempting to save file if we failed to create temporary backup. Return
 			// error.
 			return false;
 		}
 
-		ZipOutputStream zip = null;
+		// Create new zip file.
+		ok = createZettelkastenSettingsZipFile();
+		if (!ok) {
+			// On failure, rename temporary file to a .backup file and tell user. The
+			// temporary backup file might not exist due to a missing original file.
+			try {
+				if (tmpDataFile.exists()) {
+					File checkbackup = FileOperationsUtil.getBackupFilePath(zettelkastenSettingsFilepath);
+					tmpDataFile.renameTo(checkbackup);
+
+					Constants.zknlogger.log(Level.INFO, "A backup of the settings was saved to {0}",
+							checkbackup.toString());
+					// Tell user that an error occurred.
+					JOptionPane.showMessageDialog(null,
+							resourceMap.getString("settingsSaveErrMsg", "\"" + checkbackup.getName() + "\""),
+							resourceMap.getString("settingsSaveErrTitle"), JOptionPane.PLAIN_MESSAGE);
+				}
+			} catch (Exception e) {
+				Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+			}
+			return false;
+		}
+
+		// In case of success, delete temporary backup file created in the beginning of
+		// the function.
 		try {
-			zip = new ZipOutputStream(new FileOutputStream(zettelkastenDataFilepath));
+			if (tmpDataFile.exists()) {
+				tmpDataFile.delete();
+			}
+		} catch (Exception e) {
+			Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
+			// Don't treat failure to delete temporary backup file as a failure to the
+			// overall function.
+		}
+		return true;
+	}
+
+	/*
+	 * createZettelkastenDataZipFile is responsible for creating the Zettelkasten
+	 * Metadata zip file. Returns true iff successful.
+	 * 
+	 * The Zettelkasten Data file is a zip file with a separate file for the current
+	 * state of each of the following class member variables: foreignWordsFile,
+	 * synonyms, steno, and autoKorrekt.
+	 */
+	private boolean createZettelkastenDataZipFile() {
+		try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(zettelkastenDataFilepath))) {
 			XMLOutputter out = new XMLOutputter();
 
 			// Add foreign words file.
@@ -1172,43 +1173,76 @@ public class Settings {
 			// Add Korrektur file.
 			zip.putNextEntry(new ZipEntry(Constants.autoKorrekturFileName));
 			out.output(autoKorrekt.getDocument(), zip);
-
-			zip.close();
-		} catch (IOException | SecurityException e) {
+		} catch (Exception e) {
 			Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+			return false;
+		}
+		return true;
+	}
 
+	/**
+	 * saveZettelkastenDataFile saves the Zettelkasten Metadata file to
+	 * zettelkastenDataFilepath and returns true iff successful. On failure, if
+	 * existing file might have been corrupted, a message dialog informs the user
+	 * where to find the backup file of the original existing Zettelkasten Metadata
+	 * file.
+	 * 
+	 * Zip creation is handled by createZettelkastenDataZipFile.
+	 * 
+	 */
+	private boolean saveZettelkastenDataFile() {
+		// Before the main save action, create a temporary backup in case of any error
+		// during save.
+		File tmpDataFile = new File(zettelkastenDataFilepath.toString() + ".tmp");
+		boolean ok = FileOperationsUtil.createFileCopyIfExists(zettelkastenDataFilepath, tmpDataFile);
+		if (!ok) {
+			// Avoid attempting to save file if we failed to create temporary backup. Return
+			// error.
+			return false;
+		}
+
+		// Create new zip file.
+		ok = createZettelkastenDataZipFile();
+		if (!ok) {
 			// On failure, rename temporary file to a .backup file and tell user. The
 			// temporary backup file might not exist due to a missing original file.
-			if (tmpDataFile.exists()) {
-				File checkbackup = FileOperationsUtil.getBackupFilePath(zettelkastenDataFilepath);
-				tmpDataFile.renameTo(checkbackup);
+			try {
+				if (tmpDataFile.exists()) {
+					File checkbackup = FileOperationsUtil.getBackupFilePath(zettelkastenDataFilepath);
+					tmpDataFile.renameTo(checkbackup);
 
-				Constants.zknlogger.log(Level.INFO, "A backup of the meta-data was saved to {0}",
-						checkbackup.toString());
-				// Tell user that an error occurred.
-				JOptionPane.showMessageDialog(null,
-						resourceMap.getString("metadataSaveErrMsg", "\"" + checkbackup.getName() + "\""),
-						resourceMap.getString("metadataSaveErrTitle"), JOptionPane.PLAIN_MESSAGE);
+					Constants.zknlogger.log(Level.INFO, "A backup of the meta-data was saved to {0}",
+							checkbackup.toString());
+					// Tell user that an error occurred.
+					JOptionPane.showMessageDialog(null,
+							resourceMap.getString("metadataSaveErrMsg", "\"" + checkbackup.getName() + "\""),
+							resourceMap.getString("metadataSaveErrTitle"), JOptionPane.PLAIN_MESSAGE);
+				}
+			} catch (Exception e) {
+				Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
 			}
 			return false;
 		}
 
 		// In case of success, delete temporary backup file created in the beginning of
 		// the function.
-		if (tmpDataFile.exists()) {
-			try {
+		try {
+			if (tmpDataFile.exists()) {
 				tmpDataFile.delete();
-			} catch (SecurityException e) {
-				Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
 			}
+		} catch (Exception e) {
+			Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
+			// Don't treat failure to delete temporary backup file as a failure to the
+			// overall function.
 		}
 		return true;
 	}
 
 	/**
-	 * Saves the settings file. Returns true iff saves were successful. On failure,
-	 * if existing files might have been corrupted, a message dialog informs the
-	 * user where to find the backup file of the original existing files.
+	 * Saves this class settings to the associated files and returns true iff
+	 * successful. On failure, if existing files might have been corrupted, a
+	 * message dialog informs the user where to find the backup file of the original
+	 * existing files.
 	 *
 	 * @return success status
 	 */
