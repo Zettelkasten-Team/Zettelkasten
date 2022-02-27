@@ -1048,12 +1048,19 @@ public class Settings {
 	}
 
 	/**
-	 * Loads the settings file: zettelkastenSettingsFilepath and
-	 * zettelkastenDataFilepath.
+	 * Loads the settings files (zettelkastenSettingsFilepath and
+	 * zettelkastenDataFilepath) to this class current.
 	 */
 	public void loadSettings() {
-		loadZettelkastenSettingsFile();
-		loadZettelkastenDataFile();
+		try {
+			loadZettelkastenSettingsFile();
+			loadZettelkastenDataFile();
+		} catch (Exception e) {
+			// The load functions already handles some of the Exceptions. This is to get
+			// rare Exceptions like File.exists() for some reason doesn't have read
+			// permission.
+			Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
+		}
 	}
 
 	/*
@@ -1084,7 +1091,7 @@ public class Settings {
 			// Add Search Results accelerator keys.
 			zip.putNextEntry(new ZipEntry(Constants.acceleratorKeysSearchResultsName));
 			out.output(acceleratorKeys.getDocument(AcceleratorKeys.SEARCHRESULTSKEYS), zip);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
 			return false;
 		}
