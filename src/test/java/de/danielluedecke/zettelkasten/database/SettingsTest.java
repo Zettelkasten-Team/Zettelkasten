@@ -1,6 +1,7 @@
 package de.danielluedecke.zettelkasten.database;
 
 import de.danielluedecke.zettelkasten.util.Constants;
+import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
@@ -8,6 +9,7 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.XMLOutputter;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,7 +56,7 @@ public class SettingsTest {
     }
 
     @Test
-    void saveSettings_Normal_Success() throws IOException {
+    void saveSettings_Normal_Success() throws Exception {
     	// Change settings to confirm it is writing something new.
     	String testValue = "MY_UNIQUE_TEST_FILE_PATH_123456";
     	settings.setFilePath(new File(testValue));
@@ -64,16 +66,10 @@ public class SettingsTest {
         assertTrue(ok);
         
         // Confirm settings file has testValue.
-        String settingsXml = "";
-        ZipInputStream zip = new ZipInputStream(new FileInputStream(settings.getSettingsFilePath()));
-        ZipEntry entry;
-        while ((entry = zip.getNextEntry()) != null) {
-            if (entry.getName().equals(Constants.settingsFileName)) {
-            	settingsXml = new String(zip.readAllBytes());
-                break;
-            }
-        }
-        MatcherAssert.assertThat(settingsXml, CoreMatchers.containsString(testValue));
+        Document settingsXml = FileOperationsUtil.readXMLFileFromZipFile(settings.getSettingsFilePath(), Constants.settingsFileName);
+        XMLOutputter outputter = new XMLOutputter();
+        String xmlString = outputter.outputString(settingsXml);
+        MatcherAssert.assertThat(xmlString, CoreMatchers.containsString(testValue));
     }
     
     @Test

@@ -986,22 +986,6 @@ public class Settings {
 		}
 	}
 
-	private Document readXMLFileFromZipFile(File zipFile, String filename) throws Exception {
-		try (ZipInputStream zip = new ZipInputStream(new FileInputStream(zipFile))) {
-			ZipEntry entry;
-			while ((entry = zip.getNextEntry()) != null) {
-				// Keep moving through the entries to find filenameToLoad.
-				if (entry.getName().equals(filename)) {
-					SAXBuilder builder = new SAXBuilder();
-					// Document doc = new Document();
-					Document doc = builder.build(zip);
-					return doc;
-				}
-			}
-		}
-		throw new Exception(String.format("Filename %s not found in zip file %s", filename, zipFile.getPath()));
-	}
-
 	private void loadZettelkastenSettingsFile() {
 		if (zettelkastenSettingsFilepath == null) {
 			Constants.zknlogger.log(Level.SEVERE, "Could not open settings file: filepath is null.");
@@ -1017,15 +1001,16 @@ public class Settings {
 				String.format("Found settings file [%s]", zettelkastenSettingsFilepath.getPath()));
 
 		try {
-			settingsFile = readXMLFileFromZipFile(zettelkastenSettingsFilepath, Constants.settingsFileName);
-			acceleratorKeys.setDocument(AcceleratorKeys.MAINKEYS,
-					readXMLFileFromZipFile(zettelkastenSettingsFilepath, Constants.acceleratorKeysMainName));
-			acceleratorKeys.setDocument(AcceleratorKeys.NEWENTRYKEYS,
-					readXMLFileFromZipFile(zettelkastenSettingsFilepath, Constants.acceleratorKeysNewEntryName));
-			acceleratorKeys.setDocument(AcceleratorKeys.DESKTOPKEYS,
-					readXMLFileFromZipFile(zettelkastenSettingsFilepath, Constants.acceleratorKeysDesktopName));
-			acceleratorKeys.setDocument(AcceleratorKeys.SEARCHRESULTSKEYS,
-					readXMLFileFromZipFile(zettelkastenSettingsFilepath, Constants.acceleratorKeysSearchResultsName));
+			settingsFile = FileOperationsUtil.readXMLFileFromZipFile(zettelkastenSettingsFilepath,
+					Constants.settingsFileName);
+			acceleratorKeys.setDocument(AcceleratorKeys.MAINKEYS, FileOperationsUtil
+					.readXMLFileFromZipFile(zettelkastenSettingsFilepath, Constants.acceleratorKeysMainName));
+			acceleratorKeys.setDocument(AcceleratorKeys.NEWENTRYKEYS, FileOperationsUtil
+					.readXMLFileFromZipFile(zettelkastenSettingsFilepath, Constants.acceleratorKeysNewEntryName));
+			acceleratorKeys.setDocument(AcceleratorKeys.DESKTOPKEYS, FileOperationsUtil
+					.readXMLFileFromZipFile(zettelkastenSettingsFilepath, Constants.acceleratorKeysDesktopName));
+			acceleratorKeys.setDocument(AcceleratorKeys.SEARCHRESULTSKEYS, FileOperationsUtil
+					.readXMLFileFromZipFile(zettelkastenSettingsFilepath, Constants.acceleratorKeysSearchResultsName));
 		} catch (Exception e) {
 			Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
 		}
@@ -1049,10 +1034,14 @@ public class Settings {
 				String.format("Found metadata file [%s]", zettelkastenDataFilepath.getPath()));
 
 		try {
-			foreignWordsFile = readXMLFileFromZipFile(zettelkastenDataFilepath, Constants.foreignWordsName);
-			synonyms.setDocument(readXMLFileFromZipFile(zettelkastenDataFilepath, Constants.synonymsFileName));
-			autoKorrekt.setDocument(readXMLFileFromZipFile(zettelkastenDataFilepath, Constants.autoKorrekturFileName));
-			steno.setDocument(readXMLFileFromZipFile(zettelkastenDataFilepath, Constants.stenoFileName));
+			foreignWordsFile = FileOperationsUtil.readXMLFileFromZipFile(zettelkastenDataFilepath,
+					Constants.foreignWordsName);
+			synonyms.setDocument(
+					FileOperationsUtil.readXMLFileFromZipFile(zettelkastenDataFilepath, Constants.synonymsFileName));
+			autoKorrekt.setDocument(FileOperationsUtil.readXMLFileFromZipFile(zettelkastenDataFilepath,
+					Constants.autoKorrekturFileName));
+			steno.setDocument(
+					FileOperationsUtil.readXMLFileFromZipFile(zettelkastenDataFilepath, Constants.stenoFileName));
 		} catch (Exception e) {
 			Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
 		}

@@ -46,11 +46,17 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
+
+import org.jdom2.Document;
+import org.jdom2.input.SAXBuilder;
 
 /**
  *
@@ -72,6 +78,29 @@ public class FileOperationsUtil {
     public static String[] getAddedAttachments() {
         return addedAttachments;
     }
+    
+    /**
+     * Returns XML Document inside zipFile with filename.
+     * 
+     * @param zipFile
+     * @param filename filename of the XML file inside the zip file to return.
+     * @return XML Document
+     * @throws Exception IO, XML or Not Found.
+     */
+	public static Document readXMLFileFromZipFile(File zipFile, String filename) throws Exception {
+		try (ZipInputStream zip = new ZipInputStream(new FileInputStream(zipFile))) {
+			ZipEntry entry;
+			while ((entry = zip.getNextEntry()) != null) {
+				// Keep moving through the entries to find filenameToLoad.
+				if (entry.getName().equals(filename)) {
+					SAXBuilder builder = new SAXBuilder();
+					Document doc = builder.build(zip);
+					return doc;
+				}
+			}
+		}
+		throw new Exception(String.format("Filename %s not found in zip file %s", filename, zipFile.getPath()));
+	}
 
     /**
      * This method creates a backup-filepath by adding the extension
