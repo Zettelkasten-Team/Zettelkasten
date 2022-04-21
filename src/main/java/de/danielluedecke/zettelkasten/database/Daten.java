@@ -6017,14 +6017,13 @@ public class Daten {
 	/**
 	 * This method returns the content of a certain entry, i.e. the main entry text
 	 * (text excerpt or whatever). The content is returned as it is stored in the
-	 * XML-datafile. So we have the "plain text" here, <i>with</i> format-tags, but
-	 * <i>not</i> prepared for HTML-display.<br>
-	 * <br>
+	 * XML-datafile. So we have the "plain text" here, [k]with[/k] format-tags, but
+	 * [k]not[/k] prepared for HTML-display.<br>	 * <br>
 	 * Use {@link #getEntryAsHtml(int, java.lang.String[]) getEntryAsHtml()} if you
 	 * need the HTML-formatted entry instead.<br>
 	 * <br>
 	 * Use {@link #getCleanZettelContent(int) getCleanZettelContent()} if you need
-	 * the plain text entry <i>without</i> format-tags.
+	 * the plain text entry [k]without[/k] format-tags.
 	 *
 	 * @param pos the index number of the entry which content is requested. Must be
 	 *            a number from 1 to {@link #getCount(int)
