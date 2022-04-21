@@ -251,6 +251,7 @@ public class Settings {
 	private static final String SETTING_AUTOUPDATE = "autoupdate";
 	private static final String SETTING_AUTONIGHTLYUPDATE = "autonightlyupdate";
 	private static final String SETTING_SEARCHALWAYSSYNONYMS = "searchalwayssynonyms";
+	private static final String SETTING_SEARCHALWAYSACCENTINSENSITIVE = "searchalwaysaccentinsensitive";
 	private static final String SETTING_SHOWICONS = "showtoolbar";
 	private static final String SETTING_SHOWALLICONS = "showallicons";
 	private static final String SETTING_SHOWENTRYHEADLINE = "showentryheadline";
@@ -700,6 +701,7 @@ public class Settings {
 		genericElementInit(SETTING_MANUALTIMESTAMP, "0");
 		genericElementInit(SETTING_SEARCHTIME, "");
 		genericElementInit(SETTING_SEARCHALWAYSSYNONYMS, "1");
+		genericElementInit(SETTING_SEARCHALWAYSACCENTINSENSITIVE, "0");
 		genericElementInit(SETTING_SHOWSYNONYMSINTABLE, "0");
 		genericElementInit(SETTING_SHOWICONS, "1");
 		genericElementInit(SETTING_SHOWALLICONS, "1");
@@ -2210,6 +2212,14 @@ public class Settings {
 	 */
 	public void setSearchAlwaysSynonyms(boolean val) {
 		genericBooleanSetter(SETTING_SEARCHALWAYSSYNONYMS, val);
+	}
+
+	public boolean getSearchAlwaysAccentInsensitive() {
+		return genericBooleanGetter(SETTING_SEARCHALWAYSACCENTINSENSITIVE);
+	}
+
+	public void setSearchAlwaysAccentInsensitive(boolean val) {
+		genericBooleanSetter(SETTING_SEARCHALWAYSACCENTINSENSITIVE, val);
 	}
 
 	public boolean getMakeLuhmannColumnSortable() {
