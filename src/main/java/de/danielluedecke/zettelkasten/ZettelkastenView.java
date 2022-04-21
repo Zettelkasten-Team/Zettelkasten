@@ -1942,8 +1942,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				startSearch(searchterms,
 						Constants.SEARCH_AUTHOR | Constants.SEARCH_CONTENT | Constants.SEARCH_TITLE
 								| Constants.SEARCH_KEYWORDS | Constants.SEARCH_REMARKS,
-						Constants.LOG_OR, false, false, true, false, false, "", "", 0, false,
-						Constants.STARTSEARCH_USUAL, Constants.SEARCH_USUAL);
+						Constants.LOG_OR, false, false, true, /* accentInsensitive= */ true, false, false, "", "", 0,
+						false, Constants.STARTSEARCH_USUAL, Constants.SEARCH_USUAL);
 			}
 		});
 		// associate enter-keystroke with that action
@@ -3768,7 +3768,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					null, /* only needed for attachments */
 					settings.getShowSynonymsInTable(), 0, /* only need for authors */
 					(DefaultTableModel) jTableKeywords.getModel(), settings.getMakeLuhmannColumnSortable());
-			// center window
+			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
 		ZettelkastenApp.getApplication().show(taskDlg);
@@ -3794,7 +3794,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (null == updateInfoDlg) {
 			// get parent und init window
 			updateInfoDlg = new CUpdateInfoBox(getFrame());
-			// center window
+			// Center new dialog window.
 			updateInfoDlg.setLocationRelativeTo(getFrame());
 		}
 		ZettelkastenApp.getApplication().show(updateInfoDlg);
@@ -3926,7 +3926,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// add search
 			searchrequests.addSearch(
 					new String[] { getResourceMap().getString("exportLuhmannSearch", String.valueOf(displayedZettel)) },
-					Constants.SEARCH_LUHMANN, Constants.LOG_OR, false, false, false, false, ent,
+					Constants.SEARCH_LUHMANN, Constants.LOG_OR, false, false, false, /* accentInsensitive= */false,
+					false, ent,
 					getResourceMap().getString("exportLuhmannSearchDesc", String.valueOf(displayedZettel)) + " ("
 							+ df.format(new Date()) + ")",
 					getResourceMap().getString("exportLuhmannSearchDesc", String.valueOf(displayedZettel)));
@@ -4069,7 +4070,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// add search
 			searchrequests.addSearch(
 					new String[] { getResourceMap().getString("exportLinksSearch", String.valueOf(displayedZettel)) },
-					Constants.SEARCH_REFERRERS, Constants.LOG_OR, false, false, false, false, expvalues,
+					Constants.SEARCH_REFERRERS, Constants.LOG_OR, false, false, false, /* accentInsensitive= */false,
+					false, expvalues,
 					getResourceMap().getString("exportLinksSearchDesc", String.valueOf(displayedZettel)) + " ("
 							+ df.format(new Date()) + ")",
 					getResourceMap().getString("exportLinksSearchDesc", String.valueOf(displayedZettel)));
@@ -4097,7 +4099,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			DateFormat df = new SimpleDateFormat("kkmmss");
 			// add search
 			searchrequests.addSearch(new String[] { getResourceMap().getString("exportDesktopSearch") },
-					Constants.SEARCH_DESKTOP, Constants.LOG_OR, false, false, false, false, entries,
+					Constants.SEARCH_DESKTOP, Constants.LOG_OR, false, false, false, /* accentInsensitive= */false,
+					false, entries,
 					getResourceMap().getString("exportDesktopSearchDesc",
 							"\"" + desktopname + "\"" + " (" + df.format(new Date()) + ")"),
 					getResourceMap().getString("exportDesktopSearchDesc", "\"" + desktopname + "\""));
@@ -4124,7 +4127,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			DateFormat df = new SimpleDateFormat("kkmmss");
 			// add search
 			searchrequests.addSearch(new String[] { getResourceMap().getString("exportMissingDesktopSearch") },
-					Constants.SEARCH_DESKTOP, Constants.LOG_OR, false, false, false, false, entries,
+					Constants.SEARCH_DESKTOP, Constants.LOG_OR, false, false, false, /* accentInsensitive= */false,
+					false, entries,
 					getResourceMap().getString("exportMissingDesktopSearchDesc",
 							"\"" + desktopname + "\"" + " (" + df.format(new Date()) + ")"),
 					getResourceMap().getString("exportMissingDesktopSearchDesc", "\"" + desktopname + "\""));
@@ -4174,7 +4178,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// add search
 			searchrequests.addSearch(
 					new String[] { getResourceMap().getString("exportClusterSearch", lastClusterRelationKeywords) },
-					Constants.SEARCH_CLUSTER, Constants.LOG_OR, false, false, false, false, expvalues,
+					Constants.SEARCH_CLUSTER, Constants.LOG_OR, false, false, false, /* accentInsensitive= */false,
+					false, expvalues,
 					getResourceMap().getString("exportClusterSearchDesc", lastClusterRelationKeywords) + " ("
 							+ df.format(new Date()) + ")",
 					getResourceMap().getString("exportClusterSearchDesc", lastClusterRelationKeywords));
@@ -4269,7 +4274,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 							// get parent und init window
 							taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_MERGEKEYWORDS, data,
 									taskinfo, oldKw, newKw, null, jTableKeywords, selectedrows[cnt], linkedkeywordlist);
-							// center window
+							// Center new dialog window.
 							taskDlg.setLocationRelativeTo(getFrame());
 						}
 						ZettelkastenApp.getApplication().show(taskDlg);
@@ -4416,7 +4421,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				// get parent und init window
 				taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_DELETEKEYWORDS, data,
 						ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords, 0));
-				// center window
+				// Center new dialog window.
 				taskDlg.setLocationRelativeTo(getFrame());
 			}
 			ZettelkastenApp.getApplication().show(taskDlg);
@@ -4765,7 +4770,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				// get parent und init window
 				taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_DELETEAUTHORS, data,
 						ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors, 0));
-				// center window
+				// Center new dialog window.
 				taskDlg.setLocationRelativeTo(getFrame());
 			}
 			ZettelkastenApp.getApplication().show(taskDlg);
@@ -4822,7 +4827,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// create a new dialog with the bigger edit-field, passing some initial values
 			biggerEditDlg = new CBiggerEditField(getFrame(), settings, getResourceMap().getString("newAuthorTitle"), "",
 					"", Constants.EDIT_AUTHOR);
-			// center window
+			// Center new dialog window.
 			biggerEditDlg.setLocationRelativeTo(getFrame());
 		}
 		// show window
@@ -4989,7 +4994,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					// create a new dialog with the desktop-dialog, passing some initial values
 					multipleOccurencesDlg = new CShowMultipleDesktopOccurences(getFrame(), settings, true,
 							multipleOccurencesMessage);
-					// center window
+					// Center new dialog window.
 					multipleOccurencesDlg.setLocationRelativeTo(null);
 				} else {
 					multipleOccurencesDlg.setInfoMsg(multipleOccurencesMessage);
@@ -5049,7 +5054,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				// get parent und init window
 				taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_DELETEENTRY, data, searchrequests,
 						nrs);
-				// center window
+				// Center new dialog window.
 				taskDlg.setLocationRelativeTo(getFrame());
 			}
 			ZettelkastenApp.getApplication().show(taskDlg);
@@ -5433,7 +5438,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				// create a new dialog with the bigger edit-field, passing some initial values
 				biggerEditDlg = new CBiggerEditField(getFrame(), settings,
 						getResourceMap().getString("editAuthorTitle"), oldAu, oldbibkey, Constants.EDIT_AUTHOR);
-				// center window
+				// Center new dialog window.
 				biggerEditDlg.setLocationRelativeTo(getFrame());
 			}
 			// show window
@@ -5480,7 +5485,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 						// get parent und init window
 						taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_MERGEAUTHORS, data,
 								taskinfo, oldAu, newAu, newBibKey, jTableAuthors, selectedrows[cnt], linkedauthorlist);
-						// center window
+						// Center new dialog window.
 						taskDlg.setLocationRelativeTo(getFrame());
 					}
 					ZettelkastenApp.getApplication().show(taskDlg);
@@ -5511,7 +5516,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (null == setBibKeyDlg) {
 			// create a new dialog with the bigger edit-field, passing some initial values
 			setBibKeyDlg = new CSetBibKey(getFrame(), this, data, bibtex, settings);
-			// center window
+			// Center new dialog window.
 			setBibKeyDlg.setLocationRelativeTo(getFrame());
 		}
 		// show window
@@ -5650,7 +5655,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (null == newBookmarkDlg) {
 			// create a new dialog for editing new bookmarks
 			newBookmarkDlg = new CNewBookmark(getFrame(), bookmarks, bms, edit, settings);
-			// center window
+			// Center new dialog window.
 			newBookmarkDlg.setLocationRelativeTo(getFrame());
 		}
 		// show window
@@ -5775,7 +5780,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					settings, false, /* only need for keywords */
 					0, /* only need for authors */
 					(DefaultTableModel) jTableAttachments.getModel(), settings.getMakeLuhmannColumnSortable());
-			// center window
+			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
 		ZettelkastenApp.getApplication().show(taskDlg);
@@ -5912,7 +5917,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					false, /* only needed for keywords */
 					jComboBoxAuthorType.getSelectedIndex(), (DefaultTableModel) jTableAuthors.getModel(),
 					settings.getMakeLuhmannColumnSortable());
-			// center window
+			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
 		ZettelkastenApp.getApplication().show(taskDlg);
@@ -6362,7 +6367,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					false, /* only needed for keywords */
 					0, /* only needed for authors */
 					(DefaultTableModel) jTableTitles.getModel(), settings.getMakeLuhmannColumnSortable());
-			// center window
+			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
 		ZettelkastenApp.getApplication().show(taskDlg);
@@ -7487,7 +7492,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				true, // whole-word-search
 				true, // match-case-search
 				settings.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
-				false, // whether the search terms contain regular expressions or not
+				settings.getSearchAlwaysAccentInsensitive(), false, // whether the search terms contain regular
+																	// expressions or not
 				false, // time-period search
 				"", // timestamp, date from (period start)
 				"", // timestamp, date to (period end)
@@ -7525,7 +7531,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				true, // whole-word-search
 				true, // match-case-search
 				settings.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
-				false, // whether the search terms contain regular expressions or not
+				settings.getSearchAlwaysAccentInsensitive(), false, // whether the search terms contain regular
+																	// expressions or not
 				false, // time-period search
 				"", // timestamp, date from (period start)
 				"", // timestamp, date to (period end)
@@ -7585,7 +7592,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				true, // whole-word-search
 				true, // match-case-search
 				settings.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
-				false, // whether the search terms contain regular expressions or not
+				settings.getSearchAlwaysAccentInsensitive(), false, // whether the search terms contain regular
+																	// expressions or not
 				false, // time-period search
 				"", // timestamp, date from (period start)
 				"", // timestamp, date to (period end)
@@ -7654,7 +7662,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				true, // whole-word-search
 				true, // match-case-search
 				settings.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
-				false, // whether the search terms contain regular expressions or not
+				settings.getSearchAlwaysAccentInsensitive(), false, // whether the search terms contain regular
+																	// expressions or not
 				false, // time-period search
 				"", // timestamp, date from (period start)
 				"", // timestamp, date to (period end)
@@ -7836,7 +7845,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				true, // whole-word-search
 				true, // match-case-search
 				settings.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
-				false, // whether the search terms contain regular expressions or not
+				settings.getSearchAlwaysAccentInsensitive(), false, // whether the search terms contain regular
+																	// expressions or not
 				false, // time-period search
 				"", // timestamp, date from (period start)
 				"", // timestamp, date to (period end)
@@ -7875,7 +7885,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				true, // whole-word-search
 				true, // match-case-search
 				settings.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
-				false, // whether the search terms contain regular expressions or not
+				settings.getSearchAlwaysAccentInsensitive(), false, // whether the search terms contain regular
+																	// expressions or not
 				false, // time-period search
 				"", // timestamp, date from (period start)
 				"", // timestamp, date to (period end)
@@ -7910,7 +7921,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			boolean isAppendPossible = data.getCount(Daten.ZKNCOUNT) > 0;
 			// get parent und init window
 			importWindow = new CImport(getFrame(), settings, bibtex, isAppendPossible);
-			// center window
+			// Center new dialog window.
 			importWindow.setLocationRelativeTo(getFrame());
 		}
 		ZettelkastenApp.getApplication().show(importWindow);
@@ -7992,7 +8003,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 							bookmarks, desktop, searchrequests, settings, importWindow.getImportType(),
 							importWindow.getFilePath(), importWindow.getSeparatorChar(),
 							importWindow.getAsciiToUnicode(), importWindow.getAppend(), defaulttimestamp, null);
-					// center window
+					// Center new dialog window.
 					taskDlg.setLocationRelativeTo(getFrame());
 				}
 				ZettelkastenApp.getApplication().show(taskDlg);
@@ -8083,7 +8094,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (null == exportEntriesDlg) {
 			// get parent und init window
 			exportEntriesDlg = new CExportEntries(getFrame(), data.getCount(Daten.ZKNCOUNT), settings);
-			// center window
+			// Center new dialog window.
 			exportEntriesDlg.setLocationRelativeTo(getFrame());
 		}
 		ZettelkastenApp.getApplication().show(exportEntriesDlg);
@@ -8142,7 +8153,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (null == exportWindow) {
 			// get parent und init window
 			exportWindow = new CExport(getFrame(), settings, bibtex);
-			// center window
+			// Center new dialog window.
 			exportWindow.setLocationRelativeTo(getFrame());
 		}
 		ZettelkastenApp.getApplication().show(exportWindow);
@@ -8169,7 +8180,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 							null, exportWindow.isSeparateFileForNotes(), exportWindow.getFormatTagsRemoved(),
 							exportWindow.getExportBibTex(), exportWindow.getKeywordsHighlighted(), false, false,
 							exportWindow.hasTitlePrefix());
-					// center window
+					// Center new dialog window.
 					taskDlg.setLocationRelativeTo(getFrame());
 				}
 				ZettelkastenApp.getApplication().show(taskDlg);
@@ -8859,7 +8870,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (null == doubleEntriesDlg || !doubleEntriesDlg.isVisible()) {
 			// if not, create new dialog
 			doubleEntriesDlg = new FindDoubleEntriesTask(getFrame(), this, data, settings);
-			// center window
+			// Center new dialog window.
 			doubleEntriesDlg.setLocationRelativeTo(getFrame());
 		}
 		// display window
@@ -9069,7 +9080,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// get parent und init window
 			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_LOAD, data, bookmarks, searchrequests,
 					desktop, synonyms, settings, bibtex);
-			// center window
+			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
 		ZettelkastenApp.getApplication().show(taskDlg);
@@ -9096,7 +9107,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				// get parent und init window
 				taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_UPDATEFILE, settings, data,
 						desktop, bibtex, false);
-				// center window
+				// Center new dialog window.
 				taskDlg.setLocationRelativeTo(getFrame());
 			}
 			ZettelkastenApp.getApplication().show(taskDlg);
@@ -9167,7 +9178,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// get parent und init window
 			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SAVE, data, bookmarks, searchrequests,
 					desktop, synonyms, settings, bibtex);
-			// center window
+			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
 		ZettelkastenApp.getApplication().show(taskDlg);
@@ -9245,7 +9256,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				// get parent und init window
 				taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SAVE, data, bookmarks,
 						searchrequests, desktop, synonyms, settings, bibtex);
-				// center window
+				// Center new dialog window.
 				taskDlg.setLocationRelativeTo(getFrame());
 			}
 			ZettelkastenApp.getApplication().show(taskDlg);
@@ -9301,8 +9312,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		DateFormat df = new SimpleDateFormat("kkmmss");
 		// add search
 		searchrequests.addSearch(new String[] { getResourceMap().getString("exportBookmarksSearch") },
-				Constants.SEARCH_BOOKMARKS, Constants.LOG_OR, false, false, false, false, entries,
-				getResourceMap().getString("exportBookmarksSearchDesc") + " (" + df.format(new Date()) + ")",
+				Constants.SEARCH_BOOKMARKS, Constants.LOG_OR, false, false, false, /* accentInsensitive= */false, false,
+				entries, getResourceMap().getString("exportBookmarksSearchDesc") + " (" + df.format(new Date()) + ")",
 				getResourceMap().getString("exportBookmarksSearchDesc"));
 		// if dialog window isn't already created, do this now
 		if (null == searchResultsDlg) {
@@ -9490,7 +9501,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					// get parent und init window
 					taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_REFRESHBIBTEX, taskinfo, data,
 							bibtex);
-					// center window
+					// Center new dialog window.
 					taskDlg.setLocationRelativeTo(getFrame());
 				}
 				ZettelkastenApp.getApplication().show(taskDlg);
@@ -9986,7 +9997,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (null == taskDlg) {
 			// get parent und init window
 			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SETFIRSTLINEASTITLE, data, option);
-			// center window
+			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
 		ZettelkastenApp.getApplication().show(taskDlg);
@@ -10038,11 +10049,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 *                       can be {@code null} if not used.
 	 */
 	private void find(String initSearchTerm) {
-		// if dialog window isn't already created, do this now
-		if (null == searchDlg) {
-			// create a new dialog window
+		if (searchDlg == null) {
 			searchDlg = new CSearchDlg(getFrame(), searchrequests, settings, initSearchTerm);
-			// center window
+			// Center new dialog window.
 			searchDlg.setLocationRelativeTo(getFrame());
 		}
 		ZettelkastenApp.getApplication().show(searchDlg);
@@ -10055,6 +10064,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					searchDlg.isWholeWord(), // - whole words
 					searchDlg.isMatchCase(), // - case-sensitive search
 					searchDlg.isSynonymsIncluded(), // - whether synonyms are included in the search or not
+					searchDlg.isAccentInsensitive(), // accent-insensitive search
 					searchDlg.isRegExSearch(), // - whether the search term is a regular expression
 					searchDlg.isTimestampSearch(), // - whether the search is limited to a certain period of time
 													// (creation or change date of entry)
@@ -10095,7 +10105,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (null == replaceDlg) {
 			// create a new dialog window
 			replaceDlg = new CReplaceDialog(frame, settings, initSearchTerm, (replaceentries != null));
-			// center window
+			// Center new dialog window.
 			replaceDlg.setLocationRelativeTo(frame);
 		}
 		ZettelkastenApp.getApplication().show(replaceDlg);
@@ -10115,7 +10125,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 						replaceDlg.isWholeWord(), // whether only whole words should be found
 						replaceDlg.isMatchCase(), // whether search is case sensitive
 						replaceDlg.isRegEx()); // whether find/replace-terms are regular expressions
-				// center window
+				// Center new dialog window.
 				taskDlg.setLocationRelativeTo(frame);
 			}
 			ZettelkastenApp.getApplication().show(taskDlg);
@@ -10254,9 +10264,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (null == taskDlg) {
 			// get parent und init window
 			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SEARCH, data, searchrequests, synonyms,
-					what, null, null, -1, Constants.LOG_OR, true, true, true, false, false, null, null, 0, false,
-					settings.getSearchRemovesFormatTags());
-			// center window
+					what, null, null, -1, Constants.LOG_OR, true, true, true, /* accentInsensitive= */false, false,
+					false, null, null, 0, false, settings.getSearchRemovesFormatTags());
+			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
 		ZettelkastenApp.getApplication().show(taskDlg);
@@ -10395,9 +10405,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (null == taskDlg) {
 			// get parent und init window
 			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SEARCH, data, searchrequests, synonyms,
-					whichsearch, new String[] { stime, etime }, null, -1, Constants.LOG_OR, true, true, true, false,
-					true, starttime, endtime, whichstamp, false, settings.getSearchRemovesFormatTags());
-			// center window
+					whichsearch, new String[] { stime, etime }, null, -1, Constants.LOG_OR, true, true, true,
+					/* accentInsensitive= */false, false, true, starttime, endtime, whichstamp, false,
+					settings.getSearchRemovesFormatTags());
+			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
 		ZettelkastenApp.getApplication().show(taskDlg);
@@ -10456,10 +10467,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * Opens the search dialog. This method can deal several search requests.<br>
 	 * <br>
 	 * For instance, we can have a usual search where the user wants to have search
-	 * results displayed in a new frame (CSearchResults). This action is typically
-	 * performed, when the user starts a search-request from the find-dialog (see
-	 * {@link #find() find()}) or when the user double-clicks on selected entries in
-	 * the jTableAuthors or jTableKeywords for example. <br>
+	 * results displayed in a new frame (SearchResultsFrame). This action is
+	 * typically performed, when the user starts a search-request from the
+	 * find-dialog (CSearchDlg) (see {@link #find() find()}) or when the user
+	 * double-clicks on selected entries in the jTableAuthors or jTableKeywords for
+	 * example. <br>
 	 * <br>
 	 * On the other hand, the search-algorithm is also used to retrieve entries for
 	 * adding them to the desktop, as manual links or as follower-numbers. In this
@@ -10468,9 +10480,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * {@link #addManLinksFromKeywords(int) addManlinks}) or if the user wants to
 	 * add all entries from a certain author to the desktop (see
 	 * {@link #addDesktopFromAuthors(int) addDesktopFromAuthors}). In this case, no
-	 * searchresults-dialog (CSearchResults) is shown - instead, the "searchresults"
-	 * are those entries that have to be added as manual links or to the desktop.
-	 * <br>
+	 * searchresults-dialog (SearchResultsFrame) is shown - instead, the
+	 * "searchresults" are those entries that have to be added as manual links or to
+	 * the desktop. <br>
 	 * <br>
 	 * The relevant parameters for indicating this are {@code displayonly} and
 	 * {@code searchtype}, see below. <br>
@@ -10515,20 +10527,20 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * @param searchtype
 	 */
 	public void startSearch(String[] searchterms, int where, int logical, boolean wholeword, boolean matchcase,
-			boolean syno, boolean regex, boolean timesearch, String datefrom, String dateto, int timestampindex,
-			boolean displayonly, int startsearchtype, int searchtype) {
-		// check whether we have valid searchterms or not...
-		if ((null == searchterms) || (searchterms.length < 1))
+			boolean syno, boolean accentInsensitive, boolean regex, boolean timesearch, String datefrom, String dateto,
+			int timestampindex, boolean displayonly, int startsearchtype, int searchtype) {
+		if ((searchterms == null) || (searchterms.length == 0)) {
+			// Invalid search terms. Nothing to search for.
 			return;
+		}
 		// in case we search for adding desktop-entries, we have to modify the search
 		// type here.
-		// if dialog window isn't already created, do this now
-		if (null == taskDlg) {
-			// get parent und init window
+		if (taskDlg == null) {
+			// get parent and init window
 			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SEARCH, data, searchrequests, synonyms,
-					searchtype, searchterms, null, where, logical, wholeword, matchcase, syno, regex, timesearch,
-					datefrom, dateto, timestampindex, displayonly, settings.getSearchRemovesFormatTags());
-			// center window
+					searchtype, searchterms, null, where, logical, wholeword, matchcase, syno, accentInsensitive, regex,
+					timesearch, datefrom, dateto, timestampindex, displayonly, settings.getSearchRemovesFormatTags());
+			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
 		ZettelkastenApp.getApplication().show(taskDlg);
@@ -10568,7 +10580,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					// get parent und init window
 					taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_ENTRIESTOLUHMANN, data,
 							searchrequests.getCurrentSearchResults(), data.getCurrentZettelPos());
-					// center window
+					// Center new dialog window.
 					taskDlg.setLocationRelativeTo(getFrame());
 				}
 				ZettelkastenApp.getApplication().show(taskDlg);
@@ -10652,7 +10664,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					true, // whole-word-search
 					true, // match-case-search
 					settings.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
-					false, // whether the search terms contain regular expressions or not
+					settings.getSearchAlwaysAccentInsensitive(), false, // whether the search terms contain regular
+																		// expressions or not
 					false, // time-period search
 					"", // timestamp, date from (period start)
 					"", // timestamp, date to (period end)
@@ -10668,8 +10681,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			break;
 		case TAB_KEYWORDS:
 			startSearch(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords, 0),
-					Constants.SEARCH_KEYWORDS, Constants.LOG_AND, true, true, settings.getSearchAlwaysSynonyms(), false,
-					false, "", "", 0, false, Constants.STARTSEARCH_USUAL, Constants.SEARCH_USUAL);
+					Constants.SEARCH_KEYWORDS, Constants.LOG_AND, true, true, settings.getSearchAlwaysSynonyms(),
+					settings.getSearchAlwaysAccentInsensitive(), false, false, "", "", 0, false,
+					Constants.STARTSEARCH_USUAL, Constants.SEARCH_USUAL);
 			break;
 		}
 	}
@@ -10696,7 +10710,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					true, // whole-word-search
 					true, // match-case-search
 					settings.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
-					false, // time-period search
+					settings.getSearchAlwaysAccentInsensitive(), false, // time-period search
 					false, // whether the search terms contain regular expressions or not
 					"", // timestamp, date from (period start)
 					"", // timestamp, date to (period end)
@@ -10712,8 +10726,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			break;
 		case TAB_KEYWORDS:
 			startSearch(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords, 0),
-					Constants.SEARCH_KEYWORDS, Constants.LOG_OR, true, true, settings.getSearchAlwaysSynonyms(), false,
-					false, "", "", 0, false, Constants.STARTSEARCH_USUAL, Constants.SEARCH_USUAL);
+					Constants.SEARCH_KEYWORDS, Constants.LOG_OR, true, true, settings.getSearchAlwaysSynonyms(),
+					settings.getSearchAlwaysAccentInsensitive(), false, false, "", "", 0, false,
+					Constants.STARTSEARCH_USUAL, Constants.SEARCH_USUAL);
 			break;
 		}
 	}
@@ -10740,7 +10755,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					true, // whole-word-search
 					true, // match-case-search
 					settings.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
-					false, // whether the search terms contain regular expressions or not
+					settings.getSearchAlwaysAccentInsensitive(), false, // whether the search terms contain regular
+																		// expressions or not
 					false, // time-period search
 					"", // timestamp, date from (period start)
 					"", // timestamp, date to (period end)
@@ -10756,8 +10772,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			break;
 		case TAB_KEYWORDS:
 			startSearch(ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords, 0),
-					Constants.SEARCH_KEYWORDS, Constants.LOG_NOT, true, true, settings.getSearchAlwaysSynonyms(), false,
-					false, "", "", 0, false, Constants.STARTSEARCH_USUAL, Constants.SEARCH_USUAL);
+					Constants.SEARCH_KEYWORDS, Constants.LOG_NOT, true, true, settings.getSearchAlwaysSynonyms(),
+					settings.getSearchAlwaysAccentInsensitive(), false, false, "", "", 0, false,
+					Constants.STARTSEARCH_USUAL, Constants.SEARCH_USUAL);
 			break;
 		}
 	}
@@ -10776,7 +10793,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				true, // whole-word-search
 				true, // match-case-search
 				settings.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
-				false, // whether the search terms contain regular expressions or not
+				settings.getSearchAlwaysAccentInsensitive(), false, // whether the search terms contain regular
+																	// expressions or not
 				false, // time-period search
 				"", // timestamp, date from (period start)
 				"", // timestamp, date to (period end)
@@ -10804,7 +10822,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				true, // whole-word-search
 				true, // match-case-search
 				settings.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
-				false, // whether the search terms contain regular expressions or not
+				settings.getSearchAlwaysAccentInsensitive(), false, // whether the search terms contain regular
+																	// expressions or not
 				false, // time-period search
 				"", // timestamp, date from (period start)
 				"", // timestamp, date to (period end)
@@ -10832,7 +10851,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				true, // whole-word-search
 				true, // match-case-search
 				settings.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
-				false, // whether the search terms contain regular expressions or not
+				settings.getSearchAlwaysAccentInsensitive(), false, // whether the search terms contain regular
+																	// expressions or not
 				false, // time-period search
 				"", // timestamp, date from (period start)
 				"", // timestamp, date to (period end)
@@ -10957,7 +10977,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * saveSettings saves the user and program settings. On error, it show and flashes error icon.
+	 * saveSettings saves the user and program settings. On error, it show and
+	 * flashes error icon.
 	 */
 	private void saveSettings() {
 		// Save current zettel-position.

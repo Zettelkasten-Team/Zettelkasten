@@ -131,11 +131,11 @@ public class AcceleratorKeys {
 		} else {
 			mask = "control";
 			delkey = "DELETE";
-			pluskey = "PLUS";
+			pluskey = "EQUALS";
 			minuskey = "MINUS";
 			renamekey = "F2";
 			historykey = "alt";
-			numbersign = "NUMBER_SIGN";
+			numbersign = "shift 3";
 			ctrlkey = "control";
 		}
 		initDefaultMainKeysIfMissing();
