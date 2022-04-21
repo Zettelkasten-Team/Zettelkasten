@@ -32,6 +32,30 @@
  */
 package de.danielluedecke.zettelkasten;
 
+import static java.awt.event.KeyEvent.VK_ESCAPE;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.SystemTray;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+
+import javax.swing.JColorChooser;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
+import javax.swing.UIManager;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import org.jdesktop.application.Action;
+
 import at.jta.Key;
 import at.jta.NotSupportedOSException;
 import at.jta.RegistryErrorException;
@@ -44,29 +68,6 @@ import de.danielluedecke.zettelkasten.database.Synonyms;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.PlatformUtil;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.SystemTray;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.lang.reflect.InaccessibleObjectException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.logging.Level;
-import javax.swing.JColorChooser;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import org.jdesktop.application.Action;
-
-import static java.awt.event.KeyEvent.VK_ESCAPE;
 
 /**
  *
@@ -1062,8 +1063,6 @@ public class CSettingsDlg extends javax.swing.JDialog {
 		} catch (RegistryErrorException e) {
 			Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
 		} catch (NotSupportedOSException e) {
-			Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-		} catch (InaccessibleObjectException e) {
 			Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
 		}
 		return false;
