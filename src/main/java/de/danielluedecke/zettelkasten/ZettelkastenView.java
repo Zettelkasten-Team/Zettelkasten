@@ -8598,35 +8598,30 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This method opens the window for inserting new entries as "followers" or
-	 * "sub-entries". These entries are inserted at the end of the data set, but are
-	 * indicated as "followers" (i.e.: sub-entries) of the current visible entry,
-	 * <b>or</b> of the currently selected entry of the jTreeLuhmann - if there is
-	 * any selection.<br>
-	 * <br>
-	 * All the stuff like saving the data to the main-data-object is done within the
-	 * class "CNewEntry.java". We than additionally set the "luhmann"-tag here (see
-	 * CDaten.java for more detaiks), which is used in the "showLuhmann" method
-	 * here.<br>
-	 * <br>
-	 * Entries may be separated with commas, or also contain a "from-to" option.
-	 * example: "4,6,11-15,19"
+	 * This method opens an window asking for the number of the entries to be
+	 * inserted as sub-entries (Luhmann). Entries may be separated with commas, or
+	 * also contain a "from-to" range. example: "4,6,11-15,19"
+	 * 
+	 * The received entries are inserted as sub-entries of the selected entry of the
+	 * jTreeLuhmann (if any) or of the current visible entry.
 	 */
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void manualInsertEntry() {
-		// open an input-dialog
+		// Open an input-dialog.
 		String newLuhmann = (String) JOptionPane.showInputDialog(getFrame(),
 				getResourceMap().getString("newLuhmannMsg"), getResourceMap().getString("newLuhmannTitle"),
 				JOptionPane.PLAIN_MESSAGE);
-		// if we have a valid return-value...
-		if ((newLuhmann != null) && (newLuhmann.length() > 0)) {
-			// convert the string-input into an int-array
-			int[] selectedValues = Tools.retrieveEntryNumbersFromInput(newLuhmann, data.getCount(Daten.ZKNCOUNT));
-			// and add them as follower-entries
-			if (selectedValues != null) {
-				addToLuhmann(selectedValues);
-			}
+		if ((newLuhmann == null) || (newLuhmann.length() == 0)) {
+			// Do nothing if input dialog is empty.
+			return;
 		}
+		// Convert the string-input into an int-array of entry numbers.
+		int[] selectedEntryNumbers = Tools.retrieveEntryNumbersFromInput(newLuhmann, data.getCount(Daten.ZKNCOUNT));
+		if (selectedEntryNumbers == null) {
+			// Do nothing if input was not parsed correctly. retrieveEntryNumbersFromInput might shows errors to the user.
+		}
+		// Add selectedValues as follower-entries to the appropriate entry.
+		addToLuhmann(selectedEntryNumbers);
 	}
 
 	/**
