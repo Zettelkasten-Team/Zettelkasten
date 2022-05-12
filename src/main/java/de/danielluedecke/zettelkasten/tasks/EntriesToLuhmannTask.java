@@ -89,7 +89,7 @@ public class EntriesToLuhmannTask extends org.jdesktop.application.Task<Object, 
                 continue;
             }
             // add it to the current entry's luhmann-numbers
-            dataObj.addLuhmannNumber(insertPos, entries[cnt]);
+            dataObj.appendSubEntryToEntry(insertPos, entries[cnt]);
             // update progressbar
             setProgress(cnt, 0, len);
         }

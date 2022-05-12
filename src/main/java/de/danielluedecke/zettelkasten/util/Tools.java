@@ -180,7 +180,7 @@ public class Tools {
 		// here we have a cross reference to another entry
 		if (linktype.startsWith("#cr_")) {
 			// only remove manual links from activated entry!
-			if (displayedZettel != data.getCurrentZettelPos()) {
+			if (displayedZettel != data.getActivatedEntryNumber()) {
 				return false;
 			}
 			try {
