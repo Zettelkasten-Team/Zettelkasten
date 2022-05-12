@@ -2276,100 +2276,73 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			protected void cleanup(JComponent c, boolean remove) {
 			}
 		});
-		// enable drag&drop
+
+		// Enable drag&drop in jTreeLuhmann.
 		jTreeLuhmann.setDragEnabled(true);
-		// init transfer handler for tree
 		jTreeLuhmann.setTransferHandler(new EntryStringTransferHandler() {
 			@Override
 			protected String exportString(JComponent c) {
-				// retrieve tree-component
-				javax.swing.JTree t = (javax.swing.JTree) c;
-				// retrieve selected node that was dragged
-				DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) t.getSelectionPath()
+				javax.swing.JTree jTree = (javax.swing.JTree) c;
+				DefaultMutableTreeNode draggedNode = (DefaultMutableTreeNode) jTree.getSelectionPath()
 						.getLastPathComponent();
-				// prepare export-string, telling that the drag-source is the jTreeDesktop
-				StringBuilder retval = new StringBuilder(Constants.DRAG_SOURCE_JTREELUHMANN + "\n");
-				// next line contains the entry-number, or -1 if a bullet was selected
-				retval.append(String.valueOf(selectedEntryInJTreeLuhmann())).append("\n");
-				// retrieve treepath of dragged entry/bullet
-				TreePath tp = t.getSelectionPath();
-				// add each single path component to return string, new-line-separated
-				for (int cnt = 1; cnt < tp.getPathCount(); cnt++) {
-					retval.append(tp.getPathComponent(cnt).toString()).append("\t");
-				}
-				// delete last, unnecessary new-line
-				retval.setLength((retval.length() - 1));
-				// remember selected node, which should be removed when dropping the node.
-				movedNodeToRemove = selectedNode;
-				// return information
-				return retval.toString();
+
+				// Remember the dragged node, which must be removed when dropping the node.
+				movedNodeToRemove = draggedNode;
+
+				return Constants.DRAG_SOURCE_JTREELUHMANN;
 			}
 
 			@Override
-			protected boolean importString(JComponent c, String str) {
-				// get drop-component, i.e. the jTreeDesktop
-				javax.swing.JTree t = (javax.swing.JTree) c;
-				// retrieve selected node
-				DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) t.getSelectionPath()
-						.getLastPathComponent();
-				// check for valid drop-string
-				if (str != null) {
-					// each received string consists of two lines. the first one with information
-					// about the drag-source and the drag-operation, the second one with the data
-					// by this we can see whether we have received entries (i.e. a valid drop)
-					String[] dropinformation = str.split("\n");
-					// get source information
-					String sourceinfo = dropinformation[0];
-					// retrieve destination tree path of dragged node
-					String[] nodepath = null;
-					if (dropinformation.length >= 2) {
-						nodepath = dropinformation[2].split("\t");
-					}
-					// check out the source of the drag-operation. if we have a valid source,
-					// retrieve entries.
-					// here we have the jTreeLuhmannas drag-source, i.e. a drag&drop from within
-					// this tree. that means, we have to delete the drag-source, i.e.
-					// the dragged node that was moved to the new location
-					if (nodepath != null && sourceinfo.equals(Constants.DRAG_SOURCE_JTREELUHMANN)) {
-						// retrieve "depth" of treepathes of nodes
-						int draglevel = nodepath.length;
-						int droplevel = selectedNode.getLevel();
-						// retrieve parent of drop-location
-						DefaultMutableTreeNode parent = (droplevel >= draglevel)
-								? (DefaultMutableTreeNode) selectedNode.getParent()
-								: selectedNode;
-						// check whether an entry was moved within the current entry's follower,
-						// that means the entry was dragged & dropped within the same parent-level
-						// or check whether the node was dropped onto its parent
-						if ((draglevel == droplevel)
-								|| (draglevel == (droplevel + 1) && movedNodeToRemove.getParent().equals(parent))) {
-							try {
-								// cut of entry-number
-								int dropentrynr = entryNumberFromTreeNode(parent);
-								// retrieve entry-number of dragged entry.
-								int draggedentrynr = Integer.parseInt(dropinformation[1]);
-								// retrieve insert-index
-								int insertIndex = (selectedNode.isRoot()) ? 0 : parent.getIndex(selectedNode) + 1;
-								// delete moved entry from luhmann-numbers of source-entry
-								data.deleteLuhmannNumber(dropentrynr, draggedentrynr);
-								// insert entry at new index-position
-								data.addSubEntryToEntry(dropentrynr, draggedentrynr, insertIndex);
-								// update tabbed pane
-								showLuhmann(false);
-								// return success value
-								return true;
-							} catch (NumberFormatException | IndexOutOfBoundsException e) {
-							}
-						}
-					}
+			protected boolean importString(JComponent c, String dropInformationString) {
+				// dropInformationString comes from the exportString() above.
+				if (dropInformationString == null
+						|| !dropInformationString.equals(Constants.DRAG_SOURCE_JTREELUHMANN)) {
+					return false;
 				}
-				return false;
+
+				javax.swing.JTree jTree = (javax.swing.JTree) c;
+				DefaultMutableTreeNode droppedNode = (DefaultMutableTreeNode) jTree.getSelectionPath()
+						.getLastPathComponent();
+
+				// Drag&drop of jTreeLuhmann only works for reordering the sub-entries of a
+				// specific entry. It doesn't currently support moving across entries.
+				boolean droppedIntoParent = movedNodeToRemove.getParent().equals(droppedNode);
+				boolean droppedIntoSibling = movedNodeToRemove.getParent().equals(droppedNode.getParent());
+				boolean droppedIntoParentOrSibling = droppedIntoParent || droppedIntoSibling;
+				if (!droppedIntoParentOrSibling) {
+					return false;
+				}
+
+				// parentEntryNumber is where we are going to add the dragged sub-entry to.
+				EntryID parentEntry = new EntryID(
+						entryNumberFromTreeNode((DefaultMutableTreeNode) movedNodeToRemove.getParent()));
+				EntryID draggedEntry = new EntryID(entryNumberFromTreeNode(movedNodeToRemove));
+				EntryID droppedEntry = new EntryID(entryNumberFromTreeNode(droppedNode));
+
+				// Delete the dragged entry before reinserting it.
+				data.deleteLuhmannNumber(parentEntry, draggedEntry);
+
+				if (droppedIntoParent) {
+					// Reinsert dragged entry at first position.
+					data.addSubEntryToEntryAtPosition(parentEntry, draggedEntry, 0);
+				} else if (droppedIntoSibling) {
+					// Reinsert dragged entry after dropped entry.
+					data.addSubEntryToEntryAfterSibling(parentEntry, draggedEntry, droppedEntry);
+				} else {
+					// This should never happen.
+					Constants.zknlogger.log(Level.SEVERE, "BUG: jTreeLuhmann importString");
+				}
+
+				// Update tabbed-pane.
+				showLuhmann(false);
+				return true;
 			}
 
 			@Override
 			protected void cleanup(JComponent c, boolean remove) {
 			}
 		});
+
 		jListEntryKeywords.setTransferHandler(new EntryStringTransferHandler() {
 			@Override
 			protected String exportString(JComponent c) {
@@ -3522,7 +3495,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					// check vor valid values
 					if (nodeNr != -1 && parentNr != -1) {
 						// and remove the nodeNr from the entry "parentNr"
-						data.deleteLuhmannNumber(parentNr, nodeNr);
+						data.deleteLuhmannNumber(new EntryID(parentNr), new EntryID(nodeNr));
 						// update the display
 						updateDisplay();
 					}
@@ -7721,25 +7694,25 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if ((entries == null) || (entries.length == 0) || (entries[0] == -1)) {
 			return false;
 		}
-		
+
 		int targetEntry = selectedEntryInJTreeLuhmann();
 		if (targetEntry == -1) {
 			// If no valid selection made, get current entry number
 			targetEntry = data.getActivatedEntryNumber();
 		}
-		
+
 		boolean error = false;
 		for (int newSubEntry : entries) {
-			if (!data.appendSubEntryToEntry(targetEntry, newSubEntry)) {
+			if (!data.appendSubEntryToEntry(new EntryID(targetEntry), new EntryID(newSubEntry))) {
 				error = true;
 			}
 		}
 		if (error) {
-			// If fails, display error message box. 
+			// If fails, display error message box.
 			JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("errLuhmannExistsMsg"),
 					getResourceMap().getString("errLuhmannExistsTitle"), JOptionPane.PLAIN_MESSAGE);
 		}
-		
+
 		updateDisplay();
 		return true;
 	}

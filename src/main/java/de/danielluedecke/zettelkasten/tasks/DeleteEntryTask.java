@@ -32,6 +32,7 @@
  */
 package de.danielluedecke.zettelkasten.tasks;
 
+import de.danielluedecke.zettelkasten.EntryID;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.SearchRequests;
 
@@ -105,7 +106,7 @@ public class DeleteEntryTask extends org.jdesktop.application.Task<Object, Void>
         // remove deleted entry-numbers from all luhmann-numbers of other entries...
         for (int cnt = 0; cnt < len; cnt++) {
             for (int e : entries) {
-                dataObj.deleteLuhmannNumber(cnt + 1, e);
+                dataObj.deleteLuhmannNumber(new EntryID(cnt + 1), new EntryID(e));
             }
             setProgress(cnt, 0, len);
         }
