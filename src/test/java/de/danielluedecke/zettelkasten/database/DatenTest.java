@@ -130,11 +130,11 @@ public class DatenTest {
         
 		// the first (and only) parent of entry 1 is entry 2.
         daten.goToFirstParentEntry();
-        assertEquals(daten.getCurrentZettelPos(), 2);
+        assertEquals(daten.getActivatedEntryNumber(), 2);
         
         // Entry 2 doesn't have a parent. Keep at the same Zettel number.
         daten.goToFirstParentEntry();
-        assertEquals(daten.getCurrentZettelPos(), 2);
+        assertEquals(daten.getActivatedEntryNumber(), 2);
     }
 
 }

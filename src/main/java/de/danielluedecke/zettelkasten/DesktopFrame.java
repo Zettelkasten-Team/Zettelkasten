@@ -564,7 +564,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                     // a footenote, or on the rating-stars
                     if (returnValue != null && returnValue.startsWith("#z_")) {
                         // show entry
-                        zknframe.showEntry(dataObj.getCurrentZettelPos());
+                        zknframe.showEntry(dataObj.getActivatedEntryNumber());
                     }
                 } else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {
                     javax.swing.text.Element elem = evt.getSourceElement();
