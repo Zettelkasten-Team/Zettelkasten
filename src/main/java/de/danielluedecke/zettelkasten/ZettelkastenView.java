@@ -2304,6 +2304,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				DefaultMutableTreeNode droppedNode = (DefaultMutableTreeNode) jTree.getSelectionPath()
 						.getLastPathComponent();
 
+				boolean droppedIntoItself = movedNodeToRemove.equals(droppedNode);
+				if (droppedIntoItself) {
+					return false;
+				}
+
 				// Drag&drop of jTreeLuhmann only works for reordering the sub-entries of a
 				// specific entry. It doesn't currently support moving across entries.
 				boolean droppedIntoParent = movedNodeToRemove.getParent().equals(droppedNode);
