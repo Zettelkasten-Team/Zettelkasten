@@ -7284,7 +7284,7 @@ public class Daten {
 	 * @return a string with the comma-separated luhmann-numbers, or an empty string
 	 *         if the entry has not luhmann-numbers.
 	 */
-	public String getLuhmannNumbers(int pos) {
+	public String getSubEntriesCsv(int pos) {
 		// get the entry
 		Element zettel = retrieveElement(zknFile, pos);
 		// if it exists...
@@ -7307,7 +7307,7 @@ public class Daten {
 	 */
 	public String[] getLuhmannNumbersAsString(int pos) {
 		// get manual links
-		String luh = getLuhmannNumbers(pos);
+		String luh = getSubEntriesCsv(pos);
 		// if no manual links there, quit...
 		if (luh.isEmpty()) {
 			return null;
@@ -7333,7 +7333,7 @@ public class Daten {
 	 */
 	public int[] getLuhmannNumbersAsInteger(int pos) {
 		// get manual links
-		String luh = getLuhmannNumbers(pos);
+		String luh = getSubEntriesCsv(pos);
 		// if no manual links there, quit...
 		if (luh.isEmpty()) {
 			return null;
@@ -7589,7 +7589,7 @@ public class Daten {
 			// go through complete data set
 			while (!innerLoopFound && cnt <= getCount(Daten.ZKNCOUNT)) {
 				// get the luhmann numbers of each entry
-				String[] lnrs = getLuhmannNumbers(cnt).split(",");
+				String[] lnrs = getSubEntriesCsv(cnt).split(",");
 				// now check each number for the occurrence of the current entry number
 				for (String l : lnrs) {
 					// when one of the luhmann numbers equals the current entry number...
@@ -7629,7 +7629,7 @@ public class Daten {
 	 */
 	private void retrieveAllLuhmannNumbers(int zettelpos) {
 		// get the text from the luhmann-numbers
-		String lnr = getLuhmannNumbers(zettelpos);
+		String lnr = getSubEntriesCsv(zettelpos);
 		// if we have any luhmann-numbers, go on...
 		if (!lnr.isEmpty()) {
 			// copy all values to an array
@@ -7731,7 +7731,7 @@ public class Daten {
 	 */
 	public boolean hasLuhmannNumbers(int zettelpos) {
 		// retrieve luhmann numbers
-		String lnr = getLuhmannNumbers(zettelpos);
+		String lnr = getSubEntriesCsv(zettelpos);
 		return (lnr != null && !lnr.isEmpty());
 	}
 
