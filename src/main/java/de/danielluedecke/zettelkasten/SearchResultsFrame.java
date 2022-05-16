@@ -2211,7 +2211,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 				// here we have a reference to another entry
 				if (returnValue.startsWith("#z_") || returnValue.startsWith("#cr_")) {
 					// show entry
-					mainframe.showEntry(dataObj.getCurrentZettelPos());
+					mainframe.showEntry(dataObj.getActivatedEntryNumber());
 				}
 				// edit cross references
 				else if (returnValue.equalsIgnoreCase("#crt")) {

@@ -912,7 +912,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					return;
 				}
 				// on single click...
-				if (1 == evt.getClickCount() && displayedZettel == data.getCurrentZettelPos()) {
+				if (1 == evt.getClickCount() && displayedZettel == data.getActivatedEntryNumber()) {
 					// filter links
 					filterLinks();
 					highlightSegs();
@@ -1175,7 +1175,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 				// on single-click, show entry
 				if (2 == evt.getClickCount()) {
-					showEntry(retrieveEntryNrFromLuhmann());
+					showEntry(selectedEntryInJTreeLuhmann());
 				}
 			}
 		});
@@ -2276,100 +2276,78 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			protected void cleanup(JComponent c, boolean remove) {
 			}
 		});
-		// enable drag&drop
+
+		// Enable drag&drop in jTreeLuhmann.
 		jTreeLuhmann.setDragEnabled(true);
-		// init transfer handler for tree
 		jTreeLuhmann.setTransferHandler(new EntryStringTransferHandler() {
 			@Override
 			protected String exportString(JComponent c) {
-				// retrieve tree-component
-				javax.swing.JTree t = (javax.swing.JTree) c;
-				// retrieve selected node that was dragged
-				DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) t.getSelectionPath()
+				javax.swing.JTree jTree = (javax.swing.JTree) c;
+				DefaultMutableTreeNode draggedNode = (DefaultMutableTreeNode) jTree.getSelectionPath()
 						.getLastPathComponent();
-				// prepare export-string, telling that the drag-source is the jTreeDesktop
-				StringBuilder retval = new StringBuilder(Constants.DRAG_SOURCE_JTREELUHMANN + "\n");
-				// next line contains the entry-number, or -1 if a bullet was selected
-				retval.append(String.valueOf(retrieveEntryNrFromLuhmann())).append("\n");
-				// retrieve treepath of dragged entry/bullet
-				TreePath tp = t.getSelectionPath();
-				// add each single path component to return string, new-line-separated
-				for (int cnt = 1; cnt < tp.getPathCount(); cnt++) {
-					retval.append(tp.getPathComponent(cnt).toString()).append("\t");
-				}
-				// delete last, unnecessary new-line
-				retval.setLength((retval.length() - 1));
-				// remember selected node, which should be removed when dropping the node.
-				movedNodeToRemove = selectedNode;
-				// return information
-				return retval.toString();
+
+				// Remember the dragged node, which must be removed when dropping the node.
+				movedNodeToRemove = draggedNode;
+
+				return Constants.DRAG_SOURCE_JTREELUHMANN;
 			}
 
 			@Override
-			protected boolean importString(JComponent c, String str) {
-				// get drop-component, i.e. the jTreeDesktop
-				javax.swing.JTree t = (javax.swing.JTree) c;
-				// retrieve selected node
-				DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) t.getSelectionPath()
-						.getLastPathComponent();
-				// check for valid drop-string
-				if (str != null) {
-					// each received string consists of two lines. the first one with information
-					// about the drag-source and the drag-operation, the second one with the data
-					// by this we can see whether we have received entries (i.e. a valid drop)
-					String[] dropinformation = str.split("\n");
-					// get source information
-					String sourceinfo = dropinformation[0];
-					// retrieve destination tree path of dragged node
-					String[] nodepath = null;
-					if (dropinformation.length >= 2) {
-						nodepath = dropinformation[2].split("\t");
-					}
-					// check out the source of the drag-operation. if we have a valid source,
-					// retrieve entries.
-					// here we have the jTreeLuhmannas drag-source, i.e. a drag&drop from within
-					// this tree. that means, we have to delete the drag-source, i.e.
-					// the dragged node that was moved to the new location
-					if (nodepath != null && sourceinfo.equals(Constants.DRAG_SOURCE_JTREELUHMANN)) {
-						// retrieve "depth" of treepathes of nodes
-						int draglevel = nodepath.length;
-						int droplevel = selectedNode.getLevel();
-						// retrieve parent of drop-location
-						DefaultMutableTreeNode parent = (droplevel >= draglevel)
-								? (DefaultMutableTreeNode) selectedNode.getParent()
-								: selectedNode;
-						// check whether an entry was moved within the current entry's follower,
-						// that means the entry was dragged & dropped within the same parent-level
-						// or check whether the node was dropped onto its parent
-						if ((draglevel == droplevel)
-								|| (draglevel == (droplevel + 1) && movedNodeToRemove.getParent().equals(parent))) {
-							try {
-								// cut of entry-number
-								int dropentrynr = retrieveEntryNrFromLuhmann(parent);
-								// retrieve entry-number of dragged entry.
-								int draggedentrynr = Integer.parseInt(dropinformation[1]);
-								// retrieve insert-index
-								int insertIndex = (selectedNode.isRoot()) ? 0 : parent.getIndex(selectedNode) + 1;
-								// delete moved entry from luhmann-numbers of source-entry
-								data.deleteLuhmannNumber(dropentrynr, draggedentrynr);
-								// insert entry at new index-position
-								data.insertLuhmannNumber(dropentrynr, draggedentrynr, insertIndex);
-								// update tabbed pane
-								showLuhmann(false);
-								// return success value
-								return true;
-							} catch (NumberFormatException | IndexOutOfBoundsException e) {
-							}
-						}
-					}
+			protected boolean importString(JComponent c, String dropInformationString) {
+				// dropInformationString comes from the exportString() above.
+				if (dropInformationString == null
+						|| !dropInformationString.equals(Constants.DRAG_SOURCE_JTREELUHMANN)) {
+					return false;
 				}
-				return false;
+
+				javax.swing.JTree jTree = (javax.swing.JTree) c;
+				DefaultMutableTreeNode droppedNode = (DefaultMutableTreeNode) jTree.getSelectionPath()
+						.getLastPathComponent();
+
+				boolean droppedIntoItself = movedNodeToRemove.equals(droppedNode);
+				if (droppedIntoItself) {
+					return false;
+				}
+
+				// Drag&drop of jTreeLuhmann only works for reordering the sub-entries of a
+				// specific entry. It doesn't currently support moving across entries.
+				boolean droppedIntoParent = movedNodeToRemove.getParent().equals(droppedNode);
+				boolean droppedIntoSibling = movedNodeToRemove.getParent().equals(droppedNode.getParent());
+				boolean droppedIntoParentOrSibling = droppedIntoParent || droppedIntoSibling;
+				if (!droppedIntoParentOrSibling) {
+					return false;
+				}
+
+				// parentEntryNumber is where we are going to add the dragged sub-entry to.
+				EntryID parentEntry = new EntryID(
+						entryNumberFromTreeNode((DefaultMutableTreeNode) movedNodeToRemove.getParent()));
+				EntryID draggedEntry = new EntryID(entryNumberFromTreeNode(movedNodeToRemove));
+				EntryID droppedEntry = new EntryID(entryNumberFromTreeNode(droppedNode));
+
+				// Delete the dragged entry before reinserting it.
+				data.deleteLuhmannNumber(parentEntry, draggedEntry);
+
+				if (droppedIntoParent) {
+					// Reinsert dragged entry at first position.
+					data.addSubEntryToEntryAtPosition(parentEntry, draggedEntry, 0);
+				} else if (droppedIntoSibling) {
+					// Reinsert dragged entry after dropped entry.
+					data.addSubEntryToEntryAfterSibling(parentEntry, draggedEntry, droppedEntry);
+				} else {
+					// This should never happen.
+					Constants.zknlogger.log(Level.SEVERE, "BUG: jTreeLuhmann importString");
+				}
+
+				// Update tabbed-pane.
+				showLuhmann(false);
+				return true;
 			}
 
 			@Override
 			protected void cleanup(JComponent c, boolean remove) {
 			}
 		});
+
 		jListEntryKeywords.setTransferHandler(new EntryStringTransferHandler() {
 			@Override
 			protected String exportString(JComponent c) {
@@ -2600,7 +2578,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				} else if (jTextFieldFilterCluster == e.getSource()) {
 					filterClusterList();
 				} else if (jTreeLuhmann == e.getSource()) {
-					showEntry(retrieveEntryNrFromLuhmann());
+					showEntry(selectedEntryInJTreeLuhmann());
 				} else if (jListEntryKeywords == e.getSource()) {
 					searchKeywordsFromListLogOr();
 				} else if (jTableBookmarks == e.getSource()) {
@@ -2968,7 +2946,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		} else {
 			// Here we set up all the text fields and lists
 			// FIXME java.lang.IllegalArgumentException: bad position: 1
-			updateDisplayParts(data.getCurrentZettelPos());
+			updateDisplayParts(data.getActivatedEntryNumber());
 			statusOfEntryLabel.setText(
 					getResourceMap().getString("entryOfText") + " " + String.valueOf(data.getCount(Daten.ZKNCOUNT)));
 		}
@@ -3232,7 +3210,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		int sel = jTabbedPaneMain.getSelectedIndex();
 		// if selected tab was different from the previous selection, update display
 		if (sel != previousSelectedTab) {
-			updateDisplayParts(data.getCurrentZettelPos());
+			updateDisplayParts(data.getActivatedEntryNumber());
 		}
 		// we need always an update of the links
 		needsLinkUpdate = true;
@@ -3288,7 +3266,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// more than one entry necessary to enable following functions
 		setMoreEntriesAvailable(count > 1);
 		// check each selected entries for followers
-		setMoreLuhmann(data.hasLuhmannNumbers(data.getCurrentZettelPos()));
+		setMoreLuhmann(data.hasLuhmannNumbers(data.getActivatedEntryNumber()));
 		// check whether the current entry is bookmarked or not...
 		setEntryBookmarked((-1 == bookmarks.getBookmarkPosition(displayedZettel)) && (count > 0));
 		// check whether current entry is on any desktop or not
@@ -3321,10 +3299,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			return;
 		}
 		// retrieve number of selected entry
-		int nr = retrieveEntryNrFromLuhmann();
+		int nr = selectedEntryInJTreeLuhmann();
 		// if we don't have a valid selection, use current entry as reference
 		if (-1 == nr) {
-			nr = data.getCurrentZettelPos();
+			nr = data.getActivatedEntryNumber();
 		}
 		// now display only the relevant parts, no complete update of the display
 		updateDisplayParts(nr);
@@ -3448,7 +3426,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jListEntryKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(bordertext.toString(), bcol, settings));
 		// en- or disable those actions which are related to the displaying of the
 		// current entry
-		setCurrentEntryShown(displayedZettel != data.getCurrentZettelPos());
+		setCurrentEntryShown(displayedZettel != data.getActivatedEntryNumber());
 	}
 
 	private void displayZettelContent(int zettel) {
@@ -3477,7 +3455,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jEditorPaneEntry.setCaretPosition(0);
 
 		// set entry number to textfield
-		jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+		jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
 	}
 
 	/**
@@ -3516,13 +3494,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				// if yes, go on
 				if (JOptionPane.YES_OPTION == option) {
 					// retrieve entry number of selected node
-					int nodeNr = retrieveEntryNrFromLuhmann();
+					int nodeNr = selectedEntryInJTreeLuhmann();
 					// retrieve entry number of parent node
-					int parentNr = retrieveEntryNrFromLuhmann(parent);
+					int parentNr = entryNumberFromTreeNode(parent);
 					// check vor valid values
 					if (nodeNr != -1 && parentNr != -1) {
 						// and remove the nodeNr from the entry "parentNr"
-						data.deleteLuhmannNumber(parentNr, nodeNr);
+						data.deleteLuhmannNumber(new EntryID(parentNr), new EntryID(nodeNr));
 						// update the display
 						updateDisplay();
 					}
@@ -3536,36 +3514,33 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 *
 	 * @return The number of the selected entry, or -1 if an error occured
 	 */
-	private int retrieveEntryNrFromLuhmann() {
+	private int selectedEntryInJTreeLuhmann() {
 		// retrieve selected node
-		return retrieveEntryNrFromLuhmann((DefaultMutableTreeNode) jTreeLuhmann.getLastSelectedPathComponent());
+		return entryNumberFromTreeNode((DefaultMutableTreeNode) jTreeLuhmann.getLastSelectedPathComponent());
 	}
 
 	/**
-	 * This methods retrieves the number of the node {@code node} from the
+	 * This methods retrieves the number of the node {@code node} from a
 	 * jTreeLuhmann
 	 *
 	 * @param node
-	 * @return The number of the selected entry, or -1 if an error occured
+	 * @return The number of the selected entry, or -1 if an error occurred
 	 */
-	private int retrieveEntryNrFromLuhmann(DefaultMutableTreeNode node) {
-		// if we have a valid selection, go on...
-		if (node != null) {
-			// get user data
-			TreeUserObject userObject = (TreeUserObject) node.getUserObject();
-			// retrieve the node's id (i.e. entrynumber
-			String text = userObject.getId();
-			try {
-				int nr = Integer.parseInt(text);
-				return nr;
-			} catch (NumberFormatException e) {
-				Constants.zknlogger.log(Level.WARNING, "Node was: {0}{1}Retrieved Number was: {2}{3}{4}",
-						new Object[] { node.toString(), System.lineSeparator(), text, System.lineSeparator(),
-								e.getLocalizedMessage() });
-				return -1;
-			}
+	private int entryNumberFromTreeNode(DefaultMutableTreeNode node) {
+		if (node == null) {
+			return -1;
 		}
-		return -1;
+		TreeUserObject userObject = (TreeUserObject) node.getUserObject();
+		String entryNumberString = userObject.getId();
+		try {
+			int nr = Integer.parseInt(entryNumberString);
+			return nr;
+		} catch (NumberFormatException e) {
+			Constants.zknlogger.log(Level.WARNING, "Node was: {0}{1}Retrieved Number was: {2}{3}{4}",
+					new Object[] { node.toString(), System.lineSeparator(), entryNumberString, System.lineSeparator(),
+							e.getLocalizedMessage() });
+			return -1;
+		}
 	}
 
 	@Action
@@ -4546,7 +4521,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			if (returnValue.startsWith("#z_") || returnValue.equals("#activatedEntry")
 					|| returnValue.startsWith("#cr_")) {
 				// show entry
-				showEntry(data.getCurrentZettelPos());
+				showEntry(data.getActivatedEntryNumber());
 			} // edit cross references
 			else if (returnValue.equalsIgnoreCase("#crt")) {
 				editManualLinks();
@@ -5976,7 +5951,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		int entry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableTitles, 0);
 		// if we don't have a valid selection, use current entry as reference
 		if (-1 == entry) {
-			updateDisplayParts(data.getCurrentZettelPos());
+			updateDisplayParts(data.getActivatedEntryNumber());
 		} // and if it was a avalid value, show entry
 		else {
 			updateDisplayParts(entry);
@@ -5997,7 +5972,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		int entry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableAttachments, 2);
 		// if we don't have a valid selection, use current entry as reference
 		if (-1 == entry) {
-			updateDisplayParts(data.getCurrentZettelPos());
+			updateDisplayParts(data.getActivatedEntryNumber());
 		} // and if it was a avalid value, show entry
 		else {
 			updateDisplayParts(entry);
@@ -6066,7 +6041,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// clear textfield content
 			jEditorPaneBookmarkComment.setText("");
 			// and update display
-			updateDisplayParts(data.getCurrentZettelPos());
+			updateDisplayParts(data.getActivatedEntryNumber());
 		} else {
 			// get the selected row
 			int row = jTableBookmarks.getSelectedRow();
@@ -6088,7 +6063,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		int entry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableManLinks, 0);
 		// if we don't have a valid selection, use current entry as reference
 		if (-1 == entry) {
-			updateDisplayParts(data.getCurrentZettelPos());
+			updateDisplayParts(data.getActivatedEntryNumber());
 		} // and if it was a avalid value, show entry
 		else {
 			updateDisplayParts(entry);
@@ -6744,7 +6719,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				// iterate all entrys of the zettelkasten
 				for (cnt = 1; cnt <= len; cnt++) {
 					// leave out the comparison of the current entry with itself
-					if (cnt == data.getCurrentZettelPos()) {
+					if (cnt == data.getActivatedEntryNumber()) {
 						continue;
 					}
 					// init the found indicator
@@ -6766,7 +6741,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 						// store the information in that object
 						ob[0] = cnt;
 						ob[1] = data.getZettelTitle(cnt);
-						ob[2] = data.getLinkStrength(data.getCurrentZettelPos(), cnt);
+						ob[2] = data.getLinkStrength(data.getActivatedEntryNumber(), cnt);
 						ob[3] = data.getZettelRating(cnt);
 						// and add that content as a new row to the table
 						linkedlinkslist.add(ob);
@@ -6884,7 +6859,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			Constants.zknlogger.log(Level.INFO, "Memory usage logging swicthed off.");
 		}
 		// show current entry number again
-		jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+		jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
 	}
 
 	private void terminateTimers() {
@@ -7009,13 +6984,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// and first of all, clear the jTree
 		dtm.setRoot(null);
 		// check whether all followers should be shown, including top-level parent
-		int parentLuhmann = data.getCurrentZettelPos();
+		int parentLuhmann = data.getActivatedEntryNumber();
 		if (settings.getShowAllLuhmann()) {
 			// if parent should be shown as well, find parent
-			parentLuhmann = data.findParentlLuhmann(data.getCurrentZettelPos(), false);
+			parentLuhmann = data.findParentlLuhmann(data.getActivatedEntryNumber(), false);
 			if (-1 == parentLuhmann) {
 				// no parent found? use current entry as root
-				parentLuhmann = data.getCurrentZettelPos();
+				parentLuhmann = data.getActivatedEntryNumber();
 			}
 		}
 		// retrieve node title
@@ -7027,7 +7002,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		dtm.setRoot(root);
 		// now call a recursive method that fills the jTree with the luhmann-numbers,
 		// i.e. with the follower- or sub-entries
-		fillLuhmannNumbers(root, parentLuhmann, data.getCurrentZettelPos());
+		fillLuhmannNumbers(root, parentLuhmann, data.getActivatedEntryNumber());
 		// expand the jTree to specific level
 		TreeUtil.setExpandLevel(settings.getLuhmannExpandLevel());
 		TreeUtil.expandAllTrees(jTreeLuhmann);
@@ -7044,7 +7019,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// clear list model
 		isFollowerList.clear();
 		// get current entry number as string
-		String currentEntry = String.valueOf(data.getCurrentZettelPos());
+		String currentEntry = String.valueOf(data.getActivatedEntryNumber());
 		// go through complete data set
 		for (int cnt = 1; cnt <= data.getCount(Daten.ZKNCOUNT); cnt++) {
 			// get the luhmann-numbers of each entry
@@ -7302,7 +7277,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// iterate all entrys of the zettelkasten
 			for (cnt = 1; cnt <= len; cnt++) {
 				// leave out the comparison of the current entry with itself
-				if (cnt == data.getCurrentZettelPos()) {
+				if (cnt == data.getActivatedEntryNumber()) {
 					continue;
 				}
 				// init the found indicator
@@ -7320,7 +7295,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					// store the information in that object
 					ob[0] = cnt;
 					ob[1] = data.getZettelTitle(cnt);
-					ob[2] = data.getLinkStrength(data.getCurrentZettelPos(), cnt);
+					ob[2] = data.getLinkStrength(data.getActivatedEntryNumber(), cnt);
 					// and add that content to the linked list
 					linkedfilteredlinkslist.add(ob);
 				}
@@ -7563,7 +7538,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			addToDesktop(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableManLinks, 0));
 			break;
 		case TAB_LUHMANN:
-			addToDesktop(new int[] { retrieveEntryNrFromLuhmann() });
+			addToDesktop(new int[] { selectedEntryInJTreeLuhmann() });
 			break;
 		case TAB_BOOKMARKS:
 			addToDesktop(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableBookmarks, 0));
@@ -7689,7 +7664,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// manual link to the
 		// displayed entry (=itself), but instead it should be added to the activated
 		// entry.
-		int activatedEntry = data.getCurrentZettelPos();
+		int activatedEntry = data.getActivatedEntryNumber();
 		// retrieve selected tab
 		switch (jTabbedPaneMain.getSelectedIndex()) {
 		case TAB_TITLES:
@@ -7705,47 +7680,44 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableBookmarks, 0));
 			break;
 		case TAB_LUHMANN:
-			addToManLinks(activatedEntry, new int[] { retrieveEntryNrFromLuhmann() });
+			addToManLinks(activatedEntry, new int[] { selectedEntryInJTreeLuhmann() });
 			break;
 		}
 	}
 
 	/**
 	 * This method adds one or more entries as follower-numbers to the entry that is
-	 * selected in the jTreeLuhmann. The entry-numbers of the to be added entries
-	 * have to be passed as integer-array.<br>
-	 * <br>
+	 * selected in the jTreeLuhmann. <br>
 	 * This method needs to be public, since we want to access it from other frames,
 	 * like for instance {@link CSearchResults}.
 	 *
-	 * @param entries an int-array conatining the entry-numbers of those entries
+	 * @param entries an int-array containing the entry-numbers of those entries
 	 *                that should be added as follower-entries
-	 * @return {@code true} if everything went ok, false if an error occured
+	 * @return {@code true} if everything went OK, false if an error occurred
 	 */
 	public boolean addToLuhmann(int[] entries) {
-		if ((null == entries) || (entries.length < 1) || (-1 == entries[0])) {
+		if ((entries == null) || (entries.length == 0) || (entries[0] == -1)) {
 			return false;
 		}
-		// if we have a selected entry, add numbers to that (sub-)entry
-		int currentZettel = retrieveEntryNrFromLuhmann();
-		// if no valid selection made, get current entry number
-		if (-1 == currentZettel) {
-			currentZettel = data.getCurrentZettelPos();
+
+		int targetEntry = selectedEntryInJTreeLuhmann();
+		if (targetEntry == -1) {
+			// If no valid selection made, get current entry number
+			targetEntry = data.getActivatedEntryNumber();
 		}
-		// init message-box indicator
+
 		boolean error = false;
-		// iterate array and add it to the current entry
-		for (int nr : entries) {
-			if (!data.addLuhmannNumber(currentZettel, nr)) {
+		for (int newSubEntry : entries) {
+			if (!data.appendSubEntryToEntry(new EntryID(targetEntry), new EntryID(newSubEntry))) {
 				error = true;
 			}
 		}
-		// display error message box, when any problems occured
 		if (error) {
+			// If fails, display error message box.
 			JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("errLuhmannExistsMsg"),
 					getResourceMap().getString("errLuhmannExistsTitle"), JOptionPane.PLAIN_MESSAGE);
 		}
-		// update the display
+
 		updateDisplay();
 		return true;
 	}
@@ -7761,7 +7733,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			addToBookmarks(ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableTitles, 0), false);
 			break;
 		case TAB_LUHMANN:
-			addToBookmarks(new int[] { retrieveEntryNrFromLuhmann() }, false);
+			addToBookmarks(new int[] { selectedEntryInJTreeLuhmann() }, false);
 			break;
 		}
 	}
@@ -8598,35 +8570,31 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This method opens the window for inserting new entries as "followers" or
-	 * "sub-entries". These entries are inserted at the end of the data set, but are
-	 * indicated as "followers" (i.e.: sub-entries) of the current visible entry,
-	 * <b>or</b> of the currently selected entry of the jTreeLuhmann - if there is
-	 * any selection.<br>
-	 * <br>
-	 * All the stuff like saving the data to the main-data-object is done within the
-	 * class "CNewEntry.java". We than additionally set the "luhmann"-tag here (see
-	 * CDaten.java for more detaiks), which is used in the "showLuhmann" method
-	 * here.<br>
-	 * <br>
-	 * Entries may be separated with commas, or also contain a "from-to" option.
-	 * example: "4,6,11-15,19"
+	 * This method opens an window asking for the number of the entries to be
+	 * inserted as sub-entries (Luhmann). Entries may be separated with commas, or
+	 * also contain a "from-to" range. example: "4,6,11-15,19"
+	 * 
+	 * The received entries are inserted as sub-entries of the selected entry of the
+	 * jTreeLuhmann (if any) or of the current visible entry.
 	 */
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void manualInsertEntry() {
-		// open an input-dialog
+		// Open an input-dialog.
 		String newLuhmann = (String) JOptionPane.showInputDialog(getFrame(),
 				getResourceMap().getString("newLuhmannMsg"), getResourceMap().getString("newLuhmannTitle"),
 				JOptionPane.PLAIN_MESSAGE);
-		// if we have a valid return-value...
-		if ((newLuhmann != null) && (newLuhmann.length() > 0)) {
-			// convert the string-input into an int-array
-			int[] selectedValues = Tools.retrieveEntryNumbersFromInput(newLuhmann, data.getCount(Daten.ZKNCOUNT));
-			// and add them as follower-entries
-			if (selectedValues != null) {
-				addToLuhmann(selectedValues);
-			}
+		if ((newLuhmann == null) || (newLuhmann.length() == 0)) {
+			// Do nothing if input dialog is empty.
+			return;
 		}
+		// Convert the string-input into an int-array of entry numbers.
+		int[] selectedEntryNumbers = Tools.retrieveEntryNumbersFromInput(newLuhmann, data.getCount(Daten.ZKNCOUNT));
+		if (selectedEntryNumbers == null) {
+			// Do nothing if input was not parsed correctly. retrieveEntryNumbersFromInput
+			// might shows errors to the user.
+		}
+		// Add selectedValues as follower-entries to the appropriate entry.
+		addToLuhmann(selectedEntryNumbers);
 	}
 
 	/**
@@ -10579,7 +10547,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				if (null == taskDlg) {
 					// get parent und init window
 					taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_ENTRIESTOLUHMANN, data,
-							searchrequests.getCurrentSearchResults(), data.getCurrentZettelPos());
+							searchrequests.getCurrentSearchResults(), data.getActivatedEntryNumber());
 					// Center new dialog window.
 					taskDlg.setLocationRelativeTo(getFrame());
 				}
@@ -10982,7 +10950,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	private void saveSettings() {
 		// Save current zettel-position.
-		settings.setStartupEntry(data.getCurrentZettelPos());
+		settings.setStartupEntry(data.getActivatedEntryNumber());
 		// TODO(mateusbraga) The following table sorting code should be set as the
 		// default instead of overwritting at every save.
 		// Get table from search results window.
@@ -11019,7 +10987,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		int entry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableLinks, 0);
 		// if we don't have a valid selection, use current entry as reference
 		if (-1 == entry) {
-			updateDisplayParts(data.getCurrentZettelPos());
+			updateDisplayParts(data.getActivatedEntryNumber());
 		} else {
 			// and if it was a avalid value, show entry
 			updateDisplayParts(entry);
