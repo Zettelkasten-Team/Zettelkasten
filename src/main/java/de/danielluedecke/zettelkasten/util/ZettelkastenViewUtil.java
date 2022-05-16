@@ -357,11 +357,11 @@ public class ZettelkastenViewUtil {
                 break;
             case "m":
                 mainframe.toggleMemoryTimer();
-                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
                 break;
             case "e":
                 mainframe.showErrorLog();
-                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
                 break;
             case "cs":
                 // open a confirm dialog
@@ -375,7 +375,7 @@ public class ZettelkastenViewUtil {
                     searchrequests.clear();
                     searchrequests.setModified(true);
                 }
-                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
                 break;
             case "cd":
                 // open a confirm dialog
@@ -389,7 +389,7 @@ public class ZettelkastenViewUtil {
                     desktop.clear();
                     desktop.setModified(true);
                 }
-                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
                 break;
             case "cb":
                 // open a confirm dialog
@@ -402,7 +402,7 @@ public class ZettelkastenViewUtil {
                 if (JOptionPane.YES_OPTION == option) {
                     bibtex.clearEntries();
                 }
-                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
                 break;
             case "rs":
                 // open a confirm dialog
@@ -415,11 +415,11 @@ public class ZettelkastenViewUtil {
                 if (JOptionPane.YES_OPTION == option) {
                     settings.clear();
                 }
-                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
                 break;
             case "ra":
                 acceleratorKeys.initDefaultAcceleratorKeysIfMissing();
-                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
                 break;
             case "s":
                 try {
@@ -428,7 +428,7 @@ public class ZettelkastenViewUtil {
                     // log error-message
                     Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
                 }   // show current entry number again
-                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
                 break;
             case "rf":
                 // open a confirm dialog
@@ -457,7 +457,7 @@ public class ZettelkastenViewUtil {
                     taskDlg.dispose();
                     taskDlg = null;
                 }
-                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
                 break;
             case "m2u":
                 // open a confirm dialog
@@ -515,7 +515,7 @@ public class ZettelkastenViewUtil {
                 // delete the input-dialog
                 biggerEditDlg.dispose();
                 biggerEditDlg = null;
-                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
                 break;
             case "bib":
                 // open an input-dialog, setting the selected value as default-value
@@ -534,7 +534,7 @@ public class ZettelkastenViewUtil {
                 }   // delete the input-dialog
                 biggerEditDlg.dispose();
                 biggerEditDlg = null;
-                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
                 break;
             case "html":
                 // open an input-dialog, setting the selected value as default-value
@@ -549,7 +549,7 @@ public class ZettelkastenViewUtil {
                 // delete the input-dialog
                 biggerEditDlg.dispose();
                 biggerEditDlg = null;
-                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
                 break;
             case "html2":
                 // open an input-dialog, setting the selected value as default-value
@@ -566,7 +566,7 @@ public class ZettelkastenViewUtil {
                 // delete the input-dialog
                 biggerEditDlg.dispose();
                 biggerEditDlg = null;
-                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
                 break;
             case "ubb":
                 // open an input-dialog, setting the selected value as default-value
@@ -580,7 +580,7 @@ public class ZettelkastenViewUtil {
                 // delete the input-dialog
                 biggerEditDlg.dispose();
                 biggerEditDlg = null;
-                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
                 break;
             case "usb":
                 // create filepath for destination of settings-file. the destination is the application's directory
@@ -606,7 +606,7 @@ public class ZettelkastenViewUtil {
                         Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
                     }
                 }
-                jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
                 break;
             default:
                 try {
@@ -614,7 +614,7 @@ public class ZettelkastenViewUtil {
                     mainframe.showEntry(Integer.parseInt(t));
                 } catch (NumberFormatException ex) {
                     // else reset textfield to old value
-                    jTextFieldEntryNumber.setText(String.valueOf(data.getCurrentZettelPos()));
+                    jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
                 }
                 break;
         }

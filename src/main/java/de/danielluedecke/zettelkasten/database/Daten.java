@@ -33,6 +33,7 @@
 package de.danielluedecke.zettelkasten.database;
 
 import de.danielluedecke.zettelkasten.CMakeFormImage;
+import de.danielluedecke.zettelkasten.EntryID;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import de.danielluedecke.zettelkasten.util.Constants;
@@ -640,7 +641,9 @@ public class Daten {
 	 */
 	public void setModified(boolean m) {
 		modified = m;
-		zknframe.setBackupNecessary();
+		if (zknframe != null) {
+			zknframe.setBackupNecessary();
+		}
 	}
 
 	/**
@@ -2941,7 +2944,7 @@ public class Daten {
 		// of the related entry (which number is passed in the luhmann variable)
 		if (luhmann != -1) {
 			// try to add luhmann number
-			if (addLuhmannNumber(luhmann, this.zettel)) {
+			if (appendSubEntryToEntry(new EntryID(luhmann), new EntryID(this.zettel))) {
 				// if it was successful, we can insert this entry
 				// after the "parent" entry
 				retval = ADD_LUHMANNENTRY_OK;
@@ -3328,93 +3331,19 @@ public class Daten {
 	}
 
 	/**
-	 * This method adds a new follower or sub-entry index-number to an entry.
-	 * Followers', or sub-entries', index-numbers are stored in the Luhmann-tag.
-	 * <br>
-	 * <br>
-	 * It is similar to a typical tree: we have one "parent"-entry and several
-	 * child-entries (sub-entries or followers). Each of these child-elements can
-	 * have their own child-elements again (whereby the child-element itself is then
-	 * again understood as a "parent"-entry). <br>
-	 * <br>
-	 * So, the Luhmann-numbers of an entry only have one subordinated level of
-	 * sub-entries. The tree- structure comes from those sub-entries, that might
-	 * have their own sub-entries again.
+	 * This method adds is a convenience method of addSubEntryToEntry to append the
+	 * new sub-entry to the last position of entry's sub-entries.
 	 *
-	 * @param entry    the entry where the related insert-entry-index-number should
-	 *                 be added to
-	 * @param addvalue the index-number of the inserted entry
+	 * @param entry       the entry to which the sub-entry should be added
+	 * @param newSubEntry the sub-entry to be inserted
 	 * @return {@code true} if everything was ok, false if the addvalue already
 	 *         existed or if the entry indicated by "addvalue" itself already
 	 *         contains the entry "entry". in this case, we would have an infinitive
 	 *         loop, with entry A having a sub-entry B, and B having a sub-entry A
 	 *         again and so on...
 	 */
-	public boolean addLuhmannNumber(int entry, int addvalue) {
-		// check whether entry and add value are identical
-		if (entry == addvalue) {
-			return false;
-		}
-		// get the entry where the luhmann number should be added to
-		Element zettel = retrieveElement(zknFile, entry);
-		// get the entry where the luhmann number should be added to
-		Element tobeadded = retrieveElement(zknFile, addvalue);
-		// if entry does not exist, leave
-		if (null == zettel || null == zettel.getChild(ELEMENT_TRAILS)) {
-			return false;
-		}
-		// if entry does not exist, leave
-		if (null == tobeadded) {
-			return false;
-		}
-		// get the luhmann numbers of that entry
-		String lnr = zettel.getChild(ELEMENT_TRAILS).getText();
-		// check whether the addvalue already exists in that entry
-		if (!lnr.isEmpty()) {
-			// copy all values to an array
-			String[] lnrs = lnr.split(",");
-			// go throughh array of current luhmann-numbers
-			for (String exist : lnrs) {
-				try {
-					// if addvalue exist, return false
-					if (Integer.parseInt(exist) == addvalue) {
-						return false;
-					}
-				} catch (NumberFormatException ex) {
-					Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
-				}
-			}
-		}
-		// now we have to check, whether the current entry is already existing
-		// in the entry that index-number (addvalue) we want to add to the
-		// luhmann-numbers
-		// if "entry" already exists in entry "addvalue"'s luhmann-tag, we would have
-		// an infinite loop...
-		// the problem is, that we here have to recursively check not only the
-		// "addvalue"
-		// entry's luhmann-tag, but also each sub-entry that consists in the "addvalue"
-		// entry's tag...
-		lnr = tobeadded.getChild(ELEMENT_TRAILS).getText();
-		// check whether the addvalue already exists in that entry
-		// if entry exists in the addvalue-entry luhmann-tag, or in any sub-entry
-		// of the addvalue-entry, leave method to prevent infinite loops
-		if (!lnr.isEmpty() && existsInLuhmann(addvalue, entry, false)) {
-			return false;
-		}
-		// get the luhmann-numbers of that entry
-		StringBuilder sb = new StringBuilder(zettel.getChild(ELEMENT_TRAILS).getText());
-		// append separator comma, but only if we already have values
-		if (sb.length() > 0) {
-			sb.append(",");
-		}
-		// append the addvalue
-		sb.append(addvalue);
-
-		// and set the new string to the luhmann-tag
-		zettel.getChild(ELEMENT_TRAILS).setText(sb.toString());
-		// addvalue was successfully added
-		setModified(true);
-		return true;
+	public boolean appendSubEntryToEntry(EntryID entry, EntryID newSubEntry) {
+		return addSubEntryToEntryAtPosition(entry, newSubEntry, /* pos= */-1);
 	}
 
 	/**
@@ -3553,132 +3482,6 @@ public class Daten {
 	}
 
 	/**
-	 * Removes a certain entry-number from the luhmann-numbers of an entry.
-	 *
-	 * @param entry       the entry where a luhmann-number should be removed
-	 * @param removevalue the index-number that should be removed from "entry"
-	 */
-	public void deleteLuhmannNumber(int entry, int removevalue) {
-		// check whether entry and removevalue are identical
-		if (entry == removevalue) {
-			return;
-		}
-		// get the entry where the luhmann-number should be added to
-		Element zettel = retrieveElement(zknFile, entry);
-		// if entry does not exist, leave
-		if (null == zettel || null == zettel.getChild(ELEMENT_TRAILS)) {
-			return;
-		}
-		// get the luhmann-numbers of that entry
-		String lnr = zettel.getChild(ELEMENT_TRAILS).getText();
-		// check whether the addvalue already exists in that entry
-		if (!lnr.isEmpty()) {
-			// copy all values to an array
-			String[] lnrs = lnr.split(",");
-			// create new string buffer for the final values
-			StringBuilder sb = new StringBuilder();
-			// convert remove-value to string, so we can compare
-			String removenr = String.valueOf(removevalue);
-			// go through array of current luhmann-numbers
-			for (String exist : lnrs) {
-				// if the current luhhmann-number is not the one which should be deleted...
-				if (!exist.equals(removenr)) {
-					// ...add it to the buffer
-					sb.append(exist);
-					sb.append(",");
-				}
-			}
-			// finally, remove trailing comma
-			if (sb.length() > 1) {
-				sb.setLength(sb.length() - 1);
-			}
-			// and set the new string to the luhmann-tag
-			zettel.getChild(ELEMENT_TRAILS).setText(sb.toString());
-			// addvalue was successfully added
-			setModified(true);
-		}
-	}
-
-	/**
-	 * This method inserts the entry-number {@code insertnr} as luhmann-number at
-	 * the position {@code pos} within the entry's {@code entry} luhmann-numbers.
-	 *
-	 * @param entry    the entry where the luhmann-number {@code insertnr} should be
-	 *                 inserted
-	 * @param insertnr the number of the entry that should be added as
-	 *                 luhmann-number
-	 * @param pos      the position of the {@code insertnr}, i.e. at which position
-	 *                 {@code insertnr} should be added as luhmann-number
-	 * @return
-	 */
-	public boolean insertLuhmannNumber(int entry, int insertnr, int pos) {
-		// check whether entry and removevalue are identical
-		if (entry == insertnr) {
-			return false;
-		}
-		// get the entry where the luhmann-number should be added to
-		Element zettel = retrieveElement(zknFile, entry);
-		// get the entry that should be added as luhmann-number
-		Element tobeadded = retrieveElement(zknFile, insertnr);
-		// if entry does not exist, leave
-		if (null == zettel || null == zettel.getChild(ELEMENT_TRAILS)) {
-			return false;
-		}
-		// get the luhmann-numbers of that entry
-		String lnr = zettel.getChild(ELEMENT_TRAILS).getText();
-		// check whether the addvalue already exists in that entry
-		if (!lnr.isEmpty()) {
-			// now we have to check, whether the current entry is already existing
-			// in the entry that index-number (addvalue) we want to add to the
-			// luhmann-numbers
-			// if "entry" already exists in entry "addvalue"'s luhmann-tag, we would have
-			// an infinite loop...
-			// the problem is, that we here have to recursively check not only the
-			// "addvalue"
-			// entry's luhmann-tag, but also each sub-entry that consists in the "addvalue"
-			// entry's tag...
-			String alnr = tobeadded.getChild(ELEMENT_TRAILS).getText();
-			// check whether the addvalue already exists in that entry
-			// if entry exists in the addvalue-entry luhmann-tag, or in any sub-entry
-			// of the addvalue-entry, leave method to prevent infinite loops
-			if (!alnr.isEmpty() && existsInLuhmann(insertnr, entry, false)) {
-				return false;
-			}
-			// copy all values to an array
-			String[] lnrs = lnr.split(",");
-			// create list
-			List<String> luhmannnrs = new ArrayList<>();
-			// copy all numbers to list, so we can insert the new number via this list
-			// for (String ln : lnrs) luhmannnrs.add(ln);
-			luhmannnrs.addAll(Arrays.asList(lnrs));
-			try {
-				// now insert the new number
-				luhmannnrs.add(pos, String.valueOf(insertnr));
-			} catch (IndexOutOfBoundsException e) {
-				// if the index-number was out of bounds, append number to the end of the list
-				luhmannnrs.add(String.valueOf(insertnr));
-			}
-			// create stringbuilder
-			StringBuilder sb = new StringBuilder();
-			for (String luhmannnr : luhmannnrs) {
-				sb.append(luhmannnr).append(",");
-			}
-			// finally, remove trailing comma
-			if (sb.length() > 1) {
-				sb.setLength(sb.length() - 1);
-			}
-			// and set the new string to the luhmann-tag
-			zettel.getChild(ELEMENT_TRAILS).setText(sb.toString());
-			// addvalue was successfully added
-			setModified(true);
-			// return success
-			return true;
-		}
-		// return success
-		return false;
-	}
-
-	/**
 	 * /** Removes one or more manual links from the current entry...
 	 *
 	 * @param manlinks an integer-array with the manual links that should be
@@ -3767,87 +3570,6 @@ public class Daten {
 	 */
 	public void deleteManualLinks(String[] manlinks) {
 		deleteManualLinks(manlinks, zettel);
-	}
-
-	/**
-	 * This method returns the content of an entry's luhmann-tag, i.e. the follower-
-	 * or sub-entries of an entry. These numbers are displayed in the tabbedpane in
-	 * the jTreeLuhmann (see ZettelkastenView.java for more details).
-	 *
-	 * @param pos the position of the entry which luhmann-numbers we want to have
-	 * @return a string with the comma-separated luhmann-numbers, or an empty string
-	 *         if the entry has not luhmann-numbers.
-	 */
-	public String getLuhmannNumbers(int pos) {
-		// get the entry
-		Element zettel = retrieveElement(zknFile, pos);
-		// if it exists...
-		// return the content of the luhmann-child-element
-		if (zettel != null && zettel.getChild(ELEMENT_TRAILS) != null) {
-			return zettel.getChild(ELEMENT_TRAILS).getText();
-		}
-		// return result
-		return "";
-	}
-
-	/**
-	 * This method returns the luhmann-numbers (follower-links) for an entry as
-	 * string-array.
-	 *
-	 * @param pos the position of the entry which luhmann-numbers we want to have
-	 * @return an string-array containing the follower-entry-numbers where the entry
-	 *         {@code pos} refers to, or {@code null} if no such
-	 *         follower-entry-numbers exist...
-	 */
-	public String[] getLuhmannNumbersAsString(int pos) {
-		// get manual links
-		String luh = getLuhmannNumbers(pos);
-		// if no manual links there, quit...
-		if (luh.isEmpty()) {
-			return null;
-		}
-		// else split them into an array...
-		String[] luhmann = luh.split(",");
-		// if we have no manual links, return null...
-		if ((null == luhmann) || luhmann.length < 1) {
-			return null;
-		}
-		// return the content of the luhmann-child-element
-		return luhmann;
-	}
-
-	/**
-	 * This method returns the luhmann-numbers (follower-links) for an entry as
-	 * integer-array.
-	 *
-	 * @param pos the position of the entry which luhmann-numbers we want to have
-	 * @return an integer-array containing the follower-entry-numbers where the
-	 *         entry {@code pos} refers to, or {@code null} if no such
-	 *         follower-entry-numbers exist...
-	 */
-	public int[] getLuhmannNumbersAsInteger(int pos) {
-		// get manual links
-		String luh = getLuhmannNumbers(pos);
-		// if no manual links there, quit...
-		if (luh.isEmpty()) {
-			return null;
-		}
-		// else split them into an array...
-		String[] luhmann = luh.split(",");
-		// if we have no manual links, return null...
-		if ((null == luhmann) || luhmann.length < 1) {
-			return null;
-		}
-		// create integer array
-		int[] luhint = new int[luhmann.length];
-		// copy string to int
-		for (int cnt = 0; cnt < luhmann.length; cnt++) {
-			try {
-				luhint[cnt] = Integer.parseInt(luhmann[cnt]);
-			} catch (NumberFormatException ex) {
-			}
-		}
-		return luhint;
 	}
 
 	/**
@@ -4010,46 +3732,49 @@ public class Daten {
 	 * contain an entry B as sub-entry, but entry B or any of entry B's sub-entries
 	 * may not contain entry A!
 	 *
-	 * @param entry      (the entry which luhmann-tag we want to check)
-	 * @param checkvalue (the entry which may not part of entry's luhmann-tag)
-	 * @param found      (whether the checkvalue already exists in the enry's
-	 *                   luhmann-tag or not, initially should be "false")
+	 * @param firstEntry  (the entry which luhmann-tag we want to check)
+	 * @param secondEntry (the entry which may not part of entry's luhmann-tag)
 	 * @return {@code true} when the checkvalue exists, false otherwise. actually
 	 *         the "found"-value is returned
 	 */
-	private boolean existsInLuhmann(int entry, int checkvalue, boolean found) {
-		// if we found anything by now, return true
-		if (found) {
-			return true;
+	private boolean firstEntryIsDescendantOfSecondEntry(EntryID firstEntry, EntryID secondEntry) {
+		if (firstEntry == secondEntry) {
+			// They are the same entry. Not a descendant.
+			return false;
 		}
-		// get the entry
-		Element zettel = retrieveElement(zknFile, entry);
-		// if it exists, go on
-		if (zettel != null && zettel.getChild(ELEMENT_TRAILS) != null) {
-			// get the text from the luhmann-numbers
-			String lnr = zettel.getChild(ELEMENT_TRAILS).getText();
-			// if we have any luhmann-numbers, go on...
-			if (!lnr.isEmpty()) {
-				// copy all values to an array
-				String[] lnrs = lnr.split(",");
-				// go throughh array of current luhmann-numbers
-				for (String exist : lnrs) {
-					// check whether luhmann-value exists, by re-calling this method
-					// again and go through a recusrive loop
-					found = existsInLuhmann(Integer.parseInt(exist), checkvalue, found);
-					// if we have found a check-value, return true
-					if (found) {
-						return true;
-					}
-					// else check whether the current entry equals the checkvalue
-					found = (entry == checkvalue);
-				}
-			} // else check whether the current entry equals the checkvalue
-			else {
-				found = (entry == checkvalue);
+		Element secondEntryElement = retrieveElement(zknFile, secondEntry.asInt());
+		if (secondEntryElement == null) {
+			// This should never happen.
+			Constants.zknlogger.log(Level.SEVERE, "BUG: firstEntry {0} does not exist", new Object[] { secondEntry });
+			return false;
+		}
+		if (secondEntryElement.getChild(ELEMENT_TRAILS) == null) {
+			// secondEntry doesn't have any sub-entry.
+			return false;
+		}
+
+		String secondEntrySubEntriesCsv = secondEntryElement.getChild(ELEMENT_TRAILS).getText();
+		if (secondEntrySubEntriesCsv.isEmpty()) {
+			// secondEntry has no sub-entries.
+			return false;
+		}
+
+		String firstEntryString = firstEntry.asString();
+		String[] secondEntrySubEntries = secondEntrySubEntriesCsv.split(",");
+		for (String secondEntrySubEntry : secondEntrySubEntries) {
+			if (firstEntryString == secondEntrySubEntry) {
+				// firstEntry is a sub-entry of secondEntry: a direct descendant. We test it
+				// here as firstEntryIsDescendantOfSecondEntry doesn't consider equal entries as
+				// descendants.
+				return true;
+			}
+			if (firstEntryIsDescendantOfSecondEntry(secondEntry, new EntryID(secondEntrySubEntry))) {
+				return true;
 			}
 		}
-		return found;
+		// After looking at all sub-entries and not finding it, we conclude firstEntry
+		// is not a descendant of secondEntry.
+		return false;
 	}
 
 	/**
@@ -5895,8 +5620,7 @@ public class Daten {
 	 *
 	 * @return number of the currently <i>activated</i> entry
 	 */
-	public int getCurrentZettelPos() {
-		// and return the value
+	public int getActivatedEntryNumber() {
 		return zettel;
 	}
 
@@ -6018,7 +5742,8 @@ public class Daten {
 	 * This method returns the content of a certain entry, i.e. the main entry text
 	 * (text excerpt or whatever). The content is returned as it is stored in the
 	 * XML-datafile. So we have the "plain text" here, [k]with[/k] format-tags, but
-	 * [k]not[/k] prepared for HTML-display.<br>	 * <br>
+	 * [k]not[/k] prepared for HTML-display.<br>
+	 * * <br>
 	 * Use {@link #getEntryAsHtml(int, java.lang.String[]) getEntryAsHtml()} if you
 	 * need the HTML-formatted entry instead.<br>
 	 * <br>
@@ -7431,6 +7156,375 @@ public class Daten {
 	}
 
 	/**
+	 * This method retrieves all notes (resp. their ID) in the Zettelkasten that are
+	 * part of a note sequence, i.e. which are top level notes in a note sequence or
+	 * which have sub-ordinated notes, and returns the index numbers as integer
+	 * array. <br/>
+	 * <b>Caution!</b> The position {@code zettelpos} is a value from <b>1</b> to
+	 * {@link #getCount(int) getCount()} - in contrary to usual array handling where
+	 * the range is from 0 to (size-1).
+	 *
+	 * @return all note-IDs in the Zettelkasten that are part of a note sequence, as
+	 *         integer array
+	 */
+	public List<Integer> getAllManualLinks() {
+		List<Integer> manualLinkNumbers = new ArrayList<>();
+		// iterate data base
+		for (int cnt = 1; cnt <= getCount(Daten.ZKNCOUNT); cnt++) {
+			// get manual links
+			int[] curnum = getManualLinks(cnt);
+			// check if note has any manual links
+			if (curnum != null) {
+				// iterate all note sequence IDs
+				for (int cn : curnum) {
+					// check if we already added that ID
+					if (!manualLinkNumbers.contains(cn)) {
+						// if not, add it now
+						manualLinkNumbers.add(cn);
+					}
+				}
+			}
+		}
+		// return result
+		return manualLinkNumbers;
+	}
+
+	/**
+	 * This method checks whether the entry {@code zettelpos} has manual links /
+	 * references to other entries or not. <br/>
+	 * <b>Caution!</b> The position {@code zettelpos} is a value from <b>1</b> to
+	 * {@link #getCount(int) getCount()} - in contrary to usual array handling where
+	 * the range is from 0 to (size-1).
+	 *
+	 * @param zettelpos the index number of the entry
+	 * @return {@code true} if the entry {@code zettelpos} has manual links /
+	 *         references to other entries, {@code false} if not.
+	 */
+	public boolean hasManLinks(int zettelpos) {
+		// retrieve manual links
+		int[] ml = getManualLinks(zettelpos);
+		return (ml != null && ml.length > 0);
+	}
+
+	/**
+	 * This method extracts manual links from an entry's content that have been
+	 * added via the EditorFrame.<br>
+	 * <br>
+	 * All manual link tags {@code [z #number]text[/z]} will be scanned and the
+	 * numbers (references to other entries) are extracted. All manual links are
+	 * returned as integer list.
+	 *
+	 * @param dummy the content from an entry as String
+	 * @return all manual links inside the manual-link-tag {@code [z]} as integer
+	 *         list
+	 */
+	private List<Integer> extractManualLinksFromContent(String dummy) {
+		// save manual links
+		List<Integer> manlinknumbers = new ArrayList<>();
+		try {
+			// create foot note patterm
+			Pattern p = Pattern.compile("\\[z ([^\\[]*)\\](.*?)\\[/z\\]");
+			// create matcher
+			Matcher m = p.matcher(dummy);
+			// check for occurences
+			while (m.find()) {
+				// if we found something, we have two groups
+				// the 2nd groups contains the manlink number as string
+				int ml = Integer.parseInt(dummy.substring(m.start(m.groupCount() - 1), m.end(m.groupCount() - 1)));
+				// add to result list
+				if (-1 == manlinknumbers.indexOf(ml)) {
+					manlinknumbers.add(ml);
+				}
+			}
+		} catch (PatternSyntaxException | IndexOutOfBoundsException | NumberFormatException ex) {
+		}
+		return manlinknumbers;
+	}
+
+	/**
+	 * Creates a sorted String with comma separated values of manual links. Manual
+	 * links are stored in this String format in the XML database.
+	 *
+	 * @param manlinknumbers (extracted) manual links as integer list. Use
+	 *                       {@link #extractManualLinksFromContent(java.lang.String)}
+	 *                       to retrieve manual links from an entry's content as
+	 *                       integer list
+	 * @return a String containing all manual links, so this String can be stored as
+	 *         child-element in the XML database (see {@link #ELEMENT_MANLINKS}).
+	 */
+	private String retrievePreparedManualLinksFromContent(List<Integer> manlinknumbers) {
+		// add them, if we have any
+		if (manlinknumbers != null && !manlinknumbers.isEmpty()) {
+			// convert to array
+			Integer[] i = manlinknumbers.toArray(new Integer[manlinknumbers.size()]);
+			// sort array
+			Arrays.sort(i);
+			StringBuilder sb = new StringBuilder();
+			// and add it
+			for (int ml : i) {
+				sb.append(ml).append(",");
+			}
+			// remove last comma
+			if (sb.length() > 1) {
+				sb.setLength(sb.length() - 1);
+			}
+			// add to element
+			return (sb.toString());
+		} else {
+			return ("");
+		}
+	}
+
+	/**
+	 * This method returns the content of an entry's luhmann-tag, i.e. the follower-
+	 * or sub-entries of an entry. These numbers are displayed in the tabbedpane in
+	 * the jTreeLuhmann (see ZettelkastenView.java for more details).
+	 *
+	 * @param pos the position of the entry which luhmann-numbers we want to have
+	 * @return a string with the comma-separated luhmann-numbers, or an empty string
+	 *         if the entry has not luhmann-numbers.
+	 */
+	public String getLuhmannNumbers(int pos) {
+		// get the entry
+		Element zettel = retrieveElement(zknFile, pos);
+		// if it exists...
+		// return the content of the luhmann-child-element
+		if (zettel != null && zettel.getChild(ELEMENT_TRAILS) != null) {
+			return zettel.getChild(ELEMENT_TRAILS).getText();
+		}
+		// return result
+		return "";
+	}
+
+	/**
+	 * This method returns the luhmann-numbers (follower-links) for an entry as
+	 * string-array.
+	 *
+	 * @param pos the position of the entry which luhmann-numbers we want to have
+	 * @return an string-array containing the follower-entry-numbers where the entry
+	 *         {@code pos} refers to, or {@code null} if no such
+	 *         follower-entry-numbers exist...
+	 */
+	public String[] getLuhmannNumbersAsString(int pos) {
+		// get manual links
+		String luh = getLuhmannNumbers(pos);
+		// if no manual links there, quit...
+		if (luh.isEmpty()) {
+			return null;
+		}
+		// else split them into an array...
+		String[] luhmann = luh.split(",");
+		// if we have no manual links, return null...
+		if ((null == luhmann) || luhmann.length < 1) {
+			return null;
+		}
+		// return the content of the luhmann-child-element
+		return luhmann;
+	}
+
+	/**
+	 * This method returns the luhmann-numbers (follower-links) for an entry as
+	 * integer-array.
+	 *
+	 * @param pos the position of the entry which luhmann-numbers we want to have
+	 * @return an integer-array containing the follower-entry-numbers where the
+	 *         entry {@code pos} refers to, or {@code null} if no such
+	 *         follower-entry-numbers exist...
+	 */
+	public int[] getLuhmannNumbersAsInteger(int pos) {
+		// get manual links
+		String luh = getLuhmannNumbers(pos);
+		// if no manual links there, quit...
+		if (luh.isEmpty()) {
+			return null;
+		}
+		// else split them into an array...
+		String[] luhmann = luh.split(",");
+		// if we have no manual links, return null...
+		if ((null == luhmann) || luhmann.length < 1) {
+			return null;
+		}
+		// create integer array
+		int[] luhint = new int[luhmann.length];
+		// copy string to int
+		for (int cnt = 0; cnt < luhmann.length; cnt++) {
+			try {
+				luhint[cnt] = Integer.parseInt(luhmann[cnt]);
+			} catch (NumberFormatException ex) {
+			}
+		}
+		return luhint;
+	}
+
+	/**
+	 * Removes a certain entry-number from the luhmann-numbers of an entry.
+	 *
+	 * @param parentEntry   the entry where a luhmann-number should be removed
+	 * @param entryToRemove the sub-entry that should be removed from "entry"
+	 */
+	public void deleteLuhmannNumber(EntryID parentEntry, EntryID entryToRemove) {
+		if (parentEntry == entryToRemove) {
+			return;
+		}
+
+		Element parentEntryElement = retrieveElement(zknFile, parentEntry.asInt());
+		if (parentEntryElement == null || parentEntryElement.getChild(ELEMENT_TRAILS) == null) {
+			return;
+		}
+
+		String existingSubEntriesCsv = parentEntryElement.getChild(ELEMENT_TRAILS).getText();
+		if (existingSubEntriesCsv.isEmpty()) {
+			return;
+		}
+
+		String[] existingSubEntries = existingSubEntriesCsv.split(",");
+
+		// Reconstruct the csv by adding all entries except the remove one.
+		String entryNumberToRemoveString = entryToRemove.asString();
+		StringBuilder sb = new StringBuilder();
+		for (String existingSubEntry : existingSubEntries) {
+			if (!existingSubEntry.equals(entryNumberToRemoveString)) {
+				sb.append(existingSubEntry);
+				sb.append(",");
+			}
+		}
+		// Remove trailing comma.
+		if (sb.length() > 1) {
+			sb.setLength(sb.length() - 1);
+		}
+
+		parentEntryElement.getChild(ELEMENT_TRAILS).setText(sb.toString());
+		setModified(true);
+	}
+
+	/**
+	 * This method inserts the newSubEntry {@code newSubEntry} as sub-entry at the
+	 * position {@code pos} of the entry's {@code entry} sub-entries.
+	 * 
+	 * Sub-entries are stored in the Luhmann-tag as index numbers. <br>
+	 * <br>
+	 * It is similar to a typical tree: we have one parent-entry and several
+	 * child-entries (sub-entries). Each of these sub-entries can have their own
+	 * child-entries again (whereby the child-entry itself is then again understood
+	 * as a parent-entry). As a typical tree, it can't have a cycle, as that would
+	 * create an infinite loop when displaying the sub-entries.
+	 *
+	 * @param parentEntry the entry where the luhmann-number {@code insertnr} should
+	 *                    be inserted
+	 * @param newSubEntry the number of the entry that should be added as
+	 *                    luhmann-number
+	 * @param pos         the position of the {@code insertnr}, i.e. at which
+	 *                    position {@code insertnr} should be added as
+	 *                    luhmann-number
+	 * @return
+	 */
+	public boolean addSubEntryToEntryAtPosition(EntryID parentEntry, EntryID newSubEntry, int pos) {
+		if (parentEntry == newSubEntry) {
+			// Can't add sub-entry to itself.
+			return false;
+		}
+
+		Element entryElement = retrieveElement(zknFile, parentEntry.asInt());
+		if (entryElement == null || entryElement.getChild(ELEMENT_TRAILS) == null) {
+			// TODO Instead of failing, add new ELEMENT_TRAILS if it doesn't exist.
+			return false;
+		}
+
+		Element newSubEntryElement = retrieveElement(zknFile, newSubEntry.asInt());
+		if (newSubEntryElement == null) {
+			// Sub entry doesn't exist, fail.
+			return false;
+		}
+
+		String existingSubEntriesCsv = entryElement.getChild(ELEMENT_TRAILS).getText();
+
+		// Check whether the newSubEntry already exists in the entry.
+		String[] existingSubEntries = existingSubEntriesCsv.split(",");
+		if (!existingSubEntriesCsv.isEmpty()) {
+			String newSubEntryString = newSubEntry.asString();
+			for (String existingSubEntry : existingSubEntries) {
+				if (existingSubEntry == newSubEntryString) {
+					return false;
+				}
+			}
+		}
+
+		// Check if entry is a descendant of newSubEntry. We can't add it in that case
+		// as it would create a cycle in the sub-entry tree.
+		if (!existingSubEntriesCsv.isEmpty() && firstEntryIsDescendantOfSecondEntry(parentEntry, newSubEntry)) {
+			return false;
+		}
+
+		// All is good. Add sub-entry now.
+		List<String> newSubEntries = new ArrayList<>();
+		if (!existingSubEntriesCsv.isEmpty()) {
+			newSubEntries.addAll(Arrays.asList(existingSubEntries));
+		}
+
+		// `pos` == -1 is a special value for the last element in the list.
+		if (pos == -1) {
+			pos = existingSubEntries.length;
+		}
+		try {
+			newSubEntries.add(pos, newSubEntry.asString());
+		} catch (IndexOutOfBoundsException e) {
+			// If the pos is out of bounds, append number to the end of the list.
+			newSubEntries.add(newSubEntry.asString());
+		}
+		StringBuilder sb = new StringBuilder();
+		for (String luhmannnr : newSubEntries) {
+			sb.append(luhmannnr).append(",");
+		}
+		// Remove trailing comma.
+		if (sb.length() > 1) {
+			sb.setLength(sb.length() - 1);
+		}
+		entryElement.getChild(ELEMENT_TRAILS).setText(sb.toString());
+
+		setModified(true);
+		return true;
+	}
+
+	private int getSubEntryPosition(EntryID parentEntry, EntryID subEntry) {
+		if (parentEntry == subEntry) {
+			return -1;
+		}
+
+		Element parentEntryElement = retrieveElement(zknFile, parentEntry.asInt());
+		if (parentEntryElement == null || parentEntryElement.getChild(ELEMENT_TRAILS) == null) {
+			return -1;
+		}
+
+		String existingSubEntriesCsv = parentEntryElement.getChild(ELEMENT_TRAILS).getText();
+		if (existingSubEntriesCsv.isEmpty()) {
+			return -1;
+		}
+
+		String[] existingSubEntries = existingSubEntriesCsv.split(",");
+		String subEntryString = subEntry.asString();
+		int position = 0;
+		for (String existingSubEntry : existingSubEntries) {
+			if (existingSubEntry.equals(subEntryString)) {
+				break;
+			}
+			++position;
+		}
+		if (position == existingSubEntries.length) {
+			// Didn't find it.
+			return -1;
+		}
+		return position;
+	}
+
+	public boolean addSubEntryToEntryAfterSibling(EntryID entry, EntryID newSubEntry, EntryID siblingEntry) {
+		int siblingPosition = getSubEntryPosition(entry, siblingEntry);
+		if (siblingPosition == -1) {
+			return false;
+		}
+		return addSubEntryToEntryAtPosition(entry, newSubEntry, siblingPosition + 1);
+	}
+
+	/**
 	 * This method tries to find a top-level entry of a trailing entries sequence,
 	 * i.e. this method checks whether the entry with the number {@code nr} has
 	 * follwers, but is itself no follower.
@@ -7625,40 +7719,6 @@ public class Daten {
 	}
 
 	/**
-	 * This method retrieves all notes (resp. their ID) in the Zettelkasten that are
-	 * part of a note sequence, i.e. which are top level notes in a note sequence or
-	 * which have sub-ordinated notes, and returns the index numbers as integer
-	 * array. <br/>
-	 * <b>Caution!</b> The position {@code zettelpos} is a value from <b>1</b> to
-	 * {@link #getCount(int) getCount()} - in contrary to usual array handling where
-	 * the range is from 0 to (size-1).
-	 *
-	 * @return all note-IDs in the Zettelkasten that are part of a note sequence, as
-	 *         integer array
-	 */
-	public List<Integer> getAllManualLinks() {
-		List<Integer> manualLinkNumbers = new ArrayList<>();
-		// iterate data base
-		for (int cnt = 1; cnt <= getCount(Daten.ZKNCOUNT); cnt++) {
-			// get manual links
-			int[] curnum = getManualLinks(cnt);
-			// check if note has any manual links
-			if (curnum != null) {
-				// iterate all note sequence IDs
-				for (int cn : curnum) {
-					// check if we already added that ID
-					if (!manualLinkNumbers.contains(cn)) {
-						// if not, add it now
-						manualLinkNumbers.add(cn);
-					}
-				}
-			}
-		}
-		// return result
-		return manualLinkNumbers;
-	}
-
-	/**
 	 * This method checks whether the entry {@code zettelpos} has follower / trails
 	 * / luhmann numbers or not. <br/>
 	 * <b>Caution!</b> The position {@code zettelpos} is a value from <b>1</b> to
@@ -7675,89 +7735,4 @@ public class Daten {
 		return (lnr != null && !lnr.isEmpty());
 	}
 
-	/**
-	 * This method checks whether the entry {@code zettelpos} has manual links /
-	 * references to other entries or not. <br/>
-	 * <b>Caution!</b> The position {@code zettelpos} is a value from <b>1</b> to
-	 * {@link #getCount(int) getCount()} - in contrary to usual array handling where
-	 * the range is from 0 to (size-1).
-	 *
-	 * @param zettelpos the index number of the entry
-	 * @return {@code true} if the entry {@code zettelpos} has manual links /
-	 *         references to other entries, {@code false} if not.
-	 */
-	public boolean hasManLinks(int zettelpos) {
-		// retrieve manual links
-		int[] ml = getManualLinks(zettelpos);
-		return (ml != null && ml.length > 0);
-	}
-
-	/**
-	 * This method extracts manual links from an entry's content that have been
-	 * added via the EditorFrame.<br>
-	 * <br>
-	 * All manual link tags {@code [z #number]text[/z]} will be scanned and the
-	 * numbers (references to other entries) are extracted. All manual links are
-	 * returned as integer list.
-	 *
-	 * @param dummy the content from an entry as String
-	 * @return all manual links inside the manual-link-tag {@code [z]} as integer
-	 *         list
-	 */
-	private List<Integer> extractManualLinksFromContent(String dummy) {
-		// save manual links
-		List<Integer> manlinknumbers = new ArrayList<>();
-		try {
-			// create foot note patterm
-			Pattern p = Pattern.compile("\\[z ([^\\[]*)\\](.*?)\\[/z\\]");
-			// create matcher
-			Matcher m = p.matcher(dummy);
-			// check for occurences
-			while (m.find()) {
-				// if we found something, we have two groups
-				// the 2nd groups contains the manlink number as string
-				int ml = Integer.parseInt(dummy.substring(m.start(m.groupCount() - 1), m.end(m.groupCount() - 1)));
-				// add to result list
-				if (-1 == manlinknumbers.indexOf(ml)) {
-					manlinknumbers.add(ml);
-				}
-			}
-		} catch (PatternSyntaxException | IndexOutOfBoundsException | NumberFormatException ex) {
-		}
-		return manlinknumbers;
-	}
-
-	/**
-	 * Creates a sorted String with comma separated values of manual links. Manual
-	 * links are stored in this String format in the XML database.
-	 *
-	 * @param manlinknumbers (extracted) manual links as integer list. Use
-	 *                       {@link #extractManualLinksFromContent(java.lang.String)}
-	 *                       to retrieve manual links from an entry's content as
-	 *                       integer list
-	 * @return a String containing all manual links, so this String can be stored as
-	 *         child-element in the XML database (see {@link #ELEMENT_MANLINKS}).
-	 */
-	private String retrievePreparedManualLinksFromContent(List<Integer> manlinknumbers) {
-		// add them, if we have any
-		if (manlinknumbers != null && !manlinknumbers.isEmpty()) {
-			// convert to array
-			Integer[] i = manlinknumbers.toArray(new Integer[manlinknumbers.size()]);
-			// sort array
-			Arrays.sort(i);
-			StringBuilder sb = new StringBuilder();
-			// and add it
-			for (int ml : i) {
-				sb.append(ml).append(",");
-			}
-			// remove last comma
-			if (sb.length() > 1) {
-				sb.setLength(sb.length() - 1);
-			}
-			// add to element
-			return (sb.toString());
-		} else {
-			return ("");
-		}
-	}
 }

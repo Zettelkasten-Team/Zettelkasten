@@ -32,6 +32,7 @@
  */
 package de.danielluedecke.zettelkasten.tasks;
 
+import de.danielluedecke.zettelkasten.EntryID;
 import de.danielluedecke.zettelkasten.database.Daten;
 
 /**
@@ -39,72 +40,78 @@ import de.danielluedecke.zettelkasten.database.Daten;
  * @author Luedeke
  */
 public class EntriesToLuhmannTask extends org.jdesktop.application.Task<Object, Void> {
-    /**
-     * Reference to the main data class
-     */
-    private final Daten dataObj;
-    /**
-     * 
-     */
-    int[] entries;
-    /**
-     * 
-     */
-    int insertPos;
-    private final javax.swing.JDialog parentDialog;
-    private final javax.swing.JLabel msgLabel;
-    /**
-     * get the strings for file descriptions from the resource map
-     */
-    private final org.jdesktop.application.ResourceMap resourceMap =
-        org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-        getContext().getResourceMap(EntriesToLuhmannTask.class);
+	/**
+	 * Reference to the main data class
+	 */
+	private final Daten dataObj;
+	/**
+	 * 
+	 */
+	int[] entries;
+	/**
+	 * 
+	 */
+	int insertPos;
+	private final javax.swing.JDialog parentDialog;
+	private final javax.swing.JLabel msgLabel;
+	/**
+	 * get the strings for file descriptions from the resource map
+	 */
+	private final org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application
+			.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
+			.getResourceMap(EntriesToLuhmannTask.class);
 
-    EntriesToLuhmannTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label, Daten d, int[] entr, int insertpos) {
-        // Runs on the EDT.  Copy GUI state that
-        // doInBackground() depends on from parameters
-        // to createLinksTask fields, here.
-        super(app);
+	EntriesToLuhmannTask(org.jdesktop.application.Application app, javax.swing.JDialog parent, javax.swing.JLabel label,
+			Daten d, int[] entr, int insertpos) {
+		// Runs on the EDT. Copy GUI state that
+		// doInBackground() depends on from parameters
+		// to createLinksTask fields, here.
+		super(app);
 
-        dataObj = d;
-        parentDialog = parent;
-        msgLabel = label;
-        entries = entr;
-        insertPos = insertpos;
-        // init status text
-        msgLabel.setText(resourceMap.getString("msg1"));
-    }
-    @Override protected Object doInBackground() {
-        // Your Task's code here.  This method runs
-        // on a background thread, so don't reference
-        // the Swing GUI from here.
+		dataObj = d;
+		parentDialog = parent;
+		msgLabel = label;
+		entries = entr;
+		insertPos = insertpos;
+		// init status text
+		msgLabel.setText(resourceMap.getString("msg1"));
+	}
 
-        // get amount of entries
-        int len = entries.length;
+	@Override
+	protected Object doInBackground() {
+		// Your Task's code here. This method runs
+		// on a background thread, so don't reference
+		// the Swing GUI from here.
 
-        // go through complete data set
-        for (int cnt=0; cnt<len; cnt++) {
-            // leave out current entry
-            if (insertPos==entries[cnt]) {
-                continue;
-            }
-            // add it to the current entry's luhmann-numbers
-            dataObj.addLuhmannNumber(insertPos, entries[cnt]);
-            // update progressbar
-            setProgress(cnt, 0, len);
-        }
+		// get amount of entries
+		int len = entries.length;
 
-        return null;
-    }
-    @Override protected void succeeded(Object result) {
-        // Runs on the EDT.  Update the GUI based on
-        // the result computed by doInBackground().
-    }
-    @Override
-    protected void finished() {
-        super.finished();
-        // and close window
-        parentDialog.dispose();
-        parentDialog.setVisible(false);
-    }
+		// go through complete data set
+		for (int cnt = 0; cnt < len; cnt++) {
+			// leave out current entry
+			if (insertPos == entries[cnt]) {
+				continue;
+			}
+			// add it to the current entry's luhmann-numbers
+			dataObj.appendSubEntryToEntry(new EntryID(insertPos), new EntryID(entries[cnt]));
+			// update progressbar
+			setProgress(cnt, 0, len);
+		}
+
+		return null;
+	}
+
+	@Override
+	protected void succeeded(Object result) {
+		// Runs on the EDT. Update the GUI based on
+		// the result computed by doInBackground().
+	}
+
+	@Override
+	protected void finished() {
+		super.finished();
+		// and close window
+		parentDialog.dispose();
+		parentDialog.setVisible(false);
+	}
 }
