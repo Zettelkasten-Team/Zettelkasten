@@ -7019,7 +7019,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		for (int loopEntryId = 1; loopEntryId <= data.getCount(Daten.ZKNCOUNT); loopEntryId++) {
 			List<EntryID> subEntries = EntryIDUtils.csvToEntryIDList(data.getSubEntriesCsv(loopEntryId));
 			for (EntryID subEntry : subEntries) {
-				if (subEntry == activatedEntry) {
+				if (subEntry.equals(activatedEntry)) {
 					try {
 						isFollowerList.add(String.valueOf(loopEntryId));
 						// No need to look further at its siblings.
