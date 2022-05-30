@@ -165,14 +165,6 @@ public class TreeUtil {
 
 		// Handle root.
 
-		TreeUserObject userObject1 = (TreeUserObject) node.getUserObject();
-		if (userObject1 != null && userObject1.getId().equals("3")) {
-			userObject1 = null;
-		}
-		if (userObject1 != null && userObject1.getId().equals("4")) {
-			userObject1 = null;
-		}
-
 		// Respect collapsedNodes if it exists.
 		if (!collapsedNodes.isEmpty()) {
 			TreeUserObject userObject = (TreeUserObject) node.getUserObject();
@@ -188,12 +180,6 @@ public class TreeUtil {
 			} else {
 				tree.collapsePath(root);
 			}
-		}
-
-		node = (DefaultMutableTreeNode) root.getLastPathComponent();
-		TreeUserObject userObject2 = (TreeUserObject) node.getUserObject();
-		if (userObject2 != null && userObject2.getId().equals("3")) {
-			userObject2 = null;
 		}
 	}
 
