@@ -5072,7 +5072,7 @@ public class Daten {
 	public boolean gotoEntry(int nr) {
 		// check whether it's out of bounds
 		// and leave method if it is...
-		if (!zettelExists(zettel) || isDeleted(nr)) {
+		if (!zettelExists(nr) || isDeleted(nr)) {
 			return false;
 		}
 		// else set the counter for the currently displayed entry
