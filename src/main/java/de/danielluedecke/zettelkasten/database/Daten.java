@@ -3972,7 +3972,7 @@ public class Daten {
 	 * plain entry content as it is stored in the XML-file, without
 	 * htnml-conversion.
 	 *
-	 * @param pos             the entry-number. use a number from 1 to
+	 * @param inputDisplayedEntry             the entry-number. use a number from 1 to
 	 *                        {@link #getCount(int) getCount(ZKNCOUNT)}
 	 * @param segmentKeywords the keywords that are associated with certain segments
 	 *                        or paragraphs of that entry, so these paragraphs
@@ -3985,9 +3985,9 @@ public class Daten {
 	 * @return a string array with the html layoutet content of the requested entry
 	 *         and author
 	 */
-	public String getEntryAsHtml(int pos, String[] segmentKeywords, int sourceframe) {
+	public String getEntryAsHtml(int inputDisplayedEntry, String[] segmentKeywords, int sourceframe) {
 		// retrieve the entry
-		Element entry = retrieveElement(zknFile, pos);
+		Element entry = retrieveElement(zknFile, inputDisplayedEntry);
 		// if no element exists, return empty array
 		if (null == entry) {
 			return "";
@@ -3997,7 +3997,7 @@ public class Daten {
 		// which display an entry in the main window's JEditorPane
 		// return the complete html page as string array, first element of the
 		// array containing the main entry, second element the author information
-		return HtmlUbbUtil.getEntryAsHTML(settings, this, bibtexObj, pos, segmentKeywords, sourceframe);
+		return HtmlUbbUtil.getEntryAsHTML(settings, this, bibtexObj, inputDisplayedEntry, segmentKeywords, sourceframe);
 	}
 
 	/**
