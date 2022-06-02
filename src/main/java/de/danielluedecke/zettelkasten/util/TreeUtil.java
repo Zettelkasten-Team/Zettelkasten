@@ -233,14 +233,6 @@ public class TreeUtil {
 			}
 		}
 
-		TreeUserObject userObject1 = (TreeUserObject) node.getUserObject();
-		if (userObject1 != null && userObject1.getId().equals("3")) {
-			userObject1 = null;
-		}
-		if (userObject1 != null && userObject1.getId().equals("4")) {
-			userObject1 = null;
-		}
-
 		// Save the current node.
 		TreeUserObject userObject = (TreeUserObject) node.getUserObject();
 		if (userObject != null) {
