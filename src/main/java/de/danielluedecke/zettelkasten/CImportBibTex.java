@@ -920,7 +920,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                 // set displayed zettel to last modified entry.
                 mainframe.displayedZettel = getModifiedEntries().get(getModifiedEntries().size() - 1);
             }
-            // update display, since we have new authors and possibly new entries as well
+            // Update display, since we have new authors and possibly new entries as well.
             mainframe.updateDisplay();
 
             tellUser();

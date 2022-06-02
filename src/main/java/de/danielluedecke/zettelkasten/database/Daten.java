@@ -7028,7 +7028,7 @@ public class Daten {
 	 *           getCount(ZKNCOUNT)}
 	 * @return {@code true} if an ID was found, {@code false} otherwise.
 	 */
-	private boolean hasZettelID(int nr) {
+	public boolean hasZettelID(int nr) {
 		// retrieve element
 		Element zettel = retrieveZettel(nr);
 		// check for valid value
