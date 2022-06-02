@@ -2940,7 +2940,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (!data.hasZettelID(displayedZettel)) {
 			displayedZettel = data.getActivatedEntryNumber();
 		}
-		
+
 		updateEntryPaneAndKeywordsPane(displayedZettel);
 		updateToolbarAndMenu();
 		updateTabbedPane();
@@ -3206,7 +3206,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// We always need an update of the links.
 		needsLinkUpdate = true;
 		// When the previous tab was the links-tab, stop the background-task.
-		if ((TAB_LINKS == previousSelectedTab || TAB_LINKS != selectedTab) && (cLinksTask != null) && !cLinksTask.isDone()) {
+		if ((TAB_LINKS == previousSelectedTab || TAB_LINKS != selectedTab) && (cLinksTask != null)
+				&& !cLinksTask.isDone()) {
 			cLinksTask.cancel(true);
 		}
 
@@ -3289,13 +3290,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (data.getCount(Daten.ZKNCOUNT) < 1) {
 			return;
 		}
-		
+
 		int selectedEntry = selectedEntryInJTreeLuhmann();
 		// If we don't have a valid selection, do nothing.
 		if (selectedEntry == -1) {
 			return;
 		}
 		if (selectedEntry != displayedZettel) {
+			selectedLuhmannNode = (DefaultMutableTreeNode) jTreeLuhmann.getLastSelectedPathComponent();
 			setNewDisplayedEntryAndUpdateDisplay(selectedEntry);
 		}
 	}
@@ -6747,10 +6749,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 	}
 
-	private void fillLuhmannNumbers(MutableTreeNode node, EntryID nodeEntry, EntryID selectedEntry) {
+	private void fillLuhmannNumbers(MutableTreeNode node, EntryID nodeEntry, EntryID selectedEntry,
+			EntryID selectEntryParent) {
 		// Update selectedLuhmannNode if we have found it.
 		if (nodeEntry.equals(selectedEntry)) {
-			selectedLuhmannNode = (DefaultMutableTreeNode) node;
+			// If parent is set, it must also match.
+			if (selectEntryParent == null
+					|| getTreeNodeParentEntryNumber((DefaultMutableTreeNode) node).equals(selectEntryParent)) {
+				selectedLuhmannNode = (DefaultMutableTreeNode) node;
+			}
 		}
 
 		String subEntriesCsv = data.getSubEntriesCsv(nodeEntry.asInt());
@@ -6769,7 +6776,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			node.insert(loopNode, node.getChildCount());
 
 			// Recursively: create sub-entries of this new node.
-			fillLuhmannNumbers(loopNode, subEntry, selectedEntry);
+			fillLuhmannNumbers(loopNode, subEntry, selectedEntry, selectEntryParent);
 		}
 	}
 
@@ -6930,6 +6937,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		return new EntryID(rootEntry);
 	}
 
+	private EntryID getTreeNodeParentEntryNumber(DefaultMutableTreeNode node) {
+		return new EntryID(entryNumberFromTreeNode((DefaultMutableTreeNode) node.getParent()));
+	}
+
 	private void prepareNoteSequencesJTreePane(boolean resetCollapsedNodes) {
 		DefaultTreeModel dtm = (DefaultTreeModel) jTreeLuhmann.getModel();
 
@@ -6951,12 +6962,21 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				new TreeUserObject(title, newRootEntry.asString(), /* collapsed= */false));
 		dtm.setRoot(root);
 
+		// Init selectedLuhmannNode.
+		EntryID displayedZettelParent = null;
+		// Save the id of the parent if it exist to highlight the correct node.
+		if (displayedZettel == entryNumberFromTreeNode(selectedLuhmannNode)
+				&& selectedLuhmannNode.getParent() != null) {
+			displayedZettelParent = getTreeNodeParentEntryNumber(selectedLuhmannNode);
+		}
+		selectedLuhmannNode = null;
+
 		// Populate the whole tree rooted at root.
-		fillLuhmannNumbers(root, newRootEntry, new EntryID(displayedZettel));
+		fillLuhmannNumbers(root, newRootEntry, new EntryID(displayedZettel), displayedZettelParent);
 
 		TreeUtil.setExpandLevel(settings.getLuhmannExpandLevel());
 		TreeUtil.expandAllTrees(jTreeLuhmann);
-		
+
 		// If Note Sequences are shown, put focus on them.
 		jTreeLuhmann.requestFocusInWindow();
 
@@ -8699,10 +8719,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showFirstEntry() {
 		data.firstEntry();
-		
+
 		// Reset displayedZettel.
 		displayedZettel = -1;
-		
+
 		updateDisplay();
 	}
 
@@ -8712,10 +8732,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showLastEntry() {
 		data.lastEntry();
-		
+
 		// Reset displayedZettel.
 		displayedZettel = -1;
-		
+
 		updateDisplay();
 	}
 
@@ -8725,10 +8745,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showNextEntry() {
 		data.nextEntry();
-		
+
 		// Reset displayedZettel.
 		displayedZettel = -1;
-		
+
 		updateDisplay();
 	}
 
@@ -8784,10 +8804,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showPrevEntry() {
 		data.prevEntry();
-		
+
 		// Reset displayedZettel.
 		displayedZettel = -1;
-		
+
 		updateDisplay();
 	}
 
@@ -9721,10 +9741,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "historyBackAvailable")
 	public void historyBack() {
 		data.historyBack();
-		
+
 		// Reset displayedZettel.
 		displayedZettel = -1;
-		
+
 		updateDisplay();
 	}
 
@@ -9736,10 +9756,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public void goToFirstParentEntry() {
 		data.goToFirstParentEntry();
-		
+
 		// Reset displayedZettel.
 		displayedZettel = -1;
-		
+
 		updateDisplay();
 	}
 
@@ -9750,10 +9770,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "historyForAvailable")
 	public void historyFor() {
 		data.historyFore();
-		
+
 		// Reset displayedZettel.
 		displayedZettel = -1;
-		
+
 		updateDisplay();
 	}
 
