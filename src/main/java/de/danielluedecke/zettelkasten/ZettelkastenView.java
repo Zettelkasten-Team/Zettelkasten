@@ -2937,6 +2937,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	@Action
 	public final void updateDisplay() {
+		if (!data.hasZettelID(displayedZettel)) {
+			displayedZettel = data.getActivatedEntryNumber();
+		}
+		
 		updateEntryPaneAndKeywordsPane(displayedZettel);
 		updateToolbarAndMenu();
 		updateTabbedPane();
@@ -3291,7 +3295,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (selectedEntry == -1) {
 			return;
 		}
-		setNewDisplayedEntryAndUpdateDisplay(selectedEntry);
+		if (selectedEntry != displayedZettel) {
+			setNewDisplayedEntryAndUpdateDisplay(selectedEntry);
+		}
 	}
 
 	private void updateHighlightingTerms(int inputDisplayedEntry) {
@@ -6743,7 +6749,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	private void fillLuhmannNumbers(MutableTreeNode node, EntryID nodeEntry, EntryID selectedEntry) {
 		// Update selectedLuhmannNode if we have found it.
-		if (nodeEntry == selectedEntry) {
+		if (nodeEntry.equals(selectedEntry)) {
 			selectedLuhmannNode = (DefaultMutableTreeNode) node;
 		}
 
@@ -6946,10 +6952,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		dtm.setRoot(root);
 
 		// Populate the whole tree rooted at root.
-		fillLuhmannNumbers(root, newRootEntry, new EntryID(data.getActivatedEntryNumber()));
+		fillLuhmannNumbers(root, newRootEntry, new EntryID(displayedZettel));
 
 		TreeUtil.setExpandLevel(settings.getLuhmannExpandLevel());
 		TreeUtil.expandAllTrees(jTreeLuhmann);
+		
+		// If Note Sequences are shown, put focus on them.
+		jTreeLuhmann.requestFocusInWindow();
 
 		// Select and scroll to visible current entry.
 		if (selectedLuhmannNode != null) {
@@ -8689,9 +8698,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showFirstEntry() {
-		// increase entry counter
 		data.firstEntry();
-		// and update the whole content
+		
+		// Reset displayedZettel.
+		displayedZettel = -1;
+		
 		updateDisplay();
 	}
 
@@ -8700,9 +8711,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showLastEntry() {
-		// increase entry counter
 		data.lastEntry();
-		// and update the whole content
+		
+		// Reset displayedZettel.
+		displayedZettel = -1;
+		
 		updateDisplay();
 	}
 
@@ -8711,9 +8724,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showNextEntry() {
-		// increase entry counter
 		data.nextEntry();
-		// and update the whole content
+		
+		// Reset displayedZettel.
+		displayedZettel = -1;
+		
 		updateDisplay();
 	}
 
@@ -8735,6 +8750,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// goto the requested entry and update the content, if the number-parameter
 		// was within the right boundaries
 		if (data.gotoEntry(nr)) {
+			// Reset displayedZettel.
+			displayedZettel = -1;
 			updateDisplay();
 		}
 	}
@@ -8766,9 +8783,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showPrevEntry() {
-		// increase entry counter
 		data.prevEntry();
-		// and update the whole content
+		
+		// Reset displayedZettel.
+		displayedZettel = -1;
+		
 		updateDisplay();
 	}
 
@@ -9047,6 +9066,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// history-pos...
 		data.setCurrentZettelPos(shownr);
 		data.setInitialHistoryPos(shownr);
+		// Reset displayedZettel.
+		displayedZettel = -1;
 		// do the typical stuff like updating display,
 		// setting toolbar etc.
 		updateAfterOpen();
@@ -9699,10 +9720,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	@Action(enabledProperty = "historyBackAvailable")
 	public void historyBack() {
-		// go back through history
 		data.historyBack();
-		// and update the whole content
-		// FIXME java.lang.IllegalArgumentException: bad position: 1
+		
+		// Reset displayedZettel.
+		displayedZettel = -1;
+		
 		updateDisplay();
 	}
 
@@ -9714,8 +9736,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public void goToFirstParentEntry() {
 		data.goToFirstParentEntry();
-		// FIXME java.lang.IllegalArgumentException: bad position: 1
-		// Update the whole content.
+		
+		// Reset displayedZettel.
+		displayedZettel = -1;
+		
 		updateDisplay();
 	}
 
@@ -9725,9 +9749,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	@Action(enabledProperty = "historyForAvailable")
 	public void historyFor() {
-		// go fore through history
 		data.historyFore();
-		// and update the whole content
+		
+		// Reset displayedZettel.
+		displayedZettel = -1;
+		
 		updateDisplay();
 	}
 
@@ -9986,7 +10012,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	/**
 	 * Opens the replace-dialog and optionally sets the initial values
 	 * {@code initSearchTerm} and {@code replaceentries}. If not cancelled, the
-	 * requestes serach term will be replaced by its entered find term. applies to
+	 * requests search term will be replaced by its entered find term. applies to
 	 * those domains (content, titles, keywords) which have been checked in the
 	 * replace dialog.
 	 *
