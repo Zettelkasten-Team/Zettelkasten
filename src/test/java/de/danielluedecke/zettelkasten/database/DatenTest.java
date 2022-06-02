@@ -59,31 +59,31 @@ public class DatenTest {
 		Daten daten = new Daten(document);
 
 		daten.deleteLuhmannNumber(new EntryID(1), new EntryID(10));
-		assertEquals("4,61,161,1771,3622", daten.getLuhmannNumbers(1));
+		assertEquals("4,61,161,1771,3622", daten.getSubEntriesCsv(1));
 
 		daten.deleteLuhmannNumber(new EntryID(1), new EntryID(4));
-		assertEquals("61,161,1771,3622", daten.getLuhmannNumbers(1));
+		assertEquals("61,161,1771,3622", daten.getSubEntriesCsv(1));
 	}
 
 	@Test
 	void testAddSubEntryToEntryAtPosition_PositionZero() {
 		Daten daten = new Daten(document);
 		assertTrue(daten.addSubEntryToEntryAtPosition(new EntryID(2), new EntryID(3), 0));
-		assertEquals("3,1", daten.getLuhmannNumbers(2));
+		assertEquals("3,1", daten.getSubEntriesCsv(2));
 	}
 
 	@Test
 	void testAddSubEntryToEntryAtPosition_PositionMinusOne() {
 		Daten daten = new Daten(document);
 		assertTrue(daten.addSubEntryToEntryAtPosition(new EntryID(2), new EntryID(3), -1));
-		assertEquals("1,3", daten.getLuhmannNumbers(2));
+		assertEquals("1,3", daten.getSubEntriesCsv(2));
 	}
 
 	@Test
 	void testAddSubEntryToEntryAtPosition_PositionOne() {
 		Daten daten = new Daten(document);
 		assertTrue(daten.addSubEntryToEntryAtPosition(new EntryID(2), new EntryID(3), 1));
-		assertEquals("1,3", daten.getLuhmannNumbers(2));
+		assertEquals("1,3", daten.getSubEntriesCsv(2));
 	}
 
 	@Test
@@ -102,6 +102,6 @@ public class DatenTest {
 	void testAddSubEntryToEntryAfterSibling() {
 		Daten daten = new Daten(document);
 		assertTrue(daten.addSubEntryToEntryAfterSibling(new EntryID(2), new EntryID(3), new EntryID(1)));
-		assertEquals("1,3", daten.getLuhmannNumbers(2));
+		assertEquals("1,3", daten.getSubEntriesCsv(2));
 	}
 }
