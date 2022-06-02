@@ -1623,7 +1623,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
         int nr = getSelectedEntryNumber();
         // if we have a valid entry, get luhmann-numbers
         if (nr != -1) {
-            luhmann = dataObj.getLuhmannNumbers(nr);
+            luhmann = dataObj.getSubEntriesCsv(nr);
         }
         // enable actions that require a selected child-node (entty), that has luhmann-numbers
         setLuhmannNodeSelected(isNodeSelected() && !luhmann.isEmpty());
@@ -2139,7 +2139,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
                     // now we know we have an entry. so get the entry number...
                     int nr = Integer.parseInt(e.getAttributeValue("id"));
                     // get the zettel title
-                    String title = TreeUtil.retrieveNodeTitle(dataObj, settingsObj.getShowDesktopEntryNumber(), String.valueOf(nr));
+                    String title = TreeUtil.getEntryDisplayText(dataObj, settingsObj.getShowDesktopEntryNumber(), new EntryID(nr));
                     // create a new node
                     node = new DefaultMutableTreeNode(new TreeUserObject(title, e.getAttributeValue("timestamp"), String.valueOf(nr)));
                     // and tell node not to have children
@@ -2837,7 +2837,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      */
     @Action(enabledProperty = "luhmannNodeSelected")
     public void addLuhmann() {
-        addEntries(dataObj.getLuhmannNumbers(getSelectedEntryNumber()));
+        addEntries(dataObj.getSubEntriesCsv(getSelectedEntryNumber()));
     }
 
     /**
@@ -2871,7 +2871,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
      */
     private void fillLuhmannNumbers(int zettelpos) {
         // get the text from the luhmann-numbers
-        String lnr = dataObj.getLuhmannNumbers(zettelpos);
+        String lnr = dataObj.getSubEntriesCsv(zettelpos);
         // if we have any luhmann-numbers, go on...
         if (!lnr.isEmpty()) {
             String[] lnrs = lnr.split(",");
