@@ -102,19 +102,16 @@ public class TreeUtil {
 		return uebertext;
 	}
 
-	/**
-	 * This method extracts a node's ID.
-	 *
-	 * @param node the node where we want to extract the ID
-	 * @return the ID of the node's name (userobject) as string, or {@code null} if
-	 *         an error occured or nothing was found.
-	 */
-	public static String getNodeID(DefaultMutableTreeNode node) {
-		if (node != null) {
-			TreeUserObject userObject = (TreeUserObject) node.getUserObject();
-			return userObject.getId();
+	public static EntryID getEntryID(DefaultMutableTreeNode node) {
+		if (node == null) {
+			return null;
 		}
-		return null;
+		TreeUserObject userObject = (TreeUserObject) node.getUserObject();
+		return new EntryID(userObject.getId());
+	}
+
+	public static EntryID getEntryID(TreeNode node) {
+		return getEntryID((DefaultMutableTreeNode) node);
 	}
 
 	/**

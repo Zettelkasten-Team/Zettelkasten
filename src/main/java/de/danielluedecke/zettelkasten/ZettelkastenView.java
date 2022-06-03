@@ -374,11 +374,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	private String lastClusterRelationKeywords = "";
 	/**
-	 * This variable stores the treepath when a node was dragged&dropped within the
-	 * jtreeluhmann
-	 */
-	private DefaultMutableTreeNode movedNodeToRemove = null;
-	/**
 	 * This variable stores the treepath of the node that should bes elected within
 	 * the jtreeluhmann when all followers, including parents, should be displayed
 	 */
@@ -1390,10 +1385,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			t.getColumnModel().getSelectionModel().addListSelectionListener(listener);
 		}
 
+		// Selection in a JTree is what is highlighted as selected in the UI. If
+		// selection changes, this listener is called.
 		jTreeLuhmann.addTreeSelectionListener(new TreeSelectionListener() {
 			@Override
 			public void valueChanged(TreeSelectionEvent e) {
-				showEntryFromLuhmann();
+				handleNoteSequenceValueChange();
 			}
 		});
 		jTreeLuhmann.addTreeExpansionListener(new javax.swing.event.TreeExpansionListener() {
@@ -2282,14 +2279,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// Enable drag&drop in jTreeLuhmann.
 		jTreeLuhmann.setDragEnabled(true);
 		jTreeLuhmann.setTransferHandler(new EntryStringTransferHandler() {
+			private EntryID draggedEntryToRemove = null;
+			private EntryID draggedEntryParent = null;
+
 			@Override
 			protected String exportString(JComponent c) {
 				javax.swing.JTree jTree = (javax.swing.JTree) c;
-				DefaultMutableTreeNode draggedNode = (DefaultMutableTreeNode) jTree.getSelectionPath()
-						.getLastPathComponent();
+				DefaultMutableTreeNode draggedNode = (DefaultMutableTreeNode) jTree.getLastSelectedPathComponent();
 
 				// Remember the dragged node, which must be removed when dropping the node.
-				movedNodeToRemove = draggedNode;
+				draggedEntryToRemove = TreeUtil.getEntryID(draggedNode);
+				draggedEntryParent = TreeUtil.getEntryID(draggedNode.getParent());
 
 				return Constants.DRAG_SOURCE_JTREELUHMANN;
 			}
@@ -2303,38 +2303,36 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 
 				javax.swing.JTree jTree = (javax.swing.JTree) c;
-				DefaultMutableTreeNode droppedNode = (DefaultMutableTreeNode) jTree.getSelectionPath()
-						.getLastPathComponent();
+				DefaultMutableTreeNode droppedNode = (DefaultMutableTreeNode) jTree.getLastSelectedPathComponent();
+				if (droppedNode == null) {
+					return false;
+				}
+				EntryID droppedEntry = TreeUtil.getEntryID(droppedNode);
+				EntryID droppedEntryParent = TreeUtil.getEntryID(droppedNode.getParent());
 
-				boolean droppedIntoItself = movedNodeToRemove.equals(droppedNode);
+				boolean droppedIntoItself = draggedEntryToRemove.equals(droppedEntry);
 				if (droppedIntoItself) {
 					return false;
 				}
 
 				// Drag&drop of jTreeLuhmann only works for reordering the sub-entries of a
 				// specific entry. It doesn't currently support moving across entries.
-				boolean droppedIntoParent = movedNodeToRemove.getParent().equals(droppedNode);
-				boolean droppedIntoSibling = movedNodeToRemove.getParent().equals(droppedNode.getParent());
+				boolean droppedIntoParent = draggedEntryParent.equals(droppedEntry);
+				boolean droppedIntoSibling = draggedEntryParent.equals(droppedEntryParent);
 				boolean droppedIntoParentOrSibling = droppedIntoParent || droppedIntoSibling;
 				if (!droppedIntoParentOrSibling) {
 					return false;
 				}
 
-				// parentEntryNumber is where we are going to add the dragged sub-entry to.
-				EntryID parentEntry = new EntryID(
-						entryNumberFromTreeNode((DefaultMutableTreeNode) movedNodeToRemove.getParent()));
-				EntryID draggedEntry = new EntryID(entryNumberFromTreeNode(movedNodeToRemove));
-				EntryID droppedEntry = new EntryID(entryNumberFromTreeNode(droppedNode));
-
 				// Delete the dragged entry before reinserting it.
-				data.deleteLuhmannNumber(parentEntry, draggedEntry);
+				data.deleteLuhmannNumber(draggedEntryParent, draggedEntryToRemove);
 
 				if (droppedIntoParent) {
 					// Reinsert dragged entry at first position.
-					data.addSubEntryToEntryAtPosition(parentEntry, draggedEntry, 0);
+					data.addSubEntryToEntryAtPosition(draggedEntryParent, draggedEntryToRemove, 0);
 				} else if (droppedIntoSibling) {
 					// Reinsert dragged entry after dropped entry.
-					data.addSubEntryToEntryAfterSibling(parentEntry, draggedEntry, droppedEntry);
+					data.addSubEntryToEntryAfterSibling(draggedEntryParent, draggedEntryToRemove, droppedEntry);
 				} else {
 					// This should never happen.
 					Constants.zknlogger.log(Level.SEVERE, "BUG: jTreeLuhmann importString");
@@ -3285,7 +3283,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * the current entry and we don't want updating the tabbed pane with the jTree
 	 * when the user selects an entry from that tree.
 	 */
-	private void showEntryFromLuhmann() {
+	private void handleNoteSequenceValueChange() {
 		// If no data available, do nothing.
 		if (data.getCount(Daten.ZKNCOUNT) < 1) {
 			return;
@@ -3470,12 +3468,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		// Delete if Yes.
 		if (option == JOptionPane.YES_OPTION) {
-			int selectedEntryNumber = entryNumberFromTreeNode(selectedNode);
-			int parentEntryNumber = entryNumberFromTreeNode(parent);
-			if (selectedEntryNumber != -1 && parentEntryNumber != -1) {
-				data.deleteLuhmannNumber(new EntryID(parentEntryNumber), new EntryID(selectedEntryNumber));
-				updateDisplay();
-			}
+			EntryID selectedEntry = TreeUtil.getEntryID(selectedNode);
+			EntryID parentEntry = TreeUtil.getEntryID(parent);
+			data.deleteLuhmannNumber(parentEntry, selectedEntry);
+			updateDisplay();
 		}
 	}
 
@@ -3485,32 +3481,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * @return The number of the selected entry, or -1 if an error occured
 	 */
 	private int selectedEntryInJTreeLuhmann() {
-		// retrieve selected node
-		return entryNumberFromTreeNode((DefaultMutableTreeNode) jTreeLuhmann.getLastSelectedPathComponent());
-	}
-
-	/**
-	 * This methods retrieves the number of the node {@code node} from a
-	 * jTreeLuhmann
-	 *
-	 * @param node
-	 * @return The number of the selected entry, or -1 if an error occurred
-	 */
-	private int entryNumberFromTreeNode(DefaultMutableTreeNode node) {
-		if (node == null) {
+		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) jTreeLuhmann.getLastSelectedPathComponent();
+		if (selectedNode == null) {
 			return -1;
 		}
-		TreeUserObject userObject = (TreeUserObject) node.getUserObject();
-		String entryNumberString = userObject.getId();
-		try {
-			int nr = Integer.parseInt(entryNumberString);
-			return nr;
-		} catch (NumberFormatException e) {
-			Constants.zknlogger.log(Level.WARNING, "Node was: {0}{1}Retrieved Number was: {2}{3}{4}",
-					new Object[] { node.toString(), System.lineSeparator(), entryNumberString, System.lineSeparator(),
-							e.getLocalizedMessage() });
-			return -1;
-		}
+		return TreeUtil.getEntryID(selectedNode).asInt();
 	}
 
 	@Action
@@ -6749,13 +6724,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 	}
 
-	private void fillLuhmannNumbers(MutableTreeNode node, EntryID nodeEntry, EntryID selectedEntry,
+	private void fillLuhmannNumbers(DefaultMutableTreeNode node, EntryID nodeEntry, EntryID selectedEntry,
 			EntryID selectEntryParent) {
 		// Update selectedLuhmannNode if we have found it.
 		if (nodeEntry.equals(selectedEntry)) {
 			// If parent is set, it must also match.
-			if (selectEntryParent == null
-					|| getTreeNodeParentEntryNumber((DefaultMutableTreeNode) node).equals(selectEntryParent)) {
+			if (selectEntryParent == null || selectEntryParent.equals(TreeUtil.getEntryID(node.getParent()))) {
 				selectedLuhmannNode = (DefaultMutableTreeNode) node;
 			}
 		}
@@ -6769,7 +6743,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		for (EntryID subEntry : subEntries) {
 			// Create new subEntry node.
 			String title = TreeUtil.getEntryDisplayText(data, settings.getShowLuhmannEntryNumber(), subEntry);
-			MutableTreeNode loopNode = new DefaultMutableTreeNode(
+			DefaultMutableTreeNode loopNode = new DefaultMutableTreeNode(
 					new TreeUserObject(title, subEntry.asString(), /* collapsed= */true));
 
 			// Add to last position.
@@ -6937,17 +6911,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		return new EntryID(rootEntry);
 	}
 
-	private EntryID getTreeNodeParentEntryNumber(DefaultMutableTreeNode node) {
-		return new EntryID(entryNumberFromTreeNode((DefaultMutableTreeNode) node.getParent()));
-	}
-
 	private void prepareNoteSequencesJTreePane(boolean resetCollapsedNodes) {
 		DefaultTreeModel dtm = (DefaultTreeModel) jTreeLuhmann.getModel();
 
 		// Save collapsed state if same root as the previous tree.
 		DefaultMutableTreeNode previousRoot = (DefaultMutableTreeNode) dtm.getRoot();
 		EntryID newRootEntry = getRootEntryForLuhmannTree();
-		if (!resetCollapsedNodes && entryNumberFromTreeNode(previousRoot) == newRootEntry.asInt()) {
+		if (!resetCollapsedNodes && previousRoot != null && TreeUtil.getEntryID(previousRoot).equals(newRootEntry)) {
 			TreeUtil.saveCollapsedNodes(jTreeLuhmann);
 		} else {
 			TreeUtil.resetCollapsedNodes();
@@ -6958,16 +6928,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		// Prepare new root.
 		String title = TreeUtil.getEntryDisplayText(data, settings.getShowLuhmannEntryNumber(), newRootEntry);
-		MutableTreeNode root = new DefaultMutableTreeNode(
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode(
 				new TreeUserObject(title, newRootEntry.asString(), /* collapsed= */false));
 		dtm.setRoot(root);
 
 		// Init selectedLuhmannNode.
 		EntryID displayedZettelParent = null;
 		// Save the id of the parent if it exist to highlight the correct node.
-		if (displayedZettel == entryNumberFromTreeNode(selectedLuhmannNode)
+		if (selectedLuhmannNode != null && displayedZettel == TreeUtil.getEntryID(selectedLuhmannNode).asInt()
 				&& selectedLuhmannNode.getParent() != null) {
-			displayedZettelParent = getTreeNodeParentEntryNumber(selectedLuhmannNode);
+			displayedZettelParent = TreeUtil.getEntryID(selectedLuhmannNode.getParent());
 		}
 		selectedLuhmannNode = null;
 
