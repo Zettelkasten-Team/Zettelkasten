@@ -3305,8 +3305,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			return;
 		}
 		if (selectedEntry != displayedZettel) {
-			selectedLuhmannNode = (DefaultMutableTreeNode) jTreeLuhmann.getLastSelectedPathComponent();
-
 			// JTree already handles changing the selected tree node, so no need to rebuild
 			// it.
 			UpdateDisplayOptions options = new UpdateDisplayOptions.UpdateDisplayOptionsBuilder()
@@ -6739,14 +6737,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 	}
 
-	private void fillLuhmannNumbers(DefaultMutableTreeNode node, EntryID nodeEntry, EntryID selectedEntry,
-			EntryID selectEntryParent) {
+	private void fillLuhmannNumbers(DefaultMutableTreeNode node, EntryID nodeEntry, EntryID selectedEntry) {
 		// Update selectedLuhmannNode if we have found it.
 		if (nodeEntry.equals(selectedEntry)) {
-			// If parent is set, it must also match.
-			if (selectEntryParent == null || selectEntryParent.equals(TreeUtil.getEntryID(node.getParent()))) {
-				selectedLuhmannNode = (DefaultMutableTreeNode) node;
-			}
+			selectedLuhmannNode = (DefaultMutableTreeNode) node;
 		}
 
 		String subEntriesCsv = data.getSubEntriesCsv(nodeEntry.asInt());
@@ -6765,7 +6759,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			node.insert(loopNode, node.getChildCount());
 
 			// Recursively: create sub-entries of this new node.
-			fillLuhmannNumbers(loopNode, subEntry, selectedEntry, selectEntryParent);
+			fillLuhmannNumbers(loopNode, subEntry, selectedEntry);
 		}
 	}
 
@@ -6948,16 +6942,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		dtm.setRoot(root);
 
 		// Init selectedLuhmannNode.
-		EntryID displayedZettelParent = null;
-		// Save the id of the parent if it exist to highlight the correct node.
-		if (selectedLuhmannNode != null && displayedZettel == TreeUtil.getEntryID(selectedLuhmannNode).asInt()
-				&& selectedLuhmannNode.getParent() != null) {
-			displayedZettelParent = TreeUtil.getEntryID(selectedLuhmannNode.getParent());
-		}
 		selectedLuhmannNode = null;
-
 		// Populate the whole tree rooted at root.
-		fillLuhmannNumbers(root, newRootEntry, new EntryID(displayedZettel), displayedZettelParent);
+		fillLuhmannNumbers(root, newRootEntry, new EntryID(displayedZettel));
 
 		TreeUtil.setExpandLevel(settings.getLuhmannExpandLevel());
 		TreeUtil.expandAllTrees(jTreeLuhmann);
@@ -8285,10 +8272,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			data.setAttachmentlistUpToDate(false);
 			// tell about success
 			Constants.zknlogger.log(Level.INFO, "Entry save finished.");
-			// update the dislay...
+
+			// Reset displayedZettel and updateDisplay.
+			displayedZettel = -1;
 			updateDisplay();
-			// tell about success
 			Constants.zknlogger.log(Level.INFO, "Display updated.");
+
 			// and create a backup...
 			makeAutoBackup();
 			// tell about success
@@ -8525,7 +8514,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	@Action(enabledProperty = "entriesAvailable")
 	public void insertEntry() {
-		openEditWindow(false, displayedZettel, true, false, displayedZettel);
+		createEntryAndAddAsSubEntry();
+	}
+
+	private void createEntryAndAddAsSubEntry() {
+		openEditWindow(/* isEditing */false, displayedZettel, /* isLuhmann */true, /* isDeleted */false,
+				displayedZettel);
 	}
 
 	/**

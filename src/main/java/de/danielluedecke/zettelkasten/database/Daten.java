@@ -2943,10 +2943,7 @@ public class Daten {
 		// tag
 		// of the related entry (which number is passed in the luhmann variable)
 		if (luhmann != -1) {
-			// try to add luhmann number
 			if (appendSubEntryToEntry(new EntryID(luhmann), new EntryID(this.zettel))) {
-				// if it was successful, we can insert this entry
-				// after the "parent" entry
 				retval = ADD_LUHMANNENTRY_OK;
 			} else {
 				retval = ADD_LUHMANNENTRY_ERR;

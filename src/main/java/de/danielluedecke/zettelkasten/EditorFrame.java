@@ -329,11 +329,11 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
      * @param content
      * @param em
      * @param en
-     * @param l
+     * @param isLuhmannParam
      * @param isdel
      */
     @SuppressWarnings("LeakingThisInConstructor")
-    public EditorFrame(ZettelkastenView zkn, Daten d, TasksData td, AcceleratorKeys ak, Settings s, AutoKorrektur ac, Synonyms syn, StenoData stn, String content, boolean em, int en, boolean l, boolean isdel) {
+    public EditorFrame(ZettelkastenView zkn, Daten d, TasksData td, AcceleratorKeys ak, Settings s, AutoKorrektur ac, Synonyms syn, StenoData stn, String content, boolean em, int en, boolean isLuhmannParam, boolean isdel) {
         mainframe = zkn;
 
         // init the variables from the parameters
@@ -359,7 +359,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
             WindowUtils.installJComponentRepainterOnWindowFocusChanged(this.getRootPane());
         }
         entryNumber = en;
-        luhmann = l;
+        luhmann = isLuhmannParam;
         keywordStep1 = selectedKeywords = displayedKeywordList = remainingKeywords = null;
         stepcounter = 1;
         // init locale for the default-actions cut/copy/paste
@@ -4115,7 +4115,6 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
                             resourceMap.getString("errMsgAddEntryTitle"),
                             JOptionPane.PLAIN_MESSAGE);
                 } else {
-                    // tell about success
                     Constants.zknlogger.log(Level.INFO, "New entry saved.");
                 }
             }
