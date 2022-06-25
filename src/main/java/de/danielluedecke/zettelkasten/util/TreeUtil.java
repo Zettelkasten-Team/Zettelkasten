@@ -161,11 +161,15 @@ public class TreeUtil {
 		}
 
 		// Handle root.
+		String rootId = "missing";
+		TreeUserObject userObject = (TreeUserObject) node.getUserObject();
+		if (userObject != null) {
+			rootId = userObject.getId();
+		}
 
-		// Respect collapsedNodes if it exists.
-		if (!collapsedNodes.isEmpty()) {
-			TreeUserObject userObject = (TreeUserObject) node.getUserObject();
-			if (userObject != null && collapsedNodes.get(userObject.getId())) {
+		// Respect collapsedNodes if it contains the id.
+		if (collapsedNodes.containsKey(rootId)) {
+			if (collapsedNodes.get(rootId)) {
 				tree.collapsePath(root);
 			} else {
 				tree.expandPath(root);
