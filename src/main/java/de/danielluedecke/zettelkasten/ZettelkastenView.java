@@ -2926,8 +2926,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	public final void setNewDisplayedEntryAndUpdateDisplay(int inputDisplayedEntry) {
+		setNewDisplayedEntryAndUpdateDisplay(inputDisplayedEntry, UpdateDisplayOptions.defaultOptions());
+	}
+
+	public final void setNewDisplayedEntryAndUpdateDisplay(int inputDisplayedEntry, UpdateDisplayOptions options) {
 		displayedZettel = inputDisplayedEntry;
-		updateDisplay();
+		updateDisplay(options);
 	}
 
 	/**
@@ -2935,13 +2939,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	@Action
 	public final void updateDisplay() {
+		updateDisplay(UpdateDisplayOptions.defaultOptions());
+	}
+
+	public final void updateDisplay(UpdateDisplayOptions options) {
 		if (!data.hasZettelID(displayedZettel)) {
 			displayedZettel = data.getActivatedEntryNumber();
 		}
 
 		updateEntryPaneAndKeywordsPane(displayedZettel);
 		updateToolbarAndMenu();
-		updateTabbedPane();
+		updateTabbedPane(options);
 	}
 
 	/**
@@ -3168,7 +3176,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * the changelistener of the jTabbedPane. The connections of each entry to other
 	 * entries e.g. has to be updated each time
 	 */
-	private void updateTabbedPane() {
+	private void updateTabbedPane(UpdateDisplayOptions options) {
 		if (data.getCount(Daten.ZKNCOUNT) < 1) {
 			clearTabbedPaneModels();
 		}
@@ -3216,7 +3224,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			showLinks();
 			break;
 		case TAB_LUHMANN:
-			showLuhmann(/* resetCollapsedNodes= */false);
+			if (options.isUpdateNoteSequencesTab()) {
+				showLuhmann(/* resetCollapsedNodes= */false);
+			}
 			break;
 		case TAB_KEYWORDS:
 			showKeywords();
@@ -3296,7 +3306,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 		if (selectedEntry != displayedZettel) {
 			selectedLuhmannNode = (DefaultMutableTreeNode) jTreeLuhmann.getLastSelectedPathComponent();
-			setNewDisplayedEntryAndUpdateDisplay(selectedEntry);
+
+			// JTree already handles changing the selected tree node, so no need to rebuild
+			// it.
+			UpdateDisplayOptions options = new UpdateDisplayOptions.UpdateDisplayOptionsBuilder()
+					.updateNoteSequencesTab(false).build();
+			setNewDisplayedEntryAndUpdateDisplay(selectedEntry, options);
 		}
 	}
 
