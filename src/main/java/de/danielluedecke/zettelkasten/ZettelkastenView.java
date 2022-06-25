@@ -10907,6 +10907,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	private void saveSettings() {
 		// Save current zettel-position.
+		// TODO(mateusbraga) startup entry should be saved in the data file. Otherwise
+		// we might open invalid entries when changing between data files with the "Open
+		// document."
 		settings.setStartupEntry(data.getActivatedEntryNumber());
 		// TODO(mateusbraga) The following table sorting code should be set as the
 		// default instead of overwritting at every save.
