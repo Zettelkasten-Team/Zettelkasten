@@ -645,7 +645,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// jtableKeywords or not...
 		jCheckBoxShowSynonyms.setSelected(settings.getShowSynonymsInTable());
 		// check whether all followers should be shown in trailing entries tab
-		jCheckBoxShowAllLuhmann.setSelected(settings.getShowAllLuhmann());
+		jCheckBoxShowAllNoteSequences.setSelected(settings.getShowAllLuhmann());
 		// set background color
 		jEditorPaneEntry.setBackground(new Color(Integer.parseInt(settings.getMainBackgroundColor(), 16)));
 		// init action-, key- and mouse-listeners for all components. we do this after
@@ -817,16 +817,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				showKeywords();
 			}
 		});
-		// this actionn for the checkbox toggles the setting whether all follower
-		// entries, including top-level parents, should be shown, or whether
-		// current entry is the root of the treeview
-		jCheckBoxShowAllLuhmann.addActionListener(new java.awt.event.ActionListener() {
+		jCheckBoxShowAllNoteSequences.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				// change setting
-				settings.setShowAllLuhmann(jCheckBoxShowAllLuhmann.isSelected());
-				// refresh follower view
-				showLuhmann(/* resetCollapsedNodes= */true);
+				// Change setting and updateDisplay().
+				settings.setShowAllLuhmann(jCheckBoxShowAllNoteSequences.isSelected());
+				updateDisplay();
 			}
 		});
 		// this settings toggles the setting whether the cluster-list in the
@@ -2338,8 +2334,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					Constants.zknlogger.log(Level.SEVERE, "BUG: jTreeLuhmann importString");
 				}
 
-				// Update tabbed-pane.
-				showLuhmann(/* resetCollapsedNodes= */false);
+				updateDisplay();
 				return true;
 			}
 
@@ -2998,7 +2993,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public void setLuhmannLevel1() {
 		settings.setLuhmannExpandLevel(1);
-		showLuhmann(/* resetCollapsedNodes= */true);
+		updateDisplay();
 	}
 
 	/**
@@ -3007,7 +3002,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public void setLuhmannLevel2() {
 		settings.setLuhmannExpandLevel(2);
-		showLuhmann(/* resetCollapsedNodes= */true);
+		updateDisplay();
 	}
 
 	/**
@@ -3016,7 +3011,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public void setLuhmannLevel3() {
 		settings.setLuhmannExpandLevel(3);
-		showLuhmann(/* resetCollapsedNodes= */true);
+		updateDisplay();
 	}
 
 	/**
@@ -3025,7 +3020,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public void setLuhmannLevel4() {
 		settings.setLuhmannExpandLevel(4);
-		showLuhmann(/* resetCollapsedNodes= */true);
+		updateDisplay();
 	}
 
 	/**
@@ -3034,7 +3029,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public void setLuhmannLevel5() {
 		settings.setLuhmannExpandLevel(5);
-		showLuhmann(/* resetCollapsedNodes= */true);
+		updateDisplay();
 	}
 
 	/**
@@ -3043,7 +3038,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public void setLuhmannLevelAll() {
 		settings.setLuhmannExpandLevel(-1);
-		showLuhmann(/* resetCollapsedNodes= */true);
+		updateDisplay();
 	}
 
 	/**
@@ -3224,9 +3219,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			showLinks();
 			break;
 		case TAB_LUHMANN:
-			if (options.isUpdateNoteSequencesTab()) {
-				showLuhmann(/* resetCollapsedNodes= */false);
-			}
+			updateNoteSequencesTab(options);
 			break;
 		case TAB_KEYWORDS:
 			showKeywords();
@@ -3505,7 +3498,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	public void showLuhmannEntryNumber() {
 		boolean val = settings.getShowLuhmannEntryNumber();
 		settings.setShowLuhmannEntryNumber(!val);
-		showLuhmann(/* resetCollapsedNodes= */false);
+		updateDisplay();
 	}
 
 	/**
@@ -3534,32 +3527,23 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This method opens a modal dialog that starts a background-task. this
-	 * background-task then again creates the so-called luhmann-numbers. <br>
-	 * <br>
-	 * The Luhmann-Numbers function is similar to a typical tree: we have one
-	 * "parent"-entry and several child-entries (sub-entries or followers). each of
-	 * these child-elements can have their own child-elements again (whereby the
-	 * child-element itself is then again understood as "parent"-entry). <br>
-	 * <br>
-	 * So, the Luhmann-numbers of an entry only have one subordinated level of
-	 * sub-entries. the tree- structure comes from those sub-entries, that might
-	 * have their own sub-entries again.
-	 *
-	 * @param resetCollapsedNodes logical, {@code true} if all former collapsed
-	 *                            nodes should be expanded now, or {@code false} if
-	 *                            collapsed state should be remembered.
+	 * This method updates the Note Sequences tab. Does nothing if data is
+	 * unavailable.
+	 * 
+	 * The Note Sequences tab is divided into the following: a JTree pane, a Parents
+	 * notes pane, and a Note Sequences menu. Each are updated here if appropriate.
 	 */
-	private synchronized void showLuhmann(boolean resetCollapsedNodes) {
+	private synchronized void updateNoteSequencesTab(UpdateDisplayOptions options) {
 		// If no data available, do nothing.
 		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return;
 		}
-		// If the note-sequences-table is not shown, do nothing.
-		if (jTabbedPaneMain.getSelectedIndex() != TAB_LUHMANN) {
-			return;
+
+		if (options.isUpdateNoteSequencesTree()) {
+			prepareNoteSequencesJTreePane();
 		}
-		prepareNoteSequencesTab(resetCollapsedNodes);
+		prepareNoteSequencesParentsPane();
+
 		showTabMenu(viewMenuLuhmann);
 	}
 
@@ -6920,13 +6904,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		return new EntryID(rootEntry);
 	}
 
-	private void prepareNoteSequencesJTreePane(boolean resetCollapsedNodes) {
+	private void prepareNoteSequencesJTreePane() {
 		DefaultTreeModel dtm = (DefaultTreeModel) jTreeLuhmann.getModel();
 
 		// Save collapsed state if same root as the previous tree.
 		DefaultMutableTreeNode previousRoot = (DefaultMutableTreeNode) dtm.getRoot();
 		EntryID newRootEntry = getRootEntryForLuhmannTree();
-		if (!resetCollapsedNodes && previousRoot != null && TreeUtil.getEntryID(previousRoot).equals(newRootEntry)) {
+		if (previousRoot != null && TreeUtil.getEntryID(previousRoot).equals(newRootEntry)) {
 			TreeUtil.saveCollapsedNodes(jTreeLuhmann);
 		} else {
 			TreeUtil.resetCollapsedNodes();
@@ -6967,14 +6951,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private void prepareNoteSequencesParentsPane() {
 		isFollowerList.clear();
 
-		EntryID activatedEntry = new EntryID(data.getActivatedEntryNumber());
+		EntryID shownEntry = displayedZettel != -1 ? new EntryID(displayedZettel)
+				: new EntryID(data.getActivatedEntryNumber());
 
 		// Go through the complete data set to get the list of parents of the
 		// activatedEntry.
 		for (int loopEntryId = 1; loopEntryId <= data.getCount(Daten.ZKNCOUNT); loopEntryId++) {
 			List<EntryID> subEntries = EntryIDUtils.csvToEntryIDList(data.getSubEntriesCsv(loopEntryId));
 			for (EntryID subEntry : subEntries) {
-				if (subEntry.equals(activatedEntry)) {
+				if (subEntry.equals(shownEntry)) {
 					try {
 						isFollowerList.add(String.valueOf(loopEntryId));
 						// No need to look further at its siblings.
@@ -6990,11 +6975,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// Update Pane to show parents.
 		jEditorPaneIsFollower
 				.setText(HtmlUbbUtil.getLinkedEntriesAsHtml(data, settings, isFollowerList, "isFollowerText"));
-	}
-
-	private void prepareNoteSequencesTab(boolean resetCollapsedNodes) {
-		prepareNoteSequencesJTreePane(resetCollapsedNodes);
-		prepareNoteSequencesParentsPane();
 	}
 
 	/**
@@ -11776,7 +11756,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				return text;
 			}
 		};
-		jCheckBoxShowAllLuhmann = new javax.swing.JCheckBox();
+		jCheckBoxShowAllNoteSequences = new javax.swing.JCheckBox();
 		jPanel2 = new javax.swing.JPanel();
 		jTextFieldFilterKeywords = new javax.swing.JTextField();
 		jButtonRefreshKeywords = new javax.swing.JButton();
@@ -12487,21 +12467,21 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		jSplitPane2.setRightComponent(jScrollPane2);
 
-		jCheckBoxShowAllLuhmann.setText(resourceMap.getString("jCheckBoxShowAllLuhmann.text")); // NOI18N
-		jCheckBoxShowAllLuhmann.setToolTipText(resourceMap.getString("jCheckBoxShowAllLuhmann.toolTipText")); // NOI18N
-		jCheckBoxShowAllLuhmann.setName("jCheckBoxShowAllLuhmann"); // NOI18N
+		jCheckBoxShowAllNoteSequences.setText(resourceMap.getString("jCheckBoxShowAllLuhmann.text")); // NOI18N
+		jCheckBoxShowAllNoteSequences.setToolTipText(resourceMap.getString("jCheckBoxShowAllLuhmann.toolTipText")); // NOI18N
+		jCheckBoxShowAllNoteSequences.setName("jCheckBoxShowAllLuhmann"); // NOI18N
 
 		javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
 		jPanel10.setLayout(jPanel10Layout);
 		jPanel10Layout.setHorizontalGroup(
 				jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jSplitPane2)
 						.addGroup(jPanel10Layout.createSequentialGroup().addContainerGap()
-								.addComponent(jCheckBoxShowAllLuhmann)
+								.addComponent(jCheckBoxShowAllNoteSequences)
 								.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 		jPanel10Layout.setVerticalGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 				.addGroup(jPanel10Layout.createSequentialGroup().addComponent(jSplitPane2)
 						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(jCheckBoxShowAllLuhmann).addContainerGap()));
+						.addComponent(jCheckBoxShowAllNoteSequences).addContainerGap()));
 
 		jTabbedPaneMain.addTab(resourceMap.getString("jPanel10.TabConstraints.tabTitle"), jPanel10); // NOI18N
 
@@ -14898,7 +14878,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private javax.swing.JButton jButtonRefreshKeywords;
 	private javax.swing.JButton jButtonRefreshTitles;
 	private javax.swing.JCheckBox jCheckBoxCluster;
-	private javax.swing.JCheckBox jCheckBoxShowAllLuhmann;
+	private javax.swing.JCheckBox jCheckBoxShowAllNoteSequences;
 	private javax.swing.JCheckBox jCheckBoxShowSynonyms;
 	private javax.swing.JComboBox jComboBoxAuthorType;
 	private javax.swing.JComboBox jComboBoxBookmarkCategory;

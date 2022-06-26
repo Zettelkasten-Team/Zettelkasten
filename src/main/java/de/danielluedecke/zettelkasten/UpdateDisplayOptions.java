@@ -4,28 +4,29 @@ package de.danielluedecke.zettelkasten;
  * Options for when calling UpdateDisplay.
  */
 public class UpdateDisplayOptions {
-	private boolean updateNoteSequencesTab;
+	private boolean updateNoteSequencesTree;
 
 	private UpdateDisplayOptions(UpdateDisplayOptionsBuilder builder) {
-		this.updateNoteSequencesTab = builder.updateNoteSequencesTab;
+		this.updateNoteSequencesTree = builder.updateNoteSequencesTree;
 	}
 
-	public boolean isUpdateNoteSequencesTab() {
-		return updateNoteSequencesTab;
+	public boolean isUpdateNoteSequencesTree() {
+		return updateNoteSequencesTree;
 	}
-	
+
 	public static UpdateDisplayOptions defaultOptions() {
 		return new UpdateDisplayOptions.UpdateDisplayOptionsBuilder().build();
 	}
 
 	public static class UpdateDisplayOptionsBuilder {
 		// Defaults
-		private boolean updateNoteSequencesTab = true;
+		private boolean updateNoteSequencesTree = true;
 
 		public UpdateDisplayOptionsBuilder updateNoteSequencesTab(boolean should) {
-			this.updateNoteSequencesTab= should;
+			this.updateNoteSequencesTree = should;
 			return this;
 		}
+
 		public UpdateDisplayOptions build() {
 			UpdateDisplayOptions options = new UpdateDisplayOptions(this);
 			return options;
