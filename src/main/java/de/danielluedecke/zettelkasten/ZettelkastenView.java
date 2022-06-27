@@ -2619,31 +2619,31 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTextFieldEntryNumber.getInputMap().put(ks, "EnterKeyPressed");
 		jTreeLuhmann.getInputMap().put(ks, "EnterKeyPressed");
 		jListEntryKeywords.getInputMap().put(ks, "EnterKeyPressed");
-		// create action which should be executed when the user presses
-		// the delete/backspace-key
+		
+		
+		// Delete and backspace action.
 		AbstractAction a_delete = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (jTreeLuhmann == e.getSource()) {
+				if (e.getSource() == jTreeLuhmann) {
 					deleteLuhmannFromEntry();
-				} else if (jListEntryKeywords == e.getSource()) {
+				} else if (e.getSource() == jListEntryKeywords) {
 					deleteKeywordFromEntry();
-				} else if (jTableAuthors == e.getSource()) {
+				} else if (e.getSource() == jTableAuthors) {
 					deleteAuthor();
-				} else if (jTableKeywords == e.getSource()) {
+				} else if (e.getSource() == jTableKeywords) {
 					deleteKeyword();
-				} else if (jTableTitles == e.getSource()) {
+				} else if (e.getSource() == jTableTitles) {
 					deleteEntry();
-				} else if (jTableBookmarks == e.getSource()) {
+				} else if (e.getSource() == jTableBookmarks) {
 					deleteBookmark();
-				} else if (jTableManLinks == e.getSource()) {
+				} else if (e.getSource() == jTableManLinks) {
 					deleteManualLink();
-				} else if (jTableAttachments == e.getSource()) {
+				} else if (e.getSource() == jTableAttachments) {
 					deleteAttachment();
 				}
 			}
 		};
-		// put action to the tables' actionmaps
 		jTreeLuhmann.getActionMap().put("DeleteKeyPressed", a_delete);
 		jListEntryKeywords.getActionMap().put("DeleteKeyPressed", a_delete);
 		jTableAuthors.getActionMap().put("DeleteKeyPressed", a_delete);
@@ -2652,7 +2652,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTableTitles.getActionMap().put("DeleteKeyPressed", a_delete);
 		jTableBookmarks.getActionMap().put("DeleteKeyPressed", a_delete);
 		jTableAttachments.getActionMap().put("DeleteKeyPressed", a_delete);
-		// check for os, and use appropriate controlKey
+		
 		ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS()) ? "BACK_SPACE" : "DELETE");
 		jTreeLuhmann.getInputMap().put(ks, "DeleteKeyPressed");
 		jListEntryKeywords.getInputMap().put(ks, "DeleteKeyPressed");
@@ -2662,6 +2662,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTableTitles.getInputMap().put(ks, "DeleteKeyPressed");
 		jTableBookmarks.getInputMap().put(ks, "DeleteKeyPressed");
 		jTableAttachments.getInputMap().put(ks, "DeleteKeyPressed");
+		
+		
 		// create action which should be executed when the user presses
 		// the ctrl-F10/meta-F10-key
 		AbstractAction a_add = new AbstractAction() {
@@ -3452,9 +3454,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * Action that deletes a selected sub-entry in the jTreeLuhmann from its parent.
-	 * Thus, we can not only remove an sub-entry of the current entry, but also from
-	 * other sub-entries.
+	 * Action that deletes a selected subentry in the jTreeLuhmann from its parent.
 	 */
 	@Action(enabledProperty = "luhmannSelected")
 	public void deleteLuhmannFromEntry() {
@@ -3477,6 +3477,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			EntryID selectedEntry = TreeUtil.getEntryID(selectedNode);
 			EntryID parentEntry = TreeUtil.getEntryID(parent);
 			data.deleteLuhmannNumber(parentEntry, selectedEntry);
+			
+			// Reset displayedZettel and updateDisplay.
+			displayedZettel = -1;
 			updateDisplay();
 		}
 	}
