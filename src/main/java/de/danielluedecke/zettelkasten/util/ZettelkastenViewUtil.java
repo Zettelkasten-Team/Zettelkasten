@@ -262,8 +262,8 @@ public class ZettelkastenViewUtil {
 	 *         number of the selected table row!), or -1 if nothing is selected
 	 */
 	public static int retrieveSelectedEntryFromTable(Daten data, javax.swing.JTable table, int column) {
-		// if no data available, leave method
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+		// If no data available, return invalid entry.
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return -1;
 		}
 		// get the amount of selected rows
