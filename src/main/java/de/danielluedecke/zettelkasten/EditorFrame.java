@@ -198,17 +198,6 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
     private static boolean editmode;
 
     /**
-     * Determines whether the EditorFrame is used for a new entry or for
-     * editing an existing entry.
-     *
-     * @param val {@code true} if we want to edit an existing entry,
-     * {@code false} if a new entry is to be created
-     */
-    public void setEditMode(boolean val) {
-        editmode = val;
-    }
-
-    /**
      * Determines whether a new entry is created or an existing entry is edited.
      *
      * @return {@code true} if an existing entry is currently edited,
@@ -327,13 +316,13 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
      * @param syn
      * @param stn
      * @param content
-     * @param em
+     * @param isEditingParam
      * @param en
      * @param isLuhmannParam
      * @param isdel
      */
     @SuppressWarnings("LeakingThisInConstructor")
-    public EditorFrame(ZettelkastenView zkn, Daten d, TasksData td, AcceleratorKeys ak, Settings s, AutoKorrektur ac, Synonyms syn, StenoData stn, String content, boolean em, int en, boolean isLuhmannParam, boolean isdel) {
+    public EditorFrame(ZettelkastenView zkn, Daten d, TasksData td, AcceleratorKeys ak, Settings s, AutoKorrektur ac, Synonyms syn, StenoData stn, String content, boolean isEditingParam, int en, boolean isLuhmannParam, boolean isdel) {
         mainframe = zkn;
 
         // init the variables from the parameters
@@ -346,7 +335,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         spellObj = ac;
         isDeleted = isdel;
         lastSelectefFont = new Font("Courier", Font.PLAIN, 12);
-        editmode = em;
+        editmode = isEditingParam;
         // check whether memory usage is logged. if so, tell logger that new entry windows was opened
         if (settingsObj.isMemoryUsageLogged) {
             // log info

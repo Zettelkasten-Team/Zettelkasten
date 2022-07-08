@@ -5,13 +5,18 @@ package de.danielluedecke.zettelkasten;
  */
 public class UpdateDisplayOptions {
 	private boolean updateNoteSequencesTree;
+	private boolean updateLinksTable;
 
 	private UpdateDisplayOptions(UpdateDisplayOptionsBuilder builder) {
 		this.updateNoteSequencesTree = builder.updateNoteSequencesTree;
+		this.updateLinksTable = builder.updateLinksTable;
 	}
 
 	public boolean isUpdateNoteSequencesTree() {
 		return updateNoteSequencesTree;
+	}
+	public boolean isUpdateLinksTable() {
+		return updateLinksTable;
 	}
 
 	public static UpdateDisplayOptions defaultOptions() {
@@ -21,9 +26,15 @@ public class UpdateDisplayOptions {
 	public static class UpdateDisplayOptionsBuilder {
 		// Defaults
 		private boolean updateNoteSequencesTree = true;
+		private boolean updateLinksTable = true;
 
 		public UpdateDisplayOptionsBuilder updateNoteSequencesTab(boolean should) {
 			this.updateNoteSequencesTree = should;
+			return this;
+		}
+		
+		public UpdateDisplayOptionsBuilder updateLinksTab(boolean should) {
+			this.updateLinksTable = should;
 			return this;
 		}
 

@@ -1369,12 +1369,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		});
-		//
-		// finally, init the selection listeners...
-		//
+
+		// Init the JTable selection listeners.
 		javax.swing.JTable[] tables = new javax.swing.JTable[] { jTableLinks, jTableManLinks, jTableAuthors,
 				jTableTitles, jTableBookmarks, jTableAttachments };
-
 		for (javax.swing.JTable t : tables) {
 			SelectionListener listener = new SelectionListener(t);
 			t.getSelectionModel().addListSelectionListener(listener);
@@ -1885,7 +1883,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			public void stateChanged(javax.swing.event.ChangeEvent evt) {
 				int sel = jTabbedPaneMain.getSelectedIndex();
 				if (sel != previousSelectedTab) {
-					// Update displayed entry if tab changed.
+					// Update displayed entry to activated entry if tab changed.
 					setNewDisplayedEntryAndUpdateDisplay(data.getActivatedEntryNumber());
 				} else {
 					updateDisplay();
@@ -2619,8 +2617,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTextFieldEntryNumber.getInputMap().put(ks, "EnterKeyPressed");
 		jTreeLuhmann.getInputMap().put(ks, "EnterKeyPressed");
 		jListEntryKeywords.getInputMap().put(ks, "EnterKeyPressed");
-		
-		
+
 		// Delete and backspace action.
 		AbstractAction a_delete = new AbstractAction() {
 			@Override
@@ -2652,7 +2649,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTableTitles.getActionMap().put("DeleteKeyPressed", a_delete);
 		jTableBookmarks.getActionMap().put("DeleteKeyPressed", a_delete);
 		jTableAttachments.getActionMap().put("DeleteKeyPressed", a_delete);
-		
+
 		ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS()) ? "BACK_SPACE" : "DELETE");
 		jTreeLuhmann.getInputMap().put(ks, "DeleteKeyPressed");
 		jListEntryKeywords.getInputMap().put(ks, "DeleteKeyPressed");
@@ -2662,8 +2659,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTableTitles.getInputMap().put(ks, "DeleteKeyPressed");
 		jTableBookmarks.getInputMap().put(ks, "DeleteKeyPressed");
 		jTableAttachments.getInputMap().put(ks, "DeleteKeyPressed");
-		
-		
+
 		// create action which should be executed when the user presses
 		// the ctrl-F10/meta-F10-key
 		AbstractAction a_add = new AbstractAction() {
@@ -3174,7 +3170,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * entries e.g. has to be updated each time
 	 */
 	private void updateTabbedPane(UpdateDisplayOptions options) {
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			clearTabbedPaneModels();
 		}
 
@@ -3218,7 +3214,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		switch (selectedTab) {
 		case TAB_LINKS:
-			showLinks();
+			if (options.isUpdateLinksTable()) {
+				showLinks();
+			}
 			break;
 		case TAB_LUHMANN:
 			updateNoteSequencesTab(options);
@@ -3242,7 +3240,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			showAttachments();
 			break;
 		default:
-			showLinks();
+			if (options.isUpdateLinksTable()) {
+				showLinks();
+			}
 			break;
 		}
 	}
@@ -3477,7 +3477,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			EntryID selectedEntry = TreeUtil.getEntryID(selectedNode);
 			EntryID parentEntry = TreeUtil.getEntryID(parent);
 			data.deleteLuhmannNumber(parentEntry, selectedEntry);
-			
+
 			// Reset displayedZettel and updateDisplay.
 			displayedZettel = -1;
 			updateDisplay();
@@ -3572,14 +3572,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * entries are display in the JTable of the JTabbedPane
 	 */
 	private synchronized void showLinks() {
-		// if no data available, leave method
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
-			return;
-		}
-		// if the link-table is not shown, leave
+		// If the link-table is not shown, nothing to do.
 		if (jTabbedPaneMain.getSelectedIndex() != TAB_LINKS) {
 			return;
 		}
+
+		// If no data available, nothing to show.
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
+			return;
+		}
+
 		// when no update needed, show menu and leave method
 		if (!needsLinkUpdate) {
 			// update might be needed next time
@@ -3599,14 +3601,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 		// clear selections
 		jListEntryKeywords.clearSelection();
-		// clear table
+
+		// Clear table with links.
 		DefaultTableModel tm = (DefaultTableModel) jTableLinks.getModel();
-		// reset the table
 		tm.setRowCount(0);
-		// clear table with manual links
+
+		// Clear table with manual links.
 		tm = (DefaultTableModel) jTableManLinks.getModel();
-		// reset the table
 		tm.setRowCount(0);
+
 		// hide the panel with the table with manual links
 		/* jPanelManLinks.setVisible(false); */
 		// tell user that we are doing something...
@@ -5983,20 +5986,31 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 	}
 
-	private void showEntryFromManualLinks() {
-		// if no data available, leave method
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+	/*
+	 * displaySelectedEntryFromManualLinks is called whenever a selected entry is
+	 * changed in the Manual Links table. Sometimes multiple times with the same value.
+	 */
+	private void updateDisplayedEntryWithSelectedEntryFromManualLinks() {
+		// If no data available, do nothing.
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return;
 		}
-		// get the selected row
-		int entry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableManLinks, 0);
-		// if we don't have a valid selection, use current entry as reference
-		if (-1 == entry) {
-			setNewDisplayedEntryAndUpdateDisplay(data.getActivatedEntryNumber());
-		} // and if it was a avalid value, show entry
-		else {
-			setNewDisplayedEntryAndUpdateDisplay(entry);
+
+		// Get the selected entry.
+		int entry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableManLinks, /* column= */ 0);
+		// If no entry is selected, do nothing.
+		if (entry == -1) {
+			return;
 		}
+		// If selected entry is already the displayed entry, do nothing.
+		if (displayedZettel == entry) {
+			return;
+		}
+
+		// No need to update the Links tab when selection changes.
+		UpdateDisplayOptions options = new UpdateDisplayOptions.UpdateDisplayOptionsBuilder().updateLinksTab(false)
+				.build();
+		setNewDisplayedEntryAndUpdateDisplay(entry, options);
 	}
 
 	/**
@@ -8146,7 +8160,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (data.isDeleted(displayedZettel)) {
 			openEditWindow(false, displayedZettel, false, true, -1);
 		} else {
-			openEditWindow(true, displayedZettel, false, false, -1);
+			openEditWindow(/* isEditing */true, displayedZettel, /* isLuhmann */false, /* isDeleted */false,
+					/* insertAfterEntry */-1);
 		}
 	}
 
@@ -11451,7 +11466,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			else if (jTableLinks == table) {
 				showRelatedKeywords();
 			} else if (jTableManLinks == table) {
-				showEntryFromManualLinks();
+				updateDisplayedEntryWithSelectedEntryFromManualLinks();
 			} else if (jTableBookmarks == table) {
 				showEntryFromBookmarks();
 			}
