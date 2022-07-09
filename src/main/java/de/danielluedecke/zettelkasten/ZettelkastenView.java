@@ -3396,7 +3396,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	private void updateEntryPaneAndKeywordsPane(int inputDisplayedEntry) {
 		// If we have an invalid entry, reset panes.
-		if (data.getCount(Daten.ZKNCOUNT) < 1 || inputDisplayedEntry < 1) {
+		if (data.getCount(Daten.ZKNCOUNT) == 0 || inputDisplayedEntry < 1) {
 			jEditorPaneEntry.setText("");
 
 			Color bcol = (settings.isMacAqua()) ? ColorUtil.colorJTreeText : null;
