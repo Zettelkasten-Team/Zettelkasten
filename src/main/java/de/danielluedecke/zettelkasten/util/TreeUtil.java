@@ -277,7 +277,6 @@ public class TreeUtil {
 			sb.append(entry.asString());
 		}
 		if (!entryTitle.isEmpty()) {
-			sb.append(": ");
 			sb.append(entryTitle);
 		}
 		return sb.toString();
