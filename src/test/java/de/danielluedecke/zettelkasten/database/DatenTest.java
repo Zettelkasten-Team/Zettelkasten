@@ -97,7 +97,25 @@ public class DatenTest {
 		Daten daten = new Daten(document);
 		assertFalse(daten.addSubEntryToEntryAtPosition(new EntryID(54321), new EntryID(3), 0));
 	}
-	
+
+	@Test
+	void testAddSubEntryToEntryAtPosition_ParentEntryEqualsSubEntry() {
+		Daten daten = new Daten(document);
+		assertFalse(daten.addSubEntryToEntryAtPosition(new EntryID(3), new EntryID(3), 0));
+	}
+
+	@Test
+	void testAddSubEntryToEntryAtPosition_SubEntryAlreadyExists() {
+		Daten daten = new Daten(document);
+		assertFalse(daten.addSubEntryToEntryAtPosition(new EntryID(2), new EntryID(1), 0));
+	}
+
+	@Test
+	void testAddSubEntryToEntryAtPosition_ParentIsDescendantOfSubEntry() {
+		Daten daten = new Daten(document);
+		assertFalse(daten.addSubEntryToEntryAtPosition(new EntryID(1), new EntryID(2), 0));
+	}
+
 	@Test
 	void testAddSubEntryToEntryAfterSibling() {
 		Daten daten = new Daten(document);
