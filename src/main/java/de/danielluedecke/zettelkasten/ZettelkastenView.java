@@ -4321,7 +4321,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			String msg;
 			// if we have just a single selection, use phrasing for that message
 			msg = (1 == kws.length) ? getResourceMap().getString("askForDeleteKeywordMsgSingle")
-					// else if we have multiple selectios, use phrasing with appropriate wording
+					// else if we have multiple selections, use phrasing with appropriate wording
 					: getResourceMap().getString("askForDeleteKeywordMsgMultiple", String.valueOf(kws.length));
 			// ask whether keyword really should be deleted
 			int option = JOptionPane.showConfirmDialog(getFrame(), msg,
@@ -4684,7 +4684,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		String msg = (1 == rowcount)
 				? getResourceMap().getString("askForDeleteBookmarkCategoryMsgSingle",
 						(selcat != null) ? selcat.toString() : "")
-				// else if we have multiple selectios, use phrasing with appropriate wording
+				// else if we have multiple selections, use phrasing with appropriate wording
 				: getResourceMap().getString("askForDeleteBookmarkCategoryMsgMultiple", String.valueOf(rowcount));
 		// ask whether author really should be deleted
 		int option = JOptionPane.showConfirmDialog(getFrame(), msg,
