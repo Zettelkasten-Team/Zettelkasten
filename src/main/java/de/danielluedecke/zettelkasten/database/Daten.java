@@ -2943,10 +2943,7 @@ public class Daten {
 		// tag
 		// of the related entry (which number is passed in the luhmann variable)
 		if (luhmann != -1) {
-			// try to add luhmann number
 			if (appendSubEntryToEntry(new EntryID(luhmann), new EntryID(this.zettel))) {
-				// if it was successful, we can insert this entry
-				// after the "parent" entry
 				retval = ADD_LUHMANNENTRY_OK;
 			} else {
 				retval = ADD_LUHMANNENTRY_ERR;
@@ -3738,7 +3735,7 @@ public class Daten {
 	 *         the "found"-value is returned
 	 */
 	private boolean firstEntryIsDescendantOfSecondEntry(EntryID firstEntry, EntryID secondEntry) {
-		if (firstEntry == secondEntry) {
+		if (firstEntry.equals(secondEntry)) {
 			// They are the same entry. Not a descendant.
 			return false;
 		}
@@ -3762,13 +3759,13 @@ public class Daten {
 		String firstEntryString = firstEntry.asString();
 		String[] secondEntrySubEntries = secondEntrySubEntriesCsv.split(",");
 		for (String secondEntrySubEntry : secondEntrySubEntries) {
-			if (firstEntryString == secondEntrySubEntry) {
+			if (firstEntryString.equals(secondEntrySubEntry)) {
 				// firstEntry is a sub-entry of secondEntry: a direct descendant. We test it
 				// here as firstEntryIsDescendantOfSecondEntry doesn't consider equal entries as
 				// descendants.
 				return true;
 			}
-			if (firstEntryIsDescendantOfSecondEntry(secondEntry, new EntryID(secondEntrySubEntry))) {
+			if (firstEntryIsDescendantOfSecondEntry(firstEntry, new EntryID(secondEntrySubEntry))) {
 				return true;
 			}
 		}
@@ -3972,22 +3969,23 @@ public class Daten {
 	 * plain entry content as it is stored in the XML-file, without
 	 * htnml-conversion.
 	 *
-	 * @param pos             the entry-number. use a number from 1 to
-	 *                        {@link #getCount(int) getCount(ZKNCOUNT)}
-	 * @param segmentKeywords the keywords that are associated with certain segments
-	 *                        or paragraphs of that entry, so these paragraphs
-	 *                        associated with an entry will be highlighted, when the
-	 *                        entry is selected in the main window. use {@code null}
-	 *                        if not needed.
-	 * @param sourceframe     a reference to the frame from where this function call
-	 *                        came. needed for the html-formatting, since entries
-	 *                        are differently formatted in the search window.
+	 * @param inputDisplayedEntry the entry-number. use a number from 1 to
+	 *                            {@link #getCount(int) getCount(ZKNCOUNT)}
+	 * @param segmentKeywords     the keywords that are associated with certain
+	 *                            segments or paragraphs of that entry, so these
+	 *                            paragraphs associated with an entry will be
+	 *                            highlighted, when the entry is selected in the
+	 *                            main window. use {@code null} if not needed.
+	 * @param sourceframe         a reference to the frame from where this function
+	 *                            call came. needed for the html-formatting, since
+	 *                            entries are differently formatted in the search
+	 *                            window.
 	 * @return a string array with the html layoutet content of the requested entry
 	 *         and author
 	 */
-	public String getEntryAsHtml(int pos, String[] segmentKeywords, int sourceframe) {
+	public String getEntryAsHtml(int inputDisplayedEntry, String[] segmentKeywords, int sourceframe) {
 		// retrieve the entry
-		Element entry = retrieveElement(zknFile, pos);
+		Element entry = retrieveElement(zknFile, inputDisplayedEntry);
 		// if no element exists, return empty array
 		if (null == entry) {
 			return "";
@@ -3997,7 +3995,7 @@ public class Daten {
 		// which display an entry in the main window's JEditorPane
 		// return the complete html page as string array, first element of the
 		// array containing the main entry, second element the author information
-		return HtmlUbbUtil.getEntryAsHTML(settings, this, bibtexObj, pos, segmentKeywords, sourceframe);
+		return HtmlUbbUtil.getEntryAsHTML(settings, this, bibtexObj, inputDisplayedEntry, segmentKeywords, sourceframe);
 	}
 
 	/**
@@ -7028,7 +7026,7 @@ public class Daten {
 	 *           getCount(ZKNCOUNT)}
 	 * @return {@code true} if an ID was found, {@code false} otherwise.
 	 */
-	private boolean hasZettelID(int nr) {
+	public boolean hasZettelID(int nr) {
 		// retrieve element
 		Element zettel = retrieveZettel(nr);
 		// check for valid value
@@ -7363,7 +7361,7 @@ public class Daten {
 	 * @param entryToRemove the sub-entry that should be removed from "entry"
 	 */
 	public void deleteLuhmannNumber(EntryID parentEntry, EntryID entryToRemove) {
-		if (parentEntry == entryToRemove) {
+		if (parentEntry.equals(entryToRemove)) {
 			return;
 		}
 
@@ -7419,13 +7417,13 @@ public class Daten {
 	 * @return
 	 */
 	public boolean addSubEntryToEntryAtPosition(EntryID parentEntry, EntryID newSubEntry, int pos) {
-		if (parentEntry == newSubEntry) {
+		if (parentEntry.equals(newSubEntry)) {
 			// Can't add sub-entry to itself.
 			return false;
 		}
 
-		Element entryElement = retrieveElement(zknFile, parentEntry.asInt());
-		if (entryElement == null || entryElement.getChild(ELEMENT_TRAILS) == null) {
+		Element parentEntryElement = retrieveElement(zknFile, parentEntry.asInt());
+		if (parentEntryElement == null || parentEntryElement.getChild(ELEMENT_TRAILS) == null) {
 			// TODO Instead of failing, add new ELEMENT_TRAILS if it doesn't exist.
 			return false;
 		}
@@ -7436,14 +7434,14 @@ public class Daten {
 			return false;
 		}
 
-		String existingSubEntriesCsv = entryElement.getChild(ELEMENT_TRAILS).getText();
+		String existingSubEntriesCsv = parentEntryElement.getChild(ELEMENT_TRAILS).getText();
 
 		// Check whether the newSubEntry already exists in the entry.
 		String[] existingSubEntries = existingSubEntriesCsv.split(",");
 		if (!existingSubEntriesCsv.isEmpty()) {
 			String newSubEntryString = newSubEntry.asString();
 			for (String existingSubEntry : existingSubEntries) {
-				if (existingSubEntry == newSubEntryString) {
+				if (existingSubEntry.equals(newSubEntryString)) {
 					return false;
 				}
 			}
@@ -7451,7 +7449,7 @@ public class Daten {
 
 		// Check if entry is a descendant of newSubEntry. We can't add it in that case
 		// as it would create a cycle in the sub-entry tree.
-		if (!existingSubEntriesCsv.isEmpty() && firstEntryIsDescendantOfSecondEntry(parentEntry, newSubEntry)) {
+		if (firstEntryIsDescendantOfSecondEntry(parentEntry, newSubEntry)) {
 			return false;
 		}
 
@@ -7479,14 +7477,14 @@ public class Daten {
 		if (sb.length() > 1) {
 			sb.setLength(sb.length() - 1);
 		}
-		entryElement.getChild(ELEMENT_TRAILS).setText(sb.toString());
+		parentEntryElement.getChild(ELEMENT_TRAILS).setText(sb.toString());
 
 		setModified(true);
 		return true;
 	}
 
 	private int getSubEntryPosition(EntryID parentEntry, EntryID subEntry) {
-		if (parentEntry == subEntry) {
+		if (parentEntry.equals(subEntry)) {
 			return -1;
 		}
 
