@@ -268,6 +268,9 @@ public class TreeUtil {
 		// If title is empty, we use its number.
 		if (showNumber || entryTitle.isEmpty()) {
 			sb.append(entry.asString());
+			if (!entryTitle.isEmpty()) {
+				sb.append(": ");
+			}
 		}
 		if (!entryTitle.isEmpty()) {
 			sb.append(entryTitle);
