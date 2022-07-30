@@ -368,11 +368,9 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 *                when showing the authors, i.e. when the {@code task_id} is
 	 *                {@code TASK_SHOWAUTHORS}
 	 * @param dtm     a reference to the DefaultTableModel of the related tabbed
-	 * @param mls     logical, indicates whether the note sequence column in the
-	 *                titles table should be sortable or not (time consuming!) pane.
 	 */
 	public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, Synonyms s, BibTeX bt, Settings set,
-			boolean is, int et, DefaultTableModel dtm, boolean mls) {
+			boolean is, int et, DefaultTableModel dtm) {
 		super(parent);
 		daten = d;
 		bibTeX = bt;
@@ -399,7 +397,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 			foregroundTask = showAuthors(et, dtm);
 			break;
 		case TASK_SHOWTITLES:
-			foregroundTask = showTitles(dtm, mls);
+			foregroundTask = showTitles(dtm);
 			break;
 		case TASK_SHOWATTACHMENTS:
 			foregroundTask = showAttachments(dtm);
@@ -1116,10 +1114,10 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * @param dtm
 	 * @return
 	 */
-	private Task showTitles(DefaultTableModel dtm, boolean mls) {
+	private Task showTitles(DefaultTableModel dtm) {
 		return new ShowTitleListTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-				this, msgLabel, daten, dtm, mls);
+				this, msgLabel, daten, dtm);
 	}
 
 	/**
