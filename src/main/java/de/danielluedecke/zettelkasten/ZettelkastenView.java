@@ -3228,7 +3228,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			showAuthors();
 			break;
 		case TAB_TITLES:
-			showTitles();
+			updateTitlesTab();
 			break;
 		case TAB_CLUSTER:
 			showCluster();
@@ -3690,7 +3690,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					null, /* only needed for authors */
 					null, /* only needed for attachments */
 					settings.getShowSynonymsInTable(), 0, /* only need for authors */
-					(DefaultTableModel) jTableKeywords.getModel(), settings.getMakeLuhmannColumnSortable());
+					(DefaultTableModel) jTableKeywords.getModel());
 			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
@@ -4808,41 +4808,32 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	/**
 	 * This method deletes entries which are selected in the titles-table
-	 * (jTableTitles). The currently displayed entry can also be deleted via toolbar
-	 * or menu. see {@link #deleteCurrentEntry() deleteCurrentEntry()} for more
-	 * details.
+	 * (jTableTitles).
+	 * 
+	 * This method shows an option pane where the user can confirm the
+	 * delete-progress or cancel it.
 	 */
 	@Action(enabledProperty = "tableEntriesSelected")
 	public void deleteEntry() {
-		// get the amount of selected entries.
-		int rowcount = jTableTitles.getSelectedRowCount();
-		// if nothing is selected, leave
-		if (rowcount < 1) {
+		// If no selected rows, nothing to delete.
+		int numSelectedRows = jTableTitles.getSelectedRowCount();
+		if (numSelectedRows == 0) {
 			return;
 		}
-		// get the selected rows
-		int[] rows = jTableTitles.getSelectedRows();
-		// get the entrie-strings
-		int[] nrs = new int[rows.length];
-		// copy all values into the integer array
-		for (int cnt = 0; cnt < rows.length; cnt++) {
+
+		int[] selectedRows = jTableTitles.getSelectedRows();
+		int[] entryIds = new int[selectedRows.length];
+		for (int cnt = 0; cnt < selectedRows.length; cnt++) {
 			try {
-				// get the entry's number
-				int nr = Integer.parseInt(jTableTitles.getValueAt(rows[cnt], 0).toString());
-				// save it to the array
-				nrs[cnt] = nr;
+				entryIds[cnt] = Integer.parseInt(jTableTitles.getValueAt(selectedRows[cnt], 0).toString());
 			} catch (NumberFormatException ex) {
 				Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
 			}
 		}
-		// try to delete entries. this method shows an option pane where the user can
-		// confirm the delete-progress or cancel it. if cancelled, the method returns
-		// false
-		if (deleteEntries(nrs)) {
-			// set uptodate-state to false
+
+		if (deleteEntries(entryIds)) {
 			data.setTitlelistUpToDate(false);
-			// update jTableTitles
-			showTitles();
+			updateDisplay();
 		}
 	}
 
@@ -4855,6 +4846,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	/**
 	 * Deletes one or more entries which entry-numbers are passed as int-array
+	 * 
+	 * This method shows an option pane where the user can confirm the
+	 * delete-progress or cancel it. If cancelled, the method returns false.
 	 *
 	 * @param nrs the index-numbers of the entries that should be deleted
 	 * @return {@code true} if entries were deleted, {@code false} is deletion was
@@ -5688,7 +5682,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					null, /* only needed for authors */
 					settings, false, /* only need for keywords */
 					0, /* only need for authors */
-					(DefaultTableModel) jTableAttachments.getModel(), settings.getMakeLuhmannColumnSortable());
+					(DefaultTableModel) jTableAttachments.getModel());
 			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
@@ -5824,8 +5818,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 																											 */
 					bibtex, null, /* only needed for attachments */
 					false, /* only needed for keywords */
-					jComboBoxAuthorType.getSelectedIndex(), (DefaultTableModel) jTableAuthors.getModel(),
-					settings.getMakeLuhmannColumnSortable());
+					jComboBoxAuthorType.getSelectedIndex(), (DefaultTableModel) jTableAuthors.getModel());
 			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
@@ -5988,7 +5981,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	/*
 	 * displaySelectedEntryFromManualLinks is called whenever a selected entry is
-	 * changed in the Manual Links table. Sometimes multiple times with the same value.
+	 * changed in the Manual Links table. Sometimes multiple times with the same
+	 * value.
 	 */
 	private void updateDisplayedEntryWithSelectedEntryFromManualLinks() {
 		// If no data available, do nothing.
@@ -6253,26 +6247,29 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This method displays the all entries' titles using a background task. after
-	 * the task finishes, all titles and ther related entry number in the main data
-	 * file (zknfile) are displayed in the JTable of the JTabbedPane
+	 * This method displays the all entries' titles using a background task. After
+	 * the task finishes, all titles and their entry numbers in the main data file
+	 * (zknfile) are displayed in the JTable of the JTabbedPane.
 	 */
-	private void showTitles() {
-		// if no data available, leave method
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+	private void updateTitlesTab() {
+		// If no data available, do nothing.
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return;
 		}
-		// reset status text, since the amount of titles is euqal to the amount of
-		// entries
+
+		// Reset status text, since the amount of titles is euqal to the amount of
+		// entries.
 		statusMsgLabel.setText("");
-		// show/enabke related menu
+
 		showTabMenu(viewMenuTitles);
-		// if keywordlist is up to date, leave method
+
+		// If Daten says it is up to date, do nothing.
 		if (data.isTitlelistUpToDate()) {
 			return;
 		}
+		
 		// if dialog window isn't already created, do this now
-		if (null == taskDlg) {
+		if (taskDlg == null) {
 			// get parent und init window
 			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWTITLES, data, null, /*
 																											 * only
@@ -6284,7 +6281,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					null, /* only needed for attachments */
 					false, /* only needed for keywords */
 					0, /* only needed for authors */
-					(DefaultTableModel) jTableTitles.getModel(), settings.getMakeLuhmannColumnSortable());
+					(DefaultTableModel) jTableTitles.getModel());
 			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
@@ -6292,11 +6289,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// dispose the window and clear the object
 		taskDlg.dispose();
 		taskDlg = null;
-		// reset filtered list
+		
+		// Reset filtered title list.
 		linkedtitlelist = null;
-		// disable refresh button
+		// Refresh jButton starts disabled.
 		jButtonRefreshTitles.setEnabled(false);
-		// enable textfield only if we have more than 1 element in the jtable
+		// Enable filter jTextField only if we have more than 1 element in the jtable.
 		jTextFieldFilterTitles.setEnabled(jTableTitles.getRowCount() > 0);
 	}
 
@@ -8433,11 +8431,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This method deletes the currently displayed zettel. usually this method is
-	 * called from the delete-action from the toolbar or menu, in contrary to the
-	 * delete-function from the jTableTitles which deletes selected entries (see
-	 * {@link #deleteEntry() deleteEntry()}).<br>
-	 * <br>
+	 * This method deletes the currently displayed note. <br>
 	 * The entry is not being deleted completely. To keep the ordering and
 	 * index-numbers of existing entries, a deleted entry will just be cleared (all
 	 * content set to empty string values), and if a deleted entry is displayed,
