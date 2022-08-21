@@ -1419,22 +1419,16 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         f = settingsObj.getRemarksFont();
         f = new Font(f.getName(), f.getStyle(), f.getSize() + 4);
         jTextAreaRemarks.setFont(f);
-        // get the default fontsize for tables and lists
-        int defaultsize = settingsObj.getTableFontSize();
-        // get current font
-        int fsize = jListQuickInputAuthor.getFont().getSize();
-        // retrieve default listvewfont
-        Font defaultfont = settingsObj.getTableFont();
-        // create new font, add fontsize-value
-        f = new Font(defaultfont.getName(), defaultfont.getStyle(), fsize + defaultsize);
-        // set new font
-        jListQuickInputAuthor.setFont(f);
-        jListQuickInputKeywords.setFont(f);
-        jListKeywords.setFont(f);
-        jListLinks.setFont(f);
-        jTextFieldTitle.setFont(f);
+        
+        Font settingsTableFont = settingsObj.getTableFont();
+        jListQuickInputAuthor.setFont(settingsTableFont);
+        jListQuickInputKeywords.setFont(settingsTableFont);
+        jListKeywords.setFont(settingsTableFont);
+        jListLinks.setFont(settingsTableFont);
+        jTextFieldTitle.setFont(settingsTableFont);
+        
         // get the default fontsize for textfields
-        defaultsize = settingsObj.getTextfieldFontSize();
+        int defaultsize = settingsObj.getTextfieldFontSize();
         // only set new fonts, when fontsize differs from the initial value
         if (defaultsize > 0) {
             // get current font

@@ -137,17 +137,11 @@ public class CStenoEdit extends javax.swing.JDialog {
             }
         };
         getRootPane().registerKeyboardAction(cancelAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
-        // get the default fontsize for tables and lists
-        int defaultsize = settingsObj.getTableFontSize();
-        // only set new fonts, when fontsize differs from the initial value
-        if (defaultsize>0) {
-            // get current font
-            Font f = jTableSteno.getFont();
-            // create new font, add fontsize-value
-            f = new Font(f.getName(), f.getStyle(), f.getSize()+defaultsize);
-            // set new font
-            jTableSteno.setFont(f);
-        }
+        
+        // Set font.
+        Font settingsTableFont = settingsObj.getTableFont();
+        jTableSteno.setFont(settingsTableFont);
+        
         // create auto-sorter for tabel
         jTableSteno.setAutoCreateRowSorter(true);
         jTableSteno.setGridColor(settingsObj.getTableGridColor());
