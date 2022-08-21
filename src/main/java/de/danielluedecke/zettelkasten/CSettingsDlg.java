@@ -1054,10 +1054,10 @@ public class CSettingsDlg extends javax.swing.JDialog {
 			Regor winreg = new Regor();
 			return (winreg.openKey(Regor.HKEY_CLASSES_ROOT, ".zkn3") != null
 					&& winreg.openKey(Regor.HKEY_CLASSES_ROOT, "zkn3_auto_file\\shell\\Open\\command") != null);
-		} catch (RegistryErrorException | InaccessibleObjectException e) {
-			Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
 		} catch (NotSupportedOSException e) {
 			Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
+		} catch (Exception e) {
+			Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
 		}
 		return false;
 	}
