@@ -1306,7 +1306,7 @@ public class Settings {
 	public void setFilePath(File fp) {
 		// try to find filepath-element
 		Element el = settingsFile.getRootElement().getChild(SETTING_FILEPATH);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_FILEPATH);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -1338,7 +1338,7 @@ public class Settings {
 
 	public void setTableSorting(javax.swing.JTable[] tables) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_TABLEROWSORTING);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_TABLEROWSORTING);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -1495,7 +1495,7 @@ public class Settings {
 	public void setExtraBackupPath(String fp) {
 		// try to find filepath-element
 		Element el = settingsFile.getRootElement().getChild(SETTING_EXTRABACKUPPATH);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_EXTRABACKUPPATH);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -1533,7 +1533,7 @@ public class Settings {
 	public void setPandocPath(String fp) {
 		// try to find filepath-element
 		Element el = settingsFile.getRootElement().getChild(SETTING_PANDOCPATH);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_PANDOCPATH);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -1565,7 +1565,7 @@ public class Settings {
 	public void setLastUsedBibTexFile(String fp) {
 		// try to find filepath-element
 		Element el = settingsFile.getRootElement().getChild(SETTING_LASTUSEDBIBTEXFILE);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_LASTUSEDBIBTEXFILE);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -2279,7 +2279,7 @@ public class Settings {
 	 */
 	public void setCellSpacing(int hor, int ver) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_CELLSPACING);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_CELLSPACING);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -2457,7 +2457,7 @@ public class Settings {
 	 */
 	public void setAutoNightlyUpdate(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_AUTONIGHTLYUPDATE);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_AUTONIGHTLYUPDATE);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -2484,7 +2484,7 @@ public class Settings {
 	 */
 	public void setShowIconText(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWICONTEXT);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_SHOWICONTEXT);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -2501,7 +2501,7 @@ public class Settings {
 
 	public void setAutoCompleteTags(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_AUTOCOMPLETETAGS);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_AUTOCOMPLETETAGS);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -2518,7 +2518,7 @@ public class Settings {
 
 	public void setUseMacBackgroundColor(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_USEMACBACKGROUNDCOLOR);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_USEMACBACKGROUNDCOLOR);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -2535,7 +2535,7 @@ public class Settings {
 
 	public void setMarkdownActivated(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_MARKDOWNACTIVATED);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_MARKDOWNACTIVATED);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -2562,7 +2562,7 @@ public class Settings {
 	 */
 	public void setExtraBackup(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_EXTRABACKUP);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_EXTRABACKUP);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -2603,7 +2603,7 @@ public class Settings {
 			break;
 		}
 		Element el = settingsFile.getRootElement().getChild(ch);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(ch);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -2697,7 +2697,7 @@ public class Settings {
 	 */
 	public void setLastUsedDesktop(int val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_GETLASTUSEDDESKTOPNUMBER);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_GETLASTUSEDDESKTOPNUMBER);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -2721,7 +2721,7 @@ public class Settings {
 
 	public void setSearchFrameSplitLayout(int val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHFRAMESPLITLAYOUT);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_SEARCHFRAMESPLITLAYOUT);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -2752,7 +2752,7 @@ public class Settings {
 	 */
 	public void setInsertNewEntryAtEmpty(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_FILLEMPTYPLACES);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_FILLEMPTYPLACES);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -2815,7 +2815,7 @@ public class Settings {
 			break;
 		}
 		Element el = settingsFile.getRootElement().getChild(hs_style);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(hs_style);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -2877,7 +2877,7 @@ public class Settings {
 			break;
 		}
 		Element el = settingsFile.getRootElement().getChild(hs_style);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(hs_style);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -2902,7 +2902,7 @@ public class Settings {
 	 */
 	public void setReflistBackgroundColor(String col) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_APPENDIXBACKGROUNDCOLOR);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_APPENDIXBACKGROUNDCOLOR);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -2927,7 +2927,7 @@ public class Settings {
 	 */
 	public void setTableHeaderColor(String col) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_TABLEHEADERCOLOR);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_TABLEHEADERCOLOR);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -2952,7 +2952,7 @@ public class Settings {
 	 */
 	public void setTableRowEvenColor(String col) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_TABLEEVENROWCOLOR);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_TABLEEVENROWCOLOR);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -2977,7 +2977,7 @@ public class Settings {
 	 */
 	public void setTableRowOddColor(String col) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_TABLEODDROWCOLOR);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_TABLEODDROWCOLOR);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3006,7 +3006,7 @@ public class Settings {
 	 */
 	public void setHighlightSearchResults(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTSEARCHRESULTS);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_HIGHLIGHTSEARCHRESULTS);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3037,7 +3037,7 @@ public class Settings {
 	 */
 	public void setHighlightKeyword(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTKEYWORDS);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_HIGHLIGHTKEYWORDS);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3076,7 +3076,7 @@ public class Settings {
 	 */
 	public void setShowSearchEntry(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWSEARCHENTRY);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_SHOWSEARCHENTRY);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3185,7 +3185,7 @@ public class Settings {
 	 */
 	public void setSearchLog(int val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHLOG);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_SEARCHLOG);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3218,7 +3218,7 @@ public class Settings {
 	 */
 	public void setImageResizeWidth(int val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_IMGRESIZEWIDTH);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_IMGRESIZEWIDTH);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3251,7 +3251,7 @@ public class Settings {
 	 */
 	public void setImageResizeHeight(int val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_IMGRESIZEHEIGHT);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_IMGRESIZEHEIGHT);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3282,7 +3282,7 @@ public class Settings {
 	 */
 	public void setTableFontSize(int size) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_TABLEFONTSIZE);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_TABLEFONTSIZE);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3299,7 +3299,7 @@ public class Settings {
 
 	public void setDesktopOutlineFontSize(int size) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_DESKTOPOUTLINEFONTSIZE);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_DESKTOPOUTLINEFONTSIZE);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3332,7 +3332,7 @@ public class Settings {
 	 */
 	public void setManualTimestamp(int val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_MANUALTIMESTAMP);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_MANUALTIMESTAMP);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3363,7 +3363,7 @@ public class Settings {
 	 */
 	public void setTextfieldFontSize(int size) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_TEXTFIELDFONTSIZE);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_TEXTFIELDFONTSIZE);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3380,7 +3380,7 @@ public class Settings {
 
 	public void setLastUsedSetBibyKeyChoice(int choice) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_LASTUSEDSETBIBKEYCHOICE);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_LASTUSEDSETBIBKEYCHOICE);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3397,7 +3397,7 @@ public class Settings {
 
 	public void setLastUsedSetBibyKeyType(int type) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_LASTUSEDSETBIBKEYTYPE);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_LASTUSEDSETBIBKEYTYPE);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3414,7 +3414,7 @@ public class Settings {
 
 	public void setLastUsedBibtexImportSource(int source) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_LASTUSEDSETBIBIMPORTSOURCE);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_LASTUSEDSETBIBIMPORTSOURCE);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3445,7 +3445,7 @@ public class Settings {
 	 */
 	public void setImageResize(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_IMGRESIZE);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_IMGRESIZE);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3462,7 +3462,7 @@ public class Settings {
 
 	public void setShowTableBorder(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWTABLEBORDER);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_SHOWTABLEBORDER);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3479,7 +3479,7 @@ public class Settings {
 
 	public void setShowLuhmannEntryNumber(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWLUHMANNENTRYNUMBER);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_SHOWLUHMANNENTRYNUMBER);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3496,7 +3496,7 @@ public class Settings {
 
 	public void setShowDesktopEntryNumber(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWDESKTOPENTRYNUMBER);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_SHOWDESKTOPENTRYNUMBER);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3513,7 +3513,7 @@ public class Settings {
 
 	public void setShowEntryHeadline(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWENTRYHEADLINE);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_SHOWENTRYHEADLINE);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3545,7 +3545,7 @@ public class Settings {
 	 */
 	public void setQuickInputExtended(int val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_QUICKINPUTEXTENDED);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_QUICKINPUTEXTENDED);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3575,7 +3575,7 @@ public class Settings {
 	 */
 	public void setSpellCorrect(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_SPELLCORRECT);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_SPELLCORRECT);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3602,7 +3602,7 @@ public class Settings {
 	 */
 	public void setStenoActivated(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_STENOACTIVATED);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_STENOACTIVATED);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3619,7 +3619,7 @@ public class Settings {
 
 	public void setHighlightWholeWord(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTWHOLEWORD);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_HIGHLIGHTWHOLEWORD);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3636,7 +3636,7 @@ public class Settings {
 
 	public void setHighlightWholeWordSearch(boolean val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTWHOLEWORDSEARCH);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_HIGHLIGHTWHOLEWORDSEARCH);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3653,7 +3653,7 @@ public class Settings {
 
 	public void setTableFont(String f) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_TABLEFONT);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_TABLEFONT);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3670,7 +3670,7 @@ public class Settings {
 
 	public void setDesktopOutlineFont(String f) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_DESKTOPOUTLINEFONT);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_DESKTOPOUTLINEFONT);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3760,7 +3760,7 @@ public class Settings {
 	 */
 	public void setMainfont(String value, int what) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_MAINFONT);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_MAINFONT);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3867,7 +3867,7 @@ public class Settings {
 	 */
 	public void setAuthorFont(String value, int what) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_AUTHORFONT);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_AUTHORFONT);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -3961,7 +3961,7 @@ public class Settings {
 	 */
 	public void setCodeFont(String value, int what) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_CODEFONT);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_CODEFONT);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -4067,7 +4067,7 @@ public class Settings {
 	 */
 	public void setRemarksFont(String value, int what) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_REMARKSFONT);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_REMARKSFONT);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -4171,7 +4171,7 @@ public class Settings {
 	 */
 	public void setDesktopHeaderfont(String value, int what) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_DESKTOPHEADERFONT);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_DESKTOPHEADERFONT);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -4277,7 +4277,7 @@ public class Settings {
 	 */
 	public void setDesktopItemHeaderfont(String value, int what) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_DESKTOPITEMHEADERFONT);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_DESKTOPITEMHEADERFONT);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -4382,7 +4382,7 @@ public class Settings {
 	 */
 	public void setDesktopItemfont(String value, int what) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_DESKTOPITEMFONT);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_DESKTOPITEMFONT);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -4488,7 +4488,7 @@ public class Settings {
 			break;
 		}
 		Element el = settingsFile.getRootElement().getChild(hs_style);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(hs_style);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -4589,7 +4589,7 @@ public class Settings {
 	 */
 	public void setDesktopCommentfont(String value, int what) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_DESKTOPCOMMENTFONT);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_DESKTOPCOMMENTFONT);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -4696,7 +4696,7 @@ public class Settings {
 	 */
 	public void setTitleFont(String value, int what) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_TITLEFONT);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_TITLEFONT);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -4803,7 +4803,7 @@ public class Settings {
 	 */
 	public void setAppendixHeaderFont(String value, int what) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_APPENDIXHEADERFONT);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_APPENDIXHEADERFONT);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -4908,7 +4908,7 @@ public class Settings {
 	 */
 	public void setHeaderfont1(String value, int what) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_HEADERFONT1);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_HEADERFONT1);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -5100,7 +5100,7 @@ public class Settings {
 	 */
 	public void setHeaderfont2(String value, int what) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_HEADERFONT2);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_HEADERFONT2);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -5138,7 +5138,7 @@ public class Settings {
 	 */
 	public void setQuoteFont(String value, int what) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_QUOTEFONT);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_QUOTEFONT);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -5170,7 +5170,7 @@ public class Settings {
 	 */
 	public void setEntryHeadeFont(String value, int what) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_ENTRYHEADERFONT);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_ENTRYHEADERFONT);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -5198,7 +5198,7 @@ public class Settings {
 
 	public void setManlinkColor(String col) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_MANLINKCOLOR);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_MANLINKCOLOR);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -5216,7 +5216,7 @@ public class Settings {
 
 	public void setFootnoteLinkColor(String col) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_FNLINKCOLOR);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_FNLINKCOLOR);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -5234,7 +5234,7 @@ public class Settings {
 
 	public void setLinkColor(String col) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_LINKCOLOR);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_LINKCOLOR);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -5252,7 +5252,7 @@ public class Settings {
 
 	public void setEntryHeadingBackgroundColor(String col) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_ENTRYHEADERBACKGROUNDCOLOR);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_ENTRYHEADERBACKGROUNDCOLOR);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -5270,7 +5270,7 @@ public class Settings {
 
 	public void setQuoteBackgroundColor(String col) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_QUOTEBACKGROUNDCOLOR);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_QUOTEBACKGROUNDCOLOR);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -5288,7 +5288,7 @@ public class Settings {
 
 	public void setMainBackgroundColor(String col) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_MAINBACKGROUNDCOLOR);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_MAINBACKGROUNDCOLOR);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -5306,7 +5306,7 @@ public class Settings {
 
 	public void setContentBackgroundColor(String col) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_CONTENTBACKGROUNDCOLOR);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_CONTENTBACKGROUNDCOLOR);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -5328,7 +5328,7 @@ public class Settings {
 
 	public void setShowAtStartup(int value) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWATSTARTUP);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_SHOWATSTARTUP);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -5364,7 +5364,7 @@ public class Settings {
 	 */
 	public void setSearchComboTime(int value) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHCOMBOTIME);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_SEARCHCOMBOTIME);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -5552,7 +5552,7 @@ public class Settings {
 			break;
 		}
 		Element el = settingsFile.getRootElement().getChild(ch);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(ch);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -5827,7 +5827,7 @@ public class Settings {
 	 */
 	public void setLatexExportMailValue(String val) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTMAILVALUE);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(SETTING_LATEXEXPORTMAILVALUE);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -5863,7 +5863,7 @@ public class Settings {
 	private void genericDirSetter(String key, File fp) {
 		// try to find filepath-element
 		Element el = settingsFile.getRootElement().getChild(key);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(key);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -5881,7 +5881,7 @@ public class Settings {
 
 	private void genericBooleanSetter(String key, boolean val) {
 		Element el = settingsFile.getRootElement().getChild(key);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(key);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -5911,7 +5911,7 @@ public class Settings {
 
 	private void genericIntSetter(String key, int val) {
 		Element el = settingsFile.getRootElement().getChild(key);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(key);
 			settingsFile.getRootElement().addContent(el);
 		}
@@ -5929,7 +5929,7 @@ public class Settings {
 
 	private void genericStringSetter(String key, String val) {
 		Element el = settingsFile.getRootElement().getChild(key);
-		if (null == el) {
+		if (el == null) {
 			el = new Element(key);
 			settingsFile.getRootElement().addContent(el);
 		}
