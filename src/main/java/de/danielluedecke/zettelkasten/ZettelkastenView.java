@@ -2501,26 +2501,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * font-size will be applied to the components here.
 	 */
 	private void initDefaultFontSize() {
-		// get the default fontsize for tables and lists
-		int defaultsize = settings.getTableFontSize();
-		// get current font
-		int fsize = jTableLinks.getFont().getSize();
-		// retrieve default listvewfont
-		Font defaultfont = settings.getTableFont();
-		// create new font, add fontsize-value
-		Font f = new Font(defaultfont.getName(), defaultfont.getStyle(), fsize + defaultsize);
-		// set new font
-		jTableLinks.setFont(f);
-		jTableManLinks.setFont(f);
-		jTableAuthors.setFont(f);
-		jTableKeywords.setFont(f);
-		jTableTitles.setFont(f);
-		jTableBookmarks.setFont(f);
-		jTableAttachments.setFont(f);
-		jListEntryKeywords.setFont(f);
-		jTreeLuhmann.setFont(f);
-		jTreeCluster.setFont(f);
-		jTreeKeywords.setFont(f);
+		Font settingsTableFont = settings.getTableFont();
+		jTableLinks.setFont(settingsTableFont);
+		jTableManLinks.setFont(settingsTableFont);
+		jTableAuthors.setFont(settingsTableFont);
+		jTableKeywords.setFont(settingsTableFont);
+		jTableTitles.setFont(settingsTableFont);
+		jTableBookmarks.setFont(settingsTableFont);
+		jTableAttachments.setFont(settingsTableFont);
+		jListEntryKeywords.setFont(settingsTableFont);
+		jTreeLuhmann.setFont(settingsTableFont);
+		jTreeCluster.setFont(settingsTableFont);
+		jTreeKeywords.setFont(settingsTableFont);
 	}
 
 	/**
@@ -7291,7 +7283,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	@Action
 	public void settingsWindow() {
-		if (null == settingsDlg) {
+		if (settingsDlg == null) {
 			settingsDlg = new CSettingsDlg(getFrame(), settings, data, autoKorrekt, synonyms, steno);
 			settingsDlg.setLocationRelativeTo(getFrame());
 		}

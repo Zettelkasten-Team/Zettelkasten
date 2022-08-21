@@ -40,6 +40,7 @@ import java.awt.Font;
 import java.awt.SystemTray;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.lang.reflect.InaccessibleObjectException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -121,7 +122,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 	private Font desktopcommentfont;
 	private Font desktopitemheaderfont;
 	private Font desktopitemfont;
-	private Font tablefont;
+	private Font tableFont;
 	private Font desktopfont;
 	private Font codefont;
 	private Font appendixheaderfont;
@@ -278,8 +279,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 		// init desktopitem-font
 		desktopitemfont = settings.getDesktopItemFont();
 		desktopitemfontcolor = settings.getDesktopItemfont(Settings.FONTCOLOR);
-		// init listviewfont
-		tablefont = settings.getTableFont();
+		tableFont = settings.getTableFont();
 		desktopfont = settings.getDesktopOutlineFont();
 		// get bg colors
 		tableheadercolor = settings.getTableHeaderColor();
@@ -382,13 +382,10 @@ public class CSettingsDlg extends javax.swing.JDialog {
 	}
 
 	private void initListeners() {
-		// these code lines add an escape-listener to the dialog. so, when the user
-		// presses the escape-key, the same action is performed as if the user
-		// presses the cancel button...
+		// Add an escape-key listener to the dialog. When fired, it performs
+		// cancelWindows() (same as cancel button).
 		KeyStroke stroke = KeyStroke.getKeyStroke(VK_ESCAPE, 0);
-
 		ActionListener cancelAction = evt -> cancelWindow();
-
 		getRootPane().registerKeyboardAction(cancelAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
 
 		// init selection
@@ -532,6 +529,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
 
 		jSliderFontSize.addChangeListener(evt -> {
 			needsupdate = true;
+			float newFontSize = jSliderFontSize.getValue();
+			tableFont = tableFont.deriveFont(newFontSize);
 			setModified(true);
 			lafupdate = true;
 		});
@@ -616,21 +615,22 @@ public class CSettingsDlg extends javax.swing.JDialog {
 		});
 
 		jButtonListFont.addActionListener(evt -> {
-			// get the selected font
-			Font f = tablefont;
-			// create font-chooser dialog
-			if (null == fontDlg) {
-				fontDlg = new CFontChooser(null, f);
+			// Create font-chooser dialog.
+			if (fontDlg == null) {
+				fontDlg = new CFontChooser(null, tableFont);
 				fontDlg.setLocationRelativeTo(null);
 			}
+			// Show and wait on user.
 			ZettelkastenApp.getApplication().show(fontDlg);
-			// if the user has chosen a font, set it
+			
+			// If the user has chosen a font, prepare to save.
 			if (fontDlg.selectedFont != null) {
-				tablefont = fontDlg.selectedFont;
+				tableFont = fontDlg.selectedFont;
 				setModified(true);
 				lafupdate = true;
 			}
-			// close and dispose the font-dialog
+			
+			// Close and dispose the font-dialog.
 			fontDlg.dispose();
 			fontDlg = null;
 		});
@@ -1054,7 +1054,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 			Regor winreg = new Regor();
 			return (winreg.openKey(Regor.HKEY_CLASSES_ROOT, ".zkn3") != null
 					&& winreg.openKey(Regor.HKEY_CLASSES_ROOT, "zkn3_auto_file\\shell\\Open\\command") != null);
-		} catch (RegistryErrorException e) {
+		} catch (RegistryErrorException | InaccessibleObjectException e) {
 			Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
 		} catch (NotSupportedOSException e) {
 			Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
@@ -1647,7 +1647,6 @@ public class CSettingsDlg extends javax.swing.JDialog {
 		settings.setImageResizeHeight(imgresizeheight);
 		settings.setImageResizeWidth(imgresizewidth);
 		settings.setCellSpacing(spacinghor, spacingver);
-		settings.setTableFontSize(jSliderFontSize.getValue());
 		settings.setDesktopOutlineFontSize(jSliderDesktopFontSize.getValue());
 		settings.setTextfieldFontSize(jSliderTextfields.getValue());
 		settings.setAutoBackup(jCheckBoxAutobackup.isSelected());
@@ -1713,8 +1712,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 			settings.setLanguage("en");
 			break;
 		}
-		// save listview font
-		settings.setTableFont(tablefont.getFamily());
+		settings.setTableFont(tableFont);
 		settings.setDesktopOutlineFont(desktopfont.getFamily());
 		// save mainfont
 		String[] styleandweight = getStyleAndWeight(mainfont);
@@ -2479,7 +2477,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 		jLabel9.setName("jLabel9"); // NOI18N
 
 		jSliderFontSize.setMajorTickSpacing(1);
-		jSliderFontSize.setMaximum(8);
+		jSliderFontSize.setMaximum(18);
 		jSliderFontSize.setMinorTickSpacing(1);
 		jSliderFontSize.setPaintTicks(true);
 		jSliderFontSize.setSnapToTicks(true);
@@ -2559,8 +2557,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 				.addGroup(jPanel11Layout.createSequentialGroup().addContainerGap().addComponent(jCheckBoxShowHorGrid)
 						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 						.addComponent(jCheckBoxShowVerGrid)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addGap(18, 18, 18)
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGap(18, 18, 18)
 						.addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
 								.addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE,
 										javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

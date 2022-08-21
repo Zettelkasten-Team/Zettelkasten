@@ -3268,9 +3268,16 @@ public class Settings {
 	public int getTableFontSize() {
 		Element el = settingsFile.getRootElement().getChild(SETTING_TABLEFONTSIZE);
 		if (el != null) {
-			return Integer.parseInt(el.getText());
+			int fontSize = Integer.parseInt(el.getText());
+			// Before August 2022, the default was zero. This is will update the old default
+			// to 12.
+			if (fontSize == 0) {
+				return 12;
+			} else {
+				return fontSize;
+			}
 		}
-		return 0;
+		return 12;
 	}
 
 	/**
@@ -3646,18 +3653,19 @@ public class Settings {
 	public Font getTableFont() {
 		Element el = settingsFile.getRootElement().getChild(SETTING_TABLEFONT);
 		if (el != null) {
-			return new Font(el.getText(), Font.PLAIN, 12);
+			return new Font(el.getText(), Font.PLAIN, getTableFontSize());
 		}
 		return null;
 	}
 
-	public void setTableFont(String f) {
+	public void setTableFont(Font f) {
 		Element el = settingsFile.getRootElement().getChild(SETTING_TABLEFONT);
 		if (el == null) {
 			el = new Element(SETTING_TABLEFONT);
 			settingsFile.getRootElement().addContent(el);
 		}
-		el.setText(f);
+		el.setText(f.getName());
+		setTableFontSize(f.getSize());
 	}
 
 	public Font getDesktopOutlineFont() {
