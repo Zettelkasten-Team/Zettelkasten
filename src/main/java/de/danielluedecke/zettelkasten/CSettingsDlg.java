@@ -40,7 +40,6 @@ import java.awt.Font;
 import java.awt.SystemTray;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.lang.reflect.InaccessibleObjectException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
