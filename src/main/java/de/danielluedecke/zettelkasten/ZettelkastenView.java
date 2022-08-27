@@ -2866,16 +2866,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private void setDefaultLookAndFeel() throws ClassNotFoundException, UnsupportedLookAndFeelException,
 			InstantiationException, IllegalAccessException {
 		try {
-			try { // Try to scale default font size according to screen resolution.
-				Font fm = (Font) UIManager.getLookAndFeelDefaults().get("defaultFont");
-				// check if laf supports default font
-				if (fm != null) {
-					UIManager.getLookAndFeelDefaults().put("defaultFont",
-							fm.deriveFont(fm.getSize2D() * Toolkit.getDefaultToolkit().getScreenResolution() / 96));
-				}
-			} catch (HeadlessException e) {
-			}
-
 			String laf = settings.getLookAndFeel();
 			if (laf.equals(Constants.seaGlassLookAndFeelClassName)) {
 				laf = "com.seaglasslookandfeel.SeaGlassLookAndFeel";
