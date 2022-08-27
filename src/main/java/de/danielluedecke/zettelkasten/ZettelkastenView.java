@@ -293,7 +293,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * it is filtered (true) or not (false). we don't need to store the initial
 	 * elements, since we simply can iterate all keywords to restore that list
 	 */
-	private boolean linkedclusterlist;
+	private boolean linkedclusterlist = false;
 	/**
 	 * This string builder contains all follower-(trailing)-numbers of an entry,
 	 * prepared for exporting these entries.
@@ -528,6 +528,66 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
 			.getResourceMap(ToolbarIcons.class);
 
+	public ZettelkastenView(SingleFrameApplication app, Settings st, AcceleratorKeys ak, AutoKorrektur ac, Synonyms sy,
+			StenoData stn, TasksData td) throws ClassNotFoundException, UnsupportedLookAndFeelException,
+			InstantiationException, IllegalAccessException, IOException {
+		super(app);
+		taskinfo = td;
+		settings = st;
+		acceleratorKeys = ak;
+		autoKorrekt = ac;
+		synonyms = sy;
+		steno = stn;
+		bookmarks = new Bookmarks(this, settings);
+		bibtex = new BibTeX(this, settings);
+		data = new Daten(this, settings, synonyms, bibtex);
+
+		// Init Logger.
+		// Log everything.
+		Constants.zknlogger.setLevel(Level.ALL);
+		// Log to the in_memory_session_log byte-array.
+		StreamHandler sHandler = new StreamHandler(in_memory_session_log, new SimpleFormatter());
+		Constants.zknlogger.addHandler(sHandler);
+		// Log to log file.
+		FileHandler fh = createFileLogHandler();
+		if (fh != null) {
+			Constants.zknlogger.addHandler(fh);
+		}
+
+		initBibtexFile();
+
+		// Init all swing components.
+		initSwingComponents();
+
+		// Init exit-listener: what to do when exiting.
+		getApplication().addExitListener(new ConfirmExit());
+
+		// If the file in settings exists, load it.
+		if (!loadDocument()) {
+			initVariables();
+			updateDisplay();
+		}
+
+		// Check for updates.
+		if (settings.getAutoUpdate()) {
+			Task cfuT = checkForUpdate();
+			// get the application's context...
+			ApplicationContext appC = Application.getInstance().getContext();
+			// ...to get the TaskMonitor and TaskService
+			TaskMonitor tM = appC.getTaskMonitor();
+			TaskService tS = appC.getTaskService();
+			// with these we can execute the task and bring it to the foreground
+			// i.e. making the animated progressbar and busy icon visible
+			tS.execute(cfuT);
+			tM.setForegroundTask(cfuT);
+		}
+
+		// Init AutoBackupTimer.
+		makeAutoBackupTimer = new Timer();
+		makeAutoBackupTimer.schedule(new AutoBackupTimer(), Constants.autobackupUpdateStart,
+				Constants.autobackupUpdateInterval);
+	}
+
 	private FileHandler createFileLogHandler() {
 		try {
 			// Create logging file handler that will split the log into up to 3 files with a
@@ -543,61 +603,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 	}
 
-	public ZettelkastenView(SingleFrameApplication app, Settings st, AcceleratorKeys ak, AutoKorrektur ac, Synonyms sy,
-			StenoData stn, TasksData td) throws ClassNotFoundException, UnsupportedLookAndFeelException,
-			InstantiationException, IllegalAccessException, IOException {
-		super(app);
-		taskinfo = td;
-		settings = st;
-		acceleratorKeys = ak;
-		autoKorrekt = ac;
-		synonyms = sy;
-		steno = stn;
-		bookmarks = new Bookmarks(this, settings);
-		bibtex = new BibTeX(this, settings);
-
-		data = new Daten(this, settings, synonyms, bibtex);
-
-		// Init Logger.
-		// Log everything.
-		Constants.zknlogger.setLevel(Level.ALL);
-		// Log to the in_memory_session_log byte-array.
-		StreamHandler sHandler = new StreamHandler(in_memory_session_log, new SimpleFormatter());
-		Constants.zknlogger.addHandler(sHandler);
-		// Log to log file.
-		FileHandler fh = createFileLogHandler();
-		if (fh != null) {
-			Constants.zknlogger.addHandler(fh);
-		}
-
-		setDefaultLookAndFeel();
-
-		// setup the local for the default actions cut/copy/paste
-		Tools.initLocaleForDefaultActions(
-				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class)
-						.getContext().getActionMap(ZettelkastenView.class, this));
-		// init all swing components
-		initComponents();
-		javax.swing.ToolTipManager.sharedInstance().registerComponent(jEditorPaneIsFollower);
-		// set application icon
-		getFrame().setIconImage(Constants.zknicon.getImage());
-		//
-		// Here we have some bug-fixes, which might occur due to os-bugs or NetBeans
-		// bugs...
-		//
-		initBorders(settings);
-		// initially, hide the tree-view from keywords-tab
-		// the user can switch between the hierarchic treeview of keywords
-		// or the simple frequencies in a table. by default, the table-view is activated
-		// since this is a new feature, so most people would use table-view in the
-		// beginning
-		jScrollPane17.setVisible(false);
-		jTreeKeywords.setVisible(false);
-		// hide special menus. these will only be visible according to their
-		// related displayed tab
-		removeTabMenus();
-		// init the recent documents
-		setRecentDocuments();
+	private void initBibtexFile() {
 		// attach bibtex-file
 		// retrieve currently attached file
 		File currentlyattachedfile = bibtex.getCurrentlyAttachedFile();
@@ -625,97 +631,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// tell about fail
 			Constants.zknlogger.log(Level.INFO, "No BibTeX-File specified yet.");
 		}
-		// tick checbox-menuitem
-		showHighlightKeywords.setSelected(settings.getHighlightKeywords());
-		// tick checkbox whether keyword-synonyms should also be displayed in the
-		// jtableKeywords or not...
-		jCheckBoxShowSynonyms.setSelected(settings.getShowSynonymsInTable());
-		// check whether all followers should be shown in trailing entries tab
-		jCheckBoxShowAllNoteSequences.setSelected(settings.getShowAllLuhmann());
-		// set background color
-		jEditorPaneEntry.setBackground(new Color(Integer.parseInt(settings.getMainBackgroundColor(), 16)));
-		// init action-, key- and mouse-listeners for all components. we do this after
-		// selecting
-		// the two checkboxes above, to avoid triggering unnecessary actions.
-		// furthermore, we init the selection listeners for the tables and lists here
-		initListeners();
-		// init the searchbox for the toolbar
-		createToolbarSearchbox();
-		// if we have mac osx aqua-look, apply leopard style
-		if (settings.isMacAqua()) {
-			setupMacOSXLeopardStyle();
-		}
-		if (settings.isSeaGlass()) {
-			setupSeaGlassStyle();
-		}
-		// hide panels for live-search and is-follower-numbers
-		jPanelLiveSearch.setVisible(false);
-		// since we have a splitpane in this tab, we don't need auto-hiding anymore
-		/* jPanelManLinks.setVisible(false); */
-		// setup the jtree-component
-		initTrees();
-		// setup a table sorter and visible grids for the JTables
-		initTables();
-		// init transferhandler for drag&drop operations
-		initDragDropTransferHandler();
-		// init the default fontsizes for tables, lists and treeviews
-		initDefaultFontSize();
-		// initialise the keystrokes for certain components
-		initActionMaps();
-		// init accelerator table
-		initAcceleratorTable();
-		// init the icons of the toolbar, whether they are small, medium or large
-		initToolbarIcons(true);
-		// when we have a mac, we need an extra quit-hanlder...
-		if (PlatformUtil.isMacOS()) {
-			setupMacOSXApplicationListener();
-		}
-		// add an exit-listener, which offers saving etc. on
-		// exit, when we have unaved changes to the data file
-		getApplication().addExitListener(new ConfirmExit());
-		// add window-listener. somehow I lost the behaviour that clicking on the
-		// frame's
-		// upper right cross on Windows OS, quits the application. Instead, it just
-		// makes
-		// the frame disapear, but does not quit, so it looks like the application was
-		// quit
-		// but asking for changes took place. So, we simply add a windows-listener
-		// additionally
-		ZettelkastenView.super.getFrame().addWindowListener(this);
-		ZettelkastenView.super.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		// init the progress bar and status icon for
-		// the swingworker background thread
-		// creates a new class object. This variable is not used, it just associates
-		// task monitors to
-		// the background tasks. furthermore, by doing this, this class object also
-		// animates the
-		// busy icon and the progress bar of this frame.
-		//
-		// init the progressbar and animated icon for background tasks
-		InitStatusbarForTasks isb = new InitStatusbarForTasks(statusAnimationLabel, null, null);
-		// if the file exists, load it...
-		if (!loadDocument()) {
-			initVariables();
-			updateDisplay();
-		}
-		// check for updates, if set
-		if (settings.getAutoUpdate()) {
-			Task cfuT = checkForUpdate();
-			// get the application's context...
-			ApplicationContext appC = Application.getInstance().getContext();
-			// ...to get the TaskMonitor and TaskService
-			TaskMonitor tM = appC.getTaskMonitor();
-			TaskService tS = appC.getTaskService();
-			// with these we can execute the task and bring it to the foreground
-			// i.e. making the animated progressbar and busy icon visible
-			tS.execute(cfuT);
-			tM.setForegroundTask(cfuT);
-		}
-		// init autobackup-timer
-		makeAutoBackupTimer = new Timer();
-		// this timer should start after 5 minutes and update every 5 minutes
-		makeAutoBackupTimer.schedule(new AutoBackupTimer(), Constants.autobackupUpdateStart,
-				Constants.autobackupUpdateInterval);
 	}
 
 	private void initBorders(Settings settingsObj) {
@@ -11674,11 +11589,24 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always
 	 * regenerated by the Form Editor.
+	 * 
+	 * @throws UnsupportedLookAndFeelException
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// Code">//GEN-BEGIN:initComponents
-	private void initComponents() {
+	private void initSwingComponents() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
+			UnsupportedLookAndFeelException {
+		// Init Java look and feel.
+		setDefaultLookAndFeel();
+
+		// Init the locale for the default actions cut/copy/paste.
+		Tools.initLocaleForDefaultActions(
+				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class)
+						.getContext().getActionMap(ZettelkastenView.class, this));
 
 		mainPanel = new javax.swing.JPanel();
 		jSplitPaneMain1 = new javax.swing.JSplitPane();
@@ -12434,6 +12362,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jEditorPaneIsFollower.setEditable(false);
 		jEditorPaneIsFollower.setContentType("text/html"); // NOI18N
 		jEditorPaneIsFollower.setName("jEditorPaneIsFollower"); // NOI18N
+		javax.swing.ToolTipManager.sharedInstance().registerComponent(jEditorPaneIsFollower);
 		jScrollPane2.setViewportView(jEditorPaneIsFollower);
 
 		jSplitPane2.setRightComponent(jScrollPane2);
@@ -14756,6 +14685,93 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		setMenuBar(menuBar);
 		setStatusBar(statusPanel);
 		setToolBar(toolBar);
+
+		// Init application icon.
+		getFrame().setIconImage(Constants.zknicon.getImage());
+
+		// initially, hide the tree-view from keywords-tab
+		// the user can switch between the hierarchic treeview of keywords
+		// or the simple frequencies in a table. by default, the table-view is activated
+		// since this is a new feature, so most people would use table-view in the
+		// beginning
+		jScrollPane17.setVisible(false);
+		jTreeKeywords.setVisible(false);
+		// hide special menus. these will only be visible according to their
+		// related displayed tab
+		removeTabMenus();
+		// init the recent documents
+		setRecentDocuments();
+
+		// tick checbox-menuitem
+		showHighlightKeywords.setSelected(settings.getHighlightKeywords());
+		// tick checkbox whether keyword-synonyms should also be displayed in the
+		// jtableKeywords or not...
+		jCheckBoxShowSynonyms.setSelected(settings.getShowSynonymsInTable());
+		// check whether all followers should be shown in trailing entries tab
+		jCheckBoxShowAllNoteSequences.setSelected(settings.getShowAllLuhmann());
+		// set background color
+		jEditorPaneEntry.setBackground(new Color(Integer.parseInt(settings.getMainBackgroundColor(), 16)));
+		// init action-, key- and mouse-listeners for all components. we do this after
+		// selecting
+		// the two checkboxes above, to avoid triggering unnecessary actions.
+		// furthermore, we init the selection listeners for the tables and lists here
+		initListeners();
+		// init the searchbox for the toolbar
+		createToolbarSearchbox();
+		// if we have mac osx aqua-look, apply leopard style
+		if (settings.isMacAqua()) {
+			setupMacOSXLeopardStyle();
+		}
+		if (settings.isSeaGlass()) {
+			setupSeaGlassStyle();
+		}
+		// hide panels for live-search and is-follower-numbers
+		jPanelLiveSearch.setVisible(false);
+		// since we have a splitpane in this tab, we don't need auto-hiding anymore
+		/* jPanelManLinks.setVisible(false); */
+		// setup the jtree-component
+		initTrees();
+		// setup a table sorter and visible grids for the JTables
+		initTables();
+		// init transferhandler for drag&drop operations
+		initDragDropTransferHandler();
+		// init the default fontsizes for tables, lists and treeviews
+		initDefaultFontSize();
+
+		// initialise the keystrokes for certain components
+		initActionMaps();
+		// init accelerator table
+		initAcceleratorTable();
+		// init the icons of the toolbar, whether they are small, medium or large
+		initToolbarIcons(true);
+
+		// Init MacOS-specific application listener.
+		if (PlatformUtil.isMacOS()) {
+			setupMacOSXApplicationListener();
+		}
+
+		// add window-listener. somehow I lost the behaviour that clicking on the
+		// frame's
+		// upper right cross on Windows OS, quits the application. Instead, it just
+		// makes
+		// the frame disapear, but does not quit, so it looks like the application was
+		// quit
+		// but asking for changes took place. So, we simply add a windows-listener
+		// additionally
+		ZettelkastenView.super.getFrame().addWindowListener(this);
+		ZettelkastenView.super.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		// init the progress bar and status icon for
+		// the swingworker background thread
+		// creates a new class object. This variable is not used, it just associates
+		// task monitors to
+		// the background tasks. furthermore, by doing this, this class object also
+		// animates the
+		// busy icon and the progress bar of this frame.
+		//
+		// init the progressbar and animated icon for background tasks
+		InitStatusbarForTasks isb = new InitStatusbarForTasks(statusAnimationLabel, null, null);
+		
+		clearTabbedPaneModels();
 	}// </editor-fold>//GEN-END:initComponents
 
 	private void viewAuthorsCopyActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewAuthorsCopyActionPerformed
