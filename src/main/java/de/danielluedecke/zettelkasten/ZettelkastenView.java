@@ -496,10 +496,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	private TrayIcon trayIcon;
 	private SystemTray tray = null;
+
 	/**
-	 *
+	 * in_memory_session_log contains all the logs of this usage session of the app.
+	 * This log starts clean in the app startup and is discarded at the end.
 	 */
-	public ByteArrayOutputStream baos_log = new ByteArrayOutputStream(1048576);
+	public ByteArrayOutputStream in_memory_session_log = new ByteArrayOutputStream(2000);
 	/**
 	 *
 	 */
@@ -526,64 +528,48 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
 			.getResourceMap(ToolbarIcons.class);
 
-	// </editor-fold>
-	/**
-	 *
-	 * @param app
-	 * @param st
-	 * @param ak
-	 * @param ac
-	 * @param sy
-	 * @param stn
-	 * @param td
-	 */
-	@SuppressWarnings("LeakingThisInConstructor")
+	private FileHandler createFileLogHandler() {
+		try {
+			// Create logging file handler that will split the log into up to 3 files with a
+			// file size limit of 100Kb. It won't append to existing files, so each session
+			// starts a separate file.
+			FileHandler fh = new FileHandler(FileOperationsUtil.getZettelkastenHomeDir() + "zknerror%g.log", 102400, 3,
+					false);
+			fh.setFormatter(new SimpleFormatter());
+			return fh;
+		} catch (IOException | SecurityException ex) {
+			Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
+			return null;
+		}
+	}
+
 	public ZettelkastenView(SingleFrameApplication app, Settings st, AcceleratorKeys ak, AutoKorrektur ac, Synonyms sy,
 			StenoData stn, TasksData td) throws ClassNotFoundException, UnsupportedLookAndFeelException,
 			InstantiationException, IllegalAccessException, IOException {
 		super(app);
 		taskinfo = td;
-		// store reference to settings-class
 		settings = st;
-		// store reference to acceleratorKeys-class
 		acceleratorKeys = ak;
-		// store reference to auto-correction
 		autoKorrekt = ac;
-		// store reference to synonyms
 		synonyms = sy;
-		// store reference to steno data
 		steno = stn;
 		bookmarks = new Bookmarks(this, settings);
 		bibtex = new BibTeX(this, settings);
-		// init all those classes that rely on parameters and could not be initialised
-		// befor the constructor is called...
+
 		data = new Daten(this, settings, synonyms, bibtex);
-		// init stream-logger, so we have the logging both to a file and a byte-array
-		StreamHandler sHandler = new StreamHandler(baos_log, new SimpleFormatter());
-		Constants.zknlogger.addHandler(sHandler);
-		// tell logger to log everthing
+
+		// Init Logger.
+		// Log everything.
 		Constants.zknlogger.setLevel(Level.ALL);
-		// init file-logger
-		FileHandler fh;
-		try {
-			// set up a new file handler, using the settings-directory as log-file-directory
-			fh = new FileHandler(FileOperationsUtil.getZettelkastenHomeDir() + "zknerror%g.log",
-					// file limit of 100 kb
-					102400,
-					// five log files
-					3,
-					// and no appending...
-					false);
-			// add filehandler to our global logger
+		// Log to the in_memory_session_log byte-array.
+		StreamHandler sHandler = new StreamHandler(in_memory_session_log, new SimpleFormatter());
+		Constants.zknlogger.addHandler(sHandler);
+		// Log to log file.
+		FileHandler fh = createFileLogHandler();
+		if (fh != null) {
 			Constants.zknlogger.addHandler(fh);
-			// and use a simple formatting, so the log-file will be readable
-			fh.setFormatter(new SimpleFormatter());
-		} catch (IOException | SecurityException ex) {
-			Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
 		}
 
-		// before components are drawn, set the default look and feel for this
-		// application
 		setDefaultLookAndFeel();
 
 		// setup the local for the default actions cut/copy/paste
@@ -2880,7 +2866,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private void setDefaultLookAndFeel() throws ClassNotFoundException, UnsupportedLookAndFeelException,
 			InstantiationException, IllegalAccessException {
 		try {
-
 			try { // Try to scale default font size according to screen resolution.
 				Font fm = (Font) UIManager.getLookAndFeelDefaults().get("defaultFont");
 				// check if laf supports default font
@@ -2892,12 +2877,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			String laf = settings.getLookAndFeel();
-
 			if (laf.equals(Constants.seaGlassLookAndFeelClassName)) {
 				laf = "com.seaglasslookandfeel.SeaGlassLookAndFeel";
 			}
 			UIManager.setLookAndFeel(laf);
-			// log info
 			Constants.zknlogger.log(Level.INFO, "Using following LaF: {0}", settings.getLookAndFeel());
 
 			if (settings.isSeaGlass()) {
@@ -6259,7 +6242,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (data.isTitlelistUpToDate()) {
 			return;
 		}
-		
+
 		// if dialog window isn't already created, do this now
 		if (taskDlg == null) {
 			// get parent und init window
@@ -6281,7 +6264,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// dispose the window and clear the object
 		taskDlg.dispose();
 		taskDlg = null;
-		
+
 		// Reset filtered title list.
 		linkedtitlelist = null;
 		// Refresh jButton starts disabled.
@@ -11113,12 +11096,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			terminateTimers();
 			saveSettings();
 			makeExtraBackup();
-			try {
-				if (baos_log != null) {
-					baos_log.close();
-				}
-			} catch (IOException ex) {
-			}
 		}
 	}
 
