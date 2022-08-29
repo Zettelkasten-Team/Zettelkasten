@@ -649,20 +649,8 @@ public class Settings {
 			}
 		}
 
-		// init standard font. on mac, it's helvetica
-		String font = "Helvetica";
-		// on older windows arial
-		if (System.getProperty("os.name").startsWith("Windows")) {
-			font = "Arial";
-			// on new windows Calibri
-			if (System.getProperty("os.name").startsWith("Windows 7")
-					|| System.getProperty("os.name").startsWith("Windows 8")) {
-				font = "Calibri";
-			}
-		} // and on linux we take Nimbus Sans L Regular
-		else if (System.getProperty("os.name").startsWith("Linux")) {
-			font = "Nimbus Sans L Regular";
-		}
+		// Default font is the "SansSerif" logical font name.
+		String defaultFont = Font.SANS_SERIF;
 
 		String pandoc = "pandoc";
 		if (PlatformUtil.isMacOS()) {
@@ -801,8 +789,8 @@ public class Settings {
 		genericElementInit(SETTING_HIGHLIGHTBACKGROUNDCOLOR, "ffff66");
 		genericElementInit(SETTING_HIGHLIGHTKEYWORDBACKGROUNDCOLOR, "ffff66");
 		genericElementInit(SETTING_HIGHLIGHTLIVESEARCHBACKGROUNDCOLOR, "ffff66");
-		genericElementInit(SETTING_TABLEFONT, font);
-		genericElementInit(SETTING_DESKTOPOUTLINEFONT, font);
+		genericElementInit(SETTING_TABLEFONT, defaultFont);
+		genericElementInit(SETTING_DESKTOPOUTLINEFONT, defaultFont);
 		genericElementInit(SETTING_LUHMANNTREEEXPANDLEVEL, "-1");
 
 		if (null == settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTSEARCHSTYLE)) {
@@ -839,7 +827,7 @@ public class Settings {
 			// create element for font
 			Element el = new Element(SETTING_MAINFONT);
 			settingsFile.getRootElement().addContent(el);
-			el.setText(font);
+			el.setText(defaultFont);
 			el.setAttribute("size", "11");
 			el.setAttribute("style", "normal");
 			el.setAttribute("weight", "normal");
@@ -850,7 +838,7 @@ public class Settings {
 			// create element for font
 			Element el = new Element(SETTING_QUOTEFONT);
 			settingsFile.getRootElement().addContent(el);
-			el.setText(font);
+			el.setText(defaultFont);
 			el.setAttribute("size", "11");
 			el.setAttribute("color", "333333");
 		}
@@ -859,7 +847,7 @@ public class Settings {
 			// create element for font
 			Element el = new Element(SETTING_ENTRYHEADERFONT);
 			settingsFile.getRootElement().addContent(el);
-			el.setText(font);
+			el.setText(defaultFont);
 			el.setAttribute("size", "10");
 			el.setAttribute("color", "F4F4F4");
 		}
@@ -868,7 +856,7 @@ public class Settings {
 			// create element for font
 			Element el = new Element(SETTING_AUTHORFONT);
 			settingsFile.getRootElement().addContent(el);
-			el.setText(font);
+			el.setText(defaultFont);
 			el.setAttribute("size", "10");
 			el.setAttribute("style", "normal");
 			el.setAttribute("weight", "normal");
@@ -879,7 +867,7 @@ public class Settings {
 			// create element for font
 			Element el = new Element(SETTING_CODEFONT);
 			settingsFile.getRootElement().addContent(el);
-			el.setText(font);
+			el.setText(defaultFont);
 			el.setAttribute("size", "11");
 			el.setAttribute("style", "normal");
 			el.setAttribute("weight", "normal");
@@ -890,7 +878,7 @@ public class Settings {
 			// create element for font
 			Element el = new Element(SETTING_REMARKSFONT);
 			settingsFile.getRootElement().addContent(el);
-			el.setText(font);
+			el.setText(defaultFont);
 			el.setAttribute("size", "10");
 			el.setAttribute("style", "normal");
 			el.setAttribute("weight", "normal");
@@ -901,7 +889,7 @@ public class Settings {
 			// create element for font
 			Element el = new Element(SETTING_DESKTOPHEADERFONT);
 			settingsFile.getRootElement().addContent(el);
-			el.setText(font);
+			el.setText(defaultFont);
 			el.setAttribute("size", "14");
 			el.setAttribute("style", "normal");
 			el.setAttribute("weight", "bold");
@@ -912,7 +900,7 @@ public class Settings {
 			// create element for font
 			Element el = new Element(SETTING_DESKTOPITEMHEADERFONT);
 			settingsFile.getRootElement().addContent(el);
-			el.setText(font);
+			el.setText(defaultFont);
 			el.setAttribute("size", "12");
 			el.setAttribute("style", "italic");
 			el.setAttribute("weight", "normal");
@@ -923,7 +911,7 @@ public class Settings {
 			// create element for font
 			Element el = new Element(SETTING_DESKTOPITEMFONT);
 			settingsFile.getRootElement().addContent(el);
-			el.setText(font);
+			el.setText(defaultFont);
 			el.setAttribute("size", "10");
 			el.setAttribute("style", "normal");
 			el.setAttribute("weight", "normal");
@@ -934,7 +922,7 @@ public class Settings {
 			// create element for font
 			Element el = new Element(SETTING_DESKTOPCOMMENTFONT);
 			settingsFile.getRootElement().addContent(el);
-			el.setText(font);
+			el.setText(defaultFont);
 			el.setAttribute("size", "9");
 			el.setAttribute("style", "normal");
 			el.setAttribute("weight", "normal");
@@ -945,7 +933,7 @@ public class Settings {
 			// create element for font
 			Element el = new Element(SETTING_TITLEFONT);
 			settingsFile.getRootElement().addContent(el);
-			el.setText(font);
+			el.setText(defaultFont);
 			el.setAttribute("size", "13");
 			el.setAttribute("style", "normal");
 			el.setAttribute("weight", "bold");
@@ -956,7 +944,7 @@ public class Settings {
 			// create element for font
 			Element el = new Element(SETTING_APPENDIXHEADERFONT);
 			settingsFile.getRootElement().addContent(el);
-			el.setText(font);
+			el.setText(defaultFont);
 			el.setAttribute("size", "13");
 			el.setAttribute("style", "normal");
 			el.setAttribute("weight", "bold");
@@ -967,7 +955,7 @@ public class Settings {
 			// create element for font
 			Element el = new Element(SETTING_HEADERFONT1);
 			settingsFile.getRootElement().addContent(el);
-			el.setText(font);
+			el.setText(defaultFont);
 			el.setAttribute("size", "12");
 			el.setAttribute("style", "normal");
 			el.setAttribute("weight", "bold");
@@ -978,7 +966,7 @@ public class Settings {
 			// create element for font
 			Element el = new Element(SETTING_HEADERFONT2);
 			settingsFile.getRootElement().addContent(el);
-			el.setText(font);
+			el.setText(defaultFont);
 			el.setAttribute("size", "11");
 			el.setAttribute("style", "normal");
 			el.setAttribute("weight", "bold");

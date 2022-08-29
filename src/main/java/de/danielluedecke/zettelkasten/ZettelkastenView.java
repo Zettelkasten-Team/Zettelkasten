@@ -7215,11 +7215,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 			// set background color
 			jEditorPaneEntry.setBackground(new Color(Integer.parseInt(settings.getMainBackgroundColor(), 16)));
-			// update display, in case the user changed the font-settings
 			updateDisplay();
 		}
-		// when the user chose a new look and feel, or font-size for tables and lists,
-		// update ist
+		// Show 'needs restart' message if necessary.
 		if (settingsDlg.getNeedsLafUpdate()) {
 			JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("needsRestartMsg"),
 					getResourceMap().getString("needsRestartTitle"), JOptionPane.PLAIN_MESSAGE);
@@ -7965,8 +7963,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// when the previous dialog wasn't cancelled or simply closed
 		if (Constants.RETURN_VALUE_CONFIRM == exportWindow.getReturnValue()) {
 			// when the user wants to export into PDF or LaTex, open a new dialog where the
-			// user
-			// can make some extra settings like page settings and font-sizes.
+			// user can make some extra settings like page settings and font-sizes.
 			if (ExportTools.isExportSettingsOk(getFrame(), settings, exportWindow.getExportType())) {
 				// if dialog window isn't already created, do this now
 				if (null == taskDlg) {
@@ -14735,7 +14732,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		initTables();
 		// init transferhandler for drag&drop operations
 		initDragDropTransferHandler();
-		// init the default fontsizes for tables, lists and treeviews
+		// Init the default font sizes for tables, lists and treeviews.
 		initDefaultFontSize();
 
 		// initialise the keystrokes for certain components
@@ -14770,7 +14767,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		//
 		// init the progressbar and animated icon for background tasks
 		InitStatusbarForTasks isb = new InitStatusbarForTasks(statusAnimationLabel, null, null);
-		
+
 		clearTabbedPaneModels();
 	}// </editor-fold>//GEN-END:initComponents
 
