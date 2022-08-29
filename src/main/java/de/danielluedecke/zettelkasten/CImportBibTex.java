@@ -246,17 +246,11 @@ public class CImportBibTex extends javax.swing.JDialog {
         jTableBibEntries.setShowHorizontalLines(settingsObj.getShowGridHorizontal());
         jTableBibEntries.setShowVerticalLines(settingsObj.getShowGridVertical());
         jTableBibEntries.setIntercellSpacing(settingsObj.getCellSpacing());
-        // get the default fontsize for tables and lists
-        int defaultsize = settingsObj.getTableFontSize();
-        // only set new fonts, when fontsize differs from the initial value
-        if (defaultsize > 0) {
-            // get current font
-            Font f = jTableBibEntries.getFont();
-            // create new font, add fontsize-value
-            f = new Font(f.getName(), f.getStyle(), f.getSize() + defaultsize);
-            // set new font
-            jTableBibEntries.setFont(f);
-        }
+        
+        // Set font.
+        Font settingsTableFont = settingsObj.getTableFont();
+        jTableBibEntries.setFont(settingsTableFont);
+        
         // make extra table-sorter for itunes-tables
         if (settingsObj.isMacAqua()) {
             // make extra table-sorter for itunes-tables

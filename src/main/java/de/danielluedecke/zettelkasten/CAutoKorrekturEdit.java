@@ -133,17 +133,11 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
             }
         };
         getRootPane().registerKeyboardAction(cancelAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
-        // get the default fontsize for tables and lists
-        int defaultsize = settingsObj.getTableFontSize();
-        // only set new fonts, when fontsize differs from the initial value
-        if (defaultsize > 0) {
-            // get current font
-            Font f = jTableAutoKorrektur.getFont();
-            // create new font, add fontsize-value
-            f = new Font(f.getName(), f.getStyle(), f.getSize() + defaultsize);
-            // set new font
-            jTableAutoKorrektur.setFont(f);
-        }
+        
+        // Set font.
+        Font settingsTableFont = settingsObj.getTableFont();
+        jTableAutoKorrektur.setFont(settingsTableFont);
+        
         // create auto-sorter for tabel
         jTableAutoKorrektur.setAutoCreateRowSorter(true);
         jTableAutoKorrektur.setGridColor(settingsObj.getTableGridColor());

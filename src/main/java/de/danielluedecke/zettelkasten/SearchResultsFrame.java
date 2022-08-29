@@ -472,18 +472,9 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 * font-size will be applied to the components here.
 	 */
 	private void initDefaultFontSize() {
-		// get the default fontsize for tables and lists
-		int defaultsize = settingsObj.getTableFontSize();
-		// get current font
-		int fsize = jTableResults.getFont().getSize();
-		// retrieve default listvewfont
-		Font defaultfont = settingsObj.getTableFont();
-		// create new font, add fontsize-value
-		Font f = new Font(defaultfont.getName(), defaultfont.getStyle(), fsize + defaultsize);
-		// set new font
-		jTableResults.setFont(f);
-		// set new font
-		jListKeywords.setFont(f);
+        Font settingsTableFont = settingsObj.getTableFont();
+		jTableResults.setFont(settingsTableFont);
+		jListKeywords.setFont(settingsTableFont);
 	}
 
 	private void initListeners() {

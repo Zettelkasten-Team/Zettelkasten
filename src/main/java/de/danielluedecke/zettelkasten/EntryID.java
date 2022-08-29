@@ -31,11 +31,10 @@ public class EntryID {
 
 	@Override
 	public boolean equals(Object obj) {
+		assert(getClass() == obj.getClass());
 		if (this == obj)
 			return true;
 		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
 			return false;
 		EntryID other = (EntryID) obj;
 		return entryNumber == other.entryNumber;
