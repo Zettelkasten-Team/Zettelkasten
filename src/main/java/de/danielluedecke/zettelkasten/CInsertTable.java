@@ -147,17 +147,11 @@ public class CInsertTable extends javax.swing.JDialog {
             tm.setRowCount(tm.getRowCount()+1);
             tm.setColumnCount(tm.getColumnCount()+1);
         }
-        // get the default fontsize for tables and lists
-        int defaultsize = settingsObj.getTableFontSize();
-        // only set new fonts, when fontsize differs from the initial value
-        if (defaultsize>0) {
-            // get current font
-            Font f = jTable1.getFont();
-            // create new font, add fontsize-value
-            f = new Font(f.getName(), f.getStyle(), f.getSize()+defaultsize);
-            // set new font
-            jTable1.setFont(f);
-        }
+        
+        // Set font.
+        Font settingsTableFont = settingsObj.getTableFont();
+        jTable1.setFont(settingsTableFont);
+
         // create auto-sorter for tabel
         jTable1.setAutoCreateRowSorter(false);
         // init Listeners and action maps

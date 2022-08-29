@@ -293,7 +293,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * it is filtered (true) or not (false). we don't need to store the initial
 	 * elements, since we simply can iterate all keywords to restore that list
 	 */
-	private boolean linkedclusterlist;
+	private boolean linkedclusterlist = false;
 	/**
 	 * This string builder contains all follower-(trailing)-numbers of an entry,
 	 * prepared for exporting these entries.
@@ -373,11 +373,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 *
 	 */
 	private String lastClusterRelationKeywords = "";
-	/**
-	 * This variable stores the treepath when a node was dragged&dropped within the
-	 * jtreeluhmann
-	 */
-	private DefaultMutableTreeNode movedNodeToRemove = null;
 	/**
 	 * This variable stores the treepath of the node that should bes elected within
 	 * the jtreeluhmann when all followers, including parents, should be displayed
@@ -501,10 +496,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	private TrayIcon trayIcon;
 	private SystemTray tray = null;
+
 	/**
-	 *
+	 * in_memory_session_log contains all the logs of this usage session of the app.
+	 * This log starts clean in the app startup and is discarded at the end.
 	 */
-	public ByteArrayOutputStream baos_log = new ByteArrayOutputStream(1048576);
+	public ByteArrayOutputStream in_memory_session_log = new ByteArrayOutputStream(2000);
 	/**
 	 *
 	 */
@@ -531,92 +528,82 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
 			.getResourceMap(ToolbarIcons.class);
 
-	// </editor-fold>
-	/**
-	 *
-	 * @param app
-	 * @param st
-	 * @param ak
-	 * @param ac
-	 * @param sy
-	 * @param stn
-	 * @param td
-	 */
-	@SuppressWarnings("LeakingThisInConstructor")
 	public ZettelkastenView(SingleFrameApplication app, Settings st, AcceleratorKeys ak, AutoKorrektur ac, Synonyms sy,
 			StenoData stn, TasksData td) throws ClassNotFoundException, UnsupportedLookAndFeelException,
 			InstantiationException, IllegalAccessException, IOException {
 		super(app);
 		taskinfo = td;
-		// store reference to settings-class
 		settings = st;
-		// store reference to acceleratorKeys-class
 		acceleratorKeys = ak;
-		// store reference to auto-correction
 		autoKorrekt = ac;
-		// store reference to synonyms
 		synonyms = sy;
-		// store reference to steno data
 		steno = stn;
 		bookmarks = new Bookmarks(this, settings);
 		bibtex = new BibTeX(this, settings);
-		// init all those classes that rely on parameters and could not be initialised
-		// befor the constructor is called...
 		data = new Daten(this, settings, synonyms, bibtex);
-		// init stream-logger, so we have the logging both to a file and a byte-array
-		StreamHandler sHandler = new StreamHandler(baos_log, new SimpleFormatter());
-		Constants.zknlogger.addHandler(sHandler);
-		// tell logger to log everthing
+
+		// Init Logger.
+		// Log everything.
 		Constants.zknlogger.setLevel(Level.ALL);
-		// init file-logger
-		FileHandler fh;
-		try {
-			// set up a new file handler, using the settings-directory as log-file-directory
-			fh = new FileHandler(FileOperationsUtil.getZettelkastenHomeDir() + "zknerror%g.log",
-					// file limit of 100 kb
-					102400,
-					// five log files
-					3,
-					// and no appending...
-					false);
-			// add filehandler to our global logger
+		// Log to the in_memory_session_log byte-array.
+		StreamHandler sHandler = new StreamHandler(in_memory_session_log, new SimpleFormatter());
+		Constants.zknlogger.addHandler(sHandler);
+		// Log to log file.
+		FileHandler fh = createFileLogHandler();
+		if (fh != null) {
 			Constants.zknlogger.addHandler(fh);
-			// and use a simple formatting, so the log-file will be readable
-			fh.setFormatter(new SimpleFormatter());
-		} catch (IOException | SecurityException ex) {
-			Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
 		}
 
-		// before components are drawn, set the default look and feel for this
-		// application
-		setDefaultLookAndFeel();
+		initBibtexFile();
 
-		// setup the local for the default actions cut/copy/paste
-		Tools.initLocaleForDefaultActions(
-				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class)
-						.getContext().getActionMap(ZettelkastenView.class, this));
-		// init all swing components
-		initComponents();
-		javax.swing.ToolTipManager.sharedInstance().registerComponent(jEditorPaneIsFollower);
-		// set application icon
-		getFrame().setIconImage(Constants.zknicon.getImage());
-		//
-		// Here we have some bug-fixes, which might occur due to os-bugs or NetBeans
-		// bugs...
-		//
-		initBorders(settings);
-		// initially, hide the tree-view from keywords-tab
-		// the user can switch between the hierarchic treeview of keywords
-		// or the simple frequencies in a table. by default, the table-view is activated
-		// since this is a new feature, so most people would use table-view in the
-		// beginning
-		jScrollPane17.setVisible(false);
-		jTreeKeywords.setVisible(false);
-		// hide special menus. these will only be visible according to their
-		// related displayed tab
-		removeTabMenus();
-		// init the recent documents
-		setRecentDocuments();
+		// Init all swing components.
+		initSwingComponents();
+
+		// Init exit-listener: what to do when exiting.
+		getApplication().addExitListener(new ConfirmExit());
+
+		// If the file in settings exists, load it.
+		if (!loadDocument()) {
+			initVariables();
+			updateDisplay();
+		}
+
+		// Check for updates.
+		if (settings.getAutoUpdate()) {
+			Task cfuT = checkForUpdate();
+			// get the application's context...
+			ApplicationContext appC = Application.getInstance().getContext();
+			// ...to get the TaskMonitor and TaskService
+			TaskMonitor tM = appC.getTaskMonitor();
+			TaskService tS = appC.getTaskService();
+			// with these we can execute the task and bring it to the foreground
+			// i.e. making the animated progressbar and busy icon visible
+			tS.execute(cfuT);
+			tM.setForegroundTask(cfuT);
+		}
+
+		// Init AutoBackupTimer.
+		makeAutoBackupTimer = new Timer();
+		makeAutoBackupTimer.schedule(new AutoBackupTimer(), Constants.autobackupUpdateStart,
+				Constants.autobackupUpdateInterval);
+	}
+
+	private FileHandler createFileLogHandler() {
+		try {
+			// Create logging file handler that will split the log into up to 3 files with a
+			// file size limit of 100Kb. It won't append to existing files, so each session
+			// starts a separate file.
+			FileHandler fh = new FileHandler(FileOperationsUtil.getZettelkastenHomeDir() + "zknerror%g.log", 102400, 3,
+					false);
+			fh.setFormatter(new SimpleFormatter());
+			return fh;
+		} catch (IOException | SecurityException ex) {
+			Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
+			return null;
+		}
+	}
+
+	private void initBibtexFile() {
 		// attach bibtex-file
 		// retrieve currently attached file
 		File currentlyattachedfile = bibtex.getCurrentlyAttachedFile();
@@ -644,97 +631,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// tell about fail
 			Constants.zknlogger.log(Level.INFO, "No BibTeX-File specified yet.");
 		}
-		// tick checbox-menuitem
-		showHighlightKeywords.setSelected(settings.getHighlightKeywords());
-		// tick checkbox whether keyword-synonyms should also be displayed in the
-		// jtableKeywords or not...
-		jCheckBoxShowSynonyms.setSelected(settings.getShowSynonymsInTable());
-		// check whether all followers should be shown in trailing entries tab
-		jCheckBoxShowAllLuhmann.setSelected(settings.getShowAllLuhmann());
-		// set background color
-		jEditorPaneEntry.setBackground(new Color(Integer.parseInt(settings.getMainBackgroundColor(), 16)));
-		// init action-, key- and mouse-listeners for all components. we do this after
-		// selecting
-		// the two checkboxes above, to avoid triggering unnecessary actions.
-		// furthermore, we init the selection listeners for the tables and lists here
-		initListeners();
-		// init the searchbox for the toolbar
-		createToolbarSearchbox();
-		// if we have mac osx aqua-look, apply leopard style
-		if (settings.isMacAqua()) {
-			setupMacOSXLeopardStyle();
-		}
-		if (settings.isSeaGlass()) {
-			setupSeaGlassStyle();
-		}
-		// hide panels for live-search and is-follower-numbers
-		jPanelLiveSearch.setVisible(false);
-		// since we have a splitpane in this tab, we don't need auto-hiding anymore
-		/* jPanelManLinks.setVisible(false); */
-		// setup the jtree-component
-		initTrees();
-		// setup a table sorter and visible grids for the JTables
-		initTables();
-		// init transferhandler for drag&drop operations
-		initDragDropTransferHandler();
-		// init the default fontsizes for tables, lists and treeviews
-		initDefaultFontSize();
-		// initialise the keystrokes for certain components
-		initActionMaps();
-		// init accelerator table
-		initAcceleratorTable();
-		// init the icons of the toolbar, whether they are small, medium or large
-		initToolbarIcons(true);
-		// when we have a mac, we need an extra quit-hanlder...
-		if (PlatformUtil.isMacOS()) {
-			setupMacOSXApplicationListener();
-		}
-		// add an exit-listener, which offers saving etc. on
-		// exit, when we have unaved changes to the data file
-		getApplication().addExitListener(new ConfirmExit());
-		// add window-listener. somehow I lost the behaviour that clicking on the
-		// frame's
-		// upper right cross on Windows OS, quits the application. Instead, it just
-		// makes
-		// the frame disapear, but does not quit, so it looks like the application was
-		// quit
-		// but asking for changes took place. So, we simply add a windows-listener
-		// additionally
-		ZettelkastenView.super.getFrame().addWindowListener(this);
-		ZettelkastenView.super.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		// init the progress bar and status icon for
-		// the swingworker background thread
-		// creates a new class object. This variable is not used, it just associates
-		// task monitors to
-		// the background tasks. furthermore, by doing this, this class object also
-		// animates the
-		// busy icon and the progress bar of this frame.
-		//
-		// init the progressbar and animated icon for background tasks
-		InitStatusbarForTasks isb = new InitStatusbarForTasks(statusAnimationLabel, null, null);
-		// if the file exists, load it...
-		if (!loadDocument()) {
-			initVariables();
-			updateDisplay();
-		}
-		// check for updates, if set
-		if (settings.getAutoUpdate()) {
-			Task cfuT = checkForUpdate();
-			// get the application's context...
-			ApplicationContext appC = Application.getInstance().getContext();
-			// ...to get the TaskMonitor and TaskService
-			TaskMonitor tM = appC.getTaskMonitor();
-			TaskService tS = appC.getTaskService();
-			// with these we can execute the task and bring it to the foreground
-			// i.e. making the animated progressbar and busy icon visible
-			tS.execute(cfuT);
-			tM.setForegroundTask(cfuT);
-		}
-		// init autobackup-timer
-		makeAutoBackupTimer = new Timer();
-		// this timer should start after 5 minutes and update every 5 minutes
-		makeAutoBackupTimer.schedule(new AutoBackupTimer(), Constants.autobackupUpdateStart,
-				Constants.autobackupUpdateInterval);
 	}
 
 	private void initBorders(Settings settingsObj) {
@@ -822,16 +718,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				showKeywords();
 			}
 		});
-		// this actionn for the checkbox toggles the setting whether all follower
-		// entries, including top-level parents, should be shown, or whether
-		// current entry is the root of the treeview
-		jCheckBoxShowAllLuhmann.addActionListener(new java.awt.event.ActionListener() {
+		jCheckBoxShowAllNoteSequences.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				// change setting
-				settings.setShowAllLuhmann(jCheckBoxShowAllLuhmann.isSelected());
-				// refresh follower view
-				showLuhmann(/* resetCollapsedNodes= */true);
+				// Change setting and updateDisplay().
+				settings.setShowAllLuhmann(jCheckBoxShowAllNoteSequences.isSelected());
+				updateDisplay();
 			}
 		});
 		// this settings toggles the setting whether the cluster-list in the
@@ -1378,22 +1270,22 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		});
-		//
-		// finally, init the selection listeners...
-		//
+
+		// Init the JTable selection listeners.
 		javax.swing.JTable[] tables = new javax.swing.JTable[] { jTableLinks, jTableManLinks, jTableAuthors,
 				jTableTitles, jTableBookmarks, jTableAttachments };
-
 		for (javax.swing.JTable t : tables) {
 			SelectionListener listener = new SelectionListener(t);
 			t.getSelectionModel().addListSelectionListener(listener);
 			t.getColumnModel().getSelectionModel().addListSelectionListener(listener);
 		}
 
+		// Selection in a JTree is what is highlighted as selected in the UI. If
+		// selection changes, this listener is called.
 		jTreeLuhmann.addTreeSelectionListener(new TreeSelectionListener() {
 			@Override
 			public void valueChanged(TreeSelectionEvent e) {
-				showEntryFromLuhmann();
+				handleNoteSequenceValueChange();
 			}
 		});
 		jTreeLuhmann.addTreeExpansionListener(new javax.swing.event.TreeExpansionListener() {
@@ -1892,7 +1784,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			public void stateChanged(javax.swing.event.ChangeEvent evt) {
 				int sel = jTabbedPaneMain.getSelectedIndex();
 				if (sel != previousSelectedTab) {
-					// Update displayed entry if tab changed.
+					// Update displayed entry to activated entry if tab changed.
 					setNewDisplayedEntryAndUpdateDisplay(data.getActivatedEntryNumber());
 				} else {
 					updateDisplay();
@@ -2282,14 +2174,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// Enable drag&drop in jTreeLuhmann.
 		jTreeLuhmann.setDragEnabled(true);
 		jTreeLuhmann.setTransferHandler(new EntryStringTransferHandler() {
+			private EntryID draggedEntryToRemove = null;
+			private EntryID draggedEntryParent = null;
+
 			@Override
 			protected String exportString(JComponent c) {
 				javax.swing.JTree jTree = (javax.swing.JTree) c;
-				DefaultMutableTreeNode draggedNode = (DefaultMutableTreeNode) jTree.getSelectionPath()
-						.getLastPathComponent();
+				DefaultMutableTreeNode draggedNode = (DefaultMutableTreeNode) jTree.getLastSelectedPathComponent();
 
 				// Remember the dragged node, which must be removed when dropping the node.
-				movedNodeToRemove = draggedNode;
+				draggedEntryToRemove = TreeUtil.getEntryID(draggedNode);
+				draggedEntryParent = TreeUtil.getEntryID(draggedNode.getParent());
 
 				return Constants.DRAG_SOURCE_JTREELUHMANN;
 			}
@@ -2303,45 +2198,42 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 
 				javax.swing.JTree jTree = (javax.swing.JTree) c;
-				DefaultMutableTreeNode droppedNode = (DefaultMutableTreeNode) jTree.getSelectionPath()
-						.getLastPathComponent();
+				DefaultMutableTreeNode droppedNode = (DefaultMutableTreeNode) jTree.getLastSelectedPathComponent();
+				if (droppedNode == null) {
+					return false;
+				}
+				EntryID droppedEntry = TreeUtil.getEntryID(droppedNode);
+				EntryID droppedEntryParent = TreeUtil.getEntryID(droppedNode.getParent());
 
-				boolean droppedIntoItself = movedNodeToRemove.equals(droppedNode);
+				boolean droppedIntoItself = draggedEntryToRemove.equals(droppedEntry);
 				if (droppedIntoItself) {
 					return false;
 				}
 
 				// Drag&drop of jTreeLuhmann only works for reordering the sub-entries of a
 				// specific entry. It doesn't currently support moving across entries.
-				boolean droppedIntoParent = movedNodeToRemove.getParent().equals(droppedNode);
-				boolean droppedIntoSibling = movedNodeToRemove.getParent().equals(droppedNode.getParent());
+				boolean droppedIntoParent = draggedEntryParent.equals(droppedEntry);
+				boolean droppedIntoSibling = draggedEntryParent.equals(droppedEntryParent);
 				boolean droppedIntoParentOrSibling = droppedIntoParent || droppedIntoSibling;
 				if (!droppedIntoParentOrSibling) {
 					return false;
 				}
 
-				// parentEntryNumber is where we are going to add the dragged sub-entry to.
-				EntryID parentEntry = new EntryID(
-						entryNumberFromTreeNode((DefaultMutableTreeNode) movedNodeToRemove.getParent()));
-				EntryID draggedEntry = new EntryID(entryNumberFromTreeNode(movedNodeToRemove));
-				EntryID droppedEntry = new EntryID(entryNumberFromTreeNode(droppedNode));
-
 				// Delete the dragged entry before reinserting it.
-				data.deleteLuhmannNumber(parentEntry, draggedEntry);
+				data.deleteLuhmannNumber(draggedEntryParent, draggedEntryToRemove);
 
 				if (droppedIntoParent) {
 					// Reinsert dragged entry at first position.
-					data.addSubEntryToEntryAtPosition(parentEntry, draggedEntry, 0);
+					data.addSubEntryToEntryAtPosition(draggedEntryParent, draggedEntryToRemove, 0);
 				} else if (droppedIntoSibling) {
 					// Reinsert dragged entry after dropped entry.
-					data.addSubEntryToEntryAfterSibling(parentEntry, draggedEntry, droppedEntry);
+					data.addSubEntryToEntryAfterSibling(draggedEntryParent, draggedEntryToRemove, droppedEntry);
 				} else {
 					// This should never happen.
 					Constants.zknlogger.log(Level.SEVERE, "BUG: jTreeLuhmann importString");
 				}
 
-				// Update tabbed-pane.
-				showLuhmann(/* resetCollapsedNodes= */false);
+				updateDisplay();
 				return true;
 			}
 
@@ -2510,26 +2402,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * font-size will be applied to the components here.
 	 */
 	private void initDefaultFontSize() {
-		// get the default fontsize for tables and lists
-		int defaultsize = settings.getTableFontSize();
-		// get current font
-		int fsize = jTableLinks.getFont().getSize();
-		// retrieve default listvewfont
-		Font defaultfont = settings.getTableFont();
-		// create new font, add fontsize-value
-		Font f = new Font(defaultfont.getName(), defaultfont.getStyle(), fsize + defaultsize);
-		// set new font
-		jTableLinks.setFont(f);
-		jTableManLinks.setFont(f);
-		jTableAuthors.setFont(f);
-		jTableKeywords.setFont(f);
-		jTableTitles.setFont(f);
-		jTableBookmarks.setFont(f);
-		jTableAttachments.setFont(f);
-		jListEntryKeywords.setFont(f);
-		jTreeLuhmann.setFont(f);
-		jTreeCluster.setFont(f);
-		jTreeKeywords.setFont(f);
+		Font settingsTableFont = settings.getTableFont();
+		jTableLinks.setFont(settingsTableFont);
+		jTableManLinks.setFont(settingsTableFont);
+		jTableAuthors.setFont(settingsTableFont);
+		jTableKeywords.setFont(settingsTableFont);
+		jTableTitles.setFont(settingsTableFont);
+		jTableBookmarks.setFont(settingsTableFont);
+		jTableAttachments.setFont(settingsTableFont);
+		jListEntryKeywords.setFont(settingsTableFont);
+		jTreeLuhmann.setFont(settingsTableFont);
+		jTreeCluster.setFont(settingsTableFont);
+		jTreeKeywords.setFont(settingsTableFont);
 	}
 
 	/**
@@ -2626,31 +2510,30 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTextFieldEntryNumber.getInputMap().put(ks, "EnterKeyPressed");
 		jTreeLuhmann.getInputMap().put(ks, "EnterKeyPressed");
 		jListEntryKeywords.getInputMap().put(ks, "EnterKeyPressed");
-		// create action which should be executed when the user presses
-		// the delete/backspace-key
+
+		// Delete and backspace action.
 		AbstractAction a_delete = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (jTreeLuhmann == e.getSource()) {
+				if (e.getSource() == jTreeLuhmann) {
 					deleteLuhmannFromEntry();
-				} else if (jListEntryKeywords == e.getSource()) {
+				} else if (e.getSource() == jListEntryKeywords) {
 					deleteKeywordFromEntry();
-				} else if (jTableAuthors == e.getSource()) {
+				} else if (e.getSource() == jTableAuthors) {
 					deleteAuthor();
-				} else if (jTableKeywords == e.getSource()) {
+				} else if (e.getSource() == jTableKeywords) {
 					deleteKeyword();
-				} else if (jTableTitles == e.getSource()) {
+				} else if (e.getSource() == jTableTitles) {
 					deleteEntry();
-				} else if (jTableBookmarks == e.getSource()) {
+				} else if (e.getSource() == jTableBookmarks) {
 					deleteBookmark();
-				} else if (jTableManLinks == e.getSource()) {
+				} else if (e.getSource() == jTableManLinks) {
 					deleteManualLink();
-				} else if (jTableAttachments == e.getSource()) {
+				} else if (e.getSource() == jTableAttachments) {
 					deleteAttachment();
 				}
 			}
 		};
-		// put action to the tables' actionmaps
 		jTreeLuhmann.getActionMap().put("DeleteKeyPressed", a_delete);
 		jListEntryKeywords.getActionMap().put("DeleteKeyPressed", a_delete);
 		jTableAuthors.getActionMap().put("DeleteKeyPressed", a_delete);
@@ -2659,7 +2542,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTableTitles.getActionMap().put("DeleteKeyPressed", a_delete);
 		jTableBookmarks.getActionMap().put("DeleteKeyPressed", a_delete);
 		jTableAttachments.getActionMap().put("DeleteKeyPressed", a_delete);
-		// check for os, and use appropriate controlKey
+
 		ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS()) ? "BACK_SPACE" : "DELETE");
 		jTreeLuhmann.getInputMap().put(ks, "DeleteKeyPressed");
 		jListEntryKeywords.getInputMap().put(ks, "DeleteKeyPressed");
@@ -2669,6 +2552,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTableTitles.getInputMap().put(ks, "DeleteKeyPressed");
 		jTableBookmarks.getInputMap().put(ks, "DeleteKeyPressed");
 		jTableAttachments.getInputMap().put(ks, "DeleteKeyPressed");
+
 		// create action which should be executed when the user presses
 		// the ctrl-F10/meta-F10-key
 		AbstractAction a_add = new AbstractAction() {
@@ -2897,24 +2781,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private void setDefaultLookAndFeel() throws ClassNotFoundException, UnsupportedLookAndFeelException,
 			InstantiationException, IllegalAccessException {
 		try {
-
-			try { // Try to scale default font size according to screen resolution.
-				Font fm = (Font) UIManager.getLookAndFeelDefaults().get("defaultFont");
-				// check if laf supports default font
-				if (fm != null) {
-					UIManager.getLookAndFeelDefaults().put("defaultFont",
-							fm.deriveFont(fm.getSize2D() * Toolkit.getDefaultToolkit().getScreenResolution() / 96));
-				}
-			} catch (HeadlessException e) {
-			}
-
 			String laf = settings.getLookAndFeel();
-
 			if (laf.equals(Constants.seaGlassLookAndFeelClassName)) {
 				laf = "com.seaglasslookandfeel.SeaGlassLookAndFeel";
 			}
 			UIManager.setLookAndFeel(laf);
-			// log info
 			Constants.zknlogger.log(Level.INFO, "Using following LaF: {0}", settings.getLookAndFeel());
 
 			if (settings.isSeaGlass()) {
@@ -2928,8 +2799,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	public final void setNewDisplayedEntryAndUpdateDisplay(int inputDisplayedEntry) {
+		setNewDisplayedEntryAndUpdateDisplay(inputDisplayedEntry, UpdateDisplayOptions.defaultOptions());
+	}
+
+	public final void setNewDisplayedEntryAndUpdateDisplay(int inputDisplayedEntry, UpdateDisplayOptions options) {
 		displayedZettel = inputDisplayedEntry;
-		updateDisplay();
+		updateDisplay(options);
 	}
 
 	/**
@@ -2937,13 +2812,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	@Action
 	public final void updateDisplay() {
+		updateDisplay(UpdateDisplayOptions.defaultOptions());
+	}
+
+	public final void updateDisplay(UpdateDisplayOptions options) {
 		if (!data.hasZettelID(displayedZettel)) {
 			displayedZettel = data.getActivatedEntryNumber();
 		}
-		
+
 		updateEntryPaneAndKeywordsPane(displayedZettel);
 		updateToolbarAndMenu();
-		updateTabbedPane();
+		updateTabbedPane(options);
 	}
 
 	/**
@@ -2992,7 +2871,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public void setLuhmannLevel1() {
 		settings.setLuhmannExpandLevel(1);
-		showLuhmann(/* resetCollapsedNodes= */true);
+		updateDisplay();
 	}
 
 	/**
@@ -3001,7 +2880,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public void setLuhmannLevel2() {
 		settings.setLuhmannExpandLevel(2);
-		showLuhmann(/* resetCollapsedNodes= */true);
+		updateDisplay();
 	}
 
 	/**
@@ -3010,7 +2889,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public void setLuhmannLevel3() {
 		settings.setLuhmannExpandLevel(3);
-		showLuhmann(/* resetCollapsedNodes= */true);
+		updateDisplay();
 	}
 
 	/**
@@ -3019,7 +2898,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public void setLuhmannLevel4() {
 		settings.setLuhmannExpandLevel(4);
-		showLuhmann(/* resetCollapsedNodes= */true);
+		updateDisplay();
 	}
 
 	/**
@@ -3028,7 +2907,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public void setLuhmannLevel5() {
 		settings.setLuhmannExpandLevel(5);
-		showLuhmann(/* resetCollapsedNodes= */true);
+		updateDisplay();
 	}
 
 	/**
@@ -3037,7 +2916,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public void setLuhmannLevelAll() {
 		settings.setLuhmannExpandLevel(-1);
-		showLuhmann(/* resetCollapsedNodes= */true);
+		updateDisplay();
 	}
 
 	/**
@@ -3170,8 +3049,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * the changelistener of the jTabbedPane. The connections of each entry to other
 	 * entries e.g. has to be updated each time
 	 */
-	private void updateTabbedPane() {
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+	private void updateTabbedPane(UpdateDisplayOptions options) {
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			clearTabbedPaneModels();
 		}
 
@@ -3206,7 +3085,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// We always need an update of the links.
 		needsLinkUpdate = true;
 		// When the previous tab was the links-tab, stop the background-task.
-		if ((TAB_LINKS == previousSelectedTab || TAB_LINKS != selectedTab) && (cLinksTask != null) && !cLinksTask.isDone()) {
+		if ((TAB_LINKS == previousSelectedTab || TAB_LINKS != selectedTab) && (cLinksTask != null)
+				&& !cLinksTask.isDone()) {
 			cLinksTask.cancel(true);
 		}
 
@@ -3214,10 +3094,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		switch (selectedTab) {
 		case TAB_LINKS:
-			showLinks();
+			if (options.isUpdateLinksTable()) {
+				showLinks();
+			}
 			break;
 		case TAB_LUHMANN:
-			showLuhmann(/* resetCollapsedNodes= */false);
+			updateNoteSequencesTab(options);
 			break;
 		case TAB_KEYWORDS:
 			showKeywords();
@@ -3226,7 +3108,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			showAuthors();
 			break;
 		case TAB_TITLES:
-			showTitles();
+			updateTitlesTab();
 			break;
 		case TAB_CLUSTER:
 			showCluster();
@@ -3238,7 +3120,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			showAttachments();
 			break;
 		default:
-			showLinks();
+			if (options.isUpdateLinksTable()) {
+				showLinks();
+			}
 			break;
 		}
 	}
@@ -3284,19 +3168,23 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * the current entry and we don't want updating the tabbed pane with the jTree
 	 * when the user selects an entry from that tree.
 	 */
-	private void showEntryFromLuhmann() {
+	private void handleNoteSequenceValueChange() {
 		// If no data available, do nothing.
 		if (data.getCount(Daten.ZKNCOUNT) < 1) {
 			return;
 		}
-		
+
 		int selectedEntry = selectedEntryInJTreeLuhmann();
 		// If we don't have a valid selection, do nothing.
 		if (selectedEntry == -1) {
 			return;
 		}
 		if (selectedEntry != displayedZettel) {
-			setNewDisplayedEntryAndUpdateDisplay(selectedEntry);
+			// JTree already handles changing the selected tree node, so no need to rebuild
+			// it.
+			UpdateDisplayOptions options = new UpdateDisplayOptions.UpdateDisplayOptionsBuilder()
+					.updateNoteSequencesTab(false).build();
+			setNewDisplayedEntryAndUpdateDisplay(selectedEntry, options);
 		}
 	}
 
@@ -3388,7 +3276,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	private void updateEntryPaneAndKeywordsPane(int inputDisplayedEntry) {
 		// If we have an invalid entry, reset panes.
-		if (data.getCount(Daten.ZKNCOUNT) < 1 || inputDisplayedEntry < 1) {
+		if (data.getCount(Daten.ZKNCOUNT) == 0 || inputDisplayedEntry < 1) {
 			jEditorPaneEntry.setText("");
 
 			Color bcol = (settings.isMacAqua()) ? ColorUtil.colorJTreeText : null;
@@ -3446,9 +3334,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * Action that deletes a selected sub-entry in the jTreeLuhmann from its parent.
-	 * Thus, we can not only remove an sub-entry of the current entry, but also from
-	 * other sub-entries.
+	 * Action that deletes a selected subentry in the jTreeLuhmann from its parent.
 	 */
 	@Action(enabledProperty = "luhmannSelected")
 	public void deleteLuhmannFromEntry() {
@@ -3468,12 +3354,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		// Delete if Yes.
 		if (option == JOptionPane.YES_OPTION) {
-			int selectedEntryNumber = entryNumberFromTreeNode(selectedNode);
-			int parentEntryNumber = entryNumberFromTreeNode(parent);
-			if (selectedEntryNumber != -1 && parentEntryNumber != -1) {
-				data.deleteLuhmannNumber(new EntryID(parentEntryNumber), new EntryID(selectedEntryNumber));
-				updateDisplay();
-			}
+			EntryID selectedEntry = TreeUtil.getEntryID(selectedNode);
+			EntryID parentEntry = TreeUtil.getEntryID(parent);
+			data.deleteLuhmannNumber(parentEntry, selectedEntry);
+
+			// Reset displayedZettel and updateDisplay.
+			displayedZettel = -1;
+			updateDisplay();
 		}
 	}
 
@@ -3483,39 +3370,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * @return The number of the selected entry, or -1 if an error occured
 	 */
 	private int selectedEntryInJTreeLuhmann() {
-		// retrieve selected node
-		return entryNumberFromTreeNode((DefaultMutableTreeNode) jTreeLuhmann.getLastSelectedPathComponent());
-	}
-
-	/**
-	 * This methods retrieves the number of the node {@code node} from a
-	 * jTreeLuhmann
-	 *
-	 * @param node
-	 * @return The number of the selected entry, or -1 if an error occurred
-	 */
-	private int entryNumberFromTreeNode(DefaultMutableTreeNode node) {
-		if (node == null) {
+		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) jTreeLuhmann.getLastSelectedPathComponent();
+		if (selectedNode == null) {
 			return -1;
 		}
-		TreeUserObject userObject = (TreeUserObject) node.getUserObject();
-		String entryNumberString = userObject.getId();
-		try {
-			int nr = Integer.parseInt(entryNumberString);
-			return nr;
-		} catch (NumberFormatException e) {
-			Constants.zknlogger.log(Level.WARNING, "Node was: {0}{1}Retrieved Number was: {2}{3}{4}",
-					new Object[] { node.toString(), System.lineSeparator(), entryNumberString, System.lineSeparator(),
-							e.getLocalizedMessage() });
-			return -1;
-		}
+		return TreeUtil.getEntryID(selectedNode).asInt();
 	}
 
 	@Action
 	public void showLuhmannEntryNumber() {
 		boolean val = settings.getShowLuhmannEntryNumber();
 		settings.setShowLuhmannEntryNumber(!val);
-		showLuhmann(/* resetCollapsedNodes= */false);
+		updateDisplay();
 	}
 
 	/**
@@ -3544,32 +3410,23 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This method opens a modal dialog that starts a background-task. this
-	 * background-task then again creates the so-called luhmann-numbers. <br>
-	 * <br>
-	 * The Luhmann-Numbers function is similar to a typical tree: we have one
-	 * "parent"-entry and several child-entries (sub-entries or followers). each of
-	 * these child-elements can have their own child-elements again (whereby the
-	 * child-element itself is then again understood as "parent"-entry). <br>
-	 * <br>
-	 * So, the Luhmann-numbers of an entry only have one subordinated level of
-	 * sub-entries. the tree- structure comes from those sub-entries, that might
-	 * have their own sub-entries again.
-	 *
-	 * @param resetCollapsedNodes logical, {@code true} if all former collapsed
-	 *                            nodes should be expanded now, or {@code false} if
-	 *                            collapsed state should be remembered.
+	 * This method updates the Note Sequences tab. Does nothing if data is
+	 * unavailable.
+	 * 
+	 * The Note Sequences tab is divided into the following: a JTree pane, a Parents
+	 * notes pane, and a Note Sequences menu. Each are updated here if appropriate.
 	 */
-	private synchronized void showLuhmann(boolean resetCollapsedNodes) {
+	private synchronized void updateNoteSequencesTab(UpdateDisplayOptions options) {
 		// If no data available, do nothing.
 		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return;
 		}
-		// If the note-sequences-table is not shown, do nothing.
-		if (jTabbedPaneMain.getSelectedIndex() != TAB_LUHMANN) {
-			return;
+
+		if (options.isUpdateNoteSequencesTree()) {
+			prepareNoteSequencesJTreePane();
 		}
-		prepareNoteSequencesTab(resetCollapsedNodes);
+		prepareNoteSequencesParentsPane();
+
 		showTabMenu(viewMenuLuhmann);
 	}
 
@@ -3595,14 +3452,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * entries are display in the JTable of the JTabbedPane
 	 */
 	private synchronized void showLinks() {
-		// if no data available, leave method
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
-			return;
-		}
-		// if the link-table is not shown, leave
+		// If the link-table is not shown, nothing to do.
 		if (jTabbedPaneMain.getSelectedIndex() != TAB_LINKS) {
 			return;
 		}
+
+		// If no data available, nothing to show.
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
+			return;
+		}
+
 		// when no update needed, show menu and leave method
 		if (!needsLinkUpdate) {
 			// update might be needed next time
@@ -3622,14 +3481,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 		// clear selections
 		jListEntryKeywords.clearSelection();
-		// clear table
+
+		// Clear table with links.
 		DefaultTableModel tm = (DefaultTableModel) jTableLinks.getModel();
-		// reset the table
 		tm.setRowCount(0);
-		// clear table with manual links
+
+		// Clear table with manual links.
 		tm = (DefaultTableModel) jTableManLinks.getModel();
-		// reset the table
 		tm.setRowCount(0);
+
 		// hide the panel with the table with manual links
 		/* jPanelManLinks.setVisible(false); */
 		// tell user that we are doing something...
@@ -3710,7 +3570,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					null, /* only needed for authors */
 					null, /* only needed for attachments */
 					settings.getShowSynonymsInTable(), 0, /* only need for authors */
-					(DefaultTableModel) jTableKeywords.getModel(), settings.getMakeLuhmannColumnSortable());
+					(DefaultTableModel) jTableKeywords.getModel());
 			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
@@ -4295,7 +4155,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			String msg;
 			// if we have just a single selection, use phrasing for that message
 			msg = (1 == kws.length) ? getResourceMap().getString("askForDeleteKeywordMsgSingle")
-					// else if we have multiple selectios, use phrasing with appropriate wording
+					// else if we have multiple selections, use phrasing with appropriate wording
 					: getResourceMap().getString("askForDeleteKeywordMsgMultiple", String.valueOf(kws.length));
 			// ask whether keyword really should be deleted
 			int option = JOptionPane.showConfirmDialog(getFrame(), msg,
@@ -4655,7 +4515,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		String msg = (1 == rowcount)
 				? getResourceMap().getString("askForDeleteBookmarkCategoryMsgSingle",
 						(selcat != null) ? selcat.toString() : "")
-				// else if we have multiple selectios, use phrasing with appropriate wording
+				// else if we have multiple selections, use phrasing with appropriate wording
 				: getResourceMap().getString("askForDeleteBookmarkCategoryMsgMultiple", String.valueOf(rowcount));
 		// ask whether author really should be deleted
 		int option = JOptionPane.showConfirmDialog(getFrame(), msg,
@@ -4828,41 +4688,32 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	/**
 	 * This method deletes entries which are selected in the titles-table
-	 * (jTableTitles). The currently displayed entry can also be deleted via toolbar
-	 * or menu. see {@link #deleteCurrentEntry() deleteCurrentEntry()} for more
-	 * details.
+	 * (jTableTitles).
+	 * 
+	 * This method shows an option pane where the user can confirm the
+	 * delete-progress or cancel it.
 	 */
 	@Action(enabledProperty = "tableEntriesSelected")
 	public void deleteEntry() {
-		// get the amount of selected entries.
-		int rowcount = jTableTitles.getSelectedRowCount();
-		// if nothing is selected, leave
-		if (rowcount < 1) {
+		// If no selected rows, nothing to delete.
+		int numSelectedRows = jTableTitles.getSelectedRowCount();
+		if (numSelectedRows == 0) {
 			return;
 		}
-		// get the selected rows
-		int[] rows = jTableTitles.getSelectedRows();
-		// get the entrie-strings
-		int[] nrs = new int[rows.length];
-		// copy all values into the integer array
-		for (int cnt = 0; cnt < rows.length; cnt++) {
+
+		int[] selectedRows = jTableTitles.getSelectedRows();
+		int[] entryIds = new int[selectedRows.length];
+		for (int cnt = 0; cnt < selectedRows.length; cnt++) {
 			try {
-				// get the entry's number
-				int nr = Integer.parseInt(jTableTitles.getValueAt(rows[cnt], 0).toString());
-				// save it to the array
-				nrs[cnt] = nr;
+				entryIds[cnt] = Integer.parseInt(jTableTitles.getValueAt(selectedRows[cnt], 0).toString());
 			} catch (NumberFormatException ex) {
 				Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
 			}
 		}
-		// try to delete entries. this method shows an option pane where the user can
-		// confirm the delete-progress or cancel it. if cancelled, the method returns
-		// false
-		if (deleteEntries(nrs)) {
-			// set uptodate-state to false
+
+		if (deleteEntries(entryIds)) {
 			data.setTitlelistUpToDate(false);
-			// update jTableTitles
-			showTitles();
+			updateDisplay();
 		}
 	}
 
@@ -4875,6 +4726,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	/**
 	 * Deletes one or more entries which entry-numbers are passed as int-array
+	 * 
+	 * This method shows an option pane where the user can confirm the
+	 * delete-progress or cancel it. If cancelled, the method returns false.
 	 *
 	 * @param nrs the index-numbers of the entries that should be deleted
 	 * @return {@code true} if entries were deleted, {@code false} is deletion was
@@ -5708,7 +5562,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					null, /* only needed for authors */
 					settings, false, /* only need for keywords */
 					0, /* only need for authors */
-					(DefaultTableModel) jTableAttachments.getModel(), settings.getMakeLuhmannColumnSortable());
+					(DefaultTableModel) jTableAttachments.getModel());
 			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
@@ -5844,8 +5698,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 																											 */
 					bibtex, null, /* only needed for attachments */
 					false, /* only needed for keywords */
-					jComboBoxAuthorType.getSelectedIndex(), (DefaultTableModel) jTableAuthors.getModel(),
-					settings.getMakeLuhmannColumnSortable());
+					jComboBoxAuthorType.getSelectedIndex(), (DefaultTableModel) jTableAuthors.getModel());
 			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
@@ -6006,20 +5859,32 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 	}
 
-	private void showEntryFromManualLinks() {
-		// if no data available, leave method
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+	/*
+	 * displaySelectedEntryFromManualLinks is called whenever a selected entry is
+	 * changed in the Manual Links table. Sometimes multiple times with the same
+	 * value.
+	 */
+	private void updateDisplayedEntryWithSelectedEntryFromManualLinks() {
+		// If no data available, do nothing.
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return;
 		}
-		// get the selected row
-		int entry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableManLinks, 0);
-		// if we don't have a valid selection, use current entry as reference
-		if (-1 == entry) {
-			setNewDisplayedEntryAndUpdateDisplay(data.getActivatedEntryNumber());
-		} // and if it was a avalid value, show entry
-		else {
-			setNewDisplayedEntryAndUpdateDisplay(entry);
+
+		// Get the selected entry.
+		int entry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableManLinks, /* column= */ 0);
+		// If no entry is selected, do nothing.
+		if (entry == -1) {
+			return;
 		}
+		// If selected entry is already the displayed entry, do nothing.
+		if (displayedZettel == entry) {
+			return;
+		}
+
+		// No need to update the Links tab when selection changes.
+		UpdateDisplayOptions options = new UpdateDisplayOptions.UpdateDisplayOptionsBuilder().updateLinksTab(false)
+				.build();
+		setNewDisplayedEntryAndUpdateDisplay(entry, options);
 	}
 
 	/**
@@ -6262,26 +6127,29 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This method displays the all entries' titles using a background task. after
-	 * the task finishes, all titles and ther related entry number in the main data
-	 * file (zknfile) are displayed in the JTable of the JTabbedPane
+	 * This method displays the all entries' titles using a background task. After
+	 * the task finishes, all titles and their entry numbers in the main data file
+	 * (zknfile) are displayed in the JTable of the JTabbedPane.
 	 */
-	private void showTitles() {
-		// if no data available, leave method
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+	private void updateTitlesTab() {
+		// If no data available, do nothing.
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return;
 		}
-		// reset status text, since the amount of titles is euqal to the amount of
-		// entries
+
+		// Reset status text, since the amount of titles is euqal to the amount of
+		// entries.
 		statusMsgLabel.setText("");
-		// show/enabke related menu
+
 		showTabMenu(viewMenuTitles);
-		// if keywordlist is up to date, leave method
+
+		// If Daten says it is up to date, do nothing.
 		if (data.isTitlelistUpToDate()) {
 			return;
 		}
+
 		// if dialog window isn't already created, do this now
-		if (null == taskDlg) {
+		if (taskDlg == null) {
 			// get parent und init window
 			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWTITLES, data, null, /*
 																											 * only
@@ -6293,7 +6161,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					null, /* only needed for attachments */
 					false, /* only needed for keywords */
 					0, /* only needed for authors */
-					(DefaultTableModel) jTableTitles.getModel(), settings.getMakeLuhmannColumnSortable());
+					(DefaultTableModel) jTableTitles.getModel());
 			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
@@ -6301,11 +6169,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// dispose the window and clear the object
 		taskDlg.dispose();
 		taskDlg = null;
-		// reset filtered list
+
+		// Reset filtered title list.
 		linkedtitlelist = null;
-		// disable refresh button
+		// Refresh jButton starts disabled.
 		jButtonRefreshTitles.setEnabled(false);
-		// enable textfield only if we have more than 1 element in the jtable
+		// Enable filter jTextField only if we have more than 1 element in the jtable.
 		jTextFieldFilterTitles.setEnabled(jTableTitles.getRowCount() > 0);
 	}
 
@@ -6747,7 +6616,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 	}
 
-	private void fillLuhmannNumbers(MutableTreeNode node, EntryID nodeEntry, EntryID selectedEntry) {
+	private void fillLuhmannNumbers(DefaultMutableTreeNode node, EntryID nodeEntry, EntryID selectedEntry) {
 		// Update selectedLuhmannNode if we have found it.
 		if (nodeEntry.equals(selectedEntry)) {
 			selectedLuhmannNode = (DefaultMutableTreeNode) node;
@@ -6762,7 +6631,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		for (EntryID subEntry : subEntries) {
 			// Create new subEntry node.
 			String title = TreeUtil.getEntryDisplayText(data, settings.getShowLuhmannEntryNumber(), subEntry);
-			MutableTreeNode loopNode = new DefaultMutableTreeNode(
+			DefaultMutableTreeNode loopNode = new DefaultMutableTreeNode(
 					new TreeUserObject(title, subEntry.asString(), /* collapsed= */true));
 
 			// Add to last position.
@@ -6930,13 +6799,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		return new EntryID(rootEntry);
 	}
 
-	private void prepareNoteSequencesJTreePane(boolean resetCollapsedNodes) {
+	private void prepareNoteSequencesJTreePane() {
 		DefaultTreeModel dtm = (DefaultTreeModel) jTreeLuhmann.getModel();
 
 		// Save collapsed state if same root as the previous tree.
 		DefaultMutableTreeNode previousRoot = (DefaultMutableTreeNode) dtm.getRoot();
 		EntryID newRootEntry = getRootEntryForLuhmannTree();
-		if (!resetCollapsedNodes && entryNumberFromTreeNode(previousRoot) == newRootEntry.asInt()) {
+		if (previousRoot != null && TreeUtil.getEntryID(previousRoot).equals(newRootEntry)) {
 			TreeUtil.saveCollapsedNodes(jTreeLuhmann);
 		} else {
 			TreeUtil.resetCollapsedNodes();
@@ -6947,16 +6816,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		// Prepare new root.
 		String title = TreeUtil.getEntryDisplayText(data, settings.getShowLuhmannEntryNumber(), newRootEntry);
-		MutableTreeNode root = new DefaultMutableTreeNode(
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode(
 				new TreeUserObject(title, newRootEntry.asString(), /* collapsed= */false));
 		dtm.setRoot(root);
 
+		// Init selectedLuhmannNode.
+		selectedLuhmannNode = null;
 		// Populate the whole tree rooted at root.
 		fillLuhmannNumbers(root, newRootEntry, new EntryID(displayedZettel));
 
 		TreeUtil.setExpandLevel(settings.getLuhmannExpandLevel());
 		TreeUtil.expandAllTrees(jTreeLuhmann);
-		
+
 		// If Note Sequences are shown, put focus on them.
 		jTreeLuhmann.requestFocusInWindow();
 
@@ -6975,14 +6846,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private void prepareNoteSequencesParentsPane() {
 		isFollowerList.clear();
 
-		EntryID activatedEntry = new EntryID(data.getActivatedEntryNumber());
+		EntryID shownEntry = displayedZettel != -1 ? new EntryID(displayedZettel)
+				: new EntryID(data.getActivatedEntryNumber());
 
 		// Go through the complete data set to get the list of parents of the
 		// activatedEntry.
 		for (int loopEntryId = 1; loopEntryId <= data.getCount(Daten.ZKNCOUNT); loopEntryId++) {
 			List<EntryID> subEntries = EntryIDUtils.csvToEntryIDList(data.getSubEntriesCsv(loopEntryId));
 			for (EntryID subEntry : subEntries) {
-				if (subEntry.equals(activatedEntry)) {
+				if (subEntry.equals(shownEntry)) {
 					try {
 						isFollowerList.add(String.valueOf(loopEntryId));
 						// No need to look further at its siblings.
@@ -6998,11 +6870,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// Update Pane to show parents.
 		jEditorPaneIsFollower
 				.setText(HtmlUbbUtil.getLinkedEntriesAsHtml(data, settings, isFollowerList, "isFollowerText"));
-	}
-
-	private void prepareNoteSequencesTab(boolean resetCollapsedNodes) {
-		prepareNoteSequencesJTreePane(resetCollapsedNodes);
-		prepareNoteSequencesParentsPane();
 	}
 
 	/**
@@ -7304,7 +7171,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	@Action
 	public void settingsWindow() {
-		if (null == settingsDlg) {
+		if (settingsDlg == null) {
 			settingsDlg = new CSettingsDlg(getFrame(), settings, data, autoKorrekt, synonyms, steno);
 			settingsDlg.setLocationRelativeTo(getFrame());
 		}
@@ -7348,11 +7215,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 			// set background color
 			jEditorPaneEntry.setBackground(new Color(Integer.parseInt(settings.getMainBackgroundColor(), 16)));
-			// update display, in case the user changed the font-settings
 			updateDisplay();
 		}
-		// when the user chose a new look and feel, or font-size for tables and lists,
-		// update ist
+		// Show 'needs restart' message if necessary.
 		if (settingsDlg.getNeedsLafUpdate()) {
 			JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("needsRestartMsg"),
 					getResourceMap().getString("needsRestartTitle"), JOptionPane.PLAIN_MESSAGE);
@@ -8098,8 +7963,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// when the previous dialog wasn't cancelled or simply closed
 		if (Constants.RETURN_VALUE_CONFIRM == exportWindow.getReturnValue()) {
 			// when the user wants to export into PDF or LaTex, open a new dialog where the
-			// user
-			// can make some extra settings like page settings and font-sizes.
+			// user can make some extra settings like page settings and font-sizes.
 			if (ExportTools.isExportSettingsOk(getFrame(), settings, exportWindow.getExportType())) {
 				// if dialog window isn't already created, do this now
 				if (null == taskDlg) {
@@ -8171,7 +8035,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (data.isDeleted(displayedZettel)) {
 			openEditWindow(false, displayedZettel, false, true, -1);
 		} else {
-			openEditWindow(true, displayedZettel, false, false, -1);
+			openEditWindow(/* isEditing */true, displayedZettel, /* isLuhmann */false, /* isDeleted */false,
+					/* insertAfterEntry */-1);
 		}
 	}
 
@@ -8280,10 +8145,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			data.setAttachmentlistUpToDate(false);
 			// tell about success
 			Constants.zknlogger.log(Level.INFO, "Entry save finished.");
-			// update the dislay...
+
+			// Reset displayedZettel and updateDisplay.
+			displayedZettel = -1;
 			updateDisplay();
-			// tell about success
 			Constants.zknlogger.log(Level.INFO, "Display updated.");
+
 			// and create a backup...
 			makeAutoBackup();
 			// tell about success
@@ -8441,11 +8308,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This method deletes the currently displayed zettel. usually this method is
-	 * called from the delete-action from the toolbar or menu, in contrary to the
-	 * delete-function from the jTableTitles which deletes selected entries (see
-	 * {@link #deleteEntry() deleteEntry()}).<br>
-	 * <br>
+	 * This method deletes the currently displayed note. <br>
 	 * The entry is not being deleted completely. To keep the ordering and
 	 * index-numbers of existing entries, a deleted entry will just be cleared (all
 	 * content set to empty string values), and if a deleted entry is displayed,
@@ -8520,7 +8383,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	@Action(enabledProperty = "entriesAvailable")
 	public void insertEntry() {
-		openEditWindow(false, displayedZettel, true, false, displayedZettel);
+		createEntryAndAddAsSubEntry();
+	}
+
+	private void createEntryAndAddAsSubEntry() {
+		openEditWindow(/* isEditing */false, displayedZettel, /* isLuhmann */true, /* isDeleted */false,
+				displayedZettel);
 	}
 
 	/**
@@ -8699,10 +8567,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showFirstEntry() {
 		data.firstEntry();
-		
+
 		// Reset displayedZettel.
 		displayedZettel = -1;
-		
+
 		updateDisplay();
 	}
 
@@ -8712,10 +8580,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showLastEntry() {
 		data.lastEntry();
-		
+
 		// Reset displayedZettel.
 		displayedZettel = -1;
-		
+
 		updateDisplay();
 	}
 
@@ -8725,10 +8593,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showNextEntry() {
 		data.nextEntry();
-		
+
 		// Reset displayedZettel.
 		displayedZettel = -1;
-		
+
 		updateDisplay();
 	}
 
@@ -8784,10 +8652,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showPrevEntry() {
 		data.prevEntry();
-		
+
 		// Reset displayedZettel.
 		displayedZettel = -1;
-		
+
 		updateDisplay();
 	}
 
@@ -9721,10 +9589,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "historyBackAvailable")
 	public void historyBack() {
 		data.historyBack();
-		
+
 		// Reset displayedZettel.
 		displayedZettel = -1;
-		
+
 		updateDisplay();
 	}
 
@@ -9736,10 +9604,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public void goToFirstParentEntry() {
 		data.goToFirstParentEntry();
-		
+
 		// Reset displayedZettel.
 		displayedZettel = -1;
-		
+
 		updateDisplay();
 	}
 
@@ -9750,10 +9618,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "historyForAvailable")
 	public void historyFor() {
 		data.historyFore();
-		
+
 		// Reset displayedZettel.
 		displayedZettel = -1;
-		
+
 		updateDisplay();
 	}
 
@@ -10908,6 +10776,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	private void saveSettings() {
 		// Save current zettel-position.
+		// TODO(mateusbraga) startup entry should be saved in the data file. Otherwise
+		// we might open invalid entries when changing between data files with the "Open
+		// document."
 		settings.setStartupEntry(data.getActivatedEntryNumber());
 		// TODO(mateusbraga) The following table sorting code should be set as the
 		// default instead of overwritting at every save.
@@ -11127,12 +10998,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			terminateTimers();
 			saveSettings();
 			makeExtraBackup();
-			try {
-				if (baos_log != null) {
-					baos_log.close();
-				}
-			} catch (IOException ex) {
-			}
 		}
 	}
 
@@ -11466,7 +11331,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			else if (jTableLinks == table) {
 				showRelatedKeywords();
 			} else if (jTableManLinks == table) {
-				showEntryFromManualLinks();
+				updateDisplayedEntryWithSelectedEntryFromManualLinks();
 			} else if (jTableBookmarks == table) {
 				showEntryFromBookmarks();
 			}
@@ -11721,11 +11586,24 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always
 	 * regenerated by the Form Editor.
+	 * 
+	 * @throws UnsupportedLookAndFeelException
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// Code">//GEN-BEGIN:initComponents
-	private void initComponents() {
+	private void initSwingComponents() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
+			UnsupportedLookAndFeelException {
+		// Init Java look and feel.
+		setDefaultLookAndFeel();
+
+		// Init the locale for the default actions cut/copy/paste.
+		Tools.initLocaleForDefaultActions(
+				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class)
+						.getContext().getActionMap(ZettelkastenView.class, this));
 
 		mainPanel = new javax.swing.JPanel();
 		jSplitPaneMain1 = new javax.swing.JSplitPane();
@@ -11774,7 +11652,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				return text;
 			}
 		};
-		jCheckBoxShowAllLuhmann = new javax.swing.JCheckBox();
+		jCheckBoxShowAllNoteSequences = new javax.swing.JCheckBox();
 		jPanel2 = new javax.swing.JPanel();
 		jTextFieldFilterKeywords = new javax.swing.JTextField();
 		jButtonRefreshKeywords = new javax.swing.JButton();
@@ -12481,25 +12359,26 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jEditorPaneIsFollower.setEditable(false);
 		jEditorPaneIsFollower.setContentType("text/html"); // NOI18N
 		jEditorPaneIsFollower.setName("jEditorPaneIsFollower"); // NOI18N
+		javax.swing.ToolTipManager.sharedInstance().registerComponent(jEditorPaneIsFollower);
 		jScrollPane2.setViewportView(jEditorPaneIsFollower);
 
 		jSplitPane2.setRightComponent(jScrollPane2);
 
-		jCheckBoxShowAllLuhmann.setText(resourceMap.getString("jCheckBoxShowAllLuhmann.text")); // NOI18N
-		jCheckBoxShowAllLuhmann.setToolTipText(resourceMap.getString("jCheckBoxShowAllLuhmann.toolTipText")); // NOI18N
-		jCheckBoxShowAllLuhmann.setName("jCheckBoxShowAllLuhmann"); // NOI18N
+		jCheckBoxShowAllNoteSequences.setText(resourceMap.getString("jCheckBoxShowAllLuhmann.text")); // NOI18N
+		jCheckBoxShowAllNoteSequences.setToolTipText(resourceMap.getString("jCheckBoxShowAllLuhmann.toolTipText")); // NOI18N
+		jCheckBoxShowAllNoteSequences.setName("jCheckBoxShowAllLuhmann"); // NOI18N
 
 		javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
 		jPanel10.setLayout(jPanel10Layout);
 		jPanel10Layout.setHorizontalGroup(
 				jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jSplitPane2)
 						.addGroup(jPanel10Layout.createSequentialGroup().addContainerGap()
-								.addComponent(jCheckBoxShowAllLuhmann)
+								.addComponent(jCheckBoxShowAllNoteSequences)
 								.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 		jPanel10Layout.setVerticalGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 				.addGroup(jPanel10Layout.createSequentialGroup().addComponent(jSplitPane2)
 						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(jCheckBoxShowAllLuhmann).addContainerGap()));
+						.addComponent(jCheckBoxShowAllNoteSequences).addContainerGap()));
 
 		jTabbedPaneMain.addTab(resourceMap.getString("jPanel10.TabConstraints.tabTitle"), jPanel10); // NOI18N
 
@@ -14803,6 +14682,93 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		setMenuBar(menuBar);
 		setStatusBar(statusPanel);
 		setToolBar(toolBar);
+
+		// Init application icon.
+		getFrame().setIconImage(Constants.zknicon.getImage());
+
+		// initially, hide the tree-view from keywords-tab
+		// the user can switch between the hierarchic treeview of keywords
+		// or the simple frequencies in a table. by default, the table-view is activated
+		// since this is a new feature, so most people would use table-view in the
+		// beginning
+		jScrollPane17.setVisible(false);
+		jTreeKeywords.setVisible(false);
+		// hide special menus. these will only be visible according to their
+		// related displayed tab
+		removeTabMenus();
+		// init the recent documents
+		setRecentDocuments();
+
+		// tick checbox-menuitem
+		showHighlightKeywords.setSelected(settings.getHighlightKeywords());
+		// tick checkbox whether keyword-synonyms should also be displayed in the
+		// jtableKeywords or not...
+		jCheckBoxShowSynonyms.setSelected(settings.getShowSynonymsInTable());
+		// check whether all followers should be shown in trailing entries tab
+		jCheckBoxShowAllNoteSequences.setSelected(settings.getShowAllLuhmann());
+		// set background color
+		jEditorPaneEntry.setBackground(new Color(Integer.parseInt(settings.getMainBackgroundColor(), 16)));
+		// init action-, key- and mouse-listeners for all components. we do this after
+		// selecting
+		// the two checkboxes above, to avoid triggering unnecessary actions.
+		// furthermore, we init the selection listeners for the tables and lists here
+		initListeners();
+		// init the searchbox for the toolbar
+		createToolbarSearchbox();
+		// if we have mac osx aqua-look, apply leopard style
+		if (settings.isMacAqua()) {
+			setupMacOSXLeopardStyle();
+		}
+		if (settings.isSeaGlass()) {
+			setupSeaGlassStyle();
+		}
+		// hide panels for live-search and is-follower-numbers
+		jPanelLiveSearch.setVisible(false);
+		// since we have a splitpane in this tab, we don't need auto-hiding anymore
+		/* jPanelManLinks.setVisible(false); */
+		// setup the jtree-component
+		initTrees();
+		// setup a table sorter and visible grids for the JTables
+		initTables();
+		// init transferhandler for drag&drop operations
+		initDragDropTransferHandler();
+		// Init the default font sizes for tables, lists and treeviews.
+		initDefaultFontSize();
+
+		// initialise the keystrokes for certain components
+		initActionMaps();
+		// init accelerator table
+		initAcceleratorTable();
+		// init the icons of the toolbar, whether they are small, medium or large
+		initToolbarIcons(true);
+
+		// Init MacOS-specific application listener.
+		if (PlatformUtil.isMacOS()) {
+			setupMacOSXApplicationListener();
+		}
+
+		// add window-listener. somehow I lost the behaviour that clicking on the
+		// frame's
+		// upper right cross on Windows OS, quits the application. Instead, it just
+		// makes
+		// the frame disapear, but does not quit, so it looks like the application was
+		// quit
+		// but asking for changes took place. So, we simply add a windows-listener
+		// additionally
+		ZettelkastenView.super.getFrame().addWindowListener(this);
+		ZettelkastenView.super.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		// init the progress bar and status icon for
+		// the swingworker background thread
+		// creates a new class object. This variable is not used, it just associates
+		// task monitors to
+		// the background tasks. furthermore, by doing this, this class object also
+		// animates the
+		// busy icon and the progress bar of this frame.
+		//
+		// init the progressbar and animated icon for background tasks
+		InitStatusbarForTasks isb = new InitStatusbarForTasks(statusAnimationLabel, null, null);
+
+		clearTabbedPaneModels();
 	}// </editor-fold>//GEN-END:initComponents
 
 	private void viewAuthorsCopyActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewAuthorsCopyActionPerformed
@@ -14896,7 +14862,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private javax.swing.JButton jButtonRefreshKeywords;
 	private javax.swing.JButton jButtonRefreshTitles;
 	private javax.swing.JCheckBox jCheckBoxCluster;
-	private javax.swing.JCheckBox jCheckBoxShowAllLuhmann;
+	private javax.swing.JCheckBox jCheckBoxShowAllNoteSequences;
 	private javax.swing.JCheckBox jCheckBoxShowSynonyms;
 	private javax.swing.JComboBox jComboBoxAuthorType;
 	private javax.swing.JComboBox jComboBoxBookmarkCategory;

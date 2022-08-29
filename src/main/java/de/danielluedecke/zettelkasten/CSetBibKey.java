@@ -458,17 +458,11 @@ public class CSetBibKey extends javax.swing.JDialog {
         // clear table
         DefaultTableModel dtm = (DefaultTableModel) jTablePreview.getModel();
         dtm.setRowCount(0);
-        // get the default fontsize for tables and lists
-        int defaultsize = settingsObj.getTableFontSize();
-        // only set new fonts, when fontsize differs from the initial value
-        if (defaultsize > 0) {
-            // get current font
-            Font f = jTablePreview.getFont();
-            // create new font, add fontsize-value
-            f = new Font(f.getName(), f.getStyle(), f.getSize() + defaultsize);
-            // set new font
-            jTablePreview.setFont(f);
-        }
+        
+        // Set font.
+        Font settingsTableFont = settingsObj.getTableFont();
+        jTablePreview.setFont(settingsTableFont);
+        
         // create selection listener for table, so that the apply button is being
         // enabled, when bibkeys for multiple authors are set...
         SelectionListener listener = new SelectionListener();

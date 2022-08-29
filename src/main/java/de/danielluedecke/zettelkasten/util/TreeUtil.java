@@ -102,19 +102,16 @@ public class TreeUtil {
 		return uebertext;
 	}
 
-	/**
-	 * This method extracts a node's ID.
-	 *
-	 * @param node the node where we want to extract the ID
-	 * @return the ID of the node's name (userobject) as string, or {@code null} if
-	 *         an error occured or nothing was found.
-	 */
-	public static String getNodeID(DefaultMutableTreeNode node) {
-		if (node != null) {
-			TreeUserObject userObject = (TreeUserObject) node.getUserObject();
-			return userObject.getId();
+	public static EntryID getEntryID(DefaultMutableTreeNode node) {
+		if (node == null) {
+			return null;
 		}
-		return null;
+		TreeUserObject userObject = (TreeUserObject) node.getUserObject();
+		return new EntryID(userObject.getId());
+	}
+
+	public static EntryID getEntryID(TreeNode node) {
+		return getEntryID((DefaultMutableTreeNode) node);
 	}
 
 	/**
@@ -164,11 +161,15 @@ public class TreeUtil {
 		}
 
 		// Handle root.
+		String rootId = "missing";
+		TreeUserObject userObject = (TreeUserObject) node.getUserObject();
+		if (userObject != null) {
+			rootId = userObject.getId();
+		}
 
-		// Respect collapsedNodes if it exists.
-		if (!collapsedNodes.isEmpty()) {
-			TreeUserObject userObject = (TreeUserObject) node.getUserObject();
-			if (userObject != null && collapsedNodes.get(userObject.getId())) {
+		// Respect collapsedNodes if it contains the id.
+		if (collapsedNodes.containsKey(rootId)) {
+			if (collapsedNodes.get(rootId)) {
 				tree.collapsePath(root);
 			} else {
 				tree.expandPath(root);
@@ -267,9 +268,11 @@ public class TreeUtil {
 		// If title is empty, we use its number.
 		if (showNumber || entryTitle.isEmpty()) {
 			sb.append(entry.asString());
+			if (!entryTitle.isEmpty()) {
+				sb.append(": ");
+			}
 		}
 		if (!entryTitle.isEmpty()) {
-			sb.append(": ");
 			sb.append(entryTitle);
 		}
 		return sb.toString();
