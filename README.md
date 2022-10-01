@@ -1,4 +1,5 @@
-# Luhmannesque Zettelkasten
+# Zettelkasten
+
 <img src="src/main/resources/de/danielluedecke/zettelkasten/resources/icons/zkn3-256x256.png" height="128" align="right"/>
 
 <p>
@@ -21,17 +22,18 @@
 </p>
 
 
-The digital <i>Zettelkasten</i> (German for slip-box) is a program for knowledge management. It is inspired by the note-taking system of Niklas Luhmann. The official website can be found under [http://zettelkasten.danielluedecke.de](http://zettelkasten.danielluedecke.de/en/index.php).
+Zettelkasten is a program for knowledge management. It is inspired by the note-taking system of Niklas Luhmann (Zettelkasten is German for slip-box).
 <br/>
 <br/>
 ![screenshot](http://zettelkasten.danielluedecke.de/img/gallery/zkn1.png)
 
 ## Download
+
 Find the latest release [here](https://github.com/Zettelkasten-Team/Zettelkasten/releases).
 
-## <i>Zettelkasten</i> Build
+## Zettelkasten Build
 
-To make <i>Zettelkasten</i>, you need at least a Java Development Kit (JDK) 8 and Maven 3.  
+To make Zettelkasten, you need at least a Java Development Kit (JDK) 8 and Maven 3.  
 
 To get a local repository, use Git:
 
@@ -49,4 +51,5 @@ Find the build result in your `target` directory.
 
 
 ## License
+
 The GPLv3 applies. For detail information see LICENSE.md
