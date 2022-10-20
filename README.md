@@ -23,13 +23,17 @@
 
 
 Zettelkasten is a program for knowledge management. It is inspired by the note-taking system of Niklas Luhmann (Zettelkasten is German for slip-box).
-<br/>
-<br/>
+
 ![screenshot](http://zettelkasten.danielluedecke.de/img/gallery/zkn1.png)
+*Zettelkasten main window on macOS*
 
 ## Download
 
 Find the latest release [here](https://github.com/Zettelkasten-Team/Zettelkasten/releases).
+
+## Wiki
+
+Find content about Zettelkasten in our Wiki [here](https://github.com/Zettelkasten-Team/Zettelkasten/wiki)
 
 ## Zettelkasten Build
 
