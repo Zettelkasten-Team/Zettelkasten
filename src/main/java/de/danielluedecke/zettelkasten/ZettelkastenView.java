@@ -970,14 +970,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				// this listener should only react on left-mouse-button-clicks...
-				// if other button then left-button clicked, don't count it.
+				// If a button other then left-mouse button, do nothing.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
 					return;
 				}
-				// on double-click, show entry
-				if (2 == evt.getClickCount()) {
-					showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableTitles, 0));
+				// On double-click, show entry.
+				if (evt.getClickCount() == 2) {
+					UpdateDisplayOptions options = new UpdateDisplayOptions.UpdateDisplayOptionsBuilder()
+							.updateTitlesTab(false).build();
+					int selectedEntry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableTitles, 0);
+					showEntry(selectedEntry, options);
 				}
 			}
 		});
@@ -3108,7 +3110,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			showAuthors();
 			break;
 		case TAB_TITLES:
-			updateTitlesTab();
+			if (options.isUpdateTitlesTab()) {
+				updateTitlesTab();
+			}
 			break;
 		case TAB_CLUSTER:
 			showCluster();
@@ -4696,24 +4700,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "tableEntriesSelected")
 	public void deleteEntry() {
 		// If no selected rows, nothing to delete.
-		int numSelectedRows = jTableTitles.getSelectedRowCount();
-		if (numSelectedRows == 0) {
+		if (jTableTitles.getSelectedRowCount() == 0) {
 			return;
 		}
 
-		int[] selectedRows = jTableTitles.getSelectedRows();
-		int[] entryIds = new int[selectedRows.length];
-		for (int cnt = 0; cnt < selectedRows.length; cnt++) {
-			try {
-				entryIds[cnt] = Integer.parseInt(jTableTitles.getValueAt(selectedRows[cnt], 0).toString());
-			} catch (NumberFormatException ex) {
-				Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
-			}
-		}
-
-		if (deleteEntries(entryIds)) {
+		int[] selectedEntries = ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableTitles, 0);
+		if (deleteEntries(selectedEntries)) {
 			data.setTitlelistUpToDate(false);
-			updateDisplay();
+			// deleteEntries calls updateDisplay() when successful.
 		}
 	}
 
@@ -4730,13 +4724,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * This method shows an option pane where the user can confirm the
 	 * delete-progress or cancel it. If cancelled, the method returns false.
 	 *
-	 * @param nrs the index-numbers of the entries that should be deleted
+	 * @param entriesToDelete the index-numbers of the entries that should be deleted
 	 * @return {@code true} if entries were deleted, {@code false} is deletion was
 	 *         cancelled
 	 */
-	public boolean deleteEntries(int[] nrs) {
-		// when we have no entries in the array, return
-		if ((null == nrs) || (nrs.length < 1)) {
+	public boolean deleteEntries(int[] entriesToDelete) {
+		if ((entriesToDelete == null) || (entriesToDelete.length == 0)) {
 			return false;
 		}
 		// when we are editing an entry, check whether the to be deleted entry is
@@ -4744,7 +4737,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// if yes, cancel deletion
 		if (isEditModeActive && newEntryDlg != null) {
 			// go through all entries that should be deleted
-			for (int n : nrs) {
+			for (int n : entriesToDelete) {
 				// if one of those to be deleted entries is currently being edited, cancel
 				// deletion
 				if (n == newEntryDlg.entryNumber) {
@@ -4766,7 +4759,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// create linked list
 			LinkedList<Integer> checkEntries = new LinkedList<>();
 			// copy all to be deleted entries to the linked list
-			for (int n : nrs) {
+			for (int n : entriesToDelete) {
 				checkEntries.add(n);
 			}
 			// now check whether one or more entries of the to be deleted entries appear in
@@ -4796,10 +4789,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 		}
 		// if we have just a single selection, use phrasing for that message
-		String msg = (1 == nrs.length)
-				? getResourceMap().getString("askForDeleteEntryMsgSingle", String.valueOf(nrs[0]))
+		String msg = (1 == entriesToDelete.length)
+				? getResourceMap().getString("askForDeleteEntryMsgSingle", String.valueOf(entriesToDelete[0]))
 				// else if we have multiple selectios, use phrasing with appropriate wording
-				: getResourceMap().getString("askForDeleteEntryMsgMultiple", String.valueOf(nrs.length));
+				: getResourceMap().getString("askForDeleteEntryMsgMultiple", String.valueOf(entriesToDelete.length));
 		// ask whether entry really should be deleted
 		int option = JOptionPane.showConfirmDialog(getFrame(), msg,
 				getResourceMap().getString("askForDeleteEntryTitle"), JOptionPane.YES_NO_OPTION,
@@ -4807,11 +4800,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// if yes, go on
 		if (JOptionPane.YES_OPTION == option) {
 			// delete entries
-			for (int cnt = 0; cnt < nrs.length; cnt++) {
+			for (int cnt = 0; cnt < entriesToDelete.length; cnt++) {
 				// first, retrieve the entry's authors, so we can update the table
 				// jTableAuthors,
 				// by decreasing the frequencies...
-				String[] aus = data.getAuthors(nrs[cnt]);
+				String[] aus = data.getAuthors(entriesToDelete[cnt]);
 				if (aus != null) {
 					for (String a : aus) {
 						linkedauthorlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableAuthors,
@@ -4821,7 +4814,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				// then, retrieve the entry's keywords, so we can update the table
 				// jTableKeywords,
 				// by decreasing the frequencies...
-				String[] kws = data.getKeywords(nrs[cnt]);
+				String[] kws = data.getKeywords(entriesToDelete[cnt]);
 				if (kws != null) {
 					for (String k : kws) {
 						linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyChange(jTableKeywords,
@@ -4829,14 +4822,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					}
 				}
 				// finally, we can remove that entry
-				data.deleteZettel(nrs[cnt]);
+				data.deleteZettel(entriesToDelete[cnt]);
 			}
 			// remove entries from desktop...
-			if (desktop.deleteEntries(nrs) && desktopDlg != null) {
+			if (desktop.deleteEntries(entriesToDelete) && desktopDlg != null) {
 				desktopDlg.updateEntriesAfterEditing();
 			}
 			// remove entries from bookmarks...
-			bookmarks.deleteBookmarks(nrs);
+			bookmarks.deleteBookmarks(entriesToDelete);
 			// manual links and the entry's content are deleted via the CDaten-class.
 			// but it might be that deleting the entry from luhmann-numbers, desktop-data
 			// and search results is quite time consuming. thus, we delete those parts
@@ -4845,7 +4838,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			if (null == taskDlg) {
 				// get parent und init window
 				taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_DELETEENTRY, data, searchrequests,
-						nrs);
+						entriesToDelete);
 				// Center new dialog window.
 				taskDlg.setLocationRelativeTo(getFrame());
 			}
@@ -5750,19 +5743,22 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * key-released events from the jTableTitle.
 	 */
 	private void showEntryFromTitles() {
-		// if no data available, leave method
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
+			// If no data available, do nothing.
 			return;
 		}
-		// get the selected row
-		int entry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableTitles, 0);
-		// if we don't have a valid selection, use current entry as reference
-		if (-1 == entry) {
-			setNewDisplayedEntryAndUpdateDisplay(data.getActivatedEntryNumber());
-		} // and if it was a avalid value, show entry
-		else {
-			setNewDisplayedEntryAndUpdateDisplay(entry);
+
+		// Get the entry from the selected row.
+		int selectedEntry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableTitles, 0);
+		if (selectedEntry == -1) {
+			// If invalid selection, do nothing.
+			return;
 		}
+
+		// Show selected entry.
+		UpdateDisplayOptions options = new UpdateDisplayOptions.UpdateDisplayOptionsBuilder().updateTitlesTab(false)
+				.build();
+		setNewDisplayedEntryAndUpdateDisplay(selectedEntry, options);
 	}
 
 	/**
@@ -6137,7 +6133,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			return;
 		}
 
-		// Reset status text, since the amount of titles is euqal to the amount of
+		// Reset status text, since the amount of titles is equal to the amount of
 		// entries.
 		statusMsgLabel.setText("");
 
@@ -8615,12 +8611,22 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * @param nr (the entry number to display)
 	 */
 	public void showEntry(int nr) {
+		showEntry(nr, UpdateDisplayOptions.defaultOptions());
+	}
+
+	/**
+	 * Displays the entry which is given via the parameter
+	 *
+	 * @param nr      (the entry number to display)
+	 * @param options (update display options)
+	 */
+	public void showEntry(int nr, UpdateDisplayOptions options) {
 		// goto the requested entry and update the content, if the number-parameter
 		// was within the right boundaries
 		if (data.gotoEntry(nr)) {
 			// Reset displayedZettel.
 			displayedZettel = -1;
-			updateDisplay();
+			updateDisplay(options);
 		}
 	}
 
@@ -11304,14 +11310,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
-			// when a tableupdate is being processed, to call the listener...
 			if (tableUpdateActive) {
+				// Do nothing if there is an ongoing table update.
 				return;
 			}
-			// get list selection model
+
+			// Get list selection model.
 			ListSelectionModel lsm = (ListSelectionModel) e.getSource();
-			// set value-adjusting to true, so we don't fire multiple value-changed
-			// events...
+			// Set value-adjusting to true, so we don't fire multiple value-changed
+			// events.
 			lsm.setValueIsAdjusting(true);
 			if (jTableAuthors == table) {
 				showAuthorText();
@@ -11322,13 +11329,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				showEntryFromTitles();
 			} else if (jTableAttachments == table) {
 				showEntryFromAttachments();
-			}
-			// if the user selects an entry from the table, i.e. a referred link to another
-			// entry,
-			// highlight the jListEntryKeywors, which keywords are responsible for the links
-			// to
-			// the other entry
-			else if (jTableLinks == table) {
+			} else if (jTableLinks == table) {
+				// If the user selects an entry from the links table, highlight the
+				// jListEntryKeywors, which keywords are responsible for the links
+				// to the other entry
 				showRelatedKeywords();
 			} else if (jTableManLinks == table) {
 				updateDisplayedEntryWithSelectedEntryFromManualLinks();
