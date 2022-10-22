@@ -299,30 +299,27 @@ public class ZettelkastenViewUtil {
 	 *         selected
 	 */
 	public static int[] retrieveSelectedEntriesFromTable(Daten data, javax.swing.JTable table, int column) {
-		// if no data available, leave method
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+		// If no data available, do nothing.
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return null;
 		}
-		// get the amount of selected rows
-		int rowcount = table.getSelectedRowCount();
-		// if we have no selected values, leave method
-		if (rowcount < 1) {
+		// If no selected rows, nothing to delete.
+		if (table.getSelectedRowCount() == 0) {
 			return null;
 		}
-		// get the selected rows
+		
 		int[] rows = table.getSelectedRows();
-		// create string array as parameter
 		int[] selectedValues = new int[rows.length];
 		try {
-			// iterate all selected values and copy all values to array
+			// Iterate all selected values and populate selectedValues.
 			for (int cnt = 0; cnt < rows.length; cnt++) {
 				selectedValues[cnt] = Integer.parseInt(table.getValueAt(rows[cnt], column).toString());
 			}
-			// and return the array
-			return selectedValues;
 		} catch (NumberFormatException e) {
+			Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
 			return null;
 		}
+		return selectedValues;
 	}
 
 	/**
