@@ -1484,7 +1484,7 @@ public class AcceleratorKeys {
 		// retrieve the element
 		Element acckey = retrieveElement(what, actionname);
 		XMLOutputter outputter = new XMLOutputter();
-		String xmlString = outputter.outputString(getDocument(what));
+		outputter.outputString(getDocument(what));
 
 		// if the element was not found, return an empty string
 		if (null == acckey) {
@@ -1548,9 +1548,6 @@ public class AcceleratorKeys {
 			// and an iterator for the loop below
 			Iterator<?> iterator = elementList.iterator();
 
-			// counter for the return value if a found element attribute matches the
-			// parameter
-			int cnt = 1;
 			// iterate loop
 			while (iterator.hasNext()) {
 				// retrieve each single element
@@ -1562,8 +1559,6 @@ public class AcceleratorKeys {
 					// and leave method
 					return;
 				}
-				// else increase counter
-				cnt++;
 			}
 		} catch (IllegalStateException e) {
 			Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());

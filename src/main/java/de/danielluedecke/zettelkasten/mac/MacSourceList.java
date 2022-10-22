@@ -27,11 +27,11 @@ public class MacSourceList {
      * Create a SourceList style JList.
      * @return 
      */
-    public static JList createMacSourceList() {
+    public static JList<String> createMacSourceList() {
         // currently this new list-property is disabled, because the rendering is too
         // slow, when jlists are being filtered etc. thus, we simply create a JList
         // without the new mac-styled cell-renderer
-        return new JList();
+        return new JList<String>();
 /*
         // init variable
         JList list = null;
@@ -58,7 +58,7 @@ public class MacSourceList {
     /**
      * A custom JList that renders like a Mac SourceList.
      */
-    public static class SourceList extends JList {
+    public static class SourceList extends JList<Object> {
 
         public SourceList() {
             // make the component non-opaque so that we can paint the background in
@@ -81,13 +81,13 @@ public class MacSourceList {
      * A custom ListCellRenderrer that wraps a delegate renderer.
      */
     public static class CustomListCellRenderer extends JPanel
-        implements ListCellRenderer {
+        implements ListCellRenderer<Object> {
 
-        private final ListCellRenderer fDelegate;
+        private final ListCellRenderer<Object> fDelegate;
         private boolean fIsSelected;
         private boolean fIsFocused;
 
-        public CustomListCellRenderer(ListCellRenderer delegate) {
+        public CustomListCellRenderer(ListCellRenderer<Object> delegate) {
             this.setOpaque(false);
             this.setLayout(new BorderLayout());
             this.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
@@ -96,7 +96,7 @@ public class MacSourceList {
 
         @Override
         public Component getListCellRendererComponent(
-            JList list, Object value, int index, boolean isSelected,
+            JList<?> list, Object value, int index, boolean isSelected,
             boolean cellHasFocus) {
 
             this.removeAll();

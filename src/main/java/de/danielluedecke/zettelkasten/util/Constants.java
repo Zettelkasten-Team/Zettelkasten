@@ -35,9 +35,6 @@ package de.danielluedecke.zettelkasten.util;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 

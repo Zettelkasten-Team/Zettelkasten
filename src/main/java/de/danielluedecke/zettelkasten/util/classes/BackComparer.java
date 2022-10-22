@@ -41,7 +41,7 @@ import java.util.Comparator;
  * this if we want to sort strings/arrays/lists with ignoring the case
  * of the to be compared objects...
  */
-public class BackComparer implements Comparator {
+public class BackComparer implements Comparator<Object> {
     @Override public int compare(Object o1, Object o2) {
         // check for valid parameters
         if (null==o1||null==o2) {

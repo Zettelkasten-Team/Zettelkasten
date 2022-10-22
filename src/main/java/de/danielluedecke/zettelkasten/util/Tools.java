@@ -802,83 +802,46 @@ public class Tools {
 		return null;
 	}
 
+	public static class DesktopDuplicates {
+		String desktopName;
+		List<Element> duplicatesEntries;
+	}
+
 	/**
-	 * This method retrieves multiple occurences of the entries that are passed in
+	 * This method retrieves multiple occurrences of the entries that are passed in
 	 * the linked list {@code addedEntries} and puts them together to a linked list
 	 * of type {@code Object []}.
 	 *
 	 * @param desktopObj   the reference to the CDesktopData-class
 	 * @param addedEntries a linked list of integer values, containing all
 	 *                     entry-numbers that should be looked after for multiple
-	 *                     occurences
+	 *                     occurrences
 	 * @return a linked list of {@code Object []}, where each object-array has the 2
 	 *         fields: {@code Object[0]} containing the desktop-name as string, and
 	 *         {@code Object[1]} a linked list of type {@code Element} that contains
 	 *         all found entries as Element-values.
 	 */
-	public static List<Object[]> retrieveDoubleEntries(DesktopData desktopObj, List<Integer> addedEntries) {
-		// create a linked list that will scan for multiple occurences of the added
-		// entries
-		List<Object[]> multipleentries = new ArrayList<>();
-		// first we go through all saved desktops we have and look
-		// for occurences of the to be added entry. if the entry exists
-		// in one or more desktops, the element is stored in our linked list.
-		// if the entry does not exist, "null" is added to our linked list.
-		// below we can than inform the user about multiple occurences of entries,
-		// their location in the desktops and the timestamp when that entry was
-		// added in the past
-		for (int me = 0; me < desktopObj.getCount(); me++) {
-			// create a new object array for the relevant data
-			Object[] o = new Object[2];
-			// store the desktopname
-			o[0] = desktopObj.getDesktopName(me);
-			// now search for double entries (of those added entries) within this desktop
-			// and store them in the array
-			Iterator<Integer> it = addedEntries.iterator();
-			// since we may find multiple entries, we create a new linked
-			// list here, that will store *all* found entries of the current desktop
-			List<Element> finallist = new ArrayList<>();
-			// go through all found entries...
-			// what we do here is following: we may have several different entries that
-			// already
-			// have been added to this desktop before. these entries, if we have any, are
-			// stored in the linked list "addedEntries". Now we have to iterate this list
-			// for
-			// each existing desktop. each entry of the list "addedEntries" may appear one
-			// or more(!)
-			// times in a desktop (e.g., the entry "16" may occure in several sub-bullets).
-			// so calling the function "desktopObj.searchForEntry(me, it.next())" may return
-			// several(!) Elements in a linked list for each(!) entry. thus, we may have to
-			// concatenate several linked lists together. this is achieved by iterating the
-			// linked list "lle" and adding each element of it to the resulting linked list
-			// "finallist"
-			// for each entry within the found entries list "addedEntries".
-			// finally, if we have any elements in our "finallist", it is added to the
-			// object-array "o".
-			while (it.hasNext()) {
-				// retrieve all found entries within the desktop
-				List<Element> lle = desktopObj.searchForEntry(me, it.next());
-				// check whether we have any returned entries...
-				if (lle != null && lle.size() > 0) {
-					// create a new iterator for the found results
-					Iterator<Element> prepare = lle.iterator();
-					// iterate them
-					while (prepare.hasNext()) {
-						// get each single entry as element
-						Element e = prepare.next();
-						// and add it to the final list
-						if (e != null) {
-							finallist.add(e);
-						}
+	public static List<DesktopDuplicates> retrieveDoubleEntries(DesktopData desktopObj, List<Integer> addedEntries) {
+		List<DesktopDuplicates> output = new ArrayList<DesktopDuplicates>();
+		for (int desktopIndex = 0; desktopIndex < desktopObj.getCount(); desktopIndex++) {
+			DesktopDuplicates d = new DesktopDuplicates();
+			d.desktopName = desktopObj.getDesktopName(desktopIndex);
+			List<Element> duplicates = new ArrayList<>();
+			for (Integer entry : addedEntries) {
+				List<Element> matches = desktopObj.searchForEntry(desktopIndex, entry);
+				if (matches == null || matches.size() == 0) {
+					continue;
+				}
+				for (Element match : matches) {
+					if (match != null) {
+						duplicates.add(match);
 					}
 				}
 			}
-			o[1] = (finallist.size() > 0) ? finallist : null;
-			// add the object to our linked list, so this list will contain the desktop-name
-			// and the possible double entries als elements.
-			multipleentries.add(o);
+			d.duplicatesEntries = (duplicates.size() > 0) ? duplicates : null;
+			output.add(d);
 		}
-		return multipleentries;
+		return output;
 	}
 
 	/**
@@ -894,27 +857,16 @@ public class Tools {
 	 * @return a string with the message which entries are at which position in the
 	 *         desktop-data, or {@code null} if no occurences appear.
 	 */
-	public static String prepareDoubleEntriesMessage(List<Object[]> list) {
-		// retrieve system's line-separator
+	public static String prepareDoubleEntriesMessage(List<Tools.DesktopDuplicates> list) {
 		String lineseparator = System.lineSeparator();
-		// get an iterator for the multiple entries and check
-		// whether we have any multiple occurences at all. if yes,
-		// tell the user about that
-		Iterator<Object[]> i = list.iterator();
-		// prepare a string builder that will contain the information-message in case
-		// we have any multiple occurences of entries...
 		StringBuilder multipleOccurencesMessage = new StringBuilder("");
-		// go through all entries of the linked list and check
-		// whether we have found anything
-		while (i.hasNext()) {
-			// get element
-			Object[] desktopdata = i.next();
+		for (Tools.DesktopDuplicates desktopdata : list) {
 			// if second element in array is not null, we have a match. now retrieve
 			// the entry's data, so we can inform the user about the
 			// entry's details...
-			if (desktopdata[1] != null) {
+			if (desktopdata.duplicatesEntries != null) {
 				// retrieve desktop name
-				String dn = resourceMap.getString("multipleOccurencesDesktop") + " " + (String) desktopdata[0];
+				String dn = resourceMap.getString("multipleOccurencesDesktop") + " " + (String) desktopdata.desktopName;
 				StringBuilder dnsl = new StringBuilder("");
 				// now we add a separator line, so check length of string
 				for (int dnl = 0; dnl < dn.length(); dnl++) {
@@ -924,7 +876,7 @@ public class Tools {
 				multipleOccurencesMessage.append(dn).append(lineseparator);
 				multipleOccurencesMessage.append(dnsl.toString()).append(lineseparator);
 				// now retrieve the elements...
-				List<Element> elements = (ArrayList<Element>) desktopdata[1];
+				List<Element> elements = desktopdata.duplicatesEntries;
 				// create iterator for each found element
 				Iterator<Element> entryIterator = elements.iterator();
 				// go through the found entries in that desktop
@@ -1826,7 +1778,7 @@ public class Tools {
 	 * @param content the HTML-formatted content of an entry.
 	 * @return all author IDs inside footnotes
 	 */
-	public static LinkedList extractFootnotesFromContent(String content) {
+	public static LinkedList<String> extractFootnotesFromContent(String content) {
 		// now prepare a reference list from possible footnotes
 		LinkedList<String> footnotes = new LinkedList<>();
 		// position index for finding the footnotes

@@ -38,7 +38,7 @@ import java.util.Comparator;
  * This is a simple comparer for the utils-sort-methods. we need this if we want to sort
  * strings/arrays/lists with ignoring the case of the to be compared objects...
  */
-public class Comparer implements Comparator {
+public class Comparer implements Comparator<Object> {
 
     @Override
     public int compare(Object o1, Object o2) {

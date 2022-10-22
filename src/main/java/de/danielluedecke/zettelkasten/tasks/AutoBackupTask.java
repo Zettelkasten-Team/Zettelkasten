@@ -90,8 +90,7 @@ public class AutoBackupTask extends org.jdesktop.application.Task<Object, Void> 
         }
         // create backup-file, with new extension
         File backup = new File(newfp.substring(0, lastDot) + ".zkb3");
-        // create additional backup directory
-        File backup_dir = new File(newfp.substring(0, lastDot) + "_zkb3");
+        new File(newfp.substring(0, lastDot) + "_zkb3");
         // and copy original file to backupfile
         // if the user did not cancel and the destination file does not already exist, go on here
         // tell programm that task is running

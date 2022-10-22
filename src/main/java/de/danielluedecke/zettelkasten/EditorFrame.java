@@ -140,22 +140,22 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
      * create a variable for a list model. this list model is used for the
      * JList-component which displays the keywords of the current entry.
      */
-    private final DefaultListModel keywordListModel = new DefaultListModel();
+    private final DefaultListModel<String> keywordListModel = new DefaultListModel<String>();
     /**
      * create a variable for a list model. this list model is used for the
      * JList-component which displays the links of the current entry.
      */
-    private DefaultListModel linkListModel = new DefaultListModel();
+    private DefaultListModel<String> linkListModel = new DefaultListModel<String>();
     /**
      * create a variable for a list model. this list model is used for the
      * JList-component which displays the quickinput-elements.
      */
-    private final DefaultListModel quickInputKeywordsListModel = new DefaultListModel();
+    private final DefaultListModel<String> quickInputKeywordsListModel = new DefaultListModel<String>();
     /**
      * create a variable for a list model. this list model is used for the
      * JList-component which displays the quickinput-elements.
      */
-    private final DefaultListModel quickInputAuthorListModel = new DefaultListModel();
+    private final DefaultListModel<String> quickInputAuthorListModel = new DefaultListModel<String>();
     /**
      * CDaten object, which contains the XML data of the Zettelkasten
      */
@@ -321,7 +321,6 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
      * @param isLuhmannParam
      * @param isdel
      */
-    @SuppressWarnings("LeakingThisInConstructor")
     public EditorFrame(ZettelkastenView zkn, Daten d, TasksData td, AcceleratorKeys ak, Settings s, AutoKorrektur ac, Synonyms syn, StenoData stn, String content, boolean isEditingParam, int en, boolean isLuhmannParam, boolean isdel) {
         mainframe = zkn;
 
@@ -381,12 +380,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         // disable add- and remove-buttons
         setKeywordSelected(false);
         setAttachmentSelected(false);
-        // init the progress bar and status icon for
-        // the swingworker background thread
-        // creates a new class object. This variable is not used, it just associates task monitors to
-        // the background tasks. furthermore, by doing this, this class object also animates the 
-        // busy icon and the progress bar of this frame.
-        InitStatusbarForTasks isb = new InitStatusbarForTasks(statusAnimationLabel, null, null);
+        new InitStatusbarForTasks(statusAnimationLabel, null, null);
         // init the accelerator table
         initAcceleratorTable();
         initActionMaps();
@@ -621,49 +615,8 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         });
         jTextAreaEntry.setDragEnabled(true);
         jListLinks.setDragEnabled(true);
-        DropTarget dropTarget = new DropTarget(jTextAreaEntry, this);
-        DropTarget listDropTarget = new DropTarget(jListLinks, this);
-        /*
-         jTextAreaAuthor.setTransferHandler(new MoveStringTransferHandler() {
-         @Override protected String exportString(JComponent c) {
-         String selectedText = jTextAreaAuthor.getSelectedText();
-         // if no text selected, quit
-         if (null==selectedText) return null;
-         // return results
-         return selectedText.toString().trim();
-         }
-         @Override protected boolean importString(JComponent c, String str) {
-         // check for valid drop-string
-         if (str!=null) {
-         // each received string consists of two lines. the first one with information
-         // about the drag-source and the drag-operation, the second one with the data
-         // by this we can see whether we have received entries (i.e. a valid drop)
-         String[] aus = str.split("\n");
-         // iterate all dropped authors
-         for (String au : aus) {
-         // check whether author already exisrs in textfield
-         if (!au.isEmpty() && !checkForDoubleAuthors(au)) {
-         // if not, append author string
-         // therefore, add a new line, but only if the textfield is not empty
-         // (i.e. we already have an author)
-         if (!jTextAreaAuthor.getText().isEmpty()) jTextAreaAuthor.append(System.lineSeparator());
-         jTextAreaAuthor.append(au);
-         // jTextAreaAuthor.insert(au, jTextAreaAuthor.getCaretPosition());
-         // set the modified state
-         setModified(true);
-         }
-         }
-         return true;
-         }
-         return false;
-         }
-         @Override protected void cleanup(JComponent c, boolean remove) {
-         if (remove) {
-         jTextAreaAuthor.replaceSelection("");
-         }
-         }
-         });
-         */
+        new DropTarget(jTextAreaEntry, this);
+        new DropTarget(jListLinks, this);
     }
 
     private void initListeners() {
@@ -1946,7 +1899,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         // set upto-date-indicator to false, otherwise the thread will not be executed
         authorListUpToDate = false;
         // when opening this dialog, automatically create the author list
-        Task qiauT = quickInputAuthor();
+        Task<?, ?> qiauT = quickInputAuthor();
         // get the application's context...
         ApplicationContext appC = Application.getInstance().getContext();
         // ...to get the TaskMonitor and TaskService
@@ -1990,7 +1943,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
                 return;
             }
             // when opening this dialog, automatically create the author list
-            Task qikwT = quickInputKeywords();
+            Task<?, ?> qikwT = quickInputKeywords();
             // get the application's context...
             ApplicationContext appC = Application.getInstance().getContext();
             // ...to get the TaskMonitor and TaskService
@@ -2032,7 +1985,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
                         jButtonAddKeywords.putClientProperty("JButton.segmentPosition", "only");
                     }
                     // and set the new keywords to the list
-                    jListQuickInputKeywords.setListData(displayedKeywordList.toArray());
+                    jListQuickInputKeywords.setListData((String[]) displayedKeywordList.toArray());
                     // scroll to first entry in the list
                     jListQuickInputKeywords.ensureIndexIsVisible(0);
                     // dispose the window and clear the object
@@ -2054,7 +2007,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
                 int listsize = jListQuickInputKeywords.getModel().getSize();
                 jTextFieldFilterKeywordlist.setEnabled(listsize > 0);
             } else {
-                jListQuickInputKeywords.setListData(displayedKeywordList.toArray());
+                jListQuickInputKeywords.setListData((String[]) displayedKeywordList.toArray());
                 // scroll to first entry in the list
                 jListQuickInputKeywords.ensureIndexIsVisible(0);
                 // disable the refresh and filter buttons
@@ -2999,7 +2952,8 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
                 } 
                 if (!skip) {
                     // retrieve list of dropped files
-                    java.util.List files = (java.util.List) tr.getTransferData(DataFlavor.javaFileListFlavor);
+                    @SuppressWarnings("unchecked")
+					java.util.List<java.io.File> files = (List<File>) tr.getTransferData(DataFlavor.javaFileListFlavor);
                     // check for valid values
                     if (files != null && files.size() > 0) {
                         // create list with final image files
@@ -3769,7 +3723,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         // we don't want case sensitive search here
         filter = filter.toLowerCase();
         // retrieve the list model
-        ListModel lm = jListQuickInputKeywords.getModel();
+        ListModel<String> lm = jListQuickInputKeywords.getModel();
         // create new linked list that will contain the filtered elements
         LinkedList<String> list = new LinkedList<>();
         // iterate the listmodel
@@ -3783,7 +3737,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
             }
         }
         // set new listdata
-        jListQuickInputKeywords.setListData(list.toArray());
+        jListQuickInputKeywords.setListData((String[]) list.toArray());
         jListQuickInputKeywords.revalidate();
         // and enable the refresh button
         jTextFieldFilterKeywordlist.setText("");
@@ -4303,7 +4257,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
             // sort list
             Collections.sort(displayedKeywordList, new Comparer());
             // set new listdata without applied keywords
-            jListQuickInputKeywords.setListData(displayedKeywordList.toArray());
+            jListQuickInputKeywords.setListData((String[]) displayedKeywordList.toArray());
             // disable the refresh and filter buttons
             jButtonRefreshKeywordlist.setEnabled(false);
         }
@@ -4404,7 +4358,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
                 // clear selection
                 jListQuickInputKeywords.clearSelection();
                 // set new listdata without applied keywords
-                jListQuickInputKeywords.setListData(displayedKeywordList.toArray());
+                jListQuickInputKeywords.setListData((String[]) displayedKeywordList.toArray());
                 // disable the refresh and filter buttons
                 jButtonRefreshKeywordlist.setEnabled(false);
             }
@@ -4466,7 +4420,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
      * @return
      */
     @Action
-    public Task quickInputAuthor() {
+    public Task<?, ?> quickInputAuthor() {
         // disable tabpane during background task operations
         jTabbedPaneNewEntry1.setEnabled(false);
 
@@ -4570,7 +4524,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
      * @return
      */
     @Action
-    public Task quickInputKeywords() {
+    public Task<?, ?> quickInputKeywords() {
         // disable tabpane during background task operations
         jTabbedPaneNewEntry1.setEnabled(false);
         return new QuickInputKeywordsTask(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
@@ -4631,7 +4585,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
             // the result computed by doInBackground().
             //
             // and apply the data to that list
-            jListQuickInputKeywords.setListData(displayedKeywordList.toArray());
+            jListQuickInputKeywords.setListData((String[]) displayedKeywordList.toArray());
             // update list
             jListQuickInputKeywords.revalidate();
             // clear the filter-textfield
@@ -4832,11 +4786,11 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
      */
     public class SelectionListener implements ListSelectionListener {
 
-        JList list;
+        JList<String> list;
 
         // It is necessary to keep the table since it is not possible
         // to determine the table from the event's source
-        SelectionListener(JList list) {
+        SelectionListener(JList<String> list) {
             this.list = list;
         }
 
@@ -4940,7 +4894,6 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
      * WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
      */
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -5074,7 +5027,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         jButtonQuickKeyword = new javax.swing.JButton();
         jPanelQuickInput = new javax.swing.JPanel();
         jCheckBoxQuickInput = new javax.swing.JCheckBox();
-        jComboBoxQuickInput = new javax.swing.JComboBox();
+        jComboBoxQuickInput = new javax.swing.JComboBox<String>();
         statusPanel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         statusAnimationLabel = new javax.swing.JLabel();
@@ -6411,12 +6364,12 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
     private javax.swing.JButton jButtonRefreshAuthorlist;
     private javax.swing.JButton jButtonRefreshKeywordlist;
     private javax.swing.JCheckBox jCheckBoxQuickInput;
-    private javax.swing.JComboBox jComboBoxQuickInput;
+    private javax.swing.JComboBox<String> jComboBoxQuickInput;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JList jListKeywords;
-    private javax.swing.JList jListLinks;
-    private javax.swing.JList jListQuickInputAuthor;
-    private javax.swing.JList jListQuickInputKeywords;
+    private javax.swing.JList<String> jListKeywords;
+    private javax.swing.JList<String> jListLinks;
+    private javax.swing.JList<String> jListQuickInputAuthor;
+    private javax.swing.JList<String> jListQuickInputKeywords;
     private javax.swing.JMenuBar jMenuBarNewEntry;
     private javax.swing.JMenuItem jMenuItemAddFirstLineToTitle;
     private javax.swing.JMenuItem jMenuItemAddKeywordFromSelection;
