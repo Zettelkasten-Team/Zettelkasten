@@ -188,82 +188,81 @@ import org.jdom2.output.XMLOutputter;
  */
 public class ZettelkastenView extends FrameView implements WindowListener, DropTargetListener {
 
-	// <editor-fold defaultstate="collapsed" desc="Variablendeklaration">
 	/**
 	 * data stores and manages the main data for this program.
 	 */
 	private final Daten data;
-	
+
 	private final TasksData taskinfo;
-	
+
 	/**
 	 * Initiate the search request class. This class stores and manages all searches
 	 * and searchresults for the loaded datafile.
 	 */
 	private final SearchRequests searchrequests = new SearchRequests(this);
-	
+
 	/**
 	 * Initiate the bookmarks class. This class stores and manages the bookmarks of
 	 * entrys.
 	 */
 	private final Bookmarks bookmarks;
-	
+
 	/**
 	 * A reference to the bibtex-class.
 	 */
 	private final BibTeX bibtex;
-	
+
 	/**
 	 * Initiate the desktop class. This class stores and manages the desktop data.
 	 */
 	private final DesktopData desktop = new DesktopData(this);
-	
+
 	/**
 	 * Initiate the settings-class. This class first of all loads some user settings
 	 * and e.g. the filepath of the currently used datafile, so it can be
 	 * automatically opened
 	 */
 	private final Settings settings;
-	
+
 	/**
 	 * Initiate the synonyms-class.
 	 */
 	private final Synonyms synonyms;
-	
+
 	/**
 	 * Initiate the steno-class.
 	 */
 	private final StenoData steno;
-	
+
 	/**
 	 * Initiate the acceleratorkeys-class.
 	 */
 	private final AcceleratorKeys acceleratorKeys;
-	
+
 	/**
 	 * A reference to the auto-correction class
 	 */
 	private final AutoKorrektur autoKorrekt;
-	
+
 	/**
-	 * create a variable for a list model. This list model is used for the
-	 * JList-component which displays the keywords of the current entry.
+	 * This list model is used for the JList-component which displays the keywords
+	 * of the current entry.
 	 */
 	private final DefaultListModel<String> keywordListModel = new DefaultListModel<String>();
-	
+
 	/**
-	 * create a variable for a list model. This list model is used for the
-	 * JList-component which displays the found entries, which have relations
-	 * between certain keywords. see "showCluster()" for more details.
+	 * This list model is used for the JList-component which displays the found
+	 * entries, which have relations between certain keywords. see "showCluster()"
+	 * for more details.
 	 */
 	private final List<String> clusterList = new ArrayList<>();
-	
+
 	/**
-	 * create a variable for a list model. This list model is used for the
-	 * JList-component which displays the is-follower-numbers.
+	 * This list model is used for the JList-component which displays the
+	 * is-follower-numbers.
 	 */
 	private final List<String> isFollowerList = new ArrayList<>();
-	
+
 	/**
 	 * This variable stores the table data of the keyword-list when this list is
 	 * filtered. All changes to a fitered table-list are also applied to this linked
@@ -272,7 +271,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * to the table
 	 */
 	private LinkedList<Object[]> linkedkeywordlist;
-	
+
 	/**
 	 * This variable stores the table data of the author-list when this list is
 	 * filtered. All changes to a fitered table-list are also applied to this linked
@@ -281,7 +280,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * to the table
 	 */
 	private LinkedList<Object[]> linkedauthorlist;
-	
+
 	/**
 	 * This variable stores the table data of the title-list when this list is
 	 * filtered. All changes to a fitered table-list are also applied to this linked
@@ -290,25 +289,25 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * to the table
 	 */
 	private LinkedList<Object[]> linkedtitlelist;
-	
+
 	/**
 	 * This variable stores the table data of the attachment-list.
 	 */
 	private LinkedList<Object[]> linkedattachmentlist;
-	
+
 	/**
 	 * This variable stores the state of the tree data of the cluster-list, whether
 	 * it is filtered (true) or not (false). we don't need to store the initial
 	 * elements, since we simply can iterate all keywords to restore that list
 	 */
 	private boolean linkedclusterlist = false;
-	
+
 	/**
 	 * This string builder contains all follower-(trailing)-numbers of an entry,
 	 * prepared for exporting these entries.
 	 */
 	private LinkedList<Integer> luhmannnumbersforexport;
-	
+
 	/**
 	 * This variable indicates whether the tabbed pane with the jTableLinks needs
 	 * updates or not. When selecting an entry, it is displayed, while the links in
@@ -320,25 +319,27 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * details.
 	 */
 	private boolean needsLinkUpdate = true;
-	
+
 	/**
 	 * This variable indicates whether the data file is currently being saved. This
 	 * should prevent the automatic backup from starting while the data file is
 	 * saved.
 	 */
 	private boolean isSaving = false;
-	
+
 	/**
 	 * Indicates whether a system tray icon could be successfully installed or not.
 	 */
 	private boolean trayIconInstalled = false;
-	
+
 	boolean isLiveSearchActive = false;
-	
+
 	private boolean isbnc = false;
+
 	public boolean isBackupNecessary() {
 		return isbnc;
 	}
+
 	public void backupNecessary(boolean val) {
 		isbnc = val;
 	}
@@ -346,8 +347,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private boolean errorIconIsVisible = false;
 	boolean editEntryFromDesktop = false;
 	boolean editEntryFromSearchWindow = false;
-	
+
 	private String updateURI = Constants.UPDATE_URI;
+
 	public void setUpdateURI(String uri) {
 		updateURI = uri;
 	}
@@ -358,83 +360,83 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * table.
 	 */
 	private String newAddedKeyword = null;
-	
+
 	/**
 	 * This string contains an added author that was added to the jTableAuthors, so
 	 * the new added value can be selected immediatley after adding in to the table.
 	 */
 	private String newAddedAuthor = null;
-	
+
 	private String lastClusterRelationKeywords = "";
-	
+
 	/**
 	 * This variable stores the treepath of the node that should bes elected within
 	 * the jtreeluhmann when all followers, including parents, should be displayed
 	 */
 	private DefaultMutableTreeNode selectedLuhmannNode = null;
-	
+
 	/**
 	 * Constant for the selected tab of the tab pane. Since the order of the tabs
 	 * might change in the future, we declare constant here, so we just have to make
 	 * changes here instead of searching through the source code
 	 */
 	private final int TAB_LINKS = 0;
-	
+
 	/**
 	 * Constant for the selected tab of the tab pane. Since the order of the tabs
 	 * might change in the future, we declare constant here, so we just have to make
 	 * changes here instead of searching through the source code
 	 */
 	private final int TAB_LUHMANN = 1;
-	
+
 	/**
 	 * Constant for the selected tab of the tab pane. Since the order of the tabs
 	 * might change in the future, we declare constant here, so we just have to make
 	 * changes here instead of searching through the source code
 	 */
 	private final int TAB_KEYWORDS = 2;
-	
+
 	/**
 	 * Constant for the selected tab of the tab pane. Since the order of the tabs
 	 * might change in the future, we declare constant here, so we just have to make
 	 * changes here instead of searching through the source code
 	 */
 	private final int TAB_AUTHORS = 3;
-	
+
 	/**
 	 * Constant for the selected tab of the tab pane. Since the order of the tabs
 	 * might change in the future, we declare constant here, so we just have to make
 	 * changes here instead of searching through the source code
 	 */
 	private final int TAB_TITLES = 4;
-	
+
 	/**
 	 * Constant for the selected tab of the tab pane. Since the order of the tabs
 	 * might change in the future, we declare constant here, so we just have to make
 	 * changes here instead of searching through the source code
 	 */
 	private final int TAB_CLUSTER = 5;
-	
+
 	/**
 	 * Constant for the selected tab of the tab pane. Since the order of the tabs
 	 * might change in the future, we declare constant here, so we just have to make
 	 * changes here instead of searching through the source code
 	 */
 	private final int TAB_BOOKMARKS = 6;
-	
+
 	/**
 	 * Constant for the selected tab of the tab pane. Since the order of the tabs
 	 * might change in the future, we declare constant here, so we just have to make
 	 * changes here instead of searching through the source code
 	 */
 	private final int TAB_ATTACHMENTS = 7;
-	
+
 	/**
 	 * indicates the currently selected tab, which will become the previously
 	 * selected tab when the tabbedpane state changed.
 	 */
 	private int previousSelectedTab = -1;
-	
+
 	/**
 	 * This variables stores the currently displayed zettel. The currently
 	 * <i>displayed</i> Zettel may differ from the currently <i>active</i> Zettel,
@@ -442,26 +444,27 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * activate it by double-clicking it.
 	 */
 	public int displayedZettel = -1;
-	
+
 	/**
 	 * Indicates whether the thread "createLinksTask" is running or not...
 	 */
 	private boolean createLinksIsRunning = false;
-	
+
 	/**
 	 * Indicates whether the thread "createLinksFilterTask" is running or not...
 	 */
 	private boolean createFilterLinksIsRunning = false;
-	
+
 	/**
 	 * Indicates whether the thread "createLuhmannTask" is running or not...
 	 */
 	private boolean createClusterIsRunning = false;
-	
+
 	/**
 	 * Indicates whether the thread "createAutoBackupTask" is running or not...
 	 */
 	private boolean autoBackupRunning = false;
+
 	public boolean isAutoBackupRunning() {
 		return autoBackupRunning;
 	}
@@ -476,14 +479,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * not. if yes, don't open another window.
 	 */
 	private boolean isEditModeActive = false;
-	
+
 	/**
 	 * Indicated whether a table's content is changed, e.g. filtered. if so, we have
 	 * to tell this the selection listener which - otherwise - would be called
 	 * several times...
 	 */
 	private boolean tableUpdateActive = false;
-	
+
 	private Timer memoryDisplayTimer = null;
 	private Timer flashErrorIconTimer = null;
 	private int memoryLogCounter = 0;
@@ -496,9 +499,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * This log starts clean in the app startup and is discarded at the end.
 	 */
 	public ByteArrayOutputStream in_memory_session_log = new ByteArrayOutputStream(2000);
-	
+
 	private createLinksTask cLinksTask;
-	
+
 	/**
 	 * String array that contain highlight terms. This is used when creating the
 	 * html-entry in the update display method. The {@link #findLive()
@@ -513,7 +516,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			Constants.zknlogger.log(Level.WARNING, "Could not create URL Data Flavor!");
 		}
 	}
-	
+
 	/**
 	 * get the strings for file descriptions from the resource map
 	 */
@@ -4659,7 +4662,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * This method shows an option pane where the user can confirm the
 	 * delete-progress or cancel it. If cancelled, the method returns false.
 	 *
-	 * @param entriesToDelete the index-numbers of the entries that should be deleted
+	 * @param entriesToDelete the index-numbers of the entries that should be
+	 *                        deleted
 	 * @return {@code true} if entries were deleted, {@code false} is deletion was
 	 *         cancelled
 	 */
@@ -10958,38 +10962,41 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// get the application-listener class. here we can set our action to the apple
 			// menu
 			Class<?> lc = Class.forName("com.apple.eawt.ApplicationListener");
-			Object listener = Proxy.newProxyInstance(lc.getClassLoader(), new Class<?>[] { lc }, new InvocationHandler() {
-				@Override
-				public Object invoke(Object proxy, Method method, Object[] args) {
-					if (method.getName().equals("handleQuit")) {
-						// call the general exit-handler from the desktop-application-api
-						// here we do all the stuff we need when exiting the application
-						ZettelkastenApp.getApplication().exit();
-					}
-					if (method.getName().equals("handlePreferences")) {
-						// show settings window
-						settingsWindow();
-					}
-					if (method.getName().equals("handleAbout")) {
-						// show own aboutbox
-						showAboutBox();
-						try {
-							// set handled to true, so other actions won't take place any more.
-							// if we leave this out, a second, system-own aboutbox would be displayed
-							setHandled(args[0], Boolean.TRUE);
-						} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
-							Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
+			Object listener = Proxy.newProxyInstance(lc.getClassLoader(), new Class<?>[] { lc },
+					new InvocationHandler() {
+						@Override
+						public Object invoke(Object proxy, Method method, Object[] args) {
+							if (method.getName().equals("handleQuit")) {
+								// call the general exit-handler from the desktop-application-api
+								// here we do all the stuff we need when exiting the application
+								ZettelkastenApp.getApplication().exit();
+							}
+							if (method.getName().equals("handlePreferences")) {
+								// show settings window
+								settingsWindow();
+							}
+							if (method.getName().equals("handleAbout")) {
+								// show own aboutbox
+								showAboutBox();
+								try {
+									// set handled to true, so other actions won't take place any more.
+									// if we leave this out, a second, system-own aboutbox would be displayed
+									setHandled(args[0], Boolean.TRUE);
+								} catch (NoSuchMethodException | IllegalAccessException
+										| InvocationTargetException ex) {
+									Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
+								}
+							}
+							return null;
 						}
-					}
-					return null;
-				}
 
-				private void setHandled(Object event, Boolean val)
-						throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-					Method handleMethod = event.getClass().getMethod("setHandled", new Class<?>[] { boolean.class });
-					handleMethod.invoke(event, new Object[] { val });
-				}
-			});
+						private void setHandled(Object event, Boolean val)
+								throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+							Method handleMethod = event.getClass().getMethod("setHandled",
+									new Class<?>[] { boolean.class });
+							handleMethod.invoke(event, new Object[] { val });
+						}
+					});
 			// tell about success
 			Constants.zknlogger.log(Level.INFO, "Apple Class Loader successfully initiated.");
 			try {
@@ -12178,8 +12185,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTableLinks.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
 
 		}, new String[] { "Zettel", "Überschrift", "Relevanz", "Bewertung" }) {
-			Class<?>[] types = new Class<?>[] { java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class,
-					java.lang.Float.class };
+			Class<?>[] types = new Class<?>[] { java.lang.Integer.class, java.lang.String.class,
+					java.lang.Integer.class, java.lang.Float.class };
 			boolean[] canEdit = new boolean[] { false, false, false, false };
 
 			public Class<?> getColumnClass(int columnIndex) {
