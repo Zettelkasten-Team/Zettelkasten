@@ -552,8 +552,20 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		initBibtexFile();
 
+		// Init Java look and feel.
+		setDefaultLookAndFeel();
+
+		// Init the locale for the default actions cut/copy/paste.
+		Tools.initLocaleForDefaultActions(
+				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class)
+						.getContext().getActionMap(ZettelkastenView.class, this));
+
 		// Init all swing components.
-		initSwingComponents();
+		initComponents();
+
+		// initComponents is auto-generated, so further initialization is done in
+		// postInitComponentsSetup.
+		postInitComponentsSetup();
 
 		// Init exit-listener: what to do when exiting.
 		getApplication().addExitListener(new ConfirmExit());
@@ -582,6 +594,87 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		makeAutoBackupTimer = new Timer();
 		makeAutoBackupTimer.schedule(new AutoBackupTimer(), Constants.autobackupUpdateStart,
 				Constants.autobackupUpdateInterval);
+	}
+
+	private void postInitComponentsSetup() {
+		javax.swing.ToolTipManager.sharedInstance().registerComponent(jEditorPaneIsFollower);
+		// Init application icon.
+		getFrame().setIconImage(Constants.zknicon.getImage());
+
+		// initially, hide the tree-view from keywords-tab
+		// the user can switch between the hierarchic treeview of keywords
+		// or the simple frequencies in a table. by default, the table-view is activated
+		// since this is a new feature, so most people would use table-view in the
+		// beginning
+		jScrollPane17.setVisible(false);
+		jTreeKeywords.setVisible(false);
+		// hide special menus. these will only be visible according to their
+		// related displayed tab
+		removeTabMenus();
+		// init the recent documents
+		setRecentDocuments();
+
+		// tick checbox-menuitem
+		showHighlightKeywords.setSelected(settings.getHighlightKeywords());
+		// tick checkbox whether keyword-synonyms should also be displayed in the
+		// jtableKeywords or not...
+		jCheckBoxShowSynonyms.setSelected(settings.getShowSynonymsInTable());
+		// check whether all followers should be shown in trailing entries tab
+		jCheckBoxShowAllLuhmann.setSelected(settings.getShowAllLuhmann());
+		// set background color
+		jEditorPaneEntry.setBackground(new Color(Integer.parseInt(settings.getMainBackgroundColor(), 16)));
+		// init action-, key- and mouse-listeners for all components. we do this after
+		// selecting
+		// the two checkboxes above, to avoid triggering unnecessary actions.
+		// furthermore, we init the selection listeners for the tables and lists here
+		initListeners();
+		// init the searchbox for the toolbar
+		createToolbarSearchbox();
+		// if we have mac osx aqua-look, apply leopard style
+		if (settings.isMacAqua()) {
+			setupMacOSXLeopardStyle();
+		}
+		if (settings.isSeaGlass()) {
+			setupSeaGlassStyle();
+		}
+		// hide panels for live-search and is-follower-numbers
+		jPanelLiveSearch.setVisible(false);
+		// since we have a splitpane in this tab, we don't need auto-hiding anymore
+		/* jPanelManLinks.setVisible(false); */
+		// setup the jtree-component
+		initTrees();
+		// setup a table sorter and visible grids for the JTables
+		initTables();
+		// init transferhandler for drag&drop operations
+		initDragDropTransferHandler();
+		// Init the default font sizes for tables, lists and treeviews.
+		initDefaultFontSize();
+
+		// initialise the keystrokes for certain components
+		initActionMaps();
+		// init accelerator table
+		initAcceleratorTable();
+		// init the icons of the toolbar, whether they are small, medium or large
+		initToolbarIcons(true);
+
+		// Init MacOS-specific application listener.
+		if (PlatformUtil.isMacOS()) {
+			setupMacOSXApplicationListener();
+		}
+
+		// add window-listener. somehow I lost the behaviour that clicking on the
+		// frame's
+		// upper right cross on Windows OS, quits the application. Instead, it just
+		// makes
+		// the frame disapear, but does not quit, so it looks like the application was
+		// quit
+		// but asking for changes took place. So, we simply add a windows-listener
+		// additionally
+		ZettelkastenView.super.getFrame().addWindowListener(this);
+		ZettelkastenView.super.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		new InitStatusbarForTasks(statusAnimationLabel, null, null);
+
+		clearTabbedPaneModels();
 	}
 
 	private FileHandler createFileLogHandler() {
@@ -656,11 +749,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				showKeywords();
 			}
 		});
-		jCheckBoxShowAllNoteSequences.addActionListener(new java.awt.event.ActionListener() {
+		jCheckBoxShowAllLuhmann.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				// Change setting and updateDisplay().
-				settings.setShowAllLuhmann(jCheckBoxShowAllNoteSequences.isSelected());
+				settings.setShowAllLuhmann(jCheckBoxShowAllLuhmann.isSelected());
 				updateDisplay();
 			}
 		});
@@ -11040,7 +11133,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// background-color for OS X 10.5 and above as well as java 6 and 7
 
 		// make searchfields look like mac
-		searchTextFieldVariants();
+		setSearchTextFieldMacStyle();
 		// remove custim borders
 		jScrollPane2.setBorder(null);
 		jScrollPane5.setBorder(null);
@@ -11066,13 +11159,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	private void setupSeaGlassStyle() {
-		// make searchfields look like mac
-		searchTextFieldVariants();
+		setSearchTextFieldMacStyle();
 		jEditorPaneClusterEntries.setBackground(Color.white);
 		jEditorPaneIsFollower.setBackground(Color.white);
 	}
 
-	private void searchTextFieldVariants() {
+	private void setSearchTextFieldMacStyle() {
 		if (settings.isMacAqua() || settings.isSeaGlass()) {
 			jTextFieldLiveSearch.putClientProperty("JTextField.variant", "search");
 			jTextFieldFilterKeywords.putClientProperty("JTextField.variant", "search");
@@ -11538,17 +11630,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * @throws InstantiationException
 	 * @throws ClassNotFoundException
 	 */
-	// <editor-fold defaultstate="collapsed" desc="Generated
-	// Code">//GEN-BEGIN:initComponents
-	private void initSwingComponents() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
+	// GEN-BEGIN:initComponents
+	private void initComponents() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
 			UnsupportedLookAndFeelException {
-		// Init Java look and feel.
-		setDefaultLookAndFeel();
-
-		// Init the locale for the default actions cut/copy/paste.
-		Tools.initLocaleForDefaultActions(
-				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class)
-						.getContext().getActionMap(ZettelkastenView.class, this));
 
 		mainPanel = new javax.swing.JPanel();
 		jSplitPaneMain1 = new javax.swing.JSplitPane();
@@ -11597,7 +11681,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				return text;
 			}
 		};
-		jCheckBoxShowAllNoteSequences = new javax.swing.JCheckBox();
+		jCheckBoxShowAllLuhmann = new javax.swing.JCheckBox();
 		jPanel2 = new javax.swing.JPanel();
 		jTextFieldFilterKeywords = new javax.swing.JTextField();
 		jButtonRefreshKeywords = new javax.swing.JButton();
@@ -12304,26 +12388,25 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jEditorPaneIsFollower.setEditable(false);
 		jEditorPaneIsFollower.setContentType("text/html"); // NOI18N
 		jEditorPaneIsFollower.setName("jEditorPaneIsFollower"); // NOI18N
-		javax.swing.ToolTipManager.sharedInstance().registerComponent(jEditorPaneIsFollower);
 		jScrollPane2.setViewportView(jEditorPaneIsFollower);
 
 		jSplitPane2.setRightComponent(jScrollPane2);
 
-		jCheckBoxShowAllNoteSequences.setText(resourceMap.getString("jCheckBoxShowAllLuhmann.text")); // NOI18N
-		jCheckBoxShowAllNoteSequences.setToolTipText(resourceMap.getString("jCheckBoxShowAllLuhmann.toolTipText")); // NOI18N
-		jCheckBoxShowAllNoteSequences.setName("jCheckBoxShowAllLuhmann"); // NOI18N
+		jCheckBoxShowAllLuhmann.setText(resourceMap.getString("jCheckBoxShowAllLuhmann.text")); // NOI18N
+		jCheckBoxShowAllLuhmann.setToolTipText(resourceMap.getString("jCheckBoxShowAllLuhmann.toolTipText")); // NOI18N
+		jCheckBoxShowAllLuhmann.setName("jCheckBoxShowAllLuhmann"); // NOI18N
 
 		javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
 		jPanel10.setLayout(jPanel10Layout);
 		jPanel10Layout.setHorizontalGroup(
 				jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jSplitPane2)
 						.addGroup(jPanel10Layout.createSequentialGroup().addContainerGap()
-								.addComponent(jCheckBoxShowAllNoteSequences)
+								.addComponent(jCheckBoxShowAllLuhmann)
 								.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 		jPanel10Layout.setVerticalGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 				.addGroup(jPanel10Layout.createSequentialGroup().addComponent(jSplitPane2)
 						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(jCheckBoxShowAllNoteSequences).addContainerGap()));
+						.addComponent(jCheckBoxShowAllLuhmann).addContainerGap()));
 
 		jTabbedPaneMain.addTab(resourceMap.getString("jPanel10.TabConstraints.tabTitle"), jPanel10); // NOI18N
 
@@ -14627,85 +14710,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		setMenuBar(menuBar);
 		setStatusBar(statusPanel);
 		setToolBar(toolBar);
-
-		// Init application icon.
-		getFrame().setIconImage(Constants.zknicon.getImage());
-
-		// initially, hide the tree-view from keywords-tab
-		// the user can switch between the hierarchic treeview of keywords
-		// or the simple frequencies in a table. by default, the table-view is activated
-		// since this is a new feature, so most people would use table-view in the
-		// beginning
-		jScrollPane17.setVisible(false);
-		jTreeKeywords.setVisible(false);
-		// hide special menus. these will only be visible according to their
-		// related displayed tab
-		removeTabMenus();
-		// init the recent documents
-		setRecentDocuments();
-
-		// tick checbox-menuitem
-		showHighlightKeywords.setSelected(settings.getHighlightKeywords());
-		// tick checkbox whether keyword-synonyms should also be displayed in the
-		// jtableKeywords or not...
-		jCheckBoxShowSynonyms.setSelected(settings.getShowSynonymsInTable());
-		// check whether all followers should be shown in trailing entries tab
-		jCheckBoxShowAllNoteSequences.setSelected(settings.getShowAllLuhmann());
-		// set background color
-		jEditorPaneEntry.setBackground(new Color(Integer.parseInt(settings.getMainBackgroundColor(), 16)));
-		// init action-, key- and mouse-listeners for all components. we do this after
-		// selecting
-		// the two checkboxes above, to avoid triggering unnecessary actions.
-		// furthermore, we init the selection listeners for the tables and lists here
-		initListeners();
-		// init the searchbox for the toolbar
-		createToolbarSearchbox();
-		// if we have mac osx aqua-look, apply leopard style
-		if (settings.isMacAqua()) {
-			setupMacOSXLeopardStyle();
-		}
-		if (settings.isSeaGlass()) {
-			setupSeaGlassStyle();
-		}
-		// hide panels for live-search and is-follower-numbers
-		jPanelLiveSearch.setVisible(false);
-		// since we have a splitpane in this tab, we don't need auto-hiding anymore
-		/* jPanelManLinks.setVisible(false); */
-		// setup the jtree-component
-		initTrees();
-		// setup a table sorter and visible grids for the JTables
-		initTables();
-		// init transferhandler for drag&drop operations
-		initDragDropTransferHandler();
-		// Init the default font sizes for tables, lists and treeviews.
-		initDefaultFontSize();
-
-		// initialise the keystrokes for certain components
-		initActionMaps();
-		// init accelerator table
-		initAcceleratorTable();
-		// init the icons of the toolbar, whether they are small, medium or large
-		initToolbarIcons(true);
-
-		// Init MacOS-specific application listener.
-		if (PlatformUtil.isMacOS()) {
-			setupMacOSXApplicationListener();
-		}
-
-		// add window-listener. somehow I lost the behaviour that clicking on the
-		// frame's
-		// upper right cross on Windows OS, quits the application. Instead, it just
-		// makes
-		// the frame disapear, but does not quit, so it looks like the application was
-		// quit
-		// but asking for changes took place. So, we simply add a windows-listener
-		// additionally
-		ZettelkastenView.super.getFrame().addWindowListener(this);
-		ZettelkastenView.super.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		new InitStatusbarForTasks(statusAnimationLabel, null, null);
-
-		clearTabbedPaneModels();
-	}// </editor-fold>//GEN-END:initComponents
+	}// GEN-END:initComponents
 
 	private void viewAuthorsCopyActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewAuthorsCopyActionPerformed
 		// TODO add your handling code here:
@@ -14798,7 +14803,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private javax.swing.JButton jButtonRefreshKeywords;
 	private javax.swing.JButton jButtonRefreshTitles;
 	private javax.swing.JCheckBox jCheckBoxCluster;
-	private javax.swing.JCheckBox jCheckBoxShowAllNoteSequences;
+	private javax.swing.JCheckBox jCheckBoxShowAllLuhmann;
 	private javax.swing.JCheckBox jCheckBoxShowSynonyms;
 	private javax.swing.JComboBox<String> jComboBoxAuthorType;
 	private javax.swing.JComboBox<String> jComboBoxBookmarkCategory;
