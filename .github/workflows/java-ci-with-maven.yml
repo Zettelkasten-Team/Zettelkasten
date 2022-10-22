@@ -19,7 +19,11 @@ jobs:
       - name: Set up JDK 1.8
         uses: actions/setup-java@v3
         with:
+<<<<<<< Upstream, based on branch 'main' of git@github.com:mateusbraga/Zettelkasten.git
           java-version: 18.0.2+101
+=======
+          java-version: 1.8
+>>>>>>> 0b9c4b7 Fix missing distribution in actions/setup-java
           distribution: temurin
       - name: Build with Maven
         run: mvn -B package --file pom.xml
@@ -38,7 +42,11 @@ jobs:
       - name: Set up JDK 1.8
         uses: actions/setup-java@v3
         with:
+<<<<<<< Upstream, based on branch 'main' of git@github.com:mateusbraga/Zettelkasten.git
           java-version: 18.0.2+101
+=======
+          java-version: 1.8
+>>>>>>> 0b9c4b7 Fix missing distribution in actions/setup-java
           distribution: temurin
       - name: Build with Maven
         run: mvn -B package --file pom.xml
