@@ -164,8 +164,7 @@ public class ZettelkastenViewUtil {
 	 * This method updates a jTable and a possible linked list which holds filtered
 	 * values from the jTable, by adding new values to the table and list. this
 	 * method is called when new e.g. authors were edited (see
-	 * {@link ZettelkastenView#newAuthor() newAuthor()} or
-	 * {@link ZettelkastenView#editFinishedEvent() editFinishedEvent()}).
+	 * {@link ZettelkastenView#newAuthor() newAuthor()}).
 	 *
 	 * @param table      the table were we have to add a new value with frequency
 	 * @param list       the possible linked list were we have to add a new value

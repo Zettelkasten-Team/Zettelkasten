@@ -858,13 +858,12 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	}
 
 	private void startTask() {
-		// get the application's context...
 		ApplicationContext appC = Application.getInstance().getContext();
-		// ...to get the TaskMonitor and TaskService
 		taskMonitor = appC.getTaskMonitor();
 		TaskService taskService = appC.getTaskService();
-		// with these we can execute the task and bring it to the foreground
-		// i.e. making the animated progressbar and busy icon visible
+
+		// Execute the task and bring it to the foreground to make the animated progress
+		// bar and the busy icon visible.
 		taskService.execute(foregroundTask);
 		taskMonitor.setForegroundTask(foregroundTask);
 	}
