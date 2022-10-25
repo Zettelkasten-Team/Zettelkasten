@@ -4724,7 +4724,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * This method shows an option pane where the user can confirm the
 	 * delete-progress or cancel it. If cancelled, the method returns false.
 	 *
-	 * @param entriesToDelete the index-numbers of the entries that should be deleted
+	 * @param entriesToDelete the index-numbers of the entries that should be
+	 *                        deleted
 	 * @return {@code true} if entries were deleted, {@code false} is deletion was
 	 *         cancelled
 	 */
@@ -6144,27 +6145,23 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			return;
 		}
 
-		// if dialog window isn't already created, do this now
-		if (taskDlg == null) {
-			// get parent und init window
-			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWTITLES, data, null, /*
-																											 * only
-																											 * needed
-																											 * for
-																											 * keywords
-																											 */
+		// If dialog window isn't already created, do this now.
+		if (updateTitlesTabTaskDlg == null) {
+			JFrame parentFrame = getFrame();
+			updateTitlesTabTaskDlg = new TaskProgressDialog(parentFrame, TaskProgressDialog.TASK_SHOWTITLES, data,
+					null, /* only needed for keywords */
 					null, /* only needed for authors */
 					null, /* only needed for attachments */
 					false, /* only needed for keywords */
 					0, /* only needed for authors */
 					(DefaultTableModel) jTableTitles.getModel());
 			// Center new dialog window.
-			taskDlg.setLocationRelativeTo(getFrame());
+			updateTitlesTabTaskDlg.setLocationRelativeTo(parentFrame);
 		}
-		ZettelkastenApp.getApplication().show(taskDlg);
-		// dispose the window and clear the object
-		taskDlg.dispose();
-		taskDlg = null;
+		ZettelkastenApp.getApplication().show(updateTitlesTabTaskDlg);
+		// Dispose the window and clear the object.
+		updateTitlesTabTaskDlg.dispose();
+		updateTitlesTabTaskDlg = null;
 
 		// Reset filtered title list.
 		linkedtitlelist = null;
@@ -8024,7 +8021,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	/**
 	 * This method opens the window for editing existing entries. All the stuff like
 	 * saving the data to the main-data-object is done within the class
-	 * "CNewEntry.java"
+	 * de.danielluedecke.zettelkasten.EditorFrame
 	 */
 	@Action(enabledProperty = "entriesAvailable")
 	public void editEntry() {
@@ -8062,10 +8059,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This method opens the new-entry-window for editing new or existing entries.
-	 * if an entry is currently being edited, the {@code isEditModeActive} flag is
-	 * set. In this case, the edit-window is only brought to the front. Else, a new
-	 * window is created.
+	 * This method opens an edit window (EditorFrame) for editing new or existing
+	 * entries. If an entry is currently being edited, the existing window is
+	 * brought to the front. Else, a new window is created.
 	 *
 	 * @param isEditing        true if we want to edit an existing entry, false if a
 	 *                         new entry is to be created
@@ -8083,104 +8079,72 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	private void openEditWindow(boolean isEditing, int entrynumber, boolean isLuhmann, boolean isDeleted,
 			int insertAfterEntry, String content) {
-		// check whether an entry is already being edited, i.e. the edit-window is
-		// already created
 		if (isEditModeActive) {
-			// if so, bring that window to the front
+			// If an entry is already being edited, bring the existing EditorFrame window to
+			// the front.
 			newEntryDlg.toFront();
-		} // else create a new window and display it.
-		else {
-			newEntryDlg = new EditorFrame(this, data, taskinfo, acceleratorKeys, settings, autoKorrekt, synonyms, steno,
-					content, isEditing, entrynumber, isLuhmann, isDeleted);
-			newEntryDlg.setLocationRelativeTo(getFrame());
-			ZettelkastenApp.getApplication().show(newEntryDlg);
-			// edit window was initialized
-			isEditModeActive = true;
-			// if so, bring that window to the front
-			newEntryDlg.toFront();
+			return;
 		}
+
+		// Start edit mode.
+		isEditModeActive = true;
+
+		// Create new EditorFrame window and show it.
+		newEntryDlg = new EditorFrame(this, data, taskinfo, acceleratorKeys, settings, autoKorrekt, synonyms, steno,
+				content, isEditing, entrynumber, isLuhmann, isDeleted);
+		newEntryDlg.setLocationRelativeTo(getFrame());
+		ZettelkastenApp.getApplication().show(newEntryDlg);
+		newEntryDlg.toFront();
 	}
 
 	/**
-	 * This method is called from the CNewEntry-frame to indicate when an
-	 * edit.action has been finished.
+	 * This method is called from the EditorFrame to indicate when an edit has been
+	 * finished and the window has been closed.
+	 * 
+	 * @param changed whether any change happened.
 	 */
-	public void editFinishedEvent() {
-		// edit window was closed
-		isEditModeActive = false;
-		// if the user made changes to the datafile, e.g. adding new entries
-		// update the display
-		if (newEntryDlg.isModified()) {
-			//
-			// here we update modified entries in the desktop window
-			//
-			// when we had an edit-option...
-			if (newEntryDlg.isEditMode() && // and whether a current desktop-dialog is opened.
-					desktopDlg != null && // check whether the changed entry was on the desktop...
-					desktop.checkForDoubleEntry(desktop.getCurrentDesktopNr(), newEntryDlg.entryNumber)) // if yes,
-																											// update
-																											// desktop-view
-			{
+	public void editFinishedEvent(boolean changed, boolean editMode, int entryNumber) {
+		if (changed) {
+			// Maybe update desktop window.
+			if (editMode && desktopDlg != null
+					&& desktop.desktopContainsEntry(desktop.getCurrentDesktopNr(), entryNumber)) {
 				desktopDlg.updateEntriesAfterEditing();
 			}
-			//
-			// here we update modified entries in the searchresults window
-			//
-			// when we had an edit-option and whether a current search-dialog is opened.
-			if (newEntryDlg.isEditMode() && searchResultsDlg != null) {
-				// if yes, update desktop-view
+
+			// Maybe update search results window.
+			if (editMode && searchResultsDlg != null) {
 				searchResultsDlg.updateDisplayAfterEditing();
 			}
-			// authorlist might be out of date now...
-			data.setAuthorlistUpToDate(false);
-			// and keywordlist might be out of date now as well...
-			data.setKeywordlistUpToDate(false);
-			// and titles might be out of date now as well...
-			data.setTitlelistUpToDate(false);
-			// and attachment-list might be out of date now as well...
-			data.setAttachmentlistUpToDate(false);
-			// tell about success
-			Constants.zknlogger.log(Level.INFO, "Entry save finished.");
 
 			// Reset displayedZettel and updateDisplay.
 			displayedZettel = -1;
 			updateDisplay();
-			Constants.zknlogger.log(Level.INFO, "Display updated.");
 
-			// and create a backup...
+			// Create a backup.
 			makeAutoBackup();
-			// tell about success
-			Constants.zknlogger.log(Level.INFO, "Autobackup finished (if necessary).");
-			// check whether new entry was edited from search results window
-			if (editEntryFromSearchWindow) {
-				// bring window to front
-				if (searchResultsDlg != null) {
-					searchResultsDlg.toFront();
-				}
+
+			// If entry was edited from search results window, bring window to front.
+			if (editEntryFromSearchWindow && searchResultsDlg != null) {
+				searchResultsDlg.toFront();
 			}
-			// check whether new entry was edited from desktop window
-			if (editEntryFromDesktop) {
-				// check whether window is opened
-				if (desktopDlg != null) {
-					// retrieve ID of latest added entry
-					String id = data.getLastAddedZettelID();
-					// check for valid value
+
+			// If entry was edited from desktop window, bring window to front.
+			if (editEntryFromDesktop && desktopDlg != null) {
+				// Add to desktop if valid ZettelID.
+				if (entryNumber != -1) {
+					String id = data.getZettelID(entryNumber);
 					if (id != null) {
-						// find index number from ID
-						int nr = data.getZettelNumberFromID(id);
-						// if we found an entry, add it
-						if (nr != -1) {
-							desktopDlg.addEntries(new int[] { nr });
-						}
+						desktopDlg.addEntries(new int[] { entryNumber });
 					}
-					// bring window to front
-					desktopDlg.toFront();
 				}
+				desktopDlg.toFront();
 			}
 		}
-		// reset variable
+
+		// Reset edit entry variables.
 		editEntryFromDesktop = false;
 		editEntryFromSearchWindow = false;
+		isEditModeActive = false;
 	}
 
 	/**
@@ -8212,6 +8176,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// i.e. making the animated progressbar and busy icon visible
 			tS.execute(cabT);
 			tM.setForegroundTask(cabT);
+
+			Constants.zknlogger.log(Level.INFO, "Autobackup finished (if necessary).");
 		} else {
 			setAutoBackupRunning(false);
 		}
@@ -15325,6 +15291,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private javax.swing.JPanel jPanelSearchBox;
 	private javax.swing.JLabel jLabelLupe;
 	private TaskProgressDialog taskDlg;
+	private TaskProgressDialog updateTitlesTabTaskDlg;
 	private EditorFrame newEntryDlg;
 	private CImport importWindow;
 	private CUpdateInfoBox updateInfoDlg;
