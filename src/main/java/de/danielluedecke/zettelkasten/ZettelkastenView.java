@@ -4725,11 +4725,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * delete-progress or cancel it. If cancelled, the method returns false.
 	 *
 <<<<<<< Upstream, based on branch 'main' of git@github.com:mateusbraga/Zettelkasten.git
+<<<<<<< Upstream, based on branch 'main' of git@github.com:mateusbraga/Zettelkasten.git
 	 * @param entriesToDelete the index-numbers of the entries that should be
 	 *                        deleted
 =======
 	 * @param entriesToDelete the index-numbers of the entries that should be deleted
 >>>>>>> a58c371 Add updateTitlesTab to UpdateDisplayOptions
+=======
+	 * @param entriesToDelete the index-numbers of the entries that should be
+	 *                        deleted
+>>>>>>> 385e70a Fix update Titles tab Dialog from attaching to edit window
 	 * @return {@code true} if entries were deleted, {@code false} is deletion was
 	 *         cancelled
 	 */
