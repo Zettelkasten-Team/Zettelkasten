@@ -337,7 +337,7 @@ public class DesktopData {
      * @return {@code true} if the entry with the number {@code entrynr} exists
      * in the desktop {@code desktopnr}, false otherwise
      */
-    public boolean checkForDoubleEntry(int desktopnr, int entrynr) {
+    public boolean desktopContainsEntry(int desktopnr, int entrynr) {
         // retrieve desktop-element
         Element desktopelement = getDesktopElement(desktopnr);
         // if desktop-element does not exist, return false
@@ -453,7 +453,7 @@ public class DesktopData {
 
     /**
      * This method is called from the
-     * {@link #checkForDoubleEntry(int, int) checkForDoubleEntry(int, int)}
+     * {@link #desktopContainsEntry(int, int) checkForDoubleEntry(int, int)}
      * method and used to recursivly scan all elements of a desktop. If an
      * entry-element which id-attribute matches the parameter
      * {@code entrynumber} was found, this element is returned, else
