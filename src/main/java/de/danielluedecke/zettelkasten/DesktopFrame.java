@@ -2669,9 +2669,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 
 	@Action(enabledProperty = "entryNodeSelected")
 	public void editEntry() {
-		// get selected entry
 		int nr = getSelectedEntryNumber();
-		// when we have a valid selection, go on
 		if (nr != -1) {
 			zknframe.openEditWindow(true, nr, false, false, -1);
 		}
@@ -2778,7 +2776,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 					// go through all desktops and check whether the current entry already exists.
 					// if yes, add added entry to our linked list.
 					for (int me = 0; me < desktopObj.getCount(); me++) {
-						if (desktopObj.checkForDoubleEntry(me, cnt)) {
+						if (desktopObj.desktopContainsEntry(me, cnt)) {
 							multipleEntries.add(cnt);
 						}
 					}
