@@ -123,10 +123,12 @@ import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.EventObject;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.FileHandler;
@@ -314,9 +316,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * the table still belong/refer to the activated entry. when re-activating the
 	 * entry, the jTableLinks usually would be updated (due to the
 	 * {@link #updateDisplay() updateDisplay()} method). but this is not necessary,
-	 * when the list is already uptodate. see {@link #showRelatedKeywords()
-	 * showRelatedKeywords()} for and {@link #showLinks() showLinks()} for further
-	 * details.
+	 * when the list is already uptodate. see
+	 * {@link #updateDisplayedEntryAndKeywordsListWithSelectedEntryFromLinksInteraction()
+	 * showRelatedKeywords()} for and {@link #updateLinksTab() showLinks()} for
+	 * further details.
 	 */
 	private boolean needsLinkUpdate = true;
 
@@ -813,7 +816,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jListEntryKeywords.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mousePressed(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuKeywordList.isVisible()) {
 					jPopupMenuKeywordList.show(jListEntryKeywords, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -821,7 +824,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseReleased(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuKeywordList.isVisible()) {
 					jPopupMenuKeywordList.show(jListEntryKeywords, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -840,7 +843,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					filterLinks();
 					highlightSegs();
 				} // or search keyword on double click
-				else if (2 == evt.getClickCount()) {
+				else if (evt.getClickCount() == 2) {
 					searchKeywordsFromListLogAnd();
 				}
 			}
@@ -848,7 +851,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jEditorPaneEntry.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mousePressed(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuMain.isVisible()) {
 					jPopupMenuMain.show(jEditorPaneEntry, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -856,7 +859,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseReleased(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuMain.isVisible()) {
 					jPopupMenuMain.show(jEditorPaneEntry, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -865,7 +868,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTableLinks.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mousePressed(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed..
 				if (evt.isPopupTrigger() && !jPopupMenuLinks.isVisible()) {
 					jPopupMenuLinks.show(jTableLinks, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -873,7 +876,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseReleased(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed..
 				if (evt.isPopupTrigger() && !jPopupMenuLinks.isVisible()) {
 					jPopupMenuLinks.show(jTableLinks, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -881,21 +884,21 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				// This listener should only react on left-mouse-button-clicks...
-				// if other button then left-button clicked, don't count it.
+				// If a button other then left-mouse button, do nothing.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
 					return;
 				}
-				// on double-click, show cluster relations...
-				if (2 == evt.getClickCount()) {
-					showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableLinks, 0));
+				// On double-click, show entry.
+				if (evt.getClickCount() == 2) {
+					setNewActivatedEntryAndUpdateDisplay(
+							ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableLinks, 0));
 				}
 			}
 		});
 		jTableManLinks.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mousePressed(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuLinks.isVisible()) {
 					jPopupMenuLinks.show(jTableManLinks, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -903,7 +906,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseReleased(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuLinks.isVisible()) {
 					jPopupMenuLinks.show(jTableManLinks, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -917,15 +920,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					return;
 				}
 				// on double-click, show entry
-				if (2 == evt.getClickCount()) {
-					showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableManLinks, 0));
+				if (evt.getClickCount() == 2) {
+					setNewActivatedEntryAndUpdateDisplay(
+							ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableManLinks, 0));
 				}
 			}
 		});
 		jTableKeywords.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mousePressed(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuKeywords.isVisible()) {
 					jPopupMenuKeywords.show(jTableKeywords, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -933,7 +937,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseReleased(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuKeywords.isVisible()) {
 					jPopupMenuKeywords.show(jTableKeywords, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -947,7 +951,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					return;
 				}
 				// on double-click, show entry
-				if (2 == evt.getClickCount()) {
+				if (evt.getClickCount() == 2) {
 					searchLogOr();
 				}
 			}
@@ -955,7 +959,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTableAuthors.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mousePressed(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuAuthors.isVisible()) {
 					jPopupMenuAuthors.show(jTableAuthors, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -963,7 +967,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseReleased(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuAuthors.isVisible()) {
 					jPopupMenuAuthors.show(jTableAuthors, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -977,7 +981,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					return;
 				}
 				// on double-click, show entry
-				if (2 == evt.getClickCount()) {
+				if (evt.getClickCount() == 2) {
 					searchLogOr();
 				}
 			}
@@ -985,7 +989,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTableTitles.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mousePressed(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuTitles.isVisible()) {
 					jPopupMenuTitles.show(jTableTitles, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -993,7 +997,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseReleased(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuTitles.isVisible()) {
 					jPopupMenuTitles.show(jTableTitles, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -1010,14 +1014,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					UpdateDisplayOptions options = new UpdateDisplayOptions.UpdateDisplayOptionsBuilder()
 							.updateTitlesTab(false).build();
 					int selectedEntry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableTitles, 0);
-					showEntry(selectedEntry, options);
+					setNewActivatedEntryAndUpdateDisplay(selectedEntry, options);
 				}
 			}
 		});
 		jTableBookmarks.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mousePressed(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuBookmarks.isVisible()) {
 					jPopupMenuBookmarks.show(jTableBookmarks, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -1025,7 +1029,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseReleased(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuBookmarks.isVisible()) {
 					jPopupMenuBookmarks.show(jTableBookmarks, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -1039,15 +1043,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					return;
 				}
 				// on double-click, show entry
-				if (2 == evt.getClickCount()) {
-					showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableBookmarks, 0));
+				if (evt.getClickCount() == 2) {
+					setNewActivatedEntryAndUpdateDisplay(
+							ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableBookmarks, 0));
 				}
 			}
 		});
 		jTableAttachments.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mousePressed(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuAttachments.isVisible()) {
 					jPopupMenuAttachments.show(jTableAttachments, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -1055,7 +1060,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseReleased(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuAttachments.isVisible()) {
 					jPopupMenuAttachments.show(jTableAttachments, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -1069,7 +1074,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					return;
 				}
 				// on double-click, open attachment
-				if (2 == evt.getClickCount()) {
+				if (evt.getClickCount() == 2) {
 					openAttachment();
 				}
 			}
@@ -1077,7 +1082,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTreeLuhmann.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mousePressed(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuLuhmann.isVisible()) {
 					jPopupMenuLuhmann.show(jTreeLuhmann, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -1085,7 +1090,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseReleased(java.awt.event.MouseEvent evt) {
-				// check whether the popup-trigger-mouse-key was pressed
+				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuLuhmann.isVisible()) {
 					jPopupMenuLuhmann.show(jTreeLuhmann, evt.getPoint().x, evt.getPoint().y);
 				}
@@ -1099,8 +1104,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					return;
 				}
 				// on single-click, show entry
-				if (2 == evt.getClickCount()) {
-					showEntry(selectedEntryInJTreeLuhmann());
+				if (evt.getClickCount() == 2) {
+					setNewActivatedEntryAndUpdateDisplay(selectedEntryInJTreeLuhmann());
 				}
 			}
 		});
@@ -2481,11 +2486,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				} else if (jTableKeywords == e.getSource()) {
 					searchLogOr();
 				} else if (jTableLinks == e.getSource()) {
-					showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableLinks, 0));
+					setNewActivatedEntryAndUpdateDisplay(
+							ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableLinks, 0));
 				} else if (jTableManLinks == e.getSource()) {
-					showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableManLinks, 0));
+					setNewActivatedEntryAndUpdateDisplay(
+							ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableManLinks, 0));
 				} else if (jTableTitles == e.getSource()) {
-					showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableTitles, 0));
+					setNewActivatedEntryAndUpdateDisplay(
+							ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableTitles, 0));
 				} else if (jTextFieldFilterKeywords == e.getSource()) {
 					filterKeywordList(false);
 				} else if (jTextFieldFilterAttachments == e.getSource()) {
@@ -2497,11 +2505,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				} else if (jTextFieldFilterCluster == e.getSource()) {
 					filterClusterList();
 				} else if (jTreeLuhmann == e.getSource()) {
-					showEntry(selectedEntryInJTreeLuhmann());
+					setNewActivatedEntryAndUpdateDisplay(selectedEntryInJTreeLuhmann());
 				} else if (jListEntryKeywords == e.getSource()) {
 					searchKeywordsFromListLogOr();
 				} else if (jTableBookmarks == e.getSource()) {
-					showEntry(ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableBookmarks, 0));
+					setNewActivatedEntryAndUpdateDisplay(
+							ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableBookmarks, 0));
 				} else if (jTableAttachments == e.getSource()) {
 					openAttachment();
 				} else if (jTextFieldEntryNumber == e.getSource()) {
@@ -2837,7 +2846,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	public final void setNewDisplayedEntryAndUpdateDisplay(int inputDisplayedEntry, UpdateDisplayOptions options) {
 		displayedZettel = inputDisplayedEntry;
-		updateDisplay(options);
+
+		// We never update the links tab as it is based on the activated entry, which is
+		// not changing.
+		UpdateDisplayOptions overwrittenOptions = new UpdateDisplayOptions.UpdateDisplayOptionsBuilder(options)
+				.updateLinksTab(false).build();
+		updateDisplay(overwrittenOptions);
 	}
 
 	/**
@@ -3127,8 +3141,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		switch (selectedTab) {
 		case TAB_LINKS:
-			if (options.isUpdateLinksTable()) {
-				showLinks();
+			if (options.shouldUpdateLinksTable()) {
+				updateLinksTab();
 			}
 			break;
 		case TAB_LUHMANN:
@@ -3141,7 +3155,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			showAuthors();
 			break;
 		case TAB_TITLES:
-			if (options.isUpdateTitlesTab()) {
+			if (options.shouldUpdateTitlesTab()) {
 				updateTitlesTab();
 			}
 			break;
@@ -3155,8 +3169,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			showAttachments();
 			break;
 		default:
-			if (options.isUpdateLinksTable()) {
-				showLinks();
+			if (options.shouldUpdateLinksTable()) {
+				updateLinksTab();
 			}
 			break;
 		}
@@ -3205,7 +3219,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	private void handleNoteSequenceValueChange() {
 		// If no data available, do nothing.
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return;
 		}
 
@@ -3311,7 +3325,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	private void updateEntryPaneAndKeywordsPane(int inputDisplayedEntry) {
 		// If we have an invalid entry, reset panes.
-		if (data.getCount(Daten.ZKNCOUNT) == 0 || inputDisplayedEntry < 1) {
+		if (data.getCount(Daten.ZKNCOUNT) == 0 || inputDisplayedEntry == 0) {
 			jEditorPaneEntry.setText("");
 
 			Color bcol = (settings.isMacAqua()) ? ColorUtil.colorJTreeText : null;
@@ -3457,7 +3471,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			return;
 		}
 
-		if (options.isUpdateNoteSequencesTree()) {
+		if (options.shouldUpdateNoteSequencesTree()) {
 			prepareNoteSequencesJTreePane();
 		}
 		prepareNoteSequencesParentsPane();
@@ -3478,15 +3492,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public void refreshFilteredLinks() {
 		needsLinkUpdate = true;
-		showLinks();
+		updateLinksTab();
 	}
 
 	/**
-	 * This method displays the links/connection of an entry by starting a
-	 * background task. after the task finishes, all links from this entry to other
-	 * entries are display in the JTable of the JTabbedPane
+	 * This method updates the Links tab.
 	 */
-	private synchronized void showLinks() {
+	private synchronized void updateLinksTab() {
 		// If the link-table is not shown, nothing to do.
 		if (jTabbedPaneMain.getSelectedIndex() != TAB_LINKS) {
 			return;
@@ -3497,24 +3509,25 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			return;
 		}
 
-		// when no update needed, show menu and leave method
+		// When no update needed, show menu.
 		if (!needsLinkUpdate) {
-			// update might be needed next time
+			// Update might be needed next time.
 			needsLinkUpdate = true;
-			// show/enable viewmenu, if we have at least one entry...
-			if ((jTableLinks.getRowCount() > 0) && (TAB_LINKS == jTabbedPaneMain.getSelectedIndex())) {
+			// Show view menu if we have at least one entry.
+			if (jTableLinks.getRowCount() > 0) {
 				showTabMenu(viewMenuLinks);
 			}
-			// we might have changes to the manual links, so update this here...
-			displayManualLinks();
-			// and leave method
+
+			updateManualLinksTable();
+
 			return;
 		}
-		// when task is already running, quit...
+
 		if (createLinksIsRunning) {
+			// Do nothing if task is already running.
 			return;
 		}
-		// clear selections
+
 		jListEntryKeywords.clearSelection();
 
 		// Clear table with links.
@@ -3525,9 +3538,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		tm = (DefaultTableModel) jTableManLinks.getModel();
 		tm.setRowCount(0);
 
-		// hide the panel with the table with manual links
-		/* jPanelManLinks.setVisible(false); */
-		// tell user that we are doing something...
+		// Update status message.
 		statusMsgLabel.setText(getResourceMap().getString("createLinksMsg"));
 		Task<?, ?> clT = createLinks();
 		// get the application's context...
@@ -3541,14 +3552,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		tM.setForegroundTask(clT);
 	}
 
-	private void displayManualLinks() {
+	private void updateManualLinksTable() {
 		// get table model for manual links
 		DefaultTableModel tm = (DefaultTableModel) jTableManLinks.getModel();
 		// reset the table
 		tm.setRowCount(0);
 		// get the current manual links
 		int[] manlinks;
-		manlinks = data.getCurrentManualLinks();
+		manlinks = data.getManualLinksOfActivatedEntry();
 		// if we have any manual links, fille the table and display the panel
 		if ((manlinks != null) && (manlinks.length > 0)) {
 			for (int cnt = 0; cnt < manlinks.length; cnt++) {
@@ -3585,8 +3596,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * JTabbedPane
 	 */
 	private void showKeywords() {
-		// if no data available, leave method
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+		// if no data available, do nothing
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return;
 		}
 		// show amount of entries
@@ -3594,7 +3605,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				+ getResourceMap().getString("statusTextKeywords") + ")");
 		// show/enabke related menu
 		showTabMenu(viewMenuKeywords);
-		// if keywordlist is up to date, leave method
+		// if keywordlist is up to date, do nothing
 		if (data.isKeywordlistUpToDate()) {
 			return;
 		}
@@ -4100,7 +4111,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 								getResourceMap().getString("mergeKeywordMsg"),
 								getResourceMap().getString("mergeKeywordTitle"), JOptionPane.YES_NO_OPTION,
 								JOptionPane.PLAIN_MESSAGE);
-						// if no merge is requested, leave method
+						// if no merge is requested, do nothing
 						if (JOptionPane.NO_OPTION == option) {
 							return;
 						}
@@ -4381,7 +4392,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			if (returnValue.startsWith("#z_") || returnValue.equals("#activatedEntry")
 					|| returnValue.startsWith("#cr_")) {
 				// show entry
-				showEntry(data.getActivatedEntryNumber());
+				setNewActivatedEntryAndUpdateDisplay(data.getActivatedEntryNumber());
 			} // edit cross references
 			else if (returnValue.equalsIgnoreCase("#crt")) {
 				editManualLinks();
@@ -4755,17 +4766,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * This method shows an option pane where the user can confirm the
 	 * delete-progress or cancel it. If cancelled, the method returns false.
 	 *
-<<<<<<< HEAD
 	 * @param entriesToDelete the index-numbers of the entries that should be
 	 *                        deleted
-=======
-<<<<<<< Upstream, based on branch 'main' of git@github.com:mateusbraga/Zettelkasten.git
-<<<<<<< Upstream, based on branch 'main' of git@github.com:mateusbraga/Zettelkasten.git
-	 * @param entriesToDelete the index-numbers of the entries that should be
-	 *                        deleted
-=======
-	 * @param entriesToDelete the index-numbers of the entries that should be deleted
->>>>>>> a58c371 Add updateTitlesTab to UpdateDisplayOptions
 =======
 	 * @param entriesToDelete the index-numbers of the entries that should be
 	 *                        deleted
@@ -4792,7 +4794,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 							getResourceMap().getString("deleteNotPossibleTitle"), JOptionPane.PLAIN_MESSAGE);
 					// display edit-dialog
 					newEntryDlg.toFront();
-					// leave method
+					// do nothing.
 					return false;
 				}
 			}
@@ -5304,7 +5306,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					int option = JOptionPane.showConfirmDialog(getFrame(), getResourceMap().getString("mergeAuthorMsg"),
 							getResourceMap().getString("mergeAuthorTitle"), JOptionPane.YES_NO_OPTION,
 							JOptionPane.PLAIN_MESSAGE);
-					// if no merge is requested, leave method
+					// if no merge is requested, do nothing.
 					if (JOptionPane.NO_OPTION == option) {
 						return;
 					}
@@ -5576,8 +5578,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	private void showAttachments() {
-		// if no data available, leave method
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+		// if no data available, do nothing.
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return;
 		}
 		// reset status text, since the amount of titles is euqal to the amount of
@@ -5585,7 +5587,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		statusMsgLabel.setText("");
 		// show/enabke related menu
 		showTabMenu(viewMenuAttachments);
-		// if list is up to date, leave method
+		// if list is up to date, do nothing.
 		if (data.isAttachmentlistUpToDate()) {
 			return;
 		}
@@ -5713,8 +5715,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * JTabbedPane
 	 */
 	private void showAuthors() {
-		// if no data available, leave method
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+		// if no data available, do nothing.
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return;
 		}
 		// show amount of entries
@@ -5722,7 +5724,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				+ getResourceMap().getString("statusTextAuthors") + ")");
 		// show/enable related menu
 		showTabMenu(viewMenuAuthors);
-		// if authorlist is up to date, leave method
+		// if authorlist is up to date, do nothing.
 		if (data.isAuthorlistUpToDate()) {
 			return;
 		}
@@ -5813,8 +5815,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * and key-released events from the jTableTitle.
 	 */
 	private void showEntryFromAttachments() {
-		// if no data available, leave method
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+		// if no data available, do nothing.
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return;
 		}
 		// get the selected row
@@ -5835,7 +5837,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * author-text
 	 */
 	public void showAuthorText() {
-		// if no data available, leave method
+		// if no data available, do nothing.
 		if (data.getCount(Daten.AUCOUNT) < 1) {
 			return;
 		}
@@ -5879,8 +5881,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * and key-released events from the jTableBookmarks.
 	 */
 	private void showEntryFromBookmarks() {
-		// if no data available, leave method
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+		// if no data available, do nothing.
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return;
 		}
 		// get the entry number from selected bookmark
@@ -5946,8 +5948,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * will be displayed in the jList.
 	 */
 	private void showCluster() {
-		// if no data available, leave method
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+		// if no data available, do nothing.
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return;
 		}
 		// when a cluster-taks is already running, return
@@ -5956,7 +5958,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 		// show/enabke related menu
 		showTabMenu(viewMenuCluster);
-		// if clusterlist is up to date, leave method
+		// if clusterlist is up to date, do nothing.
 		if (data.isClusterlistUpToDate()) {
 			return;
 		}
@@ -6059,8 +6061,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * keywords are addes as new children.
 	 */
 	private void showClusterRelations() {
-		// if no data available, leave method
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+		// if no data available, do nothing.
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return;
 		}
 		// if the link-table is not shown, leave
@@ -6354,7 +6356,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * system tray instead.
 	 */
 	private void initSystemTray() {
-		// if systemtray is not supported, leave method
+		// if systemtray is not supported, do nothing.
 		if (!SystemTray.isSupported()) {
 			return;
 		}
@@ -6570,7 +6572,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// get the length of the data file, i.e. the amount of entrys
 			final int len = data.getCount(Daten.ZKNCOUNT);
 			// get the keyword index numbers of the current entry
-			String[] kws = data.getCurrentKeywords();
+			String[] kws = data.getKeywordsOfActivatedEntry();
 			// if we have any keywords, go on
 			if (kws != null) {
 				// create new instance of that variable
@@ -6633,7 +6635,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 			// display manual links now...
-			displayManualLinks();
+			updateManualLinksTable();
 		}
 
 		@Override
@@ -6980,7 +6982,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// tell programm that the thread is running
 			createClusterIsRunning = true;
 			// get current entries keywords
-			String[] cws = data.getCurrentKeywords();
+			String[] cws = data.getKeywordsOfActivatedEntry();
 			// if we have any current keywords, go on
 			if (cws != null) {
 				// get amount of entries
@@ -8235,7 +8237,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * is specified by the user.
 	 */
 	private void makeExtraBackup() {
-		// when no extrabackup is requested, leave method
+		// when no extrabackup is requested, do nothing.
 		if (!settings.getExtraBackup()) {
 			return;
 		}
@@ -8617,27 +8619,31 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * Displays the entry which is given via the parameter
+	 * Make entryNumber the new activated entry and update display. Do nothing if
+	 * entryNumber is invalid.
 	 *
-	 * @param nr (the entry number to display)
+	 * @param entryNumber (the entry number to display)
 	 */
-	public void showEntry(int nr) {
-		showEntry(nr, UpdateDisplayOptions.defaultOptions());
+	public void setNewActivatedEntryAndUpdateDisplay(int entryNumber) {
+		setNewActivatedEntryAndUpdateDisplay(entryNumber, UpdateDisplayOptions.defaultOptions());
 	}
 
 	/**
-	 * Displays the entry which is given via the parameter
+	 * Make entryNumber the new activated entry and update display. Do nothing if
+	 * entryNumber is invalid.
 	 *
-	 * @param nr      (the entry number to display)
-	 * @param options (update display options)
+	 * @param entryNumber (the entry number to display)
+	 * @param options     (update display options)
 	 */
-	public void showEntry(int nr, UpdateDisplayOptions options) {
-		// goto the requested entry and update the content, if the number-parameter
-		// was within the right boundaries
-		if (data.gotoEntry(nr)) {
+	public void setNewActivatedEntryAndUpdateDisplay(int entryNumber, UpdateDisplayOptions options) {
+		if (data.activateEntry(entryNumber)) {
 			// Reset displayedZettel.
 			displayedZettel = -1;
 			updateDisplay(options);
+		} else {
+			// This should never happen.
+			Constants.zknlogger.log(Level.WARNING,
+					"setNewActivatedEntryAndUpdateDisplay was called with invalid entry number: {0}", entryNumber);
 		}
 	}
 
@@ -8660,7 +8666,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			randomnumber = (int) (Math.random() * data.getCount(Daten.ZKNCOUNT)) + 1;
 		}
 		// show that entry
-		showEntry(randomnumber);
+		setNewActivatedEntryAndUpdateDisplay(randomnumber);
 	}
 
 	/**
@@ -9806,7 +9812,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		int option = JOptionPane.showConfirmDialog(getFrame(), getResourceMap().getString("removeTitleLineMsg"),
 				getResourceMap().getString("removeTitleLineTitle"), JOptionPane.YES_NO_CANCEL_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
-		// if user cancelled or closed the dialog, leave method
+		// if user cancelled or closed the dialog, do nothing.
 		if (JOptionPane.CANCEL_OPTION == option || JOptionPane.CLOSED_OPTION == option)
 			return;
 		// if dialog window isn't already created, do this now
@@ -10750,18 +10756,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * AT LEAST ONE of the selected keywords.
 	 */
 	private synchronized void filterLinks() {
-		// if no data available, leave method
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+		// if no data available, do nothing.
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return;
 		}
 		// if the link-table is not shown, leave
 		if (jTabbedPaneMain.getSelectedIndex() != TAB_LINKS) {
 			return;
 		}
-		// if no selections made, or all values de-selected, leave method
+		// if no selections made, or all values de-selected, do nothing.
 		// and show all links instead
 		if (jListEntryKeywords.getSelectedIndices().length < 1) {
-			showLinks();
+			updateLinksTab();
 			return;
 		}
 		// when thread is already running, do nothing...
@@ -10816,84 +10822,49 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * This method is called when a user selects an entry from the jTableLinks.
 	 * Whenever a "linked" entry is selected in this table, we want to<br>
 	 * 1) display that entry and<br>
-	 * 2) highlight the keywords which are responsible for the relation between the
-	 * activated entry and the currently shown entry (i.e. the selectedone in the
-	 * jTable).<br>
+	 * 2) highlight the keywords in common between the activated entry and the
+	 * displayed entry.<br>
 	 * <br>
 	 * The highlighted keywords are shown in the jListEntryKeywords.
 	 */
-	private void showRelatedKeywords() {
-		// if no data available, leave method
-		if (data.getCount(Daten.ZKNCOUNT) < 1) {
+	private void updateDisplayedEntryAndKeywordsListWithSelectedEntryFromLinksInteraction() {
+		// if no data available, do nothing.
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return;
 		}
-		// no update to linked list needed
+		// No update to linked list needed.
 		needsLinkUpdate = false;
-		// get the selected row
-		int entry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableLinks, 0);
-		// if we don't have a valid selection, use current entry as reference
-		if (-1 == entry) {
-			setNewDisplayedEntryAndUpdateDisplay(data.getActivatedEntryNumber());
-		} else {
-			// and if it was a avalid value, show entry
-			setNewDisplayedEntryAndUpdateDisplay(entry);
-			// get all keywords of the table's entry
-			String[] kws_table = data.getKeywords(entry);
-			// get keywords of current entry
-			String[] kws_current = data.getCurrentKeywords();
-			// create new array
-			int[] selections = {};
-			// if we have any keywords, go on...
-			if ((kws_table != null) && (kws_current != null) && (kws_table.length > 0) && (kws_current.length > 0)) {
-				// sort both array to keep the right order, which must be the same than the
-				// sorted
-				// order in the jListEntryKewords...
-				if (kws_table.length > 0) {
-					Arrays.sort(kws_table, new Comparer());
-				}
-				if (kws_current.length > 0) {
-					Arrays.sort(kws_current, new Comparer());
-				}
-				// go through both array and count the matches
-				// after that, we can create an integer-array with the necessary amount of
-				// elements
-				// init counter
-				int count = 0;
-				// go through outer array and compare for matching keywords
-				for (String kw_outer : kws_table) {
-					// iterate inner array
-					for (String kw_inner : kws_current) {
-						// compare valued of outer and inner loop-array
-						if (kw_outer.equals(kw_inner)) {
-							// incerease counter on macth
-							count++;
-							// and leave loop
-							break;
-						}
-					}
-				}
-				// create new integer array with the size of the count of matching keywords
-				selections = new int[count];
-				// create second counter for the above array
-				int cnt = 0;
-				// now iterate the array again. first the outer one
-				for (int cnt_out = 0; cnt_out < kws_table.length; cnt_out++) {
-					for (String kws_current1 : kws_current) {
-						// compare for matching arrays
-						if (kws_table[cnt_out].equals(kws_current1)) {
-							// first, store the entry-index-number of the jList in the integer-array
-							selections[cnt] = cnt_out;
-							// increase the array counter
-							cnt++;
-							// and leave the inner loop to look for the next matching keyword
-							break;
-						}
-					}
-				}
-			}
-			// finally, show all selected keywords
-			jListEntryKeywords.setSelectedIndices(selections);
+
+		int selectedEntry = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableLinks, 0);
+		if (selectedEntry == -1) {
+			// If we don't have a valid selection, do nothing.
+			return;
 		}
+
+		// Update displayed entry. This updates the keywordListModel before we highlight
+		// the common keywords below.
+		setNewDisplayedEntryAndUpdateDisplay(selectedEntry);
+
+		// Select intersection between selected entry's keyword and activated entry's
+		// keywords.
+		// Get keywords of the selected entry.
+		String[] selectedEntryKeywords = data.getKeywords(selectedEntry);
+		// Get keywords of activated entry.
+		String[] activatedEntryKeywords = data.getKeywordsOfActivatedEntry();
+
+		Set<String> activatedEntryKeywordsSet = new HashSet<String>(Arrays.asList(activatedEntryKeywords));
+		Set<String> selectedEntryKeywordsSet = new HashSet<String>(Arrays.asList(selectedEntryKeywords));
+		selectedEntryKeywordsSet.retainAll(activatedEntryKeywordsSet);
+		Set<String> intersection = selectedEntryKeywordsSet;
+
+		List<Integer> indexesToSelect = new ArrayList<Integer>();
+		for (int keywordIndex = 0; keywordIndex < keywordListModel.getSize(); ++keywordIndex) {
+			if (intersection.contains(keywordListModel.elementAt(keywordIndex))) {
+				indexesToSelect.add(keywordIndex);
+			}
+		}
+		int[] indexesToSelectArray = indexesToSelect.stream().mapToInt(i -> i).toArray();
+		jListEntryKeywords.setSelectedIndices(indexesToSelectArray);
 	}
 
 	public void setBackupNecessary() {
@@ -11307,10 +11278,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This class sets up a selection listener for the tables. each table which
-	 * shall react on selections, e.g. by showing an entry, gets this
-	 * selectionlistener in the method {@link #initSelectionListeners()
-	 * initSelectionListeners()}.
+	 * Selection listener for the tables. Each table that reacts to selections gets
+	 * this SelectionListener in the {@link #initSelectionListeners()
+	 * initSelectionListeners()} method.
 	 */
 	private class SelectionListener implements ListSelectionListener {
 		JTable table;
@@ -11333,23 +11303,22 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// Set value-adjusting to true, so we don't fire multiple value-changed
 			// events.
 			lsm.setValueIsAdjusting(true);
-			if (jTableAuthors == table) {
+			if (table == jTableAuthors) {
 				showAuthorText();
 				if (setBibKeyDlg != null) {
 					setBibKeyDlg.initTitleAndBibkey();
 				}
-			} else if (jTableTitles == table) {
+			} else if (table == jTableTitles) {
 				showEntryFromTitles();
-			} else if (jTableAttachments == table) {
+			} else if (table == jTableAttachments) {
 				showEntryFromAttachments();
-			} else if (jTableLinks == table) {
+			} else if (table == jTableLinks) {
 				// If the user selects an entry from the links table, highlight the
-				// jListEntryKeywors, which keywords are responsible for the links
-				// to the other entry
-				showRelatedKeywords();
-			} else if (jTableManLinks == table) {
+				// keyword in jListEntryKeywords that is responsible for the link.
+				updateDisplayedEntryAndKeywordsListWithSelectedEntryFromLinksInteraction();
+			} else if (table == jTableManLinks) {
 				updateDisplayedEntryWithSelectedEntryFromManualLinks();
-			} else if (jTableBookmarks == table) {
+			} else if (table == jTableBookmarks) {
 				showEntryFromBookmarks();
 			}
 		}

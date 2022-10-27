@@ -136,7 +136,7 @@ public class FindDoubleEntriesTask extends javax.swing.JDialog {
                 if (2==evt.getClickCount()) {
                     Object val = jTable1.getValueAt(jTable1.getSelectedRow(), jTable1.getSelectedColumn());
                     if (val!=null) {
-                        mainframe.showEntry(Integer.parseInt(val.toString()));
+                        mainframe.setNewActivatedEntryAndUpdateDisplay(Integer.parseInt(val.toString()));
                     }
                 }
             }
@@ -147,7 +147,7 @@ public class FindDoubleEntriesTask extends javax.swing.JDialog {
             @Override public void actionPerformed(ActionEvent e) {
                 Object val = jTable1.getValueAt(jTable1.getSelectedRow(), jTable1.getSelectedColumn());
                     if (val!=null) {
-                        mainframe.showEntry(Integer.parseInt(val.toString()));
+                        mainframe.setNewActivatedEntryAndUpdateDisplay(Integer.parseInt(val.toString()));
                     }
             }
         };
@@ -173,7 +173,7 @@ public class FindDoubleEntriesTask extends javax.swing.JDialog {
                             int selectedEntry = Integer.parseInt(val.toString());
                             // show entry that should be deleted, so the user knows which entry
                             // is to be deleted
-                            mainframe.showEntry(selectedEntry);
+                            mainframe.setNewActivatedEntryAndUpdateDisplay(selectedEntry);
                             // and delete entry
                             mainframe.deleteEntries(new int[] {selectedEntry});
                         }
