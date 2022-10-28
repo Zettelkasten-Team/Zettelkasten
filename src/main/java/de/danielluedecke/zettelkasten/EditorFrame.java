@@ -32,7 +32,7 @@
  */
 package de.danielluedecke.zettelkasten;
 
-import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
+import de.danielluedecke.zettelkasten.util.classes.TasksStatusBar;
 import de.danielluedecke.zettelkasten.mac.MacSourceList;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
@@ -393,7 +393,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		// the background tasks. furthermore, by doing this, this class object also
 		// animates the
 		// busy icon and the progress bar of this frame.
-		InitStatusbarForTasks isb = new InitStatusbarForTasks(statusAnimationLabel, null, null);
+		TasksStatusBar isb = new TasksStatusBar(statusAnimationLabel, null, null);
 		// init the accelerator table
 		initAcceleratorTable();
 		initActionMaps();

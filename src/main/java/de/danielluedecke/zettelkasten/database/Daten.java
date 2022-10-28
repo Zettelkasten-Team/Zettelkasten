@@ -383,14 +383,14 @@ public class Daten {
 	 * @param bib
 	 */
 	public Daten(ZettelkastenView zkn, Settings s, Synonyms syn, BibTeX bib) {
-		// initiate the JDOM files and all other data, thus
-		// creating an empty "Zettelkasten"
+		// Initiate the JDOM files and all other data, thus
+		// creating an empty "Zettelkasten".
 		zknframe = zkn;
 		settings = s;
 		synonymsObj = syn;
 		bibtexObj = bib;
 		activatedEntryNumber = 1;
-		initZettelkasten();
+		reset();
 	}
 
 	/**
@@ -402,19 +402,17 @@ public class Daten {
 		synonymsObj = null;
 		bibtexObj = null;
 		activatedEntryNumber = 1;
-		initZettelkasten();
+		reset();
 		zknFile = zettelkastenDocument;
 	}
 
-	// TODO prüfen, ob überall, wo notwendig, author-/keyword ID und timestamp
-	// attribute aktualisiert werden
 	/**
-	 * Initiates the global variables and creates empty JDom objects <br>
+	 * Reset the global variables and JDom objects<br>
 	 * <br>
 	 * <b>Warning!</b> This method does <i>not</i> clear the filePath-variable, so
 	 * be sure you have set the filePath to null manually, if necessary.
 	 */
-	public final void initZettelkasten() {
+	public final void reset() {
 		// reset all global variables
 		modified = false;
 		// zknframe can be null in tests.
@@ -5583,29 +5581,6 @@ public class Daten {
 			return false;
 		}
 		return true;
-	}
-
-	/**
-	 * This method sets the current entry, that means the last activated entry
-	 * before closing the program. With this, we can show the last shown entry on
-	 * startup of the program. <br>
-	 * <br>
-	 * This method should be called directly before closing a data-file!
-	 *
-	 * @param nr
-	 */
-	public void setCurrentZettelPos(int nr) {
-		activatedEntryNumber = nr;
-	}
-
-	/**
-	 * This method sets the initial history value. This method should be used when
-	 * the startup-entry or a random-startup-entry is set.
-	 *
-	 * @param nr
-	 */
-	public void setInitialHistoryPos(int nr) {
-		history[0] = nr;
 	}
 
 	/**

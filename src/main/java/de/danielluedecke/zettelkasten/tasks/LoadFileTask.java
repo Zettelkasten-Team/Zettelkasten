@@ -111,15 +111,14 @@ public class LoadFileTask extends org.jdesktop.application.Task<Object, Void> {
 
         // get the file path from the data file which has to be opened
         File fp = settings.getFilePath();
-        // if no file exists, exit task
-        if (null == fp || !fp.exists()) {
+        if (fp == null || !fp.exists()) {
             Constants.zknlogger.log(Level.WARNING, "Filepath is null or does not exist!");
             return null;
         }
         ZipInputStream zip;
         try {
             // Reset the Zettelkasten data files
-            daten.initZettelkasten();
+            daten.reset();
             desktopData.clear();
             bookmarks.clear();
             searchRequests.clear();
