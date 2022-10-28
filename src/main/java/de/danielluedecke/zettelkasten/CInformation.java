@@ -120,7 +120,7 @@ public class CInformation extends javax.swing.JDialog {
             jTextAreaSysInfo.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaSysInfo.border.title"), ColorUtil.colorJTreeText, settingsObj));
         }
         // retrieve filepath
-        String filepath = settingsObj.getFilePath().toString();
+        String filepath = settingsObj.getMainDataFile().toString();
         try {
             // and path to file as well as file name
             String path = filepath.substring(0, filepath.lastIndexOf(File.separatorChar));
@@ -194,7 +194,7 @@ public class CInformation extends javax.swing.JDialog {
             @Override public void removeUpdate(DocumentEvent e) { checkPath(jTextFieldImagePath); }
         });
         // calculate file-size of data file
-        File f = settingsObj.getFilePath();
+        File f = settingsObj.getMainDataFile();
         long length = f.length();
         double lkb = (double)length / 1024.0;
         double lmb = lkb / 1024.0;

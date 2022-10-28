@@ -402,7 +402,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 		String currentTitle = getTitle();
 		// get filename and find out where extension begins, so we can just set the
 		// filename as title
-		File f = settingsObj.getFilePath();
+		File f = settingsObj.getMainDataFile();
 		// check whether we have any valid filepath at all
 		if (f != null && f.exists()) {
 			String fname = f.getName();
@@ -3059,7 +3059,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 		// create document
 		Document archive = new Document();
 		// retrieve last used importdirectory
-		File importdir = settingsObj.getFilePath();
+		File importdir = settingsObj.getMainDataFile();
 		// let user choose filepath
 		File filepath = FileOperationsUtil.chooseFile(this,
 				(settingsObj.isMacAqua()) ? FileDialog.LOAD : JFileChooser.OPEN_DIALOG, JFileChooser.FILES_ONLY,
@@ -3168,7 +3168,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 	@Action
 	public void archiveDesktop() {
 		// retrieve data-filepath
-		File datafp = settingsObj.getFilePath();
+		File datafp = settingsObj.getMainDataFile();
 		// convert to string, and cut off filename by creating a substring that cuts off
 		// everything after the last separator char
 		String datafilepath = (datafp != null)

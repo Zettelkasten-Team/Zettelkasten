@@ -43,6 +43,8 @@ import de.danielluedecke.zettelkasten.util.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.logging.Level;
+
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
@@ -53,125 +55,118 @@ import javax.swing.*;
  */
 public class ZettelkastenApp extends SingleFrameApplication {
 
-    // we load the settings just after startup
-    Settings settings;
-    // and so we do with the user defined accelerator keys
-    AcceleratorKeys accKeys;
-    // and so we do with the user defined accelerator keys
-    AutoKorrektur autoKorrekt;
-    Synonyms synonyms;
-    StenoData steno;
-    TasksData taskdata;
+	// we load the settings just after startup
+	Settings settings;
+	// and so we do with the user defined accelerator keys
+	AcceleratorKeys accKeys;
+	// and so we do with the user defined accelerator keys
+	AutoKorrektur autoKorrekt;
+	Synonyms synonyms;
+	StenoData steno;
+	TasksData taskData;
 
-    private String[] params;
+	private String[] params;
 
-    /**
-     * At startup create and show the main frame of the application.
-     */
-    @Override protected void startup() {
-        // prepare the class which stores the accelerator keys. this is needed here,
-        // because the CSettings-class loads and saves this information
-        accKeys = new AcceleratorKeys();
-        // prepare the class which stores the auto-correction. this is needed here,
-        // because the CSettings-class loads and saves this information
-        autoKorrekt = new AutoKorrektur();
-        // prepare the class which stores the synonyms. this is needed here,
-        // because the CSettings-class loads and saves this information
-        synonyms = new Synonyms();
-        // prepare the class which stores the synonyms. this is needed here,
-        // because the CSettings-class loads and saves this information
-        steno = new StenoData();
-        // prepare the class which stores information that are returned
-        // from several tasks
-        taskdata = new TasksData();
-        // create new instance of the settings-class here,
-        // so we can load and save settings directly on startup and just before
-        // shutdown
-        settings = new Settings(accKeys,autoKorrekt,synonyms,steno);
-        // load settings
-        settings.loadSettings();
-        // retrieve the current default language
-        String deflang = settings.getLanguage();
-        // get country-coded
-        String englishCountryCode = new Locale("en","","").getLanguage();
-        String germanCountryCode = new Locale("de","","").getLanguage();
-        String spanishCountryCode = new Locale("es","","").getLanguage();
-        String portugueseCountryCode = new Locale("pt", "", "").getLanguage();
-        // create locale-variable
-        Locale newLocale = new Locale("en","GB");
-        // check for default language and overwrite default-language-setting (which is UK)
-        if (deflang.equals(englishCountryCode)) newLocale = new Locale("en","GB");
-        if (deflang.equals(germanCountryCode)) newLocale = new Locale("de","DE");
-        if (deflang.equals(spanishCountryCode)) newLocale = new Locale("es","ES");
-        if (deflang.equals(portugueseCountryCode)) newLocale = new Locale("pt","BR");
+	private void initLocale(Settings settings) {
+		String languageFromSettings = settings.getLanguage();
 
+		// Init supported locales.
+		String englishCountryCode = new Locale("en", "", "").getLanguage();
+		String germanCountryCode = new Locale("de", "", "").getLanguage();
+		String spanishCountryCode = new Locale("es", "", "").getLanguage();
+		String portugueseCountryCode = new Locale("pt", "", "").getLanguage();
 
-        // set default locale
-        Locale.setDefault(newLocale);
-        // check parameters for filepath of loaded file
-        for (String par : params) {
-            // check whether one of the params is a path-description to
-            // a zettelkasten-data-file. in this case, we would find the extension ".zkn3".
-            if (par.toLowerCase().endsWith(Constants.ZKN_FILEEXTENSION)) {
-                // create a dummy-file out of the parameter to check whether file exists or not
-                File dummyfile = new File(par);
-                // file file (param) exists, set is as new default filepath for the data file
-                if (dummyfile.exists()) {
-                    settings.setFilePath(dummyfile);
-                    break;
-                }
-            }
-        }
-        // check parameters for entry-number of loaded file
-        for (String par : params) {
-            try {
-                int initalZettellNr = Integer.parseInt(par);
-                if (initalZettellNr>0) {
-                    settings.setInitialParamZettel(initalZettellNr);
-                    break;
-                }
-            }
-            catch (NumberFormatException ex) {
+		// Defaults to English.
+		Locale newLocale = new Locale("en", "GB");
 
-            }
-        }
-        try {
-            show(new ZettelkastenView(this, settings, accKeys, autoKorrekt,synonyms,steno,taskdata));
-        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException | IllegalAccessException | IOException e) {
-            e.printStackTrace();
-        }
-    }
+		if (languageFromSettings.equals(englishCountryCode))
+			newLocale = new Locale("en", "GB");
+		if (languageFromSettings.equals(germanCountryCode))
+			newLocale = new Locale("de", "DE");
+		if (languageFromSettings.equals(spanishCountryCode))
+			newLocale = new Locale("es", "ES");
+		if (languageFromSettings.equals(portugueseCountryCode))
+			newLocale = new Locale("pt", "BR");
 
-    
-    /**
-     * This method is to initialize the specified window by injecting resources.
-     * Windows shown in our application come fully initialized from the GUI
-     * builder, so this additional configuration is not needed.
-     * @param root
-     */
-    @Override protected void configureWindow(java.awt.Window root) {
-    }
+		Locale.setDefault(newLocale);
+	}
 
-    
-    /**
-     * A convenient static getter for the application instance.
-     * @return the instance of ZettelkastenApp
-     */
-    public static ZettelkastenApp getApplication() {
-        return Application.getInstance(ZettelkastenApp.class);
-    }
+	private void updateSettingsWithCommandLineParams(String[] params) {
+		// Check params for:
+		// - data file (first param that ends with .zkn3).
+		// - initial entry number (first param that is a valid number)
+		for (String param : params) {
+			// Is param a data file?
+			if (param.toLowerCase().endsWith(Constants.ZKN_FILEEXTENSION)) {
+				File file = new File(param);
+				if (file.exists()) {
+					Constants.zknlogger.log(Level.INFO,
+							"Setting data file to '{0}' from the Zettelkasten command line arguments.",
+							file.toString());
+					settings.setMainDataFile(file);
+					break;
+				}
+			}
+			// Is param a number?
+			try {
+				int initalZettellNr = Integer.parseInt(param);
+				if (initalZettellNr > 0) {
+					settings.setInitialParamZettel(initalZettellNr);
+					Constants.zknlogger.log(Level.INFO,
+							"Setting initial entry number to '{0}' from the Zettelkasten command line arguments.",
+							initalZettellNr);
+					break;
+				}
+			} catch (NumberFormatException ex) {
+			}
+		}
+	}
 
-    /**
-     * Main method launching the application.
-     * @param args
-     */
-    public static void main(String[] args) {
-        launch(ZettelkastenApp.class, args);
-    }
+	/**
+	 * At startup create and show the main frame of the application.
+	 */
+	@Override
+	protected void startup() {
+		// Initialize taskData.
+		taskData = new TasksData();
 
-    @Override
-    protected void initialize(String[] args) {
-        this.params = args;
-        super.initialize(args);
-    }
+		// Initialize settings.
+		settings = new Settings();
+		updateSettingsWithCommandLineParams(params);
+
+		initLocale(settings);
+
+		Constants.zknlogger.log(Level.INFO, String.format("Starting Main Window."));
+		// Show main window.
+		try {
+			show(new ZettelkastenView(this, settings, taskData));
+		} catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException
+				| IllegalAccessException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * A convenient static getter for the application instance.
+	 * 
+	 * @return the instance of ZettelkastenApp
+	 */
+	public static ZettelkastenApp getApplication() {
+		return Application.getInstance(ZettelkastenApp.class);
+	}
+
+	/**
+	 * Main method launching the application.
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		launch(ZettelkastenApp.class, args);
+	}
+
+	@Override
+	protected void initialize(String[] args) {
+		this.params = args;
+		super.initialize(args);
+	}
 }

@@ -6190,7 +6190,7 @@ public class Daten {
 					// else, if entry has no create-timestamp, add manual timestamp
 					id.append(Tools.getTimeStampWithMilliseconds());
 				}
-				id.append(cnt).append(settings.getFileName()).append(cnt);
+				id.append(cnt).append(settings.getMainDataFileNameWithoutExtension()).append(cnt);
 				// now add id to zettel-element
 				zettel.setAttribute(ATTRIBUTE_ZETTEL_ID, id.toString());
 			}
@@ -6218,7 +6218,7 @@ public class Daten {
 				// init variable
 				StringBuilder id = new StringBuilder();
 				// add manual timestamp
-				id.append(Tools.getTimeStampWithMilliseconds()).append(settings.getFileName()).append(cnt);
+				id.append(Tools.getTimeStampWithMilliseconds()).append(settings.getMainDataFileNameWithoutExtension()).append(cnt);
 				// now add id to zettel-element
 				author.setAttribute(ATTRIBUTE_AUTHOR_ID, id.toString());
 				// and add timestamp attribute
@@ -6236,7 +6236,7 @@ public class Daten {
 				// init variable
 				StringBuilder id = new StringBuilder();
 				// add manual timestamp
-				id.append(Tools.getTimeStampWithMilliseconds()).append(settings.getFileName()).append(cnt);
+				id.append(Tools.getTimeStampWithMilliseconds()).append(settings.getMainDataFileNameWithoutExtension()).append(cnt);
 				// now add id to zettel-element
 				keyword.setAttribute(ATTRIBUTE_KEYWORD_ID, id.toString());
 				// and add timestamp attribute
@@ -6594,7 +6594,7 @@ public class Daten {
 		// check for valid value
 		if (zettel != null) {
 			// now add id to zettel-element
-			zettel.setAttribute(ATTRIBUTE_ZETTEL_ID, Tools.createZknID(settings.getFileName()));
+			zettel.setAttribute(ATTRIBUTE_ZETTEL_ID, Tools.createZknID(settings.getMainDataFileNameWithoutExtension()));
 			// change modified state
 			setModified(true);
 		}

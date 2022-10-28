@@ -261,7 +261,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		String currentTitle = getTitle();
 		// get filename and find out where extension begins, so we can just set the
 		// filename as title
-		File f = settingsObj.getFilePath();
+		File f = settingsObj.getMainDataFile();
 		// check whether we have any valid filepath at all
 		if (f != null && f.exists()) {
 			String fname = f.getName();
