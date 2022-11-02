@@ -320,6 +320,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	 * @param isLuhmannParam
 	 * @param isdel
 	 */
+	@SuppressWarnings("LeakingThisInConstructor")
 	public EditorFrame(ZettelkastenView zkn, Daten d, TasksData td, AcceleratorKeys ak, Settings s, AutoKorrektur ac,
 			Synonyms syn, StenoData stn, String content, boolean isEditingParam, int en, boolean isLuhmannParam,
 			boolean isdel) {
@@ -4137,12 +4138,12 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			}
 		}
 		Constants.zknlogger.log(Level.INFO, "Entry save finished.");
-		
+
 		dataObj.setAuthorlistUpToDate(false);
 		dataObj.setKeywordlistUpToDate(false);
 		dataObj.setTitlelistUpToDate(false);
 		dataObj.setAttachmentlistUpToDate(false);
-		
+
 		return true;
 	}
 
