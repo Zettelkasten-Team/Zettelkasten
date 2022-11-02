@@ -33,7 +33,6 @@
 package de.danielluedecke.zettelkasten.tasks.export;
 
 import de.danielluedecke.zettelkasten.database.*;
-import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
@@ -326,7 +325,7 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
                             exportPage.append(ExportTools.createPlainList(dataObj.getAttachmentsAsString(zettelnummer, false), resourceMap.getString("NoAttachment"), resourceMap.getString("attachmentHeader"), "## ", ""));
                         }
                         if ((exportparts & Constants.EXPORT_MANLINKS) != 0 && dataObj.hasManLinks(zettelnummer)) {
-                            exportPage.append(ExportTools.createPlainCommaList(dataObj.getManualLinksAsString(zettelnummer), resourceMap.getString("NoManLinks"), resourceMap.getString("manlinksHeader"), "## ", ""));
+                            exportPage.append(ExportTools.createPlainCommaList(Daten.getManualLinksAsString(zettelnummer), resourceMap.getString("NoManLinks"), resourceMap.getString("manlinksHeader"), "## ", ""));
                         }
                         if ((exportparts & Constants.EXPORT_LUHMANN) != 0 && dataObj.hasLuhmannNumbers(zettelnummer)) {
                             exportPage.append(ExportTools.createPlainCommaList(dataObj.getLuhmannNumbersAsString(zettelnummer), resourceMap.getString("NoLuhmann"), resourceMap.getString("luhmannHeader"), "## ", ""));
@@ -435,7 +434,7 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
      */
     private void exportEntriesWithComments(DefaultMutableTreeNode node, boolean exportcomments) {
         // get a list with all children of the node
-        Enumeration en = node.children();
+        Enumeration<?> en = node.children();
         // go through all children
         while (en.hasMoreElements()) {
             // get the child
@@ -473,7 +472,7 @@ public class ExportToMdTask extends org.jdesktop.application.Task<Object, Void> 
      */
     private void exportEntriesWithCommentsOnly(DefaultMutableTreeNode node) {
         // get a list with all children of the node
-        Enumeration en = node.children();
+        Enumeration<?> en = node.children();
         // go through all children
         while (en.hasMoreElements()) {
             // get the child

@@ -68,9 +68,9 @@ public class FileOperationsUtil {
 	 * create a variable for a list model. this list model is used for the
 	 * JList-component which displays the links of the current entry.
 	 */
-	private static DefaultListModel linkListModel = new DefaultListModel();
+	private static DefaultListModel<String> linkListModel = new DefaultListModel<String>();
 
-	public static DefaultListModel getListModel() {
+	public static DefaultListModel<String> getListModel() {
 		return linkListModel;
 	}
 
@@ -578,14 +578,14 @@ public class FileOperationsUtil {
 	}
 
 	public static boolean insertAttachments(Daten dataObj, Settings settingsObj, JFrame parentFrame, File[] sources,
-			DefaultListModel lm) {
+			DefaultListModel<String> lm) {
 		org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application
 				.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
 				.getResourceMap(FileOperationsUtil.class);
 		if (lm != null) {
 			linkListModel = lm;
 		} else {
-			linkListModel = new DefaultListModel();
+			linkListModel = new DefaultListModel<String>();
 		}
 		List<String> addedValues = new ArrayList<>();
 		// modified tag

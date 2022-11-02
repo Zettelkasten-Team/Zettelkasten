@@ -32,7 +32,9 @@
  */
 package de.danielluedecke.zettelkasten.tasks.export;
 
-import com.opencsv.CSVWriter;
+import com.opencsv.CSVWriterBuilder;
+import com.opencsv.ICSVWriter;
+
 import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.TasksData;
@@ -177,10 +179,12 @@ public class ExportToCsvTask extends org.jdesktop.application.Task<Object, Void>
         int counter;
         // yet everything is ok...
         exportOk = true;
-        CSVWriter writer = null;
+        ICSVWriter writer = null;
         try {
             // create csv-writer and export the data
-            writer = new CSVWriter(new OutputStreamWriter(new FileOutputStream(filepath), "UTF-8"), csvseparator);            // get the size of the export data, used for progressbar
+        	writer = new CSVWriterBuilder(new OutputStreamWriter(new FileOutputStream(filepath), "UTF-8"))
+        		    .withSeparator(csvseparator)
+        		    .build(); 
             // get the size of the export data, used for progressbar
             contentsize = exportentries.size();
             // create linked list which will hold all values of one comma-separated line

@@ -35,7 +35,6 @@ package de.danielluedecke.zettelkasten.database;
 import bibtex.dom.BibtexAbstractValue;
 import bibtex.dom.BibtexEntry;
 import bibtex.dom.BibtexFile;
-import bibtex.dom.BibtexNode;
 import bibtex.parser.BibtexParser;
 import bibtex.parser.ParseException;
 import de.danielluedecke.zettelkasten.ZettelkastenApp;
@@ -606,11 +605,11 @@ public class BibTeX {
             bp.parse(bibtexfile, isr);
             // get all nodes (entries) from the bibtex-file, so we can
             // prepare a linked list containing all entries of that bibtex-file
-            List<BibtexNode> bibNodes = bibtexfile.getEntries();
+            List<?> bibNodes = bibtexfile.getEntries();
             // reset old linked list
             attachedbibtexentries.clear();
             // iterate nodes
-            for (BibtexNode node : bibNodes) {
+            for (Object node : bibNodes) {
                 // check whether the node is of type "bibtexentry"
                 if (node instanceof BibtexEntry) {
                     BibtexEntry be = (BibtexEntry) node;
@@ -714,11 +713,11 @@ public class BibTeX {
             bp.parse(bibtexfile, isr);
             // get all nodes (entries) from the bibtex-file, so we can
             // prepare a linked list containing all entries of that bibtex-file
-            List<BibtexNode> bibNodes = bibtexfile.getEntries();
+            List<?> bibNodes = bibtexfile.getEntries();
             // reset old linked list
             bibtexentries.clear();
             // iterate nodes
-            for (BibtexNode node : bibNodes) {
+            for (Object node : bibNodes) {
                 // check whether the node is of type "bibtexentry"
                 if (node instanceof BibtexEntry) {
                     // if yes, add that entry to the linked list
@@ -763,9 +762,9 @@ public class BibTeX {
             bp.parse(appfile, isr);
             // get all nodes (entries) from the bibtex-file, so we can
             // prepare a linked list containing all entries of that bibtex-file
-            List<BibtexNode> bibNodes = appfile.getEntries();
+            List<?> bibNodes = appfile.getEntries();
             // iterate nodes
-            for (BibtexNode node : bibNodes) {
+            for (Object node : bibNodes) {
                 // check whether the node is of type "bibtexentry"
                 if (node instanceof BibtexEntry) {
                     // if yes, add that entry to the linked list
@@ -1458,7 +1457,7 @@ public class BibTeX {
         // if we found any entry, go on...
         if (be != null) {
             // get all entry fields
-            Map m = be.getFields();
+            Map<?, ?> m = be.getFields();
             // create a new map that will contain all fields that have to be replaced
             // for formatting the author-value. see below
             Map<String, String> fields;
@@ -1715,7 +1714,7 @@ public class BibTeX {
         // if we found any entry, go on...
         if (be != null) {
             // get all entry fields
-            Map m = be.getFields();
+            Map<?, ?> m = be.getFields();
             // retrieve all keys, i.e. author, title etc.
             Set<?> ks = m.keySet();
             String dummy = null;

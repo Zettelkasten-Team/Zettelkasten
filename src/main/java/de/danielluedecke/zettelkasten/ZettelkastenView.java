@@ -79,7 +79,6 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.FileDialog;
 import java.awt.Font;
-import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
@@ -137,7 +136,6 @@ import java.util.logging.StreamHandler;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -150,6 +148,7 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowSorter;
+import javax.swing.RowSorter.SortKey;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.MatteBorder;
@@ -184,82 +183,86 @@ import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-/*
- * To-Do-Sammlung
- *
- */
-// TODO beim majorbackup optional auch attachments/img?
 /**
  * The application's main frame.
  */
 public class ZettelkastenView extends FrameView implements WindowListener, DropTargetListener {
 
-	// <editor-fold defaultstate="collapsed" desc="Variablendeklaration">
 	/**
-	 * initiate the data class. this class stores and manages the main data for this
-	 * program.
+	 * data stores and manages the main data for this program.
 	 */
 	private final Daten data;
-	/**
-	 *
-	 */
+
 	private final TasksData taskinfo;
+
 	/**
-	 * initiate the search request class. this class stores and manages all searches
+	 * Initiate the search request class. This class stores and manages all searches
 	 * and searchresults for the loaded datafile.
 	 */
 	private final SearchRequests searchrequests = new SearchRequests(this);
+
 	/**
-	 * initiate the bookmarks class. this class stores and manages the bookmarks of
+	 * Initiate the bookmarks class. This class stores and manages the bookmarks of
 	 * entrys.
 	 */
 	private final Bookmarks bookmarks;
+
 	/**
 	 * A reference to the bibtex-class.
 	 */
 	private final BibTeX bibtex;
+
 	/**
-	 * initiate the desktop class. this class stores and manages the desktop data.
+	 * Initiate the desktop class. This class stores and manages the desktop data.
 	 */
 	private final DesktopData desktop = new DesktopData(this);
+
 	/**
-	 * Initiate the settings-class. this class first of all loads some user settings
+	 * Initiate the settings-class. This class first of all loads some user settings
 	 * and e.g. the filepath of the currently used datafile, so it can be
 	 * automatically opened
 	 */
 	private final Settings settings;
+
 	/**
 	 * Initiate the synonyms-class.
 	 */
 	private final Synonyms synonyms;
+
 	/**
 	 * Initiate the steno-class.
 	 */
 	private final StenoData steno;
+
 	/**
 	 * Initiate the acceleratorkeys-class.
 	 */
 	private final AcceleratorKeys acceleratorKeys;
+
 	/**
 	 * A reference to the auto-correction class
 	 */
 	private final AutoKorrektur autoKorrekt;
+
 	/**
-	 * create a variable for a list model. this list model is used for the
-	 * JList-component which displays the keywords of the current entry.
+	 * This list model is used for the JList-component which displays the keywords
+	 * of the current entry.
 	 */
-	private final DefaultListModel keywordListModel = new DefaultListModel();
+	private final DefaultListModel<String> keywordListModel = new DefaultListModel<String>();
+
 	/**
-	 * create a variable for a list model. this list model is used for the
-	 * JList-component which displays the found entries, which have relations
-	 * between certain keywords. see "showCluster()" for more details.
+	 * This list model is used for the JList-component which displays the found
+	 * entries, which have relations between certain keywords. see "showCluster()"
+	 * for more details.
 	 */
 	private final List<String> clusterList = new ArrayList<>();
+
 	/**
-	 * create a variable for a list model. this list model is used for the
-	 * JList-component which displays the is-follower-numbers.
+	 * This list model is used for the JList-component which displays the
+	 * is-follower-numbers.
 	 */
 	private final List<String> isFollowerList = new ArrayList<>();
+
 	/**
 	 * This variable stores the table data of the keyword-list when this list is
 	 * filtered. All changes to a fitered table-list are also applied to this linked
@@ -268,6 +271,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * to the table
 	 */
 	private LinkedList<Object[]> linkedkeywordlist;
+
 	/**
 	 * This variable stores the table data of the author-list when this list is
 	 * filtered. All changes to a fitered table-list are also applied to this linked
@@ -276,6 +280,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * to the table
 	 */
 	private LinkedList<Object[]> linkedauthorlist;
+
 	/**
 	 * This variable stores the table data of the title-list when this list is
 	 * filtered. All changes to a fitered table-list are also applied to this linked
@@ -284,21 +289,25 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * to the table
 	 */
 	private LinkedList<Object[]> linkedtitlelist;
+
 	/**
 	 * This variable stores the table data of the attachment-list.
 	 */
 	private LinkedList<Object[]> linkedattachmentlist;
+
 	/**
 	 * This variable stores the state of the tree data of the cluster-list, whether
 	 * it is filtered (true) or not (false). we don't need to store the initial
 	 * elements, since we simply can iterate all keywords to restore that list
 	 */
 	private boolean linkedclusterlist = false;
+
 	/**
 	 * This string builder contains all follower-(trailing)-numbers of an entry,
 	 * prepared for exporting these entries.
 	 */
 	private LinkedList<Integer> luhmannnumbersforexport;
+
 	/**
 	 * This variable indicates whether the tabbed pane with the jTableLinks needs
 	 * updates or not. When selecting an entry, it is displayed, while the links in
@@ -310,23 +319,21 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * details.
 	 */
 	private boolean needsLinkUpdate = true;
+
 	/**
 	 * This variable indicates whether the data file is currently being saved. This
 	 * should prevent the automatic backup from starting while the data file is
 	 * saved.
 	 */
 	private boolean isSaving = false;
+
 	/**
 	 * Indicates whether a system tray icon could be successfully installed or not.
 	 */
 	private boolean trayIconInstalled = false;
-	/**
-	 *
-	 */
+
 	boolean isLiveSearchActive = false;
-	/**
-	 *
-	 */
+
 	private boolean isbnc = false;
 
 	public boolean isBackupNecessary() {
@@ -337,21 +344,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		isbnc = val;
 	}
 
-	/**
-	 *
-	 */
 	private boolean errorIconIsVisible = false;
-	/**
-	 *
-	 */
 	boolean editEntryFromDesktop = false;
-	/**
-	 *
-	 */
 	boolean editEntryFromSearchWindow = false;
-	/**
-	 *
-	 */
+
 	private String updateURI = Constants.UPDATE_URI;
 
 	public void setUpdateURI(String uri) {
@@ -364,103 +360,117 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * table.
 	 */
 	private String newAddedKeyword = null;
+
 	/**
 	 * This string contains an added author that was added to the jTableAuthors, so
 	 * the new added value can be selected immediatley after adding in to the table.
 	 */
 	private String newAddedAuthor = null;
-	/**
-	 *
-	 */
+
 	private String lastClusterRelationKeywords = "";
+
 	/**
 	 * This variable stores the treepath of the node that should bes elected within
 	 * the jtreeluhmann when all followers, including parents, should be displayed
 	 */
 	private DefaultMutableTreeNode selectedLuhmannNode = null;
+
 	/**
 	 * Constant for the selected tab of the tab pane. Since the order of the tabs
 	 * might change in the future, we declare constant here, so we just have to make
 	 * changes here instead of searching through the source code
 	 */
 	private final int TAB_LINKS = 0;
+
 	/**
 	 * Constant for the selected tab of the tab pane. Since the order of the tabs
 	 * might change in the future, we declare constant here, so we just have to make
 	 * changes here instead of searching through the source code
 	 */
 	private final int TAB_LUHMANN = 1;
+
 	/**
 	 * Constant for the selected tab of the tab pane. Since the order of the tabs
 	 * might change in the future, we declare constant here, so we just have to make
 	 * changes here instead of searching through the source code
 	 */
 	private final int TAB_KEYWORDS = 2;
+
 	/**
 	 * Constant for the selected tab of the tab pane. Since the order of the tabs
 	 * might change in the future, we declare constant here, so we just have to make
 	 * changes here instead of searching through the source code
 	 */
 	private final int TAB_AUTHORS = 3;
+
 	/**
 	 * Constant for the selected tab of the tab pane. Since the order of the tabs
 	 * might change in the future, we declare constant here, so we just have to make
 	 * changes here instead of searching through the source code
 	 */
 	private final int TAB_TITLES = 4;
+
 	/**
 	 * Constant for the selected tab of the tab pane. Since the order of the tabs
 	 * might change in the future, we declare constant here, so we just have to make
 	 * changes here instead of searching through the source code
 	 */
 	private final int TAB_CLUSTER = 5;
+
 	/**
 	 * Constant for the selected tab of the tab pane. Since the order of the tabs
 	 * might change in the future, we declare constant here, so we just have to make
 	 * changes here instead of searching through the source code
 	 */
 	private final int TAB_BOOKMARKS = 6;
+
 	/**
 	 * Constant for the selected tab of the tab pane. Since the order of the tabs
 	 * might change in the future, we declare constant here, so we just have to make
 	 * changes here instead of searching through the source code
 	 */
 	private final int TAB_ATTACHMENTS = 7;
+
 	/**
 	 * indicates the currently selected tab, which will become the previously
 	 * selected tab when the tabbedpane state changed.
 	 */
 	private int previousSelectedTab = -1;
+
 	/**
-	 * This variables stores the currently displayed zettel. the currently
+	 * This variables stores the currently displayed zettel. The currently
 	 * <i>displayed</i> Zettel may differ from the currently <i>active</i> Zettel,
 	 * if we e.g. select an entry by single-clicking it from a jTable, but do not
 	 * activate it by double-clicking it.
 	 */
 	public int displayedZettel = -1;
+
 	/**
 	 * Indicates whether the thread "createLinksTask" is running or not...
 	 */
 	private boolean createLinksIsRunning = false;
+
 	/**
 	 * Indicates whether the thread "createLinksFilterTask" is running or not...
 	 */
 	private boolean createFilterLinksIsRunning = false;
+
 	/**
 	 * Indicates whether the thread "createLuhmannTask" is running or not...
 	 */
 	private boolean createClusterIsRunning = false;
+
 	/**
 	 * Indicates whether the thread "createAutoBackupTask" is running or not...
 	 */
-	private boolean cabir = false;
+	private boolean autoBackupRunning = false;
 
 	public boolean isAutoBackupRunning() {
-		return cabir;
+		return autoBackupRunning;
 	}
 
 	public void setAutoBackupRunning(boolean val) {
-		cabir = val;
+		autoBackupRunning = val;
 	}
 
 	/**
@@ -469,31 +479,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * not. if yes, don't open another window.
 	 */
 	private boolean isEditModeActive = false;
+
 	/**
 	 * Indicated whether a table's content is changed, e.g. filtered. if so, we have
 	 * to tell this the selection listener which - otherwise - would be called
 	 * several times...
 	 */
 	private boolean tableUpdateActive = false;
-	/**
-	 *
-	 */
+
 	private Timer memoryDisplayTimer = null;
-	/**
-	 *
-	 */
 	private Timer flashErrorIconTimer = null;
-	/**
-	 *
-	 */
 	private int memoryLogCounter = 0;
-	/**
-	 *
-	 */
 	private Timer makeAutoBackupTimer;
-	/**
-	 *
-	 */
 	private TrayIcon trayIcon;
 	private SystemTray tray = null;
 
@@ -502,18 +499,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * This log starts clean in the app startup and is discarded at the end.
 	 */
 	public ByteArrayOutputStream in_memory_session_log = new ByteArrayOutputStream(2000);
-	/**
-	 *
-	 */
+
 	private createLinksTask cLinksTask;
+
 	/**
-	 * String array that contain highlight terms. this is used when creating the
-	 * html-entry in the update display method. the {@link #findLive()
+	 * String array that contain highlight terms. This is used when creating the
+	 * html-entry in the update display method. The {@link #findLive()
 	 * live-search}-feature uses this to highlight the terms, or e.g. highlighting
 	 * the keywords in the text needs this array.
 	 */
 	static DataFlavor urlFlavor;
-
 	static {
 		try {
 			urlFlavor = new DataFlavor("application/x-java-url; class=java.net.URL");
@@ -521,6 +516,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			Constants.zknlogger.log(Level.WARNING, "Could not create URL Data Flavor!");
 		}
 	}
+
 	/**
 	 * get the strings for file descriptions from the resource map
 	 */
@@ -556,8 +552,20 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		initBibtexFile();
 
+		// Init Java look and feel.
+		setDefaultLookAndFeel();
+
+		// Init the locale for the default actions cut/copy/paste.
+		Tools.initLocaleForDefaultActions(
+				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class)
+						.getContext().getActionMap(ZettelkastenView.class, this));
+
 		// Init all swing components.
-		initSwingComponents();
+		initComponents();
+
+		// initComponents is auto-generated, so further initialization is done in
+		// postInitComponentsSetup.
+		postInitComponentsSetup();
 
 		// Init exit-listener: what to do when exiting.
 		getApplication().addExitListener(new ConfirmExit());
@@ -570,7 +578,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		// Check for updates.
 		if (settings.getAutoUpdate()) {
-			Task cfuT = checkForUpdate();
+			Task<?, ?> cfuT = checkForUpdate();
 			// get the application's context...
 			ApplicationContext appC = Application.getInstance().getContext();
 			// ...to get the TaskMonitor and TaskService
@@ -586,6 +594,87 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		makeAutoBackupTimer = new Timer();
 		makeAutoBackupTimer.schedule(new AutoBackupTimer(), Constants.autobackupUpdateStart,
 				Constants.autobackupUpdateInterval);
+	}
+
+	private void postInitComponentsSetup() {
+		javax.swing.ToolTipManager.sharedInstance().registerComponent(jEditorPaneIsFollower);
+		// Init application icon.
+		getFrame().setIconImage(Constants.zknicon.getImage());
+
+		// initially, hide the tree-view from keywords-tab
+		// the user can switch between the hierarchic treeview of keywords
+		// or the simple frequencies in a table. by default, the table-view is activated
+		// since this is a new feature, so most people would use table-view in the
+		// beginning
+		jScrollPane17.setVisible(false);
+		jTreeKeywords.setVisible(false);
+		// hide special menus. these will only be visible according to their
+		// related displayed tab
+		removeTabMenus();
+		// init the recent documents
+		setRecentDocuments();
+
+		// tick checbox-menuitem
+		showHighlightKeywords.setSelected(settings.getHighlightKeywords());
+		// tick checkbox whether keyword-synonyms should also be displayed in the
+		// jtableKeywords or not...
+		jCheckBoxShowSynonyms.setSelected(settings.getShowSynonymsInTable());
+		// check whether all followers should be shown in trailing entries tab
+		jCheckBoxShowAllLuhmann.setSelected(settings.getShowAllLuhmann());
+		// set background color
+		jEditorPaneEntry.setBackground(new Color(Integer.parseInt(settings.getMainBackgroundColor(), 16)));
+		// init action-, key- and mouse-listeners for all components. we do this after
+		// selecting
+		// the two checkboxes above, to avoid triggering unnecessary actions.
+		// furthermore, we init the selection listeners for the tables and lists here
+		initListeners();
+		// init the searchbox for the toolbar
+		createToolbarSearchbox();
+		// if we have mac osx aqua-look, apply leopard style
+		if (settings.isMacAqua()) {
+			setupMacOSXLeopardStyle();
+		}
+		if (settings.isSeaGlass()) {
+			setupSeaGlassStyle();
+		}
+		// hide panels for live-search and is-follower-numbers
+		jPanelLiveSearch.setVisible(false);
+		// since we have a splitpane in this tab, we don't need auto-hiding anymore
+		/* jPanelManLinks.setVisible(false); */
+		// setup the jtree-component
+		initTrees();
+		// setup a table sorter and visible grids for the JTables
+		initTables();
+		// init transferhandler for drag&drop operations
+		initDragDropTransferHandler();
+		// Init the default font sizes for tables, lists and treeviews.
+		initDefaultFontSize();
+
+		// initialise the keystrokes for certain components
+		initActionMaps();
+		// init accelerator table
+		initAcceleratorTable();
+		// init the icons of the toolbar, whether they are small, medium or large
+		initToolbarIcons(true);
+
+		// Init MacOS-specific application listener.
+		if (PlatformUtil.isMacOS()) {
+			setupMacOSXApplicationListener();
+		}
+
+		// add window-listener. somehow I lost the behaviour that clicking on the
+		// frame's
+		// upper right cross on Windows OS, quits the application. Instead, it just
+		// makes
+		// the frame disapear, but does not quit, so it looks like the application was
+		// quit
+		// but asking for changes took place. So, we simply add a windows-listener
+		// additionally
+		ZettelkastenView.super.getFrame().addWindowListener(this);
+		ZettelkastenView.super.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		new InitStatusbarForTasks(statusAnimationLabel, null, null);
+
+		clearTabbedPaneModels();
 	}
 
 	private FileHandler createFileLogHandler() {
@@ -633,62 +722,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 	}
 
-	private void initBorders(Settings settingsObj) {
-		/*
-		 * Constructor for Matte Border public MatteBorder(int top, int left, int
-		 * bottom, int right, Color matteColor)
-		 */
-		jScrollPane4.setBorder(null);
-		jScrollPane3.setBorder(null);
-		jScrollPane9.setBorder(null);
-		jPanelLiveSearch.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, ColorUtil.getBorderGray(settingsObj)));
-		jScrollPane5.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-		jScrollPane6.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-		jScrollPane7.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-		jScrollPane8.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-		jScrollPane10.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, ColorUtil.getBorderGray(settingsObj)));
-		jScrollPane11.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, ColorUtil.getBorderGray(settingsObj)));
-		jScrollPane13.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-		jScrollPane14.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-		jScrollPane16.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-		if (settingsObj.getUseMacBackgroundColor() || settingsObj.isMacAqua()) {
-			jListEntryKeywords.setBackground(
-					(settingsObj.isMacAqua()) ? ColorUtil.colorJTreeBackground : ColorUtil.colorJTreeLighterBackground);
-			jListEntryKeywords.setForeground(ColorUtil.colorJTreeDarkText);
-		}
-		if (settingsObj.isSeaGlass()) {
-			jScrollPane1.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(settingsObj)));
-			jScrollPane2.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, ColorUtil.getBorderGray(settingsObj)));
-			jScrollPane3.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, ColorUtil.getBorderGray(settingsObj)));
-			jScrollPane4.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-			jScrollPane5.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-			jScrollPane9.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-			jScrollPane10.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-			jScrollPane11.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-			jScrollPane14.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-			jScrollPane15.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, ColorUtil.getBorderGray(settingsObj)));
-			jTabbedPaneMain
-					.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
-			jListEntryKeywords.setBorder(ZknMacWidgetFactory
-					.getTitledBorder(getResourceMap().getString("jListEntryKeywords.border.title"), settings));
-			jEditorPaneBookmarkComment.setBorder(ZknMacWidgetFactory
-					.getTitledBorder(getResourceMap().getString("jEditorPaneBookmarkComment.border.title"), settings));
-		}
-		if (settingsObj.isMacAqua()) {
-			ZknMacWidgetFactory.updateSplitPane(jSplitPane1);
-			ZknMacWidgetFactory.updateSplitPane(jSplitPane2);
-			ZknMacWidgetFactory.updateSplitPane(jSplitPane3);
-			ZknMacWidgetFactory.updateSplitPane(jSplitPaneMain1);
-			ZknMacWidgetFactory.updateSplitPane(jSplitPaneMain2);
-			ZknMacWidgetFactory.updateSplitPane(jSplitPaneLinks);
-			ZknMacWidgetFactory.updateSplitPane(jSplitPaneAuthors);
-			jListEntryKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(
-					getResourceMap().getString("jListEntryKeywords.border.title"), ColorUtil.colorJTreeText, settings));
-			jEditorPaneBookmarkComment.setBorder(ZknMacWidgetFactory
-					.getTitledBorder(getResourceMap().getString("jEditorPaneBookmarkComment.border.title"), settings));
-		}
-	}
-
 	/**
 	 * This method inits several listeners for our components. we do this manually
 	 * instead of letting the GUI-Builder create the event-methods, because this
@@ -705,28 +738,26 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		//
 		// here we start with action listeners
 		//
-		// this actionn for the checkbox toggles the setting whether the synonyms
+		// This action for the checkbox toggles the setting whether the synonyms
 		// should be included in the keywordlist of the jtablekeywords or not
 		jCheckBoxShowSynonyms.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				// change setting
 				settings.setShowSynonymsInTable(jCheckBoxShowSynonyms.isSelected());
-				// tell that keywordlist is no longer up to date
 				data.setKeywordlistUpToDate(false);
-				// refresh keyword list
+				// Refresh keyword list.
 				showKeywords();
 			}
 		});
-		jCheckBoxShowAllNoteSequences.addActionListener(new java.awt.event.ActionListener() {
+		jCheckBoxShowAllLuhmann.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				// Change setting and updateDisplay().
-				settings.setShowAllLuhmann(jCheckBoxShowAllNoteSequences.isSelected());
+				settings.setShowAllLuhmann(jCheckBoxShowAllLuhmann.isSelected());
 				updateDisplay();
 			}
 		});
-		// this settings toggles the setting whether the cluster-list in the
+		// This settings toggles the setting whether the cluster-list in the
 		// jTreeCluster
 		// should show *all* keywords or only those that are related to the current
 		// entry.
@@ -737,7 +768,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jCheckBoxCluster.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				// tell that clusterlist is no longer up to date
+				// Tell that clusterlist is no longer up to date
 				data.setClusterlistUpToDate(false);
 				// refresh cluster list
 				showCluster();
@@ -798,7 +829,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				// this listener should only react on left-mouse-button-clicks...
+				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, leeave...
 				if (evt.getButton() != MouseEvent.BUTTON1) {
 					return;
@@ -850,7 +881,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				// this listener should only react on left-mouse-button-clicks...
+				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, don't count it.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
 					return;
@@ -880,7 +911,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				// this listener should only react on left-mouse-button-clicks...
+				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, don't count it.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
 					return;
@@ -910,7 +941,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				// this listener should only react on left-mouse-button-clicks...
+				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, don't count it.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
 					return;
@@ -940,7 +971,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				// this listener should only react on left-mouse-button-clicks...
+				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, don't count it.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
 					return;
@@ -1002,7 +1033,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				// this listener should only react on left-mouse-button-clicks...
+				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, don't count it.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
 					return;
@@ -1032,7 +1063,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				// this listener should only react on left-mouse-button-clicks...
+				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, don't count it.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
 					return;
@@ -1062,7 +1093,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				// this listener should only react on left-mouse-button-clicks...
+				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, don't count it.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
 					return;
@@ -1076,7 +1107,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTreeCluster.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				// this listener should only react on left-mouse-button-clicks...
+				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, don't count it.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
 					return;
@@ -1090,7 +1121,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jLabelMemory.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				// this listener should only react on left-mouse-button-clicks...
+				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, don't count it.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
 					return;
@@ -1206,7 +1237,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 		});
 		//
-		// the hyperlink-listeners
+		// The hyperlink-listeners
 		//
 		jEditorPaneEntry.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
 			@Override
@@ -1238,7 +1269,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 		});
 		//
-		// the hyperlink-listeners
+		// The hyperlink-listeners
 		//
 		jEditorPaneIsFollower.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
 			@Override
@@ -1250,7 +1281,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 		});
 		//
-		// the hyperlink-listeners
+		// The hyperlink-listeners
 		//
 		jEditorPaneClusterEntries.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
 			@Override
@@ -1295,7 +1326,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			public void treeExpanded(javax.swing.event.TreeExpansionEvent evt) {
 				// retrieve path of value that was expanded
 				TreePath tp = evt.getPath();
-				// check whether root was expanded or not. therefore, retrieve
+				// check whether root was expanded or not. Therefore, retrieve
 				// last node of the treepath, i.e. the node which was expanded
 				DefaultMutableTreeNode expandednode = (DefaultMutableTreeNode) tp.getLastPathComponent();
 				// if they equal, do nothing
@@ -1307,7 +1338,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			public void treeCollapsed(javax.swing.event.TreeExpansionEvent evt) {
 				// retrieve path of value that was expanded
 				TreePath tp = evt.getPath();
-				// check whether root was expanded or not. therefore, retrieve
+				// check whether root was expanded or not. Therefore, retrieve
 				// last node of the treepath, i.e. the node which was expanded
 				DefaultMutableTreeNode expandednode = (DefaultMutableTreeNode) tp.getLastPathComponent();
 				// if they equal, do nothing
@@ -1979,7 +2010,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		//
 		// we choose the first option, because so we can easily iterate through the xml
 		// file
-		// and retrieve action names as well as accelerator keys. this saves a lot of
+		// and retrieve action names as well as accelerator keys. This saves a lot of
 		// typing work here
 		//
 		// get the action map
@@ -2028,23 +2059,23 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// init the variables
 			String menutext;
 			char mkey;
-			// the mnemonic key for the file menu
+			// The mnemonic key for the file menu
 			menutext = fileMenu.getText();
 			mkey = menutext.charAt(0);
 			fileMenu.setMnemonic(mkey);
-			// the mnemonic key for the edit menu
+			// The mnemonic key for the edit menu
 			menutext = editMenu.getText();
 			mkey = menutext.charAt(0);
 			editMenu.setMnemonic(mkey);
-			// the mnemonic key for the search menu
+			// The mnemonic key for the search menu
 			menutext = findMenu.getText();
 			mkey = menutext.charAt(0);
 			findMenu.setMnemonic(mkey);
-			// the mnemonic key for the view menu
+			// The mnemonic key for the view menu
 			menutext = viewMenu.getText();
 			mkey = menutext.charAt(0);
 			viewMenu.setMnemonic(mkey);
-			// the mnemonic key for the windows menu
+			// The mnemonic key for the windows menu
 			menutext = windowsMenu.getText();
 			mkey = menutext.charAt(0);
 			windowsMenu.setMnemonic(mkey);
@@ -2353,11 +2384,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 		});
 		jEditorPaneEntry.setDragEnabled(true);
-		DropTarget dropTarget = new DropTarget(jEditorPaneEntry, this);
+		new DropTarget(jEditorPaneEntry, this);
 	}
 
 	/**
-	 * This method creates an own tablerow-sorter. this is necessary since we can
+	 * This method creates an own tablerow-sorter. This is necessary since we can
 	 * use own comparators here, so we can insert string with German umlauts at the
 	 * correct position - i.e. "ä" is inserted in "a", and not after "z".
 	 *
@@ -2367,7 +2398,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private void setCustomTableRowSorter(JTable table, int column) {
 		// create new table sorter
 		TableRowSorter<TableModel> sorter = new TableRowSorter<>();
-		// tell tgis jtable that it has an own sorter
+		// Tell tgis jtable that it has an own sorter
 		table.setRowSorter(sorter);
 		// and tell the sorter, which table model to sort.
 		sorter.setModel((DefaultTableModel) table.getModel());
@@ -2389,7 +2420,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// any sorting found?
 		if (sk != null) {
 			// create array with sort key
-			ArrayList l = new ArrayList();
+			ArrayList<SortKey> l = new ArrayList<SortKey>();
 			l.add(sk);
 			// set sort key to table
 			sorter.setSortKeys(l);
@@ -2693,11 +2724,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// in case we have mac os x with aqua look&feel, make JTrees look
 		// mac-like
 		if (settings.isMacAqua()) {
-			// this tree has a root, so use "true" as parameter
+			// This tree has a root, so use "true" as parameter
 			jTreeLuhmann.setUI(new MacSourceTree(true));
-			// this tree has no root, so use "false" as parameter
+			// This tree has no root, so use "false" as parameter
 			jTreeCluster.setUI(new MacSourceTree(false));
-			// this tree has no root, so use "false" as parameter
+			// This tree has no root, so use "false" as parameter
 			jTreeKeywords.setUI(new MacSourceTree(false));
 		} // on all other os / look&feels JTrees remain normal.
 		else {
@@ -3032,7 +3063,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * of the currently displayed tab of the JTabbedPane.
 	 */
 	private void removeTabMenus() {
-		// hide special menus. these will only be visible according to their
+		// hide special menus. These will only be visible according to their
 		// related displayed tab
 		menuBar.remove(viewMenuLinks);
 		menuBar.remove(viewMenuLuhmann);
@@ -3498,7 +3529,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		/* jPanelManLinks.setVisible(false); */
 		// tell user that we are doing something...
 		statusMsgLabel.setText(getResourceMap().getString("createLinksMsg"));
-		Task clT = createLinks();
+		Task<?, ?> clT = createLinks();
 		// get the application's context...
 		ApplicationContext appC = Application.getInstance().getContext();
 		// ...to get the TaskMonitor and TaskService
@@ -3660,7 +3691,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	@Action(enabledProperty = "entriesAvailable")
 	public void highlightSegments() {
-		// toggle highlight setting for keywords
+		// Toggle highlight setting for keywords
 		settings.setHighlightSegments(!settings.getHighlightSegments());
 		updateDisplay();
 	}
@@ -3763,7 +3794,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// convert to int array
 			int[] ent = new int[luhmannnumbersforexport.size()];
 			try {
-				// than the followers
+				// Than the followers
 				for (int cnt = 0; cnt < ent.length; cnt++) {
 					ent[cnt] = luhmannnumbersforexport.get(cnt);
 				}
@@ -4060,7 +4091,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 						}
 						updateDisplay();
 					} else {
-						// the new name for keyword already exists, so we can offer to merge
+						// The new name for keyword already exists, so we can offer to merge
 						// the keywords here. in fact, this is an easy find/replace-routine, since the
 						// old keyword is replaced by the existing one, when we merge them.
 						//
@@ -4376,7 +4407,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
 					Constants.zknlogger.log(Level.WARNING, "Could not rate entry. Link-text was {0}", linktype);
 				}
-			} // the user clicked on the created or edited timestamp and wants to edit this
+			} // The user clicked on the created or edited timestamp and wants to edit this
 				// timestamp
 			else if (returnValue.startsWith("#tstampc") || returnValue.startsWith("#tstampe")) {
 				// init value
@@ -4392,7 +4423,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					defaulttimestamp = (String) JOptionPane.showInputDialog(getFrame(), // parent window
 							getResourceMap().getString("editTimeStampMsg"), // message text
 							getResourceMap().getString("editTimeStampTitle"), // messagebox title
-							JOptionPane.PLAIN_MESSAGE, // type of dialog
+							JOptionPane.PLAIN_MESSAGE, // Type of dialog
 							null, // icon
 							null, // array of selection values.
 							// must be null to get an input-field.
@@ -4420,7 +4451,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 								data.setTimestampEdited(displayedZettel, defaulttimestamp);
 							}
 							updateDisplay();
-						} // the user did not edit a valid date, and probably used chars instead of
+						} // The user did not edit a valid date, and probably used chars instead of
 							// numbers
 						catch (NumberFormatException | IndexOutOfBoundsException ex) {
 							// reset value, so the input can be done again
@@ -4724,8 +4755,22 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * This method shows an option pane where the user can confirm the
 	 * delete-progress or cancel it. If cancelled, the method returns false.
 	 *
+<<<<<<< HEAD
 	 * @param entriesToDelete the index-numbers of the entries that should be
 	 *                        deleted
+=======
+<<<<<<< Upstream, based on branch 'main' of git@github.com:mateusbraga/Zettelkasten.git
+<<<<<<< Upstream, based on branch 'main' of git@github.com:mateusbraga/Zettelkasten.git
+	 * @param entriesToDelete the index-numbers of the entries that should be
+	 *                        deleted
+=======
+	 * @param entriesToDelete the index-numbers of the entries that should be deleted
+>>>>>>> a58c371 Add updateTitlesTab to UpdateDisplayOptions
+=======
+	 * @param entriesToDelete the index-numbers of the entries that should be
+	 *                        deleted
+>>>>>>> 385e70a Fix update Titles tab Dialog from attaching to edit window
+>>>>>>> refs/heads/main
 	 * @return {@code true} if entries were deleted, {@code false} is deletion was
 	 *         cancelled
 	 */
@@ -4812,7 +4857,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 								linkedauthorlist, a, -1);
 					}
 				}
-				// then, retrieve the entry's keywords, so we can update the table
+				// Then, retrieve the entry's keywords, so we can update the table
 				// jTableKeywords,
 				// by decreasing the frequencies...
 				String[] kws = data.getKeywords(entriesToDelete[cnt]);
@@ -4884,7 +4929,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (text.isEmpty()) {
 			return null;
 		}
-		// tell table selection listener we are doing something, so don't react on
+		// Tell table selection listener we are doing something, so don't react on
 		// value-changes
 		tableUpdateActive = true;
 		// get table model
@@ -5030,7 +5075,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			String resourcestring) {
 		// first check whether we have any saved values at all
 		if (list != null) {
-			// table-values might be changed, so selection listener should not react
+			// Table-values might be changed, so selection listener should not react
 			tableUpdateActive = true;
 			// get table model
 			DefaultTableModel dtm = (DefaultTableModel) table.getModel();
@@ -5251,7 +5296,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 						linkedauthorlist = updateLinkedList(linkedauthorlist, oldAu, newAu, 0);
 					}
 				} else {
-					// the new name for author already exists, so we can offer to merge
+					// The new name for author already exists, so we can offer to merge
 					// the authors here. in fact, this is an easy find/replace-routine, since the
 					// old author is replaced by the existing one, when we merge them.
 
@@ -5314,7 +5359,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	public LinkedList<String> getSelectedAuthors() {
 		String[] arr = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors, 0);
 		if (arr != null && arr.length > 0) {
-			return new LinkedList(Arrays.asList(arr));
+			return new LinkedList<String>(Arrays.asList(arr));
 		}
 		return null;
 	}
@@ -5952,10 +5997,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 			// disable checkbox during task operation
 			jCheckBoxCluster.setEnabled(false);
-			// tell user that we are doing something...
+			// Tell user that we are doing something...
 			statusMsgLabel.setText(getResourceMap().getString("createLuhmannMsg"));
 
-			Task ccT = clusterTask();
+			Task<?, ?> ccT = clusterTask();
 			// get the application's context...
 			ApplicationContext appC = Application.getInstance().getContext();
 			// ...to get the TaskMonitor and TaskService
@@ -6050,7 +6095,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		for (String kwsingle : keywords) {
 			sb.append(kwsingle).append(" + ");
 		}
-		// trim string
+		// Trim string
 		if (sb.length() > 3) {
 			sb.setLength(sb.length() - 3);
 		}
@@ -6179,7 +6224,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * @return the background task
 	 */
 	@Action
-	public Task createLinks() {
+	public Task<?, ?> createLinks() {
 		return new createLinksTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
 	}
@@ -6213,15 +6258,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				data.addEntry("", text, null, null, "", null, Tools.getTimeStamp(), -1);
 				// and titles might be out of date now as well...
 				data.setTitlelistUpToDate(false);
-				// tell about success
+				// Tell about success
 				Constants.zknlogger.log(Level.INFO, "Entry save finished.");
 				// update the dislay...
 				updateDisplay();
-				// tell about success
+				// Tell about success
 				Constants.zknlogger.log(Level.INFO, "Display updated.");
 				// and create a backup...
 				makeAutoBackup();
-				// tell about success
+				// Tell about success
 				Constants.zknlogger.log(Level.INFO, "Autobackup finished (if necessary).");
 			}
 		} catch (IllegalStateException | IOException | UnsupportedFlavorException e) {
@@ -6287,15 +6332,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				data.addEntry(title, text, null, null, "", null, Tools.getTimeStamp(), -1);
 				// and titles might be out of date now as well...
 				data.setTitlelistUpToDate(false);
-				// tell about success
+				// Tell about success
 				Constants.zknlogger.log(Level.INFO, "Entry save finished.");
 				// update the dislay...
 				updateDisplay();
-				// tell about success
+				// Tell about success
 				Constants.zknlogger.log(Level.INFO, "Display updated.");
 				// and create a backup...
 				makeAutoBackup();
-				// tell about success
+				// Tell about success
 				Constants.zknlogger.log(Level.INFO, "Autobackup finished (if necessary).");
 			}
 		} catch (IllegalStateException | IOException | UnsupportedFlavorException e) {
@@ -6320,7 +6365,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				"Zettelkasten")).getImage());
 		// retrieve system tray
 		tray = SystemTray.getSystemTray();
-		// try to add the tray icon to the systray
+		// Try to add the tray icon to the systray
 		try {
 			tray.add(trayIcon);
 		} catch (AWTException e) {
@@ -6431,7 +6476,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					addAttachments(new String[] { url.toString() });
 				} else if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
 					// retrieve list of dropped files
-					java.util.List files = (java.util.List) tr.getTransferData(DataFlavor.javaFileListFlavor);
+					@SuppressWarnings("unchecked")
+					java.util.List<java.io.File> files = (List<File>) tr.getTransferData(DataFlavor.javaFileListFlavor);
 					// check for valid values
 					if (files != null && files.size() > 0) {
 						// create array
@@ -6502,7 +6548,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		 */
 		private ArrayList<Object[]> linkedlinkslist;
 
-		@SuppressWarnings("LeakingThisInConstructor")
 		createLinksTask(org.jdesktop.application.Application app) {
 			// Runs on the EDT. Copy GUI state that
 			// doInBackground() depends on from parameters
@@ -6871,7 +6916,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * @return
 	 */
 	@Action
-	public Task autoBackupTask() {
+	public Task<?, ?> autoBackupTask() {
 		return new AutoBackupTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, statusMsgLabel, data, desktop, settings, searchrequests, synonyms, bookmarks, bibtex);
@@ -6883,7 +6928,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * @return
 	 */
 	@Action
-	public final Task checkForUpdate() {
+	public final Task<?, ?> checkForUpdate() {
 		return new CheckForUpdateTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, settings);
@@ -6899,7 +6944,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * @return the background task
 	 */
 	@Action
-	public Task clusterTask() {
+	public Task<?, ?> clusterTask() {
 		return new createClusterTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
 	}
@@ -7030,7 +7075,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * @return the background task
 	 */
 	@Action
-	public Task createFilterLinks() {
+	public Task<?, ?> createFilterLinks() {
 		return new createFilterLinksTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
 	}
@@ -8166,7 +8211,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 		// check for autobackup
 		if (settings.getAutoBackup() && (settings.getFilePath() != null)) {
-			Task cabT = autoBackupTask();
+			Task<?, ?> cabT = autoBackupTask();
 			// get the application's context...
 			ApplicationContext appC = Application.getInstance().getContext();
 			// ...to get the TaskMonitor and TaskService
@@ -10730,7 +10775,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// tell user that we are doing something...
 		statusMsgLabel.setText(getResourceMap().getString("createLinksMsg"));
 		// create task
-		Task cflT = createFilterLinks();
+		Task<?, ?> cflT = createFilterLinks();
 		// get the application's context...
 		ApplicationContext appC = Application.getInstance().getContext();
 		// ...to get the TaskMonitor and TaskService
@@ -10983,44 +11028,47 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// the stuff for the Apple-menu.">
 		try {
 			// get mac os-x application class
-			Class appc = Class.forName("com.apple.eawt.Application");
+			Class<?> appc = Class.forName("com.apple.eawt.Application");
 			// create a new instance for it.
 			Object app = appc.newInstance();
 			// get the application-listener class. here we can set our action to the apple
 			// menu
-			Class lc = Class.forName("com.apple.eawt.ApplicationListener");
-			Object listener = Proxy.newProxyInstance(lc.getClassLoader(), new Class[] { lc }, new InvocationHandler() {
-				@Override
-				public Object invoke(Object proxy, Method method, Object[] args) {
-					if (method.getName().equals("handleQuit")) {
-						// call the general exit-handler from the desktop-application-api
-						// here we do all the stuff we need when exiting the application
-						ZettelkastenApp.getApplication().exit();
-					}
-					if (method.getName().equals("handlePreferences")) {
-						// show settings window
-						settingsWindow();
-					}
-					if (method.getName().equals("handleAbout")) {
-						// show own aboutbox
-						showAboutBox();
-						try {
-							// set handled to true, so other actions won't take place any more.
-							// if we leave this out, a second, system-own aboutbox would be displayed
-							setHandled(args[0], Boolean.TRUE);
-						} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
-							Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
+			Class<?> lc = Class.forName("com.apple.eawt.ApplicationListener");
+			Object listener = Proxy.newProxyInstance(lc.getClassLoader(), new Class<?>[] { lc },
+					new InvocationHandler() {
+						@Override
+						public Object invoke(Object proxy, Method method, Object[] args) {
+							if (method.getName().equals("handleQuit")) {
+								// call the general exit-handler from the desktop-application-api
+								// here we do all the stuff we need when exiting the application
+								ZettelkastenApp.getApplication().exit();
+							}
+							if (method.getName().equals("handlePreferences")) {
+								// show settings window
+								settingsWindow();
+							}
+							if (method.getName().equals("handleAbout")) {
+								// show own aboutbox
+								showAboutBox();
+								try {
+									// set handled to true, so other actions won't take place any more.
+									// if we leave this out, a second, system-own aboutbox would be displayed
+									setHandled(args[0], Boolean.TRUE);
+								} catch (NoSuchMethodException | IllegalAccessException
+										| InvocationTargetException ex) {
+									Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
+								}
+							}
+							return null;
 						}
-					}
-					return null;
-				}
 
-				private void setHandled(Object event, Boolean val)
-						throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-					Method handleMethod = event.getClass().getMethod("setHandled", new Class[] { boolean.class });
-					handleMethod.invoke(event, new Object[] { val });
-				}
-			});
+						private void setHandled(Object event, Boolean val)
+								throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+							Method handleMethod = event.getClass().getMethod("setHandled",
+									new Class<?>[] { boolean.class });
+							handleMethod.invoke(event, new Object[] { val });
+						}
+					});
 			// tell about success
 			Constants.zknlogger.log(Level.INFO, "Apple Class Loader successfully initiated.");
 			try {
@@ -11031,7 +11079,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				// is shown
 				// but no pref-menu-item
 				Method enablePreferenceMethod = appc.getMethod("setEnabledPreferencesMenu",
-						new Class[] { boolean.class });
+						new Class<?>[] { boolean.class });
 				enablePreferenceMethod.invoke(app, new Object[] { Boolean.TRUE });
 				// tell about success
 				Constants.zknlogger.log(Level.INFO, "Apple Preference Menu successfully initiated.");
@@ -11064,7 +11112,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// background-color for OS X 10.5 and above as well as java 6 and 7
 
 		// make searchfields look like mac
-		searchTextFieldVariants();
+		setSearchTextFieldMacStyle();
 		// remove custim borders
 		jScrollPane2.setBorder(null);
 		jScrollPane5.setBorder(null);
@@ -11090,13 +11138,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	private void setupSeaGlassStyle() {
-		// make searchfields look like mac
-		searchTextFieldVariants();
+		setSearchTextFieldMacStyle();
 		jEditorPaneClusterEntries.setBackground(Color.white);
 		jEditorPaneIsFollower.setBackground(Color.white);
 	}
 
-	private void searchTextFieldVariants() {
+	private void setSearchTextFieldMacStyle() {
 		if (settings.isMacAqua() || settings.isSeaGlass()) {
 			jTextFieldLiveSearch.putClientProperty("JTextField.variant", "search");
 			jTextFieldFilterKeywords.putClientProperty("JTextField.variant", "search");
@@ -11562,18 +11609,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * @throws InstantiationException
 	 * @throws ClassNotFoundException
 	 */
-	@SuppressWarnings("unchecked")
-	// <editor-fold defaultstate="collapsed" desc="Generated
-	// Code">//GEN-BEGIN:initComponents
-	private void initSwingComponents() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
+	// GEN-BEGIN:initComponents
+	private void initComponents() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
 			UnsupportedLookAndFeelException {
-		// Init Java look and feel.
-		setDefaultLookAndFeel();
-
-		// Init the locale for the default actions cut/copy/paste.
-		Tools.initLocaleForDefaultActions(
-				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class)
-						.getContext().getActionMap(ZettelkastenView.class, this));
 
 		mainPanel = new javax.swing.JPanel();
 		jSplitPaneMain1 = new javax.swing.JSplitPane();
@@ -11622,7 +11660,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				return text;
 			}
 		};
-		jCheckBoxShowAllNoteSequences = new javax.swing.JCheckBox();
+		jCheckBoxShowAllLuhmann = new javax.swing.JCheckBox();
 		jPanel2 = new javax.swing.JPanel();
 		jTextFieldFilterKeywords = new javax.swing.JTextField();
 		jButtonRefreshKeywords = new javax.swing.JButton();
@@ -11638,7 +11676,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jPanel15 = new javax.swing.JPanel();
 		jScrollPane7 = new javax.swing.JScrollPane();
 		jTableAuthors = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
-		jComboBoxAuthorType = new javax.swing.JComboBox();
+		jComboBoxAuthorType = new javax.swing.JComboBox<String>();
 		jPanelDispAuthor = new javax.swing.JPanel();
 		jScrollPane16 = new javax.swing.JScrollPane();
 		jEditorPaneDispAuthor = new javax.swing.JEditorPane();
@@ -11659,7 +11697,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jScrollPane11 = new javax.swing.JScrollPane();
 		jTreeCluster = new javax.swing.JTree();
 		jPanel9 = new javax.swing.JPanel();
-		jComboBoxBookmarkCategory = new javax.swing.JComboBox();
+		jComboBoxBookmarkCategory = new javax.swing.JComboBox<String>();
 		jSplitPane3 = new javax.swing.JSplitPane();
 		jScrollPane9 = new javax.swing.JScrollPane();
 		jTableBookmarks = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
@@ -12210,11 +12248,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTableLinks.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
 
 		}, new String[] { "Zettel", "Überschrift", "Relevanz", "Bewertung" }) {
-			Class[] types = new Class[] { java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class,
-					java.lang.Float.class };
+			Class<?>[] types = new Class<?>[] { java.lang.Integer.class, java.lang.String.class,
+					java.lang.Integer.class, java.lang.Float.class };
 			boolean[] canEdit = new boolean[] { false, false, false, false };
 
-			public Class getColumnClass(int columnIndex) {
+			public Class<?> getColumnClass(int columnIndex) {
 				return types[columnIndex];
 			}
 
@@ -12259,11 +12297,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 								new Object[][] { { null, null, null }, { null, null, null }, { null, null, null },
 										{ null, null, null } },
 								new String[] { "Eintrag", "Überschrift", "Bewertung" }) {
-							Class[] types = new Class[] { java.lang.Integer.class, java.lang.String.class,
+							Class<?>[] types = new Class<?>[] { java.lang.Integer.class, java.lang.String.class,
 									java.lang.Float.class };
 							boolean[] canEdit = new boolean[] { false, false, false };
 
-							public Class getColumnClass(int columnIndex) {
+							public Class<?> getColumnClass(int columnIndex) {
 								return types[columnIndex];
 							}
 
@@ -12329,26 +12367,25 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jEditorPaneIsFollower.setEditable(false);
 		jEditorPaneIsFollower.setContentType("text/html"); // NOI18N
 		jEditorPaneIsFollower.setName("jEditorPaneIsFollower"); // NOI18N
-		javax.swing.ToolTipManager.sharedInstance().registerComponent(jEditorPaneIsFollower);
 		jScrollPane2.setViewportView(jEditorPaneIsFollower);
 
 		jSplitPane2.setRightComponent(jScrollPane2);
 
-		jCheckBoxShowAllNoteSequences.setText(resourceMap.getString("jCheckBoxShowAllLuhmann.text")); // NOI18N
-		jCheckBoxShowAllNoteSequences.setToolTipText(resourceMap.getString("jCheckBoxShowAllLuhmann.toolTipText")); // NOI18N
-		jCheckBoxShowAllNoteSequences.setName("jCheckBoxShowAllLuhmann"); // NOI18N
+		jCheckBoxShowAllLuhmann.setText(resourceMap.getString("jCheckBoxShowAllLuhmann.text")); // NOI18N
+		jCheckBoxShowAllLuhmann.setToolTipText(resourceMap.getString("jCheckBoxShowAllLuhmann.toolTipText")); // NOI18N
+		jCheckBoxShowAllLuhmann.setName("jCheckBoxShowAllLuhmann"); // NOI18N
 
 		javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
 		jPanel10.setLayout(jPanel10Layout);
 		jPanel10Layout.setHorizontalGroup(
 				jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jSplitPane2)
 						.addGroup(jPanel10Layout.createSequentialGroup().addContainerGap()
-								.addComponent(jCheckBoxShowAllNoteSequences)
+								.addComponent(jCheckBoxShowAllLuhmann)
 								.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 		jPanel10Layout.setVerticalGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 				.addGroup(jPanel10Layout.createSequentialGroup().addComponent(jSplitPane2)
 						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(jCheckBoxShowAllNoteSequences).addContainerGap()));
+						.addComponent(jCheckBoxShowAllLuhmann).addContainerGap()));
 
 		jTabbedPaneMain.addTab(resourceMap.getString("jPanel10.TabConstraints.tabTitle"), jPanel10); // NOI18N
 
@@ -12384,10 +12421,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTableKeywords.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
 
 		}, new String[] { "Schlagwörter", "Häufigkeit" }) {
-			Class[] types = new Class[] { java.lang.String.class, java.lang.Integer.class };
+			Class<?>[] types = new Class<?>[] { java.lang.String.class, java.lang.Integer.class };
 			boolean[] canEdit = new boolean[] { false, false };
 
-			public Class getColumnClass(int columnIndex) {
+			public Class<?> getColumnClass(int columnIndex) {
 				return types[columnIndex];
 			}
 
@@ -12472,10 +12509,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTableAuthors.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
 
 		}, new String[] { "Autoren", "Häufigkeit" }) {
-			Class[] types = new Class[] { java.lang.String.class, java.lang.Integer.class };
+			Class<?>[] types = new Class<?>[] { java.lang.String.class, java.lang.Integer.class };
 			boolean[] canEdit = new boolean[] { false, false };
 
-			public Class getColumnClass(int columnIndex) {
+			public Class<?> getColumnClass(int columnIndex) {
 				return types[columnIndex];
 			}
 
@@ -12570,11 +12607,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTableTitles.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
 
 		}, new String[] { "Zettel", "Überschrift", "Erstellt", "Geändert", "Bewertung", "Folgezettel" }) {
-			Class[] types = new Class[] { java.lang.Integer.class, java.lang.String.class, java.lang.String.class,
+			Class<?>[] types = new Class<?>[] { java.lang.Integer.class, java.lang.String.class, java.lang.String.class,
 					java.lang.String.class, java.lang.Float.class, java.lang.String.class };
 			boolean[] canEdit = new boolean[] { false, false, false, false, false, false };
 
-			public Class getColumnClass(int columnIndex) {
+			public Class<?> getColumnClass(int columnIndex) {
 				return types[columnIndex];
 			}
 
@@ -12733,10 +12770,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTableBookmarks.setModel(new javax.swing.table.DefaultTableModel(
 				new Object[][] { { null, null }, { null, null }, { null, null }, { null, null } },
 				new String[] { "Eintrag", "Kategorie" }) {
-			Class[] types = new Class[] { java.lang.Integer.class, java.lang.String.class };
+			Class<?>[] types = new Class<?>[] { java.lang.Integer.class, java.lang.String.class };
 			boolean[] canEdit = new boolean[] { false, false };
 
-			public Class getColumnClass(int columnIndex) {
+			public Class<?> getColumnClass(int columnIndex) {
 				return types[columnIndex];
 			}
 
@@ -12799,11 +12836,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTableAttachments.setModel(
 				new javax.swing.table.DefaultTableModel(new Object[][] { { null, null, null }, { null, null, null },
 						{ null, null, null }, { null, null, null } }, new String[] { "Anhang", "Typ", "Zettel" }) {
-					Class[] types = new Class[] { java.lang.String.class, java.lang.String.class,
+					Class<?>[] types = new Class<?>[] { java.lang.String.class, java.lang.String.class,
 							java.lang.Integer.class };
 					boolean[] canEdit = new boolean[] { false, false, false };
 
-					public Class getColumnClass(int columnIndex) {
+					public Class<?> getColumnClass(int columnIndex) {
 						return types[columnIndex];
 					}
 
@@ -14652,94 +14689,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		setMenuBar(menuBar);
 		setStatusBar(statusPanel);
 		setToolBar(toolBar);
-
-		// Init application icon.
-		getFrame().setIconImage(Constants.zknicon.getImage());
-
-		// initially, hide the tree-view from keywords-tab
-		// the user can switch between the hierarchic treeview of keywords
-		// or the simple frequencies in a table. by default, the table-view is activated
-		// since this is a new feature, so most people would use table-view in the
-		// beginning
-		jScrollPane17.setVisible(false);
-		jTreeKeywords.setVisible(false);
-		// hide special menus. these will only be visible according to their
-		// related displayed tab
-		removeTabMenus();
-		// init the recent documents
-		setRecentDocuments();
-
-		// tick checbox-menuitem
-		showHighlightKeywords.setSelected(settings.getHighlightKeywords());
-		// tick checkbox whether keyword-synonyms should also be displayed in the
-		// jtableKeywords or not...
-		jCheckBoxShowSynonyms.setSelected(settings.getShowSynonymsInTable());
-		// check whether all followers should be shown in trailing entries tab
-		jCheckBoxShowAllNoteSequences.setSelected(settings.getShowAllLuhmann());
-		// set background color
-		jEditorPaneEntry.setBackground(new Color(Integer.parseInt(settings.getMainBackgroundColor(), 16)));
-		// init action-, key- and mouse-listeners for all components. we do this after
-		// selecting
-		// the two checkboxes above, to avoid triggering unnecessary actions.
-		// furthermore, we init the selection listeners for the tables and lists here
-		initListeners();
-		// init the searchbox for the toolbar
-		createToolbarSearchbox();
-		// if we have mac osx aqua-look, apply leopard style
-		if (settings.isMacAqua()) {
-			setupMacOSXLeopardStyle();
-		}
-		if (settings.isSeaGlass()) {
-			setupSeaGlassStyle();
-		}
-		// hide panels for live-search and is-follower-numbers
-		jPanelLiveSearch.setVisible(false);
-		// since we have a splitpane in this tab, we don't need auto-hiding anymore
-		/* jPanelManLinks.setVisible(false); */
-		// setup the jtree-component
-		initTrees();
-		// setup a table sorter and visible grids for the JTables
-		initTables();
-		// init transferhandler for drag&drop operations
-		initDragDropTransferHandler();
-		// Init the default font sizes for tables, lists and treeviews.
-		initDefaultFontSize();
-
-		// initialise the keystrokes for certain components
-		initActionMaps();
-		// init accelerator table
-		initAcceleratorTable();
-		// init the icons of the toolbar, whether they are small, medium or large
-		initToolbarIcons(true);
-
-		// Init MacOS-specific application listener.
-		if (PlatformUtil.isMacOS()) {
-			setupMacOSXApplicationListener();
-		}
-
-		// add window-listener. somehow I lost the behaviour that clicking on the
-		// frame's
-		// upper right cross on Windows OS, quits the application. Instead, it just
-		// makes
-		// the frame disapear, but does not quit, so it looks like the application was
-		// quit
-		// but asking for changes took place. So, we simply add a windows-listener
-		// additionally
-		ZettelkastenView.super.getFrame().addWindowListener(this);
-		ZettelkastenView.super.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		// init the progress bar and status icon for
-		// the swingworker background thread
-		// creates a new class object. This variable is not used, it just associates
-		// task monitors to
-		// the background tasks. furthermore, by doing this, this class object also
-		// animates the
-		// busy icon and the progress bar of this frame.
-		//
-		// init the progressbar and animated icon for background tasks
-		InitStatusbarForTasks isb = new InitStatusbarForTasks(statusAnimationLabel, null, null);
-
-		clearTabbedPaneModels();
-	}// </editor-fold>//GEN-END:initComponents
+	}// GEN-END:initComponents
 
 	private void viewAuthorsCopyActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewAuthorsCopyActionPerformed
 		// TODO add your handling code here:
@@ -14832,17 +14782,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private javax.swing.JButton jButtonRefreshKeywords;
 	private javax.swing.JButton jButtonRefreshTitles;
 	private javax.swing.JCheckBox jCheckBoxCluster;
-	private javax.swing.JCheckBox jCheckBoxShowAllNoteSequences;
+	private javax.swing.JCheckBox jCheckBoxShowAllLuhmann;
 	private javax.swing.JCheckBox jCheckBoxShowSynonyms;
-	private javax.swing.JComboBox jComboBoxAuthorType;
-	private javax.swing.JComboBox jComboBoxBookmarkCategory;
+	private javax.swing.JComboBox<String> jComboBoxAuthorType;
+	private javax.swing.JComboBox<String> jComboBoxBookmarkCategory;
 	private javax.swing.JEditorPane jEditorPaneBookmarkComment;
 	private javax.swing.JEditorPane jEditorPaneClusterEntries;
 	private javax.swing.JEditorPane jEditorPaneDispAuthor;
 	private javax.swing.JEditorPane jEditorPaneEntry;
 	private javax.swing.JEditorPane jEditorPaneIsFollower;
 	private javax.swing.JLabel jLabelMemory;
-	private javax.swing.JList jListEntryKeywords;
+	private javax.swing.JList<String> jListEntryKeywords;
 	private javax.swing.JPanel jPanel1;
 	private javax.swing.JPanel jPanel10;
 	private javax.swing.JPanel jPanel11;

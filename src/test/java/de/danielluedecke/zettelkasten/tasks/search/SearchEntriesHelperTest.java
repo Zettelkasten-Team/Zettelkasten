@@ -1,11 +1,9 @@
 package de.danielluedecke.zettelkasten.tasks.search;
 
 import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.SearchRequests;
 import de.danielluedecke.zettelkasten.database.Synonyms;
 import de.danielluedecke.zettelkasten.util.Constants;
 import org.jdom2.Document;
-import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,11 +11,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.logging.Level;
 
 public class SearchEntriesHelperTest {
 	/**

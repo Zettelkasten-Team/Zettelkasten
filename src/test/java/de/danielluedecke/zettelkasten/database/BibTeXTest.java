@@ -1,6 +1,5 @@
 package de.danielluedecke.zettelkasten.database;
 
-import bibtex.dom.BibtexEntry;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import junit.extensions.RepeatedTest;
 import junit.framework.TestSuite;
@@ -61,7 +60,7 @@ public class BibTeXTest {
 
     @Test
     public void testGetEntry() {
-        BibtexEntry entry = bibTeX.getEntry(1);
+        bibTeX.getEntry(1);
     }
 
     @Test

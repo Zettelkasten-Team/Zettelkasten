@@ -112,12 +112,6 @@ public class ImportFromZkn extends org.jdesktop.application.Task<Object, Void> {
      */
     private final boolean atou;
     /**
-     * indicates which type of data format should be imported.
-     * refer to the Zettelkasten.view properties file (resources) to see
-     * which number is which file type.
-     */
-    private int importType;
-    /**
      * indicates whether the data should be appended to an already opened zettelkasten
      * or whether the old zettelkasten-data-file should be closed (and saved) before and
      * a new data-file should be created from the imported data

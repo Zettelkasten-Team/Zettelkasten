@@ -3,7 +3,6 @@ package de.danielluedecke.zettelkasten.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 public class Version {
 

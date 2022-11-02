@@ -157,9 +157,9 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
         Document author3Doc = new Document(new Element("authors"));
         Document keyword3Doc = new Document(new Element(Daten.ELEMENT_KEYWORD));
         Document bookmark3Doc = new Document(new Element("bookmarks"));
-        Document search3Doc = new Document(new Element("searches"));
-        Document desktop3Doc = new Document(new Element("desktops"));
-        Document desktopModifiedEntries3Doc = new Document(new Element("modifiedEntries"));
+        new Document(new Element("searches"));
+        new Document(new Element("desktops"));
+        new Document(new Element("modifiedEntries"));
         Document meta3Doc = new Document(new Element("metainformation"));
         // it looks like the SAXBuilder is closing an input stream. So we have to
         // re-open the ZIP-file each time we want to retrieve an XML-file from it
@@ -197,13 +197,10 @@ public class ImportFromZkx extends org.jdesktop.application.Task<Object, Void> {
                                 bookmark3Doc = doc;
                             }
                             if (entryname.equals(Constants.searchrequestsFileName)) {
-                                search3Doc = doc;
                             }
                             if (entryname.equals(Constants.desktopFileName)) {
-                                desktop3Doc = doc;
                             }
                             if (entryname.equals(Constants.desktopModifiedEntriesFileName)) {
-                                desktopModifiedEntries3Doc = doc;
                             }
                             break;
                         } catch (JDOMException e) {

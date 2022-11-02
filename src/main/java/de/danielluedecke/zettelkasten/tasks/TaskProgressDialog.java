@@ -100,7 +100,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	private BibTeX bibTeX;
 
 	private TaskMonitor taskMonitor;
-	private Task foregroundTask; // FIXME Provide the parametrized type for this generic.
+	private Task<?, ?> foregroundTask; // FIXME Provide the parametrized type for this generic.
 
 	public static final int TASK_LOAD = 1;
 	public static final int TASK_SAVE = 2;
@@ -161,14 +161,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
 
-		// init the progress bar and status icon for
-		// the swing worker background thread
-		// creates a new class object. This variable is not used, it just associates
-		// task monitors to
-		// the background tasks. furthermore, by doing this, this class object also
-		// animates the
-		// busy icon and the progress bar of this frame.
-		InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null); // FIXME Remove this unused
+		new InitStatusbarForTasks(null, progressBar, null);
 																						// "isb" local variable.
 		// check which task was requested and start that task
 		switch (task_id) {
@@ -191,14 +184,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		// init the progress bar and status icon for
-		// the swingworker background thread
-		// creates a new class object. This variable is not used, it just associates
-		// task monitors to
-		// the background tasks. furthermore, by doing this, this class object also
-		// animates the
-		// busy icon and the progress bar of this frame.
-		InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
+		new InitStatusbarForTasks(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_REFRESHBIBTEX:
@@ -236,14 +222,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		// init the progress bar and status icon for
-		// the swingworker background thread
-		// creates a new class object. This variable is not used, it just associates
-		// task monitors to
-		// the background tasks. furthermore, by doing this, this class object also
-		// animates the
-		// busy icon and the progress bar of this frame.
-		InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
+		new InitStatusbarForTasks(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_UPDATEFILE:
@@ -260,14 +239,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		// init the progress bar and status icon for
-		// the swingworker background thread
-		// creates a new class object. This variable is not used, it just associates
-		// task monitors to
-		// the background tasks. furthermore, by doing this, this class object also
-		// animates the
-		// busy icon and the progress bar of this frame.
-		InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
+		new InitStatusbarForTasks(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_SETFIRSTLINEASTITLE:
@@ -315,14 +287,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		// init the progress bar and status icon for
-		// the swingworker background thread
-		// creates a new class object. This variable is not used, it just associates
-		// task monitors to
-		// the background tasks. furthermore, by doing this, this class object also
-		// animates the
-		// busy icon and the progress bar of this frame.
-		InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
+		new InitStatusbarForTasks(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_REPLACE:
@@ -380,14 +345,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		// init the progress bar and status icon for
-		// the swingworker background thread
-		// creates a new class object. This variable is not used, it just associates
-		// task monitors to
-		// the background tasks. furthermore, by doing this, this class object also
-		// animates the
-		// busy icon and the progress bar of this frame.
-		InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
+		new InitStatusbarForTasks(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_SHOWKEYWORDS:
@@ -428,14 +386,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		// init the progress bar and status icon for
-		// the swingworker background thread
-		// creates a new class object. This variable is not used, it just associates
-		// task monitors to
-		// the background tasks. furthermore, by doing this, this class object also
-		// animates the
-		// busy icon and the progress bar of this frame.
-		InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
+		new InitStatusbarForTasks(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_DELETEAUTHORS:
@@ -472,14 +423,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		// init the progress bar and status icon for
-		// the swingworker background thread
-		// creates a new class object. This variable is not used, it just associates
-		// task monitors to
-		// the background tasks. furthermore, by doing this, this class object also
-		// animates the
-		// busy icon and the progress bar of this frame.
-		InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
+		new InitStatusbarForTasks(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_DELETEENTRY:
@@ -496,14 +440,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		// init the progress bar and status icon for
-		// the swingworker background thread
-		// creates a new class object. This variable is not used, it just associates
-		// task monitors to
-		// the background tasks. furthermore, by doing this, this class object also
-		// animates the
-		// busy icon and the progress bar of this frame.
-		InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
+		new InitStatusbarForTasks(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_ENTRIESTOLUHMANN:
@@ -564,14 +501,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		// init the progress bar and status icon for
-		// the swingworker background thread
-		// creates a new class object. This variable is not used, it just associates
-		// task monitors to
-		// the background tasks. furthermore, by doing this, this class object also
-		// animates the
-		// busy icon and the progress bar of this frame.
-		InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
+		new InitStatusbarForTasks(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_KEYWORDSUGGESTIONS:
@@ -640,14 +570,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		// init the progress bar and status icon for
-		// the swingworker background thread
-		// creates a new class object. This variable is not used, it just associates
-		// task monitors to
-		// the background tasks. furthermore, by doing this, this class object also
-		// animates the
-		// busy icon and the progress bar of this frame.
-		InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
+		new InitStatusbarForTasks(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (taskID) {
 		case TASK_SEARCH:
@@ -667,14 +590,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		// init the progress bar and status icon for
-		// the swingworker background thread
-		// creates a new class object. This variable is not used, it just associates
-		// task monitors to
-		// the background tasks. furthermore, by doing this, this class object also
-		// animates the
-		// busy icon and the progress bar of this frame.
-		InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
+		new InitStatusbarForTasks(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_MERGEAUTHORS:
@@ -760,14 +676,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		// init the progress bar and status icon for
-		// the swingworker background thread
-		// creates a new class object. This variable is not used, it just associates
-		// task monitors to
-		// the background tasks. furthermore, by doing this, this class object also
-		// animates the
-		// busy icon and the progress bar of this frame.
-		InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
+		new InitStatusbarForTasks(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_EXPORTDATA:
@@ -828,14 +737,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		// init the progress bar and status icon for
-		// the swingworker background thread
-		// creates a new class object. This variable is not used, it just associates
-		// task monitors to
-		// the background tasks. furthermore, by doing this, this class object also
-		// animates the
-		// busy icon and the progress bar of this frame.
-		InitStatusbarForTasks isb = new InitStatusbarForTasks(null, progressBar, null);
+		new InitStatusbarForTasks(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_IMPORTDATA:
@@ -868,7 +770,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		taskMonitor.setForegroundTask(foregroundTask);
 	}
 
-	private Task exportDataToTxt(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n,
+	private Task<?, ?> exportDataToTxt(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n,
 			boolean bibtex, boolean ihv, boolean numberprefix, boolean separateFile) {
 		return new ExportToTxtTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
@@ -876,7 +778,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 				numberprefix, separateFile);
 	}
 
-	private Task exportDataToMd(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n,
+	private Task<?, ?> exportDataToMd(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n,
 			boolean bibtex, boolean ihv, boolean numberprefix, boolean separateFile) {
 		return new ExportToMdTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
@@ -884,7 +786,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 				numberprefix, separateFile);
 	}
 
-	private Task exportDataToTex(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n,
+	private Task<?, ?> exportDataToTex(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n,
 			boolean bibtex, boolean ihv, boolean numberprefix, boolean contenttable, boolean separateFile) {
 		return new ExportToTexTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
@@ -892,7 +794,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 				numberprefix, contenttable, separateFile);
 	}
 
-	private Task exportDataToHtml(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n,
+	private Task<?, ?> exportDataToHtml(File fp, ArrayList<Object> ee, int type, int part, DefaultMutableTreeNode n,
 			boolean bibtex, boolean ihv, boolean hkws, boolean numberprefix, boolean toc) {
 		return new ExportToHtmlTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
@@ -900,39 +802,39 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 				hkws, numberprefix, toc);
 	}
 
-	private Task exportDataToXml(File fp, ArrayList<Object> ee, int part, boolean bibtex, boolean removeformattags) {
+	private Task<?, ?> exportDataToXml(File fp, ArrayList<Object> ee, int part, boolean bibtex, boolean removeformattags) {
 		return new ExportToXmlTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, tasksData, daten, bibTeX, fp, ee, part, bibtex, removeformattags);
 	}
 
-	private Task exportDataToCsv(File fp, ArrayList<Object> ee, int part, char sep, boolean removeformattags,
+	private Task<?, ?> exportDataToCsv(File fp, ArrayList<Object> ee, int part, char sep, boolean removeformattags,
 			boolean bibtex) {
 		return new ExportToCsvTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, tasksData, daten, bibTeX, fp, ee, part, sep, removeformattags, bibtex);
 	}
 
-	private Task exportDataToZkn(File fp, ArrayList<Object> ee, boolean bibtex) {
+	private Task<?, ?> exportDataToZkn(File fp, ArrayList<Object> ee, boolean bibtex) {
 		return new ExportToZknTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, tasksData, daten, bookmarks, bibTeX, bibtex, fp, ee);
 	}
 
-	private Task importFromZkx(File fp, String defaulttimestamp) {
+	private Task<?, ?> importFromZkx(File fp, String defaulttimestamp) {
 		return new ImportFromZkx(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, tasksData, daten, bookmarks, desktopData, searchRequests, fp, defaulttimestamp);
 	}
 
-	private Task importFromZkn(File fp, boolean asciiToUnicode, boolean appendit, String defaulttimestamp) {
+	private Task<?, ?> importFromZkn(File fp, boolean asciiToUnicode, boolean appendit, String defaulttimestamp) {
 		return new ImportFromZkn(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, tasksData, daten, bookmarks, desktopData, searchRequests, settings, fp, asciiToUnicode,
 				appendit, defaulttimestamp);
 	}
 
-	private Task importFromCSV(File fp, String sepchar, boolean asciiToUnicode, boolean appendit,
+	private Task<?, ?> importFromCSV(File fp, String sepchar, boolean asciiToUnicode, boolean appendit,
 			String defaulttimestamp) {
 		return new ImportFromCSV(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
@@ -949,7 +851,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * @param linkedauthors
 	 * @return
 	 */
-	private Task mergeAuthors(String oldauthors, String newauthors, String newbibkey, JTable authortable,
+	private Task<?, ?> mergeAuthors(String oldauthors, String newauthors, String newbibkey, JTable authortable,
 			int selectedrow, LinkedList<Object[]> linkedauthors) {
 		return new MergeAuthorsTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
@@ -966,7 +868,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * @param linkedkeywords
 	 * @return
 	 */
-	private Task mergeKeywords(String oldkeywords, String newkeywords, JTable kwtable, int selectedrow,
+	private Task<?, ?> mergeKeywords(String oldkeywords, String newkeywords, JTable kwtable, int selectedrow,
 			LinkedList<Object[]> linkedkeywords) {
 		return new MergeKeywordsTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
@@ -983,7 +885,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * @param t
 	 * @return
 	 */
-	private Task keywordSuggestions(int eqi, int step, LinkedList<String> sel, LinkedList<String> rest,
+	private Task<?, ?> keywordSuggestions(int eqi, int step, LinkedList<String> sel, LinkedList<String> rest,
 			LinkedList<String> ffs, String t) {
 		return new KeywordSuggestionsTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
@@ -995,7 +897,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * @param mo
 	 * @return
 	 */
-	private Task setFirstLineAsTitle(int mo) {
+	private Task<?, ?> setFirstLineAsTitle(int mo) {
 		return new SetFirstLineAsTitleTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, daten, mo);
@@ -1006,7 +908,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * @param entries
 	 * @return
 	 */
-	private Task deleteEntry(int[] entries) {
+	private Task<?, ?> deleteEntry(int[] entries) {
 		return new DeleteEntryTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, daten, searchRequests, entries);
@@ -1018,7 +920,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * @param insertpos
 	 * @return
 	 */
-	private Task entriesToLuhmann(int[] entries, int insertpos) {
+	private Task<?, ?> entriesToLuhmann(int[] entries, int insertpos) {
 		return new EntriesToLuhmannTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, daten, entries, insertpos);
@@ -1029,7 +931,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * @param authors
 	 * @return
 	 */
-	private Task deleteAuthors(String[] authors) {
+	private Task<?, ?> deleteAuthors(String[] authors) {
 		return new DeleteAuthorsTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, daten, authors);
@@ -1040,7 +942,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * @param keywords
 	 * @return
 	 */
-	private Task deleteKeywords(String[] keywords) {
+	private Task<?, ?> deleteKeywords(String[] keywords) {
 		return new DeleteKeywordsTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, daten, keywords);
@@ -1052,7 +954,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * @param dtm
 	 * @return
 	 */
-	private Task showAuthors(int et, DefaultTableModel dtm) {
+	private Task<?, ?> showAuthors(int et, DefaultTableModel dtm) {
 		return new ShowAuthorListTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, daten, bibTeX, et, dtm);
@@ -1063,7 +965,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * @param dtm
 	 * @return
 	 */
-	private Task showAttachments(DefaultTableModel dtm) {
+	private Task<?, ?> showAttachments(DefaultTableModel dtm) {
 		return new ShowAttachmentListTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, daten, settings, dtm);
@@ -1080,7 +982,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * @param rex
 	 * @return
 	 */
-	private Task replace(String fs, String rs, int[] re, int w, boolean ww, boolean mc, boolean rex) {
+	private Task<?, ?> replace(String fs, String rs, int[] re, int w, boolean ww, boolean mc, boolean rex) {
 		return new ReplaceTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, tasksData, daten, fs, rs, re, w, ww, mc, rex);
@@ -1091,7 +993,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * @param includeSynonyms
 	 * @return
 	 */
-	private Task showKeywords(boolean includeSynonyms, DefaultTableModel dtm) {
+	private Task<?, ?> showKeywords(boolean includeSynonyms, DefaultTableModel dtm) {
 		return new ShowKeywordListTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, daten, synonyms, includeSynonyms, dtm);
@@ -1102,7 +1004,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * @param conv
 	 * @return
 	 */
-	private Task convertFormatTags(int conv) {
+	private Task<?, ?> convertFormatTags(int conv) {
 		return new ConvertFormatTagsTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, daten, conv);
@@ -1113,7 +1015,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * @param dtm
 	 * @return
 	 */
-	private Task showTitles(DefaultTableModel dtm) {
+	private Task<?, ?> showTitles(DefaultTableModel dtm) {
 		return new ShowTitleListTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, daten, dtm);
@@ -1124,7 +1026,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * @param resetFreq
 	 * @return
 	 */
-	private Task updateFile(boolean resetFreq) {
+	private Task<?, ?> updateFile(boolean resetFreq) {
 		return new UpdateFileTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, daten, desktopData, bibTeX, resetFreq);
@@ -1134,7 +1036,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 *
 	 * @return
 	 */
-	private Task loadFile() {
+	private Task<?, ?> loadFile() {
 		// initiate the "statusbar" (the loading splash screen), giving visual
 		// feedback during open and save operations
 		return new LoadFileTask(
@@ -1142,7 +1044,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 				this, msgLabel, daten, bookmarks, searchRequests, desktopData, synonyms, settings, bibTeX);
 	}
 
-	private Task refreshBibTex() {
+	private Task<?, ?> refreshBibTex() {
 		return new RefreshBibTexTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, tasksData, daten, bibTeX);
@@ -1152,7 +1054,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 *
 	 * @return
 	 */
-	private Task saveFile() {
+	private Task<?, ?> saveFile() {
 		return new SaveFileTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, daten, bookmarks, searchRequests, desktopData, synonyms, settings, bibTeX);
@@ -1197,7 +1099,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 *                          <i>Zettel</i>kasten.
 	 * @return
 	 */
-	private Task startSearch(int tos, String[] s, int[] se, int w, int l, boolean ww, boolean mc, boolean syn,
+	private Task<?, ?> startSearch(int tos, String[] s, int[] se, int w, int l, boolean ww, boolean mc, boolean syn,
 			boolean accentInsensitive, boolean rex, boolean ts, String fr, String to, int tsi, boolean donly,
 			boolean rt) {
 		// initiate the "statusbar" (the loading splash screen), giving visiual
@@ -1223,7 +1125,6 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * WARNING: Do NOT modify this code. The content of this method is always
 	 * regenerated by the Form Editor.
 	 */
-	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// Code">//GEN-BEGIN:initComponents
 	private void initComponents() {
