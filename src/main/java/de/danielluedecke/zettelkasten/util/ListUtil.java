@@ -52,12 +52,12 @@ public class ListUtil {
      * @param list a reference to the JList where the related key was released
      * @param keyCode the keycode of the released key
      */
-    public static void navigateThroughList(javax.swing.JList list, int keyCode) {
+    public static void navigateThroughList(javax.swing.JList<?> list, int keyCode) {
         if (KeyEvent.VK_LEFT == keyCode || KeyEvent.VK_RIGHT == keyCode) {
             return;
         }
         int selectedRow = list.getSelectedIndex();
-        ListModel lm = list.getModel();
+        ListModel<?> lm = list.getModel();
         if (-1 == selectedRow) {
             selectedRow = 0;
         }
@@ -89,9 +89,9 @@ public class ListUtil {
      * @param list the JList where the item should be selected
      * @param textfield the related filtertextfield that contains the user-input
      */
-    public static void selectByTyping(javax.swing.JList list, javax.swing.JTextField textfield) {
+    public static void selectByTyping(javax.swing.JList<?> list, javax.swing.JTextField textfield) {
         String text = textfield.getText().toLowerCase();
-        ListModel lm = list.getModel();
+        ListModel<?> lm = list.getModel();
         for (int cnt = 0; cnt < lm.getSize(); cnt++) {
             String val = lm.getElementAt(cnt).toString();
             if (val.toLowerCase().startsWith(text)) {

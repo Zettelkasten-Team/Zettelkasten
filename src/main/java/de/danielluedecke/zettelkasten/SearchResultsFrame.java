@@ -89,6 +89,7 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowSorter;
+import javax.swing.RowSorter.SortKey;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.ListSelectionEvent;
@@ -139,7 +140,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 * create a variable for a list model. this list model is used for the
 	 * JList-component which displays the keywords of the current entry.
 	 */
-	private final DefaultListModel keywordListModel = new DefaultListModel();
+	private final DefaultListModel<String> keywordListModel = new DefaultListModel<String>();
 	/**
 	 * Indicated whether a table's content is changed, e.g. entries deleted. if so,
 	 * we have to tell this the selection listener which - otherwise - would be
@@ -188,7 +189,6 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 * @param syn
 	 * @param bib
 	 */
-	@SuppressWarnings("LeakingThisInConstructor")
 	public SearchResultsFrame(ZettelkastenView zkn, Daten d, SearchRequests sr, DesktopData desk, Settings s,
 			AcceleratorKeys ak, Synonyms syn, BibTeX bib) {
 		searchframe = this;
@@ -1129,7 +1129,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// any sorting found?
 		if (sk != null) {
 			// create array with sort key
-			ArrayList l = new ArrayList();
+			ArrayList<SortKey> l = new ArrayList<SortKey>();
 			l.add(sk);
 			// set sort key to table
 			sorter.setSortKeys(l);
@@ -1207,12 +1207,12 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		jComboBoxSearches.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				// set all results, i.e. all entry-numbers and the entries' titles, into the
+				// Set all results, i.e. all entry-numbers and the entries' titles, into the
 				// search result table
 				prepareResultList(jComboBoxSearches.getSelectedIndex());
 				// and update the display, i.e. show the entry's content
 				updateDisplay();
-				// set inputfocus to the table, so key-navigation can start immediately
+				// Set inputfocus to the table, so key-navigation can start immediately
 				jTableResults.requestFocusInWindow();
 				// finally, select first entry
 				try {
@@ -1228,7 +1228,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			// if not, choose the last search request in the combobox...
 			if (selection != searchrequest.getCurrentSearch())
 				selection = jComboBoxSearches.getItemCount() - 1;
-			// select search request
+			// Select search request
 			jComboBoxSearches.setSelectedIndex(selection);
 			// if we had no prevous selection, set row-selector to first item.
 			if (-1 == row)
@@ -1238,7 +1238,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 				row = jTableResults.getRowCount() - 1;
 			// finally...
 			try {
-				// select the appropriate table-entry
+				// Select the appropriate table-entry
 				jTableResults.setRowSelectionInterval(row, row);
 				// and make sure it is visible...
 				jTableResults.scrollRectToVisible(jTableResults.getCellRect(row, 0, false));
@@ -1265,13 +1265,13 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	private void prepareResultList(int searchrequestnr) {
 		// get search results
 		int[] result = searchrequest.getSearchResults(searchrequestnr);
-		// save current search request number
+		// Save current search request number
 		searchrequest.setCurrentSearch(searchrequestnr);
 		// check whether we have any results
 		if (result != null) {
 			// tell selection listener to do nothing...
 			tableUpdateActive = true;
-			// sort the array with the entry-numbers of the search result
+			// Sort the array with the entry-numbers of the search result
 			if (result.length > 0)
 				Arrays.sort(result);
 			// get the table model
@@ -1282,7 +1282,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			for (int cnt = 0; cnt < result.length; cnt++) {
 				// create a new object
 				Object[] ob = new Object[6];
-				// store the information in that object
+				// Store the information in that object
 				// first the entry number
 				ob[0] = result[cnt];
 				// then the entry's title
@@ -1318,7 +1318,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			sb.append(" ");
 			sb.append(resourceMap.getString("hitsText"));
 			sb.append(")");
-			// set labeltext
+			// Set labeltext
 			jLabelHits.setText(sb.toString());
 			// work done
 			tableUpdateActive = false;
@@ -1354,7 +1354,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 				keywordListModel.clear();
 				// check whether any keywords have been found
 				if (kws != null) {
-					// sort the array
+					// Sort the array
 					if (kws.length > 0)
 						Arrays.sort(kws);
 					// iterate the string array and add its content to the list model
@@ -1377,7 +1377,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 					// copy all elements of the list to the array
 					for (int cnt = 0; cnt < l.size(); cnt++)
 						selections[cnt] = l.get(cnt);
-					// set selected indices for the jList
+					// Set selected indices for the jList
 					jListKeywords.setSelectedIndices(selections);
 				}
 				// if we don't have highlighting, clear selection
@@ -1456,7 +1456,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	}
 
 	private void displayZettelContent(int nr, String[] highlightterms) {
-		// set highlight search terms
+		// Set highlight search terms
 		HtmlUbbUtil.setHighlighTerms(highlightterms, HtmlUbbUtil.HIGHLIGHT_STYLE_SEARCHRESULTS,
 				settingsObj.getHighlightWholeWordSearch());
 		// retrieve the string array of the first entry
@@ -1464,7 +1464,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 				(settingsObj.getHighlightSegments()) ? getSelectedKeywordsFromList() : null, Constants.FRAME_SEARCH);
 		// in case parsing was ok, display the entry
 		if (Tools.isValidHTML(disp, nr)) {
-			// set entry information in the main textfield
+			// Set entry information in the main textfield
 			jEditorPaneSearchEntry.setText(disp);
 		}
 		// else show error message box to user and tell him what to do
@@ -2323,7 +2323,6 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 * WARNING: Do NOT modify this code. The content of this method is always
 	 * regenerated by the Form Editor.
 	 */
-	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// Code">//GEN-BEGIN:initComponents
 	private void initComponents() {
@@ -2361,7 +2360,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		searchStatusPanel = new javax.swing.JPanel();
 		jPanel9 = new javax.swing.JPanel();
 		jLabel1 = new javax.swing.JLabel();
-		jComboBoxSearches = new javax.swing.JComboBox();
+		jComboBoxSearches = new javax.swing.JComboBox<String>();
 		jLabelHits = new javax.swing.JLabel();
 		jButtonDeleteSearch = new javax.swing.JButton();
 		searchMenuBar = new javax.swing.JMenuBar();
@@ -2555,11 +2554,11 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		jTableResults.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
 
 		}, new String[] { "Zettel", "Überschrift", "Erstellt", "Geändert", "Bewertung", "Schreibtisch" }) {
-			Class[] types = new Class[] { java.lang.Integer.class, java.lang.String.class, java.lang.String.class,
+			Class<?>[] types = new Class<?>[] { java.lang.Integer.class, java.lang.String.class, java.lang.String.class,
 					java.lang.String.class, java.lang.Float.class, java.lang.String.class };
 			boolean[] canEdit = new boolean[] { false, false, false, false, false, false };
 
-			public Class getColumnClass(int columnIndex) {
+			public Class<?> getColumnClass(int columnIndex) {
 				return types[columnIndex];
 			}
 
@@ -3011,11 +3010,11 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	private javax.swing.JMenuItem filterTopLevelLuhmann;
 	private javax.swing.JButton jButtonDeleteSearch;
 	private javax.swing.JButton jButtonResetList;
-	private javax.swing.JComboBox jComboBoxSearches;
+	private javax.swing.JComboBox<String> jComboBoxSearches;
 	private javax.swing.JEditorPane jEditorPaneSearchEntry;
 	private javax.swing.JLabel jLabel1;
 	private javax.swing.JLabel jLabelHits;
-	private javax.swing.JList jListKeywords;
+	private javax.swing.JList<String> jListKeywords;
 	private javax.swing.JMenuItem jMenuItemSwitchLayout;
 	private javax.swing.JPanel jPanel1;
 	private javax.swing.JPanel jPanel2;

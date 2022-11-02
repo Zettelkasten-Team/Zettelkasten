@@ -32,8 +32,6 @@
  */
 package de.danielluedecke.zettelkasten.tasks.search;
 
-import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.Synonyms;
 import de.danielluedecke.zettelkasten.util.Constants;
 
 public class SearchTaskOptions {

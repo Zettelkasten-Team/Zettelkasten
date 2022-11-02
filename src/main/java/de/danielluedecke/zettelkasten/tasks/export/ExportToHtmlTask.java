@@ -640,7 +640,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
                 sb.append(createHTMLList(dataObj.getAttachmentsAsString(zettelnummer, true), resourceMap.getString("NoAttachment"), resourceMap.getString("attachmentHeader"), "list_attachments"));
             }
             if ((exportparts & Constants.EXPORT_MANLINKS) != 0 && dataObj.hasManLinks(zettelnummer)) {
-                sb.append(createHTMLCommaList(dataObj.getManualLinksAsString(zettelnummer), resourceMap.getString("NoManLinks"), resourceMap.getString("manlinksHeader"), "list_manlinks"));
+                sb.append(createHTMLCommaList(Daten.getManualLinksAsString(zettelnummer), resourceMap.getString("NoManLinks"), resourceMap.getString("manlinksHeader"), "list_manlinks"));
             }
             if ((exportparts & Constants.EXPORT_LUHMANN) != 0 && dataObj.hasLuhmannNumbers(zettelnummer)) {
                 sb.append(createHTMLCommaList(dataObj.getLuhmannNumbersAsString(zettelnummer), resourceMap.getString("NoLuhmann"), resourceMap.getString("luhmannHeader"), "list_luhmann"));
@@ -742,7 +742,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
      */
     private void exportEntriesWithComments(DefaultMutableTreeNode node, boolean exportcomments) {
         // get a list with all children of the node
-        Enumeration en = node.children();
+        Enumeration<?> en = node.children();
         // go through all children
         while (en.hasMoreElements()) {
             // get the child
@@ -917,7 +917,7 @@ public class ExportToHtmlTask extends org.jdesktop.application.Task<Object, Void
      */
     private void exportEntriesWithCommentsOnly(DefaultMutableTreeNode node) {
         // get a list with all children of the node
-        Enumeration en = node.children();
+        Enumeration<?> en = node.children();
         // go through all children
         while (en.hasMoreElements()) {
             // get the child

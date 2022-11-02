@@ -57,7 +57,6 @@ import javax.swing.JFileChooser;
  * This class extends the filechooser, so that images can be previewed
  * @author sun
  */
-@SuppressWarnings("LeakingThisInConstructor")
 public class ImagePreview extends JComponent implements PropertyChangeListener {
     ImageIcon thumbnail = null;
     File file = null;

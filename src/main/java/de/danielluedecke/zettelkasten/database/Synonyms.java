@@ -232,7 +232,7 @@ public class Synonyms {
         // if we have a valid element, go on
         if (syn != null) {
             // get list of child-element with synonyms
-            List l = syn.getChildren();
+            List<?> l = syn.getChildren();
             // create array
             retval = new String[l.size() + 1];
             // first element of the array is the index word

@@ -315,7 +315,7 @@ public class HtmlUbbUtil {
         htmlrating.append("</td></tr>").append(System.lineSeparator());
 
         // check whether entry has manual links
-        String[] manualLinksAsString = dataObj.getManualLinksAsString(entrynr);
+        String[] manualLinksAsString = Daten.getManualLinksAsString(entrynr);
         if (manualLinksAsString != null && manualLinksAsString.length > 0) {
             // append manual links
             htmlrating.append("<tr><td class=\"crtitle\" valign=\"top\"><a href=\"#crt\">");

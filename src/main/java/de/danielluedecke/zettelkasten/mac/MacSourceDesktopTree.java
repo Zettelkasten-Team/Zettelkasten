@@ -9,7 +9,6 @@ import de.danielluedecke.zettelkasten.database.DesktopData;
 import de.danielluedecke.zettelkasten.util.Constants;
 import com.explodingpixels.macwidgets.MacWidgetFactory;
 import com.explodingpixels.macwidgets.SourceListBadgeContentProvider;
-import com.explodingpixels.macwidgets.SourceListCategory;
 import com.explodingpixels.macwidgets.SourceListColorScheme;
 import com.explodingpixels.macwidgets.SourceListCountBadgeRenderer;
 import com.explodingpixels.macwidgets.SourceListStandardColorScheme;
@@ -215,8 +214,7 @@ public class MacSourceDesktopTree extends BasicTreeUI {
         Icon collapseIcon = isPathSelected ? fColorScheme.getSelectedCollapsedIcon()
                 : fColorScheme.getUnselectedCollapsedIcon();
 
-        Object categoryOrItem
-                = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+        ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
         boolean setIcon = false;
 
         setExpandedIcon(setIcon ? expandIcon : null);

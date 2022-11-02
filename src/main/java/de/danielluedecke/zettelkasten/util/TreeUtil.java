@@ -153,7 +153,7 @@ public class TreeUtil {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) root.getLastPathComponent();
 		// Handle the whole tree.
 		if (node.getChildCount() >= 0) {
-			for (Enumeration<TreeNode> e = node.children(); e.hasMoreElements();) {
+			for (Enumeration<?> e = node.children(); e.hasMoreElements();) {
 				DefaultMutableTreeNode n = (DefaultMutableTreeNode) e.nextElement();
 				TreePath path = root.pathByAddingChild(n);
 				expandAllTrees(path, tree);
@@ -198,8 +198,8 @@ public class TreeUtil {
 	private static void expandAllTrees(TreePath parent, boolean expand, JTree tree) {
 		TreeNode node = (TreeNode) parent.getLastPathComponent();
 		if (node.getChildCount() >= 0) {
-			for (Enumeration<? extends TreeNode> e = node.children(); e.hasMoreElements();) {
-				TreeNode n = e.nextElement();
+			for (Enumeration<?> e = node.children(); e.hasMoreElements();) {
+				TreeNode n = (TreeNode) e.nextElement();
 				TreePath path = parent.pathByAddingChild(n);
 				expandAllTrees(path, expand, tree);
 			}
@@ -227,7 +227,7 @@ public class TreeUtil {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) nodePath.getLastPathComponent();
 		// Save the whole tree.
 		if (node.getChildCount() >= 0) {
-			for (Enumeration<TreeNode> e = node.children(); e.hasMoreElements();) {
+			for (Enumeration<?> e = node.children(); e.hasMoreElements();) {
 				DefaultMutableTreeNode n = (DefaultMutableTreeNode) e.nextElement();
 				TreePath path = nodePath.pathByAddingChild(n);
 				saveCollapsedNodes(path, tree);

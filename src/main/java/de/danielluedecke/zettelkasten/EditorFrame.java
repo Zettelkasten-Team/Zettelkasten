@@ -140,22 +140,22 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	 * create a variable for a list model. this list model is used for the
 	 * JList-component which displays the keywords of the current entry.
 	 */
-	private final DefaultListModel keywordListModel = new DefaultListModel();
+	private final DefaultListModel<String> keywordListModel = new DefaultListModel<String>();
 	/**
 	 * create a variable for a list model. this list model is used for the
 	 * JList-component which displays the links of the current entry.
 	 */
-	private DefaultListModel linkListModel = new DefaultListModel();
+	private DefaultListModel<String> linkListModel = new DefaultListModel<String>();
 	/**
 	 * create a variable for a list model. this list model is used for the
 	 * JList-component which displays the quickinput-elements.
 	 */
-	private final DefaultListModel quickInputKeywordsListModel = new DefaultListModel();
+	private final DefaultListModel<String> quickInputKeywordsListModel = new DefaultListModel<String>();
 	/**
 	 * create a variable for a list model. this list model is used for the
 	 * JList-component which displays the quickinput-elements.
 	 */
-	private final DefaultListModel quickInputAuthorListModel = new DefaultListModel();
+	private final DefaultListModel<String> quickInputAuthorListModel = new DefaultListModel<String>();
 	/**
 	 * CDaten object, which contains the XML data of the Zettelkasten
 	 */
@@ -1976,7 +1976,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		// set upto-date-indicator to false, otherwise the thread will not be executed
 		authorListUpToDate = false;
 		// when opening this dialog, automatically create the author list
-		Task qiauT = quickInputAuthor();
+		Task<?, ?> qiauT = quickInputAuthor();
 		// get the application's context...
 		ApplicationContext appC = Application.getInstance().getContext();
 		// ...to get the TaskMonitor and TaskService
@@ -2020,7 +2020,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 				return;
 			}
 			// when opening this dialog, automatically create the author list
-			Task qikwT = quickInputKeywords();
+			Task<?, ?> qikwT = quickInputKeywords();
 			// get the application's context...
 			ApplicationContext appC = Application.getInstance().getContext();
 			// ...to get the TaskMonitor and TaskService
@@ -3817,7 +3817,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		// we don't want case sensitive search here
 		filter = filter.toLowerCase();
 		// retrieve the list model
-		ListModel lm = jListQuickInputKeywords.getModel();
+		ListModel<String> lm = jListQuickInputKeywords.getModel();
 		// create new linked list that will contain the filtered elements
 		LinkedList<String> list = new LinkedList<>();
 		// iterate the listmodel
@@ -4138,12 +4138,12 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			}
 		}
 		Constants.zknlogger.log(Level.INFO, "Entry save finished.");
-		
+
 		dataObj.setAuthorlistUpToDate(false);
 		dataObj.setKeywordlistUpToDate(false);
 		dataObj.setTitlelistUpToDate(false);
 		dataObj.setAttachmentlistUpToDate(false);
-		
+
 		return true;
 	}
 
@@ -4512,7 +4512,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	 * @return
 	 */
 	@Action
-	public Task quickInputAuthor() {
+	public Task<?, ?> quickInputAuthor() {
 		// disable tabpane during background task operations
 		jTabbedPaneNewEntry1.setEnabled(false);
 
@@ -4618,7 +4618,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	 * @return
 	 */
 	@Action
-	public Task quickInputKeywords() {
+	public Task<?, ?> quickInputKeywords() {
 		// disable tabpane during background task operations
 		jTabbedPaneNewEntry1.setEnabled(false);
 		return new QuickInputKeywordsTask(
@@ -4880,11 +4880,11 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	 */
 	public class SelectionListener implements ListSelectionListener {
 
-		JList list;
+		JList<String> list;
 
 		// It is necessary to keep the table since it is not possible
 		// to determine the table from the event's source
-		SelectionListener(JList list) {
+		SelectionListener(JList<String> list) {
 			this.list = list;
 		}
 

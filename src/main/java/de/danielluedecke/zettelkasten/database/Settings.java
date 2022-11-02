@@ -45,28 +45,25 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.RowSorter;
+import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
 import javax.swing.UIManager;
+import javax.swing.table.TableModel;
+
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.XMLOutputter;
 
 /**
@@ -1335,9 +1332,9 @@ public class Settings {
 			// check if table is valid
 			if (t != null) {
 				// get sorter for each table
-				javax.swing.DefaultRowSorter sorter = (javax.swing.DefaultRowSorter) t.getRowSorter();
+				javax.swing.RowSorter<? extends TableModel> sorter =t.getRowSorter();
 				// get sort keys (column, sort order)
-				List<RowSorter.SortKey> sk = sorter.getSortKeys();
+				List<? extends SortKey> sk = sorter.getSortKeys();
 				if (sk != null && sk.size() > 0) {
 					// get first element
 					RowSorter.SortKey ssk = sk.get(0);
