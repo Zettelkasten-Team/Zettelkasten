@@ -621,7 +621,7 @@ public class ZettelkastenViewUtil {
 		default:
 			try {
 				// convert string into int value and show the entry
-				mainframe.showEntry(Integer.parseInt(t));
+				mainframe.setNewActivatedEntryAndUpdateDisplay(Integer.parseInt(t));
 			} catch (NumberFormatException ex) {
 				// else reset textfield to old value
 				jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));

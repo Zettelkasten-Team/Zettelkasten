@@ -1385,7 +1385,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 					jListKeywords.clearSelection();
 				// if we want to update the entry immediately, show entry in mainframe as well
 				if (settingsObj.getShowSearchEntry())
-					mainframe.showEntry(selection);
+					mainframe.setNewActivatedEntryAndUpdateDisplay(selection);
 				// finally, set desktop selected
 				// setDesktopEntrySelected(desktopObj.isEntryInAnyDesktop(selection));
 			} catch (NumberFormatException e) {
@@ -2044,7 +2044,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		int row = jTableResults.getSelectedRow();
 		// when we have a valid selection, go on
 		if (row != -1)
-			mainframe.showEntry(Integer.parseInt(jTableResults.getValueAt(row, 0).toString()));
+			mainframe.setNewActivatedEntryAndUpdateDisplay(Integer.parseInt(jTableResults.getValueAt(row, 0).toString()));
 	}
 
 	/**
@@ -2202,7 +2202,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 				// here we have a reference to another entry
 				if (returnValue.startsWith("#z_") || returnValue.startsWith("#cr_")) {
 					// show entry
-					mainframe.showEntry(dataObj.getActivatedEntryNumber());
+					mainframe.setNewActivatedEntryAndUpdateDisplay(dataObj.getActivatedEntryNumber());
 				}
 				// edit cross references
 				else if (returnValue.equalsIgnoreCase("#crt")) {
