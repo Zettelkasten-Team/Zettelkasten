@@ -580,7 +580,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 					// a footenote, or on the rating-stars
 					if (returnValue != null && returnValue.startsWith("#z_")) {
 						// show entry
-						zknframe.showEntry(dataObj.getActivatedEntryNumber());
+						zknframe.setNewActivatedEntryAndUpdateDisplay(dataObj.getActivatedEntryNumber());
 					}
 				} else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {
 					javax.swing.text.Element elem = evt.getSourceElement();
@@ -1207,7 +1207,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 		int nr = getSelectedEntryNumber();
 		// when we have a valid selection, go on
 		if (nr != -1) {
-			zknframe.showEntry(nr);
+			zknframe.setNewActivatedEntryAndUpdateDisplay(nr);
 		}
 	}
 

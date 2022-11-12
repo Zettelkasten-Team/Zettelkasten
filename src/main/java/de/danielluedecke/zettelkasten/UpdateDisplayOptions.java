@@ -14,13 +14,13 @@ public class UpdateDisplayOptions {
 		this.updateTitlesTab = builder.updateTitlesTab;
 	}
 
-	public boolean isUpdateNoteSequencesTree() {
+	public boolean shouldUpdateNoteSequencesTree() {
 		return updateNoteSequencesTree;
 	}
-	public boolean isUpdateLinksTable() {
+	public boolean shouldUpdateLinksTable() {
 		return updateLinksTab;
 	}
-	public boolean isUpdateTitlesTab() {
+	public boolean shouldUpdateTitlesTab() {
 		return updateTitlesTab;
 	}
 
@@ -28,11 +28,21 @@ public class UpdateDisplayOptions {
 		return new UpdateDisplayOptions.UpdateDisplayOptionsBuilder().build();
 	}
 
-	public static class UpdateDisplayOptionsBuilder {
+	public static class UpdateDisplayOptionsBuilder {		
 		// Defaults
 		private boolean updateNoteSequencesTree = true;
 		private boolean updateLinksTab = true;
 		private boolean updateTitlesTab = true;
+		
+		// Default builder.
+		public UpdateDisplayOptionsBuilder() {}
+		
+		// Create a builder on top of an existing options.
+		public UpdateDisplayOptionsBuilder(UpdateDisplayOptions options) {
+			this.updateNoteSequencesTree = options.updateNoteSequencesTree;
+			this.updateLinksTab = options.updateLinksTab;
+			this.updateTitlesTab = options.updateTitlesTab;
+		}
 
 		public UpdateDisplayOptionsBuilder updateNoteSequencesTab(boolean should) {
 			this.updateNoteSequencesTree = should;
