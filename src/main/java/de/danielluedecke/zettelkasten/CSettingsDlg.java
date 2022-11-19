@@ -389,7 +389,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 		getRootPane().registerKeyboardAction(cancelAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
 
 		// init selection
-		jComboBoxShowAtStartup.setSelectedIndex(settings.getShowAtStartup());
+		jComboBoxShowAtStartup.setSelectedIndex(settings.getStartupEntryNumberMode());
 
 		jComboBoxShowAtStartup.addActionListener(evt -> setModified(true));
 

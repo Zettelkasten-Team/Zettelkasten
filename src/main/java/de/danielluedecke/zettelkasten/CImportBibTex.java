@@ -40,7 +40,7 @@ import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.*;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
-import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
+import de.danielluedecke.zettelkasten.util.classes.TasksStatusBar;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.*;
 
@@ -160,7 +160,7 @@ public class CImportBibTex extends javax.swing.JDialog {
         }
         initListeners();
         initTable();
-        new InitStatusbarForTasks(statusLabel, null, null);
+        new TasksStatusBar(statusLabel, null, null);
         // initially, disable apply button
         jButtonApply.setEnabled(false);
         // if we have mac os x with aqua-look&feel, make certain components look like mac...

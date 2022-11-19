@@ -39,7 +39,7 @@ import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
+import de.danielluedecke.zettelkasten.util.classes.TasksStatusBar;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -98,7 +98,7 @@ public class FindDoubleEntriesTask extends javax.swing.JDialog {
         initComponents();
         // set application icon
         setIconImage(Constants.zknicon.getImage());
-        new InitStatusbarForTasks(statusAnimationLabel, progressBar, null);
+        new TasksStatusBar(statusAnimationLabel, progressBar, null);
         // these codelines add an escape-listener to the dialog. so, when the user
         // presses the escape-key, the same action is performed as if the user
         // presses the cancel button...

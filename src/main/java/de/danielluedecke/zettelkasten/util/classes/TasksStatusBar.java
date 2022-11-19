@@ -45,8 +45,7 @@ import org.jdesktop.application.TaskMonitor;
  *
  * @author danielludecke
  */
-public class InitStatusbarForTasks {
-
+public class TasksStatusBar {
     private final Timer busyIconTimer;
     private final Icon idleIcon;
     private final Icon[] busyIcons = new Icon[30];
@@ -65,7 +64,7 @@ public class InitStatusbarForTasks {
      * @param progressBar
      * @param statusMessageLabel
      */
-    public InitStatusbarForTasks( final javax.swing.JLabel statusAnimationLabel,
+    public TasksStatusBar( final javax.swing.JLabel statusAnimationLabel,
                     final javax.swing.JProgressBar progressBar,
                     final javax.swing.JLabel statusMessageLabel) {
         /**

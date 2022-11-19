@@ -45,7 +45,7 @@ import com.explodingpixels.widgets.WindowUtils;
 import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
 import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
+import de.danielluedecke.zettelkasten.util.classes.TasksStatusBar;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.StenoData;
 import de.danielluedecke.zettelkasten.mac.MacSourceDesktopTree;
@@ -342,7 +342,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 		jPanelLiveSearch.setVisible(false);
 		// retrieve system's line-separator
 		lineseparator = System.lineSeparator();
-		new InitStatusbarForTasks(statusAnimationLabel, null, null);
+		new TasksStatusBar(statusAnimationLabel, null, null);
 		// set click to update-text
 		jEditorPaneMain.setText(resourceMap.getString("clickToUpdateText"));
 		jButtonShowMultipleOccurencesDlg.setVisible(false);

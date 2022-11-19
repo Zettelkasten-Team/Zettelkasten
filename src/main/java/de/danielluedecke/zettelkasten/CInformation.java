@@ -38,7 +38,7 @@ import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
+import de.danielluedecke.zettelkasten.util.classes.TasksStatusBar;
 import de.danielluedecke.zettelkasten.util.Tools;
 import java.awt.Color;
 import java.awt.Desktop;
@@ -93,7 +93,7 @@ public class CInformation extends javax.swing.JDialog {
          */
         jScrollPane1.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
         jScrollPane1.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-        new InitStatusbarForTasks(statusLabel, null, statusMessageLabel);
+        new TasksStatusBar(statusLabel, null, statusMessageLabel);
         // these codelines add an escape-listener to the dialog. so, when the user
         // presses the escape-key, the same action is performed as if the user
         // presses the cancel button...
