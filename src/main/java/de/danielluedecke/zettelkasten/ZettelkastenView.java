@@ -156,6 +156,7 @@ import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowSorter;
 import javax.swing.RowSorter.SortKey;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -498,13 +499,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	public ZettelkastenView(SingleFrameApplication app, Settings st, TasksData td) throws ClassNotFoundException,
 			UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException {
 		super(app);
-		taskinfo = td;
-		settings = st;
-		bookmarks = new Bookmarks(this, settings);
-		bibtex = new BibTeX(this, settings);
-		data = new Daten(this, settings, settings.getSynonyms(), bibtex);
 
-		// Init Logger.
+		// Init Logger. The earlier the better.
 		// Log everything.
 		Constants.zknlogger.setLevel(Level.ALL);
 		// Log to the in_memory_session_log byte-array.
@@ -516,10 +512,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			Constants.zknlogger.addHandler(fh);
 		}
 
-		initBibtexFile();
+		taskinfo = td;
+		settings = st;
+		bookmarks = new Bookmarks(this, settings);
+		bibtex = new BibTeX(this, settings);
+		data = new Daten(this, settings, settings.getSynonyms(), bibtex);
 
 		// Init Java look and feel.
-		setDefaultLookAndFeel();
+		initUIManagerLookAndFeel();
+
+		initBibtexFile();
 
 		// Init all swing components. (initComponents is auto-generated.)
 		initComponents();
@@ -578,6 +580,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// TODO Add this toolbar searchbox to the .form file, so it can be
 		// auto-generated with the rest of the UI.
 		createToolbarSearchbox();
+
+		// Some LookAndFeel needs to happen after initialization.
+		if (settings.isSeaGlass()) {
+			ZettelkastenView.super.getFrame().getRootPane().setBackground(ColorUtil.colorSeaGlassGray);
+		}
+		if (settings.isMacAqua()) {
+			setupMacOSXLeopardStyle();
+		}
+		if (settings.isSeaGlass()) {
+			setupSeaGlassStyle();
+		}
 
 		initTrees();
 		initTables();
@@ -2742,30 +2755,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * This is needed in case the user has changed the default look and feel and we
 	 * need to set something different than the usual default.
 	 */
-	private void setDefaultLookAndFeel() throws ClassNotFoundException, UnsupportedLookAndFeelException,
-			InstantiationException, IllegalAccessException {
+	private void initUIManagerLookAndFeel() {
 		try {
 			String laf = settings.getLookAndFeel();
 			if (laf.equals(Constants.seaGlassLookAndFeelClassName)) {
 				laf = "com.seaglasslookandfeel.SeaGlassLookAndFeel";
 			}
 			UIManager.setLookAndFeel(laf);
+			SwingUtilities.updateComponentTreeUI(getFrame());
 			Constants.zknlogger.log(Level.INFO, "Using following LookAndFeel: {0}", settings.getLookAndFeel());
-
-			if (settings.isSeaGlass()) {
-				ZettelkastenView.super.getFrame().getRootPane().setBackground(ColorUtil.colorSeaGlassGray);
-			}
 		} catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException
 				| IllegalAccessException ex) {
 			Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
-			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-		}
-
-		if (settings.isMacAqua()) {
-			setupMacOSXLeopardStyle();
-		}
-		if (settings.isSeaGlass()) {
-			setupSeaGlassStyle();
 		}
 	}
 
@@ -8794,7 +8795,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 
 		// Continue loading the file in documentFile.
-		if (!loadMainDataZipDocument(documentFile, data, bookmarks, searchRequests, desktop, settings.getSynonyms(), bibtex)) {
+		if (!loadMainDataZipDocument(documentFile, data, bookmarks, searchRequests, desktop, settings.getSynonyms(),
+				bibtex)) {
 			// Load failed.
 			return false;
 		}
@@ -10994,8 +10996,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * even more mac-like...
 	 */
 	private void setupMacOSXLeopardStyle() {
-		// <editor-fold defaultstate="collapsed" desc="Initiation of some UI-stuff
-		// particular for Mac OS X">
 		// now we have to change back the background-color of all components in the
 		// mainpart of the
 		// frame, since the brush-metal-look applies to all components
@@ -11029,7 +11029,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		ac.putValue(AbstractAction.SMALL_ICON,
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("NSImage://NSStopProgressFreestandingTemplate")
 						.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		// </editor-fold>
 	}
 
 	private void setupSeaGlassStyle() {
@@ -11039,14 +11038,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	private void setSearchTextFieldMacStyle() {
-		if (settings.isMacAqua() || settings.isSeaGlass()) {
-			jTextFieldLiveSearch.putClientProperty("JTextField.variant", "search");
-			jTextFieldFilterKeywords.putClientProperty("JTextField.variant", "search");
-			jTextFieldFilterAuthors.putClientProperty("JTextField.variant", "search");
-			jTextFieldFilterTitles.putClientProperty("JTextField.variant", "search");
-			jTextFieldFilterCluster.putClientProperty("JTextField.variant", "search");
-			jTextFieldFilterAttachments.putClientProperty("JTextField.variant", "search");
-		}
+		jTextFieldLiveSearch.putClientProperty("JTextField.variant", "search");
+		jTextFieldFilterKeywords.putClientProperty("JTextField.variant", "search");
+		jTextFieldFilterAuthors.putClientProperty("JTextField.variant", "search");
+		jTextFieldFilterTitles.putClientProperty("JTextField.variant", "search");
+		jTextFieldFilterCluster.putClientProperty("JTextField.variant", "search");
+		jTextFieldFilterAttachments.putClientProperty("JTextField.variant", "search");
 	}
 
 	private void makeSeaGlassToolbar() {
