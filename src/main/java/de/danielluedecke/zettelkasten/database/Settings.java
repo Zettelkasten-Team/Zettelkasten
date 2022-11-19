@@ -572,7 +572,7 @@ public class Settings {
 	 * @return the entry-number which was passed as parameter, or -1 if no such
 	 *         paramter was passed
 	 */
-	public int getInitialParamZettel() {
+	public int getStartupEntryFromCommandLine() {
 		return initialParamEntry;
 	}
 
@@ -5306,14 +5306,14 @@ public class Settings {
 		el.setText(col);
 	}
 
-	public int getShowAtStartup() {
+	public int getStartupEntryNumberMode() {
 		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWATSTARTUP);
-		int retval = 0;
+		int retval = 1;
 		if (el != null) {
 			try {
 				retval = Integer.parseInt(el.getText());
 			} catch (NumberFormatException e) {
-				retval = 0;
+				retval = 1;
 			}
 		}
 		return retval;

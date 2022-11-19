@@ -45,7 +45,7 @@ import de.danielluedecke.zettelkasten.tasks.importtasks.ImportFromCSV;
 import de.danielluedecke.zettelkasten.tasks.importtasks.ImportFromZkn;
 import de.danielluedecke.zettelkasten.tasks.importtasks.ImportFromZkx;
 import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
+import de.danielluedecke.zettelkasten.util.classes.TasksStatusBar;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -161,7 +161,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
 
-		new InitStatusbarForTasks(null, progressBar, null);
+		new TasksStatusBar(null, progressBar, null);
 																						// "isb" local variable.
 		// check which task was requested and start that task
 		switch (task_id) {
@@ -184,7 +184,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		new InitStatusbarForTasks(null, progressBar, null);
+		new TasksStatusBar(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_REFRESHBIBTEX:
@@ -222,7 +222,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		new InitStatusbarForTasks(null, progressBar, null);
+		new TasksStatusBar(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_UPDATEFILE:
@@ -239,7 +239,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		new InitStatusbarForTasks(null, progressBar, null);
+		new TasksStatusBar(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_SETFIRSTLINEASTITLE:
@@ -287,7 +287,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		new InitStatusbarForTasks(null, progressBar, null);
+		new TasksStatusBar(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_REPLACE:
@@ -345,7 +345,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		new InitStatusbarForTasks(null, progressBar, null);
+		new TasksStatusBar(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_SHOWKEYWORDS:
@@ -386,7 +386,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		new InitStatusbarForTasks(null, progressBar, null);
+		new TasksStatusBar(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_DELETEAUTHORS:
@@ -423,7 +423,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		new InitStatusbarForTasks(null, progressBar, null);
+		new TasksStatusBar(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_DELETEENTRY:
@@ -440,7 +440,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		new InitStatusbarForTasks(null, progressBar, null);
+		new TasksStatusBar(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_ENTRIESTOLUHMANN:
@@ -501,7 +501,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		new InitStatusbarForTasks(null, progressBar, null);
+		new TasksStatusBar(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_KEYWORDSUGGESTIONS:
@@ -570,7 +570,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		new InitStatusbarForTasks(null, progressBar, null);
+		new TasksStatusBar(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (taskID) {
 		case TASK_SEARCH:
@@ -590,7 +590,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		new InitStatusbarForTasks(null, progressBar, null);
+		new TasksStatusBar(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_MERGEAUTHORS:
@@ -676,7 +676,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		new InitStatusbarForTasks(null, progressBar, null);
+		new TasksStatusBar(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_EXPORTDATA:
@@ -737,7 +737,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 		initComponents();
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
-		new InitStatusbarForTasks(null, progressBar, null);
+		new TasksStatusBar(null, progressBar, null);
 		// check which task was requested and start that task
 		switch (task_id) {
 		case TASK_IMPORTDATA:

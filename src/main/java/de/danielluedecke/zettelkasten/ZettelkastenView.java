@@ -65,7 +65,7 @@ import de.danielluedecke.zettelkasten.util.EntryIDUtils;
 import de.danielluedecke.zettelkasten.util.classes.DateComparer;
 import de.danielluedecke.zettelkasten.util.classes.EntryStringTransferHandler;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
-import de.danielluedecke.zettelkasten.util.classes.InitStatusbarForTasks;
+import de.danielluedecke.zettelkasten.util.classes.TasksStatusBar;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
 import de.danielluedecke.zettelkasten.util.PlatformUtil;
@@ -151,6 +151,7 @@ import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowSorter;
 import javax.swing.RowSorter.SortKey;
+import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.MatteBorder;
@@ -191,59 +192,20 @@ import org.jdom2.output.XMLOutputter;
 public class ZettelkastenView extends FrameView implements WindowListener, DropTargetListener {
 
 	/**
-	 * data stores and manages the main data for this program.
+	 * searchRequests manages all searches and searchresults for the loaded
+	 * datafile.
 	 */
+	private final SearchRequests searchRequests = new SearchRequests(this);
+
 	private final Daten data;
-
 	private final TasksData taskinfo;
-
-	/**
-	 * Initiate the search request class. This class stores and manages all searches
-	 * and searchresults for the loaded datafile.
-	 */
-	private final SearchRequests searchrequests = new SearchRequests(this);
-
-	/**
-	 * Initiate the bookmarks class. This class stores and manages the bookmarks of
-	 * entrys.
-	 */
 	private final Bookmarks bookmarks;
-
-	/**
-	 * A reference to the bibtex-class.
-	 */
 	private final BibTeX bibtex;
-
-	/**
-	 * Initiate the desktop class. This class stores and manages the desktop data.
-	 */
 	private final DesktopData desktop = new DesktopData(this);
-
-	/**
-	 * Initiate the settings-class. This class first of all loads some user settings
-	 * and e.g. the filepath of the currently used datafile, so it can be
-	 * automatically opened
-	 */
 	private final Settings settings;
-
-	/**
-	 * Initiate the synonyms-class.
-	 */
 	private final Synonyms synonyms;
-
-	/**
-	 * Initiate the steno-class.
-	 */
 	private final StenoData steno;
-
-	/**
-	 * Initiate the acceleratorkeys-class.
-	 */
 	private final AcceleratorKeys acceleratorKeys;
-
-	/**
-	 * A reference to the auto-correction class
-	 */
 	private final AutoKorrektur autoKorrekt;
 
 	/**
@@ -497,6 +459,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private TrayIcon trayIcon;
 	private SystemTray tray = null;
 
+	@SuppressWarnings("unused")
+	private TasksStatusBar tasksStatusBar;
+
 	/**
 	 * in_memory_session_log contains all the logs of this usage session of the app.
 	 * This log starts clean in the app startup and is discarded at the end.
@@ -558,39 +523,26 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// Init Java look and feel.
 		setDefaultLookAndFeel();
 
-		// Init the locale for the default actions cut/copy/paste.
-		Tools.initLocaleForDefaultActions(
-				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class)
-						.getContext().getActionMap(ZettelkastenView.class, this));
-
-		// Init all swing components.
+		// Init all swing components. (initComponents is auto-generated.)
 		initComponents();
 
 		// initComponents is auto-generated, so further initialization is done in
 		// postInitComponentsSetup.
-		postInitComponentsSetup();
+		postInitComponentsSetup(getFrame());
 
 		// Init exit-listener: what to do when exiting.
 		getApplication().addExitListener(new ConfirmExit());
 
 		// If the file in settings exists, load it.
-		if (!loadDocument()) {
+		if (!loadDataDocumentFromSettings()) {
+			// Failed to load. Update display for an empty data document.
 			initVariables();
 			updateDisplay();
 		}
 
 		// Check for updates.
 		if (settings.getAutoUpdate()) {
-			Task<?, ?> cfuT = checkForUpdate();
-			// get the application's context...
-			ApplicationContext appC = Application.getInstance().getContext();
-			// ...to get the TaskMonitor and TaskService
-			TaskMonitor tM = appC.getTaskMonitor();
-			TaskService tS = appC.getTaskService();
-			// with these we can execute the task and bring it to the foreground
-			// i.e. making the animated progressbar and busy icon visible
-			tS.execute(cfuT);
-			tM.setForegroundTask(cfuT);
+			prepareAndStartTask(checkForUpdate());
 		}
 
 		// Init AutoBackupTimer.
@@ -599,85 +551,59 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				Constants.autobackupUpdateInterval);
 	}
 
-	private void postInitComponentsSetup() {
-		javax.swing.ToolTipManager.sharedInstance().registerComponent(jEditorPaneIsFollower);
-		// Init application icon.
-		getFrame().setIconImage(Constants.zknicon.getImage());
+	// Common code to prepare and start a foreground task in ZettelkastenView.
+	private void prepareAndStartTask(Task<?, ?> task) {
+		ApplicationContext appC = Application.getInstance().getContext();
+		TaskMonitor tM = appC.getTaskMonitor();
+		TaskService tS = appC.getTaskService();
+		tS.execute(task);
+		tM.setForegroundTask(task);
+	}
 
-		// initially, hide the tree-view from keywords-tab
-		// the user can switch between the hierarchic treeview of keywords
-		// or the simple frequencies in a table. by default, the table-view is activated
-		// since this is a new feature, so most people would use table-view in the
-		// beginning
+	//
+	private void postInitComponentsSetup(JFrame zettelkastenViewFrame) throws ClassNotFoundException,
+			InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+		ToolTipManager.sharedInstance().registerComponent(jEditorPaneIsFollower);
+		jEditorPaneEntry.setBackground(new Color(Integer.parseInt(settings.getMainBackgroundColor(), 16)));
+
+		// Init elements that starts invisible.
 		jScrollPane17.setVisible(false);
 		jTreeKeywords.setVisible(false);
-		// hide special menus. these will only be visible according to their
-		// related displayed tab
-		removeTabMenus();
-		// init the recent documents
-		setRecentDocuments();
-
-		// tick checbox-menuitem
-		showHighlightKeywords.setSelected(settings.getHighlightKeywords());
-		// tick checkbox whether keyword-synonyms should also be displayed in the
-		// jtableKeywords or not...
-		jCheckBoxShowSynonyms.setSelected(settings.getShowSynonymsInTable());
-		// check whether all followers should be shown in trailing entries tab
-		jCheckBoxShowAllLuhmann.setSelected(settings.getShowAllLuhmann());
-		// set background color
-		jEditorPaneEntry.setBackground(new Color(Integer.parseInt(settings.getMainBackgroundColor(), 16)));
-		// init action-, key- and mouse-listeners for all components. we do this after
-		// selecting
-		// the two checkboxes above, to avoid triggering unnecessary actions.
-		// furthermore, we init the selection listeners for the tables and lists here
-		initListeners();
-		// init the searchbox for the toolbar
-		createToolbarSearchbox();
-		// if we have mac osx aqua-look, apply leopard style
-		if (settings.isMacAqua()) {
-			setupMacOSXLeopardStyle();
-		}
-		if (settings.isSeaGlass()) {
-			setupSeaGlassStyle();
-		}
-		// hide panels for live-search and is-follower-numbers
 		jPanelLiveSearch.setVisible(false);
-		// since we have a splitpane in this tab, we don't need auto-hiding anymore
-		/* jPanelManLinks.setVisible(false); */
-		// setup the jtree-component
-		initTrees();
-		// setup a table sorter and visible grids for the JTables
-		initTables();
-		// init transferhandler for drag&drop operations
-		initDragDropTransferHandler();
-		// Init the default font sizes for tables, lists and treeviews.
-		initDefaultFontSize();
 
-		// initialise the keystrokes for certain components
+		// Init selected
+		showHighlightKeywords.setSelected(settings.getHighlightKeywords());
+		jCheckBoxShowSynonyms.setSelected(settings.getShowSynonymsInTable());
+		jCheckBoxShowAllLuhmann.setSelected(settings.getShowAllLuhmann());
+
+		// Init the searchbox for the toolbar.
+		// TODO Add this toolbar searchbox to the .form file, so it can be
+		// auto-generated with the rest of the UI.
+		createToolbarSearchbox();
+
+		initTrees();
+		initTables();
+		initDragDropTransferHandler();
+		initDefaultFontSize();
 		initActionMaps();
-		// init accelerator table
 		initAcceleratorTable();
-		// init the icons of the toolbar, whether they are small, medium or large
 		initToolbarIcons(true);
+		initRecentDocumentsMenuItems();
+
+		// initListeners is called after the defaults are set to avoid triggering
+		// unnecessary actions.
+		initListeners();
+
+		// Init application icon.
+		zettelkastenViewFrame.setIconImage(Constants.zknicon.getImage());
+
+		// Init tasks status bar.
+		tasksStatusBar = new TasksStatusBar(statusAnimationLabel, null, null);
 
 		// Init MacOS-specific application listener.
 		if (PlatformUtil.isMacOS()) {
 			setupMacOSXApplicationListener();
 		}
-
-		// add window-listener. somehow I lost the behaviour that clicking on the
-		// frame's
-		// upper right cross on Windows OS, quits the application. Instead, it just
-		// makes
-		// the frame disapear, but does not quit, so it looks like the application was
-		// quit
-		// but asking for changes took place. So, we simply add a windows-listener
-		// additionally
-		ZettelkastenView.super.getFrame().addWindowListener(this);
-		ZettelkastenView.super.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		new InitStatusbarForTasks(statusAnimationLabel, null, null);
-
-		clearTabbedPaneModels();
 	}
 
 	private FileHandler createFileLogHandler() {
@@ -1357,14 +1283,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		recentDocsSubMenu.addMenuListener(new javax.swing.event.MenuListener() {
 			@Override
 			public void menuSelected(javax.swing.event.MenuEvent evt) {
-				updateRecentDocumentMenuIcon(recentDoc1, settings.getRecentDoc(1));
-				updateRecentDocumentMenuIcon(recentDoc2, settings.getRecentDoc(2));
-				updateRecentDocumentMenuIcon(recentDoc3, settings.getRecentDoc(3));
-				updateRecentDocumentMenuIcon(recentDoc4, settings.getRecentDoc(4));
-				updateRecentDocumentMenuIcon(recentDoc5, settings.getRecentDoc(5));
-				updateRecentDocumentMenuIcon(recentDoc6, settings.getRecentDoc(6));
-				updateRecentDocumentMenuIcon(recentDoc7, settings.getRecentDoc(7));
-				updateRecentDocumentMenuIcon(recentDoc8, settings.getRecentDoc(8));
+				initRecentDocumentsMenuItems();
 			}
 
 			@Override
@@ -1398,7 +1317,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				String fp = settings.getRecentDoc(3);
 				if (fp != null && !fp.isEmpty()) {
-					// FIXME java.lang.IllegalArgumentException: bad position: 1
 					openDocument(fp);
 				}
 			}
@@ -1494,7 +1412,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		windowsMenu.addMenuListener(new javax.swing.event.MenuListener() {
 			@Override
 			public void menuSelected(javax.swing.event.MenuEvent evt) {
-				showSearchResultsMenuItem.setEnabled(searchrequests.getCount() > 0);
+				showSearchResultsMenuItem.setEnabled(searchRequests.getCount() > 0);
 				showDesktopMenuItem.setEnabled(desktop.getCount() > 0);
 			}
 
@@ -2474,6 +2392,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * components.
 	 */
 	private void initActionMaps() {
+		// Init the locale for the default actions cut/copy/paste.
+		Tools.initLocaleForDefaultActions(
+				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class)
+						.getContext().getActionMap(ZettelkastenView.class, this));
+
 		// <editor-fold defaultstate="collapsed" desc="Init of action-maps so we have
 		// shortcuts for the tables">
 		// create action which should be executed when the user presses
@@ -2515,7 +2438,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					openAttachment();
 				} else if (jTextFieldEntryNumber == e.getSource()) {
 					ZettelkastenViewUtil.hiddenFeatures(ZettelkastenView.this, jTextFieldEntryNumber, data,
-							searchrequests, desktop, settings, acceleratorKeys, bibtex, displayedZettel);
+							searchRequests, desktop, settings, acceleratorKeys, bibtex, displayedZettel);
 				}
 			}
 		};
@@ -2838,6 +2761,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
 			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 		}
+
+		if (settings.isMacAqua()) {
+			setupMacOSXLeopardStyle();
+		}
+		if (settings.isSeaGlass()) {
+			setupSeaGlassStyle();
+		}
 	}
 
 	public final void setNewDisplayedEntryAndUpdateDisplay(int inputDisplayedEntry) {
@@ -3022,10 +2952,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 	}
 
-	/**
-	 * This method updates the menu-items with the recent documents
-	 */
-	private void setRecentDocuments() {
+	private void initRecentDocumentsMenuItems() {
 		setRecentDocumentMenuItem(recentDoc1, 1);
 		setRecentDocumentMenuItem(recentDoc2, 2);
 		setRecentDocumentMenuItem(recentDoc3, 3);
@@ -3037,48 +2964,34 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	private void setRecentDocumentMenuItem(javax.swing.JMenuItem menuItem, int recentDocNr) {
-		// first, hide all menu-items
 		menuItem.setVisible(false);
-		// retrieve recent document
 		String recDoc = settings.getRecentDoc(recentDocNr);
-		// check whether we have any valid value
 		if (recDoc != null && !recDoc.isEmpty()) {
-			// make menu visible, if recent document is valid
 			menuItem.setVisible(true);
-			// set filename as text
 			menuItem.setText(FileOperationsUtil.getFileName(recDoc));
-			// and set file-not-fouhd-icon
 			updateRecentDocumentMenuIcon(menuItem, recDoc);
 		}
 	}
 
 	private void updateRecentDocumentMenuIcon(javax.swing.JMenuItem menuItem, String recDoc) {
-		// check whether we have any valid value
-		if (recDoc != null && !recDoc.isEmpty()) {
-			// create icon for file-not-found
-			ImageIcon fileNotFoundIcon = Constants.errorIcon;
-			// create zkn-icon for valid files
+		File dummyfile = new File(recDoc);
+		if (dummyfile.exists()) {
 			ImageIcon zkn3Icon = Constants.zknicon;
-			// create tooltip-text for file not found
+			menuItem.setToolTipText(recDoc);
+			menuItem.setIcon(zkn3Icon);
+		} else {
+			ImageIcon fileNotFoundIcon = Constants.errorIcon;
 			String fileNotFountText = getResourceMap().getString("recDocfileNotFoundTxt");
-			// check whether file exists
-			File dummyfile = new File(recDoc);
-			// set either filepath or file-not-found-text as tooltip
-			menuItem.setToolTipText((dummyfile.exists() ? recDoc : fileNotFountText));
-			// set either file-not-found-icon or no icon
-			menuItem.setIcon((dummyfile.exists()) ? zkn3Icon : fileNotFoundIcon);
+			menuItem.setToolTipText(fileNotFountText);
+			menuItem.setIcon(fileNotFoundIcon);
 		}
 	}
 
 	/**
-	 * This method removes all menus that are related to the JTabbedPane. After this
-	 * method is called, typically the method {@link #showTabMenu(javax.swing.JMenu)
-	 * showTabMenu(javax.swing.JMenu)} has to be called, to display the related menu
-	 * of the currently displayed tab of the JTabbedPane.
+	 * This method removes all menus related to a specific tab. Usually called to
+	 * reset before updating the display.
 	 */
 	private void removeTabMenus() {
-		// hide special menus. These will only be visible according to their
-		// related displayed tab
 		menuBar.remove(viewMenuLinks);
 		menuBar.remove(viewMenuLuhmann);
 		menuBar.remove(viewMenuKeywords);
@@ -3116,7 +3029,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTextFieldFilterCluster.setEnabled(jTreeCluster.getRowCount() > 0);
 		jTextFieldFilterAttachments.setEnabled(jTableAttachments.getRowCount() > 0);
 
-		// Hide special menus. These will only be visible according to the current tab.
+		// Remove all tab menus. Code below will show the correct tab menus.
 		removeTabMenus();
 
 		// Reset status text.
@@ -3198,15 +3111,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		statusDesktopEntryButton.setEnabled(desktop.isEntryInAnyDesktop(displayedZettel) && (count > 0));
 		// retrieve modified data-files
 		setSaveEnabled(synonyms.isModified() | data.isMetaModified() | bibtex.isModified() | data.isModified()
-				| bookmarks.isModified() | searchrequests.isModified() | desktop.isModified());
+				| bookmarks.isModified() | searchRequests.isModified() | desktop.isModified());
 		buttonHistoryBack.setEnabled(data.canHistoryBack());
 		buttonHistoryFore.setEnabled(data.canHistoryFore());
 		setHistoryBackAvailable(data.canHistoryBack());
 		setHistoryForAvailable(data.canHistoryFore());
 		// desktop and search results avaiable
 		setDesktopAvailable(desktop.getCount() > 0);
-		setSearchResultsAvailable(searchrequests.getCount() > 0);
-		showSearchResultsMenuItem.setEnabled(searchrequests.getCount() > 0);
+		setSearchResultsAvailable(searchRequests.getCount() > 0);
+		showSearchResultsMenuItem.setEnabled(searchRequests.getCount() > 0);
 		showDesktopMenuItem.setEnabled(desktop.getCount() > 0);
 	}
 
@@ -3540,16 +3453,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		// Update status message.
 		statusMsgLabel.setText(getResourceMap().getString("createLinksMsg"));
-		Task<?, ?> clT = createLinks();
-		// get the application's context...
-		ApplicationContext appC = Application.getInstance().getContext();
-		// ...to get the TaskMonitor and TaskService
-		TaskMonitor tM = appC.getTaskMonitor();
-		TaskService tS = appC.getTaskService();
-		// with these we can execute the task and bring it to the foreground
-		// i.e. making the animated progressbar and busy icon visible
-		tS.execute(clT);
-		tM.setForegroundTask(clT);
+		prepareAndStartTask(createLinks());
 	}
 
 	private void updateManualLinksTable() {
@@ -3609,8 +3513,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (data.isKeywordlistUpToDate()) {
 			return;
 		}
-		// if dialog window isn't already created, do this now
-		if (null == taskDlg) {
+		// If dialog window isn't already created, do this now.
+		if (taskDlg == null) {
 			// get parent und init window
 			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWKEYWORDS, data, synonyms,
 					null, /* only needed for authors */
@@ -3620,10 +3524,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
-		ZettelkastenApp.getApplication().show(taskDlg);
-		// dispose the window and clear the object
-		taskDlg.dispose();
-		taskDlg = null;
+		waitForTaskDialog();
+
 		// check whether we have a new added keyword, and if so, select it
 		if (newAddedKeyword != null) {
 			// select recently added value
@@ -3639,7 +3541,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	public void updateZettelkasten(String updateBuildNr) {
-		// if dialog window isn't already created, do this now
+		// If dialog window isn't already created, do this now.
 		if (null == updateInfoDlg) {
 			// get parent und init window
 			updateInfoDlg = new CUpdateInfoBox(getFrame());
@@ -3772,16 +3674,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// even if the user searches twice for the same searchterms
 			DateFormat df = new SimpleDateFormat("kkmmss");
 			// add search
-			searchrequests.addSearch(
+			searchRequests.addSearch(
 					new String[] { getResourceMap().getString("exportLuhmannSearch", String.valueOf(displayedZettel)) },
 					Constants.SEARCH_LUHMANN, Constants.LOG_OR, false, false, false, /* accentInsensitive= */false,
 					false, ent,
 					getResourceMap().getString("exportLuhmannSearchDesc", String.valueOf(displayedZettel)) + " ("
 							+ df.format(new Date()) + ")",
 					getResourceMap().getString("exportLuhmannSearchDesc", String.valueOf(displayedZettel)));
-			// if dialog window isn't already created, do this now
+			// If dialog window isn't already created, do this now.
 			if (null == searchResultsDlg) {
-				searchResultsDlg = new SearchResultsFrame(this, data, searchrequests, desktop, settings,
+				searchResultsDlg = new SearchResultsFrame(this, data, searchRequests, desktop, settings,
 						acceleratorKeys, synonyms, bibtex);
 			}
 			// show search results window
@@ -3789,7 +3691,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// show latest search results by auto-selecting the last item in the combo-box
 			searchResultsDlg.showLatestSearchResult();
 			// enable window-menu-item, if we have loaded search results
-			setSearchResultsAvailable(searchrequests.getCount() > 0);
+			setSearchResultsAvailable(searchRequests.getCount() > 0);
 		}
 	}
 
@@ -3916,16 +3818,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// even if the user searches twice for the same searchterms
 			DateFormat df = new SimpleDateFormat("kkmmss");
 			// add search
-			searchrequests.addSearch(
+			searchRequests.addSearch(
 					new String[] { getResourceMap().getString("exportLinksSearch", String.valueOf(displayedZettel)) },
 					Constants.SEARCH_REFERRERS, Constants.LOG_OR, false, false, false, /* accentInsensitive= */false,
 					false, expvalues,
 					getResourceMap().getString("exportLinksSearchDesc", String.valueOf(displayedZettel)) + " ("
 							+ df.format(new Date()) + ")",
 					getResourceMap().getString("exportLinksSearchDesc", String.valueOf(displayedZettel)));
-			// if dialog window isn't already created, do this now
+			// If dialog window isn't already created, do this now.
 			if (null == searchResultsDlg) {
-				searchResultsDlg = new SearchResultsFrame(this, data, searchrequests, desktop, settings,
+				searchResultsDlg = new SearchResultsFrame(this, data, searchRequests, desktop, settings,
 						acceleratorKeys, synonyms, bibtex);
 			}
 			// show search results window
@@ -3933,7 +3835,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// show latest search results by auto-selecting the last item in the combo-box
 			searchResultsDlg.showLatestSearchResult();
 			// enable window-menu-item, if we have loaded search results
-			setSearchResultsAvailable(searchrequests.getCount() > 0);
+			setSearchResultsAvailable(searchRequests.getCount() > 0);
 		} catch (NumberFormatException e) {
 		}
 	}
@@ -3946,15 +3848,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// even if the user searches twice for the same searchterms
 			DateFormat df = new SimpleDateFormat("kkmmss");
 			// add search
-			searchrequests.addSearch(new String[] { getResourceMap().getString("exportDesktopSearch") },
+			searchRequests.addSearch(new String[] { getResourceMap().getString("exportDesktopSearch") },
 					Constants.SEARCH_DESKTOP, Constants.LOG_OR, false, false, false, /* accentInsensitive= */false,
 					false, entries,
 					getResourceMap().getString("exportDesktopSearchDesc",
 							"\"" + desktopname + "\"" + " (" + df.format(new Date()) + ")"),
 					getResourceMap().getString("exportDesktopSearchDesc", "\"" + desktopname + "\""));
-			// if dialog window isn't already created, do this now
+			// If dialog window isn't already created, do this now.
 			if (null == searchResultsDlg) {
-				searchResultsDlg = new SearchResultsFrame(this, data, searchrequests, desktop, settings,
+				searchResultsDlg = new SearchResultsFrame(this, data, searchRequests, desktop, settings,
 						acceleratorKeys, synonyms, bibtex);
 			}
 			// show search results window
@@ -3962,7 +3864,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// show latest search results by auto-selecting the last item in the combo-box
 			searchResultsDlg.showLatestSearchResult();
 			// enable window-menu-item, if we have loaded search results
-			setSearchResultsAvailable(searchrequests.getCount() > 0);
+			setSearchResultsAvailable(searchRequests.getCount() > 0);
 		}
 	}
 
@@ -3974,15 +3876,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// even if the user searches twice for the same searchterms
 			DateFormat df = new SimpleDateFormat("kkmmss");
 			// add search
-			searchrequests.addSearch(new String[] { getResourceMap().getString("exportMissingDesktopSearch") },
+			searchRequests.addSearch(new String[] { getResourceMap().getString("exportMissingDesktopSearch") },
 					Constants.SEARCH_DESKTOP, Constants.LOG_OR, false, false, false, /* accentInsensitive= */false,
 					false, entries,
 					getResourceMap().getString("exportMissingDesktopSearchDesc",
 							"\"" + desktopname + "\"" + " (" + df.format(new Date()) + ")"),
 					getResourceMap().getString("exportMissingDesktopSearchDesc", "\"" + desktopname + "\""));
-			// if dialog window isn't already created, do this now
+			// If dialog window isn't already created, do this now.
 			if (null == searchResultsDlg) {
-				searchResultsDlg = new SearchResultsFrame(this, data, searchrequests, desktop, settings,
+				searchResultsDlg = new SearchResultsFrame(this, data, searchRequests, desktop, settings,
 						acceleratorKeys, synonyms, bibtex);
 			}
 			// show search results window
@@ -3990,7 +3892,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// show latest search results by auto-selecting the last item in the combo-box
 			searchResultsDlg.showLatestSearchResult();
 			// enable window-menu-item, if we have loaded search results
-			setSearchResultsAvailable(searchrequests.getCount() > 0);
+			setSearchResultsAvailable(searchRequests.getCount() > 0);
 		}
 	}
 
@@ -4024,16 +3926,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// even if the user searches twice for the same searchterms
 			DateFormat df = new SimpleDateFormat("kkmmss");
 			// add search
-			searchrequests.addSearch(
+			searchRequests.addSearch(
 					new String[] { getResourceMap().getString("exportClusterSearch", lastClusterRelationKeywords) },
 					Constants.SEARCH_CLUSTER, Constants.LOG_OR, false, false, false, /* accentInsensitive= */false,
 					false, expvalues,
 					getResourceMap().getString("exportClusterSearchDesc", lastClusterRelationKeywords) + " ("
 							+ df.format(new Date()) + ")",
 					getResourceMap().getString("exportClusterSearchDesc", lastClusterRelationKeywords));
-			// if dialog window isn't already created, do this now
+			// If dialog window isn't already created, do this now.
 			if (null == searchResultsDlg) {
-				searchResultsDlg = new SearchResultsFrame(this, data, searchrequests, desktop, settings,
+				searchResultsDlg = new SearchResultsFrame(this, data, searchRequests, desktop, settings,
 						acceleratorKeys, synonyms, bibtex);
 			}
 			// show search results window
@@ -4041,7 +3943,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// show latest search results by auto-selecting the last item in the combo-box
 			searchResultsDlg.showLatestSearchResult();
 			// enable window-menu-item, if we have loaded search results
-			setSearchResultsAvailable(searchrequests.getCount() > 0);
+			setSearchResultsAvailable(searchRequests.getCount() > 0);
 		} catch (NumberFormatException e) {
 		}
 	}
@@ -4116,18 +4018,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 							return;
 						}
 						// merge the keywords by opening a dialog with a background task
-						// if dialog window isn't already created, do this now
-						if (null == taskDlg) {
+						// If dialog window isn't already created, do this now.
+						if (taskDlg == null) {
 							// get parent und init window
 							taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_MERGEKEYWORDS, data,
 									taskinfo, oldKw, newKw, null, jTableKeywords, selectedrows[cnt], linkedkeywordlist);
 							// Center new dialog window.
 							taskDlg.setLocationRelativeTo(getFrame());
 						}
-						ZettelkastenApp.getApplication().show(taskDlg);
-						// dispose the window and clear the object
-						taskDlg.dispose();
-						taskDlg = null;
+						waitForTaskDialog();
+
 						// update the merged linked list
 						linkedkeywordlist = taskinfo.getLinkedValues();
 						// now we want either to rename synonyms-index-words of the keyword
@@ -4262,18 +4162,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// if yes, go on
 		if (JOptionPane.YES_OPTION == option) {
 			// and delete the keywords by opening a dialog with a background task
-			// if dialog window isn't already created, do this now
-			if (null == taskDlg) {
+			// If dialog window isn't already created, do this now.
+			if (taskDlg == null) {
 				// get parent und init window
 				taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_DELETEKEYWORDS, data,
 						ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableKeywords, 0));
 				// Center new dialog window.
 				taskDlg.setLocationRelativeTo(getFrame());
 			}
-			ZettelkastenApp.getApplication().show(taskDlg);
-			// dispose the window and clear the object
-			taskDlg.dispose();
-			taskDlg = null;
+			waitForTaskDialog();
+
 			// remove entries also from table and linked list
 			linkedkeywordlist = ZettelkastenViewUtil.updateTableFrequencyRemove(jTableKeywords, linkedkeywordlist,
 					this);
@@ -4609,18 +4507,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// if yes, do so
 		if (JOptionPane.YES_OPTION == option) {
 			// and delete the authors by opening a dialog with a background task
-			// if dialog window isn't already created, do this now
-			if (null == taskDlg) {
+			// If dialog window isn't already created, do this now.
+			if (taskDlg == null) {
 				// get parent und init window
 				taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_DELETEAUTHORS, data,
 						ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAuthors, 0));
 				// Center new dialog window.
 				taskDlg.setLocationRelativeTo(getFrame());
 			}
-			ZettelkastenApp.getApplication().show(taskDlg);
-			// dispose the window and clear the object
-			taskDlg.dispose();
-			taskDlg = null;
+			waitForTaskDialog();
+
 			// update the tables and the possible linked lists
 			linkedauthorlist = ZettelkastenViewUtil.updateTableFrequencyRemove(jTableAuthors, linkedauthorlist, this);
 			// show amount of entries
@@ -4882,18 +4778,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// but it might be that deleting the entry from luhmann-numbers, desktop-data
 			// and search results is quite time consuming. thus, we delete those parts
 			// in an exra background-task
-			// if dialog window isn't already created, do this now
-			if (null == taskDlg) {
+			// If dialog window isn't already created, do this now.
+			if (taskDlg == null) {
 				// get parent und init window
-				taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_DELETEENTRY, data, searchrequests,
+				taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_DELETEENTRY, data, searchRequests,
 						entriesToDelete);
 				// Center new dialog window.
 				taskDlg.setLocationRelativeTo(getFrame());
 			}
-			ZettelkastenApp.getApplication().show(taskDlg);
-			// dispose the window and clear the object
-			taskDlg.dispose();
-			taskDlg = null;
+			waitForTaskDialog();
+
 			// when the search dialog is opened, remove entry from list...
 			if (searchResultsDlg != null) {
 				searchResultsDlg.updateComboBox(-1, -1);
@@ -5021,8 +4915,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// if the filtering removed a selected node, clear the jListCluster
 			if (null == jTreeCluster.getSelectionPath()) {
 				clusterList.clear();
-				// and show current entry again
-				// TODO aktiuellen Zettel zeigen?
 			}
 
 			// indicate that we have filtered the list
@@ -5311,18 +5203,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 						return;
 					}
 					// merge the authors by opening a dialog with a background task
-					// if dialog window isn't already created, do this now
-					if (null == taskDlg) {
+					// If dialog window isn't already created, do this now.
+					if (taskDlg == null) {
 						// get parent und init window
 						taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_MERGEAUTHORS, data,
 								taskinfo, oldAu, newAu, newBibKey, jTableAuthors, selectedrows[cnt], linkedauthorlist);
 						// Center new dialog window.
 						taskDlg.setLocationRelativeTo(getFrame());
 					}
-					ZettelkastenApp.getApplication().show(taskDlg);
-					// dispose the window and clear the object
-					taskDlg.dispose();
-					taskDlg = null;
+					waitForTaskDialog();
+
 					// update the merged linked list
 					linkedauthorlist = taskinfo.getLinkedValues();
 					// show amount of entries
@@ -5591,8 +5481,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (data.isAttachmentlistUpToDate()) {
 			return;
 		}
-		// if dialog window isn't already created, do this now
-		if (null == taskDlg) {
+		// If dialog window isn't already created, do this now.
+		if (taskDlg == null) {
 			// get parent und init window
 			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWATTACHMENTS, data, null, /*
 																												 * only
@@ -5607,10 +5497,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
-		ZettelkastenApp.getApplication().show(taskDlg);
-		// dispose the window and clear the object
-		taskDlg.dispose();
-		taskDlg = null;
+		waitForTaskDialog();
+
 		// enable textfield only if we have more than 1 element in the jtable
 		jTextFieldFilterAttachments.setEnabled(jTableAttachments.getRowCount() > 0);
 		// show amount of entries
@@ -5728,8 +5616,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (data.isAuthorlistUpToDate()) {
 			return;
 		}
-		// if dialog window isn't already created, do this now
-		if (null == taskDlg) {
+		// If dialog window isn't already created, do this now.
+		if (taskDlg == null) {
 			// get parent und init window
 			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SHOWAUTHORS, data, null, /*
 																											 * only
@@ -5743,10 +5631,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
-		ZettelkastenApp.getApplication().show(taskDlg);
-		// dispose the window and clear the object
-		taskDlg.dispose();
-		taskDlg = null;
+		waitForTaskDialog();
+
 		// check whether we have a new added author, and if so, select it
 		if (newAddedAuthor != null) {
 			// select recently added value
@@ -6002,16 +5888,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// Tell user that we are doing something...
 			statusMsgLabel.setText(getResourceMap().getString("createLuhmannMsg"));
 
-			Task<?, ?> ccT = clusterTask();
-			// get the application's context...
-			ApplicationContext appC = Application.getInstance().getContext();
-			// ...to get the TaskMonitor and TaskService
-			TaskMonitor tM = appC.getTaskMonitor();
-			TaskService tS = appC.getTaskService();
-			// with these we can execute the task and bring it to the foreground
-			// i.e. making the animated progressbar and busy icon visible
-			tS.execute(ccT);
-			tM.setForegroundTask(ccT);
+			prepareAndStartTask(clusterTask());
 		} else {
 			// else create a string array (for sorting the keywords)
 			String[] kws = new String[kwcount];
@@ -6193,22 +6070,23 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 
 		// If dialog window isn't already created, do this now.
-		if (updateTitlesTabTaskDlg == null) {
+		if (taskDlg == null) {
 			JFrame parentFrame = getFrame();
-			updateTitlesTabTaskDlg = new TaskProgressDialog(parentFrame, TaskProgressDialog.TASK_SHOWTITLES, data,
-					null, /* only needed for keywords */
+			taskDlg = new TaskProgressDialog(parentFrame, TaskProgressDialog.TASK_SHOWTITLES, data, null, /*
+																											 * only
+																											 * needed
+																											 * for
+																											 * keywords
+																											 */
 					null, /* only needed for authors */
 					null, /* only needed for attachments */
 					false, /* only needed for keywords */
 					0, /* only needed for authors */
 					(DefaultTableModel) jTableTitles.getModel());
 			// Center new dialog window.
-			updateTitlesTabTaskDlg.setLocationRelativeTo(parentFrame);
+			taskDlg.setLocationRelativeTo(parentFrame);
 		}
-		ZettelkastenApp.getApplication().show(updateTitlesTabTaskDlg);
-		// Dispose the window and clear the object.
-		updateTitlesTabTaskDlg.dispose();
-		updateTitlesTabTaskDlg = null;
+		waitForTaskDialog();
 
 		// Reset filtered title list.
 		linkedtitlelist = null;
@@ -6921,7 +6799,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	public Task<?, ?> autoBackupTask() {
 		return new AutoBackupTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-				this, statusMsgLabel, data, desktop, settings, searchrequests, synonyms, bookmarks, bibtex);
+				this, statusMsgLabel, data, desktop, settings, searchRequests, synonyms, bookmarks, bibtex);
 	}
 
 	/**
@@ -7751,7 +7629,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// for getting the relevant import data. the import task
 		// itself (background task) will be started as another dialog,
 		// when this one is closed
-		// if dialog window isn't already created, do this now
+		// If dialog window isn't already created, do this now.
 		if (null == importWindow) {
 			// when we have no data, there is no need for appending the data
 			boolean isAppendPossible = data.getCount(Daten.ZKNCOUNT) > 0;
@@ -7832,20 +7710,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 						}
 					}
 				}
-				// if dialog window isn't already created, do this now
-				if (null == taskDlg) {
+				// If dialog window isn't already created, do this now.
+				if (taskDlg == null) {
 					// get parent und init window
 					taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_IMPORTDATA, taskinfo, data,
-							bookmarks, desktop, searchrequests, settings, importWindow.getImportType(),
+							bookmarks, desktop, searchRequests, settings, importWindow.getImportType(),
 							importWindow.getFilePath(), importWindow.getSeparatorChar(),
 							importWindow.getAsciiToUnicode(), importWindow.getAppend(), defaulttimestamp, null);
 					// Center new dialog window.
 					taskDlg.setLocationRelativeTo(getFrame());
 				}
-				ZettelkastenApp.getApplication().show(taskDlg);
-				// dispose the window and clear the object
-				taskDlg.dispose();
-				taskDlg = null;
+				waitForTaskDialog();
+
 				// when an error occured, show errorlog
 				if (!taskinfo.isImportOk()) {
 					showErrorLog();
@@ -7857,7 +7733,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				case Constants.TYPE_ZKN:
 				case Constants.TYPE_CSV:
 				case Constants.TYPE_XML:
-					updateAfterOpen();
+					updateDisplayAfterOpen();
 					break;
 				}
 			}
@@ -8005,8 +7881,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// when the user wants to export into PDF or LaTex, open a new dialog where the
 			// user can make some extra settings like page settings and font-sizes.
 			if (ExportTools.isExportSettingsOk(getFrame(), settings, exportWindow.getExportType())) {
-				// if dialog window isn't already created, do this now
-				if (null == taskDlg) {
+				// If dialog window isn't already created, do this now.
+				if (taskDlg == null) {
 					// open export dialog
 					// get parent und init window
 					taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_EXPORTDATA, taskinfo, data,
@@ -8018,10 +7894,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					// Center new dialog window.
 					taskDlg.setLocationRelativeTo(getFrame());
 				}
-				ZettelkastenApp.getApplication().show(taskDlg);
-				// dispose the window and clear the object
-				taskDlg.dispose();
-				taskDlg = null;
+				waitForTaskDialog();
+
 				// if an error occured, show error-log
 				if (!taskinfo.isExportOk()) {
 					showErrorIcon();
@@ -8213,16 +8087,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 		// check for autobackup
 		if (settings.getAutoBackup() && (settings.getFilePath() != null)) {
-			Task<?, ?> cabT = autoBackupTask();
-			// get the application's context...
-			ApplicationContext appC = Application.getInstance().getContext();
-			// ...to get the TaskMonitor and TaskService
-			TaskMonitor tM = appC.getTaskMonitor();
-			TaskService tS = appC.getTaskService();
-			// with these we can execute the task and bring it to the foreground
-			// i.e. making the animated progressbar and busy icon visible
-			tS.execute(cabT);
-			tM.setForegroundTask(cabT);
+			prepareAndStartTask(autoBackupTask());
 
 			Constants.zknlogger.log(Level.INFO, "Autobackup finished (if necessary).");
 		} else {
@@ -8353,7 +8218,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if ((null == entries) || (entries.length < 1) || (-1 == entries[0])) {
 			return;
 		}
-		// if dialog window isn't already created, do this now
+		// If dialog window isn't already created, do this now.
 		if (null == desktopDlg) {
 			desktopDlg = new DesktopFrame(this, taskinfo, data, bookmarks, desktop, settings, acceleratorKeys, bibtex,
 					autoKorrekt, steno);
@@ -8368,7 +8233,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	@Action(enabledProperty = "entriesAvailable")
 	public void newDesktop() {
-		// if dialog window isn't already created, do this now
+		// If dialog window isn't already created, do this now.
 		if (null == desktopDlg) {
 			desktopDlg = new DesktopFrame(this, taskinfo, data, bookmarks, desktop, settings, acceleratorKeys, bibtex,
 					autoKorrekt, steno);
@@ -8548,15 +8413,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (askForSaveChanges(getResourceMap().getString("msgSaveChangesTitle"))) {
 			// reset the data-file
 			settings.setFilePath(new File(""));
-			data.initZettelkasten();
+			data.reset();
 			desktop.clear();
 			bookmarks.clear();
-			searchrequests.clear();
+			searchRequests.clear();
 			synonyms.clear();
 			bibtex.clearEntries();
 			// set modified state to false
 			data.setModified(false);
-			searchrequests.setModified(false);
+			searchRequests.setModified(false);
 			desktop.setModified(false);
 			bookmarks.setModified(false);
 			synonyms.setModified(false);
@@ -8763,7 +8628,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				// a modal dialog, which opens the data via a background task. the
 				// dialog only displays a progressbar and an animated busyicon while
 				// opening the file, no user-interaction possible....
-				loadDocument();
+				loadDataDocumentFromSettings();
 			}
 		}
 	}
@@ -8787,7 +8652,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				// a modal dialog, which opens the data via a background task. the
 				// dialog only displays a progressbar and an animated busyicon while
 				// opening the file, no user-interaction possible....
-				loadDocument();
+				loadDataDocumentFromSettings();
 			}
 		}
 	}
@@ -8805,165 +8670,178 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * method because in that method we do all the stuff which e.g. has also to be
 	 * made after importing files...
 	 */
-	private boolean loadDocument() {
-		// get the file path from the data file which has to be opened
-		File fp = settings.getFilePath();
-		// if file is null, exit
-		if (null == fp) {
-			// log error
+	private boolean loadDataDocumentFromSettings() {
+		File documentFile = settings.getFilePath();
+		if (documentFile == null) {
 			Constants.zknlogger.log(Level.WARNING, "Could not open file! Filepath is null!");
 			return false;
 		}
-		// if no file exists, exit task
-		if (!fp.exists()) {
-			// log file path
-			Constants.zknlogger.log(Level.WARNING, "Could not open file {0}!", fp.toString());
+		if (!documentFile.exists()) {
+			Constants.zknlogger.log(Level.WARNING, "Could not open file {0}: it doesn't exist!",
+					documentFile.toString());
 			return false;
 		}
-		// check whether we have a backup-file that is newer than the original
-		// data-file. if so, ask the user if he wants to open the backup
-		// therefore, create a filename of the backup-file (which equals the
-		// original filename, except the file-extension, which we replace
-		// by the backup-extension here
-		File backupfile = new File(
-				fp.toString().replace(Constants.ZKN_FILEEXTENSION, Constants.ZKN_BACKUPFILEEXTENSION));
-		// if file exists, compare filedates...
-		if (backupfile.exists()) {
-			// get modified-dates of original- and backup-file
-			long modifiedOriginal = fp.lastModified();
-			long modifiedBackup = backupfile.lastModified();
-			// if original-file is *older* than backup-file, ask
-			// the user what to do...
-			if (modifiedOriginal < modifiedBackup) {
-				// ask the user whether he wants to load the original file,
-				// the newer backup-file or cancel the complete load-operation...
-				// create customized options
-				Object[] options = { getResourceMap().getString("newerBackupOptionsBackup"), // YES_OPTION
-						getResourceMap().getString("newerBackupOptionsDatafile"), // NO_OPTION
-						getResourceMap().getString("newerBackupOptionsCancel") }; // CANCEL_OPTION
-				int option = JOptionPane.showOptionDialog(getFrame(), getResourceMap().getString("newerBackupMsg"),
-						getResourceMap().getString("newerBackupTitle"), JOptionPane.YES_NO_CANCEL_OPTION,
-						JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-				// the user chose to cancel the operation, so return "null"
-				if (JOptionPane.CANCEL_OPTION == option
-						|| JOptionPane.CLOSED_OPTION == option /* User pressed cancel key */) {
-					// clear filepath, so the data-file won't be accidentally overwritten...
-					settings.setFilePath(null);
-					// return result
-					return false;
-				}
-				// here the user wants to open the backup-file instead of the older file...
-				if (JOptionPane.YES_OPTION == option) {
-					try {
-						// in case the user already created a backup, we concatenate a trainling
-						// backup-counter-number to avoid overwriting existing backup-files
-						// we start with a "1"
-						int backupcounter = 1;
-						// the backup-extension
-						String backupext = ".backup";
-						// first, create basic backup-file
-						File checkbackup = new File(fp.toString() + backupext);
-						// check whether backup-file already exists
-						while (checkbackup.exists()) {
-							// if yes, increase extension-counter
-							backupcounter++;
-							// append it to extension
-							backupext = ".backup-" + String.valueOf(backupcounter);
-							// and create new file-name which we want to check...
-							checkbackup = new File(fp.toString() + backupext);
-						}
-						// rename original file and append ".backup" as extension
-						fp.renameTo(checkbackup);
-						// rename backup-file to original file-name...
-						backupfile.renameTo(settings.getFilePath());
-						// tell user that the backup-file has been loaded and the old original file
-						// backuped
-						JOptionPane.showMessageDialog(getFrame(),
-								getResourceMap().getString("backupLoadedMsg", "\"" + checkbackup.getName() + "\"",
-										System.lineSeparator() + System.lineSeparator() + "\""
-												+ fp.toString().substring(0,
-														fp.toString().lastIndexOf(File.separatorChar))
-												+ "\"" + System.lineSeparator() + System.lineSeparator(),
-										"\"" + fp.getName() + "\""),
-								getResourceMap().getString("backupLoadedTitle"), JOptionPane.PLAIN_MESSAGE);
-					} catch (SecurityException | NullPointerException e) {
-						Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-					}
-				}
+
+		// If the backup is earlier than the document file, the user might want to load
+		// the backup instead.
+		if (isBackupMoreRecentThanDocument(documentFile)) {
+			if (!askUserWhetherToLoadTheNewerBackup(documentFile)) {
+				// User aborted the loading.
+				return false;
 			}
 		}
-		// add file path to recent documents history
-		settings.addToRecentDocs(fp.toString());
-		// and update menus
-		setRecentDocuments();
-		// if dialog window isn't already created, do this now
-		if (null == taskDlg) {
-			// get parent und init window
-			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_LOAD, data, bookmarks, searchrequests,
+
+		// Continue loading the file in documentFile.
+		if (taskDlg == null) {
+			// Start load and show task dialog.
+			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_LOAD, data, bookmarks, searchRequests,
 					desktop, synonyms, settings, bibtex);
 			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
-		ZettelkastenApp.getApplication().show(taskDlg);
-		// dispose the window and clear the object
-		taskDlg.dispose();
-		taskDlg = null;
-		// check whether we have a file-version which is newer than the current
-		// program-version,
-		// e.g. if the user opens a newer data-file with an older program-version
+		waitForTaskDialog();
+
+		// Update recent-docs history.
+		settings.addToRecentDocs(documentFile.toString());
+		initRecentDocumentsMenuItems();
+
+		// Check whether we have a file-version which is newer than the current
+		// program-version. For example, the user is opening a newer data-file with an
+		// older program-version.
 		if (data.isIncompatibleFile()) {
-			// tell user that the data file is too new to be opened...
+			// Show error to the user and cancel the loading.
 			JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("incompatibleDataFileMsg"),
 					getResourceMap().getString("incompatibleDataFileTitle"), JOptionPane.PLAIN_MESSAGE);
 			return false;
 		}
-		// check whether we have a new file-version of the data-format. if yes, do
-		// conversion now...
+
+		// Check whether we have a newer file-version available for the data file. If
+		// yes, update the data file.
 		if (data.isNewVersion()) {
-			// tell user that the data file is being updated...
+			// Tell user that the data file is being updated.
 			JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("updateDataMsg"),
 					getResourceMap().getString("updateDataTitle"), JOptionPane.PLAIN_MESSAGE);
-			// if dialog window isn't already created, do this now
-			if (null == taskDlg) {
-				// get parent und init window
+			if (taskDlg == null) {
+				// Start the update and show the task dialog.
 				taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_UPDATEFILE, settings, data,
 						desktop, bibtex, false);
 				// Center new dialog window.
 				taskDlg.setLocationRelativeTo(getFrame());
 			}
-			ZettelkastenApp.getApplication().show(taskDlg);
-			// dispose the window and clear the object
-			taskDlg.dispose();
-			taskDlg = null;
+			waitForTaskDialog();
 		}
-		// which entry should be shown at startup?
-		int shownr = 1;
-		// get the setting what we want to show at startup
-		int getstarttupvalue = settings.getShowAtStartup();
-		int paramentry = settings.getInitialParamZettel();
-		// and set the related entry number
-		// in case we have retrieved an entry-number as parameter, set this entry number
-		// right now
-		if (paramentry != -1 && paramentry <= data.getCount(Daten.ZKNCOUNT)) {
-			shownr = paramentry;
-		} else if (Settings.SHOWATSTARTUP_FIRST == getstarttupvalue) {
-			shownr = 1;
-		} else if (Settings.SHOWATSTARTUP_LAST == getstarttupvalue) {
-			shownr = settings.getStartupEntry();
-		} else if (Settings.SHOWATSTARTUP_RANDOM == getstarttupvalue) {
-			shownr = (int) (Math.random() * data.getCount(Daten.ZKNCOUNT)) + 1;
-		}
-		// set the first entry that should be displayed as current zettelpos and
-		// history-pos...
-		data.setCurrentZettelPos(shownr);
-		data.setInitialHistoryPos(shownr);
-		// Reset displayedZettel.
-		displayedZettel = -1;
-		// do the typical stuff like updating display,
-		// setting toolbar etc.
-		updateAfterOpen();
-		// return success
+
+		int entryNumber = getStartupEntryNumber();
+		data.activateEntry(entryNumber);
+
+		// Update display with the new data.
+		updateDisplayAfterOpen();
+
 		return true;
+	}
+
+	// The entry number to be shown at startup.
+	private int getStartupEntryNumber() {
+		int startupEntryFromCommandLine = settings.getStartupEntryFromCommandLine();
+		if (startupEntryFromCommandLine != -1 && startupEntryFromCommandLine <= data.getCount(Daten.ZKNCOUNT)) {
+			return startupEntryFromCommandLine;
+		}
+
+		int mode = settings.getStartupEntryNumberMode();
+		if (mode == Settings.SHOWATSTARTUP_FIRST) {
+			return 1;
+		} else if (mode == Settings.SHOWATSTARTUP_LAST) {
+			return settings.getStartupEntry();
+		} else if (mode == Settings.SHOWATSTARTUP_RANDOM) {
+			return (int) (Math.random() * data.getCount(Daten.ZKNCOUNT)) + 1;
+		}
+		return 1;
+	}
+
+	/**
+	 * 
+	 * Ask the user whether he wants to load the original file, the newer
+	 * backup-file or cancel the complete load-operation. The user is given three
+	 * options:<br>
+	 * <br>
+	 * 1. Cancel the load altogether. We clear the current data file in the
+	 * settings.<br>
+	 * 2. Load the newer backup. We create a copy of the original file with a
+	 * .backup extension and set the newer backup as the current data file in the
+	 * settings.<br>
+	 * 3. Load the original, older file. We don't do anything, so the curent data
+	 * file in the settings is kept to the original file.<br>
+	 * 
+	 * @param documentFile original file
+	 */
+	private boolean askUserWhetherToLoadTheNewerBackup(File documentFile) {
+		Object[] options = { getResourceMap().getString("newerBackupOptionsBackup"), // YES_OPTION
+				getResourceMap().getString("newerBackupOptionsDatafile"), // NO_OPTION
+				getResourceMap().getString("newerBackupOptionsCancel") }; // CANCEL_OPTION
+		// Show options and wait for user input.
+		int option = JOptionPane.showOptionDialog(getFrame(), getResourceMap().getString("newerBackupMsg"),
+				getResourceMap().getString("newerBackupTitle"), JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
+		if (JOptionPane.CANCEL_OPTION == option || JOptionPane.CLOSED_OPTION == option /* User pressed cancel key */) {
+			// Clear current data file in settings as the user cancelled the loading of this
+			// file.
+			settings.setFilePath(null);
+			return false;
+		} else if (JOptionPane.YES_OPTION == option) {
+			// The user wants to open the backup-file instead of the older, original file.
+			File newerBackupfile = getBackupFileForDocument(documentFile);
+			try {
+				// In case the user already created a backup, we concatenate a trailing
+				// backup-counter-number to avoid overwriting existing backup-files
+				// we start with a "1".
+				int backupcounter = 1;
+				String backupext = ".backup";
+				// First, create basic backup-file.
+				File checkbackup = new File(documentFile.toString() + backupext);
+				while (checkbackup.exists()) {
+					// Keep increasing the extension-counter until a filename is available.
+					backupcounter++;
+					backupext = ".backup-" + String.valueOf(backupcounter);
+					checkbackup = new File(documentFile.toString() + backupext);
+				}
+				// Rename the original file to a backup with a ".backup" extension.
+				documentFile.renameTo(checkbackup);
+
+				// Rename the newer backup-file to the original filename.
+				newerBackupfile.renameTo(settings.getFilePath());
+
+				// Tell user that the backup-file has been loaded and the old original file
+				// was backup-ed.
+				JOptionPane.showMessageDialog(getFrame(),
+						getResourceMap().getString("backupLoadedMsg", "\"" + checkbackup.getName() + "\"",
+								System.lineSeparator() + System.lineSeparator() + "\""
+										+ documentFile.toString().substring(0,
+												documentFile.toString().lastIndexOf(File.separatorChar))
+										+ "\"" + System.lineSeparator() + System.lineSeparator(),
+								"\"" + documentFile.getName() + "\""),
+						getResourceMap().getString("backupLoadedTitle"), JOptionPane.PLAIN_MESSAGE);
+			} catch (SecurityException | NullPointerException e) {
+				Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private File getBackupFileForDocument(File documentFile) {
+		return new File(
+				documentFile.toString().replace(Constants.ZKN_FILEEXTENSION, Constants.ZKN_BACKUPFILEEXTENSION));
+	}
+
+	private boolean isBackupMoreRecentThanDocument(File documentFile) {
+		File backupfile = getBackupFileForDocument(documentFile);
+		if (backupfile.exists()) {
+			long modifiedOriginal = documentFile.lastModified();
+			long modifiedBackup = backupfile.lastModified();
+			return modifiedOriginal < modifiedBackup;
+		}
+		return false;
 	}
 
 	/**
@@ -8984,7 +8862,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// check for valid filepath
 		File fp = settings.getFilePath();
 		// if no valid filepath exists, open the file-chooser to retrieve a new filepath
-		if (null == fp || !fp.exists()) {
+		if (fp == null || !fp.exists()) {
 			// save the document under a new filepath
 			// and leave this method, as all relevant saving was made in
 			// the above called method
@@ -8996,18 +8874,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// tell everyone (especially autobackup-function) that we are saving data
 		// now, so don't disturb us here!
 		isSaving = true;
-		// if dialog window isn't already created, do this now
-		if (null == taskDlg) {
+		// If dialog window isn't already created, do this now.
+		if (taskDlg == null) {
 			// get parent und init window
-			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SAVE, data, bookmarks, searchrequests,
+			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SAVE, data, bookmarks, searchRequests,
 					desktop, synonyms, settings, bibtex);
 			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
-		ZettelkastenApp.getApplication().show(taskDlg);
-		// close dialog and clear variables
-		taskDlg.dispose();
-		taskDlg = null;
+		waitForTaskDialog();
+
 		// saving done...
 		isSaving = false;
 		// update the display and toolbar icons
@@ -9074,18 +8950,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// tell everyone (especially autobackup-function) that we are saving data
 			// now, so don't disturb us here!
 			isSaving = true;
-			// if dialog window isn't already created, do this now
-			if (null == taskDlg) {
+			// If dialog window isn't already created, do this now.
+			if (taskDlg == null) {
 				// get parent und init window
 				taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SAVE, data, bookmarks,
-						searchrequests, desktop, synonyms, settings, bibtex);
+						searchRequests, desktop, synonyms, settings, bibtex);
 				// Center new dialog window.
 				taskDlg.setLocationRelativeTo(getFrame());
 			}
-			ZettelkastenApp.getApplication().show(taskDlg);
-			// close dialog and clear variables
-			taskDlg.dispose();
-			taskDlg = null;
+			waitForTaskDialog();
+
 			// saving done...
 			isSaving = false;
 			// update the title to the new filename
@@ -9134,13 +9008,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// even if the user searches twice for the same searchterms
 		DateFormat df = new SimpleDateFormat("kkmmss");
 		// add search
-		searchrequests.addSearch(new String[] { getResourceMap().getString("exportBookmarksSearch") },
+		searchRequests.addSearch(new String[] { getResourceMap().getString("exportBookmarksSearch") },
 				Constants.SEARCH_BOOKMARKS, Constants.LOG_OR, false, false, false, /* accentInsensitive= */false, false,
 				entries, getResourceMap().getString("exportBookmarksSearchDesc") + " (" + df.format(new Date()) + ")",
 				getResourceMap().getString("exportBookmarksSearchDesc"));
-		// if dialog window isn't already created, do this now
+		// If dialog window isn't already created, do this now.
 		if (null == searchResultsDlg) {
-			searchResultsDlg = new SearchResultsFrame(this, data, searchrequests, desktop, settings, acceleratorKeys,
+			searchResultsDlg = new SearchResultsFrame(this, data, searchRequests, desktop, settings, acceleratorKeys,
 					synonyms, bibtex);
 		}
 		// show search results window
@@ -9148,7 +9022,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// show latest search results by auto-selecting the last item in the combo-box
 		searchResultsDlg.showLatestSearchResult();
 		// enable window-menu-item, if we have loaded search results
-		setSearchResultsAvailable(searchrequests.getCount() > 0);
+		setSearchResultsAvailable(searchRequests.getCount() > 0);
 	}
 
 	private int[] createExportBookmarks() {
@@ -9319,18 +9193,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// reference-manager (i.e.
 			// the programme that has exported the bib-tex-file).
 			if (bibtex.refreshBibTexFile(settings)) {
-				// if dialog window isn't already created, do this now
-				if (null == taskDlg) {
+				// If dialog window isn't already created, do this now.
+				if (taskDlg == null) {
 					// get parent und init window
 					taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_REFRESHBIBTEX, taskinfo, data,
 							bibtex);
 					// Center new dialog window.
 					taskDlg.setLocationRelativeTo(getFrame());
 				}
-				ZettelkastenApp.getApplication().show(taskDlg);
-				// dispose the window and clear the object
-				taskDlg.dispose();
-				taskDlg = null;
+				waitForTaskDialog();
+
 				// update author list
 				showAuthors();
 				// tell about success
@@ -9686,7 +9558,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "searchResultsAvailable")
 	public void showSearchResultWindow() {
 		if (null == searchResultsDlg) {
-			searchResultsDlg = new SearchResultsFrame(this, data, searchrequests, desktop, settings, acceleratorKeys,
+			searchResultsDlg = new SearchResultsFrame(this, data, searchRequests, desktop, settings, acceleratorKeys,
 					synonyms, bibtex);
 		}
 		ZettelkastenApp.getApplication().show(searchResultsDlg);
@@ -9815,17 +9687,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// if user cancelled or closed the dialog, do nothing.
 		if (JOptionPane.CANCEL_OPTION == option || JOptionPane.CLOSED_OPTION == option)
 			return;
-		// if dialog window isn't already created, do this now
-		if (null == taskDlg) {
+		// If dialog window isn't already created, do this now.
+		if (taskDlg == null) {
 			// get parent und init window
 			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SETFIRSTLINEASTITLE, data, option);
 			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
-		ZettelkastenApp.getApplication().show(taskDlg);
-		// dispose the window and clear the object
-		taskDlg.dispose();
-		taskDlg = null;
+		waitForTaskDialog();
+
 		// reset title-list
 		data.setTitlelistUpToDate(false);
 		updateDisplay();
@@ -9869,7 +9739,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	private void find(String initSearchTerm) {
 		if (searchDlg == null) {
-			searchDlg = new CSearchDlg(getFrame(), searchrequests, settings, initSearchTerm);
+			searchDlg = new CSearchDlg(getFrame(), searchRequests, settings, initSearchTerm);
 			// Center new dialog window.
 			searchDlg.setLocationRelativeTo(getFrame());
 		}
@@ -9920,7 +9790,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * @return {@code true} if replacement was done, false if it was cancelled.
 	 */
 	public boolean replace(JFrame frame, String initSearchTerm, int[] replaceentries) {
-		// if dialog window isn't already created, do this now
+		// If dialog window isn't already created, do this now.
 		if (null == replaceDlg) {
 			// create a new dialog window
 			replaceDlg = new CReplaceDialog(frame, settings, initSearchTerm, (replaceentries != null));
@@ -9932,8 +9802,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 //        if (!replaceDlg.cancelled && (!replaceDlg.findTerm.isEmpty()&&!replaceDlg.replaceTerm.isEmpty()) ) {
 		// when the user did not cancel, start replacement now.
 		if (!replaceDlg.isCancelled()) {
-			// if dialog window isn't already created, do this now
-			if (null == taskDlg) {
+			// If dialog window isn't already created, do this now.
+			if (taskDlg == null) {
 				// get parent und init window
 				taskDlg = new TaskProgressDialog(frame, TaskProgressDialog.TASK_REPLACE, taskinfo, data,
 						replaceDlg.getFindTerm(), // the find term
@@ -9947,10 +9817,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				// Center new dialog window.
 				taskDlg.setLocationRelativeTo(frame);
 			}
-			ZettelkastenApp.getApplication().show(taskDlg);
-			// dispose the window and clear the object
-			taskDlg.dispose();
-			taskDlg = null;
+			waitForTaskDialog();
+
 			// show replace-results
 			JOptionPane.showMessageDialog(frame, taskinfo.getReplaceMessage(),
 					getResourceMap().getString("replace.Action.text"), JOptionPane.PLAIN_MESSAGE);
@@ -9968,6 +9836,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		replaceDlg = null;
 		// return true...
 		return true;
+	}
+
+	private void waitForTaskDialog() {
+		// show() will block, wait on completion.
+		ZettelkastenApp.getApplication().show(taskDlg);
+
+		// Task dialog cleanup.
+		taskDlg.dispose();
+		taskDlg = null;
 	}
 
 	/**
@@ -10078,35 +9955,29 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 *             </ul>
 	 */
 	private void findEntryWithout(int what) {
-		// if dialog window isn't already created, do this now
-		if (null == taskDlg) {
+		// If dialog window isn't already created, do this now.
+		if (taskDlg == null) {
 			// get parent und init window
-			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SEARCH, data, searchrequests, synonyms,
+			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SEARCH, data, searchRequests, synonyms,
 					what, null, null, -1, Constants.LOG_OR, true, true, true, /* accentInsensitive= */false, false,
 					false, null, null, 0, false, settings.getSearchRemovesFormatTags());
 			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
-		ZettelkastenApp.getApplication().show(taskDlg);
-		// we have to manually dispose the window and release the memory
-		// because next time this method is called, the showKwlDlg is still not null,
-		// i.e. the constructor is not called (because the if-statement above is not
-		// true)
-		// dispose the window and clear the object
-		taskDlg.dispose();
-		taskDlg = null;
+		waitForTaskDialog();
+
 		// check whether we have any search results at all
-		if (searchrequests.getCurrentSearchResults() != null) {
-			// if dialog window isn't already created, do this now
+		if (searchRequests.getCurrentSearchResults() != null) {
+			// If dialog window isn't already created, do this now.
 			if (null == searchResultsDlg)
-				searchResultsDlg = new SearchResultsFrame(this, data, searchrequests, desktop, settings,
+				searchResultsDlg = new SearchResultsFrame(this, data, searchRequests, desktop, settings,
 						acceleratorKeys, synonyms, bibtex);
 			// show search results window
 			ZettelkastenApp.getApplication().show(searchResultsDlg);
 			// show latest search results by auto-selecting the last item in the combo-box
 			searchResultsDlg.showLatestSearchResult();
 			// enable window-menu-item, if we have loaded search results
-			setSearchResultsAvailable(searchrequests.getCount() > 0);
+			setSearchResultsAvailable(searchRequests.getCount() > 0);
 		} else {
 			// display error message box that nothing was found
 			JOptionPane.showMessageDialog(getFrame(), getResourceMap().getString("errNothingFoundMsg"),
@@ -10219,36 +10090,30 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// check whether dialog was cancelled or not
 		if (!inputIsOk && cancelled)
 			return;
-		// if dialog window isn't already created, do this now
-		if (null == taskDlg) {
+		// If dialog window isn't already created, do this now.
+		if (taskDlg == null) {
 			// get parent und init window
-			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SEARCH, data, searchrequests, synonyms,
+			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SEARCH, data, searchRequests, synonyms,
 					whichsearch, new String[] { stime, etime }, null, -1, Constants.LOG_OR, true, true, true,
 					/* accentInsensitive= */false, false, true, starttime, endtime, whichstamp, false,
 					settings.getSearchRemovesFormatTags());
 			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
-		ZettelkastenApp.getApplication().show(taskDlg);
-		// we have to manually dispose the window and release the memory
-		// because next time this method is called, the showKwlDlg is still not null,
-		// i.e. the constructor is not called (because the if-statement above is not
-		// true)
-		// dispose the window and clear the object
-		taskDlg.dispose();
-		taskDlg = null;
+		waitForTaskDialog();
+
 		// check whether we have any search results at all
-		if (searchrequests.getCurrentSearchResults() != null) {
-			// if dialog window isn't already created, do this now
+		if (searchRequests.getCurrentSearchResults() != null) {
+			// If dialog window isn't already created, do this now.
 			if (null == searchResultsDlg)
-				searchResultsDlg = new SearchResultsFrame(this, data, searchrequests, desktop, settings,
+				searchResultsDlg = new SearchResultsFrame(this, data, searchRequests, desktop, settings,
 						acceleratorKeys, synonyms, bibtex);
 			// show search window
 			ZettelkastenApp.getApplication().show(searchResultsDlg);
 			// show latest search results by auto-selecting the last item in the combo-box
 			searchResultsDlg.showLatestSearchResult();
 			// enable window-menu-item, if we have loaded search results
-			setSearchResultsAvailable(searchrequests.getCount() > 0);
+			setSearchResultsAvailable(searchRequests.getCount() > 0);
 		}
 	}
 
@@ -10354,22 +10219,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// type here.
 		if (taskDlg == null) {
 			// get parent and init window
-			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SEARCH, data, searchrequests, synonyms,
+			taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_SEARCH, data, searchRequests, synonyms,
 					searchtype, searchterms, null, where, logical, wholeword, matchcase, syno, accentInsensitive, regex,
 					timesearch, datefrom, dateto, timestampindex, displayonly, settings.getSearchRemovesFormatTags());
 			// Center new dialog window.
 			taskDlg.setLocationRelativeTo(getFrame());
 		}
-		ZettelkastenApp.getApplication().show(taskDlg);
-		// we have to manually dispose the window and release the memory
-		// because next time this method is called, the showKwlDlg is still not null,
-		// i.e. the constructor is not called (because the if-statement above is not
-		// true)
-		// dispose the window and clear the object
-		taskDlg.dispose();
-		taskDlg = null;
+		waitForTaskDialog();
+
 		// check whether we have any search results at all
-		if (searchrequests.getCurrentSearchResults() != null) {
+		if (searchRequests.getCurrentSearchResults() != null) {
 			// check the search type, whether a usual search is requested or if we want to
 			// retrieve entries from
 			// keywords or author-table.
@@ -10377,37 +10236,31 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// this is a usual search, that means the search results are added
 			// to the CSearchResults-dialog-frame and displayed
 			case Constants.STARTSEARCH_USUAL:
-				// if dialog window isn't already created, do this now
+				// If dialog window isn't already created, do this now.
 				if (null == searchResultsDlg)
-					searchResultsDlg = new SearchResultsFrame(this, data, searchrequests, desktop, settings,
+					searchResultsDlg = new SearchResultsFrame(this, data, searchRequests, desktop, settings,
 							acceleratorKeys, synonyms, bibtex);
 				// show search window
 				ZettelkastenApp.getApplication().show(searchResultsDlg);
 				// show latest search results by auto-selecting the last item in the combo-box
 				searchResultsDlg.showLatestSearchResult();
 				// enable window-menu-item, if we have loaded search results
-				setSearchResultsAvailable(searchrequests.getCount() > 0);
+				setSearchResultsAvailable(searchRequests.getCount() > 0);
 				break;
 			// this is a luhmann-search, that means the search results are *not* shown in
 			// the searchresults-window. instead, they are added as follower-numbers to
 			// the current entry.
 			case Constants.STARTSEARCH_LUHMANN:
-				// if dialog window isn't already created, do this now
-				if (null == taskDlg) {
+				// If dialog window isn't already created, do this now.
+				if (taskDlg == null) {
 					// get parent und init window
 					taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_ENTRIESTOLUHMANN, data,
-							searchrequests.getCurrentSearchResults(), data.getActivatedEntryNumber());
+							searchRequests.getCurrentSearchResults(), data.getActivatedEntryNumber());
 					// Center new dialog window.
 					taskDlg.setLocationRelativeTo(getFrame());
 				}
-				ZettelkastenApp.getApplication().show(taskDlg);
-				// we have to manually dispose the window and release the memory
-				// because next time this method is called, the showKwlDlg is still not null,
-				// i.e. the constructor is not called (because the if-statement above is not
-				// true)
-				// dispose the window and clear the object
-				taskDlg.dispose();
-				taskDlg = null;
+				waitForTaskDialog();
+
 				break;
 			// this is a desktop-search, that means the search results are *not* shown in
 			// the searchresults-window. instead, they are added to the desktop
@@ -10419,7 +10272,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				// show desktop window
 				ZettelkastenApp.getApplication().show(desktopDlg);
 				// add found entries to desktop
-				desktopDlg.addEntries(searchrequests.getCurrentSearchResults());
+				desktopDlg.addEntries(searchRequests.getCurrentSearchResults());
 				// enable window-menu-item, if we have loaded desktop data
 				setDesktopAvailable(desktop.getCount() > 0);
 				break;
@@ -10427,7 +10280,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// the searchresults-window. instead, they are added as manual links to
 			// the current entry.
 			case Constants.STARTSEARCH_MANLINK:
-				addToManLinks(searchrequests.getCurrentSearchResults());
+				addToManLinks(searchRequests.getCurrentSearchResults());
 				break;
 			}
 		} else {
@@ -10688,7 +10541,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * imported. typical tasks are for instance setting certain state-variables to
 	 * false or true, showing the first entry etc...
 	 */
-	private void updateAfterOpen() {
+	private void updateDisplayAfterOpen() {
 		// this is the typical stuff we need to do when a file is opened
 		// or imported. first of all, all the views of the tabbed pane are not
 		// uptodate, because we have new data. thus, we set all values to false,
@@ -10712,14 +10565,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			desktopDlg = null;
 		}
 		// enable window-menu-item, if we have loaded search results
-		setSearchResultsAvailable(searchrequests.getCount() > 0);
+		setSearchResultsAvailable(searchRequests.getCount() > 0);
 		// enable window-menu-item, if we have loaded desktop data
 		setDesktopAvailable(desktop.getCount() > 0);
-		// reset all necessary variables and clear all tables
-		initVariables();
 		// update the new filename to the title
 		updateTitle();
-		// update the display
+		// reset all necessary variables and clear all tables
+		initVariables();
 		updateDisplay();
 	}
 
@@ -10780,17 +10632,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		tm.setRowCount(0);
 		// tell user that we are doing something...
 		statusMsgLabel.setText(getResourceMap().getString("createLinksMsg"));
-		// create task
-		Task<?, ?> cflT = createFilterLinks();
-		// get the application's context...
-		ApplicationContext appC = Application.getInstance().getContext();
-		// ...to get the TaskMonitor and TaskService
-		TaskMonitor tM = appC.getTaskMonitor();
-		TaskService tS = appC.getTaskService();
-		// with these we can execute the task and bring it to the foreground
-		// i.e. making the animated progressbar and busy icon visible
-		tS.execute(cflT);
-		tM.setForegroundTask(cflT);
+		prepareAndStartTask(createFilterLinks());
 	}
 
 	/**
@@ -10869,7 +10711,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	public void setBackupNecessary() {
 		backupNecessary(bibtex.isModified() | synonyms.isModified() | data.isMetaModified() | data.isModified()
-				| searchrequests.isModified() | bookmarks.isModified() | desktop.isModified());
+				| searchRequests.isModified() | bookmarks.isModified() | desktop.isModified());
 		// update mainframe's toolbar and enable save-function
 		if (isBackupNecessary()) {
 			setSaveEnabled(true);
@@ -10902,7 +10744,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// warning message and title strings.
 		// check whether we have any changes at all
 		boolean anychanges = bibtex.isModified() | synonyms.isModified() | data.isMetaModified() | data.isModified()
-				| searchrequests.isModified() | bookmarks.isModified() | desktop.isModified();
+				| searchRequests.isModified() | bookmarks.isModified() | desktop.isModified();
 		// and then check, which parts of the data-file have been changed...
 		if (data.isMetaModified()) {
 			confirmText.append(getResourceMap().getString("msgSaveMeta"));
@@ -10910,7 +10752,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (data.isModified()) {
 			confirmText.append(getResourceMap().getString("msgSaveData"));
 		}
-		if (searchrequests.isModified()) {
+		if (searchRequests.isModified()) {
 			confirmText.append(getResourceMap().getString("msgSaveSearches"));
 		}
 		if (bookmarks.isModified()) {
@@ -14661,7 +14503,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}// GEN-END:initComponents
 
 	private void viewAuthorsCopyActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewAuthorsCopyActionPerformed
-		// TODO add your handling code here:
 	}// GEN-LAST:event_viewAuthorsCopyActionPerformed
 
 	/**
@@ -15210,7 +15051,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private javax.swing.JPanel jPanelSearchBox;
 	private javax.swing.JLabel jLabelLupe;
 	private TaskProgressDialog taskDlg;
-	private TaskProgressDialog updateTitlesTabTaskDlg;
 	private EditorFrame newEntryDlg;
 	private CImport importWindow;
 	private CUpdateInfoBox updateInfoDlg;

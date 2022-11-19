@@ -285,7 +285,7 @@ public class Tools {
 				int znr = Integer.parseInt(linktype.substring(3));
 				// show entry
 				if (data.zettelExists(znr) && !data.isDeleted(znr)) {
-					data.setCurrentZettelPos(znr);
+					data.activateEntry(znr);
 				}
 				// return String
 				return linktype;
@@ -299,7 +299,7 @@ public class Tools {
 				int znr = Integer.parseInt(linktype.substring(4));
 				// show entry
 				if (data.zettelExists(znr) && !data.isDeleted(znr)) {
-					data.setCurrentZettelPos(znr);
+					data.activateEntry(znr);
 				}
 				// return String
 				return linktype;

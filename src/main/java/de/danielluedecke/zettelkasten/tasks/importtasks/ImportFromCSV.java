@@ -202,7 +202,7 @@ public class ImportFromCSV extends org.jdesktop.application.Task<Object, Void> {
 		// reset the data-files
 		if (!append) {
 			settingsObj.setFilePath(new File(""));
-			dataObj.initZettelkasten();
+			dataObj.reset();
 			desktopObj.clear();
 			bookmarksObj.clear();
 			searchrequestsObj.clear();
