@@ -2174,9 +2174,9 @@ public class Settings {
 	}
 
 	/**
-	 * Gets the setting for the autobackup-option.
+	 * Gets the setting for the autoupdate-option.
 	 *
-	 * @return {@code true} if autobackup should be activated
+	 * @return {@code true} if autoupdate should be activated
 	 */
 	public boolean getAutoUpdate() {
 		return genericBooleanGetter(SETTING_AUTOUPDATE);
