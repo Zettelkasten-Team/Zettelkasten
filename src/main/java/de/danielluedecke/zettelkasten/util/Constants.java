@@ -32,7 +32,7 @@
  */
 package de.danielluedecke.zettelkasten.util;
 
-import de.danielluedecke.zettelkasten.ZettelkastenView;
+import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.logging.Logger;
@@ -1139,7 +1139,7 @@ public class Constants {
 	/**
 	 *
 	 */
-	public final static Logger zknlogger = Logger.getLogger(ZettelkastenView.class.getName());
+	public final static Logger zknlogger = Logger.getLogger(ZettelkastenApp.class.getName());
 
 	/**
 	 * These are the possible dateformats for the manual timestamp.<br>
