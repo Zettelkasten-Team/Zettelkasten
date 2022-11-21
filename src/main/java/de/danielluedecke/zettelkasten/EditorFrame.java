@@ -3523,7 +3523,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		// check whether we already have a saved data file or not. if not, we have no
 		// related
 		// path for the subdirectory "img", thus we cannot copy the images
-		if (null == settingsObj.getFilePath() || !settingsObj.getFilePath().exists()) {
+		if (null == settingsObj.getMainDataFile() || !settingsObj.getMainDataFile().exists()) {
 			// display error message box
 			JOptionPane.showMessageDialog(this, resourceMap.getString("noDataFileSavedMsg"),
 					resourceMap.getString("noDataFileSavedTitle"), JOptionPane.PLAIN_MESSAGE);

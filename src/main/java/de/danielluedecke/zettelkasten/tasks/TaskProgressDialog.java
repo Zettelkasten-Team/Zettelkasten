@@ -69,7 +69,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	/**
 	 * Daten object, which contains the XML data of the Zettelkasten
 	 */
-	private final Daten daten;
+	private Daten daten;
 	/**
 	 *
 	 */
@@ -131,7 +131,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * <li>a data file is saved (use {@link #TASK_SAVE} as parameter)</li>
 	 * </ul>
 	 *
-	 * @param parent         a reference to the parent frame that created this
+	 * @param parentFrame    a reference to the parent frame that created this
 	 *                       dialog
 	 * @param task_id        the task-id, identifying which task should be started,
 	 *                       in case this constructor is used for more than one
@@ -144,35 +144,28 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	 * @param settings
 	 * @param bibTeX
 	 */
-	public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten daten, Bookmarks bookmarks,
+	public TaskProgressDialog(java.awt.Frame parentFrame, int task_id, Daten daten, Bookmarks bookmarks,
 			SearchRequests searchRequests, DesktopData desktopData, Synonyms synonyms, Settings settings,
 			BibTeX bibTeX) {
-		super(parent);
-		this.daten = daten;
-		this.bookmarks = bookmarks;
-		this.searchRequests = searchRequests;
-		this.desktopData = desktopData;
-		this.synonyms = synonyms;
-		this.settings = settings;
-		this.bibTeX = bibTeX;
+		super(parentFrame);
 
+		// Init components from auto-generated code.
 		initComponents();
 
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
 
 		new TasksStatusBar(null, progressBar, null);
-																						// "isb" local variable.
-		// check which task was requested and start that task
+
 		switch (task_id) {
-		case TASK_LOAD:
-			foregroundTask = loadFile();
-			break;
 		case TASK_SAVE:
-			foregroundTask = saveFile();
+			foregroundTask = new SaveFileTask(
+					org.jdesktop.application.Application
+							.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
+					this, msgLabel, daten, bookmarks, searchRequests, desktopData, synonyms, settings, bibTeX);
 			break;
 		}
-		startTask();
+		startForegroundTask();
 	}
 
 	public TaskProgressDialog(java.awt.Frame parent, int task_id, TasksData td, Daten d, BibTeX bib) {
@@ -191,7 +184,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 			foregroundTask = refreshBibTex();
 			break;
 		}
-		startTask();
+		startForegroundTask();
 	}
 
 	/**
@@ -229,7 +222,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 			foregroundTask = updateFile(rf);
 			break;
 		}
-		startTask();
+		startForegroundTask();
 	}
 
 	public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, int messageOptions) {
@@ -249,7 +242,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 			foregroundTask = convertFormatTags(messageOptions);
 			break;
 		}
-		startTask();
+		startForegroundTask();
 	}
 
 	/**
@@ -294,7 +287,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 			foregroundTask = replace(fs, rs, re, w, ww, mc, rex);
 			break;
 		}
-		startTask();
+		startForegroundTask();
 	}
 
 	/**
@@ -361,7 +354,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 			foregroundTask = showAttachments(dtm);
 			break;
 		}
-		startTask();
+		startForegroundTask();
 	}
 
 	/**
@@ -396,7 +389,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 			foregroundTask = deleteKeywords(values);
 			break;
 		}
-		startTask();
+		startForegroundTask();
 	}
 
 	/**
@@ -430,7 +423,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 			foregroundTask = deleteEntry(entries);
 			break;
 		}
-		startTask();
+		startForegroundTask();
 	}
 
 	public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, int[] entries, int insertpos) {
@@ -447,7 +440,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 			foregroundTask = entriesToLuhmann(entries, insertpos);
 			break;
 		}
-		startTask();
+		startForegroundTask();
 	}
 
 	/**
@@ -509,7 +502,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 					fromFirstStep, entrytext);
 			break;
 		}
-		startTask();
+		startForegroundTask();
 	}
 
 	/**
@@ -578,7 +571,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 					donly, rt);
 			break;
 		}
-		startTask();
+		startForegroundTask();
 	}
 
 	public TaskProgressDialog(java.awt.Frame parent, int task_id, Daten d, TasksData td, String oldvalue,
@@ -600,7 +593,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 			foregroundTask = mergeKeywords(oldvalue, newvalue, table, selectedrow, linkedvalues);
 			break;
 		}
-		startTask();
+		startForegroundTask();
 	}
 
 	/**
@@ -719,7 +712,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 			}
 			break;
 		}
-		startTask();
+		startForegroundTask();
 	}
 
 	public TaskProgressDialog(java.awt.Frame parent, int task_id, TasksData td, Daten d, Bookmarks bm, DesktopData dt,
@@ -756,10 +749,10 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 			}
 			break;
 		}
-		startTask();
+		startForegroundTask();
 	}
 
-	private void startTask() {
+	private void startForegroundTask() {
 		ApplicationContext appC = Application.getInstance().getContext();
 		taskMonitor = appC.getTaskMonitor();
 		TaskService taskService = appC.getTaskService();
@@ -802,7 +795,8 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 				hkws, numberprefix, toc);
 	}
 
-	private Task<?, ?> exportDataToXml(File fp, ArrayList<Object> ee, int part, boolean bibtex, boolean removeformattags) {
+	private Task<?, ?> exportDataToXml(File fp, ArrayList<Object> ee, int part, boolean bibtex,
+			boolean removeformattags) {
 		return new ExportToXmlTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, tasksData, daten, bibTeX, fp, ee, part, bibtex, removeformattags);
@@ -1032,32 +1026,10 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 				this, msgLabel, daten, desktopData, bibTeX, resetFreq);
 	}
 
-	/**
-	 *
-	 * @return
-	 */
-	private Task<?, ?> loadFile() {
-		// initiate the "statusbar" (the loading splash screen), giving visual
-		// feedback during open and save operations
-		return new LoadFileTask(
-				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-				this, msgLabel, daten, bookmarks, searchRequests, desktopData, synonyms, settings, bibTeX);
-	}
-
 	private Task<?, ?> refreshBibTex() {
 		return new RefreshBibTexTask(
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, msgLabel, tasksData, daten, bibTeX);
-	}
-
-	/**
-	 *
-	 * @return
-	 */
-	private Task<?, ?> saveFile() {
-		return new SaveFileTask(
-				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
-				this, msgLabel, daten, bookmarks, searchRequests, desktopData, synonyms, settings, bibTeX);
 	}
 
 	/**

@@ -47,6 +47,8 @@ import java.awt.Font;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -61,6 +63,7 @@ import javax.swing.SortOrder;
 import javax.swing.UIManager;
 import javax.swing.table.TableModel;
 
+import org.apache.commons.io.FilenameUtils;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -73,33 +76,23 @@ import org.jdom2.output.XMLOutputter;
 public class Settings {
 
 	/**
-	 * A reference to the accelerator keys class
-	 */
-	private final AcceleratorKeys acceleratorKeys;
-	/**
-	 * A reference to the auto-correction class
-	 */
-	private final AutoKorrektur autoKorrekt;
-	/**
-	 * A reference to the synonyms-class
-	 */
-	private final Synonyms synonyms;
-	/**
-	 * A reference to the steno class
-	 */
-	private final StenoData steno;
-	/**
-	 * Stores the filepath of the currently in use settings file
+	 * filepath to the currently in use settings file
 	 * ("zettelkasten-settings.zks3"). This file is a zip-container with the
 	 * file-extension ".zks3" and contains several XML-Files.
 	 */
-	private final File zettelkastenSettingsFilepath;
+	private final File zipSettingsFile;
 	/**
-	 * Stores the filepath of the currently in use metadata file
-	 * ("zettelkasten-data.zkd3"). This file is a zip-container with the
-	 * file-extension ".zkd3" and contains several XML-Files.
+	 * filepath to the currently in use metadata file ("zettelkasten-data.zkd3").
+	 * This file is a zip-container with the file-extension ".zkd3" and contains
+	 * several XML-Files.
 	 */
-	private final File zettelkastenDataFilepath;
+	private final File zipMetadataFile;
+
+	private AcceleratorKeys acceleratorKeys = new AcceleratorKeys();
+	private AutoKorrektur autoKorrekt = new AutoKorrektur();
+	private Synonyms synonyms = new Synonyms();
+	private StenoData steno = new StenoData();
+
 	/**
 	 * XML-Document that stores the settings-information
 	 */
@@ -120,18 +113,6 @@ public class Settings {
 		return PlatformUtil.isMacOS() & getLookAndFeel().contains("Aqua");
 	}
 
-	/**
-	 * Indicates whether the programm is either running on a mac with aqua-look and
-	 * feel.
-	 * 
-	 * @return {@code true}, if the programm is running on a mac with aqua-look and
-	 *         feel
-	 * @deprecated Use {@link #isMacAqua()} instead.
-	 */
-	public boolean isMacStyle() {
-		return isMacAqua();
-	}
-
 	public boolean isSeaGlass() {
 		return getLookAndFeel().equals(Constants.seaGlassLookAndFeelClassName);
 	}
@@ -147,14 +128,14 @@ public class Settings {
 	 * memory-logging is enbaled or not from different jFrames...
 	 */
 	public boolean isMemoryUsageLogged = false;
-	/**
-	 * 
-	 */
+
 	private boolean highlightSegments = false;
+
 	/**
-	 * This variable stores an entry-number that was passed as parameter.
+	 * This variable stores an entry-number that was passed as command line
+	 * argument.
 	 */
-	private int initialParamEntry = -1;
+	private int commandLineInitialEntryNumber = -1;
 
 	public static final int FONTNAME = 1;
 	public static final int FONTSIZE = 2;
@@ -172,10 +153,20 @@ public class Settings {
 
 	public static final int CUSTOM_CSS_ENTRY = 1;
 	public static final int CUSTOM_CSS_DESKTOP = 2;
+
+	public static final String SETTING_LOGKEYWORDLIST_OR = "OR";
+	public static final String SETTING_LOGKEYWORDLIST_AND = "AND";
+
+	public static final String FONT_ARIAL = "Arial";
+	public static final String FONT_TIMES = "Times";
+	public static final String FONT_HELVETICA = "Helvetica";
+	public static final String FONT_COURIER = "Courier";
+
+	public static final String ZETTELKASTEN_DEFAULT_DIR_NAME = ".Zettelkasten";
 	/**
 	 * Amount of stored recent documents
 	 */
-	private static final int recentDocCount = 8;
+	private static final int RECENT_DOC_COUNT = 8;
 	/**
 	 * Here we have constants that refer to the elements that store each setting
 	 */
@@ -327,13 +318,6 @@ public class Settings {
 	private static final String SETTING_MAKELUHMANNCOLUMNSORTABLE = "makeluhmanncolumnsortable";
 	private static final String SETTING_TABLEROWSORTING = "tablerowsorting";
 
-	public static final String SETTING_LOGKEYWORDLIST_OR = "OR";
-	public static final String SETTING_LOGKEYWORDLIST_AND = "AND";
-
-	public static final String FONT_ARIAL = "Arial";
-	public static final String FONT_TIMES = "Times";
-	public static final String FONT_HELVETICA = "Helvetica";
-	public static final String FONT_COURIER = "Courier";
 	/**
 	 * get the strings for file descriptions from the resource map
 	 */
@@ -342,116 +326,132 @@ public class Settings {
 			.getResourceMap(ZettelkastenView.class);
 
 	/**
-	 * This class stores all relevant settings for the zettelkasten. we don't use
-	 * the properties api or something like that, since we store more data than just
-	 * settings in our settings-file. furthermore, saving settings like font-colors
-	 * etc. in an xml-file allows easier moving of the whole program including
-	 * settings-data to other directories or platforms/coputers. <br>
+	 * This class stores all relevant settings for the Zettelkasten.<br>
 	 * <br>
 	 * We combine several xml-files and compress them into a single zip-container,
-	 * named "zettelkasten-settings.zks3". here we store the settings as xml-file,
-	 * the foreign-words-file, the synonyms-file and several xml-files that store
-	 * the accelerator-keys for the different windows.
+	 * named "zettelkasten-settings.zks3" and "zettelkasten-data.zkd3".
 	 *
 	 * @param ak
 	 * @param ac
 	 * @param syn
 	 * @param stn
 	 */
-	public Settings(AcceleratorKeys ak, AutoKorrektur ac, Synonyms syn, StenoData stn) {
-		acceleratorKeys = ak;
-		autoKorrekt = ac;
-		synonyms = syn;
-		steno = stn;
+	public Settings() {
+		// Init settings file and acceleratorKeys.
+		zipSettingsFile = locateSettingsZipFileWithName("zettelkasten-settings.zks3");
+		if (zipSettingsFile == null || !loadZettelkastenSettingsFile(zipSettingsFile)) {
+			resetSettingsSettingsDocuments();
+		}
 
-		// create file path to settings file
-		zettelkastenSettingsFilepath = createFilePath("zettelkasten-settings.zks3");
-		zettelkastenDataFilepath = createFilePath("zettelkasten-data.zkd3");
-		// now initiate some empty xml-documents, which store the information
-		initDocuments();
+		// Init foreignWordsFile, synonyms, autoKorrekt, steno objects.
+		zipMetadataFile = locateSettingsZipFileWithName("zettelkasten-data.zkd3");
+		if (zipMetadataFile == null || !loadZettelkastenMetadataFile(zipMetadataFile)) {
+			resetMetadataSettingsDocuments();
+		}
+
+		// Always init default settings of missing fields.
+		initDefaultSettingsIfMissing();
 	}
 
-	private File createFilePath(String filename) {
-		// these lines are needed for the portable use of the Zettelkasten
-		// we check whether there's a settings-file in the application's directory.
-		// if so, we use these settings-files, else we use and create in a directory
-		// relative to the user's home-dir.
-		File portableFile = new File(System.getProperty("user.dir") + File.separatorChar + filename);
-		// check whether we found a settings-file or not...
-		if (portableFile.exists()) {
-			return portableFile;
+	/**
+	 * Returns the settings file to use based on the location priority. Returns null
+	 * if failed to open.<br>
+	 * <br>
+	 * Zettelkasten settings location priority:<br>
+	 * 1. Current directory from which Zettelkasten started.<br>
+	 * 2. Zettelkasten directory in the user's home directory.<br>
+	 * <br>
+	 */
+	private File locateSettingsZipFileWithName(String filename) {
+		Path currentDir = Paths.get(System.getProperty("user.dir"));
+		Path currentDirFilePath = Paths.get(currentDir.toString(), filename);
+		File currentDirFile = currentDirFilePath.toFile();
+		if (currentDirFile.exists()) {
+			// If a settings file in the current dir file exists, use it.
+			return currentDirFile;
 		}
-		// if we found no settings-file in the same directory as the application is
-		// stored,
-		// we assume we have no portable version in use... In this case, store
-		// settings-file
-		// in a sub-directory of the user's home-dir.
-		String fp = System.getProperty("user.home") + File.separatorChar;
-		// first of all, we want to check for a subdirectory ".Zettelkasten" in the
-		// user's home-directory
-		File fpdir = new File(System.getProperty("user.home") + File.separatorChar + ".Zettelkasten");
-		// if that directory doesn't exist, try to create it
-		if (!fpdir.exists()) {
+
+		// Fallback to Zettelkasten directory in the user's home directory.
+		Path userDir = Paths.get(System.getProperty("user.home"));
+		Path userDirZettelkastenDirPath = Paths.get(userDir.toString(), ZETTELKASTEN_DEFAULT_DIR_NAME);
+		File userDirZettelkastenDirFile = userDirZettelkastenDirPath.toFile();
+
+		// If that directory doesn't exist, try to create it.
+		if (!userDirZettelkastenDirFile.exists()) {
 			try {
-				if (fpdir.mkdir()) {
-					fp = fp + ".Zettelkasten" + File.separatorChar;
+				if (!userDirZettelkastenDirFile.mkdir()) {
+					Constants.zknlogger.log(Level.SEVERE,
+							"Failed to create Zettelkasten directory in the user directoy: {0}",
+							userDirZettelkastenDirPath.toString());
+					return null;
 				}
 			} catch (SecurityException e) {
 				Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
 				return null;
 			}
-		} // else add ".Zettelkasten"-directory to our string
-		else {
-			fp = fp + ".Zettelkasten" + File.separatorChar;
 		}
-		// append filename
-		fp = fp + filename;
-		// return result
-		return new File(fp);
+
+		// Return settings inside the Zettelkasten directory in the user's home
+		// directory.
+		Path settingsPath = Paths.get(userDir.toString(), ZETTELKASTEN_DEFAULT_DIR_NAME, filename);
+		return settingsPath.toFile();
 	}
 
 	/**
-	 * Returns the data filepath, i.e. the path to the
-	 * {@code zettelkasten-data.zkd3} file, where the synonyms, foreign words, steno
-	 * and spellchecking-data is saved. this method is used from the main frames
-	 * makeExtraBackup() method.
-	 *
-	 * @return the filepath to the zettelkasten-data.zkd3-file.
+	 * @return filepath to the zettelkasten-data.zkd3 file.
 	 */
-	public File getMetaFilePath() {
-		return zettelkastenDataFilepath;
+	public File getMetadataFile() {
+		return zipMetadataFile;
 	}
 
 	/**
-	 * @return the filepath to the zettelkasten-settings.zks3 file.
+	 * @return filepath to the zettelkasten-settings.zks3 file.
 	 */
-	public File getSettingsFilePath() {
-		return zettelkastenSettingsFilepath;
+	public File getSettingsFile() {
+		return zipSettingsFile;
 	}
 
-	/*
-	 * getAcceleratorKeys is used for testing.
-	 */
 	public AcceleratorKeys getAcceleratorKeys() {
 		return acceleratorKeys;
 	}
 
-	/**
-	 * Inits all documents, i.e. creates new document elements
-	 */
-	private void initDocuments() {
-		// first of all, create the empty documents
+	public Synonyms getSynonyms() {
+		return synonyms;
+	}
+
+	public AutoKorrektur getAutoKorrektur() {
+		return autoKorrekt;
+	}
+
+	public StenoData getStenoData() {
+		return steno;
+	}
+
+	// Named like this because we have a two settings file, and one is named
+	// settings.
+	private void resetSettingsSettingsDocuments() {
+		// Create the empty documents.
 		settingsFile = new Document(new Element("settings"));
+		acceleratorKeys = new AcceleratorKeys();
+	}
+
+	// Named like this because we have a two settings file, and one is named
+	// settings.
+	private void resetMetadataSettingsDocuments() {
+		// Create the empty documents.
 		foreignWordsFile = new Document(new Element("foreignwords"));
-		// now fill the initoal elements
-		initDefaultSettingsIfMissing();
+		synonyms = new Synonyms();
+		autoKorrekt = new AutoKorrektur();
+		steno = new StenoData();
 	}
 
 	/**
 	 * Inits all documents, i.e. creates new document elements
 	 */
-	public void clear() {
-		initDocuments();
+	public void resetSettings() {
+		resetSettingsSettingsDocuments();
+		resetMetadataSettingsDocuments();
+		initDefaultSettingsIfMissing();
 	}
 
 	/**
@@ -463,7 +463,7 @@ public class Settings {
 	 */
 	public void addToRecentDocs(String fp) {
 		// check for valid parameter
-		if (null == fp || fp.isEmpty()) {
+		if (fp == null || fp.isEmpty()) {
 			return;
 		}
 		// check whether file exists
@@ -476,7 +476,7 @@ public class Settings {
 		// add new filepath to linked list
 		recdocs.add(fp);
 		// iterate all current recent documents
-		for (int cnt = 1; cnt <= recentDocCount; cnt++) {
+		for (int cnt = 1; cnt <= RECENT_DOC_COUNT; cnt++) {
 			// retrieve recent document
 			String recentDoc = getRecentDoc(cnt);
 			// check whether the linked list already contains such a document
@@ -490,7 +490,7 @@ public class Settings {
 			}
 		}
 		// iterate all current recent documents again
-		for (int cnt = 1; cnt <= recentDocCount; cnt++) {
+		for (int cnt = 1; cnt <= RECENT_DOC_COUNT; cnt++) {
 			// check for valid bounds of linked list
 			if (recdocs.size() >= cnt) {
 				// and set recent document
@@ -507,24 +507,16 @@ public class Settings {
 	 * {@code null} if recent document does not exist or is empty
 	 *
 	 * @param nr the number of the requested recent document. use a value from 1 to
-	 *           {@link #recentDocCount recentDocCount}.
+	 *           {@link #RECENT_DOC_COUNT recentDocCount}.
 	 * @return the recent document (the file path) as string, or {@code null} if no
 	 *         such element or path exists.
 	 */
 	public String getRecentDoc(int nr) {
-		// retrieve element
-		Element el = settingsFile.getRootElement().getChild(SETTING_RECENT_DOC + String.valueOf(nr));
-		// if we have any valid document
-		if (el != null) {
-			// check whether its value is empty
-			String retval = el.getText();
-			// and if not, return in
-			if (!retval.isEmpty()) {
-				return retval;
-			}
+		String value = genericStringGetter(SETTING_RECENT_DOC + String.valueOf(nr), "");
+		if (value.isEmpty()) {
+			return null;
 		}
-		// else return null
-		return null;
+		return value;
 	}
 
 	/**
@@ -532,28 +524,11 @@ public class Settings {
 	 * documents.
 	 *
 	 * @param nr the number of the requested recent document. use a value from 1 to
-	 *           {@link #recentDocCount recentDocCount}.
+	 *           {@link #RECENT_DOC_COUNT recentDocCount}.
 	 * @param fp the filepath to the recently used document as string
 	 */
 	public void setRecentDoc(int nr, String fp) {
-		// check for valid parameter
-		if (null == fp) {
-			return;
-		}
-		// retrieve element
-		Element el = settingsFile.getRootElement().getChild(SETTING_RECENT_DOC + String.valueOf(nr));
-		// if element exists...
-		if (el != null) {
-			// add filepath
-			el.setText(fp);
-		} else {
-			// create a filepath-element
-			el = new Element(SETTING_RECENT_DOC + String.valueOf(nr));
-			// add filepath
-			el.setText(fp);
-			// and add it to the document
-			settingsFile.getRootElement().addContent(el);
-		}
+		genericStringSetter(SETTING_RECENT_DOC + String.valueOf(nr), fp);
 	}
 
 	public Color getTableGridColor() {
@@ -573,7 +548,7 @@ public class Settings {
 	 *         paramter was passed
 	 */
 	public int getStartupEntryFromCommandLine() {
-		return initialParamEntry;
+		return commandLineInitialEntryNumber;
 	}
 
 	/**
@@ -585,7 +560,7 @@ public class Settings {
 	 *           paramter was passed
 	 */
 	public void setInitialParamZettel(int nr) {
-		initialParamEntry = nr;
+		commandLineInitialEntryNumber = nr;
 	}
 
 	/**
@@ -597,52 +572,39 @@ public class Settings {
 	 * settings-file-versions.
 	 */
 	public void initDefaultSettingsIfMissing() {
+		acceleratorKeys.initDefaultAcceleratorKeysIfMissing();
 
-		for (int cnt = 0; cnt < recentDocCount; cnt++) {
-			// create field-identifier
-			String fi = SETTING_RECENT_DOC + String.valueOf(cnt + 1);
-			// retrieve content
-			if (null == settingsFile.getRootElement().getChild(fi)) {
-				// create a filepath-element
-				Element el = new Element(fi);
-				el.setText("");
-				// and add it to the document
-				settingsFile.getRootElement().addContent(el);
-			}
+		for (int cnt = 0; cnt < RECENT_DOC_COUNT; cnt++) {
+			genericElementInitIfMissing(SETTING_RECENT_DOC + String.valueOf(cnt + 1), "");
 		}
 
-		if (null == settingsFile.getRootElement().getChild(SETTING_LAF)) {
-			// create element for look and feel
-			Element el = new Element(SETTING_LAF);
-			settingsFile.getRootElement().addContent(el);
-			// retrieve all installed Look and Feels
+		{
+			// Retrieve all installed Look and Feels.
 			UIManager.LookAndFeelInfo[] installed_laf = UIManager.getInstalledLookAndFeels();
-			// init found-variables
-			boolean laf_aqua_found = false;
-			boolean laf_nimbus_found = false;
+			boolean lafAquaFound = false;
+			boolean lafNimbusFound = false;
 			String aquaclassname = "";
 			String nimbusclassname = "";
-			// in case we find "nimbus" LAF, set this as default on non-mac-os
-			// because it simply looks the best.
+
 			for (UIManager.LookAndFeelInfo laf : installed_laf) {
-				// check whether laf is mac os x
+				// In case we find "nimbus" LAF, set this as default on non-mac-os
+				// because it looks better.
 				if (laf.getName().equalsIgnoreCase("mac os x") || laf.getClassName().contains("Aqua")) {
-					laf_aqua_found = true;
+					lafAquaFound = true;
 					aquaclassname = laf.getClassName();
 				}
-				// check whether laf is nimbus
 				if (laf.getName().equalsIgnoreCase("nimbus") || laf.getClassName().contains("Nimbus")) {
-					laf_nimbus_found = true;
+					lafNimbusFound = true;
 					nimbusclassname = laf.getClassName();
 				}
 			}
-			// check which laf was found and set appropriate default value
-			if (laf_aqua_found) {
-				el.setText(aquaclassname);
-			} else if (laf_nimbus_found) {
-				el.setText(nimbusclassname);
+			// Check which laf was found and set appropriate default value.
+			if (lafAquaFound) {
+				genericElementInitIfMissing(SETTING_LAF, aquaclassname);
+			} else if (lafNimbusFound) {
+				genericElementInitIfMissing(SETTING_LAF, nimbusclassname);
 			} else {
-				el.setText(UIManager.getSystemLookAndFeelClassName());
+				genericElementInitIfMissing(SETTING_LAF, UIManager.getSystemLookAndFeelClassName());
 			}
 		}
 
@@ -655,140 +617,140 @@ public class Settings {
 		} else if (PlatformUtil.isLinux()) {
 			pandoc = "/usr/bin/pandoc";
 		}
-		genericElementInit(SETTING_PANDOCPATH, pandoc);
-		genericElementInit(SETTING_DISPLAYEDTOOLBARICONS,
+		genericElementInitIfMissing(SETTING_PANDOCPATH, pandoc);
+		genericElementInitIfMissing(SETTING_DISPLAYEDTOOLBARICONS,
 				PlatformUtil.isMacOS() ? "1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0,1,0,0,1,1,1,1,1"
 						: "1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1");
-		genericElementInit(SETTING_LOCALE, Locale.getDefault().getLanguage());
-		genericElementInit(SETTING_FILEPATH, "");
-		genericElementInit(SETTING_SEARCHFRAMESPLITLAYOUT, String.valueOf(JSplitPane.VERTICAL_SPLIT));
-		genericElementInit(SETTING_CUSTOMCSSENTRY, "");
-		genericElementInit(SETTING_CUSTOMCSSDESKTOP, "");
-		genericElementInit(SETTING_GETLASTUSEDDESKTOPNUMBER, "0");
-		genericElementInit(SETTING_AUTOCOMPLETETAGS, "1");
-		genericElementInit(SETTING_MARKDOWNACTIVATED, "0");
-		genericElementInit(SETTING_LASTOPENEDIMPORTDIR, "");
-		genericElementInit(SETTING_LASTOPENEDEXPORTDIR, "");
-		genericElementInit(SETTING_LASTOPENEDIMAGEDIR, "");
-		genericElementInit(SETTING_SHOWICONTEXT, "1");
-		genericElementInit(SETTING_USEMACBACKGROUNDCOLOR, "0");
-		genericElementInit(SETTING_LASTOPENEDATTACHMENTDIR, "");
-		genericElementInit(SETTING_AUTOBACKUP, "1");
-		genericElementInit(SETTING_SHOWALLLUHMANN, "0");
-		genericElementInit(SETTING_SHOWLUHMANNICONINDESK, "1");
-		genericElementInit(SETTING_EXTRABACKUP, "0");
-		genericElementInit(SETTING_ALWAYSMACSTYLE, "0");
-		genericElementInit(SETTING_MINIMIZETOTRAY, "0");
-		genericElementInit(SETTING_ADDALLTOHISTORY, "0");
-		genericElementInit(SETTING_COPYPLAIN, "0");
-		genericElementInit(SETTING_EXTRABACKUPPATH, "");
-		genericElementInit(SETTING_FILLEMPTYPLACES, "0");
-		genericElementInit(SETTING_MANUALTIMESTAMP, "0");
-		genericElementInit(SETTING_SEARCHTIME, "");
-		genericElementInit(SETTING_SEARCHALWAYSSYNONYMS, "1");
-		genericElementInit(SETTING_SEARCHALWAYSACCENTINSENSITIVE, "0");
-		genericElementInit(SETTING_SHOWSYNONYMSINTABLE, "0");
-		genericElementInit(SETTING_SHOWICONS, "1");
-		genericElementInit(SETTING_SHOWALLICONS, "1");
-		genericElementInit(SETTING_SHOWENTRYHEADLINE, "1");
-		genericElementInit(SETTING_ICONTHEME, "0");
-		genericElementInit(SETTING_FOOTNOTEBRACES, "1");
-		genericElementInit(SETTING_SHOWUPDATEHINTVERSION, "0");
-		genericElementInit(SETTING_USECUSTOMCSSENTRY, "0");
-		genericElementInit(SETTING_USECUSTOMCSSDESKTOP, "0");
-		genericElementInit(SETTING_USEXDGOPEN, "1");
-		genericElementInit(SETTING_MANLINKCOLOR, "0033cc");
-		genericElementInit(SETTING_FNLINKCOLOR, "0033cc");
-		genericElementInit(SETTING_LINKCOLOR, "003399");
-		genericElementInit(SETTING_APPENDIXBACKGROUNDCOLOR, "ffffff");
-		genericElementInit(SETTING_TABLEHEADERCOLOR, "e4e4e4");
-		genericElementInit(SETTING_TABLEEVENROWCOLOR, "eeeeee");
-		genericElementInit(SETTING_ENTRYHEADERBACKGROUNDCOLOR, "555555");
-		genericElementInit(SETTING_QUOTEBACKGROUNDCOLOR, "f2f2f2");
-		genericElementInit(SETTING_MAKELUHMANNCOLUMNSORTABLE, "0");
-		genericElementInit(SETTING_MAINBACKGROUNDCOLOR, "ffffff");
-		genericElementInit(SETTING_CONTENTBACKGROUNDCOLOR, "ffffff");
-		genericElementInit(SETTING_TABLEODDROWCOLOR, "f8f8f8");
-		genericElementInit(SETTING_SHOWTABLEBORDER, "1");
-		genericElementInit(SETTING_SEARCHWITHOUTFORMATTAGS, "1");
-		genericElementInit(SETTING_SHOWLUHMANNENTRYNUMBER, "0");
-		genericElementInit(SETTING_SHOWDESKTOPENTRYNUMBER, "0");
-		genericElementInit(SETTING_DESKTOPSHOWCOMMENTS, String.valueOf(Constants.DESKTOP_WITH_COMMENTS));
-		genericElementInit(SETTING_LASTUSEDBIBTEXFORMAT, "0");
-		genericElementInit(SETTING_SHOWHIGHLIGHTBACKGROUND, "1");
-		genericElementInit(SETTING_SHOWHIGHLIGHTKEYWORDBACKGROUND, "1");
-		genericElementInit(SETTING_SHOWHIGHLIGHTLIVESEARCHBACKGROUND, "1");
-		genericElementInit(SETTING_SEARCHCOMBOTIME, "0");
-		genericElementInit(SETTING_SEARCHDATETIME, "");
-		genericElementInit(SETTING_SEARCHLOG, "0");
-		genericElementInit(SETTING_HIGHLIGHTSEARCHRESULTS, "0");
-		genericElementInit(SETTING_HIGHLIGHTKEYWORDS, "0");
-		genericElementInit(SETTING_SHOWSEARCHENTRY, "0");
-		genericElementInit(SETTING_SUPFOOTNOTE, "1");
-		genericElementInit(SETTING_TABLEROWSORTING, "");
-		genericElementInit(SETTING_JUMPFOOTNOTE, "0");
-		genericElementInit(SETTING_STARTUPENTRY, "1");
-		genericElementInit(SETTING_SHOWATSTARTUP, "0");
-		genericElementInit(SETTING_LOGKEYWORDLIST, SETTING_LOGKEYWORDLIST_OR);
-		genericElementInit(SETTING_SHOWGRID_HORIZONTAL, "0");
-		genericElementInit(SETTING_SHOWGRID_VERTICAL, "0");
-		genericElementInit(SETTING_CELLSPACING, "1,1");
-		genericElementInit(SETTING_SPELLCORRECT, "0");
-		genericElementInit(SETTING_STENOACTIVATED, "0");
-		genericElementInit(SETTING_HIGHLIGHTWHOLEWORD, "0");
-		genericElementInit(SETTING_HIGHLIGHTWHOLEWORDSEARCH, "0");
-		genericElementInit(SETTING_QUICKINPUT, "0");
-		genericElementInit(SETTING_AUTOUPDATE, "1");
-		genericElementInit(SETTING_TOCFORDESKTOPEXPORT, "0");
-		genericElementInit(SETTING_REMOVELINESFORDESKTOPEXPORT, "1");
-		genericElementInit(SETTING_HIDEMULTIPLEDESKTOPOCCURENCESDLG, "0");
-		genericElementInit(SETTING_AUTONIGHTLYUPDATE, "0");
-		genericElementInit(SETTING_QUICKINPUTEXTENDED, "0");
-		genericElementInit(SETTING_IMGRESIZE, "1");
-		genericElementInit(SETTING_IMGRESIZEWIDTH, "400");
-		genericElementInit(SETTING_IMGRESIZEHEIGHT, "400");
-		genericElementInit(SETTING_TABLEFONTSIZE, "0");
-		genericElementInit(SETTING_DESKTOPOUTLINEFONTSIZE, "0");
-		genericElementInit(SETTING_TEXTFIELDFONTSIZE, "0");
-		genericElementInit(SETTING_LASTUSEDSETBIBKEYCHOICE, String.valueOf(CSetBibKey.CHOOSE_BIBKEY_MANUAL));
-		genericElementInit(SETTING_LASTUSEDSETBIBKEYTYPE, String.valueOf(CSetBibKey.CHOOSE_BIBKEY_MANUAL));
-		genericElementInit(SETTING_LASTUSEDSETBIBIMPORTSOURCE, String.valueOf(CImportBibTex.BIBTEX_SOURCE_DB));
-		genericElementInit(SETTING_LATEXEXPORTFOOTNOTE, "0");
-		genericElementInit(SETTING_LATEXEXPORTFORMTAG, "0");
-		genericElementInit(SETTING_LATEXEXPORTSHOWAUTHOR, "0");
-		genericElementInit(SETTING_LATEXEXPORTREMOVENONSTANDARDTAGS, "1");
-		genericElementInit(SETTING_LATEXEXPORTNOPREAMBLE, "0");
-		genericElementInit(SETTING_LATEXEXPORTCONVERTUMLAUT, "1");
-		genericElementInit(SETTING_LATEXEXPORTTABLESTATSTYLE, "0");
-		genericElementInit(SETTING_LATEXEXPORTSHOWMAIL, "0");
-		genericElementInit(SETTING_LATEXEXPORTCONVERTQUOTES, "1");
-		genericElementInit(SETTING_LATEXEXPORTCENTERFORM, "1");
-		genericElementInit(SETTING_LATEXEXPORTLASTUSEDBIBSTYLE, "0");
-		genericElementInit(SETTING_LATEXEXPORTDOCUMENTCLASS, "0");
-		genericElementInit(SETTING_LATEXEXPORTAUTHORVALUE, "");
-		genericElementInit(SETTING_LATEXEXPORTMAILVALUE, "");
-		genericElementInit(SETTING_SEARCHWHERE, String.valueOf(Constants.SEARCH_CONTENT | Constants.SEARCH_TITLE
-				| Constants.SEARCH_KEYWORDS | Constants.SEARCH_REMARKS));
-		genericElementInit(SETTING_REPLACEWHERE, String.valueOf(Constants.SEARCH_CONTENT | Constants.SEARCH_TITLE
-				| Constants.SEARCH_KEYWORDS | Constants.SEARCH_REMARKS));
-		genericElementInit(SETTING_EXPORTPARTS, String.valueOf(Constants.EXPORT_TITLE | Constants.EXPORT_CONTENT
-				| Constants.EXPORT_AUTHOR | Constants.EXPORT_REMARKS));
-		genericElementInit(SETTING_EXPORTFORMAT, String.valueOf(Constants.EXP_TYPE_DESKTOP_DOCX));
-		genericElementInit(SETTING_DESKTOPEXPORTFORMAT, String.valueOf(Constants.EXP_TYPE_DESKTOP_DOCX));
-		genericElementInit(SETTING_DESKTOPCOMMENTEXPORT, "0");
-		genericElementInit(SETTING_DESKTOPDISPLAYITEMS,
+		genericElementInitIfMissing(SETTING_LOCALE, Locale.getDefault().getLanguage());
+		genericElementInitIfMissing(SETTING_FILEPATH, "");
+		genericElementInitIfMissing(SETTING_SEARCHFRAMESPLITLAYOUT, String.valueOf(JSplitPane.VERTICAL_SPLIT));
+		genericElementInitIfMissing(SETTING_CUSTOMCSSENTRY, "");
+		genericElementInitIfMissing(SETTING_CUSTOMCSSDESKTOP, "");
+		genericElementInitIfMissing(SETTING_GETLASTUSEDDESKTOPNUMBER, "0");
+		genericElementInitIfMissing(SETTING_AUTOCOMPLETETAGS, "1");
+		genericElementInitIfMissing(SETTING_MARKDOWNACTIVATED, "0");
+		genericElementInitIfMissing(SETTING_LASTOPENEDIMPORTDIR, "");
+		genericElementInitIfMissing(SETTING_LASTOPENEDEXPORTDIR, "");
+		genericElementInitIfMissing(SETTING_LASTOPENEDIMAGEDIR, "");
+		genericElementInitIfMissing(SETTING_SHOWICONTEXT, "1");
+		genericElementInitIfMissing(SETTING_USEMACBACKGROUNDCOLOR, "0");
+		genericElementInitIfMissing(SETTING_LASTOPENEDATTACHMENTDIR, "");
+		genericElementInitIfMissing(SETTING_AUTOBACKUP, "1");
+		genericElementInitIfMissing(SETTING_SHOWALLLUHMANN, "0");
+		genericElementInitIfMissing(SETTING_SHOWLUHMANNICONINDESK, "1");
+		genericElementInitIfMissing(SETTING_EXTRABACKUP, "0");
+		genericElementInitIfMissing(SETTING_ALWAYSMACSTYLE, "0");
+		genericElementInitIfMissing(SETTING_MINIMIZETOTRAY, "0");
+		genericElementInitIfMissing(SETTING_ADDALLTOHISTORY, "0");
+		genericElementInitIfMissing(SETTING_COPYPLAIN, "0");
+		genericElementInitIfMissing(SETTING_EXTRABACKUPPATH, "");
+		genericElementInitIfMissing(SETTING_FILLEMPTYPLACES, "0");
+		genericElementInitIfMissing(SETTING_MANUALTIMESTAMP, "0");
+		genericElementInitIfMissing(SETTING_SEARCHTIME, "");
+		genericElementInitIfMissing(SETTING_SEARCHALWAYSSYNONYMS, "1");
+		genericElementInitIfMissing(SETTING_SEARCHALWAYSACCENTINSENSITIVE, "0");
+		genericElementInitIfMissing(SETTING_SHOWSYNONYMSINTABLE, "0");
+		genericElementInitIfMissing(SETTING_SHOWICONS, "1");
+		genericElementInitIfMissing(SETTING_SHOWALLICONS, "1");
+		genericElementInitIfMissing(SETTING_SHOWENTRYHEADLINE, "1");
+		genericElementInitIfMissing(SETTING_ICONTHEME, "0");
+		genericElementInitIfMissing(SETTING_FOOTNOTEBRACES, "1");
+		genericElementInitIfMissing(SETTING_SHOWUPDATEHINTVERSION, "0");
+		genericElementInitIfMissing(SETTING_USECUSTOMCSSENTRY, "0");
+		genericElementInitIfMissing(SETTING_USECUSTOMCSSDESKTOP, "0");
+		genericElementInitIfMissing(SETTING_USEXDGOPEN, "1");
+		genericElementInitIfMissing(SETTING_MANLINKCOLOR, "0033cc");
+		genericElementInitIfMissing(SETTING_FNLINKCOLOR, "0033cc");
+		genericElementInitIfMissing(SETTING_LINKCOLOR, "003399");
+		genericElementInitIfMissing(SETTING_APPENDIXBACKGROUNDCOLOR, "ffffff");
+		genericElementInitIfMissing(SETTING_TABLEHEADERCOLOR, "e4e4e4");
+		genericElementInitIfMissing(SETTING_TABLEEVENROWCOLOR, "eeeeee");
+		genericElementInitIfMissing(SETTING_ENTRYHEADERBACKGROUNDCOLOR, "555555");
+		genericElementInitIfMissing(SETTING_QUOTEBACKGROUNDCOLOR, "f2f2f2");
+		genericElementInitIfMissing(SETTING_MAKELUHMANNCOLUMNSORTABLE, "0");
+		genericElementInitIfMissing(SETTING_MAINBACKGROUNDCOLOR, "ffffff");
+		genericElementInitIfMissing(SETTING_CONTENTBACKGROUNDCOLOR, "ffffff");
+		genericElementInitIfMissing(SETTING_TABLEODDROWCOLOR, "f8f8f8");
+		genericElementInitIfMissing(SETTING_SHOWTABLEBORDER, "1");
+		genericElementInitIfMissing(SETTING_SEARCHWITHOUTFORMATTAGS, "1");
+		genericElementInitIfMissing(SETTING_SHOWLUHMANNENTRYNUMBER, "0");
+		genericElementInitIfMissing(SETTING_SHOWDESKTOPENTRYNUMBER, "0");
+		genericElementInitIfMissing(SETTING_DESKTOPSHOWCOMMENTS, String.valueOf(Constants.DESKTOP_WITH_COMMENTS));
+		genericElementInitIfMissing(SETTING_LASTUSEDBIBTEXFORMAT, "0");
+		genericElementInitIfMissing(SETTING_SHOWHIGHLIGHTBACKGROUND, "1");
+		genericElementInitIfMissing(SETTING_SHOWHIGHLIGHTKEYWORDBACKGROUND, "1");
+		genericElementInitIfMissing(SETTING_SHOWHIGHLIGHTLIVESEARCHBACKGROUND, "1");
+		genericElementInitIfMissing(SETTING_SEARCHCOMBOTIME, "0");
+		genericElementInitIfMissing(SETTING_SEARCHDATETIME, "");
+		genericElementInitIfMissing(SETTING_SEARCHLOG, "0");
+		genericElementInitIfMissing(SETTING_HIGHLIGHTSEARCHRESULTS, "0");
+		genericElementInitIfMissing(SETTING_HIGHLIGHTKEYWORDS, "0");
+		genericElementInitIfMissing(SETTING_SHOWSEARCHENTRY, "0");
+		genericElementInitIfMissing(SETTING_SUPFOOTNOTE, "1");
+		genericElementInitIfMissing(SETTING_TABLEROWSORTING, "");
+		genericElementInitIfMissing(SETTING_JUMPFOOTNOTE, "0");
+		genericElementInitIfMissing(SETTING_STARTUPENTRY, "1");
+		genericElementInitIfMissing(SETTING_SHOWATSTARTUP, "0");
+		genericElementInitIfMissing(SETTING_LOGKEYWORDLIST, SETTING_LOGKEYWORDLIST_OR);
+		genericElementInitIfMissing(SETTING_SHOWGRID_HORIZONTAL, "0");
+		genericElementInitIfMissing(SETTING_SHOWGRID_VERTICAL, "0");
+		genericElementInitIfMissing(SETTING_CELLSPACING, "1,1");
+		genericElementInitIfMissing(SETTING_SPELLCORRECT, "0");
+		genericElementInitIfMissing(SETTING_STENOACTIVATED, "0");
+		genericElementInitIfMissing(SETTING_HIGHLIGHTWHOLEWORD, "0");
+		genericElementInitIfMissing(SETTING_HIGHLIGHTWHOLEWORDSEARCH, "0");
+		genericElementInitIfMissing(SETTING_QUICKINPUT, "0");
+		genericElementInitIfMissing(SETTING_AUTOUPDATE, "1");
+		genericElementInitIfMissing(SETTING_TOCFORDESKTOPEXPORT, "0");
+		genericElementInitIfMissing(SETTING_REMOVELINESFORDESKTOPEXPORT, "1");
+		genericElementInitIfMissing(SETTING_HIDEMULTIPLEDESKTOPOCCURENCESDLG, "0");
+		genericElementInitIfMissing(SETTING_AUTONIGHTLYUPDATE, "0");
+		genericElementInitIfMissing(SETTING_QUICKINPUTEXTENDED, "0");
+		genericElementInitIfMissing(SETTING_IMGRESIZE, "1");
+		genericElementInitIfMissing(SETTING_IMGRESIZEWIDTH, "400");
+		genericElementInitIfMissing(SETTING_IMGRESIZEHEIGHT, "400");
+		genericElementInitIfMissing(SETTING_TABLEFONTSIZE, "0");
+		genericElementInitIfMissing(SETTING_DESKTOPOUTLINEFONTSIZE, "0");
+		genericElementInitIfMissing(SETTING_TEXTFIELDFONTSIZE, "0");
+		genericElementInitIfMissing(SETTING_LASTUSEDSETBIBKEYCHOICE, String.valueOf(CSetBibKey.CHOOSE_BIBKEY_MANUAL));
+		genericElementInitIfMissing(SETTING_LASTUSEDSETBIBKEYTYPE, String.valueOf(CSetBibKey.CHOOSE_BIBKEY_MANUAL));
+		genericElementInitIfMissing(SETTING_LASTUSEDSETBIBIMPORTSOURCE, String.valueOf(CImportBibTex.BIBTEX_SOURCE_DB));
+		genericElementInitIfMissing(SETTING_LATEXEXPORTFOOTNOTE, "0");
+		genericElementInitIfMissing(SETTING_LATEXEXPORTFORMTAG, "0");
+		genericElementInitIfMissing(SETTING_LATEXEXPORTSHOWAUTHOR, "0");
+		genericElementInitIfMissing(SETTING_LATEXEXPORTREMOVENONSTANDARDTAGS, "1");
+		genericElementInitIfMissing(SETTING_LATEXEXPORTNOPREAMBLE, "0");
+		genericElementInitIfMissing(SETTING_LATEXEXPORTCONVERTUMLAUT, "1");
+		genericElementInitIfMissing(SETTING_LATEXEXPORTTABLESTATSTYLE, "0");
+		genericElementInitIfMissing(SETTING_LATEXEXPORTSHOWMAIL, "0");
+		genericElementInitIfMissing(SETTING_LATEXEXPORTCONVERTQUOTES, "1");
+		genericElementInitIfMissing(SETTING_LATEXEXPORTCENTERFORM, "1");
+		genericElementInitIfMissing(SETTING_LATEXEXPORTLASTUSEDBIBSTYLE, "0");
+		genericElementInitIfMissing(SETTING_LATEXEXPORTDOCUMENTCLASS, "0");
+		genericElementInitIfMissing(SETTING_LATEXEXPORTAUTHORVALUE, "");
+		genericElementInitIfMissing(SETTING_LATEXEXPORTMAILVALUE, "");
+		genericElementInitIfMissing(SETTING_SEARCHWHERE, String.valueOf(Constants.SEARCH_CONTENT
+				| Constants.SEARCH_TITLE | Constants.SEARCH_KEYWORDS | Constants.SEARCH_REMARKS));
+		genericElementInitIfMissing(SETTING_REPLACEWHERE, String.valueOf(Constants.SEARCH_CONTENT
+				| Constants.SEARCH_TITLE | Constants.SEARCH_KEYWORDS | Constants.SEARCH_REMARKS));
+		genericElementInitIfMissing(SETTING_EXPORTPARTS, String.valueOf(Constants.EXPORT_TITLE
+				| Constants.EXPORT_CONTENT | Constants.EXPORT_AUTHOR | Constants.EXPORT_REMARKS));
+		genericElementInitIfMissing(SETTING_EXPORTFORMAT, String.valueOf(Constants.EXP_TYPE_DESKTOP_DOCX));
+		genericElementInitIfMissing(SETTING_DESKTOPEXPORTFORMAT, String.valueOf(Constants.EXP_TYPE_DESKTOP_DOCX));
+		genericElementInitIfMissing(SETTING_DESKTOPCOMMENTEXPORT, "0");
+		genericElementInitIfMissing(SETTING_DESKTOPDISPLAYITEMS,
 				String.valueOf(Constants.DESKTOP_SHOW_REMARKS | Constants.DESKTOP_SHOW_AUTHORS));
-		genericElementInit(SETTING_SEARCHWHAT, "");
-		genericElementInit(SETTING_REPLACEWHAT, "");
-		genericElementInit(SETTING_SEARCHOPTION, "0");
-		genericElementInit(SETTING_REPLACEOPTION, "0");
-		genericElementInit(SETTING_LASTUSEDBIBTEXFILE, "");
-		genericElementInit(SETTING_HIGHLIGHTBACKGROUNDCOLOR, "ffff66");
-		genericElementInit(SETTING_HIGHLIGHTKEYWORDBACKGROUNDCOLOR, "ffff66");
-		genericElementInit(SETTING_HIGHLIGHTLIVESEARCHBACKGROUNDCOLOR, "ffff66");
-		genericElementInit(SETTING_TABLEFONT, defaultFont);
-		genericElementInit(SETTING_DESKTOPOUTLINEFONT, defaultFont);
-		genericElementInit(SETTING_LUHMANNTREEEXPANDLEVEL, "-1");
+		genericElementInitIfMissing(SETTING_SEARCHWHAT, "");
+		genericElementInitIfMissing(SETTING_REPLACEWHAT, "");
+		genericElementInitIfMissing(SETTING_SEARCHOPTION, "0");
+		genericElementInitIfMissing(SETTING_REPLACEOPTION, "0");
+		genericElementInitIfMissing(SETTING_LASTUSEDBIBTEXFILE, "");
+		genericElementInitIfMissing(SETTING_HIGHLIGHTBACKGROUNDCOLOR, "ffff66");
+		genericElementInitIfMissing(SETTING_HIGHLIGHTKEYWORDBACKGROUNDCOLOR, "ffff66");
+		genericElementInitIfMissing(SETTING_HIGHLIGHTLIVESEARCHBACKGROUNDCOLOR, "ffff66");
+		genericElementInitIfMissing(SETTING_TABLEFONT, defaultFont);
+		genericElementInitIfMissing(SETTING_DESKTOPOUTLINEFONT, defaultFont);
+		genericElementInitIfMissing(SETTING_LUHMANNTREEEXPANDLEVEL, "-1");
 
 		if (null == settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTSEARCHSTYLE)) {
 			// create element for font
@@ -971,90 +933,50 @@ public class Settings {
 		}
 	}
 
-	private void genericElementInit(String attr, String value) {
-		if (null == settingsFile.getRootElement().getChild(attr)) {
-			// create a filepath-element
-			Element el = new Element(attr);
-			el.setText(value);
-			// and add it to the document
-			settingsFile.getRootElement().addContent(el);
+	private boolean loadZettelkastenSettingsFile(File zipSettingsPath) {
+		if (!zipSettingsPath.exists()) {
+			Constants.zknlogger.log(Level.WARNING, String
+					.format("Could not open settings file: filepath [%s] does not exist.", zipSettingsPath.getPath()));
+			return false;
 		}
-	}
-
-	private void loadZettelkastenSettingsFile() {
-		if (zettelkastenSettingsFilepath == null) {
-			Constants.zknlogger.log(Level.SEVERE, "Could not open settings file: filepath is null.");
-			return;
-		}
-		if (!zettelkastenSettingsFilepath.exists()) {
-			Constants.zknlogger.log(Level.WARNING,
-					String.format("Could not open settings file: filepath [%s] does not exist.",
-							zettelkastenSettingsFilepath.getPath()));
-			return;
-		}
-		Constants.zknlogger.log(Level.INFO,
-				String.format("Found settings file [%s]", zettelkastenSettingsFilepath.getPath()));
+		Constants.zknlogger.log(Level.INFO, String.format("Found settings file [%s]", zipSettingsPath.getPath()));
 
 		try {
-			settingsFile = FileOperationsUtil.readXMLFileFromZipFile(zettelkastenSettingsFilepath,
-					Constants.settingsFileName);
-			acceleratorKeys.setDocument(AcceleratorKeys.MAINKEYS, FileOperationsUtil
-					.readXMLFileFromZipFile(zettelkastenSettingsFilepath, Constants.acceleratorKeysMainName));
-			acceleratorKeys.setDocument(AcceleratorKeys.NEWENTRYKEYS, FileOperationsUtil
-					.readXMLFileFromZipFile(zettelkastenSettingsFilepath, Constants.acceleratorKeysNewEntryName));
-			acceleratorKeys.setDocument(AcceleratorKeys.DESKTOPKEYS, FileOperationsUtil
-					.readXMLFileFromZipFile(zettelkastenSettingsFilepath, Constants.acceleratorKeysDesktopName));
+			settingsFile = FileOperationsUtil.readXMLFileFromZipFile(zipSettingsPath, Constants.settingsFileName);
+			acceleratorKeys.setDocument(AcceleratorKeys.MAINKEYS,
+					FileOperationsUtil.readXMLFileFromZipFile(zipSettingsPath, Constants.acceleratorKeysMainName));
+			acceleratorKeys.setDocument(AcceleratorKeys.NEWENTRYKEYS,
+					FileOperationsUtil.readXMLFileFromZipFile(zipSettingsPath, Constants.acceleratorKeysNewEntryName));
+			acceleratorKeys.setDocument(AcceleratorKeys.DESKTOPKEYS,
+					FileOperationsUtil.readXMLFileFromZipFile(zipSettingsPath, Constants.acceleratorKeysDesktopName));
 			acceleratorKeys.setDocument(AcceleratorKeys.SEARCHRESULTSKEYS, FileOperationsUtil
-					.readXMLFileFromZipFile(zettelkastenSettingsFilepath, Constants.acceleratorKeysSearchResultsName));
+					.readXMLFileFromZipFile(zipSettingsPath, Constants.acceleratorKeysSearchResultsName));
 		} catch (Exception e) {
 			Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+			return false;
 		}
-
-		initDefaultSettingsIfMissing();
-		acceleratorKeys.initDefaultAcceleratorKeysIfMissing();
+		return true;
 	}
 
-	private void loadZettelkastenDataFile() {
-		if (zettelkastenDataFilepath == null) {
-			Constants.zknlogger.log(Level.SEVERE, "Could not open metadata file: filepath is null.");
-			return;
+	private boolean loadZettelkastenMetadataFile(File zipDataFile) {
+		if (!zipDataFile.exists()) {
+			Constants.zknlogger.log(Level.WARNING, String
+					.format("Could not open metadata file: filepath [%s] does not exist.", zipDataFile.getPath()));
+			return false;
 		}
-		if (!zettelkastenDataFilepath.exists()) {
-			Constants.zknlogger.log(Level.WARNING, String.format(
-					"Could not open metadata file: filepath [%s] does not exist.", zettelkastenDataFilepath.getPath()));
-			return;
-		}
-		Constants.zknlogger.log(Level.INFO,
-				String.format("Found metadata file [%s]", zettelkastenDataFilepath.getPath()));
+		Constants.zknlogger.log(Level.INFO, String.format("Found metadata file [%s]", zipDataFile.getPath()));
 
 		try {
-			foreignWordsFile = FileOperationsUtil.readXMLFileFromZipFile(zettelkastenDataFilepath,
-					Constants.foreignWordsName);
-			synonyms.setDocument(
-					FileOperationsUtil.readXMLFileFromZipFile(zettelkastenDataFilepath, Constants.synonymsFileName));
-			autoKorrekt.setDocument(FileOperationsUtil.readXMLFileFromZipFile(zettelkastenDataFilepath,
-					Constants.autoKorrekturFileName));
-			steno.setDocument(
-					FileOperationsUtil.readXMLFileFromZipFile(zettelkastenDataFilepath, Constants.stenoFileName));
+			foreignWordsFile = FileOperationsUtil.readXMLFileFromZipFile(zipDataFile, Constants.foreignWordsName);
+			synonyms.setDocument(FileOperationsUtil.readXMLFileFromZipFile(zipDataFile, Constants.synonymsFileName));
+			autoKorrekt.setDocument(
+					FileOperationsUtil.readXMLFileFromZipFile(zipDataFile, Constants.autoKorrekturFileName));
+			steno.setDocument(FileOperationsUtil.readXMLFileFromZipFile(zipDataFile, Constants.stenoFileName));
 		} catch (Exception e) {
 			Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+			return false;
 		}
-	}
-
-	/**
-	 * Loads the settings files (zettelkastenSettingsFilepath and
-	 * zettelkastenDataFilepath) to this class current.
-	 */
-	public void loadSettings() {
-		try {
-			loadZettelkastenSettingsFile();
-			loadZettelkastenDataFile();
-		} catch (Exception e) {
-			// The load functions already handles some of the Exceptions. This is to get
-			// rare Exceptions like File.exists() for some reason doesn't have read
-			// permission.
-			Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-		}
+		return true;
 	}
 
 	/*
@@ -1067,7 +989,7 @@ public class Settings {
 	 * and Constants.acceleratorKeysSearchResultsName.
 	 */
 	private boolean createZettelkastenSettingsZipFile() {
-		try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(zettelkastenSettingsFilepath))) {
+		try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(zipSettingsFile))) {
 			XMLOutputter out = new XMLOutputter();
 
 			// Add settings file.
@@ -1094,7 +1016,7 @@ public class Settings {
 
 	/**
 	 * saveZettelkastenSettingsFile saves the Zettelkasten Settings file to
-	 * zettelkastenSettingsFilepath and returns true iff successful. On failure, if
+	 * {@code zipSettingsFile} and returns true iff successful. On failure, if
 	 * existing file might have been corrupted, a message dialog informs the user
 	 * where to find the backup file of the original existing Zettelkasten Settings
 	 * file.
@@ -1102,14 +1024,13 @@ public class Settings {
 	 * Zip creation is handled by createZettelkastenSettingsZipFile.
 	 */
 	private boolean saveZettelkastenSettingsFile() {
-		// Before creating the new zip file, create a temporary backup in case of any
-		// error
-		// during the creation.
-		File tmpDataFile = new File(zettelkastenSettingsFilepath.toString() + ".tmp");
-		boolean ok = FileOperationsUtil.createFileCopyIfExists(zettelkastenSettingsFilepath, tmpDataFile);
+		// Before creating the new zip file, create a temporary backup in case of
+		// errors.
+		File tmpDataFile = new File(zipSettingsFile.toString() + ".tmp");
+		boolean ok = FileOperationsUtil.createFileCopyIfExists(zipSettingsFile, tmpDataFile);
 		if (!ok) {
 			// Avoid attempting to save file if we failed to create temporary backup. Return
-			// error.
+			// error. Error is logged inside createFileCopyIfExists.
 			return false;
 		}
 
@@ -1120,7 +1041,7 @@ public class Settings {
 			// temporary backup file might not exist due to a missing original file.
 			try {
 				if (tmpDataFile.exists()) {
-					File checkbackup = FileOperationsUtil.getBackupFilePath(zettelkastenSettingsFilepath);
+					File checkbackup = FileOperationsUtil.getBackupFilePath(zipSettingsFile);
 					tmpDataFile.renameTo(checkbackup);
 
 					Constants.zknlogger.log(Level.INFO, "A backup of the settings was saved to {0}",
@@ -1158,8 +1079,8 @@ public class Settings {
 	 * state of each of the following class member variables: foreignWordsFile,
 	 * synonyms, steno, and autoKorrekt.
 	 */
-	private boolean createZettelkastenDataZipFile() {
-		try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(zettelkastenDataFilepath))) {
+	private boolean createZettelkastenMetadataZipFile() {
+		try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(zipMetadataFile))) {
 			XMLOutputter out = new XMLOutputter();
 
 			// Add foreign words file.
@@ -1191,11 +1112,11 @@ public class Settings {
 	 * Zip creation is handled by createZettelkastenDataZipFile.
 	 * 
 	 */
-	private boolean saveZettelkastenDataFile() {
+	private boolean saveZettelkastenMetadataFile() {
 		// Before the main save action, create a temporary backup in case of any error
 		// during save.
-		File tmpDataFile = new File(zettelkastenDataFilepath.toString() + ".tmp");
-		boolean ok = FileOperationsUtil.createFileCopyIfExists(zettelkastenDataFilepath, tmpDataFile);
+		File tmpDataFile = new File(zipMetadataFile.toString() + ".tmp");
+		boolean ok = FileOperationsUtil.createFileCopyIfExists(zipMetadataFile, tmpDataFile);
 		if (!ok) {
 			// Avoid attempting to save file if we failed to create temporary backup. Return
 			// error.
@@ -1203,13 +1124,13 @@ public class Settings {
 		}
 
 		// Create new zip file.
-		ok = createZettelkastenDataZipFile();
+		ok = createZettelkastenMetadataZipFile();
 		if (!ok) {
 			// On failure, rename temporary file to a .backup file and tell user. The
 			// temporary backup file might not exist due to a missing original file.
 			try {
 				if (tmpDataFile.exists()) {
-					File checkbackup = FileOperationsUtil.getBackupFilePath(zettelkastenDataFilepath);
+					File checkbackup = FileOperationsUtil.getBackupFilePath(zipMetadataFile);
 					tmpDataFile.renameTo(checkbackup);
 
 					Constants.zknlogger.log(Level.INFO, "A backup of the meta-data was saved to {0}",
@@ -1247,75 +1168,53 @@ public class Settings {
 	 *
 	 * @return success status
 	 */
-	public boolean saveSettings() {
+	public boolean saveSettingsToFiles() {
 		boolean ok = true;
 		// Keep track of whether any of the saves failed.
 		ok = ok && saveZettelkastenSettingsFile();
-		ok = ok && saveZettelkastenDataFile();
+		ok = ok && saveZettelkastenMetadataFile();
+
+		Constants.zknlogger.log(Level.INFO, "Successfully saved the settings files [{0}] and [{1}].",
+				new String[] { zipSettingsFile.toString(), zipMetadataFile.toString() });
 		return ok;
 	}
 
 	/**
-	 * Retrieves the filepath of the last used main datafile
+	 * Returns the main data file.
 	 *
-	 * @return the filepath of the last used main datafile, or null if no filepath
-	 *         was specified.
+	 * @return the filepath of the main datafile, or null if none.
 	 */
-	public File getFilePath() {
-		// we do this step by step rather that appending a ".getText()" to the line
-		// below, because
-		// by doing so we can check whether the child element exists or not, and
-		// avoiding null pointer
-		// exceptions
-		// first, get the filepath, which is in relation to the zkn-path
-		Element el = settingsFile.getRootElement().getChild(SETTING_FILEPATH);
-		// create an empty string as return value
-		String value = "";
-		// is the element exists, copy the text to the return value
-		if (el != null) {
-			value = el.getText();
-		}
-		// when we have no filename, return null
+	public File getMainDataFile() {
+		String value = genericStringGetter(SETTING_FILEPATH, "");
 		if (value.isEmpty()) {
 			return null;
 		}
-		// else return filepath
 		return new File(value);
 	}
 
 	/**
-	 * Sets the filepath of the currently used main datafile
+	 * Sets the filepath of the main data file.
 	 *
-	 * @param fp (the filepath of the currently used main datafile)
+	 * @param file filepath of the currently used main datafile
 	 */
-	public void setFilePath(File fp) {
-		// try to find filepath-element
-		Element el = settingsFile.getRootElement().getChild(SETTING_FILEPATH);
-		if (el == null) {
-			el = new Element(SETTING_FILEPATH);
-			settingsFile.getRootElement().addContent(el);
-		}
-		// set new file path which should be now relative to the zkn-path
-		el.setText((null == fp) ? "" : fp.toString());
+	public void setMainDataFile(File file) {
+		genericStringSetter(SETTING_FILEPATH, (file == null) ? "" : file.toString());
+		// We always reset the startup entry when changing the main data file.
+		setStartupEntry(-1);
 	}
 
 	/**
+	 * Returns the name of the main data file without the extension. For example,
+	 * a/b/test.zkn3 returns 'test'.
 	 *
-	 * @return
+	 * @return name of the main data file without the extension
 	 */
-	public String getFileName() {
-		// get filename and find out where extension begins, so we can just set the
-		// filename as title
-		File f = getFilePath();
-		// check whether we have any valid filepath at all
+	public String getMainDataFileNameWithoutExtension() {
+		File f = getMainDataFile();
 		if (f != null && f.exists()) {
-			String fname = f.getName();
-			// find file-extension
-			int extpos = fname.lastIndexOf(Constants.ZKN_FILEEXTENSION);
-			// set the filename as title
-			if (extpos != -1) {
-				// return file-name
-				return fname.substring(0, extpos);
+			String extension = FilenameUtils.getExtension(f.getName());
+			if (("." + extension).equals(Constants.ZKN_FILEEXTENSION)) {
+				return FilenameUtils.removeExtension(f.getName());
 			}
 		}
 		return null;
@@ -1332,7 +1231,7 @@ public class Settings {
 			// check if table is valid
 			if (t != null) {
 				// get sorter for each table
-				javax.swing.RowSorter<? extends TableModel> sorter =t.getRowSorter();
+				javax.swing.RowSorter<? extends TableModel> sorter = t.getRowSorter();
 				// get sort keys (column, sort order)
 				List<? extends SortKey> sk = sorter.getSortKeys();
 				if (sk != null && sk.size() > 0) {
@@ -1349,6 +1248,9 @@ public class Settings {
 	public RowSorter.SortKey getTableSorting(javax.swing.JTable table) {
 		if (table != null) {
 			Element el = settingsFile.getRootElement().getChild(SETTING_TABLEROWSORTING);
+			if (el == null) {
+				return null;
+			}
 			// get sorting attributes
 			List<Attribute> attr = el.getAttributes();
 			// check if we found any sorting attributes
@@ -1466,26 +1368,19 @@ public class Settings {
 	/**
 	 * Retrieves the filepath for the external backup when leaving the application
 	 *
-	 * @return the filepath of the external backup, or null if no path was specified
+	 * @return filepath of the external backup, or null if no path was specified
 	 */
-	public File getExtraBackupPath() {
+	public File getExtraBackupDir() {
 		return genericDirGetter(SETTING_EXTRABACKUPPATH);
 	}
 
 	/**
 	 * Sets the filepath for the external backup when leaving the application
 	 *
-	 * @param fp the filepath of the external backup
+	 * @param value filepath of the external backup
 	 */
-	public void setExtraBackupPath(String fp) {
-		// try to find filepath-element
-		Element el = settingsFile.getRootElement().getChild(SETTING_EXTRABACKUPPATH);
-		if (el == null) {
-			el = new Element(SETTING_EXTRABACKUPPATH);
-			settingsFile.getRootElement().addContent(el);
-		}
-		// set new file path which should be now relative to the zkn-path
-		el.setText(fp);
+	public void setExtraBackupPath(String value) {
+		genericStringSetter(SETTING_EXTRABACKUPPATH, value);
 	}
 
 	/**
@@ -1494,19 +1389,10 @@ public class Settings {
 	 * @return the filepath for the external converter tool "pandoc"
 	 */
 	public String getPandocPath() {
-		// first, get the filepath, which is in relation to the zkn-path
-		Element el = settingsFile.getRootElement().getChild(SETTING_PANDOCPATH);
-		// create an empty string as return value
-		String value = "";
-		// is the element exists, copy the text to the return value
-		if (el != null) {
-			value = el.getText();
-		}
-		// when we have no filename, return null
+		String value = genericStringGetter(SETTING_PANDOCPATH, "");
 		if (value.isEmpty()) {
 			return null;
 		}
-		// else return filepath
 		return value;
 	}
 
@@ -1515,15 +1401,8 @@ public class Settings {
 	 *
 	 * @param fp the filepath to the external converter tool "pandoc"
 	 */
-	public void setPandocPath(String fp) {
-		// try to find filepath-element
-		Element el = settingsFile.getRootElement().getChild(SETTING_PANDOCPATH);
-		if (el == null) {
-			el = new Element(SETTING_PANDOCPATH);
-			settingsFile.getRootElement().addContent(el);
-		}
-		// set new file path which should be now relative to the zkn-path
-		el.setText(fp);
+	public void setPandocPath(String value) {
+		genericStringSetter(SETTING_PANDOCPATH, value);
 	}
 
 	/**
@@ -1536,7 +1415,11 @@ public class Settings {
 	 *         saved
 	 */
 	public File getLastUsedBibTexFile() {
-		return genericDirGetter(SETTING_LASTUSEDBIBTEXFILE);
+		String value = genericStringGetter(SETTING_LASTUSEDBIBTEXFILE, "");
+		if (value.isEmpty()) {
+			return null;
+		}
+		return new File(value);
 	}
 
 	/**
@@ -1548,14 +1431,7 @@ public class Settings {
 	 * @param fp the filepath of the last used BibTeX file
 	 */
 	public void setLastUsedBibTexFile(String fp) {
-		// try to find filepath-element
-		Element el = settingsFile.getRootElement().getChild(SETTING_LASTUSEDBIBTEXFILE);
-		if (el == null) {
-			el = new Element(SETTING_LASTUSEDBIBTEXFILE);
-			settingsFile.getRootElement().addContent(el);
-		}
-		// set new file path which should be now relative to the zkn-path
-		el.setText(fp);
+		genericStringSetter(SETTING_LASTUSEDBIBTEXFILE, fp);
 	}
 
 	/**
@@ -1610,7 +1486,7 @@ public class Settings {
 			retval.append(userpath.toString());
 		} else {
 			// get base dir
-			File f = getBaseDir();
+			File f = getMainDataFileDir();
 			// if we have no valid filepath, return empty string
 			if (null == f) {
 				return "";
@@ -1674,7 +1550,7 @@ public class Settings {
 			retval.append(userpath.toString());
 		} else {
 			// get base dir
-			File f = getBaseDir();
+			File f = getMainDataFileDir();
 			// if we have no valid filepath, return empty string
 			if (null == f) {
 				return "";
@@ -2017,33 +1893,12 @@ public class Settings {
 	 * @return {@code null}, if no value is set... else the directory of the
 	 *         data-file, <i>without</i> trailing separator char
 	 */
-	public File getBaseDir() {
-		// first, get the filepath, which is in relation to the zkn-path
-		Element el = settingsFile.getRootElement().getChild(SETTING_FILEPATH);
-		// create an empty string as return value
-		String value = "";
-		// is the element exists, copy the text to the return value
-		if (el != null) {
-			value = el.getText();
-		}
-		// when we have no filename, return null
-		if (value.isEmpty()) {
+	public File getMainDataFileDir() {
+		File mainDataFile = getMainDataFile();
+		if (mainDataFile == null) {
 			return null;
 		}
-		// find last separator char to get the base-directory of the data-file
-		int index = value.lastIndexOf(String.valueOf(File.separatorChar));
-		// if nothing found, return null
-		if (-1 == index) {
-			return null;
-		}
-		try {
-			// else cut off the filename, so we only have the data-file's directory
-			value = value.substring(0, index);
-		} catch (IndexOutOfBoundsException ex) {
-			return null;
-		}
-		// else return filepath
-		return new File(value);
+		return mainDataFile.getParentFile();
 	}
 
 	/**
@@ -2242,18 +2097,12 @@ public class Settings {
 	 *         cellspacing-values
 	 */
 	public Dimension getCellSpacing() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_CELLSPACING);
-		if (el != null) {
-			// parse both string-values to an array
-			String[] dummy = el.getText().split(",");
-			// first value indicates horizontal spacing
-			int space_hor = Integer.parseInt(dummy[0]);
-			// second value indicates vertical distance
-			int space_ver = Integer.parseInt(dummy[1]);
-			// return values as dimension
-			return new Dimension(space_hor, space_ver);
+		String value = genericStringGetter(SETTING_CELLSPACING, "");
+		if (value.isEmpty()) {
+			return new Dimension(1, 1);
 		}
-		return new Dimension(1, 1);
+		String[] splitted = value.split(",");
+		return new Dimension(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
 	}
 
 	/**
@@ -2263,21 +2112,11 @@ public class Settings {
 	 * @param ver the vertical distance between the table cells
 	 */
 	public void setCellSpacing(int hor, int ver) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_CELLSPACING);
-		if (el == null) {
-			el = new Element(SETTING_CELLSPACING);
-			settingsFile.getRootElement().addContent(el);
-		}
-		// create string builder
-		StringBuilder dummy = new StringBuilder("");
-		// add horizontal value
-		dummy.append(String.valueOf(hor));
-		// add separating comma
-		dummy.append(",");
-		// add vertical value
-		dummy.append(String.valueOf(ver));
-		// store values
-		el.setText(dummy.toString());
+		StringBuilder builder = new StringBuilder("");
+		builder.append(String.valueOf(hor));
+		builder.append(",");
+		builder.append(String.valueOf(ver));
+		genericStringSetter(SETTING_CELLSPACING, builder.toString());
 	}
 
 	/**
@@ -2335,9 +2174,9 @@ public class Settings {
 	}
 
 	/**
-	 * Gets the setting for the autobackup-option.
+	 * Gets the setting for the autoupdate-option.
 	 *
-	 * @return {@code true} if autobackup should be activated
+	 * @return {@code true} if autoupdate should be activated
 	 */
 	public boolean getAutoUpdate() {
 		return genericBooleanGetter(SETTING_AUTOUPDATE);
@@ -2428,11 +2267,7 @@ public class Settings {
 	 * @return {@code true} if autobackup should be activated
 	 */
 	public boolean getAutoNightlyUpdate() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_AUTONIGHTLYUPDATE);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_AUTONIGHTLYUPDATE);
 	}
 
 	/**
@@ -2441,12 +2276,7 @@ public class Settings {
 	 * @param val true if the autobackup should be activated
 	 */
 	public void setAutoNightlyUpdate(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_AUTONIGHTLYUPDATE);
-		if (el == null) {
-			el = new Element(SETTING_AUTONIGHTLYUPDATE);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_AUTONIGHTLYUPDATE, val);
 	}
 
 	/**
@@ -2455,11 +2285,7 @@ public class Settings {
 	 * @return {@code true} if show icon text should be activated
 	 */
 	public boolean getShowIconText() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWICONTEXT);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_SHOWICONTEXT);
 	}
 
 	/**
@@ -2468,63 +2294,31 @@ public class Settings {
 	 * @param val true if the show icon text should be activated
 	 */
 	public void setShowIconText(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWICONTEXT);
-		if (el == null) {
-			el = new Element(SETTING_SHOWICONTEXT);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_SHOWICONTEXT, val);
 	}
 
 	public boolean getAutoCompleteTags() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_AUTOCOMPLETETAGS);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_AUTOCOMPLETETAGS);
 	}
 
 	public void setAutoCompleteTags(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_AUTOCOMPLETETAGS);
-		if (el == null) {
-			el = new Element(SETTING_AUTOCOMPLETETAGS);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_AUTOCOMPLETETAGS, val);
 	}
 
 	public boolean getUseMacBackgroundColor() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_USEMACBACKGROUNDCOLOR);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_USEMACBACKGROUNDCOLOR);
 	}
 
 	public void setUseMacBackgroundColor(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_USEMACBACKGROUNDCOLOR);
-		if (el == null) {
-			el = new Element(SETTING_USEMACBACKGROUNDCOLOR);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_USEMACBACKGROUNDCOLOR, val);
 	}
 
 	public boolean getMarkdownActivated() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_MARKDOWNACTIVATED);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_MARKDOWNACTIVATED);
 	}
 
 	public void setMarkdownActivated(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_MARKDOWNACTIVATED);
-		if (el == null) {
-			el = new Element(SETTING_MARKDOWNACTIVATED);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_MARKDOWNACTIVATED, val);
 	}
 
 	/**
@@ -2533,11 +2327,7 @@ public class Settings {
 	 * @return {@code true} if autobackup should be activated
 	 */
 	public boolean getExtraBackup() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_EXTRABACKUP);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_EXTRABACKUP);
 	}
 
 	/**
@@ -2546,12 +2336,7 @@ public class Settings {
 	 * @param val true if the autobackup should be activated
 	 */
 	public void setExtraBackup(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_EXTRABACKUP);
-		if (el == null) {
-			el = new Element(SETTING_EXTRABACKUP);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_EXTRABACKUP, val);
 	}
 
 	public String getCustomCSS(int what) {
@@ -2567,11 +2352,7 @@ public class Settings {
 			ch = SETTING_CUSTOMCSSENTRY;
 			break;
 		}
-		Element el = settingsFile.getRootElement().getChild(ch);
-		if (el != null) {
-			return el.getText();
-		}
-		return null;
+		return genericStringGetter(ch, null);
 	}
 
 	public void setCustomCSS(int what, String css) {
@@ -2587,12 +2368,7 @@ public class Settings {
 			ch = SETTING_CUSTOMCSSENTRY;
 			break;
 		}
-		Element el = settingsFile.getRootElement().getChild(ch);
-		if (el == null) {
-			el = new Element(ch);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(css);
+		genericStringSetter(ch, css);
 	}
 
 	/**
@@ -2649,28 +2425,14 @@ public class Settings {
 	 *         instead. if no desktop exists at all, {@code -1} is returned.
 	 */
 	public int getLastUsedDesktop(int count) {
-		// check for any desktops at all
-		if (count < 1) {
+		if (count == 0) {
 			return -1;
 		}
-		// get attribute which stores last used desktop number
-		Element el = settingsFile.getRootElement().getChild(SETTING_GETLASTUSEDDESKTOPNUMBER);
-		// check for valid value
-		if (el != null) {
-			try {
-				// retrieve value
-				int retval = Integer.parseInt(el.getText());
-				// check for valid bounds
-				if (retval >= count) {
-					retval = 0;
-				}
-				// return value
-				return retval;
-			} catch (NumberFormatException e) {
-				return 0;
-			}
+		int value = genericIntGetter(SETTING_GETLASTUSEDDESKTOPNUMBER, 0);
+		if (value >= count) {
+			return 0;
 		}
-		return 0;
+		return value;
 	}
 
 	/**
@@ -2681,36 +2443,15 @@ public class Settings {
 	 *            index-number {code 0} for the first desktop.
 	 */
 	public void setLastUsedDesktop(int val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_GETLASTUSEDDESKTOPNUMBER);
-		if (el == null) {
-			el = new Element(SETTING_GETLASTUSEDDESKTOPNUMBER);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(String.valueOf(val));
+		genericIntSetter(SETTING_GETLASTUSEDDESKTOPNUMBER, val);
 	}
 
 	public int getSearchFrameSplitLayout() {
-		// get attribute which stores last used desktop number
-		Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHFRAMESPLITLAYOUT);
-		// check for valid value
-		if (el != null) {
-			try {
-				// retrieve value
-				return Integer.parseInt(el.getText());
-			} catch (NumberFormatException e) {
-				return JSplitPane.HORIZONTAL_SPLIT;
-			}
-		}
-		return JSplitPane.HORIZONTAL_SPLIT;
+		return genericIntGetter(SETTING_SEARCHFRAMESPLITLAYOUT, JSplitPane.HORIZONTAL_SPLIT);
 	}
 
 	public void setSearchFrameSplitLayout(int val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHFRAMESPLITLAYOUT);
-		if (el == null) {
-			el = new Element(SETTING_SEARCHFRAMESPLITLAYOUT);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(String.valueOf(val));
+		genericIntSetter(SETTING_SEARCHFRAMESPLITLAYOUT, val);
 	}
 
 	/**
@@ -2721,11 +2462,7 @@ public class Settings {
 	 *         false if new entries should be inserted at the end of the data file
 	 */
 	public boolean getInsertNewEntryAtEmpty() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_FILLEMPTYPLACES);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_FILLEMPTYPLACES);
 	}
 
 	/**
@@ -2736,12 +2473,7 @@ public class Settings {
 	 *            if new entries should be inserted at the end of the data file
 	 */
 	public void setInsertNewEntryAtEmpty(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_FILLEMPTYPLACES);
-		if (el == null) {
-			el = new Element(SETTING_FILLEMPTYPLACES);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_FILLEMPTYPLACES, val);
 	}
 
 	/**
@@ -2768,11 +2500,7 @@ public class Settings {
 			hs_style = SETTING_SHOWHIGHLIGHTBACKGROUND;
 			break;
 		}
-		Element el = settingsFile.getRootElement().getChild(hs_style);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(hs_style);
 	}
 
 	/**
@@ -2799,12 +2527,7 @@ public class Settings {
 			hs_style = SETTING_SHOWHIGHLIGHTBACKGROUND;
 			break;
 		}
-		Element el = settingsFile.getRootElement().getChild(hs_style);
-		if (el == null) {
-			el = new Element(hs_style);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericIntSetter(hs_style, style);
 	}
 
 	/**
@@ -2831,11 +2554,7 @@ public class Settings {
 			hs_style = SETTING_HIGHLIGHTBACKGROUNDCOLOR;
 			break;
 		}
-		Element el = settingsFile.getRootElement().getChild(hs_style);
-		if (el != null) {
-			return el.getText();
-		}
-		return "ffff66";
+		return genericStringGetter(hs_style, "ffff66");
 	}
 
 	/**
@@ -2861,12 +2580,7 @@ public class Settings {
 			hs_style = SETTING_HIGHLIGHTBACKGROUNDCOLOR;
 			break;
 		}
-		Element el = settingsFile.getRootElement().getChild(hs_style);
-		if (el == null) {
-			el = new Element(hs_style);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(col);
+		genericIntSetter(hs_style, style);
 	}
 
 	/**
@@ -2874,24 +2588,15 @@ public class Settings {
 	 * @return
 	 */
 	public String getAppendixBackgroundColor() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_APPENDIXBACKGROUNDCOLOR);
-		if (el != null) {
-			return el.getText();
-		}
-		return "f2f2f2";
+		return genericStringGetter(SETTING_APPENDIXBACKGROUNDCOLOR, "f2f2f2");
 	}
 
 	/**
 	 *
 	 * @param col
 	 */
-	public void setReflistBackgroundColor(String col) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_APPENDIXBACKGROUNDCOLOR);
-		if (el == null) {
-			el = new Element(SETTING_APPENDIXBACKGROUNDCOLOR);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(col);
+	public void setReflistBackgroundColor(String value) {
+		genericStringSetter(SETTING_APPENDIXBACKGROUNDCOLOR, value);
 	}
 
 	/**
@@ -2899,74 +2604,27 @@ public class Settings {
 	 * @return
 	 */
 	public String getTableHeaderColor() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_TABLEHEADERCOLOR);
-		if (el != null) {
-			return el.getText();
-		}
-		return "e4e4e4";
+		return genericStringGetter(SETTING_TABLEHEADERCOLOR, "e4e4e4");
 	}
 
-	/**
-	 *
-	 * @param col
-	 */
-	public void setTableHeaderColor(String col) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_TABLEHEADERCOLOR);
-		if (el == null) {
-			el = new Element(SETTING_TABLEHEADERCOLOR);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(col);
+	public void setTableHeaderColor(String value) {
+		genericStringSetter(SETTING_TABLEHEADERCOLOR, value);
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public String getTableRowEvenColor() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_TABLEEVENROWCOLOR);
-		if (el != null) {
-			return el.getText();
-		}
-		return "eeeeee";
+		return genericStringGetter(SETTING_TABLEEVENROWCOLOR, "eeeeee");
 	}
 
-	/**
-	 *
-	 * @param col
-	 */
-	public void setTableRowEvenColor(String col) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_TABLEEVENROWCOLOR);
-		if (el == null) {
-			el = new Element(SETTING_TABLEEVENROWCOLOR);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(col);
+	public void setTableRowEvenColor(String value) {
+		genericStringSetter(SETTING_TABLEEVENROWCOLOR, value);
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public String getTableRowOddColor() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_TABLEODDROWCOLOR);
-		if (el != null) {
-			return el.getText();
-		}
-		return "f8f8f8";
+		return genericStringGetter(SETTING_TABLEODDROWCOLOR, "f8f8f8");
 	}
 
-	/**
-	 *
-	 * @param col
-	 */
-	public void setTableRowOddColor(String col) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_TABLEODDROWCOLOR);
-		if (el == null) {
-			el = new Element(SETTING_TABLEODDROWCOLOR);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(col);
+	public void setTableRowOddColor(String value) {
+		genericStringSetter(SETTING_TABLEODDROWCOLOR, value);
 	}
 
 	/**
@@ -2976,11 +2634,7 @@ public class Settings {
 	 * @return {@code true} if search terms should be highlighted
 	 */
 	public boolean getHighlightSearchResults() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTSEARCHRESULTS);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_HIGHLIGHTSEARCHRESULTS);
 	}
 
 	/**
@@ -2990,12 +2644,7 @@ public class Settings {
 	 * @param val {@code true} if search terms should be highlighted
 	 */
 	public void setHighlightSearchResults(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTSEARCHRESULTS);
-		if (el == null) {
-			el = new Element(SETTING_HIGHLIGHTSEARCHRESULTS);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_HIGHLIGHTSEARCHRESULTS, val);
 	}
 
 	/**
@@ -3006,11 +2655,7 @@ public class Settings {
 	 * @return {@code true} if keywords should be highlighted
 	 */
 	public boolean getHighlightKeywords() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTKEYWORDS);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_HIGHLIGHTKEYWORDS);
 	}
 
 	/**
@@ -3021,12 +2666,7 @@ public class Settings {
 	 * @param val {@code true} if keywords should be highlighted
 	 */
 	public void setHighlightKeyword(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTKEYWORDS);
-		if (el == null) {
-			el = new Element(SETTING_HIGHLIGHTKEYWORDS);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_HIGHLIGHTKEYWORDS, val);
 	}
 
 	public boolean getHighlightSegments() {
@@ -3045,11 +2685,7 @@ public class Settings {
 	 * @return {@code true} if entry should be displayed at once
 	 */
 	public boolean getShowSearchEntry() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWSEARCHENTRY);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_SHOWSEARCHENTRY);
 	}
 
 	/**
@@ -3060,12 +2696,7 @@ public class Settings {
 	 * @param val {@code true} if entry should be displayed at once
 	 */
 	public void setShowSearchEntry(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWSEARCHENTRY);
-		if (el == null) {
-			el = new Element(SETTING_SHOWSEARCHENTRY);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_SHOWSEARCHENTRY, val);
 	}
 
 	/**
@@ -3155,11 +2786,7 @@ public class Settings {
 	 * @return 0 if search was log-and; 1 for log-or and 2 for log-not.
 	 */
 	public int getSearchLog() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHLOG);
-		if (el != null) {
-			return Integer.parseInt(el.getText());
-		}
-		return 0;
+		return genericIntGetter(SETTING_SEARCHLOG, 0);
 	}
 
 	/**
@@ -3169,12 +2796,7 @@ public class Settings {
 	 * @param val 0 if search was log-and; 1 for log-or and 2 for log-not.
 	 */
 	public void setSearchLog(int val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHLOG);
-		if (el == null) {
-			el = new Element(SETTING_SEARCHLOG);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(String.valueOf(val));
+		genericIntSetter(SETTING_SEARCHLOG, val);
 	}
 
 	/**
@@ -3186,11 +2808,7 @@ public class Settings {
 	 * @return the preferred maximum width of an image
 	 */
 	public int getImageResizeWidth() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_IMGRESIZEWIDTH);
-		if (el != null) {
-			return Integer.parseInt(el.getText());
-		}
-		return 300;
+		return genericIntGetter(SETTING_IMGRESIZEWIDTH, 300);
 	}
 
 	/**
@@ -3202,12 +2820,7 @@ public class Settings {
 	 * @param val the preferred maximum width of an image
 	 */
 	public void setImageResizeWidth(int val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_IMGRESIZEWIDTH);
-		if (el == null) {
-			el = new Element(SETTING_IMGRESIZEWIDTH);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(String.valueOf(val));
+		genericIntSetter(SETTING_IMGRESIZEWIDTH, val);
 	}
 
 	/**
@@ -3219,11 +2832,7 @@ public class Settings {
 	 * @return the preferred maximum width of an image
 	 */
 	public int getImageResizeHeight() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_IMGRESIZEHEIGHT);
-		if (el != null) {
-			return Integer.parseInt(el.getText());
-		}
-		return 300;
+		return genericIntGetter(SETTING_IMGRESIZEHEIGHT, 300);
 	}
 
 	/**
@@ -3235,12 +2844,7 @@ public class Settings {
 	 * @param val the preferred maximum width of an image
 	 */
 	public void setImageResizeHeight(int val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_IMGRESIZEHEIGHT);
-		if (el == null) {
-			el = new Element(SETTING_IMGRESIZEHEIGHT);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(String.valueOf(val));
+		genericIntSetter(SETTING_IMGRESIZEHEIGHT, val);
 	}
 
 	/**
@@ -3273,29 +2877,15 @@ public class Settings {
 	 * @param size the value for which the original font-size should be increased
 	 */
 	public void setTableFontSize(int size) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_TABLEFONTSIZE);
-		if (el == null) {
-			el = new Element(SETTING_TABLEFONTSIZE);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(String.valueOf(size));
+		genericIntSetter(SETTING_TABLEFONTSIZE, size);
 	}
 
 	public int getDesktopOutlineFontSize() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_DESKTOPOUTLINEFONTSIZE);
-		if (el != null) {
-			return Integer.parseInt(el.getText());
-		}
-		return 0;
+		return genericIntGetter(SETTING_DESKTOPOUTLINEFONTSIZE, 0);
 	}
 
 	public void setDesktopOutlineFontSize(int size) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_DESKTOPOUTLINEFONTSIZE);
-		if (el == null) {
-			el = new Element(SETTING_DESKTOPOUTLINEFONTSIZE);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(String.valueOf(size));
+		genericIntSetter(SETTING_DESKTOPOUTLINEFONTSIZE, size);
 	}
 
 	/**
@@ -3307,11 +2897,7 @@ public class Settings {
 	 * @return the index-value for the manual timestamp
 	 */
 	public int getManualTimestamp() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_MANUALTIMESTAMP);
-		if (el != null) {
-			return Integer.parseInt(el.getText());
-		}
-		return 0;
+		return genericIntGetter(SETTING_MANUALTIMESTAMP, 0);
 	}
 
 	/**
@@ -3323,12 +2909,7 @@ public class Settings {
 	 * @param val the index-value for the manual timestamp
 	 */
 	public void setManualTimestamp(int val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_MANUALTIMESTAMP);
-		if (el == null) {
-			el = new Element(SETTING_MANUALTIMESTAMP);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(String.valueOf(val));
+		genericIntSetter(SETTING_MANUALTIMESTAMP, val);
 	}
 
 	/**
@@ -3339,11 +2920,7 @@ public class Settings {
 	 * @return the value for which the original font size should be increased.
 	 */
 	public int getTextfieldFontSize() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_TEXTFIELDFONTSIZE);
-		if (el != null) {
-			return Integer.parseInt(el.getText());
-		}
-		return 0;
+		return genericIntGetter(SETTING_TEXTFIELDFONTSIZE, 0);
 	}
 
 	/**
@@ -3353,64 +2930,32 @@ public class Settings {
 	 *
 	 * @param size the value for which the original font-size should be increased
 	 */
-	public void setTextfieldFontSize(int size) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_TEXTFIELDFONTSIZE);
-		if (el == null) {
-			el = new Element(SETTING_TEXTFIELDFONTSIZE);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(String.valueOf(size));
+	public void setTextfieldFontSize(int value) {
+		genericIntSetter(SETTING_TEXTFIELDFONTSIZE, value);
 	}
 
 	public int getLastUsedSetBibyKeyChoice() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_LASTUSEDSETBIBKEYCHOICE);
-		if (el != null) {
-			return Integer.parseInt(el.getText());
-		}
-		return CSetBibKey.CHOOSE_BIBKEY_FROM_DB;
+		return genericIntGetter(SETTING_LASTUSEDSETBIBKEYCHOICE, CSetBibKey.CHOOSE_BIBKEY_FROM_DB);
 	}
 
-	public void setLastUsedSetBibyKeyChoice(int choice) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_LASTUSEDSETBIBKEYCHOICE);
-		if (el == null) {
-			el = new Element(SETTING_LASTUSEDSETBIBKEYCHOICE);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(String.valueOf(choice));
+	public void setLastUsedSetBibyKeyChoice(int value) {
+		genericIntSetter(SETTING_LASTUSEDSETBIBKEYCHOICE, value);
 	}
 
 	public int getLastUsedSetBibyKeyType() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_LASTUSEDSETBIBKEYTYPE);
-		if (el != null) {
-			return Integer.parseInt(el.getText());
-		}
-		return CSetBibKey.TYPE_BIBKEY_NEW;
+		return genericIntGetter(SETTING_LASTUSEDSETBIBKEYTYPE, CSetBibKey.TYPE_BIBKEY_NEW);
 	}
 
-	public void setLastUsedSetBibyKeyType(int type) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_LASTUSEDSETBIBKEYTYPE);
-		if (el == null) {
-			el = new Element(SETTING_LASTUSEDSETBIBKEYTYPE);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(String.valueOf(type));
+	public void setLastUsedSetBibyKeyType(int value) {
+		genericIntSetter(SETTING_LASTUSEDSETBIBKEYTYPE, value);
 	}
 
 	public int getLastUsedBibtexImportSource() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_LASTUSEDSETBIBIMPORTSOURCE);
-		if (el != null) {
-			return Integer.parseInt(el.getText());
-		}
-		return CImportBibTex.BIBTEX_SOURCE_DB;
+		return genericIntGetter(SETTING_LASTUSEDSETBIBIMPORTSOURCE, CImportBibTex.BIBTEX_SOURCE_DB);
 	}
 
-	public void setLastUsedBibtexImportSource(int source) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_LASTUSEDSETBIBIMPORTSOURCE);
-		if (el == null) {
-			el = new Element(SETTING_LASTUSEDSETBIBIMPORTSOURCE);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(String.valueOf(source));
+	public void setLastUsedBibtexImportSource(int value) {
+		genericIntSetter(SETTING_LASTUSEDSETBIBIMPORTSOURCE, value);
 	}
 
 	/**
@@ -3421,11 +2966,7 @@ public class Settings {
 	 * @return {@code true} if large images should be resized.
 	 */
 	public boolean getImageResize() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_IMGRESIZE);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_IMGRESIZE);
 	}
 
 	/**
@@ -3436,80 +2977,39 @@ public class Settings {
 	 * @param val whether thumbnail-display is enabled or not
 	 */
 	public void setImageResize(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_IMGRESIZE);
-		if (el == null) {
-			el = new Element(SETTING_IMGRESIZE);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_IMGRESIZE, val);
 	}
 
 	public boolean getShowTableBorder() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWTABLEBORDER);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_SHOWTABLEBORDER);
 	}
 
 	public void setShowTableBorder(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWTABLEBORDER);
-		if (el == null) {
-			el = new Element(SETTING_SHOWTABLEBORDER);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_SHOWTABLEBORDER, val);
 	}
 
 	public boolean getShowLuhmannEntryNumber() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWLUHMANNENTRYNUMBER);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_SHOWLUHMANNENTRYNUMBER);
 	}
 
 	public void setShowLuhmannEntryNumber(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWLUHMANNENTRYNUMBER);
-		if (el == null) {
-			el = new Element(SETTING_SHOWLUHMANNENTRYNUMBER);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_SHOWLUHMANNENTRYNUMBER, val);
 	}
 
 	public boolean getShowDesktopEntryNumber() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWDESKTOPENTRYNUMBER);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_SHOWDESKTOPENTRYNUMBER);
 	}
 
 	public void setShowDesktopEntryNumber(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWDESKTOPENTRYNUMBER);
-		if (el == null) {
-			el = new Element(SETTING_SHOWDESKTOPENTRYNUMBER);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_SHOWDESKTOPENTRYNUMBER, val);
 	}
 
 	public boolean getShowEntryHeadline() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWENTRYHEADLINE);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_SHOWENTRYHEADLINE);
 	}
 
 	public void setShowEntryHeadline(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWENTRYHEADLINE);
-		if (el == null) {
-			el = new Element(SETTING_SHOWENTRYHEADLINE);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_SHOWENTRYHEADLINE, val);
 	}
 
 	/**
@@ -3518,15 +3018,7 @@ public class Settings {
 	 * @return {@code true} if the extended keyword-quickinput should be activated
 	 */
 	public int getQuickInputExtended() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_QUICKINPUTEXTENDED);
-		if (el != null) {
-			try {
-				return Integer.parseInt(el.getText());
-			} catch (NumberFormatException e) {
-				return 0;
-			}
-		}
-		return 0;
+		return genericIntGetter(SETTING_QUICKINPUTEXTENDED, 0);
 	}
 
 	/**
@@ -3536,12 +3028,7 @@ public class Settings {
 	 * @param val true if the extended keyword-quickinput should be activated
 	 */
 	public void setQuickInputExtended(int val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_QUICKINPUTEXTENDED);
-		if (el == null) {
-			el = new Element(SETTING_QUICKINPUTEXTENDED);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(String.valueOf(val));
+		genericIntSetter(SETTING_QUICKINPUTEXTENDED, val);
 	}
 
 	/**
@@ -3551,11 +3038,7 @@ public class Settings {
 	 * @return
 	 */
 	public boolean getSpellCorrect() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SPELLCORRECT);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_SPELLCORRECT);
 	}
 
 	/**
@@ -3566,12 +3049,7 @@ public class Settings {
 	 *            otherwise)
 	 */
 	public void setSpellCorrect(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SPELLCORRECT);
-		if (el == null) {
-			el = new Element(SETTING_SPELLCORRECT);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_SPELLCORRECT, val);
 	}
 
 	/**
@@ -3580,11 +3058,7 @@ public class Settings {
 	 * @return {@code true} if steno is activated, false otherwise
 	 */
 	public boolean getStenoActivated() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_STENOACTIVATED);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_STENOACTIVATED);
 	}
 
 	/**
@@ -3593,81 +3067,48 @@ public class Settings {
 	 * @param val {@code true} if steno is activated, false otherwise
 	 */
 	public void setStenoActivated(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_STENOACTIVATED);
-		if (el == null) {
-			el = new Element(SETTING_STENOACTIVATED);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_STENOACTIVATED, val);
 	}
 
 	public boolean getHighlightWholeWord() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTWHOLEWORD);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_HIGHLIGHTWHOLEWORD);
 	}
 
 	public void setHighlightWholeWord(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTWHOLEWORD);
-		if (el == null) {
-			el = new Element(SETTING_HIGHLIGHTWHOLEWORD);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_HIGHLIGHTWHOLEWORD, val);
 	}
 
 	public boolean getHighlightWholeWordSearch() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTWHOLEWORDSEARCH);
-		if (el != null) {
-			return el.getText().equals("1");
-		}
-		return false;
+		return genericBooleanGetter(SETTING_HIGHLIGHTWHOLEWORDSEARCH);
 	}
 
 	public void setHighlightWholeWordSearch(boolean val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_HIGHLIGHTWHOLEWORDSEARCH);
-		if (el == null) {
-			el = new Element(SETTING_HIGHLIGHTWHOLEWORDSEARCH);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText((val) ? "1" : "0");
+		genericBooleanSetter(SETTING_HIGHLIGHTWHOLEWORDSEARCH, val);
 	}
 
 	public Font getTableFont() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_TABLEFONT);
-		if (el != null) {
-			return new Font(el.getText(), Font.PLAIN, getTableFontSize());
+		String value = genericStringGetter(SETTING_TABLEFONT, "");
+		if (value.isEmpty()) {
+			return null;
 		}
-		return null;
+		return new Font(value, Font.PLAIN, getTableFontSize());
 	}
 
 	public void setTableFont(Font f) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_TABLEFONT);
-		if (el == null) {
-			el = new Element(SETTING_TABLEFONT);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(f.getName());
+		genericStringSetter(SETTING_TABLEFONT, f.getName());
 		setTableFontSize(f.getSize());
 	}
 
 	public Font getDesktopOutlineFont() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_DESKTOPOUTLINEFONT);
-		if (el != null) {
-			return new Font(el.getText(), Font.PLAIN, 12);
+		String value = genericStringGetter(SETTING_DESKTOPOUTLINEFONT, "");
+		if (value.isEmpty()) {
+			return null;
 		}
-		return null;
+		return new Font(value, Font.PLAIN, 12);
 	}
 
-	public void setDesktopOutlineFont(String f) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_DESKTOPOUTLINEFONT);
-		if (el == null) {
-			el = new Element(SETTING_DESKTOPOUTLINEFONT);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(f);
+	public void setDesktopOutlineFont(String value) {
+		genericStringSetter(SETTING_DESKTOPOUTLINEFONT, value);
 	}
 
 	/**
@@ -5181,151 +4622,67 @@ public class Settings {
 	}
 
 	public String getManlinkColor() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_MANLINKCOLOR);
-		String retval = "0033cc";
-		if (el != null) {
-			retval = el.getText();
-		}
-		return retval;
+		return genericStringGetter(SETTING_MANLINKCOLOR, "0033cc");
 	}
 
-	public void setManlinkColor(String col) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_MANLINKCOLOR);
-		if (el == null) {
-			el = new Element(SETTING_MANLINKCOLOR);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(col);
+	public void setManlinkColor(String value) {
+		genericStringSetter(SETTING_MANLINKCOLOR, value);
 	}
 
 	public String getFootnoteLinkColor() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_FNLINKCOLOR);
-		String retval = "0033cc";
-		if (el != null) {
-			retval = el.getText();
-		}
-		return retval;
+		return genericStringGetter(SETTING_FNLINKCOLOR, "0033cc");
 	}
 
-	public void setFootnoteLinkColor(String col) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_FNLINKCOLOR);
-		if (el == null) {
-			el = new Element(SETTING_FNLINKCOLOR);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(col);
+	public void setFootnoteLinkColor(String value) {
+		genericStringSetter(SETTING_FNLINKCOLOR, value);
 	}
 
 	public String getLinkColor() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_LINKCOLOR);
-		String retval = "003399";
-		if (el != null) {
-			retval = el.getText();
-		}
-		return retval;
+		return genericStringGetter(SETTING_LINKCOLOR, "f2f2f2");
 	}
 
-	public void setLinkColor(String col) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_LINKCOLOR);
-		if (el == null) {
-			el = new Element(SETTING_LINKCOLOR);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(col);
+	public void setLinkColor(String value) {
+		genericStringSetter(SETTING_LINKCOLOR, value);
 	}
 
 	public String getEntryHeadingBackgroundColor() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_ENTRYHEADERBACKGROUNDCOLOR);
-		String retval = "f2f2f2";
-		if (el != null) {
-			retval = el.getText();
-		}
-		return retval;
+		return genericStringGetter(SETTING_ENTRYHEADERBACKGROUNDCOLOR, "f2f2f2");
 	}
 
-	public void setEntryHeadingBackgroundColor(String col) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_ENTRYHEADERBACKGROUNDCOLOR);
-		if (el == null) {
-			el = new Element(SETTING_ENTRYHEADERBACKGROUNDCOLOR);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(col);
+	public void setEntryHeadingBackgroundColor(String value) {
+		genericStringSetter(SETTING_ENTRYHEADERBACKGROUNDCOLOR, value);
 	}
 
 	public String getQuoteBackgroundColor() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_QUOTEBACKGROUNDCOLOR);
-		String retval = "f2f2f2";
-		if (el != null) {
-			retval = el.getText();
-		}
-		return retval;
+		return genericStringGetter(SETTING_QUOTEBACKGROUNDCOLOR, "f2f2f2");
 	}
 
-	public void setQuoteBackgroundColor(String col) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_QUOTEBACKGROUNDCOLOR);
-		if (el == null) {
-			el = new Element(SETTING_QUOTEBACKGROUNDCOLOR);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(col);
+	public void setQuoteBackgroundColor(String value) {
+		genericStringSetter(SETTING_QUOTEBACKGROUNDCOLOR, value);
 	}
 
 	public String getMainBackgroundColor() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_MAINBACKGROUNDCOLOR);
-		String retval = "ffffff";
-		if (el != null) {
-			retval = el.getText();
-		}
-		return retval;
+		return genericStringGetter(SETTING_MAINBACKGROUNDCOLOR, "ffffff");
 	}
 
-	public void setMainBackgroundColor(String col) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_MAINBACKGROUNDCOLOR);
-		if (el == null) {
-			el = new Element(SETTING_MAINBACKGROUNDCOLOR);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(col);
+	public void setMainBackgroundColor(String value) {
+		genericStringSetter(SETTING_MAINBACKGROUNDCOLOR, value);
 	}
 
 	public String getContentBackgroundColor() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_CONTENTBACKGROUNDCOLOR);
-		String retval = "ffffff";
-		if (el != null) {
-			retval = el.getText();
-		}
-		return retval;
+		return genericStringGetter(SETTING_CONTENTBACKGROUNDCOLOR, "ffffff");
 	}
 
-	public void setContentBackgroundColor(String col) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_CONTENTBACKGROUNDCOLOR);
-		if (el == null) {
-			el = new Element(SETTING_CONTENTBACKGROUNDCOLOR);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(col);
+	public void setContentBackgroundColor(String value) {
+		genericStringSetter(SETTING_CONTENTBACKGROUNDCOLOR, value);
 	}
 
 	public int getStartupEntryNumberMode() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWATSTARTUP);
-		int retval = 1;
-		if (el != null) {
-			try {
-				retval = Integer.parseInt(el.getText());
-			} catch (NumberFormatException e) {
-				retval = 1;
-			}
-		}
-		return retval;
+		return genericIntGetter(SETTING_SHOWATSTARTUP, 1);
 	}
 
 	public void setShowAtStartup(int value) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SHOWATSTARTUP);
-		if (el == null) {
-			el = new Element(SETTING_SHOWATSTARTUP);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(String.valueOf(value));
+		genericStringSetter(SETTING_SHOWATSTARTUP, String.valueOf(value));
 	}
 
 	/**
@@ -5336,16 +4693,7 @@ public class Settings {
 	 * @return the index of the selected item.
 	 */
 	public int getSearchComboTime() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHCOMBOTIME);
-		int retval = 0;
-		if (el != null) {
-			try {
-				retval = Integer.parseInt(el.getText());
-			} catch (NumberFormatException e) {
-				retval = 0;
-			}
-		}
-		return retval;
+		return genericIntGetter(SETTING_SEARCHCOMBOTIME, 0);
 	}
 
 	/**
@@ -5356,12 +4704,7 @@ public class Settings {
 	 * @param value the index of the selected item.
 	 */
 	public void setSearchComboTime(int value) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_SEARCHCOMBOTIME);
-		if (el == null) {
-			el = new Element(SETTING_SEARCHCOMBOTIME);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(String.valueOf(value));
+		genericStringSetter(SETTING_SEARCHCOMBOTIME, String.valueOf(value));
 	}
 
 	/**
@@ -5390,34 +4733,18 @@ public class Settings {
 		genericStringSetter(SETTING_SEARCHDATETIME, value);
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public boolean getShowIcons() {
 		return genericBooleanGetter(SETTING_SHOWICONS);
 	}
 
-	/**
-	 *
-	 * @param value
-	 */
 	public void setShowIcons(boolean value) {
 		genericBooleanSetter(SETTING_SHOWICONS, value);
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public boolean getShowAllIcons() {
 		return genericBooleanGetter(SETTING_SHOWALLICONS);
 	}
 
-	/**
-	 *
-	 * @param value
-	 */
 	public void setShowAllIcons(boolean value) {
 		genericBooleanSetter(SETTING_SHOWALLICONS, value);
 	}
@@ -5518,12 +4845,7 @@ public class Settings {
 			ch = SETTING_USECUSTOMCSSENTRY;
 			break;
 		}
-		Element el = settingsFile.getRootElement().getChild(ch);
-		boolean retval = false;
-		if (el != null) {
-			retval = el.getText().equals("1");
-		}
-		return retval;
+		return genericBooleanGetter(ch);
 	}
 
 	/**
@@ -5544,12 +4866,7 @@ public class Settings {
 			ch = SETTING_USECUSTOMCSSENTRY;
 			break;
 		}
-		Element el = settingsFile.getRootElement().getChild(ch);
-		if (el == null) {
-			el = new Element(ch);
-			settingsFile.getRootElement().addContent(el);
-		}
-		el.setText(value ? "1" : "0");
+		genericBooleanSetter(ch, value);
 	}
 
 	/**
@@ -5592,18 +4909,10 @@ public class Settings {
 		return defpath;
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public boolean getLatexExportCreateFormTags() {
 		return genericBooleanGetter(SETTING_LATEXEXPORTFORMTAG);
 	}
 
-	/**
-	 *
-	 * @param val
-	 */
 	public void setLatexExportCreateFormTags(boolean val) {
 		genericBooleanSetter(SETTING_LATEXEXPORTFORMTAG, val);
 	}
@@ -5618,216 +4927,111 @@ public class Settings {
 		return genericBooleanGetter(SETTING_LATEXEXPORTFOOTNOTE);
 	}
 
-	/**
-	 *
-	 * @param val
-	 */
 	public void setLatexExportFootnoteRef(boolean val) {
 		genericBooleanSetter(SETTING_LATEXEXPORTFOOTNOTE, val);
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public int getLastUsedLatexBibStyle() {
 		return genericIntGetter(SETTING_LATEXEXPORTLASTUSEDBIBSTYLE, 0);
 	}
 
-	/**
-	 *
-	 * @param value
-	 */
 	public void setLastUsedLatexBibStyle(int value) {
 		genericIntSetter(SETTING_LATEXEXPORTLASTUSEDBIBSTYLE, value);
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public int getLastUsedLatexDocClass() {
 		return genericIntGetter(SETTING_LATEXEXPORTDOCUMENTCLASS, 0);
 	}
 
-	/**
-	 *
-	 * @param value
-	 */
 	public void setLastUsedLatexDocClass(int value) {
 		genericIntSetter(SETTING_LATEXEXPORTDOCUMENTCLASS, value);
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public boolean getLatexExportShowAuthor() {
 		return genericBooleanGetter(SETTING_LATEXEXPORTSHOWAUTHOR);
 	}
 
-	/**
-	 *
-	 * @param val
-	 */
 	public void setLatexExportShowAuthor(boolean val) {
 		genericBooleanSetter(SETTING_LATEXEXPORTSHOWAUTHOR, val);
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public boolean getLatexExportShowMail() {
 		return genericBooleanGetter(SETTING_LATEXEXPORTSHOWMAIL);
 	}
 
-	/**
-	 *
-	 * @param val
-	 */
 	public void setLatexExportShowMail(boolean val) {
 		genericBooleanSetter(SETTING_LATEXEXPORTSHOWMAIL, val);
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public boolean getLatexExportConvertQuotes() {
 		return genericBooleanGetter(SETTING_LATEXEXPORTCONVERTQUOTES);
 	}
 
-	/**
-	 *
-	 * @param val
-	 */
 	public void setLatexExportConvertQuotes(boolean val) {
 		genericBooleanSetter(SETTING_LATEXEXPORTCONVERTQUOTES, val);
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public boolean getLatexExportCenterForm() {
 		return genericBooleanGetter(SETTING_LATEXEXPORTCENTERFORM);
 	}
 
-	/**
-	 *
-	 * @param val
-	 */
 	public void setLatexExportCenterForm(boolean val) {
 		genericBooleanSetter(SETTING_LATEXEXPORTCENTERFORM, val);
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public boolean getLatexExportRemoveNonStandardTags() {
 		return genericBooleanGetter(SETTING_LATEXEXPORTREMOVENONSTANDARDTAGS);
 	}
 
-	/**
-	 *
-	 * @param val
-	 */
 	public void setLatexExportRemoveNonStandardTags(boolean val) {
 		genericBooleanSetter(SETTING_LATEXEXPORTREMOVENONSTANDARDTAGS, val);
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public boolean getLatexExportNoPreamble() {
 		return genericBooleanGetter(SETTING_LATEXEXPORTNOPREAMBLE);
 	}
 
-	/**
-	 *
-	 * @param val
-	 */
 	public void setLatexExportNoPreamble(boolean val) {
 		genericBooleanSetter(SETTING_LATEXEXPORTNOPREAMBLE, val);
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public boolean getLatexExportConvertUmlaut() {
 		return genericBooleanGetter(SETTING_LATEXEXPORTCONVERTUMLAUT);
 	}
 
-	/**
-	 *
-	 * @param val
-	 */
 	public void setLatexExportConvertUmlaut(boolean val) {
 		genericBooleanSetter(SETTING_LATEXEXPORTCONVERTUMLAUT, val);
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public boolean getLatexExportStatisticTableStyle() {
 		return genericBooleanGetter(SETTING_LATEXEXPORTTABLESTATSTYLE);
 	}
 
-	/**
-	 *
-	 * @param val
-	 */
 	public void setLatexExportStatisticTableStyle(boolean val) {
 		genericBooleanSetter(SETTING_LATEXEXPORTTABLESTATSTYLE, val);
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public String getLatexExportAuthorValue() {
 		return genericStringGetter(SETTING_LATEXEXPORTAUTHORVALUE, "");
 	}
 
-	/**
-	 *
-	 * @param val
-	 */
-	public void setLatexExportAuthorValue(String val) {
-		genericStringSetter(SETTING_LATEXEXPORTAUTHORVALUE, val);
+	public void setLatexExportAuthorValue(String value) {
+		genericStringSetter(SETTING_LATEXEXPORTAUTHORVALUE, value);
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public String getLatexExportMailValue() {
-		Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTMAILVALUE);
-		if (el != null) {
-			return el.getText();
-		}
-		return "";
+		return genericStringGetter(SETTING_LATEXEXPORTMAILVALUE, "");
 	}
 
-	/**
-	 *
-	 * @param val
-	 */
-	public void setLatexExportMailValue(String val) {
-		Element el = settingsFile.getRootElement().getChild(SETTING_LATEXEXPORTMAILVALUE);
-		if (el == null) {
-			el = new Element(SETTING_LATEXEXPORTMAILVALUE);
+	public void setLatexExportMailValue(String value) {
+		genericStringSetter(SETTING_LATEXEXPORTMAILVALUE, value);
+	}
+
+	private void genericElementInitIfMissing(String attr, String value) {
+		if (settingsFile.getRootElement().getChild(attr) == null) {
+			Element el = new Element(attr);
+			el.setText(value);
 			settingsFile.getRootElement().addContent(el);
-		}
-		if (val != null && !val.isEmpty()) {
-			el.setText(val);
-		} else {
-			el.setText("");
 		}
 	}
 
@@ -5861,7 +5065,7 @@ public class Settings {
 			settingsFile.getRootElement().addContent(el);
 		}
 		// set new file path which should be now relative to the zkn-path
-		el.setText((null == fp) ? "" : FileOperationsUtil.getFilePath(fp));
+		el.setText((fp == null) ? "" : FileOperationsUtil.getFilePath(fp));
 	}
 
 	private boolean genericBooleanGetter(String key) {
@@ -5926,7 +5130,7 @@ public class Settings {
 			el = new Element(key);
 			settingsFile.getRootElement().addContent(el);
 		}
-		if (val != null && !val.isEmpty()) {
+		if (val != null) {
 			el.setText(val);
 		} else {
 			el.setText("");

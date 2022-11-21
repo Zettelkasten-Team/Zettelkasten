@@ -416,7 +416,7 @@ public class ZettelkastenViewUtil {
 					JOptionPane.PLAIN_MESSAGE);
 			// if action should be performed, do so
 			if (JOptionPane.YES_OPTION == option) {
-				settings.clear();
+				settings.resetSettings();
 			}
 			jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
 			break;

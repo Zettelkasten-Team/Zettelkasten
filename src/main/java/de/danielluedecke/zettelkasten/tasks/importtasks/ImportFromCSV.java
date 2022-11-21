@@ -201,7 +201,9 @@ public class ImportFromCSV extends org.jdesktop.application.Task<Object, Void> {
 	private void resetDataFiles() {
 		// reset the data-files
 		if (!append) {
-			settingsObj.setFilePath(new File(""));
+			Constants.zknlogger.log(Level.INFO,
+					"Setting data file to none during import from csv.");
+			settingsObj.setMainDataFile(new File(""));
 			dataObj.reset();
 			desktopObj.clear();
 			bookmarksObj.clear();

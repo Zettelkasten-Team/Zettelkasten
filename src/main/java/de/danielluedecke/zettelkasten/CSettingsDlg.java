@@ -310,7 +310,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 		jCheckBoxExtraBackup.setSelected(settings.getExtraBackup());
 		jCheckBoxAllToHist.setSelected(settings.getAddAllToHistory());
 		jTextFieldBackupPath
-				.setText((settings.getExtraBackupPath() != null) ? settings.getExtraBackupPath().toString() : "");
+				.setText((settings.getExtraBackupDir() != null) ? settings.getExtraBackupDir().toString() : "");
 		jTextFieldBackupPath.setEnabled(settings.getExtraBackup());
 		jTextFieldPandoc.setText(settings.getPandocPath());
 		jButtonBrowseBackup.setEnabled(settings.getExtraBackup());
@@ -1807,7 +1807,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 		settings.setDesktopItemfont(styleandweight[1], Settings.FONTWEIGHT);
 		settings.setDesktopItemfont(desktopitemfontcolor, Settings.FONTCOLOR);
 		// save the changes to the settings-file
-		savesettingok = settings.saveSettings();
+		savesettingok = settings.saveSettingsToFiles();
 		// finally disable button again
 		setModified(false);
 		// and close window

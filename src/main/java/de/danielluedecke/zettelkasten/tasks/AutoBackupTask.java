@@ -76,7 +76,7 @@ public class AutoBackupTask extends org.jdesktop.application.Task<Object, Void> 
         // prevent task from processing when the file path is incorrect
 
         // get filepath
-        File fp = settingsObj.getFilePath();
+        File fp = settingsObj.getMainDataFile();
         // copy current filepath to string
         String newfp = fp.toString();
         // look for last occurence of the extension-period. this
@@ -159,7 +159,7 @@ public class AutoBackupTask extends org.jdesktop.application.Task<Object, Void> 
             // log error message
             Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             // create a copy of the data file in case we have problems creating the auto-backup
-            File datafiledummy = settingsObj.getFilePath();
+            File datafiledummy = settingsObj.getMainDataFile();
             // check for valid value
             if (datafiledummy != null && datafiledummy.exists()) {
                 try {
@@ -188,7 +188,7 @@ public class AutoBackupTask extends org.jdesktop.application.Task<Object, Void> 
             // log error message
             Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
             // create a copy of the data file in case we have problems creating the auto-backup
-            File datafiledummy = settingsObj.getFilePath();
+            File datafiledummy = settingsObj.getMainDataFile();
             // check for valid value
             if (datafiledummy != null && datafiledummy.exists()) {
                 try {

@@ -19,13 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class SettingsTest {
-
-	/**
-	 * Common test document. See setUp().
-	 */
-	public Settings settings;
 
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -36,26 +33,21 @@ public class SettingsTest {
 		tempFolder.create();
 		System.setProperty("user.dir", tempFolder.getRoot().getPath());
 		System.setProperty("user.home", tempFolder.getRoot().getPath());
-
-		AcceleratorKeys accKeys = new AcceleratorKeys();
-		AutoKorrektur autoKorrekt = new AutoKorrektur();
-		Synonyms synonyms = new Synonyms();
-		StenoData steno = new StenoData();
-		settings = new Settings(accKeys, autoKorrekt, synonyms, steno);
 	}
 
 	@Test
 	void saveSettings_Normal_Success() throws Exception {
+		Settings settings = new Settings();
 		// Change settings to confirm it is writing something new.
 		String testValue = "MY_UNIQUE_TEST_FILE_PATH_123456";
-		settings.setFilePath(new File(testValue));
+		settings.setMainDataFile(new File(testValue));
 
 		// Run save.
-		boolean ok = settings.saveSettings();
+		boolean ok = settings.saveSettingsToFiles();
 		assertTrue(ok);
 
 		// Confirm settings file has testValue.
-		Document settingsXml = FileOperationsUtil.readXMLFileFromZipFile(settings.getSettingsFilePath(),
+		Document settingsXml = FileOperationsUtil.readXMLFileFromZipFile(settings.getSettingsFile(),
 				Constants.settingsFileName);
 		XMLOutputter outputter = new XMLOutputter();
 		String xmlString = outputter.outputString(settingsXml);
@@ -64,15 +56,17 @@ public class SettingsTest {
 
 	@Test
 	void saveSettings_MissingDir_Fails() {
+		Settings settings = new Settings();
 		tempFolder.delete();
 
 		// Run save. Should fail due to missing directory.
-		boolean ok = settings.saveSettings();
+		boolean ok = settings.saveSettingsToFiles();
 		assertTrue(!ok);
 	}
 
 	@Test
-	void loadSettings_Filepath_Success() throws IOException {
+	void Constructor_MainDataFile_Success() throws IOException {
+		Settings settings = new Settings();
 		File settingsTestFile = new File(SettingsTest.class.getClassLoader()
 				.getResource("zettelkasten-settings_custom-accelerator.zks3").getPath());
 		// Settings file to be used for test must exist.
@@ -80,21 +74,22 @@ public class SettingsTest {
 
 		// settings doesn't have an existing file. We will copy the test file to where
 		// settings will look at.
-		assertTrue(!settings.getSettingsFilePath().exists());
-		FileUtils.copyFile(settingsTestFile, settings.getSettingsFilePath());
-		assertTrue(settings.getSettingsFilePath().exists());
+		assertTrue(!settings.getSettingsFile().exists());
+		FileUtils.copyFile(settingsTestFile, settings.getSettingsFile());
+		assertTrue(settings.getSettingsFile().exists());
 
 		// Run load.
-		settings.loadSettings();
+		settings = new Settings();
 
 		// testValue is the value manually added to the settingsTestFile. A successful
 		// load make settings have that in the filepath.
 		String testValue = "MY_TEST_RECENT_DOC1";
-		assertEquals(testValue, settings.getFilePath().getPath());
+		assertEquals(testValue, settings.getMainDataFile().getPath());
 	}
 
 	@Test
-	void loadSettings_acceleratorKeysNewEntryInsertSymbolWithControlAltA_Success() throws IOException {
+	void Constructor_acceleratorKeysNewEntryInsertSymbolWithControlAltA_Success() throws IOException {
+		Settings settings = new Settings();
 		File settingsTestFile = new File(SettingsTest.class.getClassLoader()
 				.getResource("zettelkasten-settings_custom-accelerator.zks3").getPath());
 		// Settings file to be used for test must exist.
@@ -102,12 +97,12 @@ public class SettingsTest {
 
 		// settings doesn't have an existing file. We will copy the test file to where
 		// settings will look at.
-		assertTrue(!settings.getSettingsFilePath().exists());
-		FileUtils.copyFile(settingsTestFile, settings.getSettingsFilePath());
-		assertTrue(settings.getSettingsFilePath().exists());
+		assertTrue(!settings.getSettingsFile().exists());
+		FileUtils.copyFile(settingsTestFile, settings.getSettingsFile());
+		assertTrue(settings.getSettingsFile().exists());
 
 		// Run load.
-		settings.loadSettings();
+		settings = new Settings();
 
 		// testValue is the value that was manually added to the settingsTestFile. A
 		// successful load make the New Entry Keys have insertSymbol paired with
@@ -117,4 +112,20 @@ public class SettingsTest {
 				settings.getAcceleratorKeys().getAcceleratorKey(AcceleratorKeys.NEWENTRYKEYS, "insertSymbol"));
 	}
 
+	@Test
+	void MainDataFile_setMainDataFile_Success() throws IOException {
+		Settings settings = new Settings();
+
+		Path testPath = Paths.get(tempFolder.getRoot().getPath(), "ANY_VALUE.zkn3");
+		settings.setMainDataFile(testPath.toFile());
+
+		assertEquals(testPath.toString(), settings.getMainDataFile().toString());
+		assertEquals(testPath.getParent().toString(), settings.getMainDataFileDir().toString());
+
+		// Invalid main data file returns null.
+		assertEquals(null, settings.getMainDataFileNameWithoutExtension());
+		// Now with an existing main data file.
+		testPath.toFile().createNewFile();
+		assertEquals("ANY_VALUE", settings.getMainDataFileNameWithoutExtension().toString());
+	}
 }

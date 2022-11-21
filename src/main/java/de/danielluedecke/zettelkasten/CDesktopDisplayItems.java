@@ -139,7 +139,7 @@ public class CDesktopDisplayItems extends javax.swing.JDialog {
         // save user settings
         settingsObj.setDesktopDisplayItems(items);
         // save the changes to the settings-file
-        savesettingok = settingsObj.saveSettings();
+        savesettingok = settingsObj.saveSettingsToFiles();
         // tell programm that we need to update the display
         needsupdate = true;
         // close window
