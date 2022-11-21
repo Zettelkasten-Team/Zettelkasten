@@ -54,6 +54,7 @@ import de.danielluedecke.zettelkasten.mac.MacSourceTree;
 import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
 import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
 import de.danielluedecke.zettelkasten.tasks.AutoBackupTask;
+import de.danielluedecke.zettelkasten.tasks.CheckForUpdateTask;
 import de.danielluedecke.zettelkasten.tasks.FindDoubleEntriesTask;
 import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
 import de.danielluedecke.zettelkasten.tasks.export.ExportTools;
@@ -465,6 +466,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@SuppressWarnings("unused")
 	private TasksStatusBar tasksStatusBar;
 
+	/**
+	 * in_memory_session_log contains all the logs of this usage session of the app.
+	 * This log starts clean in the app startup and is discarded at the end.
+	 */
+	public ByteArrayOutputStream in_memory_session_log = new ByteArrayOutputStream(2000);
+
 	private createLinksTask cLinksTask;
 
 	/**
@@ -493,6 +500,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException {
 		super(app);
 
+		// Init Logger. The earlier the better.
+		// Log everything.
+		Constants.zknlogger.setLevel(Level.ALL);
+		// Log to the in_memory_session_log byte-array.
+		StreamHandler sHandler = new StreamHandler(in_memory_session_log, new SimpleFormatter());
+		Constants.zknlogger.addHandler(sHandler);
+		// Log to log file.
+		FileHandler fh = createFileLogHandler();
+		if (fh != null) {
+			Constants.zknlogger.addHandler(fh);
+		}
+
 		taskinfo = td;
 		settings = st;
 		bookmarks = new Bookmarks(this, settings);
@@ -519,6 +538,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// Failed to load. Update display for an empty data document.
 			initVariables();
 			updateDisplay();
+		}
+
+		// Check for updates.
+		if (settings.getAutoUpdate()) {
+			prepareAndStartTask(checkForUpdate());
 		}
 
 		// Init AutoBackupTimer.
@@ -590,6 +614,21 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// Init MacOS-specific menus.
 		if (PlatformUtil.isMacOS()) {
 			setupMacOSXMenus();
+		}
+	}
+
+	private FileHandler createFileLogHandler() {
+		try {
+			// Create logging file handler that will split the log into up to 3 files with a
+			// file size limit of 100Kb. It won't append to existing files, so each session
+			// starts a separate file.
+			FileHandler fh = new FileHandler(FileOperationsUtil.getZettelkastenHomeDir() + "zknerror%g.log", 102400, 3,
+					false);
+			fh.setFormatter(new SimpleFormatter());
+			return fh;
+		} catch (IOException | SecurityException ex) {
+			Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
+			return null;
 		}
 	}
 
@@ -6762,6 +6801,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
 				this, statusMsgLabel, data, desktop, settings, searchRequests, settings.getSynonyms(), bookmarks,
 				bibtex);
+	}
+
+	/**
+	 * Action with background task, which imorts the file
+	 *
+	 * @return
+	 */
+	@Action
+	public final Task<?, ?> checkForUpdate() {
+		return new CheckForUpdateTask(
+				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
+				this, settings);
 	}
 
 	/**

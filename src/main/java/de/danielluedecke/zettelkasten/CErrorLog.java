@@ -113,7 +113,7 @@ public class CErrorLog extends javax.swing.JDialog {
                             + "------------------------------"
                             + System.lineSeparator()
                             + System.lineSeparator()
-                            + ZettelkastenApp.getApplication().getCurrentSessionLogs().toString());
+                            + mainframe.in_memory_session_log.toString());
                     jTextArea2.setCaretPosition(0);
                 }
             }

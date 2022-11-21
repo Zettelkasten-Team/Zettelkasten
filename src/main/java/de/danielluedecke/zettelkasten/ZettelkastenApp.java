@@ -40,16 +40,10 @@ import de.danielluedecke.zettelkasten.database.StenoData;
 import de.danielluedecke.zettelkasten.database.Synonyms;
 import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
-import java.util.logging.SimpleFormatter;
-import java.util.logging.StreamHandler;
 
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
@@ -60,11 +54,6 @@ import javax.swing.*;
  * The main class of the application.
  */
 public class ZettelkastenApp extends SingleFrameApplication {
-	/**
-	 * inMemorySessionLog contains all the logs of the current usage session of the
-	 * app. This log starts clean in the app startup and is discarded at the end.
-	 */
-	private ByteArrayOutputStream inMemorySessionLog = new ByteArrayOutputStream(2000);
 
 	// we load the settings just after startup
 	Settings settings;
@@ -77,21 +66,6 @@ public class ZettelkastenApp extends SingleFrameApplication {
 	TasksData taskData;
 
 	private String[] params;
-
-	private FileHandler createFileLogHandler() {
-		try {
-			// Create logging file handler that will split the log into up to 3 files with a
-			// file size limit of 100Kb. It won't append to existing files, so each session
-			// starts a separate file.
-			FileHandler fh = new FileHandler(FileOperationsUtil.getZettelkastenHomeDir() + "zknerror%g.log", 102400, 3,
-					false);
-			fh.setFormatter(new SimpleFormatter());
-			return fh;
-		} catch (IOException | SecurityException ex) {
-			Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
-			return null;
-		}
-	}
 
 	private void initLocale(Settings settings) {
 		String languageFromSettings = settings.getLanguage();
@@ -153,18 +127,6 @@ public class ZettelkastenApp extends SingleFrameApplication {
 	 */
 	@Override
 	protected void startup() {
-		// Init Logger. The earlier the better.
-		// Log everything.
-		Constants.zknlogger.setLevel(Level.ALL);
-		// Log to the inMemorySessionLog byte-array.
-		StreamHandler sHandler = new StreamHandler(inMemorySessionLog, new SimpleFormatter());
-		Constants.zknlogger.addHandler(sHandler);
-		// Log to log file.
-		FileHandler fh = createFileLogHandler();
-		if (fh != null) {
-			Constants.zknlogger.addHandler(fh);
-		}
-
 		// Initialize taskData.
 		taskData = new TasksData();
 
@@ -191,10 +153,6 @@ public class ZettelkastenApp extends SingleFrameApplication {
 	 */
 	public static ZettelkastenApp getApplication() {
 		return Application.getInstance(ZettelkastenApp.class);
-	}
-
-	public ByteArrayOutputStream getCurrentSessionLogs() {
-		return inMemorySessionLog;
 	}
 
 	/**
