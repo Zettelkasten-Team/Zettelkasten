@@ -30,7 +30,7 @@ public class EditorFrameTest extends SwingTestCase {
         AutoKorrektur autoKorrektur = new AutoKorrektur();
         Synonyms synonyms = new Synonyms();
         StenoData stenoData = new StenoData();
-        Settings s = new Settings(acceleratorKeys, autoKorrektur, synonyms, stenoData);
+        Settings s = new Settings();
         TasksData tasksData = new TasksData();
 
         SingleFrameApplication singleFrameApplication = new SingleFrameApplication() {
@@ -42,10 +42,6 @@ public class EditorFrameTest extends SwingTestCase {
         ZettelkastenView zknFrame = new ZettelkastenView(
                 singleFrameApplication,
                 s,
-                acceleratorKeys,
-                autoKorrektur,
-                synonyms,
-                stenoData,
                 tasksData);
 
         BibTeX bibTex = new BibTeX(zknFrame, s);

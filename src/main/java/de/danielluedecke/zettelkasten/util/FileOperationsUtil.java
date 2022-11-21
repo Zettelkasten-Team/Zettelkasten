@@ -472,7 +472,9 @@ public class FileOperationsUtil {
 	public static boolean createFileCopyIfExists(File sourceFile, File newFile) {
 		try {
 			if (!sourceFile.exists()) {
-				// Do nothing is there is no existing Zettelkasten Data file.
+				// Do nothing if source file does not exist.
+				Constants.zknlogger.log(Level.WARNING, "Couldn't make a backup copy of {0} as it doesn't exist",
+						sourceFile.toString());
 				return true;
 			}
 
@@ -609,7 +611,7 @@ public class FileOperationsUtil {
 		// check whether we already have a saved data file or not. if not, we have no
 		// related
 		// path for the subdirectory "img", thus we cannot copy the images
-		if (null == settingsObj.getFilePath() || !settingsObj.getFilePath().exists()) {
+		if (null == settingsObj.getMainDataFile() || !settingsObj.getMainDataFile().exists()) {
 			// display error message box
 			JOptionPane.showMessageDialog(parentFrame, resourceMap.getString("noDataFileSavedMsg"),
 					resourceMap.getString("noDataFileSavedTitle"), JOptionPane.PLAIN_MESSAGE);
@@ -843,7 +845,7 @@ public class FileOperationsUtil {
 					linkfile = new File(linkfile.getCanonicalPath());
 					if (!linkfile.exists()) {
 						linkfile = new File(linktype);
-						File zknp = settingsObj.getBaseDir();
+						File zknp = settingsObj.getMainDataFileDir();
 						if (null == zknp) {
 							zknp = new File(new File("").getAbsolutePath());
 						}
@@ -962,7 +964,7 @@ public class FileOperationsUtil {
 	 */
 	public static String getZettelkastenDataDir(Settings settings, boolean addTrailingSeparatorChar) {
 		// retrieve path of data file
-		File f = settings.getBaseDir();
+		File f = settings.getMainDataFileDir();
 		// check for valid value
 		if (f != null) {
 			// convert file path to string

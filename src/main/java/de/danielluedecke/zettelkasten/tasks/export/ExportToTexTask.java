@@ -513,7 +513,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
             exportPageHeader.append(desktopObj.getCurrentDesktopName());
         } // else, use data file's name as title
         else {
-            settingsObj.getFileName();
+            settingsObj.getMainDataFileNameWithoutExtension();
         }
         exportPageHeader.append("}").append(System.lineSeparator());
         // check whether author-name or email should be set

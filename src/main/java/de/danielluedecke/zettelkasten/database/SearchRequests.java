@@ -113,7 +113,11 @@ public class SearchRequests {
 	 *          search results data
 	 */
 	public void setSearchData(Document d) {
-		searches = d;
+		if (d == null) {
+			searches = new Document(new Element("searches"));
+		} else {
+			searches = d;
+		}
 	}
 
 	/**
