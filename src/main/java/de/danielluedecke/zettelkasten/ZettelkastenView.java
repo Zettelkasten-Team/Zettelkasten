@@ -611,9 +611,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// Init tasks status bar.
 		tasksStatusBar = new TasksStatusBar(statusAnimationLabel, null, null);
 
-		// Init MacOS-specific application listener.
+		// Init MacOS-specific menus.
 		if (PlatformUtil.isMacOS()) {
-			setupMacOSXApplicationListener();
+			setupMacOSXMenus();
 		}
 	}
 
@@ -7919,12 +7919,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	@Action
 	public void showAboutBox() {
-		if (null == zknAboutBox) {
-			zknAboutBox = new AboutBox(getFrame(), settings.isMacAqua() | settings.isMacAqua());
+		if (zknAboutBox == null) {
+			zknAboutBox = new AboutBox(getFrame(), settings.isMacAqua());
 			zknAboutBox.setLocationRelativeTo(getFrame());
 		}
 		ZettelkastenApp.getApplication().show(zknAboutBox);
-		// clear memory allocation
+		// Cleanup.
 		zknAboutBox.dispose();
 		zknAboutBox = null;
 	}
@@ -10916,79 +10916,20 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This is an application listener that is initialised when running the program
-	 * on mac os x. by using this appListener, we can use the typical apple-menu bar
-	 * which provides own about, preferences and quit-menu-items.
+	 * MacOS is special regarding the about, preferences and quit menu.
 	 */
-	private void setupMacOSXApplicationListener() {
-		// <editor-fold defaultstate="collapsed" desc="Application-listener initiating
-		// the stuff for the Apple-menu.">
+	private void setupMacOSXMenus() {
 		try {
-			// get mac os-x application class
-			Class<?> appc = Class.forName("com.apple.eawt.Application");
-			// create a new instance for it.
-			Object app = appc.newInstance();
-			// get the application-listener class. here we can set our action to the apple
-			// menu
-			Class<?> lc = Class.forName("com.apple.eawt.ApplicationListener");
-			Object listener = Proxy.newProxyInstance(lc.getClassLoader(), new Class<?>[] { lc },
-					new InvocationHandler() {
-						@Override
-						public Object invoke(Object proxy, Method method, Object[] args) {
-							if (method.getName().equals("handleQuit")) {
-								// call the general exit-handler from the desktop-application-api
-								// here we do all the stuff we need when exiting the application
-								ZettelkastenApp.getApplication().exit();
-							}
-							if (method.getName().equals("handlePreferences")) {
-								// show settings window
-								settingsWindow();
-							}
-							if (method.getName().equals("handleAbout")) {
-								// show own aboutbox
-								showAboutBox();
-								try {
-									// set handled to true, so other actions won't take place any more.
-									// if we leave this out, a second, system-own aboutbox would be displayed
-									setHandled(args[0], Boolean.TRUE);
-								} catch (NoSuchMethodException | IllegalAccessException
-										| InvocationTargetException ex) {
-									Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
-								}
-							}
-							return null;
-						}
+			Desktop desktop = Desktop.getDesktop();
 
-						private void setHandled(Object event, Boolean val)
-								throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-							Method handleMethod = event.getClass().getMethod("setHandled",
-									new Class<?>[] { boolean.class });
-							handleMethod.invoke(event, new Object[] { val });
-						}
-					});
-			// tell about success
-			Constants.zknlogger.log(Level.INFO, "Apple Class Loader successfully initiated.");
-			try {
-				// add application listener that listens to actions on the apple menu items
-				Method m = appc.getMethod("addApplicationListener", lc);
-				m.invoke(app, listener);
-				// register that we want that Preferences menu. by default, only the about box
-				// is shown
-				// but no pref-menu-item
-				Method enablePreferenceMethod = appc.getMethod("setEnabledPreferencesMenu",
-						new Class<?>[] { boolean.class });
-				enablePreferenceMethod.invoke(app, new Object[] { Boolean.TRUE });
-				// tell about success
-				Constants.zknlogger.log(Level.INFO, "Apple Preference Menu successfully initiated.");
-			} catch (NoSuchMethodException | SecurityException | InvocationTargetException ex) {
-				Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
-			}
-		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+			desktop.setAboutHandler(e -> showAboutBox());
+			desktop.setPreferencesHandler(e -> settingsWindow());
+			desktop.setQuitHandler((e, r) -> ZettelkastenApp.getApplication().exit());
+
+			Constants.zknlogger.log(Level.INFO, "setupMacOSXApplicationListener successfully initiated.");
+		} catch (Exception e) {
 			Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
 		}
-		// </editor-fold>
-
-		// </editor-fold>
 	}
 
 	/**
