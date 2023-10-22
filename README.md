@@ -33,7 +33,7 @@ Find the latest release [here](https://github.com/Zettelkasten-Team/Zettelkasten
 
 ## Wiki
 
-Find content about Zettelkasten in our Wiki [here](https://github.com/Zettelkasten-Team/Zettelkasten/wiki)
+Find content about Zettelkasten in our Wiki [here](https://github.com/Zettelkasten-Team/Zettelkasten/wiki).
 
 ## Zettelkasten Build
 
@@ -50,6 +50,7 @@ Then, in the root directory of the local repository, run the following command l
 ```shell
 mvn clean package
 ```
+Note: `mvn` is [Apache Maven](https://maven.apache.org/install.html). Confirm with `mvn -v` in a new shell.
 
 Find the build result in your `target` directory.
 
