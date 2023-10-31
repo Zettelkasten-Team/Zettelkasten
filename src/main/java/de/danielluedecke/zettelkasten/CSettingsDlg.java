@@ -103,7 +103,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 	 * for the sake of configuring a menu or
 	 * for initial application set up
 	 */
-	private UIManager.LookAndFeelInfo[] installed_laf = UIManager.getInstalledLookAndFeels();
+	private final UIManager.LookAndFeelInfo[] installed_laf = UIManager.getInstalledLookAndFeels();
 
 	/**
 	 * get the strings for file descriptions from the resource map
@@ -839,7 +839,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 			if (installed_laf[cnt].getClassName().equals(settings.getLookAndFeel())) {
 				lafselection = cnt;
 			}
-		};
+		}
 		jComboBoxLAF.addItem(Constants.seaGlassLookAndFeelClassName);
 		if (settings.isSeaGlass()) {
 			lafselection = installed_laf.length;
@@ -1103,7 +1103,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 	 * @return a prepared string containing a description of the font-settings
 	 */
 	private String getFontDataForCombobox(Font f) {
-		StringBuilder item = new StringBuilder("");
+		StringBuilder item = new StringBuilder();
 		// first, set the font's name
 		item.append(f.getFamily());
 		// add additional information
@@ -1525,16 +1525,15 @@ public class CSettingsDlg extends javax.swing.JDialog {
 			// set color to jLabel
 			jLabelColor.setBackground(color);
 			// convert the color-rgb-values into a hexa-decimal-string
-			StringBuilder output = new StringBuilder("");
 			// we need the format option to keep the leeding zero of hex-values
 			// from 00 to 0F.
-			output.append(String.format("%02x", color.getRed()));
-			output.append(String.format("%02x", color.getGreen()));
-			output.append(String.format("%02x", color.getBlue()));
+			String output = String.format("%02x", color.getRed()) +
+					String.format("%02x", color.getGreen()) +
+					String.format("%02x", color.getBlue());
 			// setFontColor(Integer.toHexString(color.getRed())+Integer.toHexString(color.getGreen())+Integer.toHexString(color.getBlue()));
 			// convert the color-rgb-values into a hexa-decimal-string and save the new font
 			// color
-			setFontColor(output.toString());
+			setFontColor(output);
 		}
 	}
 
@@ -1551,16 +1550,15 @@ public class CSettingsDlg extends javax.swing.JDialog {
 			// set color to jLabel
 			jLabelTableColor.setBackground(color);
 			// convert the color-rgb-values into a hexa-decimal-string
-			StringBuilder output = new StringBuilder("");
 			// we need the format option to keep the leeding zero of hex-values
 			// from 00 to 0F.
-			output.append(String.format("%02x", color.getRed()));
-			output.append(String.format("%02x", color.getGreen()));
-			output.append(String.format("%02x", color.getBlue()));
+			String output = String.format("%02x", color.getRed()) +
+					String.format("%02x", color.getGreen()) +
+					String.format("%02x", color.getBlue());
 			// setFontColor(Integer.toHexString(color.getRed())+Integer.toHexString(color.getGreen())+Integer.toHexString(color.getBlue()));
 			// convert the color-rgb-values into a hexa-decimal-string and save the new font
 			// color
-			setBackgroundColor(output.toString());
+			setBackgroundColor(output);
 		}
 	}
 
