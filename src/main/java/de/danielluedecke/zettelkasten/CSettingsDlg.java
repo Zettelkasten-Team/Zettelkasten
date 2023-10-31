@@ -1638,8 +1638,9 @@ public class CSettingsDlg extends javax.swing.JDialog {
 		}
 		// save all the settings
 		int selectedlaf = jComboBoxLAF.getSelectedIndex();
-		String laf = (selectedlaf >= installed_laf.length) ? Constants.seaGlassLookAndFeelClassName
-				: installed_laf[jComboBoxLAF.getSelectedIndex()].getClassName();
+		String laf;
+		if (selectedlaf >= installed_laf.length) laf = Constants.seaGlassLookAndFeelClassName;
+		else laf = installed_laf[jComboBoxLAF.getSelectedIndex()].getClassName();
 		settings.setLookAndFeel(laf);
 		settings.setShowAtStartup(jComboBoxShowAtStartup.getSelectedIndex());
 		settings.setManualTimestamp(jComboBoxManualTimestamp.getSelectedIndex());
