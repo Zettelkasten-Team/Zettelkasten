@@ -98,6 +98,7 @@ import java.util.zip.ZipInputStream;
  */
 public class ZettelkastenView extends FrameView implements WindowListener, DropTargetListener {
 
+	// <editor-fold defaultstate="collapsed" desc="Variablendeklaration">
 	/**
 	 * searchRequests manages all searches and searchresults for the loaded
 	 * datafile.
@@ -11348,7 +11349,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * @throws InstantiationException
 	 * @throws ClassNotFoundException
 	 */
-	// GEN-BEGIN:initComponents
+	@SuppressWarnings("unchecked")
+	// <editor-fold defaultstate="collapsed" desc="Generated
+	// Code">//GEN-BEGIN:initComponents
 	private void initComponents() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
 			UnsupportedLookAndFeelException {
 
@@ -14428,9 +14431,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		setMenuBar(menuBar);
 		setStatusBar(statusPanel);
 		setToolBar(toolBar);
-	}// GEN-END:initComponents
+	}// </editor-fold>//GEN-END:initComponents
 
 	private void viewAuthorsCopyActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewAuthorsCopyActionPerformed
+		// TODO add your handling code here:
 	}// GEN-LAST:event_viewAuthorsCopyActionPerformed
 
 	/**
