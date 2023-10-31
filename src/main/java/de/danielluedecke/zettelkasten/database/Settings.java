@@ -564,8 +564,8 @@ public class Settings {
 	}
 
 	/**
-	 * initDefaultSettingsIfMissing creates all the used XML elements in
-	 * settingsFile, setting them to the default value if missing.
+	 * Create all the used XML elements in settingsFile,
+	 * setting them to the default value if missing.
 	 * 
 	 * We do this because when loading old settings file, it might be missing new
 	 * settings elements. This ensures some compatibility to older/news
@@ -1924,19 +1924,18 @@ public class Settings {
 	}
 
 	/**
-	 * Retrieves the setting which java-look'n'feel the user wants to have set
+	 * Get the setting for look and feel
 	 *
-	 * @return the string for the look'n'feel's class name
+	 * @return Look and feel class name as string
 	 */
 	public String getLookAndFeel() {
 		return genericStringGetter(SETTING_LAF, "");
 	}
 
 	/**
-	 * Saves the look'n'feel setting so we know which look'n'feel to be set when the
-	 * program is started.
+	 * Set the default look and feel setting
 	 *
-	 * @param laf (the look'n'feel's classname)
+	 * @param laf (Look and feel class name as string)
 	 */
 	public void setLookAndFeel(String laf) {
 		genericStringSetter(SETTING_LAF, laf);
