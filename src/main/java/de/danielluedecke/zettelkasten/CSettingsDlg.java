@@ -96,10 +96,14 @@ public class CSettingsDlg extends javax.swing.JDialog {
 	 *
 	 */
 	private final Synonyms synonyms;
+
 	/**
-	 * Used to retrieve all installed look'n'feels...
+	 * Provide information about installed LookAndFeel
+	 * for the sake of configuring a menu or
+	 * for initial application set up
 	 */
-	private UIManager.LookAndFeelInfo installed_laf[];
+	private UIManager.LookAndFeelInfo[] installed_laf;
+
 	/**
 	 * get the strings for file descriptions from the resource map
 	 */
