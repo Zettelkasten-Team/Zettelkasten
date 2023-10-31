@@ -97,12 +97,13 @@ public class CSettingsDlg extends javax.swing.JDialog {
 	 */
 	private final Synonyms synonyms;
 
+	//  LookAndFeelInfo maintains the class name of the LookAndFeel class, not the actual LookAndFeel instance.
 	/**
 	 * Provide information about installed LookAndFeel
 	 * for the sake of configuring a menu or
 	 * for initial application set up
 	 */
-	private UIManager.LookAndFeelInfo[] installed_laf;
+	private UIManager.LookAndFeelInfo[] installed_laf = UIManager.getInstalledLookAndFeels();
 
 	/**
 	 * get the strings for file descriptions from the resource map
@@ -835,19 +836,14 @@ public class CSettingsDlg extends javax.swing.JDialog {
 	}
 
 	/**
-	 * This method inits the combobox. all items are removed and then all installed
-	 * look'n'feels-classnames are addes to the combobox.
+	 * Initialize the combo box. all items are removed and then all installed
+	 * look'n'feels-classnames are added to the combo box.
 	 */
 	private void initComboboxLAF() {
-		// clear combobox
 		jComboBoxLAF.removeAllItems();
-		// store initial selection
 		lafselection = 0;
-		// retrieve all available look'n'feels
-		installed_laf = UIManager.getInstalledLookAndFeels();
-		// and add them to the combobox
 		for (int cnt = 0; cnt < installed_laf.length; cnt++) {
-			jComboBoxLAF.addItem((installed_laf[cnt].getName()));
+			jComboBoxLAF.addItem(installed_laf[cnt].getName());
 			if (installed_laf[cnt].getClassName().equals(settings.getLookAndFeel())) {
 				lafselection = cnt;
 			}
