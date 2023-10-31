@@ -399,7 +399,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		bibtex = new BibTeX(this, settings);
 		data = new Daten(this, settings, settings.getSynonyms(), bibtex);
 
-		// Init Java look and feel.
+		// mInit Java look and feel.
 		initUIManagerLookAndFeel();
 
 		initBibtexFile();
@@ -2612,9 +2612,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This method sets the default look and feel before the components are drawn.
-	 * This is needed in case the user has changed the default look and feel and we
-	 * need to set something different than the usual default.
+	 * Set the default look and feel before drawing the components.
+	 * If the user has changed the default look and feel
+	 * and we need to set something other than the default.
 	 */
 	private void initUIManagerLookAndFeel() {
 		try {
@@ -2759,9 +2759,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This method checks whether a certain menu has already been added to the menu
-	 * bar. We need this to avoid multiple occurrences of same menus that are
-	 * related to the JTabbedPane.
+	 * Check if a given menu has already been added to the menu bar.
+	 * Avoid multiple occurrences of the same menus
+	 * that refer to the JTabbedPane.
 	 *
 	 * @param menu the menu that should be checked for existence
 	 * @return {@code true} if menu is already visible in the menu bar,
