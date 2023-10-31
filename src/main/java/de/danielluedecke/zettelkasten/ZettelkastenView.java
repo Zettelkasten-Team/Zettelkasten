@@ -399,7 +399,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		bibtex = new BibTeX(this, settings);
 		data = new Daten(this, settings, settings.getSynonyms(), bibtex);
 
-		// mInit Java look and feel.
+		// Init Java look and feel.
 		initUIManagerLookAndFeel();
 
 		initBibtexFile();
