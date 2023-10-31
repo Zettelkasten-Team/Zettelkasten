@@ -365,22 +365,14 @@ public class CSettingsDlg extends javax.swing.JDialog {
 				jComboBoxLocale.setSelectedIndex(0);
 			}
 		} catch (IllegalArgumentException e) {
-			// log error
 			Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
 		}
-		// set all look'n'feels to the combobox
 		initComboboxLAF();
-		// set all font-settings to next combo-box
 		initComboboxFonts();
-		// init backgrpound colorts
 		initComboBoxBackgroundColors();
-		// init combobox with manual timestamp-values
 		initComboboxManualTimestamp();
-		// init icon themes
 		initComboBoxIconThemes();
-		// init startup cb
 		initComboboxStartup();
-		// init listener
 		initListeners();
 		setModified(false);
 		lafupdate = false;
