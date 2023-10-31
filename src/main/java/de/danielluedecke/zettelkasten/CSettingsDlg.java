@@ -163,7 +163,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 	/**
 	 * Stores the current selection of the look'n'feel combobox
 	 */
-	private int lafselection;
+	private int lafselection = 0;
 	/**
 	 * return value for the main window so we know whether we have to update the
 	 * display
@@ -828,8 +828,8 @@ public class CSettingsDlg extends javax.swing.JDialog {
 	}
 
 	/**
-	 * Initialize the combo box. all items are removed and then all installed
-	 * look'n'feels-classnames are added to the combo box.
+	 * Initialize the combo box
+	 * Look and feel class names are added to the combo box.
 	 */
 	private void initComboboxLAF() {
 		jComboBoxLAF.removeAllItems();
@@ -839,7 +839,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 			if (installed_laf[cnt].getClassName().equals(settings.getLookAndFeel())) {
 				lafselection = cnt;
 			}
-		}
+		};
 		jComboBoxLAF.addItem(Constants.seaGlassLookAndFeelClassName);
 		if (settings.isSeaGlass()) {
 			lafselection = installed_laf.length;
