@@ -37,7 +37,7 @@ Find content about Zettelkasten in our Wiki [here](https://github.com/Zettelkast
 
 ## Zettelkasten Build
 
-To make Zettelkasten, you need at least a Java Development Kit (JDK) 8 and Maven 3.  
+To make Zettelkasten, you need a Java Development Kit (JDK) 8 and Maven 3.  
 
 To get a local repository, use Git:
 
