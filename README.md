@@ -8,13 +8,13 @@
     </a>
      <a href="https://github.com/Zettelkasten-Team/Zettelkasten/releases" alt="Downloads">
         <img src="https://img.shields.io/github/downloads/Zettelkasten-Team/Zettelkasten/total.svg" />
-     </a>       
+     </a>
      <a href="https://github.com/Zettelkasten-Team/Zettelkasten/issues" alt="Resolution time">
         <img src="http://isitmaintained.com/badge/resolution/Zettelkasten-Team/Zettelkasten.svg" />
     </a>
      <a href="https://github.com/Zettelkasten-Team/Zettelkasten/issues" alt="Open Issues">
         <img src="http://isitmaintained.com/badge/open/Zettelkasten-Team/Zettelkasten.svg" />
-     </a>            
+     </a>
     <a href="https://github.com/Zettelkasten-Team/Zettelkasten/graphs/contributors" alt="Contributors">
         <img src="https://img.shields.io/github/contributors/Zettelkasten-Team/Zettelkasten" />
     </a>
@@ -37,7 +37,7 @@ Find content about Zettelkasten in our Wiki [here](https://github.com/Zettelkast
 
 ## Zettelkasten Build
 
-To make Zettelkasten, you need a Java Development Kit (JDK) 8 and Maven 3.  
+To build Zettelkasten, you need a Java Development Kit (JDK) 8 and Maven 3.
 
 To get a local repository, use Git:
 
