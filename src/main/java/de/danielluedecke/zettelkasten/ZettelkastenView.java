@@ -386,8 +386,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	/**
 	 * get the strings for file descriptions from the resource map
 	 */
-	private final org.jdesktop.application.ResourceMap toolbarResourceMap = org.jdesktop.application.Application
-			.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
+	private final ResourceMap toolbarResourceMap = Application
+			.getInstance(ZettelkastenApp.class).getContext()
 			.getResourceMap(ToolbarIcons.class);
 
 	public ZettelkastenView(SingleFrameApplication app, Settings st, TasksData td) throws ClassNotFoundException,
@@ -542,18 +542,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		//
 		// This action for the checkbox toggles the setting whether the synonyms
 		// should be included in the keywordlist of the jtablekeywords or not
-		jCheckBoxShowSynonyms.addActionListener(new java.awt.event.ActionListener() {
+		jCheckBoxShowSynonyms.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+			public void actionPerformed(ActionEvent evt) {
 				settings.setShowSynonymsInTable(jCheckBoxShowSynonyms.isSelected());
 				data.setKeywordlistUpToDate(false);
 				// Refresh keyword list.
 				showKeywords();
 			}
 		});
-		jCheckBoxShowAllLuhmann.addActionListener(new java.awt.event.ActionListener() {
+		jCheckBoxShowAllLuhmann.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+			public void actionPerformed(ActionEvent evt) {
 				// Change setting and updateDisplay().
 				settings.setShowAllLuhmann(jCheckBoxShowAllLuhmann.isSelected());
 				updateDisplay();
@@ -567,9 +567,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// through
 		// all entries and retrieve those entries' keywords as well, if these entries'
 		// keywords contain at least one keyword of the current entry's keywords.
-		jCheckBoxCluster.addActionListener(new java.awt.event.ActionListener() {
+		jCheckBoxCluster.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+			public void actionPerformed(ActionEvent evt) {
 				// Tell that clusterlist is no longer up to date
 				data.setClusterlistUpToDate(false);
 				// refresh cluster list
@@ -595,9 +595,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// select the last active look and feel
 		jComboBoxAuthorType.setSelectedIndex(0);
 		// init actionlistener
-		jComboBoxAuthorType.addActionListener(new java.awt.event.ActionListener() {
+		jComboBoxAuthorType.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+			public void actionPerformed(ActionEvent evt) {
 				// authorlist needs update
 				data.setAuthorlistUpToDate(false);
 				// show authors
@@ -612,9 +612,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// should react on mouse-clicks. a single click filters the jTableLinks, a
 		// double-click
 		// starts a keyword-search
-		jListEntryKeywords.addMouseListener(new java.awt.event.MouseAdapter() {
+		jListEntryKeywords.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mousePressed(java.awt.event.MouseEvent evt) {
+			public void mousePressed(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuKeywordList.isVisible()) {
 					jPopupMenuKeywordList.show(jListEntryKeywords, evt.getPoint().x, evt.getPoint().y);
@@ -622,7 +622,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseReleased(java.awt.event.MouseEvent evt) {
+			public void mouseReleased(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuKeywordList.isVisible()) {
 					jPopupMenuKeywordList.show(jListEntryKeywords, evt.getPoint().x, evt.getPoint().y);
@@ -630,7 +630,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
+			public void mouseClicked(MouseEvent evt) {
 				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, leeave...
 				if (evt.getButton() != MouseEvent.BUTTON1) {
@@ -647,9 +647,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		});
-		jEditorPaneEntry.addMouseListener(new java.awt.event.MouseAdapter() {
+		jEditorPaneEntry.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mousePressed(java.awt.event.MouseEvent evt) {
+			public void mousePressed(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuMain.isVisible()) {
 					jPopupMenuMain.show(jEditorPaneEntry, evt.getPoint().x, evt.getPoint().y);
@@ -657,16 +657,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseReleased(java.awt.event.MouseEvent evt) {
+			public void mouseReleased(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuMain.isVisible()) {
 					jPopupMenuMain.show(jEditorPaneEntry, evt.getPoint().x, evt.getPoint().y);
 				}
 			}
 		});
-		jTableLinks.addMouseListener(new java.awt.event.MouseAdapter() {
+		jTableLinks.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mousePressed(java.awt.event.MouseEvent evt) {
+			public void mousePressed(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed..
 				if (evt.isPopupTrigger() && !jPopupMenuLinks.isVisible()) {
 					jPopupMenuLinks.show(jTableLinks, evt.getPoint().x, evt.getPoint().y);
@@ -674,7 +674,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseReleased(java.awt.event.MouseEvent evt) {
+			public void mouseReleased(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed..
 				if (evt.isPopupTrigger() && !jPopupMenuLinks.isVisible()) {
 					jPopupMenuLinks.show(jTableLinks, evt.getPoint().x, evt.getPoint().y);
@@ -682,7 +682,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
+			public void mouseClicked(MouseEvent evt) {
 				// If a button other then left-mouse button, do nothing.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
 					return;
@@ -694,9 +694,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		});
-		jTableManLinks.addMouseListener(new java.awt.event.MouseAdapter() {
+		jTableManLinks.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mousePressed(java.awt.event.MouseEvent evt) {
+			public void mousePressed(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuLinks.isVisible()) {
 					jPopupMenuLinks.show(jTableManLinks, evt.getPoint().x, evt.getPoint().y);
@@ -704,7 +704,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseReleased(java.awt.event.MouseEvent evt) {
+			public void mouseReleased(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuLinks.isVisible()) {
 					jPopupMenuLinks.show(jTableManLinks, evt.getPoint().x, evt.getPoint().y);
@@ -712,7 +712,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
+			public void mouseClicked(MouseEvent evt) {
 				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, don't count it.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
@@ -725,9 +725,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		});
-		jTableKeywords.addMouseListener(new java.awt.event.MouseAdapter() {
+		jTableKeywords.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mousePressed(java.awt.event.MouseEvent evt) {
+			public void mousePressed(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuKeywords.isVisible()) {
 					jPopupMenuKeywords.show(jTableKeywords, evt.getPoint().x, evt.getPoint().y);
@@ -735,7 +735,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseReleased(java.awt.event.MouseEvent evt) {
+			public void mouseReleased(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuKeywords.isVisible()) {
 					jPopupMenuKeywords.show(jTableKeywords, evt.getPoint().x, evt.getPoint().y);
@@ -743,7 +743,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
+			public void mouseClicked(MouseEvent evt) {
 				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, don't count it.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
@@ -755,9 +755,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		});
-		jTableAuthors.addMouseListener(new java.awt.event.MouseAdapter() {
+		jTableAuthors.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mousePressed(java.awt.event.MouseEvent evt) {
+			public void mousePressed(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuAuthors.isVisible()) {
 					jPopupMenuAuthors.show(jTableAuthors, evt.getPoint().x, evt.getPoint().y);
@@ -765,7 +765,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseReleased(java.awt.event.MouseEvent evt) {
+			public void mouseReleased(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuAuthors.isVisible()) {
 					jPopupMenuAuthors.show(jTableAuthors, evt.getPoint().x, evt.getPoint().y);
@@ -773,7 +773,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
+			public void mouseClicked(MouseEvent evt) {
 				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, don't count it.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
@@ -785,9 +785,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		});
-		jTableTitles.addMouseListener(new java.awt.event.MouseAdapter() {
+		jTableTitles.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mousePressed(java.awt.event.MouseEvent evt) {
+			public void mousePressed(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuTitles.isVisible()) {
 					jPopupMenuTitles.show(jTableTitles, evt.getPoint().x, evt.getPoint().y);
@@ -795,7 +795,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseReleased(java.awt.event.MouseEvent evt) {
+			public void mouseReleased(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuTitles.isVisible()) {
 					jPopupMenuTitles.show(jTableTitles, evt.getPoint().x, evt.getPoint().y);
@@ -803,7 +803,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
+			public void mouseClicked(MouseEvent evt) {
 				// If a button other then left-mouse button, do nothing.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
 					return;
@@ -817,9 +817,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		});
-		jTableBookmarks.addMouseListener(new java.awt.event.MouseAdapter() {
+		jTableBookmarks.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mousePressed(java.awt.event.MouseEvent evt) {
+			public void mousePressed(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuBookmarks.isVisible()) {
 					jPopupMenuBookmarks.show(jTableBookmarks, evt.getPoint().x, evt.getPoint().y);
@@ -827,7 +827,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseReleased(java.awt.event.MouseEvent evt) {
+			public void mouseReleased(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuBookmarks.isVisible()) {
 					jPopupMenuBookmarks.show(jTableBookmarks, evt.getPoint().x, evt.getPoint().y);
@@ -835,7 +835,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
+			public void mouseClicked(MouseEvent evt) {
 				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, don't count it.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
@@ -848,9 +848,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		});
-		jTableAttachments.addMouseListener(new java.awt.event.MouseAdapter() {
+		jTableAttachments.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mousePressed(java.awt.event.MouseEvent evt) {
+			public void mousePressed(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuAttachments.isVisible()) {
 					jPopupMenuAttachments.show(jTableAttachments, evt.getPoint().x, evt.getPoint().y);
@@ -858,7 +858,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseReleased(java.awt.event.MouseEvent evt) {
+			public void mouseReleased(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuAttachments.isVisible()) {
 					jPopupMenuAttachments.show(jTableAttachments, evt.getPoint().x, evt.getPoint().y);
@@ -866,7 +866,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
+			public void mouseClicked(MouseEvent evt) {
 				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, don't count it.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
@@ -878,9 +878,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		});
-		jTreeLuhmann.addMouseListener(new java.awt.event.MouseAdapter() {
+		jTreeLuhmann.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mousePressed(java.awt.event.MouseEvent evt) {
+			public void mousePressed(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuLuhmann.isVisible()) {
 					jPopupMenuLuhmann.show(jTreeLuhmann, evt.getPoint().x, evt.getPoint().y);
@@ -888,7 +888,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseReleased(java.awt.event.MouseEvent evt) {
+			public void mouseReleased(MouseEvent evt) {
 				// Check whether the popup-trigger-mouse-key was pressed.
 				if (evt.isPopupTrigger() && !jPopupMenuLuhmann.isVisible()) {
 					jPopupMenuLuhmann.show(jTreeLuhmann, evt.getPoint().x, evt.getPoint().y);
@@ -896,7 +896,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
+			public void mouseClicked(MouseEvent evt) {
 				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, don't count it.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
@@ -908,9 +908,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		});
-		jTreeCluster.addMouseListener(new java.awt.event.MouseAdapter() {
+		jTreeCluster.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
+			public void mouseClicked(MouseEvent evt) {
 				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, don't count it.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
@@ -922,9 +922,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		});
-		jLabelMemory.addMouseListener(new java.awt.event.MouseAdapter() {
+		jLabelMemory.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
+			public void mouseClicked(MouseEvent evt) {
 				// This listener should only react on left-mouse-button-clicks...
 				// if other button then left-button clicked, don't count it.
 				if (evt.getButton() != MouseEvent.BUTTON1) {
@@ -935,9 +935,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		//
 		// here we start with key-listeners
 		//
-		jListEntryKeywords.addKeyListener(new java.awt.event.KeyAdapter() {
+		jListEntryKeywords.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(java.awt.event.KeyEvent evt) {
+			public void keyReleased(KeyEvent evt) {
 				// if a navigation-key (arrows, page-down/up, home etc.) is pressed,
 				// we assume a new item-selection, so behave like on a mouse-click and
 				// filter the links
@@ -948,9 +948,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		});
-		jTextFieldLiveSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+		jTextFieldLiveSearch.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(java.awt.event.KeyEvent evt) {
+			public void keyReleased(KeyEvent evt) {
 				// when the user presses the escape-key, hide panel
 				if (KeyEvent.VK_ESCAPE == evt.getKeyCode()) {
 					findLiveCancel();
@@ -968,9 +968,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		});
-		jTreeCluster.addKeyListener(new java.awt.event.KeyAdapter() {
+		jTreeCluster.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(java.awt.event.KeyEvent evt) {
+			public void keyReleased(KeyEvent evt) {
 				// if a navigation-key (arrows, page-down/up, home etc.) is pressed,
 				// we assume a new item-selection, so behave like on a mouse-click and
 				// show the cluster relations.
@@ -979,9 +979,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		});
-		jTextFieldFilterKeywords.addKeyListener(new java.awt.event.KeyAdapter() {
+		jTextFieldFilterKeywords.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(java.awt.event.KeyEvent evt) {
+			public void keyReleased(KeyEvent evt) {
 				if (Tools.isNavigationKey(evt.getKeyCode())) {
 					// if user pressed navigation key, select next table entry
 					de.danielluedecke.zettelkasten.util.TableUtils.navigateThroughList(jTableKeywords,
@@ -993,9 +993,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		});
-		jTextFieldFilterAuthors.addKeyListener(new java.awt.event.KeyAdapter() {
+		jTextFieldFilterAuthors.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(java.awt.event.KeyEvent evt) {
+			public void keyReleased(KeyEvent evt) {
 				if (Tools.isNavigationKey(evt.getKeyCode())) {
 					// if user pressed navigation key, select next table entry
 					de.danielluedecke.zettelkasten.util.TableUtils.navigateThroughList(jTableAuthors, evt.getKeyCode());
@@ -1006,9 +1006,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		});
-		jTextFieldFilterTitles.addKeyListener(new java.awt.event.KeyAdapter() {
+		jTextFieldFilterTitles.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(java.awt.event.KeyEvent evt) {
+			public void keyReleased(KeyEvent evt) {
 				if (Tools.isNavigationKey(evt.getKeyCode())) {
 					// if user pressed navigation key, select next table entry
 					de.danielluedecke.zettelkasten.util.TableUtils.navigateThroughList(jTableTitles, evt.getKeyCode());
@@ -1019,16 +1019,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		});
-		jTextFieldFilterCluster.addKeyListener(new java.awt.event.KeyAdapter() {
+		jTextFieldFilterCluster.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(java.awt.event.KeyEvent evt) {
+			public void keyReleased(KeyEvent evt) {
 				// select treenode live, while the user is typing...
 				TreeUtil.selectByTyping(jTreeCluster, jTextFieldFilterCluster);
 			}
 		});
-		jTextFieldFilterAttachments.addKeyListener(new java.awt.event.KeyAdapter() {
+		jTextFieldFilterAttachments.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(java.awt.event.KeyEvent evt) {
+			public void keyReleased(KeyEvent evt) {
 				if (Tools.isNavigationKey(evt.getKeyCode())) {
 					// if user pressed navigation key, select next table entry
 					de.danielluedecke.zettelkasten.util.TableUtils.navigateThroughList(jTableAttachments,
@@ -1043,13 +1043,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		//
 		// The hyperlink-listeners
 		//
-		jEditorPaneEntry.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
+		jEditorPaneEntry.addHyperlinkListener(new HyperlinkListener() {
 			@Override
-			public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
+			public void hyperlinkUpdate(HyperlinkEvent evt) {
 				// if the link was clicked, proceed
 				if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
 					// get input event with additional modifiers
-					java.awt.event.InputEvent inev = evt.getInputEvent();
+					InputEvent inev = evt.getInputEvent();
 					// check whether shift key was pressed, and if so, remove manual link
 					if (inev.isControlDown() || inev.isMetaDown()) {
 						if (Tools.removeHyperlink(evt.getDescription(), data, displayedZettel)) {
@@ -1075,9 +1075,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		//
 		// The hyperlink-listeners
 		//
-		jEditorPaneIsFollower.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
+		jEditorPaneIsFollower.addHyperlinkListener(new HyperlinkListener() {
 			@Override
-			public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
+			public void hyperlinkUpdate(HyperlinkEvent evt) {
 				// if the link was clicked, proceed
 				if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
 					openHyperlink(evt.getDescription());
@@ -1087,9 +1087,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		//
 		// The hyperlink-listeners
 		//
-		jEditorPaneClusterEntries.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
+		jEditorPaneClusterEntries.addHyperlinkListener(new HyperlinkListener() {
 			@Override
-			public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
+			public void hyperlinkUpdate(HyperlinkEvent evt) {
 				// if the link was clicked, proceed
 				if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
 					openHyperlink(evt.getDescription());
@@ -1109,9 +1109,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		});
 
 		// Init the JTable selection listeners.
-		javax.swing.JTable[] tables = new javax.swing.JTable[] { jTableLinks, jTableManLinks, jTableAuthors,
+		JTable[] tables = new JTable[] { jTableLinks, jTableManLinks, jTableAuthors,
 				jTableTitles, jTableBookmarks, jTableAttachments };
-		for (javax.swing.JTable t : tables) {
+		for (JTable t : tables) {
 			SelectionListener listener = new SelectionListener(t);
 			t.getSelectionModel().addListSelectionListener(listener);
 			t.getColumnModel().getSelectionModel().addListSelectionListener(listener);
@@ -1125,9 +1125,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				handleNoteSequenceValueChange();
 			}
 		});
-		jTreeLuhmann.addTreeExpansionListener(new javax.swing.event.TreeExpansionListener() {
+		jTreeLuhmann.addTreeExpansionListener(new TreeExpansionListener() {
 			@Override
-			public void treeExpanded(javax.swing.event.TreeExpansionEvent evt) {
+			public void treeExpanded(TreeExpansionEvent evt) {
 				// retrieve path of value that was expanded
 				TreePath tp = evt.getPath();
 				// check whether root was expanded or not. Therefore, retrieve
@@ -1139,7 +1139,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void treeCollapsed(javax.swing.event.TreeExpansionEvent evt) {
+			public void treeCollapsed(TreeExpansionEvent evt) {
 				// retrieve path of value that was expanded
 				TreePath tp = evt.getPath();
 				// check whether root was expanded or not. Therefore, retrieve
@@ -1153,183 +1153,183 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		//
 		// init the menu-listeners...
 		//
-		recentDocsSubMenu.addMenuListener(new javax.swing.event.MenuListener() {
+		recentDocsSubMenu.addMenuListener(new MenuListener() {
 			@Override
-			public void menuSelected(javax.swing.event.MenuEvent evt) {
+			public void menuSelected(MenuEvent evt) {
 				initRecentDocumentsMenuItems();
 			}
 
 			@Override
-			public void menuDeselected(javax.swing.event.MenuEvent evt) {
+			public void menuDeselected(MenuEvent evt) {
 			}
 
 			@Override
-			public void menuCanceled(javax.swing.event.MenuEvent evt) {
+			public void menuCanceled(MenuEvent evt) {
 			}
 		});
-		recentDoc1.addActionListener(new java.awt.event.ActionListener() {
+		recentDoc1.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+			public void actionPerformed(ActionEvent evt) {
 				String fp = settings.getRecentDoc(1);
 				if (fp != null) {
 					openRecentDocument(fp);
 				}
 			}
 		});
-		recentDoc2.addActionListener(new java.awt.event.ActionListener() {
+		recentDoc2.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+			public void actionPerformed(ActionEvent evt) {
 				String fp = settings.getRecentDoc(2);
 				if (fp != null && !fp.isEmpty()) {
 					openRecentDocument(fp);
 				}
 			}
 		});
-		recentDoc3.addActionListener(new java.awt.event.ActionListener() {
+		recentDoc3.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+			public void actionPerformed(ActionEvent evt) {
 				String fp = settings.getRecentDoc(3);
 				if (fp != null && !fp.isEmpty()) {
 					openRecentDocument(fp);
 				}
 			}
 		});
-		recentDoc4.addActionListener(new java.awt.event.ActionListener() {
+		recentDoc4.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+			public void actionPerformed(ActionEvent evt) {
 				String fp = settings.getRecentDoc(4);
 				if (fp != null && !fp.isEmpty()) {
 					openRecentDocument(fp);
 				}
 			}
 		});
-		recentDoc5.addActionListener(new java.awt.event.ActionListener() {
+		recentDoc5.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+			public void actionPerformed(ActionEvent evt) {
 				String fp = settings.getRecentDoc(5);
 				if (fp != null && !fp.isEmpty()) {
 					openRecentDocument(fp);
 				}
 			}
 		});
-		recentDoc6.addActionListener(new java.awt.event.ActionListener() {
+		recentDoc6.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+			public void actionPerformed(ActionEvent evt) {
 				String fp = settings.getRecentDoc(6);
 				if (fp != null && !fp.isEmpty()) {
 					openRecentDocument(fp);
 				}
 			}
 		});
-		recentDoc7.addActionListener(new java.awt.event.ActionListener() {
+		recentDoc7.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+			public void actionPerformed(ActionEvent evt) {
 				String fp = settings.getRecentDoc(7);
 				if (fp != null && !fp.isEmpty()) {
 					openRecentDocument(fp);
 				}
 			}
 		});
-		recentDoc8.addActionListener(new java.awt.event.ActionListener() {
+		recentDoc8.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+			public void actionPerformed(ActionEvent evt) {
 				String fp = settings.getRecentDoc(8);
 				if (fp != null && !fp.isEmpty()) {
 					openRecentDocument(fp);
 				}
 			}
 		});
-		fileMenu.addMenuListener(new javax.swing.event.MenuListener() {
+		fileMenu.addMenuListener(new MenuListener() {
 			@Override
-			public void menuSelected(javax.swing.event.MenuEvent evt) {
+			public void menuSelected(MenuEvent evt) {
 				menuFileInformation
 						.setEnabled(settings.getMainDataFile() != null && settings.getMainDataFile().exists());
 			}
 
 			@Override
-			public void menuDeselected(javax.swing.event.MenuEvent evt) {
+			public void menuDeselected(MenuEvent evt) {
 			}
 
 			@Override
-			public void menuCanceled(javax.swing.event.MenuEvent evt) {
+			public void menuCanceled(MenuEvent evt) {
 			}
 		});
-		viewMenu.addMenuListener(new javax.swing.event.MenuListener() {
+		viewMenu.addMenuListener(new MenuListener() {
 			@Override
-			public void menuSelected(javax.swing.event.MenuEvent evt) {
+			public void menuSelected(MenuEvent evt) {
 				highlightSegmentsMenuItem.setSelected(settings.getHighlightSegments());
 			}
 
 			@Override
-			public void menuDeselected(javax.swing.event.MenuEvent evt) {
+			public void menuDeselected(MenuEvent evt) {
 			}
 
 			@Override
-			public void menuCanceled(javax.swing.event.MenuEvent evt) {
+			public void menuCanceled(MenuEvent evt) {
 			}
 		});
-		editMenu.addMenuListener(new javax.swing.event.MenuListener() {
+		editMenu.addMenuListener(new MenuListener() {
 			@Override
-			public void menuSelected(javax.swing.event.MenuEvent evt) {
+			public void menuSelected(MenuEvent evt) {
 				// set indicator which show whether we have selections or not
 				setListFilledWithEntry(!jListEntryKeywords.getSelectedValuesList().isEmpty());
 			}
 
 			@Override
-			public void menuDeselected(javax.swing.event.MenuEvent evt) {
+			public void menuDeselected(MenuEvent evt) {
 			}
 
 			@Override
-			public void menuCanceled(javax.swing.event.MenuEvent evt) {
+			public void menuCanceled(MenuEvent evt) {
 			}
 		});
-		windowsMenu.addMenuListener(new javax.swing.event.MenuListener() {
+		windowsMenu.addMenuListener(new MenuListener() {
 			@Override
-			public void menuSelected(javax.swing.event.MenuEvent evt) {
+			public void menuSelected(MenuEvent evt) {
 				showSearchResultsMenuItem.setEnabled(searchRequests.getCount() > 0);
 				showDesktopMenuItem.setEnabled(desktop.getCount() > 0);
 			}
 
 			@Override
-			public void menuDeselected(javax.swing.event.MenuEvent evt) {
+			public void menuDeselected(MenuEvent evt) {
 			}
 
 			@Override
-			public void menuCanceled(javax.swing.event.MenuEvent evt) {
+			public void menuCanceled(MenuEvent evt) {
 			}
 		});
-		findEntryKeywordsMenu.addMenuListener(new javax.swing.event.MenuListener() {
+		findEntryKeywordsMenu.addMenuListener(new MenuListener() {
 			@Override
-			public void menuSelected(javax.swing.event.MenuEvent evt) {
+			public void menuSelected(MenuEvent evt) {
 				// set indicator which show whether we have selections or not
 				setListFilledWithEntry(!jListEntryKeywords.getSelectedValuesList().isEmpty());
 			}
 
 			@Override
-			public void menuDeselected(javax.swing.event.MenuEvent evt) {
+			public void menuDeselected(MenuEvent evt) {
 			}
 
 			@Override
-			public void menuCanceled(javax.swing.event.MenuEvent evt) {
+			public void menuCanceled(MenuEvent evt) {
 			}
 		});
-		viewMenuLinks.addMenuListener(new javax.swing.event.MenuListener() {
+		viewMenuLinks.addMenuListener(new MenuListener() {
 			@Override
-			public void menuSelected(javax.swing.event.MenuEvent evt) {
+			public void menuSelected(MenuEvent evt) {
 				initViewMenuLinks();
 			}
 
 			@Override
-			public void menuDeselected(javax.swing.event.MenuEvent evt) {
+			public void menuDeselected(MenuEvent evt) {
 			}
 
 			@Override
-			public void menuCanceled(javax.swing.event.MenuEvent evt) {
+			public void menuCanceled(MenuEvent evt) {
 			}
 		});
-		viewMenuAuthors.addMenuListener(new javax.swing.event.MenuListener() {
+		viewMenuAuthors.addMenuListener(new MenuListener() {
 			@Override
-			public void menuSelected(javax.swing.event.MenuEvent evt) {
+			public void menuSelected(MenuEvent evt) {
 				// new keyword is always possible
 				viewAuthorsNew.setEnabled(true);
 				// at least one selection needed
@@ -1339,32 +1339,32 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void menuDeselected(javax.swing.event.MenuEvent evt) {
+			public void menuDeselected(MenuEvent evt) {
 			}
 
 			@Override
-			public void menuCanceled(javax.swing.event.MenuEvent evt) {
+			public void menuCanceled(MenuEvent evt) {
 			}
 		});
-		viewMenuBookmarks.addMenuListener(new javax.swing.event.MenuListener() {
+		viewMenuBookmarks.addMenuListener(new MenuListener() {
 			@Override
-			public void menuSelected(javax.swing.event.MenuEvent evt) {
+			public void menuSelected(MenuEvent evt) {
 				// at least one selection needed
 				setTableEntriesSelected(jTableBookmarks.getSelectedRowCount() > 0);
 				setExportPossible(jTableBookmarks.getRowCount() > 0);
 			}
 
 			@Override
-			public void menuDeselected(javax.swing.event.MenuEvent evt) {
+			public void menuDeselected(MenuEvent evt) {
 			}
 
 			@Override
-			public void menuCanceled(javax.swing.event.MenuEvent evt) {
+			public void menuCanceled(MenuEvent evt) {
 			}
 		});
-		viewMenuKeywords.addMenuListener(new javax.swing.event.MenuListener() {
+		viewMenuKeywords.addMenuListener(new MenuListener() {
 			@Override
-			public void menuSelected(javax.swing.event.MenuEvent evt) {
+			public void menuSelected(MenuEvent evt) {
 				// new keyword is always possible
 				viewKeywordsNew.setEnabled(true);
 				// at least one selection needed
@@ -1373,16 +1373,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void menuDeselected(javax.swing.event.MenuEvent evt) {
+			public void menuDeselected(MenuEvent evt) {
 			}
 
 			@Override
-			public void menuCanceled(javax.swing.event.MenuEvent evt) {
+			public void menuCanceled(MenuEvent evt) {
 			}
 		});
-		viewMenuAttachments.addMenuListener(new javax.swing.event.MenuListener() {
+		viewMenuAttachments.addMenuListener(new MenuListener() {
 			@Override
-			public void menuSelected(javax.swing.event.MenuEvent evt) {
+			public void menuSelected(MenuEvent evt) {
 				// get the amount of selected rows
 				// at least one selection needed
 				setTableEntriesSelected(jTableAttachments.getSelectedRowCount() > 0);
@@ -1390,16 +1390,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void menuDeselected(javax.swing.event.MenuEvent evt) {
+			public void menuDeselected(MenuEvent evt) {
 			}
 
 			@Override
-			public void menuCanceled(javax.swing.event.MenuEvent evt) {
+			public void menuCanceled(MenuEvent evt) {
 			}
 		});
-		viewMenuTitles.addMenuListener(new javax.swing.event.MenuListener() {
+		viewMenuTitles.addMenuListener(new MenuListener() {
 			@Override
-			public void menuSelected(javax.swing.event.MenuEvent evt) {
+			public void menuSelected(MenuEvent evt) {
 				// get the amount of selected rows
 				// at least one selection needed
 				setTableEntriesSelected(jTableTitles.getSelectedRowCount() > 0);
@@ -1407,16 +1407,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void menuDeselected(javax.swing.event.MenuEvent evt) {
+			public void menuDeselected(MenuEvent evt) {
 			}
 
 			@Override
-			public void menuCanceled(javax.swing.event.MenuEvent evt) {
+			public void menuCanceled(MenuEvent evt) {
 			}
 		});
-		viewMenuLuhmann.addMenuListener(new javax.swing.event.MenuListener() {
+		viewMenuLuhmann.addMenuListener(new MenuListener() {
 			@Override
-			public void menuSelected(javax.swing.event.MenuEvent evt) {
+			public void menuSelected(MenuEvent evt) {
 				// set selected state
 				viewMenuLuhmannShowNumbers.setSelected(settings.getShowLuhmannEntryNumber());
 				// retrieve selected node
@@ -1428,33 +1428,33 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void menuDeselected(javax.swing.event.MenuEvent evt) {
+			public void menuDeselected(MenuEvent evt) {
 			}
 
 			@Override
-			public void menuCanceled(javax.swing.event.MenuEvent evt) {
+			public void menuCanceled(MenuEvent evt) {
 			}
 		});
-		viewMenuCluster.addMenuListener(new javax.swing.event.MenuListener() {
+		viewMenuCluster.addMenuListener(new MenuListener() {
 			@Override
-			public void menuSelected(javax.swing.event.MenuEvent evt) {
+			public void menuSelected(MenuEvent evt) {
 				setExportPossible(clusterList.size() > 0);
 			}
 
 			@Override
-			public void menuDeselected(javax.swing.event.MenuEvent evt) {
+			public void menuDeselected(MenuEvent evt) {
 			}
 
 			@Override
-			public void menuCanceled(javax.swing.event.MenuEvent evt) {
+			public void menuCanceled(MenuEvent evt) {
 			}
 		});
 		//
 		// init the menu-listeners...
 		//
-		jPopupMenuKeywords.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+		jPopupMenuKeywords.addPopupMenuListener(new PopupMenuListener() {
 			@Override
-			public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuWillBecomeVisible(PopupMenuEvent evt) {
 				// new keyword is always possible
 				popupKeywordsNew.setEnabled(true);
 				// at least one selection needed
@@ -1462,31 +1462,31 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent evt) {
 			}
 
 			@Override
-			public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuCanceled(PopupMenuEvent evt) {
 			}
 		});
-		jPopupMenuKeywordList.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+		jPopupMenuKeywordList.addPopupMenuListener(new PopupMenuListener() {
 			@Override
-			public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuWillBecomeVisible(PopupMenuEvent evt) {
 				initViewMenuLinks();
 				popupKwListHighlightSegments.setSelected(settings.getHighlightSegments());
 			}
 
 			@Override
-			public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent evt) {
 			}
 
 			@Override
-			public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuCanceled(PopupMenuEvent evt) {
 			}
 		});
-		jPopupMenuAuthors.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+		jPopupMenuAuthors.addPopupMenuListener(new PopupMenuListener() {
 			@Override
-			public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuWillBecomeVisible(PopupMenuEvent evt) {
 				// new keyword is always possible
 				popupAuthorsNew.setEnabled(true);
 				// at least one selection needed
@@ -1494,16 +1494,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent evt) {
 			}
 
 			@Override
-			public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuCanceled(PopupMenuEvent evt) {
 			}
 		});
-		jPopupMenuLuhmann.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+		jPopupMenuLuhmann.addPopupMenuListener(new PopupMenuListener() {
 			@Override
-			public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuWillBecomeVisible(PopupMenuEvent evt) {
 				// retrieve selected node
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTreeLuhmann.getLastSelectedPathComponent();
 				// check whether any selection made, that is not the root
@@ -1512,75 +1512,75 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent evt) {
 			}
 
 			@Override
-			public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuCanceled(PopupMenuEvent evt) {
 			}
 		});
-		jPopupMenuTitles.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+		jPopupMenuTitles.addPopupMenuListener(new PopupMenuListener() {
 			@Override
-			public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuWillBecomeVisible(PopupMenuEvent evt) {
 				// at least one selection needed
 				setTableEntriesSelected(jTableTitles.getSelectedRowCount() > 0);
 			}
 
 			@Override
-			public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent evt) {
 			}
 
 			@Override
-			public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuCanceled(PopupMenuEvent evt) {
 			}
 		});
-		jPopupMenuBookmarks.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+		jPopupMenuBookmarks.addPopupMenuListener(new PopupMenuListener() {
 			@Override
-			public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuWillBecomeVisible(PopupMenuEvent evt) {
 				// at least one selection needed
 				setTableEntriesSelected(jTableBookmarks.getSelectedRowCount() > 0);
 			}
 
 			@Override
-			public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent evt) {
 			}
 
 			@Override
-			public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuCanceled(PopupMenuEvent evt) {
 			}
 		});
-		jPopupMenuLinks.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+		jPopupMenuLinks.addPopupMenuListener(new PopupMenuListener() {
 			@Override
-			public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuWillBecomeVisible(PopupMenuEvent evt) {
 				initViewMenuLinks();
 			}
 
 			@Override
-			public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent evt) {
 			}
 
 			@Override
-			public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuCanceled(PopupMenuEvent evt) {
 			}
 		});
-		jPopupMenuAttachments.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+		jPopupMenuAttachments.addPopupMenuListener(new PopupMenuListener() {
 			@Override
-			public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuWillBecomeVisible(PopupMenuEvent evt) {
 				// at least one selection needed
 				setTableEntriesSelected(jTableAttachments.getSelectedRowCount() > 0);
 			}
 
 			@Override
-			public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent evt) {
 			}
 
 			@Override
-			public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuCanceled(PopupMenuEvent evt) {
 			}
 		});
-		jPopupMenuMain.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+		jPopupMenuMain.addPopupMenuListener(new PopupMenuListener() {
 			@Override
-			public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuWillBecomeVisible(PopupMenuEvent evt) {
 				try {
 					// set copy/cut actions en- or disabled, depending on whether we have
 					// selected text or not
@@ -1601,17 +1601,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			@Override
-			public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent evt) {
 			}
 
 			@Override
-			public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+			public void popupMenuCanceled(PopupMenuEvent evt) {
 			}
 		});
 
-		jTabbedPaneMain.addChangeListener(new javax.swing.event.ChangeListener() {
+		jTabbedPaneMain.addChangeListener(new ChangeListener() {
 			@Override
-			public void stateChanged(javax.swing.event.ChangeEvent evt) {
+			public void stateChanged(ChangeEvent evt) {
 				int sel = jTabbedPaneMain.getSelectedIndex();
 				if (sel != previousSelectedTab) {
 					// Update displayed entry to activated entry if tab changed.
@@ -1639,9 +1639,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (settings.isMacAqua() || settings.isSeaGlass()) {
 			tb_searchTextfield.putClientProperty("JTextField.variant", "search");
 		} else {
-			tb_searchTextfield.setPreferredSize(new java.awt.Dimension(150, 26));
-			tb_searchTextfield.setMaximumSize(new java.awt.Dimension(200, 26));
-			tb_searchTextfield.setAlignmentY(java.awt.Component.CENTER_ALIGNMENT);
+			tb_searchTextfield.setPreferredSize(new Dimension(150, 26));
+			tb_searchTextfield.setMaximumSize(new Dimension(200, 26));
+			tb_searchTextfield.setAlignmentY(Component.CENTER_ALIGNMENT);
 		}
 		tb_searchTextfield.setToolTipText(getResourceMap().getString("searchfieldTooltip"));
 		// put action to the tables' actionmaps
@@ -1674,27 +1674,27 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		KeyStroke ks = KeyStroke.getKeyStroke("ENTER");
 		tb_searchTextfield.getInputMap().put(ks, "EnterKeyPressed");
 		// add search box to toolbar
-		jPanelSearchBox = new javax.swing.JPanel();
-		jLabelLupe = new javax.swing.JLabel();
+		jPanelSearchBox = new JPanel();
+		jLabelLupe = new JLabel();
 		jPanelSearchBox.setName("jPanelSearchBox");
 		jLabelLupe.setName("jLabelLupe");
 		jLabelLupe.setIcon(Constants.lupeIcon);
-		javax.swing.GroupLayout jPanelSearchBoxLayout = new javax.swing.GroupLayout(jPanelSearchBox);
+		GroupLayout jPanelSearchBoxLayout = new GroupLayout(jPanelSearchBox);
 		jPanelSearchBox.setLayout(jPanelSearchBoxLayout);
 		jPanelSearchBoxLayout.setHorizontalGroup(jPanelSearchBoxLayout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addGroup(jPanelSearchBoxLayout.createSequentialGroup().addContainerGap().addComponent(jLabelLupe)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(tb_searchTextfield, javax.swing.GroupLayout.PREFERRED_SIZE,
-								javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-						.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+						.addComponent(tb_searchTextfield, GroupLayout.PREFERRED_SIZE,
+								GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 		jPanelSearchBoxLayout.setVerticalGroup(jPanelSearchBoxLayout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+				.createParallelGroup(GroupLayout.Alignment.TRAILING)
 				.addGroup(jPanelSearchBoxLayout.createSequentialGroup().addContainerGap()
-						.addGroup(jPanelSearchBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+						.addGroup(jPanelSearchBoxLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 								.addComponent(jLabelLupe).addComponent(tb_searchTextfield,
-										javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
-										javax.swing.GroupLayout.PREFERRED_SIZE))
+										GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+										GroupLayout.PREFERRED_SIZE))
 						.addContainerGap(20, Short.MAX_VALUE)));
 		toolBar.add(settings.isSeaGlass() ? tb_searchTextfield : jPanelSearchBox);
 		// hide label on mac
@@ -1811,8 +1811,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// typing work here
 		//
 		// get the action map
-		javax.swing.ActionMap actionMap = org.jdesktop.application.Application
-				.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
+		ActionMap actionMap = Application
+				.getInstance(ZettelkastenApp.class).getContext()
 				.getActionMap(ZettelkastenView.class, this);
 		// iterate the xml file with the accelerator keys for the main window
 		for (int cnt = 1; cnt <= settings.getAcceleratorKeys().getCount(AcceleratorKeys.MAINKEYS); cnt++) {
@@ -1910,9 +1910,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		setCustomTableRowSorter(jTableAttachments, 0);
 		// 6th column in title table has icons
 		jTableTitles.getColumnModel().getColumn(5).setCellRenderer(new TitleTableCellRenderer(data));
-		javax.swing.JTable[] tables = new javax.swing.JTable[] { jTableLinks, jTableManLinks, jTableKeywords,
+		JTable[] tables = new JTable[] { jTableLinks, jTableManLinks, jTableKeywords,
 				jTableAuthors, jTableTitles, jTableBookmarks, jTableAttachments };
-		for (javax.swing.JTable t : tables) {
+		for (JTable t : tables) {
 			t.getTableHeader().setReorderingAllowed(false);
 			t.setGridColor(settings.getTableGridColor());
 			t.setShowHorizontalLines(settings.getShowGridHorizontal());
@@ -2009,7 +2009,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			@Override
 			protected String exportString(JComponent c) {
-				javax.swing.JTree jTree = (javax.swing.JTree) c;
+				JTree jTree = (JTree) c;
 				DefaultMutableTreeNode draggedNode = (DefaultMutableTreeNode) jTree.getLastSelectedPathComponent();
 
 				// Remember the dragged node, which must be removed when dropping the node.
@@ -2027,7 +2027,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					return false;
 				}
 
-				javax.swing.JTree jTree = (javax.swing.JTree) c;
+				JTree jTree = (JTree) c;
 				DefaultMutableTreeNode droppedNode = (DefaultMutableTreeNode) jTree.getLastSelectedPathComponent();
 				if (droppedNode == null) {
 					return false;
@@ -2213,7 +2213,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
 		}
 		// get last table sorting
-		RowSorter.SortKey sk = settings.getTableSorting(table);
+		SortKey sk = settings.getTableSorting(table);
 		// any sorting found?
 		if (sk != null) {
 			// create array with sort key
@@ -2268,7 +2268,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private void initActionMaps() {
 		// Init the locale for the default actions cut/copy/paste.
 		Tools.initLocaleForDefaultActions(
-				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class)
+				Application.getInstance(ZettelkastenApp.class)
 						.getContext().getActionMap(ZettelkastenView.class, this));
 
 		// <editor-fold defaultstate="collapsed" desc="Init of action-maps so we have
@@ -2539,9 +2539,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		} // on all other os / look&feels JTrees remain normal.
 		else {
 			// create array with all jTrees of mainframe
-			javax.swing.JTree[] trees = new javax.swing.JTree[] { jTreeLuhmann, jTreeCluster, jTreeKeywords };
+			JTree[] trees = new JTree[] { jTreeLuhmann, jTreeCluster, jTreeKeywords };
 			// and iterate that arrea
-			for (javax.swing.JTree tree : trees) {
+			for (JTree tree : trees) {
 				// remove icons from jTree
 				DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer) tree.getCellRenderer();
 				// Remove the icons
@@ -2620,9 +2620,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private void initUIManagerLookAndFeel() {
 		try {
 			String laf = settings.getLookAndFeel();
-			if (laf.equals(Constants.seaGlassLookAndFeelClassName)) {
-				laf = "com.seaglasslookandfeel.SeaGlassLookAndFeel";
-			}
 			UIManager.setLookAndFeel(laf);
 			SwingUtilities.updateComponentTreeUI(getFrame());
 			Constants.zknlogger.log(Level.INFO, "Using following LookAndFeel: {0}", settings.getLookAndFeel());
@@ -2768,7 +2765,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * @return {@code true} if menu is already visible in the menu bar,
 	 *         {@code false} otherwise.
 	 */
-	private boolean menuBarHasMenu(javax.swing.JMenu menu) {
+	private boolean menuBarHasMenu(JMenu menu) {
 		boolean result = false;
 		// iterate all menu items
 		for (int cnt = 0; cnt < menuBar.getMenuCount(); cnt++) {
@@ -2793,7 +2790,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * displayed menu is already "visible" (i.e. it already has been added to the
 	 * menu bar), so we don't have the same menu multiple times displayed in the
 	 * menu bar. This check is achived with the method
-	 * {@link #menuBarHasMenu(javax.swing.JMenu) menuBarHasMenu(javax.swing.JMenu)}.
+	 * {@link #menuBarHasMenu(JMenu) menuBarHasMenu(javax.swing.JMenu)}.
 	 * <br>
 	 * <br>
 	 * If the menu has not been added yet, it will be added then. And the menu bar
@@ -2802,7 +2799,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * @param menu the menu that is related to the currently displayed tab in the
 	 *             JTabbedPane.
 	 */
-	private void showTabMenu(javax.swing.JMenu menu) {
+	private void showTabMenu(JMenu menu) {
 		// check whether the menu already is visible (added)
 		if (!menuBarHasMenu(menu)) {
 			// if not, add it now
@@ -2826,7 +2823,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		setRecentDocumentMenuItem(recentDoc8, 8);
 	}
 
-	private void setRecentDocumentMenuItem(javax.swing.JMenuItem menuItem, int recentDocNr) {
+	private void setRecentDocumentMenuItem(JMenuItem menuItem, int recentDocNr) {
 		menuItem.setVisible(false);
 		String recDoc = settings.getRecentDoc(recentDocNr);
 		if (recDoc != null && !recDoc.isEmpty()) {
@@ -2836,7 +2833,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 	}
 
-	private void updateRecentDocumentMenuIcon(javax.swing.JMenuItem menuItem, String recDoc) {
+	private void updateRecentDocumentMenuIcon(JMenuItem menuItem, String recDoc) {
 		File dummyfile = new File(recDoc);
 		if (dummyfile.exists()) {
 			ImageIcon zkn3Icon = Constants.zknicon;
@@ -3141,8 +3138,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			StringBuilder cleanedContent = new StringBuilder("");
 			cleanedContent
 					.append("<body><div style=\"margin:5px;padding:5px;background-color:#dddddd;color:#800000;\">");
-			URL imgURL = org.jdesktop.application.Application
-					.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass()
+			URL imgURL = Application
+					.getInstance(ZettelkastenApp.class).getClass()
 					.getResource("/de/danielluedecke/zettelkasten/resources/icons/error.png");
 			cleanedContent.append("<img border=\"0\" src=\"").append(imgURL).append("\">&#8195;");
 			cleanedContent.append(getResourceMap().getString("incorrectNestedTagsText"));
@@ -4136,7 +4133,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	/**
 	 * This method opens a file or URL either from within a clicked link inside the
 	 * jEditorPane (see
-	 * {@link #eventHyperlinkActivated(javax.swing.event.HyperlinkEvent)
+	 * {@link #eventHyperlinkActivated(HyperlinkEvent)
 	 * eventHyperlinkActivated(javax.swing.event.HyperlinkEvent)} or from the
 	 * attachment-list (see {@link #openAttachment() openAttachment()}.
 	 *
@@ -5395,7 +5392,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 		}
 		// add action listener to combo box
-		jComboBoxBookmarkCategory.addActionListener(new java.awt.event.ActionListener() {
+		jComboBoxBookmarkCategory.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
 				// get selection
@@ -5968,7 +5965,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public Task<?, ?> createLinks() {
 		return new createLinksTask(
-				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
+				Application.getInstance(ZettelkastenApp.class));
 	}
 
 	/**
@@ -6102,7 +6099,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 		// create tray-icon with tooltip
 		trayIcon = new TrayIcon((new ImageIcon(
-				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class)
+				Application.getInstance(ZettelkastenApp.class)
 						.getClass().getResource("/de/danielluedecke/zettelkasten/resources/icons/zkn3_16x16.png"),
 				"Zettelkasten")).getImage());
 		// retrieve system tray
@@ -6118,13 +6115,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		trayIcon.setToolTip("Zettelkasten");
 		// and mouse listener, so the window will be restored when the user clicks on
 		// the tray icon
-		trayIcon.addMouseListener(new java.awt.event.MouseAdapter() {
+		trayIcon.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
+			public void mouseClicked(MouseEvent evt) {
 				// set main frame visible
 				getFrame().setVisible(true);
 				// restore frame state to normal state
-				getFrame().setExtendedState(java.awt.Frame.NORMAL);
+				getFrame().setExtendedState(Frame.NORMAL);
 				// if we have a tray icon, remove it
 				if (tray != null) {
 					// clear popup menu
@@ -6219,7 +6216,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				} else if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
 					// retrieve list of dropped files
 					@SuppressWarnings("unchecked")
-					java.util.List<java.io.File> files = (List<File>) tr.getTransferData(DataFlavor.javaFileListFlavor);
+					List<File> files = (List<File>) tr.getTransferData(DataFlavor.javaFileListFlavor);
 					// check for valid values
 					if (files != null && files.size() > 0) {
 						// create array
@@ -6278,7 +6275,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 *
 	 * @return the background task
 	 */
-	private class createLinksTask extends org.jdesktop.application.Task<Object, Void> {
+	private class createLinksTask extends Task<Object, Void> {
 
 		/**
 		 * This variable stores the table data of the links-list. We use this variable
@@ -6290,7 +6287,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		 */
 		private ArrayList<Object[]> linkedlinkslist;
 
-		createLinksTask(org.jdesktop.application.Application app) {
+		createLinksTask(Application app) {
 			// Runs on the EDT. Copy GUI state that
 			// doInBackground() depends on from parameters
 			// to createLinksTask fields, here.
@@ -6389,8 +6386,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 			// show amount of entries
 			statusMsgLabel.setText("(" + String.valueOf(jTableLinks.getRowCount()) + " "
-					+ org.jdesktop.application.Application
-							.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
+					+ Application
+							.getInstance(ZettelkastenApp.class).getContext()
 							.getResourceMap(ZettelkastenView.class).getString("statusTextLinks")
 					+ ")");
 		}
@@ -6660,7 +6657,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public Task<?, ?> autoBackupTask() {
 		return new AutoBackupTask(
-				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class),
+				Application.getInstance(ZettelkastenApp.class),
 				this, statusMsgLabel, data, desktop, settings, searchRequests, settings.getSynonyms(), bookmarks,
 				bibtex);
 	}
@@ -6677,7 +6674,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public Task<?, ?> clusterTask() {
 		return new createClusterTask(
-				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
+				Application.getInstance(ZettelkastenApp.class));
 	}
 
 	/**
@@ -6689,13 +6686,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 *
 	 * @return the background task
 	 */
-	private class createClusterTask extends org.jdesktop.application.Task<Object, Void> {
+	private class createClusterTask extends Task<Object, Void> {
 
 		// create link list for the keywords and related keywords
 
 		LinkedList<String> lwsClusterTask = new LinkedList<>();
 
-		createClusterTask(org.jdesktop.application.Application app) {
+		createClusterTask(Application app) {
 			// Runs on the EDT. Copy GUI state that
 			// doInBackground() depends on from parameters
 			// to createLinksTask fields, here.
@@ -6785,8 +6782,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			jTextFieldFilterCluster.setEnabled(jTreeCluster.getRowCount() > 1);
 			// show amount of entries
 			statusMsgLabel.setText("(" + String.valueOf(jTreeCluster.getRowCount()) + " "
-					+ org.jdesktop.application.Application
-							.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
+					+ Application
+							.getInstance(ZettelkastenApp.class).getContext()
 							.getResourceMap(ZettelkastenView.class).getString("statusTextKeywords")
 					+ ")");
 			jTreeCluster.setToolTipText(null);
@@ -6808,7 +6805,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public Task<?, ?> createFilterLinks() {
 		return new createFilterLinksTask(
-				org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class));
+				Application.getInstance(ZettelkastenApp.class));
 	}
 
 	/**
@@ -6823,7 +6820,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 *
 	 * @return the background task
 	 */
-	private class createFilterLinksTask extends org.jdesktop.application.Task<Object, Void> {
+	private class createFilterLinksTask extends Task<Object, Void> {
 
 		/**
 		 * This variable stores the table data of the filtered links-list. We use this
@@ -6835,7 +6832,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		 */
 		private ArrayList<Object[]> linkedfilteredlinkslist;
 
-		createFilterLinksTask(org.jdesktop.application.Application app) {
+		createFilterLinksTask(Application app) {
 			// Runs on the EDT. Copy GUI state that
 			// doInBackground() depends on from parameters
 			// to createLinksTask fields, here.
@@ -6922,8 +6919,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 			// show amount of entries
 			statusMsgLabel.setText("(" + String.valueOf(jTableLinks.getRowCount()) + " "
-					+ org.jdesktop.application.Application
-							.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
+					+ Application
+							.getInstance(ZettelkastenApp.class).getContext()
 							.getResourceMap(ZettelkastenView.class).getString("statusTextLinks")
 					+ ")");
 		}
@@ -7728,7 +7725,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// first check for valid return value. export is only started,
 		// when the previous dialog wasn't cancelled or simply closed
 		if (Constants.RETURN_VALUE_CONFIRM == exportWindow.getReturnValue()) {
-			// when the user wants to export into PDF or LaTex, open a new dialog where the
+			// when the user wants to export into PDF or LaTeX, open a new dialog where the
 			// user can make some extra settings like page settings and font-sizes.
 			if (ExportTools.isExportSettingsOk(getFrame(), settings, exportWindow.getExportType())) {
 				// If dialog window isn't already created, do this now.
@@ -8908,7 +8905,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * <br>
 	 * This method fills a LinkedList with the export-data (i.e. the bookmarks).<br>
 	 * <br>
-	 * Then the method {@link #exportList(java.util.LinkedList, java.lang.String)
+	 * Then the method {@link #exportList(LinkedList, String)
 	 * exportList(LinkedList,String)} is called, which is responsible for saving the
 	 * data of this linked list to a file.
 	 */
@@ -8984,7 +8981,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * <br>
 	 * This method fills a LinkedList with the export-data (i.e. the keywords).<br>
 	 * <br>
-	 * Then the method {@link #exportList(java.util.LinkedList, java.lang.String)
+	 * Then the method {@link #exportList(LinkedList, String)
 	 * exportList(LinkedList,String)} is called, which is responsible for saving the
 	 * data of this linked list to a file.
 	 */
@@ -9034,7 +9031,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * This method fills a LinkedList with the export-data (i.e. the
 	 * author-value).<br>
 	 * <br>
-	 * Then the method {@link #exportList(java.util.LinkedList, java.lang.String)
+	 * Then the method {@link #exportList(LinkedList, String)
 	 * exportList(LinkedList,String)} is called, which is responsible for saving the
 	 * data of this linked list to a file.
 	 */
@@ -9148,7 +9145,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * This method fills a LinkedList with the export-data (i.e. the
 	 * attachment-values).<br>
 	 * <br>
-	 * Then the method {@link #exportList(java.util.LinkedList, java.lang.String)
+	 * Then the method {@link #exportList(LinkedList, String)
 	 * exportList(LinkedList,String)} is called, which is responsible for saving the
 	 * data of this linked list to a file.
 	 */
@@ -10572,7 +10569,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (searchResultsDlg != null) {
 			sft = searchResultsDlg.getSearchFrameTable();
 		}
-		settings.setTableSorting(new javax.swing.JTable[] { jTableLinks, jTableManLinks, jTableKeywords, jTableAuthors,
+		settings.setTableSorting(new JTable[] { jTableLinks, jTableManLinks, jTableKeywords, jTableAuthors,
 				jTableTitles, jTableBookmarks, jTableAttachments, sft });
 
 		if (!settings.saveSettingsToFiles()) {
@@ -10864,8 +10861,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jScrollPane16.setBorder(null);
 		// make refresh buttons look like mac
 		// get the action map
-		javax.swing.ActionMap actionMap = org.jdesktop.application.Application
-				.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
+		ActionMap actionMap = Application
+				.getInstance(ZettelkastenApp.class).getContext()
 				.getActionMap(ZettelkastenView.class, this);
 		// init variables
 		AbstractAction ac;
@@ -10933,13 +10930,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		Tools.makeTexturedToolBarButton(tb_next, Tools.SEGMENT_POSITION_MIDDLE);
 		Tools.makeTexturedToolBarButton(tb_last, Tools.SEGMENT_POSITION_LAST);
 
-		toolBar.setPreferredSize(new java.awt.Dimension(toolBar.getSize().width, Constants.seaGlassToolbarHeight));
-		toolBar.add(new javax.swing.JToolBar.Separator(), 0);
+		toolBar.setPreferredSize(new Dimension(toolBar.getSize().width, Constants.seaGlassToolbarHeight));
+		toolBar.add(new JToolBar.Separator(), 0);
 	}
 
 	/**
 	 *
-	 * @param bottomBarNeedsUdpate if {@code true}, the bottom bar on mac aqua style
+	 * @param bottomBarNeedsUpdate if {@code true}, the bottom bar on mac aqua style
 	 *                             will also be re-initialized. Use {@code true}
 	 *                             only the first time the bottom bar is
 	 *                             initialized. For further GUI-updates, e.g. from
@@ -11355,33 +11352,33 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private void initComponents() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
 			UnsupportedLookAndFeelException {
 
-		mainPanel = new javax.swing.JPanel();
-		jSplitPaneMain1 = new javax.swing.JSplitPane();
-		jSplitPaneMain2 = new javax.swing.JSplitPane();
-		jPanel17 = new javax.swing.JPanel();
-		jScrollPane1 = new javax.swing.JScrollPane();
-		jEditorPaneEntry = new javax.swing.JEditorPane();
-		jPanelLiveSearch = new javax.swing.JPanel();
-		jTextFieldLiveSearch = new javax.swing.JTextField();
-		jButton1 = new javax.swing.JButton();
-		jScrollPane3 = new javax.swing.JScrollPane();
+		mainPanel = new JPanel();
+		jSplitPaneMain1 = new JSplitPane();
+		jSplitPaneMain2 = new JSplitPane();
+		jPanel17 = new JPanel();
+		jScrollPane1 = new JScrollPane();
+		jEditorPaneEntry = new JEditorPane();
+		jPanelLiveSearch = new JPanel();
+		jTextFieldLiveSearch = new JTextField();
+		jButton1 = new JButton();
+		jScrollPane3 = new JScrollPane();
 		jListEntryKeywords = MacSourceList.createMacSourceList();
-		jPanelMainRight = new javax.swing.JPanel();
-		jTabbedPaneMain = new javax.swing.JTabbedPane();
-		jPanel1 = new javax.swing.JPanel();
-		jSplitPaneLinks = new javax.swing.JSplitPane();
-		jPanel14 = new javax.swing.JPanel();
-		jScrollPane4 = new javax.swing.JScrollPane();
-		jTableLinks = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
-		jPanelManLinks = new javax.swing.JPanel();
-		jScrollPane15 = new javax.swing.JScrollPane();
-		jTableManLinks = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
-		jPanel10 = new javax.swing.JPanel();
-		jSplitPane2 = new javax.swing.JSplitPane();
-		jScrollPane10 = new javax.swing.JScrollPane();
-		jTreeLuhmann = new javax.swing.JTree();
-		jScrollPane2 = new javax.swing.JScrollPane();
-		jEditorPaneIsFollower = new javax.swing.JEditorPane() {
+		jPanelMainRight = new JPanel();
+		jTabbedPaneMain = new JTabbedPane();
+		jPanel1 = new JPanel();
+		jSplitPaneLinks = new JSplitPane();
+		jPanel14 = new JPanel();
+		jScrollPane4 = new JScrollPane();
+		jTableLinks = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new JTable();
+		jPanelManLinks = new JPanel();
+		jScrollPane15 = new JScrollPane();
+		jTableManLinks = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new JTable();
+		jPanel10 = new JPanel();
+		jSplitPane2 = new JSplitPane();
+		jScrollPane10 = new JScrollPane();
+		jTreeLuhmann = new JTree();
+		jScrollPane2 = new JScrollPane();
+		jEditorPaneIsFollower = new JEditorPane() {
 			@Override
 			public String getToolTipText(MouseEvent evt) {
 				String text = null;
@@ -11402,486 +11399,486 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				return text;
 			}
 		};
-		jCheckBoxShowAllLuhmann = new javax.swing.JCheckBox();
-		jPanel2 = new javax.swing.JPanel();
-		jTextFieldFilterKeywords = new javax.swing.JTextField();
-		jButtonRefreshKeywords = new javax.swing.JButton();
-		jCheckBoxShowSynonyms = new javax.swing.JCheckBox();
-		jPanel16 = new javax.swing.JPanel();
-		jScrollPane17 = new javax.swing.JScrollPane();
-		jTreeKeywords = new javax.swing.JTree();
-		jScrollPane6 = new javax.swing.JScrollPane();
-		jTableKeywords = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
-		jPanel7 = new javax.swing.JPanel();
-		jTextFieldFilterAuthors = new javax.swing.JTextField();
-		jSplitPaneAuthors = new javax.swing.JSplitPane();
-		jPanel15 = new javax.swing.JPanel();
-		jScrollPane7 = new javax.swing.JScrollPane();
-		jTableAuthors = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
-		jComboBoxAuthorType = new javax.swing.JComboBox<String>();
-		jPanelDispAuthor = new javax.swing.JPanel();
-		jScrollPane16 = new javax.swing.JScrollPane();
-		jEditorPaneDispAuthor = new javax.swing.JEditorPane();
-		jButtonRefreshAuthors = new javax.swing.JButton();
-		jPanel8 = new javax.swing.JPanel();
-		jScrollPane8 = new javax.swing.JScrollPane();
-		jTableTitles = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
-		jTextFieldFilterTitles = new javax.swing.JTextField();
-		jButtonRefreshTitles = new javax.swing.JButton();
-		jPanel11 = new javax.swing.JPanel();
-		jTextFieldFilterCluster = new javax.swing.JTextField();
-		jButtonRefreshCluster = new javax.swing.JButton();
-		jCheckBoxCluster = new javax.swing.JCheckBox();
-		jPanel3 = new javax.swing.JPanel();
-		jSplitPane1 = new javax.swing.JSplitPane();
-		jScrollPane5 = new javax.swing.JScrollPane();
-		jEditorPaneClusterEntries = new javax.swing.JEditorPane();
-		jScrollPane11 = new javax.swing.JScrollPane();
-		jTreeCluster = new javax.swing.JTree();
-		jPanel9 = new javax.swing.JPanel();
-		jComboBoxBookmarkCategory = new javax.swing.JComboBox<String>();
-		jSplitPane3 = new javax.swing.JSplitPane();
-		jScrollPane9 = new javax.swing.JScrollPane();
-		jTableBookmarks = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
-		jScrollPane14 = new javax.swing.JScrollPane();
-		jEditorPaneBookmarkComment = new javax.swing.JEditorPane();
-		jPanel13 = new javax.swing.JPanel();
-		jScrollPane13 = new javax.swing.JScrollPane();
+		jCheckBoxShowAllLuhmann = new JCheckBox();
+		jPanel2 = new JPanel();
+		jTextFieldFilterKeywords = new JTextField();
+		jButtonRefreshKeywords = new JButton();
+		jCheckBoxShowSynonyms = new JCheckBox();
+		jPanel16 = new JPanel();
+		jScrollPane17 = new JScrollPane();
+		jTreeKeywords = new JTree();
+		jScrollPane6 = new JScrollPane();
+		jTableKeywords = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new JTable();
+		jPanel7 = new JPanel();
+		jTextFieldFilterAuthors = new JTextField();
+		jSplitPaneAuthors = new JSplitPane();
+		jPanel15 = new JPanel();
+		jScrollPane7 = new JScrollPane();
+		jTableAuthors = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new JTable();
+		jComboBoxAuthorType = new JComboBox<String>();
+		jPanelDispAuthor = new JPanel();
+		jScrollPane16 = new JScrollPane();
+		jEditorPaneDispAuthor = new JEditorPane();
+		jButtonRefreshAuthors = new JButton();
+		jPanel8 = new JPanel();
+		jScrollPane8 = new JScrollPane();
+		jTableTitles = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new JTable();
+		jTextFieldFilterTitles = new JTextField();
+		jButtonRefreshTitles = new JButton();
+		jPanel11 = new JPanel();
+		jTextFieldFilterCluster = new JTextField();
+		jButtonRefreshCluster = new JButton();
+		jCheckBoxCluster = new JCheckBox();
+		jPanel3 = new JPanel();
+		jSplitPane1 = new JSplitPane();
+		jScrollPane5 = new JScrollPane();
+		jEditorPaneClusterEntries = new JEditorPane();
+		jScrollPane11 = new JScrollPane();
+		jTreeCluster = new JTree();
+		jPanel9 = new JPanel();
+		jComboBoxBookmarkCategory = new JComboBox<String>();
+		jSplitPane3 = new JSplitPane();
+		jScrollPane9 = new JScrollPane();
+		jTableBookmarks = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new JTable();
+		jScrollPane14 = new JScrollPane();
+		jEditorPaneBookmarkComment = new JEditorPane();
+		jPanel13 = new JPanel();
+		jScrollPane13 = new JScrollPane();
 		jTableAttachments = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null)
-				: new javax.swing.JTable();
-		jTextFieldFilterAttachments = new javax.swing.JTextField();
-		jButtonRefreshAttachments = new javax.swing.JButton();
-		menuBar = new javax.swing.JMenuBar();
-		fileMenu = new javax.swing.JMenu();
-		newEntryMenuItem = new javax.swing.JMenuItem();
-		insertEntryMenuItem = new javax.swing.JMenuItem();
-		jSeparator104 = new javax.swing.JSeparator();
-		quickNewEntryMenuItem = new javax.swing.JMenuItem();
-		quickNewTitleEntryMenuItem = new javax.swing.JMenuItem();
-		jSeparator1 = new javax.swing.JSeparator();
-		openMenuItem = new javax.swing.JMenuItem();
-		recentDocsSubMenu = new javax.swing.JMenu();
-		recentDoc1 = new javax.swing.JMenuItem();
-		recentDoc2 = new javax.swing.JMenuItem();
-		recentDoc3 = new javax.swing.JMenuItem();
-		recentDoc4 = new javax.swing.JMenuItem();
-		recentDoc5 = new javax.swing.JMenuItem();
-		recentDoc6 = new javax.swing.JMenuItem();
-		recentDoc7 = new javax.swing.JMenuItem();
-		recentDoc8 = new javax.swing.JMenuItem();
-		jSeparator107 = new javax.swing.JSeparator();
-		saveMenuItem = new javax.swing.JMenuItem();
-		saveAsMenuItem = new javax.swing.JMenuItem();
-		jSeparator2 = new javax.swing.JSeparator();
-		newDesktopMenuItem = new javax.swing.JMenuItem();
-		newZettelkastenMenuItem = new javax.swing.JMenuItem();
-		jSeparator78 = new javax.swing.JSeparator();
-		importMenuItem = new javax.swing.JMenuItem();
-		exportMenuItem = new javax.swing.JMenuItem();
-		jSeparator77 = new javax.swing.JSeparator();
-		menuFileInformation = new javax.swing.JMenuItem();
-		jSeparatorExit = new javax.swing.JSeparator();
-		exitMenuItem = new javax.swing.JMenuItem();
-		editMenu = new javax.swing.JMenu();
-		editMenuItem = new javax.swing.JMenuItem();
-		jSeparator33 = new javax.swing.JSeparator();
-		deleteZettelMenuItem = new javax.swing.JMenuItem();
-		jSeparator6 = new javax.swing.JSeparator();
-		deleteKwFromListMenuItem = new javax.swing.JMenuItem();
-		jSeparator40 = new javax.swing.JSeparator();
-		copyMenuItem = new javax.swing.JMenuItem();
-		copyPlainMenuItem = new javax.swing.JMenuItem();
-		pasteMenuItem = new javax.swing.JMenuItem();
-		selectAllMenuItem = new javax.swing.JMenuItem();
-		jSeparator99 = new javax.swing.JSeparator();
-		addSelectionToKeywordMenuItem = new javax.swing.JMenuItem();
-		addFirstLineToTitleMenuItem = new javax.swing.JMenuItem();
-		addSelectionToTitleMenuItem = new javax.swing.JMenuItem();
-		jSeparator24 = new javax.swing.JSeparator();
-		manualInsertLinksMenuItem = new javax.swing.JMenuItem();
-		manualInsertMenuItem = new javax.swing.JMenuItem();
-		jSeparator41 = new javax.swing.JSeparator();
-		setBookmarkMenuItem = new javax.swing.JMenuItem();
-		addToDesktopMenuItem = new javax.swing.JMenuItem();
-		findMenu = new javax.swing.JMenu();
-		findMenuItem = new javax.swing.JMenuItem();
-		findReplaceMenuItem = new javax.swing.JMenuItem();
-		jSeparator31 = new javax.swing.JSeparator();
-		findEntryWithout = new javax.swing.JMenu();
-		findEntriesWithoutKeywords = new javax.swing.JMenuItem();
-		jSeparator69 = new javax.swing.JSeparator();
-		findEntriesWithoutAuthors = new javax.swing.JMenuItem();
-		jSeparator75 = new javax.swing.JSeparator();
-		findEntriesWithoutRemarks = new javax.swing.JMenuItem();
-		findEntriesWithRemarks = new javax.swing.JMenuItem();
-		jSeparator106 = new javax.swing.JPopupMenu.Separator();
-		findEntriesWithoutManualLinks = new javax.swing.JMenuItem();
-		jSeparator65 = new javax.swing.JPopupMenu.Separator();
-		findEntriesAnyLuhmann = new javax.swing.JMenuItem();
-		findEntriesTopLevelLuhmann = new javax.swing.JMenuItem();
-		jSeparator110 = new javax.swing.JSeparator();
-		findEntriesWithRatings = new javax.swing.JMenuItem();
-		findEntriesWithoutRatings = new javax.swing.JMenuItem();
-		jSeparator76 = new javax.swing.JSeparator();
-		findEntriesWithAttachments = new javax.swing.JMenuItem();
-		jSeparator83 = new javax.swing.JSeparator();
-		findEntriesFromCreatedTimestamp = new javax.swing.JMenuItem();
-		findEntriesFromEditedTimestamp = new javax.swing.JMenuItem();
-		jSeparator95 = new javax.swing.JSeparator();
-		findDoubleEntriesItem = new javax.swing.JMenuItem();
-		jSeparator68 = new javax.swing.JSeparator();
-		findEntryKeywordsMenu = new javax.swing.JMenu();
-		menuKwListSearchOr = new javax.swing.JMenuItem();
-		jSeparator19 = new javax.swing.JSeparator();
-		menuKwListSearchAnd = new javax.swing.JMenuItem();
-		jSeparator39 = new javax.swing.JSeparator();
-		menuKwListSearchNot = new javax.swing.JMenuItem();
-		jSeparator18 = new javax.swing.JSeparator();
-		liveSearchMenuItem = new javax.swing.JMenuItem();
-		jSeparator22 = new javax.swing.JSeparator();
-		homeMenuItem = new javax.swing.JMenuItem();
-		prevEntryMenuItem = new javax.swing.JMenuItem();
-		nextEntryMenuItem = new javax.swing.JMenuItem();
-		lastEntryMenuItem = new javax.swing.JMenuItem();
-		jSeparator72 = new javax.swing.JPopupMenu.Separator();
-		randomEntryMenuItem = new javax.swing.JMenuItem();
-		jSeparator111 = new javax.swing.JPopupMenu.Separator();
-		historyForMenuItem = new javax.swing.JMenuItem();
-		histroyBackMenuItem = new javax.swing.JMenuItem();
-		goToFirstParentEntryMenuItem = new javax.swing.JMenuItem();
-		jSeparator112 = new javax.swing.JPopupMenu.Separator();
-		gotoEntryMenuItem = new javax.swing.JMenuItem();
-		viewMenu = new javax.swing.JMenu();
-		showLinksMenuItem = new javax.swing.JMenuItem();
-		showLuhmannMenuItem = new javax.swing.JMenuItem();
-		showKeywordsMenuItem = new javax.swing.JMenuItem();
-		showAuthorsMenuItem = new javax.swing.JMenuItem();
-		showTitlesMenuItem = new javax.swing.JMenuItem();
-		showClusterMenuItem = new javax.swing.JMenuItem();
-		showBookmarksMenuItem = new javax.swing.JMenuItem();
-		showAttachmentsMenuItem = new javax.swing.JMenuItem();
-		jSeparator23 = new javax.swing.JSeparator();
-		showCurrentEntryAgain = new javax.swing.JMenuItem();
-		jSeparator55 = new javax.swing.JSeparator();
-		showHighlightKeywords = new javax.swing.JCheckBoxMenuItem();
-		highlightSegmentsMenuItem = new javax.swing.JCheckBoxMenuItem();
-		viewMenuLinks = new javax.swing.JMenu();
-		viewMenuLinksKwListRefresh = new javax.swing.JMenuItem();
-		jSeparator116 = new javax.swing.JPopupMenu.Separator();
-		viewMenuLinksRemoveManLink = new javax.swing.JMenuItem();
-		jSeparator3 = new javax.swing.JSeparator();
-		viewMenuLinksKwListLogOr = new javax.swing.JCheckBoxMenuItem();
-		viewMenuLinksKwListLogAnd = new javax.swing.JCheckBoxMenuItem();
-		jSeparator53 = new javax.swing.JSeparator();
-		viewMenuLinksManLink = new javax.swing.JMenuItem();
-		viewMenuLinksLuhmann = new javax.swing.JMenuItem();
-		jSeparator58 = new javax.swing.JSeparator();
-		viewMenuLinksDesktop = new javax.swing.JMenuItem();
-		jSeparator100 = new javax.swing.JSeparator();
-		viewMenuLinksExport = new javax.swing.JMenuItem();
-		viewMenuExportToSearch = new javax.swing.JMenuItem();
-		viewMenuLuhmann = new javax.swing.JMenu();
-		viewMenuLuhmannDelete = new javax.swing.JMenuItem();
-		jSeparator61 = new javax.swing.JSeparator();
-		viewMenuLuhmannManLinks = new javax.swing.JMenuItem();
-		viewMenuLuhmannBookmarks = new javax.swing.JMenuItem();
-		jSeparator62 = new javax.swing.JSeparator();
-		viewMenuLuhmannDesktop = new javax.swing.JMenuItem();
-		jSeparator73 = new javax.swing.JPopupMenu.Separator();
-		viewMenuLuhmannShowTopLevel = new javax.swing.JMenuItem();
-		jSeparator102 = new javax.swing.JSeparator();
-		viewMenuLuhmannExport = new javax.swing.JMenuItem();
-		viewMenuLuhmannExportSearch = new javax.swing.JMenuItem();
-		jSeparator118 = new javax.swing.JPopupMenu.Separator();
-		viewMenuLuhmannShowNumbers = new javax.swing.JCheckBoxMenuItem();
-		jSeparator101 = new javax.swing.JPopupMenu.Separator();
-		viewMenuLuhmannShowLevel = new javax.swing.JMenu();
-		viewMenuLuhmannDepthAll = new javax.swing.JMenuItem();
-		jSeparator119 = new javax.swing.JPopupMenu.Separator();
-		viewMenuLuhmannDepth1 = new javax.swing.JMenuItem();
-		viewMenuLuhmannDepth2 = new javax.swing.JMenuItem();
-		viewMenuLuhmannDepth3 = new javax.swing.JMenuItem();
-		viewMenuLuhmannDepth4 = new javax.swing.JMenuItem();
-		viewMenuLuhmannDepth5 = new javax.swing.JMenuItem();
-		viewMenuKeywords = new javax.swing.JMenu();
-		viewKeywordsCopy = new javax.swing.JMenuItem();
-		jSeparator25 = new javax.swing.JSeparator();
-		viewKeywordsSearchOr = new javax.swing.JMenuItem();
-		viewKeywordsSearchAnd = new javax.swing.JMenuItem();
-		viewKeywordsSearchNot = new javax.swing.JMenuItem();
-		jSeparator26 = new javax.swing.JSeparator();
-		viewKeywordsNew = new javax.swing.JMenuItem();
-		viewKeywordsEdit = new javax.swing.JMenuItem();
-		viewKeywordsDelete = new javax.swing.JMenuItem();
-		jSeparator27 = new javax.swing.JSeparator();
-		viewKeywordsAddToList = new javax.swing.JMenuItem();
-		jSeparator47 = new javax.swing.JSeparator();
-		viewKeywordsLuhmann = new javax.swing.JMenuItem();
-		viewKeywordsLuhmannAnd = new javax.swing.JMenuItem();
-		jSeparator67 = new javax.swing.JSeparator();
-		viewKeywordsManLinks = new javax.swing.JMenuItem();
-		viewKeywordsManLinksAnd = new javax.swing.JMenuItem();
-		jSeparator48 = new javax.swing.JSeparator();
-		viewKeywordsDesktop = new javax.swing.JMenuItem();
-		viewKeywordsDesktopAnd = new javax.swing.JMenuItem();
-		jSeparator80 = new javax.swing.JSeparator();
-		viewKeywordsExport = new javax.swing.JMenuItem();
-		viewMenuAuthors = new javax.swing.JMenu();
-		viewAuthorsCopy = new javax.swing.JMenuItem();
-		jSeparator28 = new javax.swing.JSeparator();
-		viewAuthorsSubFind = new javax.swing.JMenu();
-		viewAuthorsSearchOr = new javax.swing.JMenuItem();
-		viewAuthorsSearchAnd = new javax.swing.JMenuItem();
-		viewAuthorsSearchNot = new javax.swing.JMenuItem();
-		jSeparator29 = new javax.swing.JSeparator();
-		viewAuthorsSubEdit = new javax.swing.JMenu();
-		viewAuthorsNew = new javax.swing.JMenuItem();
-		viewAuthorsEdit = new javax.swing.JMenuItem();
-		viewAuthorsDelete = new javax.swing.JMenuItem();
-		jSeparator90 = new javax.swing.JSeparator();
-		viewAuthorsBibkey = new javax.swing.JMenuItem();
-		jSeparator30 = new javax.swing.JSeparator();
-		viewAuthorsSubAdd = new javax.swing.JMenu();
-		viewAuthorsAddToEntry = new javax.swing.JMenuItem();
-		jSeparator51 = new javax.swing.JSeparator();
-		viewAuthorsManLinks = new javax.swing.JMenuItem();
-		viewAuthorsManLinksAnd = new javax.swing.JMenuItem();
-		jSeparator71 = new javax.swing.JSeparator();
-		viewAuthorsAddLuhmann = new javax.swing.JMenuItem();
-		viewAuthorsAddLuhmannAnd = new javax.swing.JMenuItem();
-		jSeparator52 = new javax.swing.JSeparator();
-		viewAuthorsDesktop = new javax.swing.JMenuItem();
-		viewAuthorsDesktopAnd = new javax.swing.JMenuItem();
-		jSeparator81 = new javax.swing.JSeparator();
-		viewAuthorsImport = new javax.swing.JMenuItem();
-		viewAuthorsExport = new javax.swing.JMenuItem();
-		jSeparator92 = new javax.swing.JSeparator();
-		viewAuthorsAttachBibtexFile = new javax.swing.JMenuItem();
-		viewAuthorsRefreshBibtexFile = new javax.swing.JMenuItem();
-		viewMenuTitles = new javax.swing.JMenu();
-		viewTitlesCopy = new javax.swing.JMenuItem();
-		jSeparator43 = new javax.swing.JSeparator();
-		viewTitlesEdit = new javax.swing.JMenuItem();
-		viewTitlesDelete = new javax.swing.JMenuItem();
-		jSeparator105 = new javax.swing.JSeparator();
-		viewTitlesAutomaticFirstLine = new javax.swing.JMenuItem();
-		jSeparator42 = new javax.swing.JSeparator();
-		viewTitlesManLinks = new javax.swing.JMenuItem();
-		viewTitlesLuhmann = new javax.swing.JMenuItem();
-		viewTitlesBookmarks = new javax.swing.JMenuItem();
-		jSeparator113 = new javax.swing.JPopupMenu.Separator();
-		viewTitlesDesktop = new javax.swing.JMenuItem();
-		jSeparator108 = new javax.swing.JPopupMenu.Separator();
-		viewTitlesExport = new javax.swing.JMenuItem();
-		viewMenuCluster = new javax.swing.JMenu();
-		viewClusterExport = new javax.swing.JMenuItem();
-		viewClusterExportToSearch = new javax.swing.JMenuItem();
-		viewMenuBookmarks = new javax.swing.JMenu();
-		viewBookmarksEdit = new javax.swing.JMenuItem();
-		viewBookmarksDelete = new javax.swing.JMenuItem();
-		jSeparator35 = new javax.swing.JSeparator();
-		viewBookmarksEditCat = new javax.swing.JMenuItem();
-		viewBookmarksDeleteCat = new javax.swing.JMenuItem();
-		jSeparator37 = new javax.swing.JSeparator();
-		viewBookmarksManLink = new javax.swing.JMenuItem();
-		viewBookmarksAddLuhmann = new javax.swing.JMenuItem();
-		jSeparator59 = new javax.swing.JSeparator();
-		viewBookmarkDesktop = new javax.swing.JMenuItem();
-		jSeparator82 = new javax.swing.JSeparator();
-		viewBookmarksExport = new javax.swing.JMenuItem();
-		viewBookmarksExportSearch = new javax.swing.JMenuItem();
-		viewMenuAttachments = new javax.swing.JMenu();
-		viewAttachmentsCopy = new javax.swing.JMenuItem();
-		jSeparator84 = new javax.swing.JSeparator();
-		viewAttachmentEdit = new javax.swing.JMenuItem();
-		viewAttachmentsDelete = new javax.swing.JMenuItem();
-		jSeparator85 = new javax.swing.JSeparator();
-		viewMenuAttachmentGoto = new javax.swing.JMenuItem();
-		jSeparator93 = new javax.swing.JSeparator();
-		viewAttachmentsExport = new javax.swing.JMenuItem();
-		windowsMenu = new javax.swing.JMenu();
-		showSearchResultsMenuItem = new javax.swing.JMenuItem();
-		jSeparator44 = new javax.swing.JSeparator();
-		showDesktopMenuItem = new javax.swing.JMenuItem();
-		jSeparator109 = new javax.swing.JSeparator();
-		showNewEntryMenuItem = new javax.swing.JMenuItem();
-		jSeparator34 = new javax.swing.JPopupMenu.Separator();
-		showErrorLogMenuItem = new javax.swing.JMenuItem();
-		aboutMenu = new javax.swing.JMenu();
-		aboutMenuItem = new javax.swing.JMenuItem();
-		jSeparatorAbout1 = new javax.swing.JSeparator();
-		preferencesMenuItem = new javax.swing.JMenuItem();
-		statusPanel = new javax.swing.JPanel();
-		jPanel12 = new javax.swing.JPanel();
-		statusEntryLabel = new javax.swing.JLabel();
-		statusAnimationLabel = new javax.swing.JLabel();
-		jTextFieldEntryNumber = new javax.swing.JTextField();
-		statusOfEntryLabel = new javax.swing.JLabel();
-		buttonHistoryBack = new javax.swing.JButton();
-		buttonHistoryFore = new javax.swing.JButton();
-		statusMsgLabel = new javax.swing.JLabel();
-		statusErrorButton = new javax.swing.JButton();
-		statusDesktopEntryButton = new javax.swing.JButton();
-		toolBar = new javax.swing.JToolBar();
-		tb_newEntry = new javax.swing.JButton();
-		tb_open = new javax.swing.JButton();
-		tb_save = new javax.swing.JButton();
-		jSeparator4 = new javax.swing.JToolBar.Separator();
-		tb_edit = new javax.swing.JButton();
-		tb_delete = new javax.swing.JButton();
-		tb_copy = new javax.swing.JButton();
-		tb_paste = new javax.swing.JButton();
-		tb_selectall = new javax.swing.JButton();
-		jSeparator5 = new javax.swing.JToolBar.Separator();
-		tb_addmanlinks = new javax.swing.JButton();
-		tb_addluhmann = new javax.swing.JButton();
-		tb_addbookmark = new javax.swing.JButton();
-		tb_addtodesktop = new javax.swing.JButton();
-		jSeparator10 = new javax.swing.JToolBar.Separator();
-		tb_find = new javax.swing.JButton();
-		tb_first = new javax.swing.JButton();
-		tb_prev = new javax.swing.JButton();
-		tb_next = new javax.swing.JButton();
-		tb_last = new javax.swing.JButton();
-		jSeparator32 = new javax.swing.JToolBar.Separator();
-		jLabelMemory = new javax.swing.JLabel();
-		jPopupMenuKeywords = new javax.swing.JPopupMenu();
-		popupKeywordsCopy = new javax.swing.JMenuItem();
-		jSeparator8 = new javax.swing.JSeparator();
-		popupKeywordsSearchOr = new javax.swing.JMenuItem();
-		popupKeywordsSearchAnd = new javax.swing.JMenuItem();
-		popupKeywordsSearchNot = new javax.swing.JMenuItem();
-		jSeparator9 = new javax.swing.JSeparator();
-		popupKeywordsNew = new javax.swing.JMenuItem();
-		popupKeywordsEdit = new javax.swing.JMenuItem();
-		popupKeywordsDelete = new javax.swing.JMenuItem();
-		jSeparator7 = new javax.swing.JSeparator();
-		popupKeywordsAddToList = new javax.swing.JMenuItem();
-		jSeparator45 = new javax.swing.JSeparator();
-		popupKeywordsManLinks = new javax.swing.JMenuItem();
-		popupKeywordsManLinksAnd = new javax.swing.JMenuItem();
-		jSeparator66 = new javax.swing.JSeparator();
-		popupKeywordsLuhmann = new javax.swing.JMenuItem();
-		popupKeywordsLuhmannAnd = new javax.swing.JMenuItem();
-		jSeparator46 = new javax.swing.JSeparator();
-		popupKeywordsDesktop = new javax.swing.JMenuItem();
-		popupKeywordsDesktopAnd = new javax.swing.JMenuItem();
-		jPopupMenuKeywordList = new javax.swing.JPopupMenu();
-		popupKwListCopy = new javax.swing.JMenuItem();
-		jSeparator89 = new javax.swing.JSeparator();
-		popupKwListSearchOr = new javax.swing.JMenuItem();
-		popupKwListSearchAnd = new javax.swing.JMenuItem();
-		popupKwListSearchNot = new javax.swing.JMenuItem();
-		jSeparator13 = new javax.swing.JSeparator();
-		popupKwListHighlight = new javax.swing.JMenuItem();
-		popupKwListHighlightSegments = new javax.swing.JCheckBoxMenuItem();
-		popupKwListRefresh = new javax.swing.JMenuItem();
-		jSeparator11 = new javax.swing.JSeparator();
-		popupKwListLogOr = new javax.swing.JCheckBoxMenuItem();
-		popupKwListLogAnd = new javax.swing.JCheckBoxMenuItem();
-		jSeparator12 = new javax.swing.JSeparator();
-		popupKwListDelete = new javax.swing.JMenuItem();
-		jPopupMenuAuthors = new javax.swing.JPopupMenu();
-		popupAuthorsCopy = new javax.swing.JMenuItem();
-		jSeparator14 = new javax.swing.JSeparator();
-		popupAuthorsSearchLogOr = new javax.swing.JMenuItem();
-		popupAuthorsSearchLogAnd = new javax.swing.JMenuItem();
-		popupAuthorsSearchLogNot = new javax.swing.JMenuItem();
-		jSeparator15 = new javax.swing.JSeparator();
-		popupAuthorsNew = new javax.swing.JMenuItem();
-		popupAuthorsEdit = new javax.swing.JMenuItem();
-		popupAuthorsDelete = new javax.swing.JMenuItem();
-		jSeparator91 = new javax.swing.JSeparator();
-		popupAuthorsBibkey = new javax.swing.JMenuItem();
-		jSeparator16 = new javax.swing.JSeparator();
-		popupAuthorsAddToEntry = new javax.swing.JMenuItem();
-		jSeparator49 = new javax.swing.JSeparator();
-		popupAuthorsSubAdd = new javax.swing.JMenu();
-		popupAuthorsManLinks = new javax.swing.JMenuItem();
-		popupAuthorsManLinksAnd = new javax.swing.JMenuItem();
-		jSeparator70 = new javax.swing.JSeparator();
-		popupAuthorsLuhmann = new javax.swing.JMenuItem();
-		popupAuthorsLuhmannAnd = new javax.swing.JMenuItem();
-		jSeparator50 = new javax.swing.JSeparator();
-		popupAuthorsDesktop = new javax.swing.JMenuItem();
-		popupAuthorsDesktopAnd = new javax.swing.JMenuItem();
-		jSeparator96 = new javax.swing.JSeparator();
-		popupAuthorsImport = new javax.swing.JMenuItem();
-		jPopupMenuLuhmann = new javax.swing.JPopupMenu();
-		popupLuhmannAdd = new javax.swing.JMenuItem();
-		jSeparator17 = new javax.swing.JSeparator();
-		popupLuhmannDelete = new javax.swing.JMenuItem();
-		jSeparator60 = new javax.swing.JSeparator();
-		popupLuhmannManLinks = new javax.swing.JMenuItem();
-		popupLuhmannBookmarks = new javax.swing.JMenuItem();
-		jSeparator63 = new javax.swing.JSeparator();
-		popupLuhmannDesktop = new javax.swing.JMenuItem();
-		jSeparator117 = new javax.swing.JPopupMenu.Separator();
-		popupLuhmannSetLevel = new javax.swing.JMenu();
-		popupLuhmannLevelAll = new javax.swing.JMenuItem();
-		jSeparator74 = new javax.swing.JPopupMenu.Separator();
-		popupLuhmannLevel1 = new javax.swing.JMenuItem();
-		popupLuhmannLevel2 = new javax.swing.JMenuItem();
-		popupLuhmannLevel3 = new javax.swing.JMenuItem();
-		popupLuhmannLevel4 = new javax.swing.JMenuItem();
-		popupLuhmannLevel5 = new javax.swing.JMenuItem();
-		jPopupMenuTitles = new javax.swing.JPopupMenu();
-		popupTitlesCopy = new javax.swing.JMenuItem();
-		jSeparator20 = new javax.swing.JSeparator();
-		popupTitlesEdit = new javax.swing.JMenuItem();
-		popupTitlesEditEntry = new javax.swing.JMenuItem();
-		jSeparator103 = new javax.swing.JSeparator();
-		popupTitlesDelete = new javax.swing.JMenuItem();
-		jSeparator114 = new javax.swing.JPopupMenu.Separator();
-		popupTitlesAutomaticTitle = new javax.swing.JMenuItem();
-		jSeparator21 = new javax.swing.JSeparator();
-		popupTitlesManLinks = new javax.swing.JMenuItem();
-		popupTitlesLuhmann = new javax.swing.JMenuItem();
-		popupTitlesBookmarks = new javax.swing.JMenuItem();
-		jSeparator64 = new javax.swing.JSeparator();
-		popupTitlesDesktop = new javax.swing.JMenuItem();
-		jPopupMenuBookmarks = new javax.swing.JPopupMenu();
-		popupBookmarksEdit = new javax.swing.JMenuItem();
-		popupBookmarksDelete = new javax.swing.JMenuItem();
-		jSeparator36 = new javax.swing.JSeparator();
-		popupBookmarksEditCat = new javax.swing.JMenuItem();
-		popupBookmarksDeleteCat = new javax.swing.JMenuItem();
-		jSeparator38 = new javax.swing.JSeparator();
-		popupBookmarksAddManLinks = new javax.swing.JMenuItem();
-		popupBookmarksAddLuhmann = new javax.swing.JMenuItem();
-		jSeparator56 = new javax.swing.JSeparator();
-		popupBookmarkAddDesktop = new javax.swing.JMenuItem();
-		jPopupMenuLinks = new javax.swing.JPopupMenu();
-		popupLinksRefresh = new javax.swing.JMenuItem();
-		jSeparator115 = new javax.swing.JPopupMenu.Separator();
-		popupLinkRemoveManLink = new javax.swing.JMenuItem();
-		jSeparator54 = new javax.swing.JSeparator();
-		popupLinksManLinks = new javax.swing.JMenuItem();
-		popupLinksLuhmann = new javax.swing.JMenuItem();
-		jSeparator57 = new javax.swing.JSeparator();
-		popupLinksDesktop = new javax.swing.JMenuItem();
-		jPopupMenuAttachments = new javax.swing.JPopupMenu();
-		popupAttachmentsCopy = new javax.swing.JMenuItem();
-		jSeparator87 = new javax.swing.JSeparator();
-		popupAttachmentsEdit = new javax.swing.JMenuItem();
-		popupAttachmentsDelete = new javax.swing.JMenuItem();
-		jSeparator94 = new javax.swing.JSeparator();
-		popupAttachmentsGoto = new javax.swing.JMenuItem();
-		jSeparator86 = new javax.swing.JSeparator();
-		popupAttachmentsExport = new javax.swing.JMenuItem();
-		jPopupMenuMain = new javax.swing.JPopupMenu();
-		popupMainCopy = new javax.swing.JMenuItem();
-		popupMainCopyPlain = new javax.swing.JMenuItem();
-		jSeparator88 = new javax.swing.JSeparator();
-		popupMainFind = new javax.swing.JMenuItem();
-		jSeparator97 = new javax.swing.JSeparator();
-		popupMainAddToKeyword = new javax.swing.JMenuItem();
-		jSeparator98 = new javax.swing.JSeparator();
-		popupMainSetFirstLineAsTitle = new javax.swing.JMenuItem();
-		popupMainSetSelectionAsTitle = new javax.swing.JMenuItem();
+				: new JTable();
+		jTextFieldFilterAttachments = new JTextField();
+		jButtonRefreshAttachments = new JButton();
+		menuBar = new JMenuBar();
+		fileMenu = new JMenu();
+		newEntryMenuItem = new JMenuItem();
+		insertEntryMenuItem = new JMenuItem();
+		jSeparator104 = new JSeparator();
+		quickNewEntryMenuItem = new JMenuItem();
+		quickNewTitleEntryMenuItem = new JMenuItem();
+		jSeparator1 = new JSeparator();
+		openMenuItem = new JMenuItem();
+		recentDocsSubMenu = new JMenu();
+		recentDoc1 = new JMenuItem();
+		recentDoc2 = new JMenuItem();
+		recentDoc3 = new JMenuItem();
+		recentDoc4 = new JMenuItem();
+		recentDoc5 = new JMenuItem();
+		recentDoc6 = new JMenuItem();
+		recentDoc7 = new JMenuItem();
+		recentDoc8 = new JMenuItem();
+		jSeparator107 = new JSeparator();
+		saveMenuItem = new JMenuItem();
+		saveAsMenuItem = new JMenuItem();
+		jSeparator2 = new JSeparator();
+		newDesktopMenuItem = new JMenuItem();
+		newZettelkastenMenuItem = new JMenuItem();
+		jSeparator78 = new JSeparator();
+		importMenuItem = new JMenuItem();
+		exportMenuItem = new JMenuItem();
+		jSeparator77 = new JSeparator();
+		menuFileInformation = new JMenuItem();
+		jSeparatorExit = new JSeparator();
+		exitMenuItem = new JMenuItem();
+		editMenu = new JMenu();
+		editMenuItem = new JMenuItem();
+		jSeparator33 = new JSeparator();
+		deleteZettelMenuItem = new JMenuItem();
+		jSeparator6 = new JSeparator();
+		deleteKwFromListMenuItem = new JMenuItem();
+		jSeparator40 = new JSeparator();
+		copyMenuItem = new JMenuItem();
+		copyPlainMenuItem = new JMenuItem();
+		pasteMenuItem = new JMenuItem();
+		selectAllMenuItem = new JMenuItem();
+		jSeparator99 = new JSeparator();
+		addSelectionToKeywordMenuItem = new JMenuItem();
+		addFirstLineToTitleMenuItem = new JMenuItem();
+		addSelectionToTitleMenuItem = new JMenuItem();
+		jSeparator24 = new JSeparator();
+		manualInsertLinksMenuItem = new JMenuItem();
+		manualInsertMenuItem = new JMenuItem();
+		jSeparator41 = new JSeparator();
+		setBookmarkMenuItem = new JMenuItem();
+		addToDesktopMenuItem = new JMenuItem();
+		findMenu = new JMenu();
+		findMenuItem = new JMenuItem();
+		findReplaceMenuItem = new JMenuItem();
+		jSeparator31 = new JSeparator();
+		findEntryWithout = new JMenu();
+		findEntriesWithoutKeywords = new JMenuItem();
+		jSeparator69 = new JSeparator();
+		findEntriesWithoutAuthors = new JMenuItem();
+		jSeparator75 = new JSeparator();
+		findEntriesWithoutRemarks = new JMenuItem();
+		findEntriesWithRemarks = new JMenuItem();
+		jSeparator106 = new JPopupMenu.Separator();
+		findEntriesWithoutManualLinks = new JMenuItem();
+		jSeparator65 = new JPopupMenu.Separator();
+		findEntriesAnyLuhmann = new JMenuItem();
+		findEntriesTopLevelLuhmann = new JMenuItem();
+		jSeparator110 = new JSeparator();
+		findEntriesWithRatings = new JMenuItem();
+		findEntriesWithoutRatings = new JMenuItem();
+		jSeparator76 = new JSeparator();
+		findEntriesWithAttachments = new JMenuItem();
+		jSeparator83 = new JSeparator();
+		findEntriesFromCreatedTimestamp = new JMenuItem();
+		findEntriesFromEditedTimestamp = new JMenuItem();
+		jSeparator95 = new JSeparator();
+		findDoubleEntriesItem = new JMenuItem();
+		jSeparator68 = new JSeparator();
+		findEntryKeywordsMenu = new JMenu();
+		menuKwListSearchOr = new JMenuItem();
+		jSeparator19 = new JSeparator();
+		menuKwListSearchAnd = new JMenuItem();
+		jSeparator39 = new JSeparator();
+		menuKwListSearchNot = new JMenuItem();
+		jSeparator18 = new JSeparator();
+		liveSearchMenuItem = new JMenuItem();
+		jSeparator22 = new JSeparator();
+		homeMenuItem = new JMenuItem();
+		prevEntryMenuItem = new JMenuItem();
+		nextEntryMenuItem = new JMenuItem();
+		lastEntryMenuItem = new JMenuItem();
+		jSeparator72 = new JPopupMenu.Separator();
+		randomEntryMenuItem = new JMenuItem();
+		jSeparator111 = new JPopupMenu.Separator();
+		historyForMenuItem = new JMenuItem();
+		histroyBackMenuItem = new JMenuItem();
+		goToFirstParentEntryMenuItem = new JMenuItem();
+		jSeparator112 = new JPopupMenu.Separator();
+		gotoEntryMenuItem = new JMenuItem();
+		viewMenu = new JMenu();
+		showLinksMenuItem = new JMenuItem();
+		showLuhmannMenuItem = new JMenuItem();
+		showKeywordsMenuItem = new JMenuItem();
+		showAuthorsMenuItem = new JMenuItem();
+		showTitlesMenuItem = new JMenuItem();
+		showClusterMenuItem = new JMenuItem();
+		showBookmarksMenuItem = new JMenuItem();
+		showAttachmentsMenuItem = new JMenuItem();
+		jSeparator23 = new JSeparator();
+		showCurrentEntryAgain = new JMenuItem();
+		jSeparator55 = new JSeparator();
+		showHighlightKeywords = new JCheckBoxMenuItem();
+		highlightSegmentsMenuItem = new JCheckBoxMenuItem();
+		viewMenuLinks = new JMenu();
+		viewMenuLinksKwListRefresh = new JMenuItem();
+		jSeparator116 = new JPopupMenu.Separator();
+		viewMenuLinksRemoveManLink = new JMenuItem();
+		jSeparator3 = new JSeparator();
+		viewMenuLinksKwListLogOr = new JCheckBoxMenuItem();
+		viewMenuLinksKwListLogAnd = new JCheckBoxMenuItem();
+		jSeparator53 = new JSeparator();
+		viewMenuLinksManLink = new JMenuItem();
+		viewMenuLinksLuhmann = new JMenuItem();
+		jSeparator58 = new JSeparator();
+		viewMenuLinksDesktop = new JMenuItem();
+		jSeparator100 = new JSeparator();
+		viewMenuLinksExport = new JMenuItem();
+		viewMenuExportToSearch = new JMenuItem();
+		viewMenuLuhmann = new JMenu();
+		viewMenuLuhmannDelete = new JMenuItem();
+		jSeparator61 = new JSeparator();
+		viewMenuLuhmannManLinks = new JMenuItem();
+		viewMenuLuhmannBookmarks = new JMenuItem();
+		jSeparator62 = new JSeparator();
+		viewMenuLuhmannDesktop = new JMenuItem();
+		jSeparator73 = new JPopupMenu.Separator();
+		viewMenuLuhmannShowTopLevel = new JMenuItem();
+		jSeparator102 = new JSeparator();
+		viewMenuLuhmannExport = new JMenuItem();
+		viewMenuLuhmannExportSearch = new JMenuItem();
+		jSeparator118 = new JPopupMenu.Separator();
+		viewMenuLuhmannShowNumbers = new JCheckBoxMenuItem();
+		jSeparator101 = new JPopupMenu.Separator();
+		viewMenuLuhmannShowLevel = new JMenu();
+		viewMenuLuhmannDepthAll = new JMenuItem();
+		jSeparator119 = new JPopupMenu.Separator();
+		viewMenuLuhmannDepth1 = new JMenuItem();
+		viewMenuLuhmannDepth2 = new JMenuItem();
+		viewMenuLuhmannDepth3 = new JMenuItem();
+		viewMenuLuhmannDepth4 = new JMenuItem();
+		viewMenuLuhmannDepth5 = new JMenuItem();
+		viewMenuKeywords = new JMenu();
+		viewKeywordsCopy = new JMenuItem();
+		jSeparator25 = new JSeparator();
+		viewKeywordsSearchOr = new JMenuItem();
+		viewKeywordsSearchAnd = new JMenuItem();
+		viewKeywordsSearchNot = new JMenuItem();
+		jSeparator26 = new JSeparator();
+		viewKeywordsNew = new JMenuItem();
+		viewKeywordsEdit = new JMenuItem();
+		viewKeywordsDelete = new JMenuItem();
+		jSeparator27 = new JSeparator();
+		viewKeywordsAddToList = new JMenuItem();
+		jSeparator47 = new JSeparator();
+		viewKeywordsLuhmann = new JMenuItem();
+		viewKeywordsLuhmannAnd = new JMenuItem();
+		jSeparator67 = new JSeparator();
+		viewKeywordsManLinks = new JMenuItem();
+		viewKeywordsManLinksAnd = new JMenuItem();
+		jSeparator48 = new JSeparator();
+		viewKeywordsDesktop = new JMenuItem();
+		viewKeywordsDesktopAnd = new JMenuItem();
+		jSeparator80 = new JSeparator();
+		viewKeywordsExport = new JMenuItem();
+		viewMenuAuthors = new JMenu();
+		viewAuthorsCopy = new JMenuItem();
+		jSeparator28 = new JSeparator();
+		viewAuthorsSubFind = new JMenu();
+		viewAuthorsSearchOr = new JMenuItem();
+		viewAuthorsSearchAnd = new JMenuItem();
+		viewAuthorsSearchNot = new JMenuItem();
+		jSeparator29 = new JSeparator();
+		viewAuthorsSubEdit = new JMenu();
+		viewAuthorsNew = new JMenuItem();
+		viewAuthorsEdit = new JMenuItem();
+		viewAuthorsDelete = new JMenuItem();
+		jSeparator90 = new JSeparator();
+		viewAuthorsBibkey = new JMenuItem();
+		jSeparator30 = new JSeparator();
+		viewAuthorsSubAdd = new JMenu();
+		viewAuthorsAddToEntry = new JMenuItem();
+		jSeparator51 = new JSeparator();
+		viewAuthorsManLinks = new JMenuItem();
+		viewAuthorsManLinksAnd = new JMenuItem();
+		jSeparator71 = new JSeparator();
+		viewAuthorsAddLuhmann = new JMenuItem();
+		viewAuthorsAddLuhmannAnd = new JMenuItem();
+		jSeparator52 = new JSeparator();
+		viewAuthorsDesktop = new JMenuItem();
+		viewAuthorsDesktopAnd = new JMenuItem();
+		jSeparator81 = new JSeparator();
+		viewAuthorsImport = new JMenuItem();
+		viewAuthorsExport = new JMenuItem();
+		jSeparator92 = new JSeparator();
+		viewAuthorsAttachBibtexFile = new JMenuItem();
+		viewAuthorsRefreshBibtexFile = new JMenuItem();
+		viewMenuTitles = new JMenu();
+		viewTitlesCopy = new JMenuItem();
+		jSeparator43 = new JSeparator();
+		viewTitlesEdit = new JMenuItem();
+		viewTitlesDelete = new JMenuItem();
+		jSeparator105 = new JSeparator();
+		viewTitlesAutomaticFirstLine = new JMenuItem();
+		jSeparator42 = new JSeparator();
+		viewTitlesManLinks = new JMenuItem();
+		viewTitlesLuhmann = new JMenuItem();
+		viewTitlesBookmarks = new JMenuItem();
+		jSeparator113 = new JPopupMenu.Separator();
+		viewTitlesDesktop = new JMenuItem();
+		jSeparator108 = new JPopupMenu.Separator();
+		viewTitlesExport = new JMenuItem();
+		viewMenuCluster = new JMenu();
+		viewClusterExport = new JMenuItem();
+		viewClusterExportToSearch = new JMenuItem();
+		viewMenuBookmarks = new JMenu();
+		viewBookmarksEdit = new JMenuItem();
+		viewBookmarksDelete = new JMenuItem();
+		jSeparator35 = new JSeparator();
+		viewBookmarksEditCat = new JMenuItem();
+		viewBookmarksDeleteCat = new JMenuItem();
+		jSeparator37 = new JSeparator();
+		viewBookmarksManLink = new JMenuItem();
+		viewBookmarksAddLuhmann = new JMenuItem();
+		jSeparator59 = new JSeparator();
+		viewBookmarkDesktop = new JMenuItem();
+		jSeparator82 = new JSeparator();
+		viewBookmarksExport = new JMenuItem();
+		viewBookmarksExportSearch = new JMenuItem();
+		viewMenuAttachments = new JMenu();
+		viewAttachmentsCopy = new JMenuItem();
+		jSeparator84 = new JSeparator();
+		viewAttachmentEdit = new JMenuItem();
+		viewAttachmentsDelete = new JMenuItem();
+		jSeparator85 = new JSeparator();
+		viewMenuAttachmentGoto = new JMenuItem();
+		jSeparator93 = new JSeparator();
+		viewAttachmentsExport = new JMenuItem();
+		windowsMenu = new JMenu();
+		showSearchResultsMenuItem = new JMenuItem();
+		jSeparator44 = new JSeparator();
+		showDesktopMenuItem = new JMenuItem();
+		jSeparator109 = new JSeparator();
+		showNewEntryMenuItem = new JMenuItem();
+		jSeparator34 = new JPopupMenu.Separator();
+		showErrorLogMenuItem = new JMenuItem();
+		aboutMenu = new JMenu();
+		aboutMenuItem = new JMenuItem();
+		jSeparatorAbout1 = new JSeparator();
+		preferencesMenuItem = new JMenuItem();
+		statusPanel = new JPanel();
+		jPanel12 = new JPanel();
+		statusEntryLabel = new JLabel();
+		statusAnimationLabel = new JLabel();
+		jTextFieldEntryNumber = new JTextField();
+		statusOfEntryLabel = new JLabel();
+		buttonHistoryBack = new JButton();
+		buttonHistoryFore = new JButton();
+		statusMsgLabel = new JLabel();
+		statusErrorButton = new JButton();
+		statusDesktopEntryButton = new JButton();
+		toolBar = new JToolBar();
+		tb_newEntry = new JButton();
+		tb_open = new JButton();
+		tb_save = new JButton();
+		jSeparator4 = new JToolBar.Separator();
+		tb_edit = new JButton();
+		tb_delete = new JButton();
+		tb_copy = new JButton();
+		tb_paste = new JButton();
+		tb_selectall = new JButton();
+		jSeparator5 = new JToolBar.Separator();
+		tb_addmanlinks = new JButton();
+		tb_addluhmann = new JButton();
+		tb_addbookmark = new JButton();
+		tb_addtodesktop = new JButton();
+		jSeparator10 = new JToolBar.Separator();
+		tb_find = new JButton();
+		tb_first = new JButton();
+		tb_prev = new JButton();
+		tb_next = new JButton();
+		tb_last = new JButton();
+		jSeparator32 = new JToolBar.Separator();
+		jLabelMemory = new JLabel();
+		jPopupMenuKeywords = new JPopupMenu();
+		popupKeywordsCopy = new JMenuItem();
+		jSeparator8 = new JSeparator();
+		popupKeywordsSearchOr = new JMenuItem();
+		popupKeywordsSearchAnd = new JMenuItem();
+		popupKeywordsSearchNot = new JMenuItem();
+		jSeparator9 = new JSeparator();
+		popupKeywordsNew = new JMenuItem();
+		popupKeywordsEdit = new JMenuItem();
+		popupKeywordsDelete = new JMenuItem();
+		jSeparator7 = new JSeparator();
+		popupKeywordsAddToList = new JMenuItem();
+		jSeparator45 = new JSeparator();
+		popupKeywordsManLinks = new JMenuItem();
+		popupKeywordsManLinksAnd = new JMenuItem();
+		jSeparator66 = new JSeparator();
+		popupKeywordsLuhmann = new JMenuItem();
+		popupKeywordsLuhmannAnd = new JMenuItem();
+		jSeparator46 = new JSeparator();
+		popupKeywordsDesktop = new JMenuItem();
+		popupKeywordsDesktopAnd = new JMenuItem();
+		jPopupMenuKeywordList = new JPopupMenu();
+		popupKwListCopy = new JMenuItem();
+		jSeparator89 = new JSeparator();
+		popupKwListSearchOr = new JMenuItem();
+		popupKwListSearchAnd = new JMenuItem();
+		popupKwListSearchNot = new JMenuItem();
+		jSeparator13 = new JSeparator();
+		popupKwListHighlight = new JMenuItem();
+		popupKwListHighlightSegments = new JCheckBoxMenuItem();
+		popupKwListRefresh = new JMenuItem();
+		jSeparator11 = new JSeparator();
+		popupKwListLogOr = new JCheckBoxMenuItem();
+		popupKwListLogAnd = new JCheckBoxMenuItem();
+		jSeparator12 = new JSeparator();
+		popupKwListDelete = new JMenuItem();
+		jPopupMenuAuthors = new JPopupMenu();
+		popupAuthorsCopy = new JMenuItem();
+		jSeparator14 = new JSeparator();
+		popupAuthorsSearchLogOr = new JMenuItem();
+		popupAuthorsSearchLogAnd = new JMenuItem();
+		popupAuthorsSearchLogNot = new JMenuItem();
+		jSeparator15 = new JSeparator();
+		popupAuthorsNew = new JMenuItem();
+		popupAuthorsEdit = new JMenuItem();
+		popupAuthorsDelete = new JMenuItem();
+		jSeparator91 = new JSeparator();
+		popupAuthorsBibkey = new JMenuItem();
+		jSeparator16 = new JSeparator();
+		popupAuthorsAddToEntry = new JMenuItem();
+		jSeparator49 = new JSeparator();
+		popupAuthorsSubAdd = new JMenu();
+		popupAuthorsManLinks = new JMenuItem();
+		popupAuthorsManLinksAnd = new JMenuItem();
+		jSeparator70 = new JSeparator();
+		popupAuthorsLuhmann = new JMenuItem();
+		popupAuthorsLuhmannAnd = new JMenuItem();
+		jSeparator50 = new JSeparator();
+		popupAuthorsDesktop = new JMenuItem();
+		popupAuthorsDesktopAnd = new JMenuItem();
+		jSeparator96 = new JSeparator();
+		popupAuthorsImport = new JMenuItem();
+		jPopupMenuLuhmann = new JPopupMenu();
+		popupLuhmannAdd = new JMenuItem();
+		jSeparator17 = new JSeparator();
+		popupLuhmannDelete = new JMenuItem();
+		jSeparator60 = new JSeparator();
+		popupLuhmannManLinks = new JMenuItem();
+		popupLuhmannBookmarks = new JMenuItem();
+		jSeparator63 = new JSeparator();
+		popupLuhmannDesktop = new JMenuItem();
+		jSeparator117 = new JPopupMenu.Separator();
+		popupLuhmannSetLevel = new JMenu();
+		popupLuhmannLevelAll = new JMenuItem();
+		jSeparator74 = new JPopupMenu.Separator();
+		popupLuhmannLevel1 = new JMenuItem();
+		popupLuhmannLevel2 = new JMenuItem();
+		popupLuhmannLevel3 = new JMenuItem();
+		popupLuhmannLevel4 = new JMenuItem();
+		popupLuhmannLevel5 = new JMenuItem();
+		jPopupMenuTitles = new JPopupMenu();
+		popupTitlesCopy = new JMenuItem();
+		jSeparator20 = new JSeparator();
+		popupTitlesEdit = new JMenuItem();
+		popupTitlesEditEntry = new JMenuItem();
+		jSeparator103 = new JSeparator();
+		popupTitlesDelete = new JMenuItem();
+		jSeparator114 = new JPopupMenu.Separator();
+		popupTitlesAutomaticTitle = new JMenuItem();
+		jSeparator21 = new JSeparator();
+		popupTitlesManLinks = new JMenuItem();
+		popupTitlesLuhmann = new JMenuItem();
+		popupTitlesBookmarks = new JMenuItem();
+		jSeparator64 = new JSeparator();
+		popupTitlesDesktop = new JMenuItem();
+		jPopupMenuBookmarks = new JPopupMenu();
+		popupBookmarksEdit = new JMenuItem();
+		popupBookmarksDelete = new JMenuItem();
+		jSeparator36 = new JSeparator();
+		popupBookmarksEditCat = new JMenuItem();
+		popupBookmarksDeleteCat = new JMenuItem();
+		jSeparator38 = new JSeparator();
+		popupBookmarksAddManLinks = new JMenuItem();
+		popupBookmarksAddLuhmann = new JMenuItem();
+		jSeparator56 = new JSeparator();
+		popupBookmarkAddDesktop = new JMenuItem();
+		jPopupMenuLinks = new JPopupMenu();
+		popupLinksRefresh = new JMenuItem();
+		jSeparator115 = new JPopupMenu.Separator();
+		popupLinkRemoveManLink = new JMenuItem();
+		jSeparator54 = new JSeparator();
+		popupLinksManLinks = new JMenuItem();
+		popupLinksLuhmann = new JMenuItem();
+		jSeparator57 = new JSeparator();
+		popupLinksDesktop = new JMenuItem();
+		jPopupMenuAttachments = new JPopupMenu();
+		popupAttachmentsCopy = new JMenuItem();
+		jSeparator87 = new JSeparator();
+		popupAttachmentsEdit = new JMenuItem();
+		popupAttachmentsDelete = new JMenuItem();
+		jSeparator94 = new JSeparator();
+		popupAttachmentsGoto = new JMenuItem();
+		jSeparator86 = new JSeparator();
+		popupAttachmentsExport = new JMenuItem();
+		jPopupMenuMain = new JPopupMenu();
+		popupMainCopy = new JMenuItem();
+		popupMainCopyPlain = new JMenuItem();
+		jSeparator88 = new JSeparator();
+		popupMainFind = new JMenuItem();
+		jSeparator97 = new JSeparator();
+		popupMainAddToKeyword = new JMenuItem();
+		jSeparator98 = new JSeparator();
+		popupMainSetFirstLineAsTitle = new JMenuItem();
+		popupMainSetSelectionAsTitle = new JMenuItem();
 
 		mainPanel.setName("mainPanel"); // NOI18N
-		mainPanel.setLayout(new java.awt.BorderLayout());
+		mainPanel.setLayout(new BorderLayout());
 
 		jSplitPaneMain1.setBorder(null);
 		jSplitPaneMain1.setDividerLocation(650);
@@ -11900,7 +11897,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		jEditorPaneEntry.setEditable(false);
 		jEditorPaneEntry.setBorder(null);
-		org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance()
+		ResourceMap resourceMap = Application.getInstance()
 				.getContext().getResourceMap(ZettelkastenView.class);
 		jEditorPaneEntry.setContentType(resourceMap.getString("jEditorPaneEntry.contentType")); // NOI18N
 		jEditorPaneEntry.setName("jEditorPaneEntry"); // NOI18N
@@ -11912,7 +11909,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTextFieldLiveSearch.setToolTipText(resourceMap.getString("jTextFieldLiveSearch.toolTipText")); // NOI18N
 		jTextFieldLiveSearch.setName("jTextFieldLiveSearch"); // NOI18N
 
-		javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance().getContext()
+		ActionMap actionMap = Application.getInstance().getContext()
 				.getActionMap(ZettelkastenView.class, this);
 		jButton1.setAction(actionMap.get("findLiveCancel")); // NOI18N
 		jButton1.setIcon(resourceMap.getIcon("jButton1.icon")); // NOI18N
@@ -11921,38 +11918,38 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jButton1.setFocusPainted(false);
 		jButton1.setName("jButton1"); // NOI18N
 
-		javax.swing.GroupLayout jPanelLiveSearchLayout = new javax.swing.GroupLayout(jPanelLiveSearch);
+		GroupLayout jPanelLiveSearchLayout = new GroupLayout(jPanelLiveSearch);
 		jPanelLiveSearch.setLayout(jPanelLiveSearchLayout);
 		jPanelLiveSearchLayout.setHorizontalGroup(jPanelLiveSearchLayout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelLiveSearchLayout.createSequentialGroup()
+				.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addGroup(GroupLayout.Alignment.TRAILING, jPanelLiveSearchLayout.createSequentialGroup()
 						.addContainerGap()
-						.addComponent(jTextFieldLiveSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(jButton1,
-								javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addComponent(jTextFieldLiveSearch, GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(jButton1,
+								GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
 						.addContainerGap()));
 		jPanelLiveSearchLayout.setVerticalGroup(jPanelLiveSearchLayout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addGroup(jPanelLiveSearchLayout.createSequentialGroup().addGap(3, 3, 3)
 						.addGroup(jPanelLiveSearchLayout
-								.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-								.addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE,
-										javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(jTextFieldLiveSearch, javax.swing.GroupLayout.DEFAULT_SIZE,
-										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+								.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+								.addComponent(jButton1, GroupLayout.DEFAULT_SIZE,
+										GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(jTextFieldLiveSearch, GroupLayout.DEFAULT_SIZE,
+										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 						.addGap(3, 3, 3)));
 
-		javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
+		GroupLayout jPanel17Layout = new GroupLayout(jPanel17);
 		jPanel17.setLayout(jPanel17Layout);
-		jPanel17Layout.setHorizontalGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
-				.addComponent(jPanelLiveSearch, javax.swing.GroupLayout.DEFAULT_SIZE,
-						javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-		jPanel17Layout.setVerticalGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+		jPanel17Layout.setHorizontalGroup(jPanel17Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+				.addComponent(jPanelLiveSearch, GroupLayout.DEFAULT_SIZE,
+						GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+		jPanel17Layout.setVerticalGroup(jPanel17Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addGroup(jPanel17Layout.createSequentialGroup()
-						.addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
-						.addGap(0, 0, 0).addComponent(jPanelLiveSearch, javax.swing.GroupLayout.PREFERRED_SIZE,
-								javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)));
+						.addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
+						.addGap(0, 0, 0).addComponent(jPanelLiveSearch, GroupLayout.PREFERRED_SIZE,
+								GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)));
 
 		jSplitPaneMain2.setLeftComponent(jPanel17);
 
@@ -11960,7 +11957,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jScrollPane3.setName("jScrollPane3"); // NOI18N
 
 		jListEntryKeywords.setBorder(
-				javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jListEntryKeywords.border.title"))); // NOI18N
+				BorderFactory.createTitledBorder(resourceMap.getString("jListEntryKeywords.border.title"))); // NOI18N
 		jListEntryKeywords.setModel(keywordListModel);
 		jListEntryKeywords.setName("jListEntryKeywords"); // NOI18N
 		jListEntryKeywords.setVisibleRowCount(-1);
@@ -11972,14 +11969,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		jPanelMainRight.setName("jPanelMainRight"); // NOI18N
 
-		jTabbedPaneMain.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+		jTabbedPaneMain.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		jTabbedPaneMain.setName("jTabbedPaneMain"); // NOI18N
 
 		jPanel1.setName("jPanel1"); // NOI18N
 
 		jSplitPaneLinks.setBorder(null);
 		jSplitPaneLinks.setDividerLocation(250);
-		jSplitPaneLinks.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+		jSplitPaneLinks.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneLinks.setName("jSplitPaneLinks"); // NOI18N
 		jSplitPaneLinks.setOneTouchExpandable(true);
 
@@ -11987,11 +11984,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		jScrollPane4.setName("jScrollPane4"); // NOI18N
 
-		jTableLinks.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
+		jTableLinks.setModel(new DefaultTableModel(new Object[][] {
 
 		}, new String[] { "Zettel", "Überschrift", "Relevanz", "Bewertung" }) {
-			Class<?>[] types = new Class<?>[] { java.lang.Integer.class, java.lang.String.class,
-					java.lang.Integer.class, java.lang.Float.class };
+			Class<?>[] types = new Class<?>[] { Integer.class, String.class,
+					Integer.class, Float.class };
 			boolean[] canEdit = new boolean[] { false, false, false, false };
 
 			public Class<?> getColumnClass(int columnIndex) {
@@ -12004,7 +12001,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		});
 		jTableLinks.setDragEnabled(true);
 		jTableLinks.setName("jTableLinks"); // NOI18N
-		jTableLinks.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+		jTableLinks.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTableLinks.setShowVerticalLines(false);
 		jTableLinks.getTableHeader().setReorderingAllowed(false);
 		jScrollPane4.setViewportView(jTableLinks);
@@ -12019,12 +12016,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					.setHeaderValue(resourceMap.getString("jTableLinks.columnModel.title3")); // NOI18N
 		}
 
-		javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
+		GroupLayout jPanel14Layout = new GroupLayout(jPanel14);
 		jPanel14.setLayout(jPanel14Layout);
-		jPanel14Layout.setHorizontalGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE));
-		jPanel14Layout.setVerticalGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE));
+		jPanel14Layout.setHorizontalGroup(jPanel14Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(jScrollPane4, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE));
+		jPanel14Layout.setVerticalGroup(jPanel14Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(jScrollPane4, GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE));
 
 		jSplitPaneLinks.setTopComponent(jPanel14);
 
@@ -12035,12 +12032,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		jTableManLinks
 				.setModel(
-						new javax.swing.table.DefaultTableModel(
+						new DefaultTableModel(
 								new Object[][] { { null, null, null }, { null, null, null }, { null, null, null },
 										{ null, null, null } },
 								new String[] { "Eintrag", "Überschrift", "Bewertung" }) {
-							Class<?>[] types = new Class<?>[] { java.lang.Integer.class, java.lang.String.class,
-									java.lang.Float.class };
+							Class<?>[] types = new Class<?>[] { Integer.class, String.class,
+									Float.class };
 							boolean[] canEdit = new boolean[] { false, false, false };
 
 							public Class<?> getColumnClass(int columnIndex) {
@@ -12065,23 +12062,23 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					.setHeaderValue(resourceMap.getString("jTableManLinks.columnModel.title2")); // NOI18N
 		}
 
-		javax.swing.GroupLayout jPanelManLinksLayout = new javax.swing.GroupLayout(jPanelManLinks);
+		GroupLayout jPanelManLinksLayout = new GroupLayout(jPanelManLinks);
 		jPanelManLinks.setLayout(jPanelManLinksLayout);
 		jPanelManLinksLayout
-				.setHorizontalGroup(jPanelManLinksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addComponent(jScrollPane15, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE));
+				.setHorizontalGroup(jPanelManLinksLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(jScrollPane15, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE));
 		jPanelManLinksLayout
-				.setVerticalGroup(jPanelManLinksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addComponent(jScrollPane15, javax.swing.GroupLayout.Alignment.TRAILING,
-								javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE));
+				.setVerticalGroup(jPanelManLinksLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(jScrollPane15, GroupLayout.Alignment.TRAILING,
+								GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE));
 
 		jSplitPaneLinks.setRightComponent(jPanelManLinks);
 
-		javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+		GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
 		jPanel1.setLayout(jPanel1Layout);
-		jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+		jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(jSplitPaneLinks));
-		jPanel1Layout.setVerticalGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+		jPanel1Layout.setVerticalGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(jSplitPaneLinks));
 
 		jTabbedPaneMain.addTab(resourceMap.getString("jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
@@ -12090,7 +12087,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		jSplitPane2.setBorder(null);
 		jSplitPane2.setDividerLocation(380);
-		jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+		jSplitPane2.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPane2.setName("jSplitPane2"); // NOI18N
 		jSplitPane2.setOneTouchExpandable(true);
 
@@ -12117,16 +12114,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jCheckBoxShowAllLuhmann.setToolTipText(resourceMap.getString("jCheckBoxShowAllLuhmann.toolTipText")); // NOI18N
 		jCheckBoxShowAllLuhmann.setName("jCheckBoxShowAllLuhmann"); // NOI18N
 
-		javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+		GroupLayout jPanel10Layout = new GroupLayout(jPanel10);
 		jPanel10.setLayout(jPanel10Layout);
 		jPanel10Layout.setHorizontalGroup(
-				jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jSplitPane2)
+				jPanel10Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jSplitPane2)
 						.addGroup(jPanel10Layout.createSequentialGroup().addContainerGap()
 								.addComponent(jCheckBoxShowAllLuhmann)
-								.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
-		jPanel10Layout.setVerticalGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+								.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+		jPanel10Layout.setVerticalGroup(jPanel10Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addGroup(jPanel10Layout.createSequentialGroup().addComponent(jSplitPane2)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 						.addComponent(jCheckBoxShowAllLuhmann).addContainerGap()));
 
 		jTabbedPaneMain.addTab(resourceMap.getString("jPanel10.TabConstraints.tabTitle"), jPanel10); // NOI18N
@@ -12160,10 +12157,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jScrollPane6.setBorder(null);
 		jScrollPane6.setName("jScrollPane6"); // NOI18N
 
-		jTableKeywords.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
+		jTableKeywords.setModel(new DefaultTableModel(new Object[][] {
 
 		}, new String[] { "Schlagwörter", "Häufigkeit" }) {
-			Class<?>[] types = new Class<?>[] { java.lang.String.class, java.lang.Integer.class };
+			Class<?>[] types = new Class<?>[] { String.class, Integer.class };
 			boolean[] canEdit = new boolean[] { false, false };
 
 			public Class<?> getColumnClass(int columnIndex) {
@@ -12186,46 +12183,46 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					.setHeaderValue(resourceMap.getString("jTableKeywords.columnModel.title1")); // NOI18N
 		}
 
-		javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
+		GroupLayout jPanel16Layout = new GroupLayout(jPanel16);
 		jPanel16.setLayout(jPanel16Layout);
-		jPanel16Layout.setHorizontalGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addComponent(jScrollPane17, javax.swing.GroupLayout.Alignment.TRAILING,
-						javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-				.addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE));
-		jPanel16Layout.setVerticalGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
-						.addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(jScrollPane17,
-								javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)));
+		jPanel16Layout.setHorizontalGroup(jPanel16Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(jScrollPane17, GroupLayout.Alignment.TRAILING,
+						GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+				.addComponent(jScrollPane6, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE));
+		jPanel16Layout.setVerticalGroup(jPanel16Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addGroup(GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
+						.addComponent(jScrollPane6, GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(jScrollPane17,
+								GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)));
 
-		javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+		GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
 		jPanel2.setLayout(jPanel2Layout);
-		jPanel2Layout.setHorizontalGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addComponent(jPanel16, javax.swing.GroupLayout.Alignment.TRAILING,
-						javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+		jPanel2Layout.setHorizontalGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(jPanel16, GroupLayout.Alignment.TRAILING,
+						GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 				.addGroup(jPanel2Layout.createSequentialGroup().addContainerGap().addGroup(jPanel2Layout
-						.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addGroup(GroupLayout.Alignment.TRAILING,
 								jPanel2Layout.createSequentialGroup()
-										.addComponent(jTextFieldFilterKeywords, javax.swing.GroupLayout.DEFAULT_SIZE,
+										.addComponent(jTextFieldFilterKeywords, GroupLayout.DEFAULT_SIZE,
 												226, Short.MAX_VALUE)
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(jButtonRefreshKeywords, javax.swing.GroupLayout.PREFERRED_SIZE,
-												26, javax.swing.GroupLayout.PREFERRED_SIZE))
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addComponent(jButtonRefreshKeywords, GroupLayout.PREFERRED_SIZE,
+												26, GroupLayout.PREFERRED_SIZE))
 						.addGroup(jPanel2Layout.createSequentialGroup().addComponent(jCheckBoxShowSynonyms).addGap(0,
 								102, Short.MAX_VALUE)))
 						.addContainerGap()));
-		jPanel2Layout.setVerticalGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-						.addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE,
-								javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+		jPanel2Layout.setVerticalGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addGroup(GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+						.addComponent(jPanel16, GroupLayout.DEFAULT_SIZE,
+								GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+						.addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
 								.addGroup(jPanel2Layout.createSequentialGroup().addComponent(jCheckBoxShowSynonyms)
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(jTextFieldFilterKeywords, javax.swing.GroupLayout.PREFERRED_SIZE,
-												javax.swing.GroupLayout.DEFAULT_SIZE,
-												javax.swing.GroupLayout.PREFERRED_SIZE))
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addComponent(jTextFieldFilterKeywords, GroupLayout.PREFERRED_SIZE,
+												GroupLayout.DEFAULT_SIZE,
+												GroupLayout.PREFERRED_SIZE))
 								.addComponent(jButtonRefreshKeywords))
 						.addContainerGap()));
 
@@ -12239,7 +12236,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		jSplitPaneAuthors.setBorder(null);
 		jSplitPaneAuthors.setDividerLocation(270);
-		jSplitPaneAuthors.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+		jSplitPaneAuthors.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneAuthors.setName("jSplitPaneAuthors"); // NOI18N
 		jSplitPaneAuthors.setOneTouchExpandable(true);
 
@@ -12248,10 +12245,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jScrollPane7.setBorder(null);
 		jScrollPane7.setName("jScrollPane7"); // NOI18N
 
-		jTableAuthors.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
+		jTableAuthors.setModel(new DefaultTableModel(new Object[][] {
 
 		}, new String[] { "Autoren", "Häufigkeit" }) {
-			Class<?>[] types = new Class<?>[] { java.lang.String.class, java.lang.Integer.class };
+			Class<?>[] types = new Class<?>[] { String.class, Integer.class };
 			boolean[] canEdit = new boolean[] { false, false };
 
 			public Class<?> getColumnClass(int columnIndex) {
@@ -12275,18 +12272,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		jComboBoxAuthorType.setName("jComboBoxAuthorType"); // NOI18N
 
-		javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
+		GroupLayout jPanel15Layout = new GroupLayout(jPanel15);
 		jPanel15.setLayout(jPanel15Layout);
-		jPanel15Layout.setHorizontalGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+		jPanel15Layout.setHorizontalGroup(jPanel15Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(jComboBoxAuthorType, 0, 270, Short.MAX_VALUE)
-				.addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE));
+				.addComponent(jScrollPane7, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE));
 		jPanel15Layout
-				.setVerticalGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel15Layout.createSequentialGroup()
-								.addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
-								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(jComboBoxAuthorType, javax.swing.GroupLayout.PREFERRED_SIZE,
-										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+				.setVerticalGroup(jPanel15Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addGroup(GroupLayout.Alignment.TRAILING, jPanel15Layout.createSequentialGroup()
+								.addComponent(jScrollPane7, GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
+								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(jComboBoxAuthorType, GroupLayout.PREFERRED_SIZE,
+										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addGap(3, 3, 3)));
 
 		jSplitPaneAuthors.setTopComponent(jPanel15);
@@ -12294,7 +12291,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jPanelDispAuthor.setName("jPanelDispAuthor"); // NOI18N
 
 		jScrollPane16.setBorder(null);
-		jScrollPane16.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		jScrollPane16.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		jScrollPane16.setName("jScrollPane16"); // NOI18N
 
 		jEditorPaneDispAuthor.setEditable(false);
@@ -12302,14 +12299,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jEditorPaneDispAuthor.setName("jEditorPaneDispAuthor"); // NOI18N
 		jScrollPane16.setViewportView(jEditorPaneDispAuthor);
 
-		javax.swing.GroupLayout jPanelDispAuthorLayout = new javax.swing.GroupLayout(jPanelDispAuthor);
+		GroupLayout jPanelDispAuthorLayout = new GroupLayout(jPanelDispAuthor);
 		jPanelDispAuthor.setLayout(jPanelDispAuthorLayout);
 		jPanelDispAuthorLayout.setHorizontalGroup(
-				jPanelDispAuthorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE));
+				jPanelDispAuthorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(jScrollPane16, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE));
 		jPanelDispAuthorLayout
-				.setVerticalGroup(jPanelDispAuthorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE));
+				.setVerticalGroup(jPanelDispAuthorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(jScrollPane16, GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE));
 
 		jSplitPaneAuthors.setRightComponent(jPanelDispAuthor);
 
@@ -12320,22 +12317,22 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jButtonRefreshAuthors.setFocusPainted(false);
 		jButtonRefreshAuthors.setName("jButtonRefreshAuthors"); // NOI18N
 
-		javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+		GroupLayout jPanel7Layout = new GroupLayout(jPanel7);
 		jPanel7.setLayout(jPanel7Layout);
-		jPanel7Layout.setHorizontalGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+		jPanel7Layout.setHorizontalGroup(jPanel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(jSplitPaneAuthors)
 				.addGroup(jPanel7Layout.createSequentialGroup().addGap(6, 6, 6).addComponent(jTextFieldFilterAuthors)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(jButtonRefreshAuthors, javax.swing.GroupLayout.PREFERRED_SIZE, 26,
-								javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+						.addComponent(jButtonRefreshAuthors, GroupLayout.PREFERRED_SIZE, 26,
+								GroupLayout.PREFERRED_SIZE)
 						.addContainerGap()));
-		jPanel7Layout.setVerticalGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+		jPanel7Layout.setVerticalGroup(jPanel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addGroup(GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
 						.addComponent(jSplitPaneAuthors)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-								.addComponent(jTextFieldFilterAuthors, javax.swing.GroupLayout.PREFERRED_SIZE,
-										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+						.addGroup(jPanel7Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+								.addComponent(jTextFieldFilterAuthors, GroupLayout.PREFERRED_SIZE,
+										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(jButtonRefreshAuthors))
 						.addContainerGap()));
 
@@ -12346,11 +12343,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jScrollPane8.setBorder(null);
 		jScrollPane8.setName("jScrollPane8"); // NOI18N
 
-		jTableTitles.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
+		jTableTitles.setModel(new DefaultTableModel(new Object[][] {
 
 		}, new String[] { "Zettel", "Überschrift", "Erstellt", "Geändert", "Bewertung", "Folgezettel" }) {
-			Class<?>[] types = new Class<?>[] { java.lang.Integer.class, java.lang.String.class, java.lang.String.class,
-					java.lang.String.class, java.lang.Float.class, java.lang.String.class };
+			Class<?>[] types = new Class<?>[] { Integer.class, String.class, String.class,
+					String.class, Float.class, String.class };
 			boolean[] canEdit = new boolean[] { false, false, false, false, false, false };
 
 			public Class<?> getColumnClass(int columnIndex) {
@@ -12391,26 +12388,26 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jButtonRefreshTitles.setFocusPainted(false);
 		jButtonRefreshTitles.setName("jButtonRefreshTitles"); // NOI18N
 
-		javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+		GroupLayout jPanel8Layout = new GroupLayout(jPanel8);
 		jPanel8.setLayout(jPanel8Layout);
-		jPanel8Layout.setHorizontalGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+		jPanel8Layout.setHorizontalGroup(jPanel8Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addGroup(GroupLayout.Alignment.TRAILING,
 						jPanel8Layout.createSequentialGroup().addContainerGap()
-								.addComponent(jTextFieldFilterTitles, javax.swing.GroupLayout.DEFAULT_SIZE, 226,
+								.addComponent(jTextFieldFilterTitles, GroupLayout.DEFAULT_SIZE, 226,
 										Short.MAX_VALUE)
-								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(jButtonRefreshTitles, javax.swing.GroupLayout.PREFERRED_SIZE, 26,
-										javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(jButtonRefreshTitles, GroupLayout.PREFERRED_SIZE, 26,
+										GroupLayout.PREFERRED_SIZE)
 								.addContainerGap())
-				.addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE));
-		jPanel8Layout.setVerticalGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-						.addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+				.addComponent(jScrollPane8, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE));
+		jPanel8Layout.setVerticalGroup(jPanel8Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addGroup(GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+						.addComponent(jScrollPane8, GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+						.addGroup(jPanel8Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
 								.addComponent(jButtonRefreshTitles).addComponent(jTextFieldFilterTitles,
-										javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
-										javax.swing.GroupLayout.PREFERRED_SIZE))
+										GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+										GroupLayout.PREFERRED_SIZE))
 						.addContainerGap()));
 
 		jTabbedPaneMain.addTab(resourceMap.getString("jPanel8.TabConstraints.tabTitle"), jPanel8); // NOI18N
@@ -12436,7 +12433,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		jSplitPane1.setBorder(null);
 		jSplitPane1.setDividerLocation(310);
-		jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+		jSplitPane1.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPane1.setName("jSplitPane1"); // NOI18N
 
 		jScrollPane5.setBorder(null);
@@ -12458,38 +12455,38 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		jSplitPane1.setLeftComponent(jScrollPane11);
 
-		javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+		GroupLayout jPanel3Layout = new GroupLayout(jPanel3);
 		jPanel3.setLayout(jPanel3Layout);
 		jPanel3Layout.setHorizontalGroup(
-				jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jSplitPane1));
-		jPanel3Layout.setVerticalGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE));
+				jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jSplitPane1));
+		jPanel3Layout.setVerticalGroup(jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(jSplitPane1, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE));
 
-		javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+		GroupLayout jPanel11Layout = new GroupLayout(jPanel11);
 		jPanel11.setLayout(jPanel11Layout);
-		jPanel11Layout.setHorizontalGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+		jPanel11Layout.setHorizontalGroup(jPanel11Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addGroup(jPanel11Layout.createSequentialGroup()
-						.addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+						.addGroup(jPanel11Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 								.addGroup(jPanel11Layout.createSequentialGroup().addContainerGap()
 										.addComponent(jTextFieldFilterCluster)
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(jButtonRefreshCluster, javax.swing.GroupLayout.PREFERRED_SIZE, 26,
-												javax.swing.GroupLayout.PREFERRED_SIZE))
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addComponent(jButtonRefreshCluster, GroupLayout.PREFERRED_SIZE, 26,
+												GroupLayout.PREFERRED_SIZE))
 								.addGroup(jPanel11Layout.createSequentialGroup().addComponent(jCheckBoxCluster)
 										.addGap(0, 32, Short.MAX_VALUE)))
 						.addContainerGap())
-				.addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+				.addComponent(jPanel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
 						Short.MAX_VALUE));
-		jPanel11Layout.setVerticalGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+		jPanel11Layout.setVerticalGroup(jPanel11Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addGroup(jPanel11Layout.createSequentialGroup()
-						.addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE,
-								javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+						.addComponent(jPanel3, GroupLayout.DEFAULT_SIZE,
+								GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 						.addComponent(jCheckBoxCluster)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-								.addComponent(jTextFieldFilterCluster, javax.swing.GroupLayout.PREFERRED_SIZE,
-										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+						.addGroup(jPanel11Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+								.addComponent(jTextFieldFilterCluster, GroupLayout.PREFERRED_SIZE,
+										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(jButtonRefreshCluster))
 						.addContainerGap()));
 
@@ -12502,17 +12499,17 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		jSplitPane3.setBorder(null);
 		jSplitPane3.setDividerLocation(380);
-		jSplitPane3.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+		jSplitPane3.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPane3.setName("jSplitPane3"); // NOI18N
 		jSplitPane3.setOneTouchExpandable(true);
 
 		jScrollPane9.setBorder(null);
 		jScrollPane9.setName("jScrollPane9"); // NOI18N
 
-		jTableBookmarks.setModel(new javax.swing.table.DefaultTableModel(
+		jTableBookmarks.setModel(new DefaultTableModel(
 				new Object[][] { { null, null }, { null, null }, { null, null }, { null, null } },
 				new String[] { "Eintrag", "Kategorie" }) {
-			Class<?>[] types = new Class<?>[] { java.lang.Integer.class, java.lang.String.class };
+			Class<?>[] types = new Class<?>[] { Integer.class, String.class };
 			boolean[] canEdit = new boolean[] { false, false };
 
 			public Class<?> getColumnClass(int columnIndex) {
@@ -12538,11 +12535,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jSplitPane3.setLeftComponent(jScrollPane9);
 
 		jScrollPane14.setBorder(null);
-		jScrollPane14.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		jScrollPane14.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		jScrollPane14.setName("jScrollPane14"); // NOI18N
 
 		jEditorPaneBookmarkComment.setEditable(false);
-		jEditorPaneBookmarkComment.setBorder(javax.swing.BorderFactory
+		jEditorPaneBookmarkComment.setBorder(BorderFactory
 				.createTitledBorder(resourceMap.getString("jEditorPaneBookmarkComment.border.title"))); // NOI18N
 		jEditorPaneBookmarkComment.setContentType(resourceMap.getString("jEditorPaneBookmarkComment.contentType")); // NOI18N
 		jEditorPaneBookmarkComment.setName("jEditorPaneBookmarkComment"); // NOI18N
@@ -12550,21 +12547,21 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		jSplitPane3.setRightComponent(jScrollPane14);
 
-		javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+		GroupLayout jPanel9Layout = new GroupLayout(jPanel9);
 		jPanel9.setLayout(jPanel9Layout);
-		jPanel9Layout.setHorizontalGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+		jPanel9Layout.setHorizontalGroup(jPanel9Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addGroup(GroupLayout.Alignment.TRAILING,
 						jPanel9Layout.createSequentialGroup().addContainerGap()
 								.addComponent(jComboBoxBookmarkCategory, 0, 258, Short.MAX_VALUE).addContainerGap())
-				.addComponent(jSplitPane3, javax.swing.GroupLayout.Alignment.TRAILING,
-						javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE));
+				.addComponent(jSplitPane3, GroupLayout.Alignment.TRAILING,
+						GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE));
 		jPanel9Layout
-				.setVerticalGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-								.addComponent(jSplitPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
-								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(jComboBoxBookmarkCategory, javax.swing.GroupLayout.PREFERRED_SIZE,
-										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+				.setVerticalGroup(jPanel9Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addGroup(GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+								.addComponent(jSplitPane3, GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
+								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(jComboBoxBookmarkCategory, GroupLayout.PREFERRED_SIZE,
+										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addContainerGap()));
 
 		jTabbedPaneMain.addTab(resourceMap.getString("jPanel9.TabConstraints.tabTitle"), jPanel9); // NOI18N
@@ -12572,14 +12569,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jPanel13.setName("jPanel13"); // NOI18N
 
 		jScrollPane13.setBorder(null);
-		jScrollPane13.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		jScrollPane13.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		jScrollPane13.setName("jScrollPane13"); // NOI18N
 
 		jTableAttachments.setModel(
-				new javax.swing.table.DefaultTableModel(new Object[][] { { null, null, null }, { null, null, null },
+				new DefaultTableModel(new Object[][] { { null, null, null }, { null, null, null },
 						{ null, null, null }, { null, null, null } }, new String[] { "Anhang", "Typ", "Zettel" }) {
-					Class<?>[] types = new Class<?>[] { java.lang.String.class, java.lang.String.class,
-							java.lang.Integer.class };
+					Class<?>[] types = new Class<?>[] { String.class, String.class,
+							Integer.class };
 					boolean[] canEdit = new boolean[] { false, false, false };
 
 					public Class<?> getColumnClass(int columnIndex) {
@@ -12613,45 +12610,45 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jButtonRefreshAttachments.setFocusPainted(false);
 		jButtonRefreshAttachments.setName("jButtonRefreshAttachments"); // NOI18N
 
-		javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
+		GroupLayout jPanel13Layout = new GroupLayout(jPanel13);
 		jPanel13.setLayout(jPanel13Layout);
-		jPanel13Layout.setHorizontalGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+		jPanel13Layout.setHorizontalGroup(jPanel13Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addGroup(GroupLayout.Alignment.TRAILING,
 						jPanel13Layout.createSequentialGroup().addContainerGap()
-								.addComponent(jTextFieldFilterAttachments, javax.swing.GroupLayout.DEFAULT_SIZE, 226,
+								.addComponent(jTextFieldFilterAttachments, GroupLayout.DEFAULT_SIZE, 226,
 										Short.MAX_VALUE)
-								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(jButtonRefreshAttachments, javax.swing.GroupLayout.PREFERRED_SIZE, 26,
-										javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(jButtonRefreshAttachments, GroupLayout.PREFERRED_SIZE, 26,
+										GroupLayout.PREFERRED_SIZE)
 								.addContainerGap())
-				.addComponent(jScrollPane13, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE));
-		jPanel13Layout.setVerticalGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
-						.addComponent(jScrollPane13, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-								.addComponent(jTextFieldFilterAttachments, javax.swing.GroupLayout.PREFERRED_SIZE,
-										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+				.addComponent(jScrollPane13, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE));
+		jPanel13Layout.setVerticalGroup(jPanel13Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addGroup(GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
+						.addComponent(jScrollPane13, GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+						.addGroup(jPanel13Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+								.addComponent(jTextFieldFilterAttachments, GroupLayout.PREFERRED_SIZE,
+										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(jButtonRefreshAttachments))
 						.addContainerGap()));
 
 		jTabbedPaneMain.addTab(resourceMap.getString("jPanel13.TabConstraints.tabTitle"), jPanel13); // NOI18N
 
-		javax.swing.GroupLayout jPanelMainRightLayout = new javax.swing.GroupLayout(jPanelMainRight);
+		GroupLayout jPanelMainRightLayout = new GroupLayout(jPanelMainRight);
 		jPanelMainRight.setLayout(jPanelMainRightLayout);
 		jPanelMainRightLayout.setHorizontalGroup(jPanelMainRightLayout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 291, Short.MAX_VALUE)
-				.addGroup(jPanelMainRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 291, Short.MAX_VALUE)
+				.addGroup(jPanelMainRightLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addComponent(jTabbedPaneMain)));
 		jPanelMainRightLayout.setVerticalGroup(jPanelMainRightLayout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 529, Short.MAX_VALUE)
-				.addGroup(jPanelMainRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addComponent(jTabbedPaneMain, javax.swing.GroupLayout.Alignment.TRAILING,
-								javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)));
+				.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 529, Short.MAX_VALUE)
+				.addGroup(jPanelMainRightLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(jTabbedPaneMain, GroupLayout.Alignment.TRAILING,
+								GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)));
 
 		jSplitPaneMain1.setRightComponent(jPanelMainRight);
 
-		mainPanel.add(jSplitPaneMain1, java.awt.BorderLayout.CENTER);
+		mainPanel.add(jSplitPaneMain1, BorderLayout.CENTER);
 
 		menuBar.setName("menuBar"); // NOI18N
 
@@ -13319,8 +13316,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		viewAuthorsCopy.setAction(actionMap.get("copy"));
 		viewAuthorsCopy.setText(resourceMap.getString("viewAuthorsCopy.text")); // NOI18N
 		viewAuthorsCopy.setName("viewAuthorsCopy"); // NOI18N
-		viewAuthorsCopy.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+		viewAuthorsCopy.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
 				viewAuthorsCopyActionPerformed(evt);
 			}
 		});
@@ -13646,9 +13643,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		menuBar.add(aboutMenu);
 
-		statusPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0,
+		statusPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0,
 				resourceMap.getColor("statusPanel.border.matteColor"))); // NOI18N
-		statusPanel.setMinimumSize(new java.awt.Dimension(200, 16));
+		statusPanel.setMinimumSize(new Dimension(200, 16));
 		statusPanel.setName("statusPanel"); // NOI18N
 
 		jPanel12.setName("jPanel12"); // NOI18N
@@ -13671,7 +13668,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		buttonHistoryBack.setBorderPainted(false);
 		buttonHistoryBack.setContentAreaFilled(false);
 		buttonHistoryBack.setFocusPainted(false);
-		buttonHistoryBack.setMargin(new java.awt.Insets(0, 0, 0, 0));
+		buttonHistoryBack.setMargin(new Insets(0, 0, 0, 0));
 		buttonHistoryBack.setName("buttonHistoryBack"); // NOI18N
 
 		buttonHistoryFore.setAction(actionMap.get("historyFor")); // NOI18N
@@ -13679,7 +13676,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		buttonHistoryFore.setBorderPainted(false);
 		buttonHistoryFore.setContentAreaFilled(false);
 		buttonHistoryFore.setFocusPainted(false);
-		buttonHistoryFore.setMargin(new java.awt.Insets(0, 0, 0, 0));
+		buttonHistoryFore.setMargin(new Insets(0, 0, 0, 0));
 		buttonHistoryFore.setName("buttonHistoryFore"); // NOI18N
 
 		statusMsgLabel.setText(resourceMap.getString("statusMsgLabel.text")); // NOI18N
@@ -13703,63 +13700,63 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		statusDesktopEntryButton.setFocusPainted(false);
 		statusDesktopEntryButton.setName("statusDesktopEntryButton"); // NOI18N
 
-		javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+		GroupLayout jPanel12Layout = new GroupLayout(jPanel12);
 		jPanel12.setLayout(jPanel12Layout);
-		jPanel12Layout.setHorizontalGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
+		jPanel12Layout.setHorizontalGroup(jPanel12Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addGroup(GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
 						.addComponent(statusEntryLabel)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(jTextFieldEntryNumber, javax.swing.GroupLayout.PREFERRED_SIZE,
-								javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+						.addComponent(jTextFieldEntryNumber, GroupLayout.PREFERRED_SIZE,
+								GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 						.addComponent(statusOfEntryLabel)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(buttonHistoryBack, javax.swing.GroupLayout.PREFERRED_SIZE, 16,
-								javax.swing.GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(buttonHistoryFore, javax.swing.GroupLayout.PREFERRED_SIZE, 16,
-								javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+						.addComponent(buttonHistoryBack, GroupLayout.PREFERRED_SIZE, 16,
+								GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+						.addComponent(buttonHistoryFore, GroupLayout.PREFERRED_SIZE, 16,
+								GroupLayout.PREFERRED_SIZE)
 						.addGap(6, 6, 6).addComponent(statusErrorButton)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 						.addComponent(statusDesktopEntryButton)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 667, Short.MAX_VALUE)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 667, Short.MAX_VALUE)
 						.addComponent(statusMsgLabel)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 						.addComponent(statusAnimationLabel)));
-		jPanel12Layout.setVerticalGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+		jPanel12Layout.setVerticalGroup(jPanel12Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addGroup(jPanel12Layout.createSequentialGroup().addGap(3, 3, 3).addGroup(jPanel12Layout
-						.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addGroup(jPanel12Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 								.addComponent(statusEntryLabel)
-								.addComponent(jTextFieldEntryNumber, javax.swing.GroupLayout.PREFERRED_SIZE,
-										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addComponent(jTextFieldEntryNumber, GroupLayout.PREFERRED_SIZE,
+										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(statusOfEntryLabel))
-						.addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-								.addComponent(buttonHistoryFore, javax.swing.GroupLayout.Alignment.LEADING, 0,
-										javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(buttonHistoryBack, javax.swing.GroupLayout.Alignment.LEADING))
+						.addGroup(jPanel12Layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+								.addComponent(buttonHistoryFore, GroupLayout.Alignment.LEADING, 0,
+										GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(buttonHistoryBack, GroupLayout.Alignment.LEADING))
 						.addComponent(statusAnimationLabel).addComponent(statusMsgLabel).addComponent(statusErrorButton)
 						.addComponent(statusDesktopEntryButton))
-						.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
-		javax.swing.GroupLayout statusPanelLayout = new javax.swing.GroupLayout(statusPanel);
+		GroupLayout statusPanelLayout = new GroupLayout(statusPanel);
 		statusPanel.setLayout(statusPanelLayout);
 		statusPanelLayout.setHorizontalGroup(statusPanelLayout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addGroup(statusPanelLayout.createSequentialGroup().addContainerGap().addComponent(jPanel12,
-						javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addContainerGap()));
 		statusPanelLayout.setVerticalGroup(
-				statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
-						javax.swing.GroupLayout.Alignment.TRAILING,
+				statusPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
+						GroupLayout.Alignment.TRAILING,
 						statusPanelLayout.createSequentialGroup().addGap(0, 0, Short.MAX_VALUE).addComponent(jPanel12,
-								javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
-								javax.swing.GroupLayout.PREFERRED_SIZE)));
+								GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+								GroupLayout.PREFERRED_SIZE)));
 
-		toolBar.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0,
+		toolBar.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0,
 				resourceMap.getColor("toolBar.border.matteColor"))); // NOI18N
 		toolBar.setFloatable(false);
-		toolBar.setMinimumSize(new java.awt.Dimension(300, 20));
+		toolBar.setMinimumSize(new Dimension(300, 20));
 		toolBar.setName("toolBar"); // NOI18N
 
 		tb_newEntry.setAction(actionMap.get("newEntry")); // NOI18N
@@ -13767,9 +13764,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		tb_newEntry.setBorderPainted(false);
 		tb_newEntry.setFocusPainted(false);
 		tb_newEntry.setFocusable(false);
-		tb_newEntry.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		tb_newEntry.setHorizontalTextPosition(SwingConstants.CENTER);
 		tb_newEntry.setName("tb_newEntry"); // NOI18N
-		tb_newEntry.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+		tb_newEntry.setVerticalTextPosition(SwingConstants.BOTTOM);
 		toolBar.add(tb_newEntry);
 
 		tb_open.setAction(actionMap.get("openDocument")); // NOI18N
@@ -13777,9 +13774,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		tb_open.setBorderPainted(false);
 		tb_open.setFocusPainted(false);
 		tb_open.setFocusable(false);
-		tb_open.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		tb_open.setHorizontalTextPosition(SwingConstants.CENTER);
 		tb_open.setName("tb_open"); // NOI18N
-		tb_open.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+		tb_open.setVerticalTextPosition(SwingConstants.BOTTOM);
 		toolBar.add(tb_open);
 
 		tb_save.setAction(actionMap.get("saveDocument")); // NOI18N
@@ -13787,9 +13784,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		tb_save.setBorderPainted(false);
 		tb_save.setFocusPainted(false);
 		tb_save.setFocusable(false);
-		tb_save.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		tb_save.setHorizontalTextPosition(SwingConstants.CENTER);
 		tb_save.setName("tb_save"); // NOI18N
-		tb_save.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+		tb_save.setVerticalTextPosition(SwingConstants.BOTTOM);
 		toolBar.add(tb_save);
 
 		jSeparator4.setName("jSeparator4"); // NOI18N
@@ -13800,9 +13797,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		tb_edit.setBorderPainted(false);
 		tb_edit.setFocusPainted(false);
 		tb_edit.setFocusable(false);
-		tb_edit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		tb_edit.setHorizontalTextPosition(SwingConstants.CENTER);
 		tb_edit.setName("tb_edit"); // NOI18N
-		tb_edit.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+		tb_edit.setVerticalTextPosition(SwingConstants.BOTTOM);
 		toolBar.add(tb_edit);
 
 		tb_delete.setAction(actionMap.get("deleteCurrentEntry")); // NOI18N
@@ -13810,27 +13807,27 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		tb_delete.setBorderPainted(false);
 		tb_delete.setFocusPainted(false);
 		tb_delete.setFocusable(false);
-		tb_delete.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		tb_delete.setHorizontalTextPosition(SwingConstants.CENTER);
 		tb_delete.setName("tb_delete"); // NOI18N
-		tb_delete.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+		tb_delete.setVerticalTextPosition(SwingConstants.BOTTOM);
 		toolBar.add(tb_delete);
 
 		tb_copy.setAction(actionMap.get("copy"));
 		tb_copy.setBorderPainted(false);
 		tb_copy.setFocusPainted(false);
 		tb_copy.setFocusable(false);
-		tb_copy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		tb_copy.setHorizontalTextPosition(SwingConstants.CENTER);
 		tb_copy.setName("tb_copy"); // NOI18N
-		tb_copy.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+		tb_copy.setVerticalTextPosition(SwingConstants.BOTTOM);
 		toolBar.add(tb_copy);
 
 		tb_paste.setAction(actionMap.get("paste"));
 		tb_paste.setBorderPainted(false);
 		tb_paste.setFocusPainted(false);
 		tb_paste.setFocusable(false);
-		tb_paste.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		tb_paste.setHorizontalTextPosition(SwingConstants.CENTER);
 		tb_paste.setName("tb_paste"); // NOI18N
-		tb_paste.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+		tb_paste.setVerticalTextPosition(SwingConstants.BOTTOM);
 		toolBar.add(tb_paste);
 
 		tb_selectall.setAction(actionMap.get("selectAllText")); // NOI18N
@@ -13838,9 +13835,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		tb_selectall.setBorderPainted(false);
 		tb_selectall.setFocusPainted(false);
 		tb_selectall.setFocusable(false);
-		tb_selectall.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		tb_selectall.setHorizontalTextPosition(SwingConstants.CENTER);
 		tb_selectall.setName("tb_selectall"); // NOI18N
-		tb_selectall.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+		tb_selectall.setVerticalTextPosition(SwingConstants.BOTTOM);
 		toolBar.add(tb_selectall);
 
 		jSeparator5.setName("jSeparator5"); // NOI18N
@@ -13851,9 +13848,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		tb_addmanlinks.setBorderPainted(false);
 		tb_addmanlinks.setFocusPainted(false);
 		tb_addmanlinks.setFocusable(false);
-		tb_addmanlinks.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		tb_addmanlinks.setHorizontalTextPosition(SwingConstants.CENTER);
 		tb_addmanlinks.setName("tb_addmanlinks"); // NOI18N
-		tb_addmanlinks.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+		tb_addmanlinks.setVerticalTextPosition(SwingConstants.BOTTOM);
 		toolBar.add(tb_addmanlinks);
 
 		tb_addluhmann.setAction(actionMap.get("manualInsertEntry")); // NOI18N
@@ -13861,9 +13858,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		tb_addluhmann.setBorderPainted(false);
 		tb_addluhmann.setFocusPainted(false);
 		tb_addluhmann.setFocusable(false);
-		tb_addluhmann.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		tb_addluhmann.setHorizontalTextPosition(SwingConstants.CENTER);
 		tb_addluhmann.setName("tb_addluhmann"); // NOI18N
-		tb_addluhmann.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+		tb_addluhmann.setVerticalTextPosition(SwingConstants.BOTTOM);
 		toolBar.add(tb_addluhmann);
 
 		tb_addbookmark.setAction(actionMap.get("addToBookmark")); // NOI18N
@@ -13871,9 +13868,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		tb_addbookmark.setBorderPainted(false);
 		tb_addbookmark.setFocusPainted(false);
 		tb_addbookmark.setFocusable(false);
-		tb_addbookmark.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		tb_addbookmark.setHorizontalTextPosition(SwingConstants.CENTER);
 		tb_addbookmark.setName("tb_addbookmark"); // NOI18N
-		tb_addbookmark.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+		tb_addbookmark.setVerticalTextPosition(SwingConstants.BOTTOM);
 		toolBar.add(tb_addbookmark);
 
 		tb_addtodesktop.setAction(actionMap.get("addToDesktop")); // NOI18N
@@ -13881,9 +13878,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		tb_addtodesktop.setBorderPainted(false);
 		tb_addtodesktop.setFocusPainted(false);
 		tb_addtodesktop.setFocusable(false);
-		tb_addtodesktop.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		tb_addtodesktop.setHorizontalTextPosition(SwingConstants.CENTER);
 		tb_addtodesktop.setName("tb_addtodesktop"); // NOI18N
-		tb_addtodesktop.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+		tb_addtodesktop.setVerticalTextPosition(SwingConstants.BOTTOM);
 		toolBar.add(tb_addtodesktop);
 
 		jSeparator10.setName("jSeparator10"); // NOI18N
@@ -13894,9 +13891,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		tb_find.setBorderPainted(false);
 		tb_find.setFocusPainted(false);
 		tb_find.setFocusable(false);
-		tb_find.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		tb_find.setHorizontalTextPosition(SwingConstants.CENTER);
 		tb_find.setName("tb_find"); // NOI18N
-		tb_find.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+		tb_find.setVerticalTextPosition(SwingConstants.BOTTOM);
 		toolBar.add(tb_find);
 
 		tb_first.setAction(actionMap.get("showFirstEntry")); // NOI18N
@@ -13904,9 +13901,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		tb_first.setBorderPainted(false);
 		tb_first.setFocusPainted(false);
 		tb_first.setFocusable(false);
-		tb_first.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		tb_first.setHorizontalTextPosition(SwingConstants.CENTER);
 		tb_first.setName("tb_first"); // NOI18N
-		tb_first.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+		tb_first.setVerticalTextPosition(SwingConstants.BOTTOM);
 		toolBar.add(tb_first);
 
 		tb_prev.setAction(actionMap.get("showPrevEntry")); // NOI18N
@@ -13914,9 +13911,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		tb_prev.setBorderPainted(false);
 		tb_prev.setFocusPainted(false);
 		tb_prev.setFocusable(false);
-		tb_prev.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		tb_prev.setHorizontalTextPosition(SwingConstants.CENTER);
 		tb_prev.setName("tb_prev"); // NOI18N
-		tb_prev.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+		tb_prev.setVerticalTextPosition(SwingConstants.BOTTOM);
 		toolBar.add(tb_prev);
 
 		tb_next.setAction(actionMap.get("showNextEntry")); // NOI18N
@@ -13924,9 +13921,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		tb_next.setBorderPainted(false);
 		tb_next.setFocusPainted(false);
 		tb_next.setFocusable(false);
-		tb_next.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		tb_next.setHorizontalTextPosition(SwingConstants.CENTER);
 		tb_next.setName("tb_next"); // NOI18N
-		tb_next.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+		tb_next.setVerticalTextPosition(SwingConstants.BOTTOM);
 		toolBar.add(tb_next);
 
 		tb_last.setAction(actionMap.get("showLastEntry")); // NOI18N
@@ -13934,9 +13931,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		tb_last.setBorderPainted(false);
 		tb_last.setFocusPainted(false);
 		tb_last.setFocusable(false);
-		tb_last.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		tb_last.setHorizontalTextPosition(SwingConstants.CENTER);
 		tb_last.setName("tb_last"); // NOI18N
-		tb_last.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+		tb_last.setVerticalTextPosition(SwingConstants.BOTTOM);
 		toolBar.add(tb_last);
 
 		jSeparator32.setName("jSeparator32"); // NOI18N
@@ -14433,7 +14430,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		setToolBar(toolBar);
 	}// </editor-fold>//GEN-END:initComponents
 
-	private void viewAuthorsCopyActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewAuthorsCopyActionPerformed
+	private void viewAuthorsCopyActionPerformed(ActionEvent evt) {// GEN-FIRST:event_viewAuthorsCopyActionPerformed
 		// TODO add your handling code here:
 	}// GEN-LAST:event_viewAuthorsCopyActionPerformed
 
@@ -14474,514 +14471,514 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	// Variables declaration - do not modify//GEN-BEGIN:variables
-	private javax.swing.JMenu aboutMenu;
-	private javax.swing.JMenuItem aboutMenuItem;
-	private javax.swing.JMenuItem addFirstLineToTitleMenuItem;
-	private javax.swing.JMenuItem addSelectionToKeywordMenuItem;
-	private javax.swing.JMenuItem addSelectionToTitleMenuItem;
-	private javax.swing.JMenuItem addToDesktopMenuItem;
-	private javax.swing.JButton buttonHistoryBack;
-	private javax.swing.JButton buttonHistoryFore;
-	private javax.swing.JMenuItem copyMenuItem;
-	private javax.swing.JMenuItem copyPlainMenuItem;
-	private javax.swing.JMenuItem deleteKwFromListMenuItem;
-	private javax.swing.JMenuItem deleteZettelMenuItem;
-	private javax.swing.JMenu editMenu;
-	private javax.swing.JMenuItem editMenuItem;
-	private javax.swing.JMenuItem exitMenuItem;
-	private javax.swing.JMenuItem exportMenuItem;
-	private javax.swing.JMenu fileMenu;
-	private javax.swing.JMenuItem findDoubleEntriesItem;
-	private javax.swing.JMenuItem findEntriesAnyLuhmann;
-	private javax.swing.JMenuItem findEntriesFromCreatedTimestamp;
-	private javax.swing.JMenuItem findEntriesFromEditedTimestamp;
-	private javax.swing.JMenuItem findEntriesTopLevelLuhmann;
-	private javax.swing.JMenuItem findEntriesWithAttachments;
-	private javax.swing.JMenuItem findEntriesWithRatings;
-	private javax.swing.JMenuItem findEntriesWithRemarks;
-	private javax.swing.JMenuItem findEntriesWithoutAuthors;
-	private javax.swing.JMenuItem findEntriesWithoutKeywords;
-	private javax.swing.JMenuItem findEntriesWithoutManualLinks;
-	private javax.swing.JMenuItem findEntriesWithoutRatings;
-	private javax.swing.JMenuItem findEntriesWithoutRemarks;
-	private javax.swing.JMenu findEntryKeywordsMenu;
-	private javax.swing.JMenu findEntryWithout;
-	private javax.swing.JMenu findMenu;
-	private javax.swing.JMenuItem findMenuItem;
-	private javax.swing.JMenuItem findReplaceMenuItem;
-	private javax.swing.JMenuItem gotoEntryMenuItem;
-	private javax.swing.JCheckBoxMenuItem highlightSegmentsMenuItem;
-	private javax.swing.JMenuItem historyForMenuItem;
-	private javax.swing.JMenuItem histroyBackMenuItem;
-	private javax.swing.JMenuItem goToFirstParentEntryMenuItem;
-	private javax.swing.JMenuItem homeMenuItem;
-	private javax.swing.JMenuItem importMenuItem;
-	private javax.swing.JMenuItem insertEntryMenuItem;
-	private javax.swing.JButton jButton1;
-	private javax.swing.JButton jButtonRefreshAttachments;
-	private javax.swing.JButton jButtonRefreshAuthors;
-	private javax.swing.JButton jButtonRefreshCluster;
-	private javax.swing.JButton jButtonRefreshKeywords;
-	private javax.swing.JButton jButtonRefreshTitles;
-	private javax.swing.JCheckBox jCheckBoxCluster;
-	private javax.swing.JCheckBox jCheckBoxShowAllLuhmann;
-	private javax.swing.JCheckBox jCheckBoxShowSynonyms;
-	private javax.swing.JComboBox<String> jComboBoxAuthorType;
-	private javax.swing.JComboBox<String> jComboBoxBookmarkCategory;
-	private javax.swing.JEditorPane jEditorPaneBookmarkComment;
-	private javax.swing.JEditorPane jEditorPaneClusterEntries;
-	private javax.swing.JEditorPane jEditorPaneDispAuthor;
-	private javax.swing.JEditorPane jEditorPaneEntry;
-	private javax.swing.JEditorPane jEditorPaneIsFollower;
-	private javax.swing.JLabel jLabelMemory;
-	private javax.swing.JList<String> jListEntryKeywords;
-	private javax.swing.JPanel jPanel1;
-	private javax.swing.JPanel jPanel10;
-	private javax.swing.JPanel jPanel11;
-	private javax.swing.JPanel jPanel12;
-	private javax.swing.JPanel jPanel13;
-	private javax.swing.JPanel jPanel14;
-	private javax.swing.JPanel jPanel15;
-	private javax.swing.JPanel jPanel16;
-	private javax.swing.JPanel jPanel17;
-	private javax.swing.JPanel jPanel2;
-	private javax.swing.JPanel jPanel3;
-	private javax.swing.JPanel jPanel7;
-	private javax.swing.JPanel jPanel8;
-	private javax.swing.JPanel jPanel9;
-	private javax.swing.JPanel jPanelDispAuthor;
-	private javax.swing.JPanel jPanelLiveSearch;
-	private javax.swing.JPanel jPanelMainRight;
-	private javax.swing.JPanel jPanelManLinks;
-	private javax.swing.JPopupMenu jPopupMenuAttachments;
-	private javax.swing.JPopupMenu jPopupMenuAuthors;
-	private javax.swing.JPopupMenu jPopupMenuBookmarks;
-	private javax.swing.JPopupMenu jPopupMenuKeywordList;
-	private javax.swing.JPopupMenu jPopupMenuKeywords;
-	private javax.swing.JPopupMenu jPopupMenuLinks;
-	private javax.swing.JPopupMenu jPopupMenuLuhmann;
-	private javax.swing.JPopupMenu jPopupMenuMain;
-	private javax.swing.JPopupMenu jPopupMenuTitles;
-	private javax.swing.JScrollPane jScrollPane1;
-	private javax.swing.JScrollPane jScrollPane10;
-	private javax.swing.JScrollPane jScrollPane11;
-	private javax.swing.JScrollPane jScrollPane13;
-	private javax.swing.JScrollPane jScrollPane14;
-	private javax.swing.JScrollPane jScrollPane15;
-	private javax.swing.JScrollPane jScrollPane16;
-	private javax.swing.JScrollPane jScrollPane17;
-	private javax.swing.JScrollPane jScrollPane2;
-	private javax.swing.JScrollPane jScrollPane3;
-	private javax.swing.JScrollPane jScrollPane4;
-	private javax.swing.JScrollPane jScrollPane5;
-	private javax.swing.JScrollPane jScrollPane6;
-	private javax.swing.JScrollPane jScrollPane7;
-	private javax.swing.JScrollPane jScrollPane8;
-	private javax.swing.JScrollPane jScrollPane9;
-	private javax.swing.JSeparator jSeparator1;
-	private javax.swing.JToolBar.Separator jSeparator10;
-	private javax.swing.JSeparator jSeparator100;
-	private javax.swing.JPopupMenu.Separator jSeparator101;
-	private javax.swing.JSeparator jSeparator102;
-	private javax.swing.JSeparator jSeparator103;
-	private javax.swing.JSeparator jSeparator104;
-	private javax.swing.JSeparator jSeparator105;
-	private javax.swing.JPopupMenu.Separator jSeparator106;
-	private javax.swing.JSeparator jSeparator107;
-	private javax.swing.JPopupMenu.Separator jSeparator108;
-	private javax.swing.JSeparator jSeparator109;
-	private javax.swing.JSeparator jSeparator11;
-	private javax.swing.JSeparator jSeparator110;
-	private javax.swing.JPopupMenu.Separator jSeparator111;
-	private javax.swing.JPopupMenu.Separator jSeparator112;
-	private javax.swing.JPopupMenu.Separator jSeparator113;
-	private javax.swing.JPopupMenu.Separator jSeparator114;
-	private javax.swing.JPopupMenu.Separator jSeparator115;
-	private javax.swing.JPopupMenu.Separator jSeparator116;
-	private javax.swing.JPopupMenu.Separator jSeparator117;
-	private javax.swing.JPopupMenu.Separator jSeparator118;
-	private javax.swing.JPopupMenu.Separator jSeparator119;
-	private javax.swing.JSeparator jSeparator12;
-	private javax.swing.JSeparator jSeparator13;
-	private javax.swing.JSeparator jSeparator14;
-	private javax.swing.JSeparator jSeparator15;
-	private javax.swing.JSeparator jSeparator16;
-	private javax.swing.JSeparator jSeparator17;
-	private javax.swing.JSeparator jSeparator18;
-	private javax.swing.JSeparator jSeparator19;
-	private javax.swing.JSeparator jSeparator2;
-	private javax.swing.JSeparator jSeparator20;
-	private javax.swing.JSeparator jSeparator21;
-	private javax.swing.JSeparator jSeparator22;
-	private javax.swing.JSeparator jSeparator23;
-	private javax.swing.JSeparator jSeparator24;
-	private javax.swing.JSeparator jSeparator25;
-	private javax.swing.JSeparator jSeparator26;
-	private javax.swing.JSeparator jSeparator27;
-	private javax.swing.JSeparator jSeparator28;
-	private javax.swing.JSeparator jSeparator29;
-	private javax.swing.JSeparator jSeparator3;
-	private javax.swing.JSeparator jSeparator30;
-	private javax.swing.JSeparator jSeparator31;
-	private javax.swing.JToolBar.Separator jSeparator32;
-	private javax.swing.JSeparator jSeparator33;
-	private javax.swing.JPopupMenu.Separator jSeparator34;
-	private javax.swing.JSeparator jSeparator35;
-	private javax.swing.JSeparator jSeparator36;
-	private javax.swing.JSeparator jSeparator37;
-	private javax.swing.JSeparator jSeparator38;
-	private javax.swing.JSeparator jSeparator39;
-	private javax.swing.JToolBar.Separator jSeparator4;
-	private javax.swing.JSeparator jSeparator40;
-	private javax.swing.JSeparator jSeparator41;
-	private javax.swing.JSeparator jSeparator42;
-	private javax.swing.JSeparator jSeparator43;
-	private javax.swing.JSeparator jSeparator44;
-	private javax.swing.JSeparator jSeparator45;
-	private javax.swing.JSeparator jSeparator46;
-	private javax.swing.JSeparator jSeparator47;
-	private javax.swing.JSeparator jSeparator48;
-	private javax.swing.JSeparator jSeparator49;
-	private javax.swing.JToolBar.Separator jSeparator5;
-	private javax.swing.JSeparator jSeparator50;
-	private javax.swing.JSeparator jSeparator51;
-	private javax.swing.JSeparator jSeparator52;
-	private javax.swing.JSeparator jSeparator53;
-	private javax.swing.JSeparator jSeparator54;
-	private javax.swing.JSeparator jSeparator55;
-	private javax.swing.JSeparator jSeparator56;
-	private javax.swing.JSeparator jSeparator57;
-	private javax.swing.JSeparator jSeparator58;
-	private javax.swing.JSeparator jSeparator59;
-	private javax.swing.JSeparator jSeparator6;
-	private javax.swing.JSeparator jSeparator60;
-	private javax.swing.JSeparator jSeparator61;
-	private javax.swing.JSeparator jSeparator62;
-	private javax.swing.JSeparator jSeparator63;
-	private javax.swing.JSeparator jSeparator64;
-	private javax.swing.JPopupMenu.Separator jSeparator65;
-	private javax.swing.JSeparator jSeparator66;
-	private javax.swing.JSeparator jSeparator67;
-	private javax.swing.JSeparator jSeparator68;
-	private javax.swing.JSeparator jSeparator69;
-	private javax.swing.JSeparator jSeparator7;
-	private javax.swing.JSeparator jSeparator70;
-	private javax.swing.JSeparator jSeparator71;
-	private javax.swing.JPopupMenu.Separator jSeparator72;
-	private javax.swing.JPopupMenu.Separator jSeparator73;
-	private javax.swing.JPopupMenu.Separator jSeparator74;
-	private javax.swing.JSeparator jSeparator75;
-	private javax.swing.JSeparator jSeparator76;
-	private javax.swing.JSeparator jSeparator77;
-	private javax.swing.JSeparator jSeparator78;
-	private javax.swing.JSeparator jSeparator8;
-	private javax.swing.JSeparator jSeparator80;
-	private javax.swing.JSeparator jSeparator81;
-	private javax.swing.JSeparator jSeparator82;
-	private javax.swing.JSeparator jSeparator83;
-	private javax.swing.JSeparator jSeparator84;
-	private javax.swing.JSeparator jSeparator85;
-	private javax.swing.JSeparator jSeparator86;
-	private javax.swing.JSeparator jSeparator87;
-	private javax.swing.JSeparator jSeparator88;
-	private javax.swing.JSeparator jSeparator89;
-	private javax.swing.JSeparator jSeparator9;
-	private javax.swing.JSeparator jSeparator90;
-	private javax.swing.JSeparator jSeparator91;
-	private javax.swing.JSeparator jSeparator92;
-	private javax.swing.JSeparator jSeparator93;
-	private javax.swing.JSeparator jSeparator94;
-	private javax.swing.JSeparator jSeparator95;
-	private javax.swing.JSeparator jSeparator96;
-	private javax.swing.JSeparator jSeparator97;
-	private javax.swing.JSeparator jSeparator98;
-	private javax.swing.JSeparator jSeparator99;
-	private javax.swing.JSeparator jSeparatorAbout1;
-	private javax.swing.JSeparator jSeparatorExit;
-	private javax.swing.JSplitPane jSplitPane1;
-	private javax.swing.JSplitPane jSplitPane2;
-	private javax.swing.JSplitPane jSplitPane3;
-	private javax.swing.JSplitPane jSplitPaneAuthors;
-	private javax.swing.JSplitPane jSplitPaneLinks;
-	private javax.swing.JSplitPane jSplitPaneMain1;
-	private javax.swing.JSplitPane jSplitPaneMain2;
-	private javax.swing.JTabbedPane jTabbedPaneMain;
-	private javax.swing.JTable jTableAttachments;
-	private javax.swing.JTable jTableAuthors;
-	private javax.swing.JTable jTableBookmarks;
-	private javax.swing.JTable jTableKeywords;
-	private javax.swing.JTable jTableLinks;
-	private javax.swing.JTable jTableManLinks;
-	private javax.swing.JTable jTableTitles;
-	private javax.swing.JTextField jTextFieldEntryNumber;
-	private javax.swing.JTextField jTextFieldFilterAttachments;
-	private javax.swing.JTextField jTextFieldFilterAuthors;
-	private javax.swing.JTextField jTextFieldFilterCluster;
-	private javax.swing.JTextField jTextFieldFilterKeywords;
-	private javax.swing.JTextField jTextFieldFilterTitles;
-	private javax.swing.JTextField jTextFieldLiveSearch;
-	private javax.swing.JTree jTreeCluster;
-	private javax.swing.JTree jTreeKeywords;
-	private javax.swing.JTree jTreeLuhmann;
-	private javax.swing.JMenuItem lastEntryMenuItem;
-	private javax.swing.JMenuItem liveSearchMenuItem;
-	private javax.swing.JPanel mainPanel;
-	private javax.swing.JMenuItem manualInsertLinksMenuItem;
-	private javax.swing.JMenuItem manualInsertMenuItem;
-	private javax.swing.JMenuBar menuBar;
-	private javax.swing.JMenuItem menuFileInformation;
-	private javax.swing.JMenuItem menuKwListSearchAnd;
-	private javax.swing.JMenuItem menuKwListSearchNot;
-	private javax.swing.JMenuItem menuKwListSearchOr;
-	private javax.swing.JMenuItem newDesktopMenuItem;
-	private javax.swing.JMenuItem newEntryMenuItem;
-	private javax.swing.JMenuItem newZettelkastenMenuItem;
-	private javax.swing.JMenuItem nextEntryMenuItem;
-	private javax.swing.JMenuItem openMenuItem;
-	private javax.swing.JMenuItem pasteMenuItem;
-	private javax.swing.JMenuItem popupAttachmentsCopy;
-	private javax.swing.JMenuItem popupAttachmentsDelete;
-	private javax.swing.JMenuItem popupAttachmentsEdit;
-	private javax.swing.JMenuItem popupAttachmentsExport;
-	private javax.swing.JMenuItem popupAttachmentsGoto;
-	private javax.swing.JMenuItem popupAuthorsAddToEntry;
-	private javax.swing.JMenuItem popupAuthorsBibkey;
-	private javax.swing.JMenuItem popupAuthorsCopy;
-	private javax.swing.JMenuItem popupAuthorsDelete;
-	private javax.swing.JMenuItem popupAuthorsDesktop;
-	private javax.swing.JMenuItem popupAuthorsDesktopAnd;
-	private javax.swing.JMenuItem popupAuthorsEdit;
-	private javax.swing.JMenuItem popupAuthorsImport;
-	private javax.swing.JMenuItem popupAuthorsLuhmann;
-	private javax.swing.JMenuItem popupAuthorsLuhmannAnd;
-	private javax.swing.JMenuItem popupAuthorsManLinks;
-	private javax.swing.JMenuItem popupAuthorsManLinksAnd;
-	private javax.swing.JMenuItem popupAuthorsNew;
-	private javax.swing.JMenuItem popupAuthorsSearchLogAnd;
-	private javax.swing.JMenuItem popupAuthorsSearchLogNot;
-	private javax.swing.JMenuItem popupAuthorsSearchLogOr;
-	private javax.swing.JMenu popupAuthorsSubAdd;
-	private javax.swing.JMenuItem popupBookmarkAddDesktop;
-	private javax.swing.JMenuItem popupBookmarksAddLuhmann;
-	private javax.swing.JMenuItem popupBookmarksAddManLinks;
-	private javax.swing.JMenuItem popupBookmarksDelete;
-	private javax.swing.JMenuItem popupBookmarksDeleteCat;
-	private javax.swing.JMenuItem popupBookmarksEdit;
-	private javax.swing.JMenuItem popupBookmarksEditCat;
-	private javax.swing.JMenuItem popupKeywordsAddToList;
-	private javax.swing.JMenuItem popupKeywordsCopy;
-	private javax.swing.JMenuItem popupKeywordsDelete;
-	private javax.swing.JMenuItem popupKeywordsDesktop;
-	private javax.swing.JMenuItem popupKeywordsDesktopAnd;
-	private javax.swing.JMenuItem popupKeywordsEdit;
-	private javax.swing.JMenuItem popupKeywordsLuhmann;
-	private javax.swing.JMenuItem popupKeywordsLuhmannAnd;
-	private javax.swing.JMenuItem popupKeywordsManLinks;
-	private javax.swing.JMenuItem popupKeywordsManLinksAnd;
-	private javax.swing.JMenuItem popupKeywordsNew;
-	private javax.swing.JMenuItem popupKeywordsSearchAnd;
-	private javax.swing.JMenuItem popupKeywordsSearchNot;
-	private javax.swing.JMenuItem popupKeywordsSearchOr;
-	private javax.swing.JMenuItem popupKwListCopy;
-	private javax.swing.JMenuItem popupKwListDelete;
-	private javax.swing.JMenuItem popupKwListHighlight;
-	private javax.swing.JCheckBoxMenuItem popupKwListHighlightSegments;
-	private javax.swing.JCheckBoxMenuItem popupKwListLogAnd;
-	private javax.swing.JCheckBoxMenuItem popupKwListLogOr;
-	private javax.swing.JMenuItem popupKwListRefresh;
-	private javax.swing.JMenuItem popupKwListSearchAnd;
-	private javax.swing.JMenuItem popupKwListSearchNot;
-	private javax.swing.JMenuItem popupKwListSearchOr;
-	private javax.swing.JMenuItem popupLinkRemoveManLink;
-	private javax.swing.JMenuItem popupLinksDesktop;
-	private javax.swing.JMenuItem popupLinksLuhmann;
-	private javax.swing.JMenuItem popupLinksManLinks;
-	private javax.swing.JMenuItem popupLinksRefresh;
-	private javax.swing.JMenuItem popupLuhmannAdd;
-	private javax.swing.JMenuItem popupLuhmannBookmarks;
-	private javax.swing.JMenuItem popupLuhmannDelete;
-	private javax.swing.JMenuItem popupLuhmannDesktop;
-	private javax.swing.JMenuItem popupLuhmannLevel1;
-	private javax.swing.JMenuItem popupLuhmannLevel2;
-	private javax.swing.JMenuItem popupLuhmannLevel3;
-	private javax.swing.JMenuItem popupLuhmannLevel4;
-	private javax.swing.JMenuItem popupLuhmannLevel5;
-	private javax.swing.JMenuItem popupLuhmannLevelAll;
-	private javax.swing.JMenuItem popupLuhmannManLinks;
-	private javax.swing.JMenu popupLuhmannSetLevel;
-	private javax.swing.JMenuItem popupMainAddToKeyword;
-	private javax.swing.JMenuItem popupMainCopy;
-	private javax.swing.JMenuItem popupMainCopyPlain;
-	private javax.swing.JMenuItem popupMainFind;
-	private javax.swing.JMenuItem popupMainSetFirstLineAsTitle;
-	private javax.swing.JMenuItem popupMainSetSelectionAsTitle;
-	private javax.swing.JMenuItem popupTitlesAutomaticTitle;
-	private javax.swing.JMenuItem popupTitlesBookmarks;
-	private javax.swing.JMenuItem popupTitlesCopy;
-	private javax.swing.JMenuItem popupTitlesDelete;
-	private javax.swing.JMenuItem popupTitlesDesktop;
-	private javax.swing.JMenuItem popupTitlesEdit;
-	private javax.swing.JMenuItem popupTitlesEditEntry;
-	private javax.swing.JMenuItem popupTitlesLuhmann;
-	private javax.swing.JMenuItem popupTitlesManLinks;
-	private javax.swing.JMenuItem preferencesMenuItem;
-	private javax.swing.JMenuItem prevEntryMenuItem;
-	private javax.swing.JMenuItem quickNewEntryMenuItem;
-	private javax.swing.JMenuItem quickNewTitleEntryMenuItem;
-	private javax.swing.JMenuItem randomEntryMenuItem;
-	private javax.swing.JMenuItem recentDoc1;
-	private javax.swing.JMenuItem recentDoc2;
-	private javax.swing.JMenuItem recentDoc3;
-	private javax.swing.JMenuItem recentDoc4;
-	private javax.swing.JMenuItem recentDoc5;
-	private javax.swing.JMenuItem recentDoc6;
-	private javax.swing.JMenuItem recentDoc7;
-	private javax.swing.JMenuItem recentDoc8;
-	private javax.swing.JMenu recentDocsSubMenu;
-	private javax.swing.JMenuItem saveAsMenuItem;
-	private javax.swing.JMenuItem saveMenuItem;
-	private javax.swing.JMenuItem selectAllMenuItem;
-	private javax.swing.JMenuItem setBookmarkMenuItem;
-	private javax.swing.JMenuItem showAttachmentsMenuItem;
-	private javax.swing.JMenuItem showAuthorsMenuItem;
-	private javax.swing.JMenuItem showBookmarksMenuItem;
-	private javax.swing.JMenuItem showClusterMenuItem;
-	private javax.swing.JMenuItem showCurrentEntryAgain;
-	private javax.swing.JMenuItem showDesktopMenuItem;
-	private javax.swing.JMenuItem showErrorLogMenuItem;
-	private javax.swing.JCheckBoxMenuItem showHighlightKeywords;
-	private javax.swing.JMenuItem showKeywordsMenuItem;
-	private javax.swing.JMenuItem showLinksMenuItem;
-	private javax.swing.JMenuItem showLuhmannMenuItem;
-	private javax.swing.JMenuItem showNewEntryMenuItem;
-	private javax.swing.JMenuItem showSearchResultsMenuItem;
-	private javax.swing.JMenuItem showTitlesMenuItem;
-	private javax.swing.JLabel statusAnimationLabel;
-	private javax.swing.JButton statusDesktopEntryButton;
-	private javax.swing.JLabel statusEntryLabel;
-	private javax.swing.JButton statusErrorButton;
-	private javax.swing.JLabel statusMsgLabel;
-	private javax.swing.JLabel statusOfEntryLabel;
-	private javax.swing.JPanel statusPanel;
-	private javax.swing.JButton tb_addbookmark;
-	private javax.swing.JButton tb_addluhmann;
-	private javax.swing.JButton tb_addmanlinks;
-	private javax.swing.JButton tb_addtodesktop;
-	private javax.swing.JButton tb_copy;
-	private javax.swing.JButton tb_delete;
-	private javax.swing.JButton tb_edit;
-	private javax.swing.JButton tb_find;
-	private javax.swing.JButton tb_first;
-	private javax.swing.JButton tb_last;
-	private javax.swing.JButton tb_newEntry;
-	private javax.swing.JButton tb_next;
-	private javax.swing.JButton tb_open;
-	private javax.swing.JButton tb_paste;
-	private javax.swing.JButton tb_prev;
-	private javax.swing.JButton tb_save;
-	private javax.swing.JButton tb_selectall;
-	private javax.swing.JToolBar toolBar;
-	private javax.swing.JMenuItem viewAttachmentEdit;
-	private javax.swing.JMenuItem viewAttachmentsCopy;
-	private javax.swing.JMenuItem viewAttachmentsDelete;
-	private javax.swing.JMenuItem viewAttachmentsExport;
-	private javax.swing.JMenuItem viewAuthorsAddLuhmann;
-	private javax.swing.JMenuItem viewAuthorsAddLuhmannAnd;
-	private javax.swing.JMenuItem viewAuthorsAddToEntry;
-	private javax.swing.JMenuItem viewAuthorsAttachBibtexFile;
-	private javax.swing.JMenuItem viewAuthorsBibkey;
-	private javax.swing.JMenuItem viewAuthorsCopy;
-	private javax.swing.JMenuItem viewAuthorsDelete;
-	private javax.swing.JMenuItem viewAuthorsDesktop;
-	private javax.swing.JMenuItem viewAuthorsDesktopAnd;
-	private javax.swing.JMenuItem viewAuthorsEdit;
-	private javax.swing.JMenuItem viewAuthorsExport;
-	private javax.swing.JMenuItem viewAuthorsImport;
-	private javax.swing.JMenuItem viewAuthorsManLinks;
-	private javax.swing.JMenuItem viewAuthorsManLinksAnd;
-	private javax.swing.JMenuItem viewAuthorsNew;
-	private javax.swing.JMenuItem viewAuthorsRefreshBibtexFile;
-	private javax.swing.JMenuItem viewAuthorsSearchAnd;
-	private javax.swing.JMenuItem viewAuthorsSearchNot;
-	private javax.swing.JMenuItem viewAuthorsSearchOr;
-	private javax.swing.JMenu viewAuthorsSubAdd;
-	private javax.swing.JMenu viewAuthorsSubEdit;
-	private javax.swing.JMenu viewAuthorsSubFind;
-	private javax.swing.JMenuItem viewBookmarkDesktop;
-	private javax.swing.JMenuItem viewBookmarksAddLuhmann;
-	private javax.swing.JMenuItem viewBookmarksDelete;
-	private javax.swing.JMenuItem viewBookmarksDeleteCat;
-	private javax.swing.JMenuItem viewBookmarksEdit;
-	private javax.swing.JMenuItem viewBookmarksEditCat;
-	private javax.swing.JMenuItem viewBookmarksExport;
-	private javax.swing.JMenuItem viewBookmarksExportSearch;
-	private javax.swing.JMenuItem viewBookmarksManLink;
-	private javax.swing.JMenuItem viewClusterExport;
-	private javax.swing.JMenuItem viewClusterExportToSearch;
-	private javax.swing.JMenuItem viewKeywordsAddToList;
-	private javax.swing.JMenuItem viewKeywordsCopy;
-	private javax.swing.JMenuItem viewKeywordsDelete;
-	private javax.swing.JMenuItem viewKeywordsDesktop;
-	private javax.swing.JMenuItem viewKeywordsDesktopAnd;
-	private javax.swing.JMenuItem viewKeywordsEdit;
-	private javax.swing.JMenuItem viewKeywordsExport;
-	private javax.swing.JMenuItem viewKeywordsLuhmann;
-	private javax.swing.JMenuItem viewKeywordsLuhmannAnd;
-	private javax.swing.JMenuItem viewKeywordsManLinks;
-	private javax.swing.JMenuItem viewKeywordsManLinksAnd;
-	private javax.swing.JMenuItem viewKeywordsNew;
-	private javax.swing.JMenuItem viewKeywordsSearchAnd;
-	private javax.swing.JMenuItem viewKeywordsSearchNot;
-	private javax.swing.JMenuItem viewKeywordsSearchOr;
-	private javax.swing.JMenu viewMenu;
-	private javax.swing.JMenuItem viewMenuAttachmentGoto;
-	private javax.swing.JMenu viewMenuAttachments;
-	private javax.swing.JMenu viewMenuAuthors;
-	private javax.swing.JMenu viewMenuBookmarks;
-	private javax.swing.JMenu viewMenuCluster;
-	private javax.swing.JMenuItem viewMenuExportToSearch;
-	private javax.swing.JMenu viewMenuKeywords;
-	private javax.swing.JMenu viewMenuLinks;
-	private javax.swing.JMenuItem viewMenuLinksDesktop;
-	private javax.swing.JMenuItem viewMenuLinksExport;
-	private javax.swing.JCheckBoxMenuItem viewMenuLinksKwListLogAnd;
-	private javax.swing.JCheckBoxMenuItem viewMenuLinksKwListLogOr;
-	private javax.swing.JMenuItem viewMenuLinksKwListRefresh;
-	private javax.swing.JMenuItem viewMenuLinksLuhmann;
-	private javax.swing.JMenuItem viewMenuLinksManLink;
-	private javax.swing.JMenuItem viewMenuLinksRemoveManLink;
-	private javax.swing.JMenu viewMenuLuhmann;
-	private javax.swing.JMenuItem viewMenuLuhmannBookmarks;
-	private javax.swing.JMenuItem viewMenuLuhmannDelete;
-	private javax.swing.JMenuItem viewMenuLuhmannDepth1;
-	private javax.swing.JMenuItem viewMenuLuhmannDepth2;
-	private javax.swing.JMenuItem viewMenuLuhmannDepth3;
-	private javax.swing.JMenuItem viewMenuLuhmannDepth4;
-	private javax.swing.JMenuItem viewMenuLuhmannDepth5;
-	private javax.swing.JMenuItem viewMenuLuhmannDepthAll;
-	private javax.swing.JMenuItem viewMenuLuhmannDesktop;
-	private javax.swing.JMenuItem viewMenuLuhmannExport;
-	private javax.swing.JMenuItem viewMenuLuhmannExportSearch;
-	private javax.swing.JMenuItem viewMenuLuhmannManLinks;
-	private javax.swing.JMenu viewMenuLuhmannShowLevel;
-	private javax.swing.JCheckBoxMenuItem viewMenuLuhmannShowNumbers;
-	private javax.swing.JMenuItem viewMenuLuhmannShowTopLevel;
-	private javax.swing.JMenu viewMenuTitles;
-	private javax.swing.JMenuItem viewTitlesAutomaticFirstLine;
-	private javax.swing.JMenuItem viewTitlesBookmarks;
-	private javax.swing.JMenuItem viewTitlesCopy;
-	private javax.swing.JMenuItem viewTitlesDelete;
-	private javax.swing.JMenuItem viewTitlesDesktop;
-	private javax.swing.JMenuItem viewTitlesEdit;
-	private javax.swing.JMenuItem viewTitlesExport;
-	private javax.swing.JMenuItem viewTitlesLuhmann;
-	private javax.swing.JMenuItem viewTitlesManLinks;
-	private javax.swing.JMenu windowsMenu;
+	private JMenu aboutMenu;
+	private JMenuItem aboutMenuItem;
+	private JMenuItem addFirstLineToTitleMenuItem;
+	private JMenuItem addSelectionToKeywordMenuItem;
+	private JMenuItem addSelectionToTitleMenuItem;
+	private JMenuItem addToDesktopMenuItem;
+	private JButton buttonHistoryBack;
+	private JButton buttonHistoryFore;
+	private JMenuItem copyMenuItem;
+	private JMenuItem copyPlainMenuItem;
+	private JMenuItem deleteKwFromListMenuItem;
+	private JMenuItem deleteZettelMenuItem;
+	private JMenu editMenu;
+	private JMenuItem editMenuItem;
+	private JMenuItem exitMenuItem;
+	private JMenuItem exportMenuItem;
+	private JMenu fileMenu;
+	private JMenuItem findDoubleEntriesItem;
+	private JMenuItem findEntriesAnyLuhmann;
+	private JMenuItem findEntriesFromCreatedTimestamp;
+	private JMenuItem findEntriesFromEditedTimestamp;
+	private JMenuItem findEntriesTopLevelLuhmann;
+	private JMenuItem findEntriesWithAttachments;
+	private JMenuItem findEntriesWithRatings;
+	private JMenuItem findEntriesWithRemarks;
+	private JMenuItem findEntriesWithoutAuthors;
+	private JMenuItem findEntriesWithoutKeywords;
+	private JMenuItem findEntriesWithoutManualLinks;
+	private JMenuItem findEntriesWithoutRatings;
+	private JMenuItem findEntriesWithoutRemarks;
+	private JMenu findEntryKeywordsMenu;
+	private JMenu findEntryWithout;
+	private JMenu findMenu;
+	private JMenuItem findMenuItem;
+	private JMenuItem findReplaceMenuItem;
+	private JMenuItem gotoEntryMenuItem;
+	private JCheckBoxMenuItem highlightSegmentsMenuItem;
+	private JMenuItem historyForMenuItem;
+	private JMenuItem histroyBackMenuItem;
+	private JMenuItem goToFirstParentEntryMenuItem;
+	private JMenuItem homeMenuItem;
+	private JMenuItem importMenuItem;
+	private JMenuItem insertEntryMenuItem;
+	private JButton jButton1;
+	private JButton jButtonRefreshAttachments;
+	private JButton jButtonRefreshAuthors;
+	private JButton jButtonRefreshCluster;
+	private JButton jButtonRefreshKeywords;
+	private JButton jButtonRefreshTitles;
+	private JCheckBox jCheckBoxCluster;
+	private JCheckBox jCheckBoxShowAllLuhmann;
+	private JCheckBox jCheckBoxShowSynonyms;
+	private JComboBox<String> jComboBoxAuthorType;
+	private JComboBox<String> jComboBoxBookmarkCategory;
+	private JEditorPane jEditorPaneBookmarkComment;
+	private JEditorPane jEditorPaneClusterEntries;
+	private JEditorPane jEditorPaneDispAuthor;
+	private JEditorPane jEditorPaneEntry;
+	private JEditorPane jEditorPaneIsFollower;
+	private JLabel jLabelMemory;
+	private JList<String> jListEntryKeywords;
+	private JPanel jPanel1;
+	private JPanel jPanel10;
+	private JPanel jPanel11;
+	private JPanel jPanel12;
+	private JPanel jPanel13;
+	private JPanel jPanel14;
+	private JPanel jPanel15;
+	private JPanel jPanel16;
+	private JPanel jPanel17;
+	private JPanel jPanel2;
+	private JPanel jPanel3;
+	private JPanel jPanel7;
+	private JPanel jPanel8;
+	private JPanel jPanel9;
+	private JPanel jPanelDispAuthor;
+	private JPanel jPanelLiveSearch;
+	private JPanel jPanelMainRight;
+	private JPanel jPanelManLinks;
+	private JPopupMenu jPopupMenuAttachments;
+	private JPopupMenu jPopupMenuAuthors;
+	private JPopupMenu jPopupMenuBookmarks;
+	private JPopupMenu jPopupMenuKeywordList;
+	private JPopupMenu jPopupMenuKeywords;
+	private JPopupMenu jPopupMenuLinks;
+	private JPopupMenu jPopupMenuLuhmann;
+	private JPopupMenu jPopupMenuMain;
+	private JPopupMenu jPopupMenuTitles;
+	private JScrollPane jScrollPane1;
+	private JScrollPane jScrollPane10;
+	private JScrollPane jScrollPane11;
+	private JScrollPane jScrollPane13;
+	private JScrollPane jScrollPane14;
+	private JScrollPane jScrollPane15;
+	private JScrollPane jScrollPane16;
+	private JScrollPane jScrollPane17;
+	private JScrollPane jScrollPane2;
+	private JScrollPane jScrollPane3;
+	private JScrollPane jScrollPane4;
+	private JScrollPane jScrollPane5;
+	private JScrollPane jScrollPane6;
+	private JScrollPane jScrollPane7;
+	private JScrollPane jScrollPane8;
+	private JScrollPane jScrollPane9;
+	private JSeparator jSeparator1;
+	private JToolBar.Separator jSeparator10;
+	private JSeparator jSeparator100;
+	private JPopupMenu.Separator jSeparator101;
+	private JSeparator jSeparator102;
+	private JSeparator jSeparator103;
+	private JSeparator jSeparator104;
+	private JSeparator jSeparator105;
+	private JPopupMenu.Separator jSeparator106;
+	private JSeparator jSeparator107;
+	private JPopupMenu.Separator jSeparator108;
+	private JSeparator jSeparator109;
+	private JSeparator jSeparator11;
+	private JSeparator jSeparator110;
+	private JPopupMenu.Separator jSeparator111;
+	private JPopupMenu.Separator jSeparator112;
+	private JPopupMenu.Separator jSeparator113;
+	private JPopupMenu.Separator jSeparator114;
+	private JPopupMenu.Separator jSeparator115;
+	private JPopupMenu.Separator jSeparator116;
+	private JPopupMenu.Separator jSeparator117;
+	private JPopupMenu.Separator jSeparator118;
+	private JPopupMenu.Separator jSeparator119;
+	private JSeparator jSeparator12;
+	private JSeparator jSeparator13;
+	private JSeparator jSeparator14;
+	private JSeparator jSeparator15;
+	private JSeparator jSeparator16;
+	private JSeparator jSeparator17;
+	private JSeparator jSeparator18;
+	private JSeparator jSeparator19;
+	private JSeparator jSeparator2;
+	private JSeparator jSeparator20;
+	private JSeparator jSeparator21;
+	private JSeparator jSeparator22;
+	private JSeparator jSeparator23;
+	private JSeparator jSeparator24;
+	private JSeparator jSeparator25;
+	private JSeparator jSeparator26;
+	private JSeparator jSeparator27;
+	private JSeparator jSeparator28;
+	private JSeparator jSeparator29;
+	private JSeparator jSeparator3;
+	private JSeparator jSeparator30;
+	private JSeparator jSeparator31;
+	private JToolBar.Separator jSeparator32;
+	private JSeparator jSeparator33;
+	private JPopupMenu.Separator jSeparator34;
+	private JSeparator jSeparator35;
+	private JSeparator jSeparator36;
+	private JSeparator jSeparator37;
+	private JSeparator jSeparator38;
+	private JSeparator jSeparator39;
+	private JToolBar.Separator jSeparator4;
+	private JSeparator jSeparator40;
+	private JSeparator jSeparator41;
+	private JSeparator jSeparator42;
+	private JSeparator jSeparator43;
+	private JSeparator jSeparator44;
+	private JSeparator jSeparator45;
+	private JSeparator jSeparator46;
+	private JSeparator jSeparator47;
+	private JSeparator jSeparator48;
+	private JSeparator jSeparator49;
+	private JToolBar.Separator jSeparator5;
+	private JSeparator jSeparator50;
+	private JSeparator jSeparator51;
+	private JSeparator jSeparator52;
+	private JSeparator jSeparator53;
+	private JSeparator jSeparator54;
+	private JSeparator jSeparator55;
+	private JSeparator jSeparator56;
+	private JSeparator jSeparator57;
+	private JSeparator jSeparator58;
+	private JSeparator jSeparator59;
+	private JSeparator jSeparator6;
+	private JSeparator jSeparator60;
+	private JSeparator jSeparator61;
+	private JSeparator jSeparator62;
+	private JSeparator jSeparator63;
+	private JSeparator jSeparator64;
+	private JPopupMenu.Separator jSeparator65;
+	private JSeparator jSeparator66;
+	private JSeparator jSeparator67;
+	private JSeparator jSeparator68;
+	private JSeparator jSeparator69;
+	private JSeparator jSeparator7;
+	private JSeparator jSeparator70;
+	private JSeparator jSeparator71;
+	private JPopupMenu.Separator jSeparator72;
+	private JPopupMenu.Separator jSeparator73;
+	private JPopupMenu.Separator jSeparator74;
+	private JSeparator jSeparator75;
+	private JSeparator jSeparator76;
+	private JSeparator jSeparator77;
+	private JSeparator jSeparator78;
+	private JSeparator jSeparator8;
+	private JSeparator jSeparator80;
+	private JSeparator jSeparator81;
+	private JSeparator jSeparator82;
+	private JSeparator jSeparator83;
+	private JSeparator jSeparator84;
+	private JSeparator jSeparator85;
+	private JSeparator jSeparator86;
+	private JSeparator jSeparator87;
+	private JSeparator jSeparator88;
+	private JSeparator jSeparator89;
+	private JSeparator jSeparator9;
+	private JSeparator jSeparator90;
+	private JSeparator jSeparator91;
+	private JSeparator jSeparator92;
+	private JSeparator jSeparator93;
+	private JSeparator jSeparator94;
+	private JSeparator jSeparator95;
+	private JSeparator jSeparator96;
+	private JSeparator jSeparator97;
+	private JSeparator jSeparator98;
+	private JSeparator jSeparator99;
+	private JSeparator jSeparatorAbout1;
+	private JSeparator jSeparatorExit;
+	private JSplitPane jSplitPane1;
+	private JSplitPane jSplitPane2;
+	private JSplitPane jSplitPane3;
+	private JSplitPane jSplitPaneAuthors;
+	private JSplitPane jSplitPaneLinks;
+	private JSplitPane jSplitPaneMain1;
+	private JSplitPane jSplitPaneMain2;
+	private JTabbedPane jTabbedPaneMain;
+	private JTable jTableAttachments;
+	private JTable jTableAuthors;
+	private JTable jTableBookmarks;
+	private JTable jTableKeywords;
+	private JTable jTableLinks;
+	private JTable jTableManLinks;
+	private JTable jTableTitles;
+	private JTextField jTextFieldEntryNumber;
+	private JTextField jTextFieldFilterAttachments;
+	private JTextField jTextFieldFilterAuthors;
+	private JTextField jTextFieldFilterCluster;
+	private JTextField jTextFieldFilterKeywords;
+	private JTextField jTextFieldFilterTitles;
+	private JTextField jTextFieldLiveSearch;
+	private JTree jTreeCluster;
+	private JTree jTreeKeywords;
+	private JTree jTreeLuhmann;
+	private JMenuItem lastEntryMenuItem;
+	private JMenuItem liveSearchMenuItem;
+	private JPanel mainPanel;
+	private JMenuItem manualInsertLinksMenuItem;
+	private JMenuItem manualInsertMenuItem;
+	private JMenuBar menuBar;
+	private JMenuItem menuFileInformation;
+	private JMenuItem menuKwListSearchAnd;
+	private JMenuItem menuKwListSearchNot;
+	private JMenuItem menuKwListSearchOr;
+	private JMenuItem newDesktopMenuItem;
+	private JMenuItem newEntryMenuItem;
+	private JMenuItem newZettelkastenMenuItem;
+	private JMenuItem nextEntryMenuItem;
+	private JMenuItem openMenuItem;
+	private JMenuItem pasteMenuItem;
+	private JMenuItem popupAttachmentsCopy;
+	private JMenuItem popupAttachmentsDelete;
+	private JMenuItem popupAttachmentsEdit;
+	private JMenuItem popupAttachmentsExport;
+	private JMenuItem popupAttachmentsGoto;
+	private JMenuItem popupAuthorsAddToEntry;
+	private JMenuItem popupAuthorsBibkey;
+	private JMenuItem popupAuthorsCopy;
+	private JMenuItem popupAuthorsDelete;
+	private JMenuItem popupAuthorsDesktop;
+	private JMenuItem popupAuthorsDesktopAnd;
+	private JMenuItem popupAuthorsEdit;
+	private JMenuItem popupAuthorsImport;
+	private JMenuItem popupAuthorsLuhmann;
+	private JMenuItem popupAuthorsLuhmannAnd;
+	private JMenuItem popupAuthorsManLinks;
+	private JMenuItem popupAuthorsManLinksAnd;
+	private JMenuItem popupAuthorsNew;
+	private JMenuItem popupAuthorsSearchLogAnd;
+	private JMenuItem popupAuthorsSearchLogNot;
+	private JMenuItem popupAuthorsSearchLogOr;
+	private JMenu popupAuthorsSubAdd;
+	private JMenuItem popupBookmarkAddDesktop;
+	private JMenuItem popupBookmarksAddLuhmann;
+	private JMenuItem popupBookmarksAddManLinks;
+	private JMenuItem popupBookmarksDelete;
+	private JMenuItem popupBookmarksDeleteCat;
+	private JMenuItem popupBookmarksEdit;
+	private JMenuItem popupBookmarksEditCat;
+	private JMenuItem popupKeywordsAddToList;
+	private JMenuItem popupKeywordsCopy;
+	private JMenuItem popupKeywordsDelete;
+	private JMenuItem popupKeywordsDesktop;
+	private JMenuItem popupKeywordsDesktopAnd;
+	private JMenuItem popupKeywordsEdit;
+	private JMenuItem popupKeywordsLuhmann;
+	private JMenuItem popupKeywordsLuhmannAnd;
+	private JMenuItem popupKeywordsManLinks;
+	private JMenuItem popupKeywordsManLinksAnd;
+	private JMenuItem popupKeywordsNew;
+	private JMenuItem popupKeywordsSearchAnd;
+	private JMenuItem popupKeywordsSearchNot;
+	private JMenuItem popupKeywordsSearchOr;
+	private JMenuItem popupKwListCopy;
+	private JMenuItem popupKwListDelete;
+	private JMenuItem popupKwListHighlight;
+	private JCheckBoxMenuItem popupKwListHighlightSegments;
+	private JCheckBoxMenuItem popupKwListLogAnd;
+	private JCheckBoxMenuItem popupKwListLogOr;
+	private JMenuItem popupKwListRefresh;
+	private JMenuItem popupKwListSearchAnd;
+	private JMenuItem popupKwListSearchNot;
+	private JMenuItem popupKwListSearchOr;
+	private JMenuItem popupLinkRemoveManLink;
+	private JMenuItem popupLinksDesktop;
+	private JMenuItem popupLinksLuhmann;
+	private JMenuItem popupLinksManLinks;
+	private JMenuItem popupLinksRefresh;
+	private JMenuItem popupLuhmannAdd;
+	private JMenuItem popupLuhmannBookmarks;
+	private JMenuItem popupLuhmannDelete;
+	private JMenuItem popupLuhmannDesktop;
+	private JMenuItem popupLuhmannLevel1;
+	private JMenuItem popupLuhmannLevel2;
+	private JMenuItem popupLuhmannLevel3;
+	private JMenuItem popupLuhmannLevel4;
+	private JMenuItem popupLuhmannLevel5;
+	private JMenuItem popupLuhmannLevelAll;
+	private JMenuItem popupLuhmannManLinks;
+	private JMenu popupLuhmannSetLevel;
+	private JMenuItem popupMainAddToKeyword;
+	private JMenuItem popupMainCopy;
+	private JMenuItem popupMainCopyPlain;
+	private JMenuItem popupMainFind;
+	private JMenuItem popupMainSetFirstLineAsTitle;
+	private JMenuItem popupMainSetSelectionAsTitle;
+	private JMenuItem popupTitlesAutomaticTitle;
+	private JMenuItem popupTitlesBookmarks;
+	private JMenuItem popupTitlesCopy;
+	private JMenuItem popupTitlesDelete;
+	private JMenuItem popupTitlesDesktop;
+	private JMenuItem popupTitlesEdit;
+	private JMenuItem popupTitlesEditEntry;
+	private JMenuItem popupTitlesLuhmann;
+	private JMenuItem popupTitlesManLinks;
+	private JMenuItem preferencesMenuItem;
+	private JMenuItem prevEntryMenuItem;
+	private JMenuItem quickNewEntryMenuItem;
+	private JMenuItem quickNewTitleEntryMenuItem;
+	private JMenuItem randomEntryMenuItem;
+	private JMenuItem recentDoc1;
+	private JMenuItem recentDoc2;
+	private JMenuItem recentDoc3;
+	private JMenuItem recentDoc4;
+	private JMenuItem recentDoc5;
+	private JMenuItem recentDoc6;
+	private JMenuItem recentDoc7;
+	private JMenuItem recentDoc8;
+	private JMenu recentDocsSubMenu;
+	private JMenuItem saveAsMenuItem;
+	private JMenuItem saveMenuItem;
+	private JMenuItem selectAllMenuItem;
+	private JMenuItem setBookmarkMenuItem;
+	private JMenuItem showAttachmentsMenuItem;
+	private JMenuItem showAuthorsMenuItem;
+	private JMenuItem showBookmarksMenuItem;
+	private JMenuItem showClusterMenuItem;
+	private JMenuItem showCurrentEntryAgain;
+	private JMenuItem showDesktopMenuItem;
+	private JMenuItem showErrorLogMenuItem;
+	private JCheckBoxMenuItem showHighlightKeywords;
+	private JMenuItem showKeywordsMenuItem;
+	private JMenuItem showLinksMenuItem;
+	private JMenuItem showLuhmannMenuItem;
+	private JMenuItem showNewEntryMenuItem;
+	private JMenuItem showSearchResultsMenuItem;
+	private JMenuItem showTitlesMenuItem;
+	private JLabel statusAnimationLabel;
+	private JButton statusDesktopEntryButton;
+	private JLabel statusEntryLabel;
+	private JButton statusErrorButton;
+	private JLabel statusMsgLabel;
+	private JLabel statusOfEntryLabel;
+	private JPanel statusPanel;
+	private JButton tb_addbookmark;
+	private JButton tb_addluhmann;
+	private JButton tb_addmanlinks;
+	private JButton tb_addtodesktop;
+	private JButton tb_copy;
+	private JButton tb_delete;
+	private JButton tb_edit;
+	private JButton tb_find;
+	private JButton tb_first;
+	private JButton tb_last;
+	private JButton tb_newEntry;
+	private JButton tb_next;
+	private JButton tb_open;
+	private JButton tb_paste;
+	private JButton tb_prev;
+	private JButton tb_save;
+	private JButton tb_selectall;
+	private JToolBar toolBar;
+	private JMenuItem viewAttachmentEdit;
+	private JMenuItem viewAttachmentsCopy;
+	private JMenuItem viewAttachmentsDelete;
+	private JMenuItem viewAttachmentsExport;
+	private JMenuItem viewAuthorsAddLuhmann;
+	private JMenuItem viewAuthorsAddLuhmannAnd;
+	private JMenuItem viewAuthorsAddToEntry;
+	private JMenuItem viewAuthorsAttachBibtexFile;
+	private JMenuItem viewAuthorsBibkey;
+	private JMenuItem viewAuthorsCopy;
+	private JMenuItem viewAuthorsDelete;
+	private JMenuItem viewAuthorsDesktop;
+	private JMenuItem viewAuthorsDesktopAnd;
+	private JMenuItem viewAuthorsEdit;
+	private JMenuItem viewAuthorsExport;
+	private JMenuItem viewAuthorsImport;
+	private JMenuItem viewAuthorsManLinks;
+	private JMenuItem viewAuthorsManLinksAnd;
+	private JMenuItem viewAuthorsNew;
+	private JMenuItem viewAuthorsRefreshBibtexFile;
+	private JMenuItem viewAuthorsSearchAnd;
+	private JMenuItem viewAuthorsSearchNot;
+	private JMenuItem viewAuthorsSearchOr;
+	private JMenu viewAuthorsSubAdd;
+	private JMenu viewAuthorsSubEdit;
+	private JMenu viewAuthorsSubFind;
+	private JMenuItem viewBookmarkDesktop;
+	private JMenuItem viewBookmarksAddLuhmann;
+	private JMenuItem viewBookmarksDelete;
+	private JMenuItem viewBookmarksDeleteCat;
+	private JMenuItem viewBookmarksEdit;
+	private JMenuItem viewBookmarksEditCat;
+	private JMenuItem viewBookmarksExport;
+	private JMenuItem viewBookmarksExportSearch;
+	private JMenuItem viewBookmarksManLink;
+	private JMenuItem viewClusterExport;
+	private JMenuItem viewClusterExportToSearch;
+	private JMenuItem viewKeywordsAddToList;
+	private JMenuItem viewKeywordsCopy;
+	private JMenuItem viewKeywordsDelete;
+	private JMenuItem viewKeywordsDesktop;
+	private JMenuItem viewKeywordsDesktopAnd;
+	private JMenuItem viewKeywordsEdit;
+	private JMenuItem viewKeywordsExport;
+	private JMenuItem viewKeywordsLuhmann;
+	private JMenuItem viewKeywordsLuhmannAnd;
+	private JMenuItem viewKeywordsManLinks;
+	private JMenuItem viewKeywordsManLinksAnd;
+	private JMenuItem viewKeywordsNew;
+	private JMenuItem viewKeywordsSearchAnd;
+	private JMenuItem viewKeywordsSearchNot;
+	private JMenuItem viewKeywordsSearchOr;
+	private JMenu viewMenu;
+	private JMenuItem viewMenuAttachmentGoto;
+	private JMenu viewMenuAttachments;
+	private JMenu viewMenuAuthors;
+	private JMenu viewMenuBookmarks;
+	private JMenu viewMenuCluster;
+	private JMenuItem viewMenuExportToSearch;
+	private JMenu viewMenuKeywords;
+	private JMenu viewMenuLinks;
+	private JMenuItem viewMenuLinksDesktop;
+	private JMenuItem viewMenuLinksExport;
+	private JCheckBoxMenuItem viewMenuLinksKwListLogAnd;
+	private JCheckBoxMenuItem viewMenuLinksKwListLogOr;
+	private JMenuItem viewMenuLinksKwListRefresh;
+	private JMenuItem viewMenuLinksLuhmann;
+	private JMenuItem viewMenuLinksManLink;
+	private JMenuItem viewMenuLinksRemoveManLink;
+	private JMenu viewMenuLuhmann;
+	private JMenuItem viewMenuLuhmannBookmarks;
+	private JMenuItem viewMenuLuhmannDelete;
+	private JMenuItem viewMenuLuhmannDepth1;
+	private JMenuItem viewMenuLuhmannDepth2;
+	private JMenuItem viewMenuLuhmannDepth3;
+	private JMenuItem viewMenuLuhmannDepth4;
+	private JMenuItem viewMenuLuhmannDepth5;
+	private JMenuItem viewMenuLuhmannDepthAll;
+	private JMenuItem viewMenuLuhmannDesktop;
+	private JMenuItem viewMenuLuhmannExport;
+	private JMenuItem viewMenuLuhmannExportSearch;
+	private JMenuItem viewMenuLuhmannManLinks;
+	private JMenu viewMenuLuhmannShowLevel;
+	private JCheckBoxMenuItem viewMenuLuhmannShowNumbers;
+	private JMenuItem viewMenuLuhmannShowTopLevel;
+	private JMenu viewMenuTitles;
+	private JMenuItem viewTitlesAutomaticFirstLine;
+	private JMenuItem viewTitlesBookmarks;
+	private JMenuItem viewTitlesCopy;
+	private JMenuItem viewTitlesDelete;
+	private JMenuItem viewTitlesDesktop;
+	private JMenuItem viewTitlesEdit;
+	private JMenuItem viewTitlesExport;
+	private JMenuItem viewTitlesLuhmann;
+	private JMenuItem viewTitlesManLinks;
+	private JMenu windowsMenu;
 	// End of variables declaration//GEN-END:variables
 
-	private javax.swing.JTextField tb_searchTextfield;
-	private javax.swing.JPanel jPanelSearchBox;
-	private javax.swing.JLabel jLabelLupe;
+	private JTextField tb_searchTextfield;
+	private JPanel jPanelSearchBox;
+	private JLabel jLabelLupe;
 	private TaskProgressDialog taskDlg;
 	private EditorFrame editEntryDlg;
 	private CImport importWindow;

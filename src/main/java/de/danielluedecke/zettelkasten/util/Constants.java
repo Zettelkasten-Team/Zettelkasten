@@ -1129,11 +1129,11 @@ public class Constants {
 	/**
 	 *
 	 */
-	public static final String[] iconThemes = { "", "crystal/", "tango/", "osx/", "crystal/small/", "tango/small/" };
+	public static final String[] iconThemes = { "", "yaru/", "crystal/", "tango/", "osx/", "crystal/small/", "tango/small/" };
 	/**
 	 *
 	 */
-	public static final String[] iconThemesNames = { "Standard", "Crystal", "Tango", "Standard (small)",
+	public static final String[] iconThemesNames = { "Standard", "Yaru", "Crystal", "Tango", "Standard (small)", "Yaru (small)",
 			"Crystal (small)", "Tango (small)" };
 
 	/**
