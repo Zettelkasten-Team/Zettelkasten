@@ -341,6 +341,12 @@
             <artifactId>jaxb-runtime</artifactId>
             <version>3.0.0</version>
         </dependency>
+        <!-- https://www.formdev.com/flatlaf/#download -->
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.2.5</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>

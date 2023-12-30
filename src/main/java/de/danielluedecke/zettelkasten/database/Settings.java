@@ -33,6 +33,9 @@
 
 package de.danielluedecke.zettelkasten.database;
 
+import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
+
 import de.danielluedecke.zettelkasten.CImportBibTex;
 import de.danielluedecke.zettelkasten.CSetBibKey;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
@@ -49,6 +52,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -579,31 +583,34 @@ public class Settings {
 		}
 
 		{
-			// Retrieve all installed Look and Feels.
+			// Install FlatLafs Light and Dark with Ubuntu accent colour (Todo: make colors / themeing flexible, not hardcoded)
+			UIManager.installLookAndFeel("FlatLightLaf", "com.formdev.flatlaf.FlatLightLaf");
+			FlatLightLaf.setGlobalExtraDefaults(Collections.singletonMap("@accentColor", "#ea5420"));
+			UIManager.installLookAndFeel("FlatDarkLaf", "com.formdev.flatlaf.FlatDarkLaf");
+			FlatDarkLaf.setGlobalExtraDefaults(Collections.singletonMap("@accentColor", "#ea5420"));
+			// Retrieve all installed LookAndFeels
 			UIManager.LookAndFeelInfo[] installed_laf = UIManager.getInstalledLookAndFeels();
 			boolean lafAquaFound = false;
-			boolean lafNimbusFound = false;
 			String aquaclassname = "";
-			String nimbusclassname = "";
+			String flatlightlafclassname = "";
 
+			// Give Aqua and FlatLightLaf proper classnames
 			for (UIManager.LookAndFeelInfo laf : installed_laf) {
-				// In case we find "nimbus" LAF, set this as default on non-mac-os
-				// because it looks better.
 				if (laf.getName().equalsIgnoreCase("mac os x") || laf.getClassName().contains("Aqua")) {
 					lafAquaFound = true;
 					aquaclassname = laf.getClassName();
 				}
-				if (laf.getName().equalsIgnoreCase("nimbus") || laf.getClassName().contains("Nimbus")) {
-					lafNimbusFound = true;
-					nimbusclassname = laf.getClassName();
+				if (laf.getName().equalsIgnoreCase("FlatLightLaf") || laf.getClassName().contains("com.formdev.flatlaf.FlatLightLaf")) {
+					flatlightlafclassname = laf.getClassName();
 				}
 			}
-			// Check which laf was found and set appropriate default value.
+			// Set Aqua as default on MacOS, FlatLightLaf on Linux and System Laf on Windows
 			if (lafAquaFound) {
 				genericElementInitIfMissing(SETTING_LAF, aquaclassname);
-			} else if (lafNimbusFound) {
-				genericElementInitIfMissing(SETTING_LAF, nimbusclassname);
-			} else {
+			} else if (PlatformUtil.isLinux()) {
+				genericElementInitIfMissing(SETTING_LAF, flatlightlafclassname);
+			}
+			else {
 				genericElementInitIfMissing(SETTING_LAF, UIManager.getSystemLookAndFeelClassName());
 			}
 		}
