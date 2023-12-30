@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.danielluedecke</groupId>
     <artifactId>Zettelkasten</artifactId>
-    <version>3.2023.11</version>
+    <version>3.2023.12</version>
     <name>Zettelkasten</name>
     <properties>
         <zkn.launch4jVersion>${project.version}.0</zkn.launch4jVersion>
