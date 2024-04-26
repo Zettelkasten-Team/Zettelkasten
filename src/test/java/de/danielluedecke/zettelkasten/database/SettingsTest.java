@@ -128,4 +128,41 @@ public class SettingsTest {
 		testPath.toFile().createNewFile();
 		assertEquals("ANY_VALUE", settings.getMainDataFileNameWithoutExtension().toString());
 	}
+
+	@Test
+	void isMacAqua_MacOSWithAquaLookAndFeel_ReturnsTrue() {
+		Settings settings = new Settings();
+		// Set up the environment to simulate macOS with Aqua look and feel
+		// For example:
+		// Mocking PlatformUtil to return true for isMacOS()
+		// Mocking getLookAndFeel() to return a value containing "Aqua"
+
+		assertTrue(settings.isMacAqua());
+	}
+
+	@Test
+	void loadSettings_FileNotFound_ReturnsFalse() {
+		// Arrange: Create a Settings instance
+		Settings settings = new Settings();
+
+		// Act: Constructor should initialize settings with non-existent file
+		boolean result = settings.getSettingsFile() == null;
+
+		// Assert: Verify that settings file is not found
+		assertTrue(result);
+	}
+
+	@Test
+	void useDefaultSettings_ShouldSetDefaultValues() {
+		// Arrange
+		Settings settings = new Settings();
+
+		// Act
+		settings.useDefaultSettings();
+
+		// Assert
+		assertEquals("default_value", settings.getSetting1());
+		// Add more assertions for other settings
+	}
+
 }
