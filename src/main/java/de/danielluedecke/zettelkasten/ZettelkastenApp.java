@@ -57,23 +57,14 @@ import javax.swing.*;
  * The main class of the application.
  */
 public class ZettelkastenApp extends SingleFrameApplication {
-	/**
-	 * inMemorySessionLog contains all the logs of the current usage session of the
-	 * app. This log starts clean in the app startup and is discarded at the end.
-	 */
 	private ByteArrayOutputStream inMemorySessionLog = new ByteArrayOutputStream(2000);
-
-	// we load the settings just after startup
-	Settings settings;
-	// and so we do with the user defined accelerator keys
-	AcceleratorKeys accKeys;
-	// and so we do with the user defined accelerator keys
-	AutoKorrektur autoKorrekt;
-	Synonyms synonyms;
-	StenoData steno;
-	TasksData taskData;
-
-	private String[] params;
+	private Settings settings;
+	private AcceleratorKeys accKeys;
+	private AutoKorrektur autoKorrekt;
+	private Synonyms synonyms;
+	private StenoData steno;
+	private TasksData taskData;
+	String[] params;
 
 	private FileHandler createFileLogHandler() {
 		try {
@@ -167,15 +158,13 @@ public class ZettelkastenApp extends SingleFrameApplication {
 		}
 	}
 
-	 Object initializeTaskData() {
+	 void initializeTaskData() {
 		taskData = new TasksData();
-		 return null;
 	 }
 
-	Object initializeSettings() {
+	void initializeSettings() {
 		settings = new Settings();
-		updateSettingsWithCommandLineParams(params);
-		return null;
+		//updateSettingsWithCommandLineParams(params);
 	}
 
 	void initializeLocale() {
