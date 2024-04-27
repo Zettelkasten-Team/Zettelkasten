@@ -46,10 +46,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.SimpleFormatter;
-import java.util.logging.StreamHandler;
+import java.util.logging.*;
 
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
@@ -153,36 +150,52 @@ public class ZettelkastenApp extends SingleFrameApplication {
 	 */
 	@Override
 	protected void startup() {
-		// Init Logger. The earlier the better.
-		// Log everything.
-		Constants.zknlogger.setLevel(Level.ALL);
-		// Log to the inMemorySessionLog byte-array.
+		configureLogger(Constants.zknlogger);
+		initializeTaskData();
+		initializeSettings();
+		initializeLocale();
+		showMainWindow();
+	}
+
+	void configureLogger(Logger logger) {
+		logger.setLevel(Level.ALL);
 		StreamHandler sHandler = new StreamHandler(inMemorySessionLog, new SimpleFormatter());
-		Constants.zknlogger.addHandler(sHandler);
-		// Log to log file.
+		logger.addHandler(sHandler);
 		FileHandler fh = createFileLogHandler();
 		if (fh != null) {
-			Constants.zknlogger.addHandler(fh);
+			logger.addHandler(fh);
 		}
+	}
 
-		// Initialize taskData.
+	 Object initializeTaskData() {
 		taskData = new TasksData();
+		 return null;
+	 }
 
-		// Initialize settings.
+	Object initializeSettings() {
 		settings = new Settings();
 		updateSettingsWithCommandLineParams(params);
+		return null;
+	}
 
+	void initializeLocale() {
 		initLocale(settings);
+	}
 
-		Constants.zknlogger.log(Level.INFO, String.format("Starting Main Window."));
-		// Show main window.
+	private void showMainWindow() {
+		Constants.zknlogger.log(Level.INFO, "Starting Main Window.");
 		try {
 			show(new ZettelkastenView(this, settings, taskData));
 		} catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException
-				| IllegalAccessException | IOException e) {
-			e.printStackTrace();
+				 | IllegalAccessException | IOException e) {
+			handleMainWindowException(e);
 		}
 	}
+
+	private void handleMainWindowException(Exception e) {
+		e.printStackTrace();
+	}
+
 
 	/**
 	 * A convenient static getter for the application instance.
