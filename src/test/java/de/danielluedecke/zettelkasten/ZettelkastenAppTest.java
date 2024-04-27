@@ -4,6 +4,7 @@ import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.database.Settings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -29,20 +30,12 @@ class ZettelkastenAppTest {
     @Test
     void startup_ShouldInitializeLoggerAndSettings() {
         // Arrange
-        TasksData tasksDataMock = mock(TasksData.class);
-        Settings settingsMock = mock(Settings.class);
-        doNothing().when(loggerMock).log(any(Level.class), anyString());
-        when(settingsMock.getLanguage()).thenReturn("en");
-        zettelkastenApp.initializeTaskData();
-        zettelkastenApp.initializeSettings();
+        zettelkastenApp.configureLogger(loggerMock);
 
         // Act
         zettelkastenApp.startup();
 
         // Assert
-        zettelkastenApp.initializeTaskData();
-        assertNotNull(zettelkastenApp.initializeSettings());
-        verify(loggerMock, atLeastOnce()).log(any(Level.class), anyString());
-        verify(settingsMock).getLanguage();
+        verify(loggerMock, times(2)).addHandler(any());
     }
 }

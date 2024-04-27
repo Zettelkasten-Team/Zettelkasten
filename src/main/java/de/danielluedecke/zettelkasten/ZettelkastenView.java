@@ -2617,17 +2617,23 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * If the user has changed the default look and feel
 	 * and we need to set something other than the default.
 	 */
-	private void initUIManagerLookAndFeel() {
+	void initUIManagerLookAndFeel() {
 		try {
 			String laf = settings.getLookAndFeel();
 			UIManager.setLookAndFeel(laf);
-			SwingUtilities.updateComponentTreeUI(getFrame());
-			Constants.zknlogger.log(Level.INFO, "Using following LookAndFeel: {0}", settings.getLookAndFeel());
+			JFrame frame = getFrame();
+			if (frame != null) {
+				SwingUtilities.updateComponentTreeUI(frame);
+				Constants.zknlogger.log(Level.INFO, "Using following LookAndFeel: {0}", settings.getLookAndFeel());
+			} else {
+				Constants.zknlogger.log(Level.WARNING, "Frame is null");
+			}
 		} catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException
-				| IllegalAccessException ex) {
+				 | IllegalAccessException ex) {
 			Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
 		}
 	}
+
 
 	public final void setNewDisplayedEntryAndUpdateDisplay(int inputDisplayedEntry) {
 		setNewDisplayedEntryAndUpdateDisplay(inputDisplayedEntry, UpdateDisplayOptions.defaultOptions());
@@ -10662,7 +10668,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (!anyChange) {
 			// Nothing to save, return true.
 			Constants.zknlogger.log(Level.INFO, "Nothing to be saved in the main data file [{0}].",
-					settings.getMainDataFile().toString());
+					settings.getMainDataFile() != null ? settings.getMainDataFile().toString() : "null");
 			return true;
 		}
 		// We have changes. We need to ask the user if they want to save the latest

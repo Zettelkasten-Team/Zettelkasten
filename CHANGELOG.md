@@ -1,21 +1,20 @@
-# [Unreleased]
-### Changes
-- Add Go to first parent note action
-- Importing zkx3 files with ID duplicates was unreliable ([215](https://github.com/Zettelkasten-Team/Zettelkasten/issues/215))
-- Dialog "Newer backup file exists" should be more intuitive ([361](https://github.com/Zettelkasten-Team/Zettelkasten/issues/361))
-- Revised BibTeX import ([257](https://github.com/Zettelkasten-Team/Zettelkasten/issues/257))
-- Remove duplicateEntry ([339](https://github.com/Zettelkasten-Team/Zettelkasten/issues/339))
-- pt-BR translation ([237](https://github.com/Zettelkasten-Team/Zettelkasten/issues/237))
-- Sea Glass Look and Feel For Swing reconstructed ([292](https://github.com/Zettelkasten-Team/Zettelkasten/issues/292))
-- Fixed a bug where the success dialog of the BibTeX import could not be displayed because a value for the format string was missing ([257](https://github.com/Zettelkasten-Team/Zettelkasten/issues/257))
+# Change Log
 
-<a name="v3.2.8"></a>
-# [3.2.8](https://github.com/Zettelkasten-Team/Zettelkasten/compare/3.2.7...release/v3.2.8) (TBD)
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org/) for commit guidelines.
+
+# [Unreleased]
+#### 🩹 Bug fixes
+
+- askUserAndMaybeSaveChanges (within ZettelkastenView), ensure that settings.getMainDataFile() does not return null before calling toString() on it.
+
+<a name="v3.2022.8"></a>
+# [3.2022.8](https://github.com/Zettelkasten-Team/Zettelkasten/compare/v3.3.1...v3.2022.8) (August 2022)
 
 <a name="v3.3.1"></a>
-# [3.3.1](https://github.com/Zettelkasten-Team/Zettelkasten/compare/3.3.0...v3.3.1) (2020-04-06)
-### Bug fixes
-- Look-and-Feel Seaglass was removed, due to compatibility issues with JDK 11 ([210](https://github.com/Zettelkasten-Team/Zettelkasten/issues/210)).
+# [3.3.1](https://github.com/Zettelkasten-Team/Zettelkasten/compare/v3.3.0...v3.3.1) (2020-04-06)
+### 🩹 Bug fixes
+- Look-and-Feel Seaglass was removed, due to compatibility issues with JDK 11.
 
 <a name="v3.3.0"></a>
 # [3.3.0](https://github.com/Zettelkasten-Team/Zettelkasten/compare/3.2.7...v3.3.0) (2020-04-02)
@@ -23,9 +22,9 @@
 - Registration of ".zkn3" file ending temporarily deactivated.
 - Font size of GUI adapted to high resolution screens.
 - Code optimizations.
-### Bug fixes 
-- Note-IDs were missing in XML exports ([171](https://github.com/Zettelkasten-Team/Zettelkasten/issues/171)).
-- The preference setting "At program startup: Show last displayed note" lead in certain situations to program startup issues (compare [178](https://github.com/Zettelkasten-Team/Zettelkasten/issues/178)). 
+### 🩹 Bug fixes 
+- Note-IDs were missing in XML exports.
+- The preference setting "At program startup: Show last displayed note" lead in certain situations to program startup issues. 
 <a name="3.2.7"></a>
 # [3.2.7](https://github.com/Zettelkasten-Team/Zettelkasten/compare/3.2.6...3.2.7) (2015-10-16)
 
