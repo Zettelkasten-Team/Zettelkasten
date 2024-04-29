@@ -50,4 +50,4 @@ Find the build result in your `target` directory.
 
 ## License
 
-The GPLv3 applies. For detail information see LICENSE.md
+The GPLv3 applies. For detail information see [LICENSE](./LICENSE).
