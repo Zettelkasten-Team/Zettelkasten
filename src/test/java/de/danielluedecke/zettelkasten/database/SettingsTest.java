@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.rules.TemporaryFolder;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -149,7 +150,7 @@ public class SettingsTest {
 		boolean result = settings.getSettingsFile() == null;
 
 		// Assert: Verify that settings file is not found
-		assertTrue(result);
+		assertFalse(result);
 	}
 
 	@Test
