@@ -1165,7 +1165,8 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
             jToolBar1.add(tb_paste);
 
             //---- jSeparator1 ----
-            //jSeparator1.setName("jSeparator1");
+            JSeparator jSeparator1 = new JSeparator();
+            jSeparator1.setName("jSeparator1");
             jToolBar1.addSeparator();
 
             //---- tb_selectall ----
@@ -1179,7 +1180,8 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
             jToolBar1.add(tb_selectall);
 
             //---- jSeparator3 ----
-            //jSeparator3.setName("jSeparator3");
+            JSeparator jSeparator3 = new JSeparator();
+            jSeparator3.setName("jSeparator3");
             jToolBar1.addSeparator();
 
             //---- tb_undo ----
@@ -1201,7 +1203,8 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
             jToolBar1.add(tb_redo);
 
             //---- jSeparator2 ----
-           //jSeparator2.setName("jSeparator2");
+            JSeparator jSeparator2 = new JSeparator();
+            jSeparator2.setName("jSeparator2");
             jToolBar1.addSeparator();
 
             //---- tb_bold ----
