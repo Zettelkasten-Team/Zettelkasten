@@ -316,7 +316,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 			Constants.zknlogger.log(Level.INFO, "Memory usage logged. Desktop Window opened.");
 		}
 		// create brushed look for window, so toolbar and window-bar become a unit
-		if (settingsObj.isMacAqua()) {
+		if (settingsObj.isMacStyle()) {
 			MacUtils.makeWindowLeopardStyle(getRootPane());
 			// WindowUtils.createAndInstallRepaintWindowFocusListener(this);
 			WindowUtils.installJComponentRepainterOnWindowFocusChanged(this.getRootPane());
@@ -332,7 +332,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 		setIconImage(Constants.zknicon.getImage());
 		// if we have mac os x with aqua, make the window look like typical
 		// cocoa-applications
-		if (settingsObj.isMacAqua()) {
+		if (settingsObj.isMacStyle()) {
 			setupMacOSXLeopardStyle();
 		}
 		if (settingsObj.isSeaGlass()) {
@@ -383,7 +383,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 			jTextArea3.setBorder(
 					ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextArea3.border.title"), settingsObj));
 		}
-		if (settingsObj.isMacAqua()) {
+		if (settingsObj.isMacStyle()) {
 			ZknMacWidgetFactory.updateSplitPane(jSplitPaneDesktop1);
 			ZknMacWidgetFactory.updateSplitPane(jSplitPaneDesktop2);
 			jTextArea1.setBorder(
@@ -830,7 +830,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 			tb_addluhmann.setVisible(false);
 			tb_rename.setVisible(false);
 		}
-		if (settingsObj.isMacAqua()) {
+		if (settingsObj.isMacStyle()) {
 			makeMacToolbar();
 		}
 		if (settingsObj.isSeaGlass()) {
@@ -1044,7 +1044,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 		// ATTENTION! Mnemonic keys are NOT applied on Mac OS, see Apple guidelines for
 		// further details:
 		// http://developer.apple.com/DOCUMENTATION/Java/Conceptual/Java14Development/07-NativePlatformIntegration/NativePlatformIntegration.html#//apple_ref/doc/uid/TP40001909-211867-BCIBDHFJ
-		if (!settingsObj.isMacAqua()) {
+		if (!settingsObj.isMacStyle()) {
 			// init the variables
 			String menutext;
 			char mkey;
@@ -1291,7 +1291,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 		// and first of all, clear the jTree
 		dtm.setRoot(null);
 		// macstyle beim jTree setzen
-		if (settingsObj.isMacAqua()) {
+		if (settingsObj.isMacStyle()) {
 			jTreeDesktop.setUI(new MacSourceDesktopTree(desktopObj, dataObj, settingsObj));
 		} else {
 			// set cell renderer, for desktop icons
@@ -3062,7 +3062,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 		File importdir = settingsObj.getMainDataFile();
 		// let user choose filepath
 		File filepath = FileOperationsUtil.chooseFile(this,
-				(settingsObj.isMacAqua()) ? FileDialog.LOAD : JFileChooser.OPEN_DIALOG, JFileChooser.FILES_ONLY,
+				(settingsObj.isMacStyle()) ? FileDialog.LOAD : JFileChooser.OPEN_DIALOG, JFileChooser.FILES_ONLY,
 				(null == importdir) ? null : importdir.getPath(), (null == importdir) ? null : importdir.getName(),
 				resourceMap.getString("openArchiveTitle"), new String[] { ".zip" }, "Zip", settingsObj);
 		// if we have a valid file, go on
@@ -3183,7 +3183,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 		File exportdir = new File(datafilepath);
 		// here we open a swing filechooser, in case the os ist no mac aqua
 		File filepath = FileOperationsUtil.chooseFile(this,
-				(settingsObj.isMacAqua()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG, JFileChooser.FILES_ONLY,
+				(settingsObj.isMacStyle()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG, JFileChooser.FILES_ONLY,
 				exportdir.getPath(), exportdir.getName(), resourceMap.getString("fileDialogTitleSave"),
 				new String[] { ".zip" }, "Zip", settingsObj);
 		if (filepath != null) {

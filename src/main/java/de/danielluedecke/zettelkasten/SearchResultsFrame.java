@@ -208,7 +208,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			Constants.zknlogger.log(Level.INFO, "Memory usage logged. Search Results Window opened.");
 		}
 		// create brushed look for window, so toolbar and window-bar become a unit
-		if (settingsObj.isMacAqua()) {
+		if (settingsObj.isMacStyle()) {
 			MacUtils.makeWindowLeopardStyle(getRootPane());
 			// WindowUtils.createAndInstallRepaintWindowFocusListener(this);
 			WindowUtils.installJComponentRepainterOnWindowFocusChanged(this.getRootPane());
@@ -225,7 +225,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		setIconImage(Constants.zknicon.getImage());
 		// if we have mac os x with aqua, make the window look like typical
 		// cocoa-applications
-		if (settingsObj.isMacAqua()) {
+		if (settingsObj.isMacStyle()) {
 			setupMacOSXLeopardStyle();
 		}
 		if (settingsObj.isSeaGlass()) {
@@ -284,9 +284,9 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		 */
 		jScrollPane1.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
 		jScrollPane4.setBorder(null);
-		if (settingsObj.getUseMacBackgroundColor() || settingsObj.isMacAqua()) {
+		if (settingsObj.getUseMacBackgroundColor() || settingsObj.isMacStyle()) {
 			jListKeywords.setBackground(
-					(settingsObj.isMacAqua()) ? ColorUtil.colorJTreeBackground : ColorUtil.colorJTreeLighterBackground);
+					(settingsObj.isMacStyle()) ? ColorUtil.colorJTreeBackground : ColorUtil.colorJTreeLighterBackground);
 			jListKeywords.setForeground(ColorUtil.colorJTreeDarkText);
 		}
 		if (settingsObj.isSeaGlass()) {
@@ -304,7 +304,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			// jPanel3.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1,
 			// ColorUtil.getBorderGray(settingsObj)));
 		}
-		if (settingsObj.isMacAqua()) {
+		if (settingsObj.isMacStyle()) {
 			ZknMacWidgetFactory.updateSplitPane(jSplitPaneSearch1);
 			ZknMacWidgetFactory.updateSplitPane(jSplitPaneSearch2);
 			jListKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(
@@ -362,7 +362,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 				tbb.setIcon(null);
 			}
 		}
-		if (settingsObj.isMacAqua())
+		if (settingsObj.isMacStyle())
 			makeMacToolBar();
 		if (settingsObj.isSeaGlass())
 			makeSeaGlassToolbar();
@@ -748,7 +748,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// ATTENTION! Mnemonic keys are NOT applied on Mac OS, see Apple guidelines for
 		// further details:
 		// http://developer.apple.com/DOCUMENTATION/Java/Conceptual/Java14Development/07-NativePlatformIntegration/NativePlatformIntegration.html#//apple_ref/doc/uid/TP40001909-211867-BCIBDHFJ
-		if (!settingsObj.isMacAqua()) {
+		if (!settingsObj.isMacStyle()) {
 			// init the variables
 			String menutext;
 			char mkey;
@@ -977,7 +977,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		}
 		settingsObj.setSearchFrameSplitLayout(currentlayout);
 		jSplitPaneSearch1.setOrientation(currentlayout);
-		if (settingsObj.isMacAqua())
+		if (settingsObj.isMacStyle())
 			ZknMacWidgetFactory.updateSplitPane(jSplitPaneSearch1);
 	}
 
@@ -1137,7 +1137,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			sorter.sort();
 		}
 		// make extra table-sorter for itunes-tables
-		if (settingsObj.isMacAqua()) {
+		if (settingsObj.isMacStyle()) {
 			TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
 				@Override
 				public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
@@ -2344,7 +2344,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		jSplitPaneSearch1 = new javax.swing.JSplitPane();
 		jPanel1 = new javax.swing.JPanel();
 		jScrollPane1 = new javax.swing.JScrollPane();
-		jTableResults = (settingsObj.isMacAqua())
+		jTableResults = (settingsObj.isMacStyle())
 				? com.explodingpixels.macwidgets.MacWidgetFactory.createITunesTable(null)
 				: new javax.swing.JTable();
 		jTextFieldFilterList = new javax.swing.JTextField();

@@ -1,0 +1,75 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.6" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.danielluedecke.zettelkasten.resources"
+	"i18n.bundleName": "CNewBookmark"
+	"i18n.autoExternalize": false
+	"i18n.keyPrefix": "CNewBookmark"
+	contentType: "form/swing"
+	root: new FormRoot {
+		"$setComponentNames": true
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {comp jScrollPane1::l:::x, seq {space :::p, par l {seq l {comp jLabel2:::p::p, space :::p, comp jTextFieldNewCat:::::x, space :::p, comp jButtonAddCat:::p::p}, seq {par l {seq l {comp jLabel1:::p::p, space :::p, comp jComboBoxCats:::p::p}, comp jLabel3::l:p::p}, space :0:0:x}, seq t {space :0:0:x, comp jButtonCancel:::p::p, space :::p, comp jButtonApply:::p::p}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, par b {comp jLabel1::b:p::p, comp jComboBoxCats::b:p::p}, space :p::p, par b {comp jLabel2::b:p::p, comp jButtonAddCat::b:p::p, comp jTextFieldNewCat::b:p::p}, space :p::p, comp jLabel3:::p::p, space :p::p, comp jScrollPane1::::151:x, space :p::p, par b {comp jButtonApply::b:p::p, comp jButtonCancel::b:p::p}, space :p:3:p}}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"title": new FormMessage( null, "FormNewBookmark.title" )
+			"modal": true
+			"name": "FormNewBookmark"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "jLabel1"
+				"text": new FormMessage( null, "jLabel1.text" )
+				"name": "jLabel1"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "jComboBoxCats"
+				"model": new javax.swing.DefaultComboBoxModel {
+					selectedItem: "Item 1"
+					addElement( "Item 1" )
+					addElement( "Item 2" )
+					addElement( "Item 3" )
+					addElement( "Item 4" )
+				}
+				"name": "jComboBoxCats"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "jLabel2"
+				"text": new FormMessage( null, "jLabel2.text" )
+				"name": "jLabel2"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "jTextFieldNewCat"
+				"text": new FormMessage( null, "jTextFieldNewCat.text" )
+				"name": "jTextFieldNewCat"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButtonAddCat"
+				"name": "jButtonAddCat"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "jLabel3"
+				"text": new FormMessage( null, "jLabel3.text" )
+				"name": "jLabel3"
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "jScrollPane1"
+				"name": "jScrollPane1"
+				add( new FormComponent( "javax.swing.JTextArea" ) {
+					name: "jTextAreaComment"
+					"lineWrap": true
+					"wrapStyleWord": true
+					"name": "jTextAreaComment"
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButtonApply"
+				"name": "jButtonApply"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButtonCancel"
+				"name": "jButtonCancel"
+			} )
+		}, new FormLayoutConstraints( null ) )
+	}
+}

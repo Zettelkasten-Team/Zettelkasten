@@ -1,0 +1,339 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.6" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.danielluedecke.zettelkasten.resources"
+	"i18n.bundleName": "CModifyDesktopEntry"
+	"i18n.autoExternalize": false
+	"i18n.keyPrefix": "CModifyDesktopEntry"
+	contentType: "form/swing"
+	root: new FormRoot {
+		"$setComponentNames": true
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {comp jToolBar1::l::0:x, comp mainPanel::l:::x:2, seq t {space :::x, comp jButtonCancel:::p::p, space :::p, comp jButtonApply:::p::p, space :::p}}"
+			"$verticalGroup": "par l {seq t {comp jToolBar1:::p::p, space :p:0:p, comp mainPanel::::314:x, space :::p, par b {comp jButtonApply::b:p::p, comp jButtonCancel::b:p::p}, space :p:3:p}}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 0
+			"title": new FormMessage( null, "FormCModifyDesktopEntry.title" )
+			"minimumSize": new java.awt.Dimension( 300, 200 )
+			"name": "FormCModifyDesktopEntry"
+			add( new FormContainer( "javax.swing.JToolBar", new FormLayoutManager( class javax.swing.JToolBar ) ) {
+				name: "jToolBar1"
+				"border": new javax.swing.border.MatteBorder( 0, 0, 1, 0, sfield java.awt.Color black )
+				"floatable": false
+				"rollover": true
+				"minimumSize": new java.awt.Dimension( 200, 10 )
+				"name": "jToolBar1"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "tb_cut"
+					"text": new FormMessage( null, "tb_cut.text" )
+					"borderPainted": false
+					"focusPainted": false
+					"focusable": false
+					"horizontalTextPosition": 0
+					"name": "tb_cut"
+					"verticalTextPosition": 3
+					auxiliary() {
+						"JavaCodeGenerator.preInitCode": "${field}.setAction(actionMap.get(\"cut\"));"
+					}
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "tb_copy"
+					"text": new FormMessage( null, "tb_copy.text" )
+					"borderPainted": false
+					"focusPainted": false
+					"focusable": false
+					"horizontalTextPosition": 0
+					"name": "tb_copy"
+					"verticalTextPosition": 3
+					auxiliary() {
+						"JavaCodeGenerator.preInitCode": "${field}.setAction(actionMap.get(\"copy\"));"
+					}
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "tb_paste"
+					"text": new FormMessage( null, "tb_paste.text" )
+					"borderPainted": false
+					"focusPainted": false
+					"focusable": false
+					"horizontalTextPosition": 0
+					"name": "tb_paste"
+					"verticalTextPosition": 3
+					auxiliary() {
+						"JavaCodeGenerator.preInitCode": "${field}.setAction(actionMap.get(\"paste\"));"
+					}
+				} )
+				add( new FormComponent( "javax.swing.JToolBar$Separator" ) {
+					name: "jSeparator1"
+					"name": "jSeparator1"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "tb_selectall"
+					"text": new FormMessage( null, "tb_selectall.text" )
+					"borderPainted": false
+					"focusPainted": false
+					"focusable": false
+					"horizontalTextPosition": 0
+					"name": "tb_selectall"
+					"verticalTextPosition": 3
+				} )
+				add( new FormComponent( "javax.swing.JToolBar$Separator" ) {
+					name: "jSeparator3"
+					"name": "jSeparator3"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "tb_undo"
+					"borderPainted": false
+					"focusPainted": false
+					"focusable": false
+					"horizontalTextPosition": 0
+					"name": "tb_undo"
+					"verticalTextPosition": 3
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "tb_redo"
+					"borderPainted": false
+					"focusPainted": false
+					"focusable": false
+					"horizontalTextPosition": 0
+					"name": "tb_redo"
+					"verticalTextPosition": 3
+				} )
+				add( new FormComponent( "javax.swing.JToolBar$Separator" ) {
+					name: "jSeparator2"
+					"name": "jSeparator2"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "tb_bold"
+					"borderPainted": false
+					"focusPainted": false
+					"focusable": false
+					"horizontalTextPosition": 0
+					"name": "tb_bold"
+					"verticalTextPosition": 3
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "tb_italic"
+					"borderPainted": false
+					"focusPainted": false
+					"focusable": false
+					"horizontalTextPosition": 0
+					"name": "tb_italic"
+					"verticalTextPosition": 3
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "tb_underline"
+					"borderPainted": false
+					"focusPainted": false
+					"focusable": false
+					"horizontalTextPosition": 0
+					"name": "tb_underline"
+					"verticalTextPosition": 3
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "tb_strike"
+					"borderPainted": false
+					"focusPainted": false
+					"focusable": false
+					"horizontalTextPosition": 0
+					"name": "tb_strike"
+					"verticalTextPosition": 3
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButtonApply"
+				"name": "jButtonApply"
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+				name: "mainPanel"
+				"minimumSize": new java.awt.Dimension( 200, 100 )
+				"name": "mainPanel"
+				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "jScrollPane1"
+					"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+					"minimumSize": new java.awt.Dimension( 20, 20 )
+					"name": "jScrollPane1"
+					add( new FormComponent( "javax.swing.JTextArea" ) {
+						name: "jTextArea1"
+						"lineWrap": true
+						"wrapStyleWord": true
+						"name": "jTextArea1"
+					} )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "Center"
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButtonCancel"
+				"name": "jButtonCancel"
+			} )
+		}, new FormLayoutConstraints( null ) )
+		add( new FormContainer( "javax.swing.JPopupMenu", new FormLayoutManager( class javax.swing.JPopupMenu ) ) {
+			name: "jPopupMenuMain"
+			"name": "jPopupMenuMain"
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "popupMainCut"
+				"name": "popupMainCut"
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "${field}.setAction(actionMap.get(\"cut\"));"
+				}
+			} )
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "popupMainCopy"
+				"name": "popupMainCopy"
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "${field}.setAction(actionMap.get(\"copy\"));"
+				}
+			} )
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "popupMainPaste"
+				"name": "popupMainPaste"
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "${field}.setAction(actionMap.get(\"paste\"));"
+				}
+			} )
+			add( new FormComponent( "javax.swing.JSeparator" ) {
+				name: "jSeparator26"
+				"name": "jSeparator26"
+			} )
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "popupMainSelectAll"
+				"name": "popupMainSelectAll"
+			} )
+			add( new FormComponent( "javax.swing.JSeparator" ) {
+				name: "jSeparator25"
+				"name": "jSeparator25"
+			} )
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "popupMainUndo"
+				"name": "popupMainUndo"
+			} )
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "popupMainRedo"
+				"name": "popupMainRedo"
+			} )
+			add( new FormComponent( "javax.swing.JSeparator" ) {
+				name: "jSeparator20"
+				"name": "jSeparator20"
+			} )
+			add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+				name: "formatSubmenu"
+				"text": new FormMessage( null, "formatSubmenu.text" )
+				"name": "formatSubmenu"
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "popupMainBold"
+					"name": "popupMainBold"
+				} )
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "popupMainItalic"
+					"name": "popupMainItalic"
+				} )
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "popupMainUnderline"
+					"name": "popupMainUnderline"
+				} )
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "popupMainStrikeThrough"
+					"name": "popupMainStrikeThrough"
+				} )
+				add( new FormComponent( "javax.swing.JSeparator" ) {
+					name: "jSeparator16"
+					"name": "jSeparator16"
+				} )
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "popupMainHeader1"
+					"name": "popupMainHeader1"
+				} )
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "poupMainHeader2"
+					"name": "poupMainHeader2"
+				} )
+				add( new FormComponent( "javax.swing.JSeparator" ) {
+					name: "jSeparator35"
+					"name": "jSeparator35"
+				} )
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "popupMainCite"
+					"name": "popupMainCite"
+				} )
+				add( new FormComponent( "javax.swing.JSeparator" ) {
+					name: "jSeparator17"
+					"name": "jSeparator17"
+				} )
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "popupMainTextcolor"
+					"name": "popupMainTextcolor"
+				} )
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "popupMainHighlight"
+					"name": "popupMainHighlight"
+				} )
+				add( new FormComponent( "javax.swing.JSeparator" ) {
+					name: "jSeparator18"
+					"name": "jSeparator18"
+				} )
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "popupMainCenter"
+					"name": "popupMainCenter"
+				} )
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "popupMainMargin"
+					"name": "popupMainMargin"
+				} )
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "popupMainList"
+					"name": "popupMainList"
+				} )
+				add( new FormComponent( "javax.swing.JSeparator" ) {
+					name: "jSeparator15"
+					"name": "jSeparator15"
+				} )
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "popupMainSup"
+					"name": "popupMainSup"
+				} )
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "popupMainSub"
+					"name": "popupMainSub"
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JSeparator" ) {
+				name: "jSeparator19"
+				"name": "jSeparator19"
+			} )
+			add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+				name: "removeSubMenu"
+				"text": new FormMessage( null, "removeSubMenu.text" )
+				"name": "removeSubMenu"
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "popupRemoveDoubleLine"
+					"name": "popupRemoveDoubleLine"
+				} )
+				add( new FormComponent( "javax.swing.JSeparator" ) {
+					name: "jSeparator31"
+					"name": "jSeparator31"
+				} )
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "popupRemoveDoubleSpace"
+					"name": "popupRemoveDoubleSpace"
+				} )
+				add( new FormComponent( "javax.swing.JSeparator" ) {
+					name: "jSeparator32"
+					"name": "jSeparator32"
+				} )
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "popupRemoveTab"
+					"name": "popupRemoveTab"
+				} )
+				add( new FormComponent( "javax.swing.JSeparator" ) {
+					name: "jSeparator33"
+					"name": "jSeparator33"
+				} )
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "popupRemoveSingleLine"
+					"name": "popupRemoveSingleLine"
+				} )
+			} )
+		} )
+	}
+}

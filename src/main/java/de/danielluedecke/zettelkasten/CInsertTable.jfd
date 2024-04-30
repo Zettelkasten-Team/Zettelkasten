@@ -1,0 +1,58 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.6" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.danielluedecke.zettelkasten.resources"
+	"i18n.bundleName": "CInsertTable"
+	"i18n.autoExternalize": false
+	"i18n.keyPrefix": "CInsertTable"
+	contentType: "form/swing"
+	root: new FormRoot {
+		"$setComponentNames": true
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {comp jScrollPane1::l::605:x, seq {space :::p, par l {seq l {comp jCheckBoxTableHeader:::p::p, space ::240:x, comp jButtonCancel:::p::p, space :::p, comp jButtonApply:::p::p}, seq l {comp jLabel1:::p::p, space :::p, comp jTextFieldCaption::::461:x}}, space :::p}}"
+			"$verticalGroup": "par l {seq t {space :::p, par b {comp jLabel1::b:p::p, comp jTextFieldCaption::b:p::p}, space :::p, comp jScrollPane1::::269:x, space :::p, par b {comp jCheckBoxTableHeader::b:p::p, comp jButtonApply::b:p::p, comp jButtonCancel::b:p::p}, space :p:3:p}}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"title": new FormMessage( null, "FormCInsertTable.title" )
+			"modal": true
+			"name": "FormCInsertTable"
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "jScrollPane1"
+				"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				"name": "jScrollPane1"
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "jTable1"
+					"autoResizeMode": 0
+					"cellSelectionEnabled": true
+					"name": "jTable1"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "(settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();"
+					}
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "jCheckBoxTableHeader"
+				"text": new FormMessage( null, "jCheckBoxTableHeader.text" )
+				"name": "jCheckBoxTableHeader"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButtonApply"
+				"name": "jButtonApply"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButtonCancel"
+				"name": "jButtonCancel"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "jLabel1"
+				"text": new FormMessage( null, "jLabel1.text" )
+				"name": "jLabel1"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "jTextFieldCaption"
+				"name": "jTextFieldCaption"
+			} )
+		}, new FormLayoutConstraints( null ) )
+	}
+}

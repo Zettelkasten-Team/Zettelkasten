@@ -138,7 +138,7 @@ public class SettingsTest {
 		// Mocking PlatformUtil to return true for isMacOS()
 		// Mocking getLookAndFeel() to return a value containing "Aqua"
 
-		assertTrue(settings.isMacAqua());
+		assertTrue(settings.isMacStyle());
 	}
 
 	@Test

@@ -363,7 +363,7 @@ public class CSearchDlg extends javax.swing.JDialog {
 	}
 
 	private void setMnemonicKeys() {
-		if (!settingsObj.isMacAqua()) {
+		if (!settingsObj.isMacStyle()) {
 			// init the variables
 			String text;
 			char mkey;

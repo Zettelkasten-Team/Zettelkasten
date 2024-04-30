@@ -33,6 +33,12 @@
 
 package de.danielluedecke.zettelkasten;
 
+import java.awt.*;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.GroupLayout;
+import javax.swing.LayoutStyle;
+import javax.swing.border.*;
 import de.danielluedecke.zettelkasten.database.Settings;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -152,204 +158,204 @@ public class CHighlightSearchSettings extends javax.swing.JDialog {
      */
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // Generated using JFormDesigner Evaluation license - Ralf Barkow
     private void initComponents() {
+        ResourceBundle bundle = ResourceBundle.getBundle("de.danielluedecke.zettelkasten.resources.CHighlightSearchSettings");
+        jPanel1 = new JPanel();
+        jLabel1 = new JLabel();
+        jButtonChangeColor = new JButton();
+        jCheckBoxBold = new JCheckBox();
+        jCheckBoxItalic = new JCheckBox();
+        jCheckBoxShowHighlight = new JCheckBox();
+        jLabel3 = new JLabel();
+        jSliderSize = new JSlider();
+        jLabel2 = new JLabel();
+        jButtonBackgroundColor = new JButton();
+        jPanel2 = new JPanel();
+        jLabelColor = new JLabel();
+        jButtonCancel = new JButton();
+        jButtonApply = new JButton();
 
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jButtonChangeColor = new javax.swing.JButton();
-        jCheckBoxBold = new javax.swing.JCheckBox();
-        jCheckBoxItalic = new javax.swing.JCheckBox();
-        jCheckBoxShowHighlight = new javax.swing.JCheckBox();
-        jLabel3 = new javax.swing.JLabel();
-        jSliderSize = new javax.swing.JSlider();
-        jLabel2 = new javax.swing.JLabel();
-        jButtonBackgroundColor = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        jLabelColor = new javax.swing.JLabel();
-        jButtonCancel = new javax.swing.JButton();
-        jButtonApply = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CHighlightSearchSettings.class);
-        setTitle(resourceMap.getString("FormHighlightSearchSettings.title")); // NOI18N
+        //======== this ========
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle(bundle.getString("FormHighlightSearchSettings.title"));
         setModal(true);
-        setName("FormHighlightSearchSettings"); // NOI18N
+        setName("FormHighlightSearchSettings");
         setResizable(false);
+        Container contentPane = getContentPane();
 
-        jPanel1.setName("jPanel1"); // NOI18N
+        //======== jPanel1 ========
+        {
+            jPanel1.setName("jPanel1");
+            jPanel1.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing
+            .border.EmptyBorder(0,0,0,0), "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn",javax.swing.border.TitledBorder
+            .CENTER,javax.swing.border.TitledBorder.BOTTOM,new java.awt.Font("Dia\u006cog",java.
+            awt.Font.BOLD,12),java.awt.Color.red),jPanel1. getBorder()))
+            ;jPanel1. addPropertyChangeListener(new java.beans.PropertyChangeListener(){@Override public void propertyChange(java.beans.PropertyChangeEvent e
+            ){if("\u0062ord\u0065r".equals(e.getPropertyName()))throw new RuntimeException();}})
+            ;
 
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
+            //---- jLabel1 ----
+            jLabel1.setText(bundle.getString("jLabel1.text"));
+            jLabel1.setName("jLabel1");
 
-        jButtonChangeColor.setText(resourceMap.getString("jButtonChangeColor.text")); // NOI18N
-        jButtonChangeColor.setName("jButtonChangeColor"); // NOI18N
-        jButtonChangeColor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonChangeColorActionPerformed(evt);
+            //---- jButtonChangeColor ----
+            jButtonChangeColor.setText(bundle.getString("jButtonChangeColor.text"));
+            jButtonChangeColor.setName("jButtonChangeColor");
+            jButtonChangeColor.addActionListener(e -> jButtonChangeColorActionPerformed(e));
+
+            //---- jCheckBoxBold ----
+            jCheckBoxBold.setText(bundle.getString("jCheckBoxBold.text"));
+            jCheckBoxBold.setName("jCheckBoxBold");
+            jCheckBoxBold.addActionListener(e -> jCheckBoxBoldActionPerformed(e));
+
+            //---- jCheckBoxItalic ----
+            jCheckBoxItalic.setText(bundle.getString("jCheckBoxItalic.text"));
+            jCheckBoxItalic.setName("jCheckBoxItalic");
+            jCheckBoxItalic.addActionListener(e -> jCheckBoxItalicActionPerformed(e));
+
+            //---- jCheckBoxShowHighlight ----
+            jCheckBoxShowHighlight.setText(bundle.getString("jCheckBoxShowHighlight.text"));
+            jCheckBoxShowHighlight.setName("jCheckBoxShowHighlight");
+            jCheckBoxShowHighlight.addActionListener(e -> jCheckBoxShowHighlightActionPerformed(e));
+
+            //---- jLabel3 ----
+            jLabel3.setText(bundle.getString("jLabel3.text"));
+            jLabel3.setName("jLabel3");
+
+            //---- jSliderSize ----
+            jSliderSize.setMajorTickSpacing(1);
+            jSliderSize.setMaximum(5);
+            jSliderSize.setMinorTickSpacing(1);
+            jSliderSize.setPaintLabels(true);
+            jSliderSize.setPaintTicks(true);
+            jSliderSize.setSnapToTicks(true);
+            jSliderSize.setName("jSliderSize");
+            jSliderSize.addChangeListener(e -> jSliderSizeStateChanged(e));
+
+            //---- jLabel2 ----
+            jLabel2.setText(bundle.getString("jLabel2.text"));
+            jLabel2.setName("jLabel2");
+
+            //---- jButtonBackgroundColor ----
+            jButtonBackgroundColor.setText(bundle.getString("jButtonBackgroundColor.text"));
+            jButtonBackgroundColor.setName("jButtonBackgroundColor");
+            jButtonBackgroundColor.addActionListener(e -> jButtonBackgroundColorActionPerformed(e));
+
+            //======== jPanel2 ========
+            {
+                jPanel2.setBorder(new TitledBorder("Vorschau Farbeinstellungen"));
+                jPanel2.setName("jPanel2");
+
+                //---- jLabelColor ----
+                jLabelColor.setText(bundle.getString("jLabelColor.text"));
+                jLabelColor.setName("jLabelColor");
+                jLabelColor.setOpaque(true);
+
+                GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
+                jPanel2.setLayout(jPanel2Layout);
+                jPanel2Layout.setHorizontalGroup(
+                    jPanel2Layout.createParallelGroup()
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jLabelColor)
+                            .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                );
+                jPanel2Layout.setVerticalGroup(
+                    jPanel2Layout.createParallelGroup()
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jLabelColor)
+                            .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                );
             }
-        });
 
-        jCheckBoxBold.setText(resourceMap.getString("jCheckBoxBold.text")); // NOI18N
-        jCheckBoxBold.setName("jCheckBoxBold"); // NOI18N
-        jCheckBoxBold.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxBoldActionPerformed(evt);
-            }
-        });
+            //---- jButtonCancel ----
+            jButtonCancel.setName("jButtonCancel");
 
-        jCheckBoxItalic.setText(resourceMap.getString("jCheckBoxItalic.text")); // NOI18N
-        jCheckBoxItalic.setName("jCheckBoxItalic"); // NOI18N
-        jCheckBoxItalic.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxItalicActionPerformed(evt);
-            }
-        });
+            //---- jButtonApply ----
+            jButtonApply.setName("jButtonApply");
 
-        jCheckBoxShowHighlight.setText(resourceMap.getString("jCheckBoxShowHighlight.text")); // NOI18N
-        jCheckBoxShowHighlight.setName("jCheckBoxShowHighlight"); // NOI18N
-        jCheckBoxShowHighlight.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxShowHighlightActionPerformed(evt);
-            }
-        });
-
-        jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
-        jLabel3.setName("jLabel3"); // NOI18N
-
-        jSliderSize.setMajorTickSpacing(1);
-        jSliderSize.setMaximum(5);
-        jSliderSize.setMinorTickSpacing(1);
-        jSliderSize.setPaintLabels(true);
-        jSliderSize.setPaintTicks(true);
-        jSliderSize.setSnapToTicks(true);
-        jSliderSize.setName("jSliderSize"); // NOI18N
-        jSliderSize.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jSliderSizeStateChanged(evt);
-            }
-        });
-
-        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
-        jLabel2.setName("jLabel2"); // NOI18N
-
-        jButtonBackgroundColor.setText(resourceMap.getString("jButtonBackgroundColor.text")); // NOI18N
-        jButtonBackgroundColor.setName("jButtonBackgroundColor"); // NOI18N
-        jButtonBackgroundColor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonBackgroundColorActionPerformed(evt);
-            }
-        });
-
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel2.border.title"))); // NOI18N
-        jPanel2.setName("jPanel2"); // NOI18N
-
-        jLabelColor.setText(resourceMap.getString("jLabelColor.text")); // NOI18N
-        jLabelColor.setName("jLabelColor"); // NOI18N
-        jLabelColor.setOpaque(true);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabelColor)
-                .addContainerGap(241, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabelColor)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CHighlightSearchSettings.class, this);
-        jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
-        jButtonCancel.setName("jButtonCancel"); // NOI18N
-
-        jButtonApply.setAction(actionMap.get("apply")); // NOI18N
-        jButtonApply.setName("jButtonApply"); // NOI18N
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
+            jPanel1.setLayout(jPanel1Layout);
+            jPanel1Layout.setHorizontalGroup(
+                jPanel1Layout.createParallelGroup()
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup()
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jCheckBoxBold)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxItalic)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxShowHighlight))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel2))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButtonBackgroundColor)
-                                    .addComponent(jButtonChangeColor)))
-                            .addComponent(jSliderSize, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
-                            .addComponent(jLabel3))
-                        .addGap(6, 6, 6))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButtonCancel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonApply)
-                        .addContainerGap())))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jButtonChangeColor))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonBackgroundColor)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBoxBold)
-                    .addComponent(jCheckBoxItalic)
-                    .addComponent(jCheckBoxShowHighlight))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSliderSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonCancel)
-                    .addComponent(jButtonApply)))
-        );
+                                .addGroup(jPanel1Layout.createParallelGroup()
+                                    .addComponent(jPanel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jCheckBoxBold)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jCheckBoxItalic)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jCheckBoxShowHighlight))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel1)
+                                            .addComponent(jLabel2))
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jPanel1Layout.createParallelGroup()
+                                            .addComponent(jButtonBackgroundColor)
+                                            .addComponent(jButtonChangeColor)))
+                                    .addComponent(jSliderSize, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel3))
+                                .addGap(6, 6, 6))
+                            .addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButtonCancel)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonApply)
+                                .addContainerGap())))
+            );
+            jPanel1Layout.setVerticalGroup(
+                jPanel1Layout.createParallelGroup()
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jButtonChangeColor))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButtonBackgroundColor)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(jCheckBoxBold)
+                            .addComponent(jCheckBoxItalic)
+                            .addComponent(jCheckBoxShowHighlight))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSliderSize, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(jPanel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButtonCancel)
+                            .addComponent(jButtonApply)))
+            );
+        }
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
+        contentPane.setLayout(contentPaneLayout);
+        contentPaneLayout.setHorizontalGroup(
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        contentPaneLayout.setVerticalGroup(
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
         pack();
+        setLocationRelativeTo(getOwner());
     }// </editor-fold>//GEN-END:initComponents
 
 private void jCheckBoxBoldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxBoldActionPerformed
@@ -383,20 +389,21 @@ private void jButtonBackgroundColorActionPerformed(java.awt.event.ActionEvent ev
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonApply;
-    private javax.swing.JButton jButtonBackgroundColor;
-    private javax.swing.JButton jButtonCancel;
-    private javax.swing.JButton jButtonChangeColor;
-    private javax.swing.JCheckBox jCheckBoxBold;
-    private javax.swing.JCheckBox jCheckBoxItalic;
-    private javax.swing.JCheckBox jCheckBoxShowHighlight;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabelColor;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JSlider jSliderSize;
+    // Generated using JFormDesigner Evaluation license - Ralf Barkow
+    private JPanel jPanel1;
+    private JLabel jLabel1;
+    private JButton jButtonChangeColor;
+    private JCheckBox jCheckBoxBold;
+    private JCheckBox jCheckBoxItalic;
+    private JCheckBox jCheckBoxShowHighlight;
+    private JLabel jLabel3;
+    private JSlider jSliderSize;
+    private JLabel jLabel2;
+    private JButton jButtonBackgroundColor;
+    private JPanel jPanel2;
+    private JLabel jLabelColor;
+    private JButton jButtonCancel;
+    private JButton jButtonApply;
     // End of variables declaration//GEN-END:variables
 
 }

@@ -1,0 +1,138 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.6" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.danielluedecke.zettelkasten.resources"
+	"i18n.bundleName": "CFontChooser"
+	"i18n.autoExternalize": false
+	"i18n.keyPrefix": "CFontChooser"
+	contentType: "form/swing"
+	root: new FormRoot {
+		"$setComponentNames": true
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq l {space :::p, comp jPanel1:::::x, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp jPanel1:::::x, space :::p}}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"title": new FormMessage( null, "FormFontChooser.title" )
+			"modal": true
+			"name": "FormFontChooser"
+			"resizable": false
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq l {par t {seq {space :6:6:6, comp jPanel5:::::x}, seq l {comp jPanel2:::p::p, space :::p, comp jPanel3:::p::p, space :::p, comp jPanel4:::p::p}}, space :::p}}"
+				"$verticalGroup": "par l {seq t {par l {comp jPanel3:::::x:1, comp jPanel2::l:::x:1, comp jPanel4:::::x}, space :::p, comp jPanel5:::p::p, space :::p}}"
+			} ) {
+				name: "jPanel1"
+				"name": "jPanel1"
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+					"$horizontalGroup": "par l {seq l {space :::p, par l {comp jScrollPane1::l::217:x, seq l {comp jLabel1:::p::p, space ::159:x}, comp jTextFieldFilter::l::217:x}}}"
+					"$verticalGroup": "par l {seq l {comp jLabel1:::p::p, space :::p, comp jTextFieldFilter:::p::p, space :::p, comp jScrollPane1::::220:x}}"
+				} ) {
+					name: "jPanel2"
+					"name": "jPanel2"
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "jLabel1"
+						"text": new FormMessage( null, "jLabel1.text" )
+						"name": "jLabel1"
+					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "jScrollPane1"
+						"name": "jScrollPane1"
+						add( new FormComponent( "javax.swing.JList" ) {
+							name: "jListFont"
+							"selectionMode": 0
+							"name": "jListFont"
+							auxiliary() {
+								"JavaCodeGenerator.preInitCode": "${field}.setModel(listmodelFont);"
+								"JavaCodeGenerator.customCreateCode": "MacSourceList.createMacSourceList();"
+							}
+						} )
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "jTextFieldFilter"
+						"text": new FormMessage( null, "jTextFieldFilter.text" )
+						"name": "jTextFieldFilter"
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+					"$horizontalGroup": "par l {seq l {space :::p, par l {comp jButtonCancel::l:p::p:1, comp jScrollPane2::l::111:x:1, comp jLabel2::l:p::p}, space :::p}}"
+					"$verticalGroup": "par l {seq l {comp jLabel2:::p::p, space :::p, comp jScrollPane2::::219:x, space :::p, comp jButtonCancel:::p::p}}"
+				} ) {
+					name: "jPanel3"
+					"name": "jPanel3"
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "jLabel2"
+						"text": new FormMessage( null, "jLabel2.text" )
+						"name": "jLabel2"
+					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "jScrollPane2"
+						"name": "jScrollPane2"
+						add( new FormComponent( "javax.swing.JList" ) {
+							name: "jListStyle"
+							"selectionMode": 0
+							"name": "jListStyle"
+							auxiliary() {
+								"JavaCodeGenerator.preInitCode": "${field}.setModel(listmodelStyle);"
+								"JavaCodeGenerator.customCreateCode": "MacSourceList.createMacSourceList();"
+							}
+						} )
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "jButtonCancel"
+						"name": "jButtonCancel"
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+					"$horizontalGroup": "par l {seq l {space :::p, par l {comp jScrollPane3::l::123:x:1, par l:l {comp jLabel3::l:p::p, comp jButtonApply::t:p::p}}, space :::p}}"
+					"$verticalGroup": "par l {seq l {comp jLabel3:::p::p, space :::p, comp jScrollPane3::::219:x, space :::p, comp jButtonApply:::p::p}}"
+				} ) {
+					name: "jPanel4"
+					"name": "jPanel4"
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "jLabel3"
+						"text": new FormMessage( null, "jLabel3.text" )
+						"name": "jLabel3"
+					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "jScrollPane3"
+						"name": "jScrollPane3"
+						add( new FormComponent( "javax.swing.JList" ) {
+							name: "jListSize"
+							"selectionMode": 0
+							"name": "jListSize"
+							auxiliary() {
+								"JavaCodeGenerator.preInitCode": "${field}.setModel(listmodelSize);"
+								"JavaCodeGenerator.customCreateCode": "MacSourceList.createMacSourceList();"
+							}
+						} )
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "jButtonApply"
+						"name": "jButtonApply"
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+					"$horizontalGroup": "par l {seq l {space :::p, comp jScrollPane4::::463:x, space :::p}}"
+					"$verticalGroup": "par l {seq l {comp jScrollPane4::::116:x, space :::p}}"
+				} ) {
+					name: "jPanel5"
+					"border": new javax.swing.border.TitledBorder( "Vorschau" )
+					"name": "jPanel5"
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "jScrollPane4"
+						"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+						"name": "jScrollPane4"
+						add( new FormComponent( "javax.swing.JEditorPane" ) {
+							name: "jEditorPanePreview"
+							"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+							"contentType": new FormMessage( null, "jEditorPanePreview.contentType" )
+							"editable": false
+							"name": "jEditorPanePreview"
+						} )
+					} )
+				} )
+			} )
+		}, new FormLayoutConstraints( null ) )
+	}
+}

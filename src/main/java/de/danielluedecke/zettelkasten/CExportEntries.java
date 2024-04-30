@@ -33,6 +33,11 @@
 
 package de.danielluedecke.zettelkasten;
 
+import java.awt.*;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.GroupLayout;
+import javax.swing.LayoutStyle;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.Constants;
@@ -134,111 +139,120 @@ public class CExportEntries extends javax.swing.JDialog {
      */
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // Generated using JFormDesigner Evaluation license - Ralf Barkow
     private void initComponents() {
+        ResourceBundle bundle = ResourceBundle.getBundle("de.danielluedecke.zettelkasten.resources.CExportEntries");
+        jPanel1 = new JPanel();
+        jLabel1 = new JLabel();
+        jRadioButtonAll = new JRadioButton();
+        jRadioButtonSelection = new JRadioButton();
+        jTextFieldSelection = new JTextField();
+        jButtonApply = new JButton();
+        jButtonCancel = new JButton();
+        buttonGroup1 = new ButtonGroup();
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jRadioButtonAll = new javax.swing.JRadioButton();
-        jRadioButtonSelection = new javax.swing.JRadioButton();
-        jTextFieldSelection = new javax.swing.JTextField();
-        jButtonApply = new javax.swing.JButton();
-        jButtonCancel = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CExportEntries.class);
-        setTitle(resourceMap.getString("FormExportEntriesChoice.title")); // NOI18N
+        //======== this ========
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle(bundle.getString("FormExportEntriesChoice.title"));
         setModal(true);
-        setName("FormExportEntriesChoice"); // NOI18N
+        setName("FormExportEntriesChoice");
         setResizable(false);
+        Container contentPane = getContentPane();
 
-        jPanel1.setName("jPanel1"); // NOI18N
+        //======== jPanel1 ========
+        {
+            jPanel1.setName("jPanel1");
+            jPanel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax.
+            swing. border. EmptyBorder( 0, 0, 0, 0) , "JF\u006frmDesi\u0067ner Ev\u0061luatio\u006e", javax. swing. border
+            . TitledBorder. CENTER, javax. swing. border. TitledBorder. BOTTOM, new java .awt .Font ("Dialo\u0067"
+            ,java .awt .Font .BOLD ,12 ), java. awt. Color. red) ,jPanel1. getBorder
+            ( )) ); jPanel1. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java
+            .beans .PropertyChangeEvent e) {if ("borde\u0072" .equals (e .getPropertyName () )) throw new RuntimeException
+            ( ); }} );
 
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
+            //---- jLabel1 ----
+            jLabel1.setText(bundle.getString("jLabel1.text"));
+            jLabel1.setName("jLabel1");
 
-        buttonGroup1.add(jRadioButtonAll);
-        jRadioButtonAll.setSelected(true);
-        jRadioButtonAll.setText(resourceMap.getString("jRadioButtonAll.text")); // NOI18N
-        jRadioButtonAll.setName("jRadioButtonAll"); // NOI18N
-        jRadioButtonAll.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                eventActionPerformed(evt);
-            }
-        });
+            //---- jRadioButtonAll ----
+            jRadioButtonAll.setSelected(true);
+            jRadioButtonAll.setText(bundle.getString("jRadioButtonAll.text"));
+            jRadioButtonAll.setName("jRadioButtonAll");
+            jRadioButtonAll.addActionListener(e -> eventActionPerformed(e));
 
-        buttonGroup1.add(jRadioButtonSelection);
-        jRadioButtonSelection.setText(resourceMap.getString("jRadioButtonSelection.text")); // NOI18N
-        jRadioButtonSelection.setName("jRadioButtonSelection"); // NOI18N
-        jRadioButtonSelection.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                eventActionPerformed(evt);
-            }
-        });
+            //---- jRadioButtonSelection ----
+            jRadioButtonSelection.setText(bundle.getString("jRadioButtonSelection.text"));
+            jRadioButtonSelection.setName("jRadioButtonSelection");
+            jRadioButtonSelection.addActionListener(e -> eventActionPerformed(e));
 
-        jTextFieldSelection.setName("jTextFieldSelection"); // NOI18N
+            //---- jTextFieldSelection ----
+            jTextFieldSelection.setName("jTextFieldSelection");
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CExportEntries.class, this);
-        jButtonApply.setAction(actionMap.get("applyExport")); // NOI18N
-        jButtonApply.setName("jButtonApply"); // NOI18N
+            //---- jButtonApply ----
+            jButtonApply.setName("jButtonApply");
 
-        jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
-        jButtonCancel.setName("jButtonCancel"); // NOI18N
+            //---- jButtonCancel ----
+            jButtonCancel.setName("jButtonCancel");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jRadioButtonAll)
+            GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
+            jPanel1.setLayout(jPanel1Layout);
+            jPanel1Layout.setHorizontalGroup(
+                jPanel1Layout.createParallelGroup()
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jRadioButtonSelection)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldSelection, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButtonCancel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonApply)))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jRadioButtonAll)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButtonSelection)
-                    .addComponent(jTextFieldSelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonApply)
-                    .addComponent(jButtonCancel)))
-        );
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup()
+                            .addComponent(jLabel1)
+                            .addComponent(jRadioButtonAll)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jRadioButtonSelection)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldSelection, GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE))
+                            .addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButtonCancel)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonApply)))
+                        .addContainerGap())
+            );
+            jPanel1Layout.setVerticalGroup(
+                jPanel1Layout.createParallelGroup()
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jRadioButtonAll)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(jRadioButtonSelection)
+                            .addComponent(jTextFieldSelection, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButtonApply)
+                            .addComponent(jButtonCancel)))
+            );
+        }
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
+        contentPane.setLayout(contentPaneLayout);
+        contentPaneLayout.setHorizontalGroup(
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        contentPaneLayout.setVerticalGroup(
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
         pack();
+        setLocationRelativeTo(getOwner());
+
+        //---- buttonGroup1 ----
+        buttonGroup1.add(jRadioButtonAll);
+        buttonGroup1.add(jRadioButtonSelection);
     }// </editor-fold>//GEN-END:initComponents
 
     private void eventActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventActionPerformed
@@ -247,14 +261,15 @@ public class CExportEntries extends javax.swing.JDialog {
     }//GEN-LAST:event_eventActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JButton jButtonApply;
-    private javax.swing.JButton jButtonCancel;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JRadioButton jRadioButtonAll;
-    private javax.swing.JRadioButton jRadioButtonSelection;
-    private javax.swing.JTextField jTextFieldSelection;
+    // Generated using JFormDesigner Evaluation license - Ralf Barkow
+    private JPanel jPanel1;
+    private JLabel jLabel1;
+    private JRadioButton jRadioButtonAll;
+    private JRadioButton jRadioButtonSelection;
+    private JTextField jTextFieldSelection;
+    private JButton jButtonApply;
+    private JButton jButtonCancel;
+    private ButtonGroup buttonGroup1;
     // End of variables declaration//GEN-END:variables
 
 }

@@ -1,0 +1,90 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.6" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.danielluedecke.zettelkasten.resources"
+	"i18n.bundleName": "CFilterSearch"
+	"i18n.autoExternalize": false
+	"i18n.keyPrefix": "CFilterSearch"
+	contentType: "form/swing"
+	root: new FormRoot {
+		"$setComponentNames": true
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {comp jScrollPane1::t::434:x, seq t {space ::188:x, comp jButtonCancel:::p::p, space :::p, comp jButtonOk:::p::p, space :::p}, seq l {space :p:6:p, par l {seq l {comp jPanel6:::::x, space :::p}, seq l {comp jTextFieldFilter::::396:x, space :::p, comp jButtonRefresh:::p:20:p, space :6:6:p}}}}"
+			"$verticalGroup": "par l {seq t {comp jScrollPane1::::287:x, space :::p, par l:::p {comp jTextFieldFilter:::::x:1, comp jButtonRefresh::::0:x:1}, space :::p, comp jPanel6:::p::p:1, space :::p, par b {comp jButtonCancel::b:p::p, comp jButtonOk::b:p::p}, space :p:3:p}}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"title": new FormMessage( null, "FormFilterSearch.title" )
+			"modal": true
+			"name": "FormFilterSearch"
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "jScrollPane1"
+				"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				"name": "jScrollPane1"
+				add( new FormComponent( "javax.swing.JList" ) {
+					name: "jList1"
+					"name": "jList1"
+					auxiliary() {
+						"JavaCodeGenerator.preInitCode": "${field}.setModel(filterListModel);"
+						"JavaCodeGenerator.customCreateCode": "MacSourceList.createMacSourceList();"
+					}
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButtonOk"
+				"text": new FormMessage( null, "jButtonOk.text" )
+				"name": "jButtonOk"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButtonCancel"
+				"text": new FormMessage( null, "jButtonCancel.text" )
+				"name": "jButtonCancel"
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq l {space :::p, par l {comp jRadioButtonLogAnd::l:p::p, comp jRadioButtonLogOr::l:p::p, comp jRadioButtonLogNot::l:p::p}, space ::169:x}}"
+				"$verticalGroup": "par l {seq l {comp jRadioButtonLogAnd:::p::p, space :::p, comp jRadioButtonLogOr:::p::p, space :::p, comp jRadioButtonLogNot:::p::p, space ::10:x}}"
+			} ) {
+				name: "jPanel6"
+				"border": new javax.swing.border.TitledBorder( "Suchoptionen" )
+				"name": "jPanel6"
+				add( new FormComponent( "javax.swing.JRadioButton" ) {
+					name: "jRadioButtonLogAnd"
+					"$buttonGroup": new FormReference( "buttonGroup1" )
+					"selected": true
+					"text": new FormMessage( null, "jRadioButtonLogAnd.text" )
+					"name": "jRadioButtonLogAnd"
+				} )
+				add( new FormComponent( "javax.swing.JRadioButton" ) {
+					name: "jRadioButtonLogOr"
+					"$buttonGroup": new FormReference( "buttonGroup1" )
+					"text": new FormMessage( null, "jRadioButtonLogOr.text" )
+					"name": "jRadioButtonLogOr"
+				} )
+				add( new FormComponent( "javax.swing.JRadioButton" ) {
+					name: "jRadioButtonLogNot"
+					"$buttonGroup": new FormReference( "buttonGroup1" )
+					"text": new FormMessage( null, "jRadioButtonLogNot.text" )
+					"name": "jRadioButtonLogNot"
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "jTextFieldFilter"
+				"toolTipText": new FormMessage( null, "jTextFieldFilter.toolTipText" )
+				"name": "jTextFieldFilter"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButtonRefresh"
+				"borderPainted": false
+				"contentAreaFilled": false
+				"focusPainted": false
+				"name": "jButtonRefresh"
+			} )
+		}, new FormLayoutConstraints( null ) )
+		add( new FormNonVisual( "javax.swing.ButtonGroup" ) {
+			name: "buttonGroup1"
+			auxiliary() {
+				"JavaCodeGenerator.variableLocal": false
+			}
+		} )
+	}
+}

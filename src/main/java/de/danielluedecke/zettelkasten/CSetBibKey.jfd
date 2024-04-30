@@ -1,0 +1,136 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.6" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.danielluedecke.zettelkasten.resources"
+	"i18n.bundleName": "CSetBibKey"
+	"i18n.autoExternalize": false
+	"i18n.keyPrefix": "CSetBibKey"
+	contentType: "form/swing"
+	root: new FormRoot {
+		"$setComponentNames": true
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {comp jScrollPane1::l:::x, seq {space :p::p, par l {seq {space :21:21:p, par l {seq {comp jComboBoxShowBibTex:::p::p, space :::p, comp jLabel1:::p::p, space :0:209:x}, seq l {comp jLabelManualBibkey:::p::p, space :::p, comp jTextFieldManualBibkey:::::x}}}, seq l {comp jTextFieldFilterTable:::::x, space :::p, comp jButtonRefreshView:::p::p, space :p::p, comp jButtonCancel:::p::p, space :p::p, comp jButtonApply:::p::p}, seq {par l {comp jRadioButtonManualBibkey:::p::p, comp jLabelTitle:::p::p, comp jRadioButtonFileBibkey::l:p::p}, space :0:0:x}}, space :p::p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, comp jLabelTitle:::p::p, space s:p::p, comp jRadioButtonManualBibkey:::p::p, space :p::p, par b {comp jTextFieldManualBibkey::b:p::p, comp jLabelManualBibkey::b:p::p}, space u:p::p, comp jRadioButtonFileBibkey:::p::p, space :p::p, par b {comp jComboBoxShowBibTex::b:p::p, comp jLabel1::b:p::p}, space s:p::p, comp jScrollPane1::::225:x, space :::p, par l:::p {comp jTextFieldFilterTable::t:p::p, comp jButtonCancel::t:::x, comp jButtonApply::t:::x, comp jButtonRefreshView::t:::x}, space :p:3:p}}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"title": new FormMessage( null, "CFormSetBibKey.title" )
+			"name": "CFormSetBibKey"
+			add( new FormComponent( "javax.swing.JRadioButton" ) {
+				name: "jRadioButtonManualBibkey"
+				"$buttonGroup": new FormReference( "buttonGroup1" )
+				"selected": true
+				"text": new FormMessage( null, "jRadioButtonManualBibkey.text" )
+				"toolTipText": new FormMessage( null, "jRadioButtonManualBibkey.toolTipText" )
+				"name": "jRadioButtonManualBibkey"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "jLabelManualBibkey"
+				"text": new FormMessage( null, "jLabelManualBibkey.text" )
+				"name": "jLabelManualBibkey"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "jTextFieldManualBibkey"
+				"text": new FormMessage( null, "jTextFieldManualBibkey.text" )
+				"name": "jTextFieldManualBibkey"
+			} )
+			add( new FormComponent( "javax.swing.JRadioButton" ) {
+				name: "jRadioButtonFileBibkey"
+				"$buttonGroup": new FormReference( "buttonGroup1" )
+				"text": new FormMessage( null, "jRadioButtonFileBibkey.text" )
+				"toolTipText": new FormMessage( null, "jRadioButtonFileBibkey.toolTipText" )
+				"name": "jRadioButtonFileBibkey"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButtonCancel"
+				"name": "jButtonCancel"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButtonApply"
+				"name": "jButtonApply"
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "jScrollPane1"
+				"name": "jScrollPane1"
+				"preferredSize": new java.awt.Dimension( 100, 100 )
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "jTablePreview"
+					"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector {
+						add( new java.util.Vector {
+							add( null )
+							add( null )
+						} )
+						add( new java.util.Vector {
+							add( null )
+							add( null )
+						} )
+						add( new java.util.Vector {
+							add( null )
+							add( null )
+						} )
+						add( new java.util.Vector {
+							add( null )
+							add( null )
+						} )
+					}, new java.util.Vector {
+						add( "Bibkey" )
+						add( "Eintrag" )
+					}, new java.util.Vector {
+						add( class java.lang.String )
+						add( class java.lang.String )
+					}, new java.util.Vector {
+						add( false )
+						add( false )
+					}, new java.util.Vector {
+						add( null )
+						add( null )
+					} )
+					"name": "jTablePreview"
+					"selectionMode": 0
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "(settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();"
+					}
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "jLabelTitle"
+				"text": new FormMessage( null, "jLabelTitle.text" )
+				"name": "jLabelTitle"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButtonRefreshView"
+				"borderPainted": false
+				"contentAreaFilled": false
+				"focusPainted": false
+				"name": "jButtonRefreshView"
+				"preferredSize": new java.awt.Dimension( 20, 20 )
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "jTextFieldFilterTable"
+				"toolTipText": new FormMessage( null, "jTextFieldFilterTable.toolTipText" )
+				"name": "jTextFieldFilterTable"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "jComboBoxShowBibTex"
+				"model": new javax.swing.DefaultComboBoxModel {
+					selectedItem: "Nur neue BibTex-Einträge anzeigen"
+					addElement( "Nur neue BibTex-Einträge anzeigen" )
+					addElement( "Nur vorhandene BibTex-Einträge anzeigen" )
+					addElement( "Alle BibTex-Einträge anzeigen" )
+				}
+				"name": "jComboBoxShowBibTex"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "jLabel1"
+				"text": new FormMessage( null, "jLabel1.text" )
+				"name": "jLabel1"
+			} )
+		}, new FormLayoutConstraints( null ) )
+		add( new FormNonVisual( "javax.swing.ButtonGroup" ) {
+			name: "buttonGroup1"
+			auxiliary() {
+				"JavaCodeGenerator.variableLocal": false
+			}
+		} )
+	}
+}

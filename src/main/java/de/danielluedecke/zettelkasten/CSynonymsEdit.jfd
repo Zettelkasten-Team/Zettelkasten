@@ -1,0 +1,56 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.6" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.danielluedecke.zettelkasten.resources"
+	"i18n.bundleName": "CSynonymsEdit"
+	"i18n.autoExternalize": false
+	"i18n.keyPrefix": "CSynonymsEdit"
+	contentType: "form/swing"
+	root: new FormRoot {
+		"$setComponentNames": true
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq t {space :::p, comp jTextFieldFind::::223:x, space :::p, comp jButtonFindNext:::p::p, space s:::p, comp jButtonCancel:::p::p, space :::p, comp jButtonApply:::p::p, space :::p}, comp jScrollPane1::l::500:x}"
+			"$verticalGroup": "par l {seq t {comp jScrollPane1::::359:x, space :::p, par t {par b {comp jButtonCancel::b:p::p, comp jTextFieldFind::b:p::p, comp jButtonApply::b:p::p}, comp jButtonFindNext::t:p::p}, space :p:3:p}}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"title": new FormMessage( null, "FormSynonymsEdit.title" )
+			"minimumSize": new java.awt.Dimension( 200, 200 )
+			"modal": true
+			"name": "FormSynonymsEdit"
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "jScrollPane1"
+				"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				"minimumSize": new java.awt.Dimension( 30, 30 )
+				"name": "jScrollPane1"
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "jTable1"
+					"autoResizeMode": 0
+					"cellSelectionEnabled": true
+					"name": "jTable1"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "(settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();"
+					}
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButtonCancel"
+				"name": "jButtonCancel"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButtonApply"
+				"name": "jButtonApply"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "jTextFieldFind"
+				"name": "jTextFieldFind"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButtonFindNext"
+				"toolTipText": new FormMessage( null, "jButtonFindNext.toolTipText" )
+				"name": "jButtonFindNext"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jButtonFindNextActionPerformed", true ) )
+			} )
+		}, new FormLayoutConstraints( null ) )
+	}
+}

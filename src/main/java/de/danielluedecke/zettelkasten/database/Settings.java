@@ -113,7 +113,7 @@ public class Settings {
 	 * @return {@code true}, if the programm is running on a mac with aqua-look and
 	 *         feel
 	 */
-	public boolean isMacAqua() {
+	public boolean isMacStyle() {
 		return PlatformUtil.isMacOS() & getLookAndFeel().contains("Aqua");
 	}
 
@@ -536,7 +536,7 @@ public class Settings {
 	}
 
 	public Color getTableGridColor() {
-		if (isMacAqua()) {
+		if (isMacStyle()) {
 			return Constants.gridcolortransparent;
 		}
 		return ((getShowGridHorizontal() || getShowGridVertical()) ? Constants.gridcolor
@@ -4906,7 +4906,7 @@ public class Settings {
 		// get default path
 		String defpath = Constants.standardIconThemePath;
 		// check whether we have os x
-		if (isMacAqua() || isSeaGlass()) {
+		if (isMacStyle() || isSeaGlass()) {
 			defpath = defpath + "osx/";
 		} else {
 			defpath = defpath + Constants.iconThemes[theme];

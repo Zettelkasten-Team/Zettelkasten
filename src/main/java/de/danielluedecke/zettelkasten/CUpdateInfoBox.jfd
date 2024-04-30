@@ -1,0 +1,55 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.6" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.danielluedecke.zettelkasten.resources"
+	"i18n.bundleName": "CUpdateInfoBox"
+	"i18n.autoExternalize": false
+	"i18n.keyPrefix": "CUpdateInfoBox"
+	contentType: "form/swing"
+	root: new FormRoot {
+		"$setComponentNames": true
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {comp jPanel1:::p::p}"
+			"$verticalGroup": "par l {comp jPanel1:::p::p}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"title": new FormMessage( null, "FormUpdateInfoBox.title" )
+			"modal": true
+			"name": "FormUpdateInfoBox"
+			"resizable": false
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq {space :::p, par l {comp jLabel1:::p::p, par t:l {seq t {comp jButton2:::p::p, space :::p, comp jButton1:::p::p}, comp jLabel2::t:p::p}, comp jCheckBox1::l:p::p}, space :::p}}"
+				"$verticalGroup": "par l {seq {space :::p, comp jLabel1:::p::p, space :::p, comp jLabel2:::p::p, space u:::p, par b {comp jButton1::b:p::p, comp jButton2::b:p::p}, space :::p, comp jCheckBox1:::p::p, space :::p}}"
+			} ) {
+				name: "jPanel1"
+				"name": "jPanel1"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "jLabel1"
+					"text": new FormMessage( null, "jLabel1.text" )
+					"name": "jLabel1"
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "jLabel2"
+					"text": new FormMessage( null, "jLabel2.text" )
+					"name": "jLabel2"
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "jCheckBox1"
+					"text": new FormMessage( null, "jCheckBox1.text" )
+					"name": "jCheckBox1"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "jButton1"
+					"text": new FormMessage( null, "jButton1.text" )
+					"name": "jButton1"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "jButton2"
+					"text": new FormMessage( null, "jButton2.text" )
+					"name": "jButton2"
+				} )
+			} )
+		}, new FormLayoutConstraints( null ) )
+	}
+}

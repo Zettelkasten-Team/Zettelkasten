@@ -1,0 +1,108 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.6" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.danielluedecke.zettelkasten.resources"
+	"i18n.bundleName": "CHighlightSearchSettings"
+	"i18n.autoExternalize": false
+	"i18n.keyPrefix": "CHighlightSearchSettings"
+	contentType: "form/swing"
+	root: new FormRoot {
+		"$setComponentNames": true
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq l {space :::p, comp jPanel1:::::x, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp jPanel1:::p::p, space :::x}}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"title": new FormMessage( null, "FormHighlightSearchSettings.title" )
+			"modal": true
+			"name": "FormHighlightSearchSettings"
+			"resizable": false
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq {space :::p, par l {seq {par l {comp jPanel2::l:::x, seq l {comp jCheckBoxBold:::p::p, space :::p, comp jCheckBoxItalic:::p::p, space :::p, comp jCheckBoxShowHighlight:::p::p}, seq l {par t {comp jLabel1:::p::p, comp jLabel2::t:p::p}, space :::p, par l {comp jButtonBackgroundColor::l:p::p, comp jButtonChangeColor::l:p::p}}, comp jSliderSize::l:::x, comp jLabel3::l:p::p}, space :p:6:p}, seq t {comp jButtonCancel:::p::p, space :::p, comp jButtonApply:::p::p, space :::p}}}}"
+				"$verticalGroup": "par l {seq l {space :::p, par b {comp jLabel1::b:p::p, comp jButtonChangeColor::b:p::p}, space :::p, par b {comp jButtonBackgroundColor::b:p::p, comp jLabel2::b:p::p}, space :::p, par b {comp jCheckBoxBold::b:p::p, comp jCheckBoxItalic::b:p::p, comp jCheckBoxShowHighlight::b:p::p}, space u:::p, comp jLabel3:::p::p, space :::p, comp jSliderSize:::p::p, space :p:12:p, comp jPanel2:::p::p, space :::x, par b {comp jButtonCancel::b:p::p, comp jButtonApply::b:p::p}}}"
+			} ) {
+				name: "jPanel1"
+				"name": "jPanel1"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "jLabel1"
+					"text": new FormMessage( null, "jLabel1.text" )
+					"name": "jLabel1"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "jButtonChangeColor"
+					"text": new FormMessage( null, "jButtonChangeColor.text" )
+					"name": "jButtonChangeColor"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jButtonChangeColorActionPerformed", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "jCheckBoxBold"
+					"text": new FormMessage( null, "jCheckBoxBold.text" )
+					"name": "jCheckBoxBold"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jCheckBoxBoldActionPerformed", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "jCheckBoxItalic"
+					"text": new FormMessage( null, "jCheckBoxItalic.text" )
+					"name": "jCheckBoxItalic"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jCheckBoxItalicActionPerformed", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "jCheckBoxShowHighlight"
+					"text": new FormMessage( null, "jCheckBoxShowHighlight.text" )
+					"name": "jCheckBoxShowHighlight"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jCheckBoxShowHighlightActionPerformed", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "jLabel3"
+					"text": new FormMessage( null, "jLabel3.text" )
+					"name": "jLabel3"
+				} )
+				add( new FormComponent( "javax.swing.JSlider" ) {
+					name: "jSliderSize"
+					"majorTickSpacing": 1
+					"maximum": 5
+					"minorTickSpacing": 1
+					"paintLabels": true
+					"paintTicks": true
+					"snapToTicks": true
+					"name": "jSliderSize"
+					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "jSliderSizeStateChanged", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "jLabel2"
+					"text": new FormMessage( null, "jLabel2.text" )
+					"name": "jLabel2"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "jButtonBackgroundColor"
+					"text": new FormMessage( null, "jButtonBackgroundColor.text" )
+					"name": "jButtonBackgroundColor"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jButtonBackgroundColorActionPerformed", true ) )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+					"$horizontalGroup": "par l {seq l {space :::p, comp jLabelColor:::p::p, space :::x}}"
+					"$verticalGroup": "par l {seq l {space :::p, comp jLabelColor:::p::p, space :::x}}"
+				} ) {
+					name: "jPanel2"
+					"border": new javax.swing.border.TitledBorder( "Vorschau Farbeinstellungen" )
+					"name": "jPanel2"
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "jLabelColor"
+						"text": new FormMessage( null, "jLabelColor.text" )
+						"name": "jLabelColor"
+						"opaque": true
+					} )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "jButtonCancel"
+					"name": "jButtonCancel"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "jButtonApply"
+					"name": "jButtonApply"
+				} )
+			} )
+		}, new FormLayoutConstraints( null ) )
+	}
+}

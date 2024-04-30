@@ -227,7 +227,7 @@ public class FileOperationsUtil {
 	 */
 	public static File chooseFile(java.awt.Frame parent, int dlgmode, int filemode, String initdir, String initfile,
 			String title, final String[] acceptedext, final String desc, Settings settings) {
-		if (!settings.isMacAqua()) {
+		if (!settings.isMacStyle()) {
 			File curdir = (null == initdir) ? null : new File(initdir);
 			JFileChooser fc = createFileChooser(title, filemode, curdir, acceptedext, desc);
 			int option = (JFileChooser.OPEN_DIALOG == dlgmode) ? fc.showOpenDialog(parent) : fc.showSaveDialog(parent);
@@ -277,7 +277,7 @@ public class FileOperationsUtil {
 	 */
 	public static File chooseFile(java.awt.Dialog parent, int dlgmode, int filemode, String initdir, String initfile,
 			String title, final String[] acceptedext, final String desc, Settings settings) {
-		if (!settings.isMacAqua()) {
+		if (!settings.isMacStyle()) {
 			File curdir = (null == initdir) ? null : new File(initdir);
 			JFileChooser fc = createFileChooser(title, filemode, curdir, acceptedext, desc);
 			int option = (JFileChooser.OPEN_DIALOG == dlgmode) ? fc.showOpenDialog(parent) : fc.showSaveDialog(parent);
