@@ -171,7 +171,7 @@ public class ZettelkastenApp extends SingleFrameApplication {
 		initLocale(settings);
 	}
 
-	private void showMainWindow() {
+	void showMainWindow() {
 		Constants.zknlogger.log(Level.INFO, "Starting Main Window.");
 		try {
 			show(new ZettelkastenView(this, settings, taskData));

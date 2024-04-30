@@ -7,6 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org/) for commit guidelin
 #### 🩹 Bug fixes
 
 - askUserAndMaybeSaveChanges (within ZettelkastenView), ensure that settings.getMainDataFile() does not return null before calling toString() on it.
+- refactor(ZettelkastenApp): showMainWindow method with visibility set to package-private. This change allows better unit testing by enabling direct access to the method from test classes within the same package.
 
 <a name="v3.2022.8"></a>
 # [3.2022.8](https://github.com/Zettelkasten-Team/Zettelkasten/compare/v3.3.1...v3.2022.8) (August 2022)
