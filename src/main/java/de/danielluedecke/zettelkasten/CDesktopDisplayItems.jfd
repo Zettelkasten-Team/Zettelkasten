@@ -1,0 +1,68 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.6" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.danielluedecke.zettelkasten.resources"
+	"i18n.bundleName": "CDesktopDisplayItems"
+	"i18n.autoExternalize": false
+	"i18n.keyPrefix": "CDesktopDisplayItems"
+	contentType: "form/swing"
+	root: new FormRoot {
+		"$setComponentNames": true
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq l {space :::p, comp jPanel1:::::x, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp jPanel1:::p::p, space :::x}}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"title": new FormMessage( null, "FormDesktopDisplayItems.title" )
+			"modal": true
+			"name": "FormDesktopDisplayItems"
+			"resizable": false
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq t {space :::x, comp jButtonCancel:::p::p, space :::p, comp jButtonApply:::p::p}, seq {par l {comp jCheckBoxRemarks::l:p::p, comp jCheckBoxAuthors::l:p::p, comp jCheckBoxAttachments::l:p::p, comp jCheckBoxKeywords::l:p::p, comp jLabel1::l:p::p}, space :::p}}"
+				"$verticalGroup": "par l {seq l {space :::p, comp jLabel1:::p::p, space :::p, comp jCheckBoxRemarks:::p::p, space :::p, comp jCheckBoxAuthors:::p::p, space :::p, comp jCheckBoxAttachments:::p::p, space :::p, comp jCheckBoxKeywords:::p::p, space :::x, par b {comp jButtonApply::b:p::p, comp jButtonCancel::b:p::p}}}"
+			} ) {
+				name: "jPanel1"
+				"name": "jPanel1"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "jLabel1"
+					"text": new FormMessage( null, "jLabel1.text" )
+					"name": "jLabel1"
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "jCheckBoxRemarks"
+					"text": new FormMessage( null, "jCheckBoxRemarks.text" )
+					"name": "jCheckBoxRemarks"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxClicked", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "jCheckBoxAuthors"
+					"text": new FormMessage( null, "jCheckBoxAuthors.text" )
+					"name": "jCheckBoxAuthors"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxClicked", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "jCheckBoxAttachments"
+					"text": new FormMessage( null, "jCheckBoxAttachments.text" )
+					"name": "jCheckBoxAttachments"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxClicked", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "jCheckBoxKeywords"
+					"text": new FormMessage( null, "jCheckBoxKeywords.text" )
+					"name": "jCheckBoxKeywords"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxClicked", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "jButtonApply"
+					"text": new FormMessage( null, "jButtonApply.text" )
+					"name": "jButtonApply"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "jButtonCancel"
+					"name": "jButtonCancel"
+				} )
+			} )
+		}, new FormLayoutConstraints( null ) )
+	}
+}

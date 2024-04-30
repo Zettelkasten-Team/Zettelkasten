@@ -473,7 +473,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (settings.isSeaGlass()) {
 			ZettelkastenView.super.getFrame().getRootPane().setBackground(ColorUtil.colorSeaGlassGray);
 		}
-		if (settings.isMacAqua()) {
+		if (settings.isMacStyle()) {
 			setupMacOSXLeopardStyle();
 		}
 		if (settings.isSeaGlass()) {
@@ -1647,7 +1647,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// init a search textfield that is added to the toolbar
 		tb_searchTextfield = new JTextField(15);
 		// on mac, make textfield look like a search box
-		if (settings.isMacAqua() || settings.isSeaGlass()) {
+		if (settings.isMacStyle() || settings.isSeaGlass()) {
 			tb_searchTextfield.putClientProperty("JTextField.variant", "search");
 		} else {
 			tb_searchTextfield.setPreferredSize(new Dimension(150, 26));
@@ -1709,7 +1709,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 						.addContainerGap(20, Short.MAX_VALUE)));
 		toolBar.add(settings.isSeaGlass() ? tb_searchTextfield : jPanelSearchBox);
 		// hide label on mac
-		jLabelLupe.setVisible(!settings.isMacAqua() && !settings.isSeaGlass());
+		jLabelLupe.setVisible(!settings.isMacStyle() && !settings.isSeaGlass());
 	}
 
 	/**
@@ -1776,7 +1776,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				tb_addtodesktop.setVisible(settings.getShowAllIcons());
 				tb_find.setVisible(settings.getShowAllIcons());
 			}
-			if (settings.isMacAqua() && bottomBarNeedsUdpate) {
+			if (settings.isMacStyle() && bottomBarNeedsUdpate) {
 				makeMacToolbar();
 			}
 			if (settings.isSeaGlass()) {
@@ -1859,7 +1859,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// when we have aqua look&feel, make some of the menu items invisivle, which
 		// already
 		// appear in the Apple-Menu
-		if (settings.isMacAqua()) {
+		if (settings.isMacStyle()) {
 			aboutMenu.setVisible(false);
 			exitMenuItem.setVisible(false);
 			jSeparatorExit.setVisible(false);
@@ -1930,7 +1930,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			t.setShowVerticalLines(settings.getShowGridVertical());
 			t.setIntercellSpacing(settings.getCellSpacing());
 			// make extra table-sorter for itunes-tables
-			if (settings.isMacAqua()) {
+			if (settings.isMacStyle()) {
 				TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
 					@Override
 					public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
@@ -1941,7 +1941,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				// since the default for those is "auto resize off"
 				t.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
 			}
-//            if (settings.isMacAqua()) {
+//            if (settings.isMacStyle()) {
 //                t.setDefaultRenderer(String.class, new MacSourceList.CustomTableCellRenderer());
 //            }
 		}
@@ -2540,7 +2540,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private void initTrees() {
 		// in case we have mac os x with aqua look&feel, make JTrees look
 		// mac-like
-		if (settings.isMacAqua()) {
+		if (settings.isMacStyle()) {
 			// This tree has a root, so use "true" as parameter
 			jTreeLuhmann.setUI(new MacSourceTree(true));
 			// This tree has no root, so use "false" as parameter
@@ -3096,7 +3096,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			bordertext.append(" (").append(String.valueOf(keywordListModel.size())).append(")");
 		}
 		// set new border text
-		Color bcol = (settings.isMacAqua()) ? ColorUtil.colorJTreeText : null;
+		Color bcol = (settings.isMacStyle()) ? ColorUtil.colorJTreeText : null;
 		jListEntryKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(bordertext.toString(), bcol, settings));
 	}
 
@@ -3118,7 +3118,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (data.getCount(Daten.ZKNCOUNT) == 0 || inputDisplayedEntry == 0) {
 			jEditorPaneEntry.setText("");
 
-			Color bcol = (settings.isMacAqua()) ? ColorUtil.colorJTreeText : null;
+			Color bcol = (settings.isMacStyle()) ? ColorUtil.colorJTreeText : null;
 			jListEntryKeywords.setBorder(ZknMacWidgetFactory
 					.getTitledBorder(getResourceMap().getString("jListEntryKeywords.border.title"), bcol, settings));
 			keywordListModel.clear();
@@ -5855,7 +5855,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			sb.setLength(sb.length() - 3);
 		}
 		// and set the relations as status message label
-		if (!settings.isMacAqua()) {
+		if (!settings.isMacStyle()) {
 			statusMsgLabel.setText(sb.toString());
 		}
 		jTreeCluster.setToolTipText(sb.toString());
@@ -7784,7 +7784,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action
 	public void showAboutBox() {
 		if (null == zknAboutBox) {
-			zknAboutBox = new AboutBox(getFrame(), settings.isMacAqua() | settings.isMacAqua());
+			zknAboutBox = new AboutBox(getFrame(), settings.isMacStyle() | settings.isMacStyle());
 			zknAboutBox.setLocationRelativeTo(getFrame());
 		}
 		ZettelkastenApp.getApplication().show(zknAboutBox);
@@ -8449,7 +8449,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 			// create a swing filechooser when we have no mac
 			File filepath = FileOperationsUtil.chooseFile(getFrame(),
-					(settings.isMacAqua()) ? FileDialog.LOAD : JFileChooser.OPEN_DIALOG, JFileChooser.FILES_ONLY,
+					(settings.isMacStyle()) ? FileDialog.LOAD : JFileChooser.OPEN_DIALOG, JFileChooser.FILES_ONLY,
 					filedir, filename, getResourceMap().getString("fileDialogTitleOpen"),
 					new String[] { Constants.ZKN_FILEEXTENSION, Constants.ZKN_BACKUPFILEEXTENSION },
 					getResourceMap().getString("fileDescription1"), settings);
@@ -8880,7 +8880,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		// Ask to the user for the new file filepath.
 		File filepath = FileOperationsUtil.chooseFile(getFrame(),
-				(settings.isMacAqua()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG, JFileChooser.FILES_ONLY, null,
+				(settings.isMacStyle()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG, JFileChooser.FILES_ONLY, null,
 				null, getResourceMap().getString("fileDialogTitleSave"), new String[] { Constants.ZKN_FILEEXTENSION },
 				getResourceMap().getString("fileDescription1"), settings);
 		if (filepath == null) {
@@ -9075,7 +9075,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			selectedfile = bibtex.getFilePath();
 		}
 		selectedfile = FileOperationsUtil.chooseFile(getFrame(),
-				(settings.isMacAqua()) ? FileDialog.LOAD : JFileChooser.OPEN_DIALOG, JFileChooser.FILES_ONLY,
+				(settings.isMacStyle()) ? FileDialog.LOAD : JFileChooser.OPEN_DIALOG, JFileChooser.FILES_ONLY,
 				(selectedfile == null) ? null : selectedfile.toString(),
 				(selectedfile == null) ? null : selectedfile.getName(),
 				getResourceMap().getString("bibTextFileChooserTitle"), new String[] { ".bib", ".txt" },
@@ -9206,7 +9206,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 			// here we open a swing filechooser, in case the os ist no mac aqua
 			File filepath = FileOperationsUtil.chooseFile(getFrame(),
-					(settings.isMacAqua()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG, JFileChooser.FILES_ONLY, null,
+					(settings.isMacStyle()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG, JFileChooser.FILES_ONLY, null,
 					null, getResourceMap().getString("exportListFormatTitle"),
 					new String[] { "." + exportformat.toLowerCase() }, expo.toString(), settings);
 			// if we have any valid
@@ -11386,10 +11386,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jSplitPaneLinks = new JSplitPane();
 		jPanel14 = new JPanel();
 		jScrollPane4 = new JScrollPane();
-		jTableLinks = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new JTable();
+		jTableLinks = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new JTable();
 		jPanelManLinks = new JPanel();
 		jScrollPane15 = new JScrollPane();
-		jTableManLinks = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new JTable();
+		jTableManLinks = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new JTable();
 		jPanel10 = new JPanel();
 		jSplitPane2 = new JSplitPane();
 		jScrollPane10 = new JScrollPane();
@@ -11425,13 +11425,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jScrollPane17 = new JScrollPane();
 		jTreeKeywords = new JTree();
 		jScrollPane6 = new JScrollPane();
-		jTableKeywords = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new JTable();
+		jTableKeywords = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new JTable();
 		jPanel7 = new JPanel();
 		jTextFieldFilterAuthors = new JTextField();
 		jSplitPaneAuthors = new JSplitPane();
 		jPanel15 = new JPanel();
 		jScrollPane7 = new JScrollPane();
-		jTableAuthors = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new JTable();
+		jTableAuthors = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new JTable();
 		jComboBoxAuthorType = new JComboBox<String>();
 		jPanelDispAuthor = new JPanel();
 		jScrollPane16 = new JScrollPane();
@@ -11439,7 +11439,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jButtonRefreshAuthors = new JButton();
 		jPanel8 = new JPanel();
 		jScrollPane8 = new JScrollPane();
-		jTableTitles = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new JTable();
+		jTableTitles = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new JTable();
 		jTextFieldFilterTitles = new JTextField();
 		jButtonRefreshTitles = new JButton();
 		jPanel11 = new JPanel();
@@ -11456,12 +11456,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jComboBoxBookmarkCategory = new JComboBox<String>();
 		jSplitPane3 = new JSplitPane();
 		jScrollPane9 = new JScrollPane();
-		jTableBookmarks = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new JTable();
+		jTableBookmarks = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new JTable();
 		jScrollPane14 = new JScrollPane();
 		jEditorPaneBookmarkComment = new JEditorPane();
 		jPanel13 = new JPanel();
 		jScrollPane13 = new JScrollPane();
-		jTableAttachments = (settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null)
+		jTableAttachments = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null)
 				: new JTable();
 		jTextFieldFilterAttachments = new JTextField();
 		jButtonRefreshAttachments = new JButton();

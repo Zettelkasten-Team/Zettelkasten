@@ -344,7 +344,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			Constants.zknlogger.log(Level.INFO, "Memory usage logged. New Entry Window opened.");
 		}
 		// create brushed look for window, so toolbar and window-bar become a unit
-		if (settingsObj.isMacAqua()) {
+		if (settingsObj.isMacStyle()) {
 			MacUtils.makeWindowLeopardStyle(getRootPane());
 			// WindowUtils.createAndInstallRepaintWindowFocusListener(this);
 			WindowUtils.installJComponentRepainterOnWindowFocusChanged(this.getRootPane());
@@ -375,7 +375,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		initComboBox();
 		// if we have mac os x with aqua/leopard-style make window look like native
 		// leopard
-		if (settingsObj.isMacAqua()) {
+		if (settingsObj.isMacStyle()) {
 			setupMacOSXLeopardStyle();
 		}
 		if (settingsObj.isSeaGlass()) {
@@ -470,7 +470,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			jListLinks.setBorder(
 					ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jListLinks.border.title"), settingsObj));
 		}
-		if (settingsObj.isMacAqua()) {
+		if (settingsObj.isMacStyle()) {
 			ZknMacWidgetFactory.updateSplitPane(jSplitPaneNewEntry1);
 			ZknMacWidgetFactory.updateSplitPane(jSplitPaneNewEntry2);
 			ZknMacWidgetFactory.updateSplitPane(jSplitPaneNewEntry3);
@@ -847,7 +847,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 				}
 			}
 		});
-		if (settingsObj.isMacAqua()) {
+		if (settingsObj.isMacStyle()) {
 			jTextFieldAddKeyword.addFocusListener(new java.awt.event.FocusAdapter() {
 				@Override
 				public void focusGained(java.awt.event.FocusEvent evt) {
@@ -1244,7 +1244,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			tb_highlight.setVisible(settingsObj.getShowAllIcons());
 			tb_strike.setVisible(settingsObj.getShowAllIcons());
 		}
-		if (settingsObj.isMacAqua()) {
+		if (settingsObj.isMacStyle()) {
 			makeMacToolbar();
 		}
 		if (settingsObj.isSeaGlass()) {
@@ -1518,7 +1518,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		// ATTENTION! Mnemonic keys are NOT applied on Mac OS, see Apple guidelines for
 		// further details:
 		// http://developer.apple.com/DOCUMENTATION/Java/Conceptual/Java14Development/07-NativePlatformIntegration/NativePlatformIntegration.html#//apple_ref/doc/uid/TP40001909-211867-BCIBDHFJ
-		if (!settingsObj.isMacAqua()) {
+		if (!settingsObj.isMacStyle()) {
 			// init the variables
 			String menutext;
 			char mkey;
@@ -5101,7 +5101,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		jPanel4 = new javax.swing.JPanel();
 		jScrollPane3 = new javax.swing.JScrollPane();
 		jListKeywords = MacSourceList.createMacSourceList();
-		jTextFieldAddKeyword = (settingsObj.isMacAqua())
+		jTextFieldAddKeyword = (settingsObj.isMacStyle())
 				? ZknMacWidgetFactory.createHudTreeTextField(resourceMap.getString("textFieldDefaultText"))
 				: new javax.swing.JTextField();
 		jPanel6 = new javax.swing.JPanel();
@@ -5109,7 +5109,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		jTextAreaRemarks = new javax.swing.JTextArea();
 		jScrollPane5 = new javax.swing.JScrollPane();
 		jListLinks = MacSourceList.createMacSourceList();
-		jTextFieldAddLink = (settingsObj.isMacAqua())
+		jTextFieldAddLink = (settingsObj.isMacStyle())
 				? ZknMacWidgetFactory.createHudTreeTextField(resourceMap.getString("textFieldDefaultText"))
 				: new javax.swing.JTextField();
 		jPanel2 = new javax.swing.JPanel();

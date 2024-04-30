@@ -1,0 +1,136 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.6" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.danielluedecke.zettelkasten.resources"
+	"i18n.bundleName": "CReplaceDialog"
+	"i18n.autoExternalize": false
+	"i18n.keyPrefix": "CReplaceDialog"
+	contentType: "form/swing"
+	root: new FormRoot {
+		"$setComponentNames": true
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq l {space :::p, comp jPanel1:::p::p, space :::x}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp jPanel1:::p::p, space :p:3:p}}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"title": new FormMessage( null, "FormReplaceDialog.title" )
+			"modal": true
+			"name": "FormReplaceDialog"
+			"resizable": false
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq {space :::p, par l {comp jLabel1::l:p::p, comp jLabel2::l:p::p}, space :::p, par l {seq l {comp jCheckBoxRegEx:::p::p, space :0:0:x}, comp jTextFieldFind::l:::x, comp jTextFieldReplace::l:::x}, space :::p}, seq t {space :::x, comp jButtonCancel:::p::p, space :::p, comp jButtonReplace:::p::p, space :6:6:6}, seq {space :p:6:p, comp jPanel2:::::x, space :::p}, seq {space :p:6:p, comp jPanel3:::::x, space :::p}}"
+				"$verticalGroup": "par l {seq l {space :::p, par b {comp jLabel1::b:p::p, comp jTextFieldFind::b:p::p}, space :p:0:p, comp jCheckBoxRegEx:::p::p, space :p::p, par b {comp jLabel2::b:p::p, comp jTextFieldReplace::b:p::p}, space u:::p, comp jPanel2:::p::p, space u:::p, comp jPanel3:::p::p, space :::x, par b {comp jButtonCancel::b:p::p, comp jButtonReplace::b:p::p}}}"
+			} ) {
+				name: "jPanel1"
+				"name": "jPanel1"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "jLabel1"
+					"labelFor": new FormReference( "jTextFieldFind" )
+					"text": new FormMessage( null, "jLabel1.text" )
+					"name": "jLabel1"
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "jTextFieldFind"
+					"name": "jTextFieldFind"
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "jLabel2"
+					"labelFor": new FormReference( "jTextFieldReplace" )
+					"text": new FormMessage( null, "jLabel2.text" )
+					"name": "jLabel2"
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "jTextFieldReplace"
+					"name": "jTextFieldReplace"
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+					"$horizontalGroup": "par l {seq {space :::p, par l {comp jCheckBoxMatchCase:::p::p, comp jCheckBoxWholeWord::l:p::p}, space :::x}}"
+					"$verticalGroup": "par l {seq l {space :::p, comp jCheckBoxMatchCase:::p::p, space :::p, comp jCheckBoxWholeWord:::p::p, space :::x}}"
+				} ) {
+					name: "jPanel2"
+					"border": new javax.swing.border.TitledBorder( "Suchoptionen" )
+					"name": "jPanel2"
+					add( new FormComponent( "javax.swing.JCheckBox" ) {
+						name: "jCheckBoxMatchCase"
+						"text": new FormMessage( null, "jCheckBoxMatchCase.text" )
+						"name": "jCheckBoxMatchCase"
+					} )
+					add( new FormComponent( "javax.swing.JCheckBox" ) {
+						name: "jCheckBoxWholeWord"
+						"text": new FormMessage( null, "jCheckBoxWholeWord.text" )
+						"name": "jCheckBoxWholeWord"
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+					"$horizontalGroup": "par l {seq {space :::p, par l {comp jCheckBoxReplaceRemarks::l:p::p, comp jCheckBoxReplaceTitles::l:p::p, comp jCheckBoxReplaceContent::l:p::p}, space s:::p, par l {comp jCheckBoxReplaceAuthors:::p::p, comp jCheckBoxReplaceKeywords:::p::p, comp jCheckBoxReplaceAttachments:::p::p}, space :::x}}"
+					"$verticalGroup": "par l {seq l {space :::p, par l {seq l {comp jCheckBoxReplaceKeywords:::p::p, space :::p, comp jCheckBoxReplaceAuthors:::p::p, space :::p, comp jCheckBoxReplaceAttachments:::p::p}, seq l {comp jCheckBoxReplaceTitles:::p::p, space :::p, comp jCheckBoxReplaceContent:::p::p, space :::p, comp jCheckBoxReplaceRemarks:::p::p}}, space :::x}}"
+				} ) {
+					name: "jPanel3"
+					"border": new javax.swing.border.TitledBorder( "Ersetzen in" )
+					"name": "jPanel3"
+					add( new FormComponent( "javax.swing.JCheckBox" ) {
+						name: "jCheckBoxReplaceTitles"
+						"text": new FormMessage( null, "jCheckBoxReplaceTitles.text" )
+						"name": "jCheckBoxReplaceTitles"
+					} )
+					add( new FormComponent( "javax.swing.JCheckBox" ) {
+						name: "jCheckBoxReplaceContent"
+						"text": new FormMessage( null, "jCheckBoxReplaceContent.text" )
+						"name": "jCheckBoxReplaceContent"
+					} )
+					add( new FormComponent( "javax.swing.JCheckBox" ) {
+						name: "jCheckBoxReplaceRemarks"
+						"text": new FormMessage( null, "jCheckBoxReplaceRemarks.text" )
+						"name": "jCheckBoxReplaceRemarks"
+					} )
+					add( new FormComponent( "javax.swing.JCheckBox" ) {
+						name: "jCheckBoxReplaceKeywords"
+						"text": new FormMessage( null, "jCheckBoxReplaceKeywords.text" )
+						"name": "jCheckBoxReplaceKeywords"
+					} )
+					add( new FormComponent( "javax.swing.JCheckBox" ) {
+						name: "jCheckBoxReplaceAuthors"
+						"text": new FormMessage( null, "jCheckBoxReplaceAuthors.text" )
+						"name": "jCheckBoxReplaceAuthors"
+					} )
+					add( new FormComponent( "javax.swing.JCheckBox" ) {
+						name: "jCheckBoxReplaceAttachments"
+						"text": new FormMessage( null, "jCheckBoxReplaceAttachments.text" )
+						"name": "jCheckBoxReplaceAttachments"
+					} )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "jButtonCancel"
+					"name": "jButtonCancel"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "jButtonReplace"
+					"name": "jButtonReplace"
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "jCheckBoxRegEx"
+					"text": new FormMessage( null, "jCheckBoxRegEx.text" )
+					"toolTipText": new FormMessage( null, "jCheckBoxRegEx.toolTipText" )
+					"name": "jCheckBoxRegEx"
+				} )
+			} )
+		}, new FormLayoutConstraints( null ) )
+		add( new FormContainer( "javax.swing.JPopupMenu", new FormLayoutManager( class javax.swing.JPopupMenu ) ) {
+			name: "jPopupMenuCCP"
+			"name": "jPopupMenuCCP"
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "popupCCPcut"
+				"name": "popupCCPcut"
+			} )
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "popupCCPcopy"
+				"name": "popupCCPcopy"
+			} )
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "popupCCPpaste"
+				"name": "popupCCPpaste"
+			} )
+		} )
+	}
+}

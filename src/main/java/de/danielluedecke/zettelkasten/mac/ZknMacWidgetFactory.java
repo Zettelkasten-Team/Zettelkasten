@@ -70,7 +70,7 @@ public class ZknMacWidgetFactory {
 
 	public static TitledBorder getTitledBorder(String title, Color titlecolor, Settings settings) {
 		TitledBorder b;
-		if (settings.isMacAqua() || settings.isSeaGlass()) {
+		if (settings.isMacStyle() || settings.isSeaGlass()) {
 			b = new TitledBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3), title, TitledBorder.LEFT,
 					TitledBorder.BELOW_TOP);
 			Font f = b.getTitleFont();

@@ -1,0 +1,55 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.6" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.danielluedecke.zettelkasten.tasks.resources"
+	"i18n.bundleName": "FindDoubleEntriesTask"
+	"i18n.autoExternalize": false
+	"i18n.keyPrefix": "FindDoubleEntriesTask"
+	contentType: "form/swing"
+	root: new FormRoot {
+		"$setComponentNames": true
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {comp jPanel1::t:::x, comp jScrollPane1::l::400:x}"
+			"$verticalGroup": "par l {seq t {comp jScrollPane1::::238:x, space :::p, comp jPanel1:::p::p}}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"title": new FormMessage( null, "FormFindDoubleEntries.title" )
+			"name": "FormFindDoubleEntries"
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "jScrollPane1"
+				"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				"name": "jScrollPane1"
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "jTable1"
+					"autoResizeMode": 0
+					"cellSelectionEnabled": true
+					"name": "jTable1"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "(settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();"
+					}
+				} )
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq l {space :::p, par l {comp msgLabel::l::388:x, seq l {comp progressBar::::376:x, space u:::p, comp statusAnimationLabel:::p::p}}, space :::p}}"
+				"$verticalGroup": "par l {seq t {space :::x, comp msgLabel:::p::p, space :::p, par t {comp progressBar::t:p::p, comp statusAnimationLabel::t:p::p}, space :::p}}"
+			} ) {
+				name: "jPanel1"
+				"name": "jPanel1"
+				add( new FormComponent( "javax.swing.JProgressBar" ) {
+					name: "progressBar"
+					"name": "progressBar"
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "statusAnimationLabel"
+					"name": "statusAnimationLabel"
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "msgLabel"
+					"text": new FormMessage( null, "msgLabel.text" )
+					"name": "msgLabel"
+				} )
+			} )
+		}, new FormLayoutConstraints( null ) )
+	}
+}

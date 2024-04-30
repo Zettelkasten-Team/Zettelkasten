@@ -32,6 +32,11 @@
  */
 package de.danielluedecke.zettelkasten;
 
+import java.awt.*;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.GroupLayout;
+import javax.swing.LayoutStyle;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
 import java.awt.Toolkit;
@@ -180,90 +185,96 @@ public class CInsertHyperlink extends javax.swing.JDialog {
      */
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // Generated using JFormDesigner Evaluation license - Ralf Barkow
     private void initComponents() {
+        ResourceBundle bundle = ResourceBundle.getBundle("de.danielluedecke.zettelkasten.resources.CInsertHyperlink");
+        jLabel1 = new JLabel();
+        jTextFieldURL = new JTextField();
+        jLabel2 = new JLabel();
+        jTextFieldDescription = new JTextField();
+        jButtonApply = new JButton();
+        jButtonCancel = new JButton();
 
-        jLabel1 = new javax.swing.JLabel();
-        jTextFieldURL = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jTextFieldDescription = new javax.swing.JTextField();
-        jButtonApply = new javax.swing.JButton();
-        jButtonCancel = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CInsertHyperlink.class);
-        setTitle(resourceMap.getString("FormInsertHyperlink.title")); // NOI18N
+        //======== this ========
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle(bundle.getString("FormInsertHyperlink.title"));
         setModal(true);
-        setName("FormInsertHyperlink"); // NOI18N
+        setName("FormInsertHyperlink");
         setResizable(false);
+        Container contentPane = getContentPane();
 
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
+        //---- jLabel1 ----
+        jLabel1.setText(bundle.getString("jLabel1.text"));
+        jLabel1.setName("jLabel1");
 
-        jTextFieldURL.setText(resourceMap.getString("jTextFieldURL.text")); // NOI18N
-        jTextFieldURL.setName("jTextFieldURL"); // NOI18N
+        //---- jTextFieldURL ----
+        jTextFieldURL.setText(bundle.getString("jTextFieldURL.text"));
+        jTextFieldURL.setName("jTextFieldURL");
 
-        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
-        jLabel2.setName("jLabel2"); // NOI18N
+        //---- jLabel2 ----
+        jLabel2.setText(bundle.getString("jLabel2.text"));
+        jLabel2.setName("jLabel2");
 
-        jTextFieldDescription.setText(resourceMap.getString("jTextFieldDescription.text")); // NOI18N
-        jTextFieldDescription.setName("jTextFieldDescription"); // NOI18N
+        //---- jTextFieldDescription ----
+        jTextFieldDescription.setText(bundle.getString("jTextFieldDescription.text"));
+        jTextFieldDescription.setName("jTextFieldDescription");
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CInsertHyperlink.class, this);
-        jButtonApply.setAction(actionMap.get("insertHyperlink")); // NOI18N
-        jButtonApply.setName("jButtonApply"); // NOI18N
+        //---- jButtonApply ----
+        jButtonApply.setName("jButtonApply");
 
-        jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
-        jButtonCancel.setName("jButtonCancel"); // NOI18N
+        //---- jButtonCancel ----
+        jButtonCancel.setName("jButtonCancel");
 
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .addContainerGap()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(layout.createSequentialGroup()
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jLabel1)
-                            .add(jLabel2))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jTextFieldURL, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 360, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jTextFieldDescription, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 360, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                        .add(0, 0, Short.MAX_VALUE)
-                        .add(jButtonCancel)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jButtonApply)))
-                .addContainerGap())
+        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
+        contentPane.setLayout(contentPaneLayout);
+        contentPaneLayout.setHorizontalGroup(
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(contentPaneLayout.createParallelGroup()
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                            .addGroup(contentPaneLayout.createParallelGroup()
+                                .addComponent(jLabel1)
+                                .addComponent(jLabel2))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(contentPaneLayout.createParallelGroup()
+                                .addComponent(jTextFieldURL, GroupLayout.PREFERRED_SIZE, 360, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jTextFieldDescription, GroupLayout.PREFERRED_SIZE, 360, GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                            .addGap(0, 0, Short.MAX_VALUE)
+                            .addComponent(jButtonCancel)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButtonApply)))
+                    .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel1)
-                    .add(jTextFieldURL, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel2)
-                    .add(jTextFieldDescription, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jButtonCancel)
-                    .add(jButtonApply))
-                .addContainerGap())
+        contentPaneLayout.setVerticalGroup(
+            contentPaneLayout.createParallelGroup()
+                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(jTextFieldURL, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(jTextFieldDescription, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(contentPaneLayout.createParallelGroup()
+                        .addComponent(jButtonCancel)
+                        .addComponent(jButtonApply))
+                    .addContainerGap())
         );
-
         pack();
+        setLocationRelativeTo(getOwner());
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonApply;
-    private javax.swing.JButton jButtonCancel;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JTextField jTextFieldDescription;
-    private javax.swing.JTextField jTextFieldURL;
+    // Generated using JFormDesigner Evaluation license - Ralf Barkow
+    private JLabel jLabel1;
+    private JTextField jTextFieldURL;
+    private JLabel jLabel2;
+    private JTextField jTextFieldDescription;
+    private JButton jButtonApply;
+    private JButton jButtonCancel;
     // End of variables declaration//GEN-END:variables
 }

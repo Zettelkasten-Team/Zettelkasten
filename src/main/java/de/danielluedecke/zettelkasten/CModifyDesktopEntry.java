@@ -33,6 +33,11 @@
 
 package de.danielluedecke.zettelkasten;
 
+import java.awt.*;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.GroupLayout;
+import javax.swing.LayoutStyle;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
 import de.danielluedecke.zettelkasten.database.AcceleratorKeys;
@@ -66,6 +71,7 @@ import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.undo.UndoManager;
+
 import org.jdesktop.application.Action;
 
 /**
@@ -127,7 +133,7 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
         desktopframe = parent;
 
         // create brushed look for window, so toolbar and window-bar become a unit
-        if (settingsObj.isMacAqua()) {
+        if (settingsObj.isMacStyle()) {
             MacUtils.makeWindowLeopardStyle(getRootPane());
             // WindowUtils.createAndInstallRepaintWindowFocusListener(this);
             WindowUtils.installJComponentRepainterOnWindowFocusChanged(this.getRootPane());
@@ -142,7 +148,7 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
         initListeners();
         initActionMaps();
         // if we have mac os x with aqua/leopard-style make window look like native leopard
-        if (settingsObj.isMacAqua()) {
+        if (settingsObj.isMacStyle()) {
             setupMacOSXLeopardStyle();
         }
         if (settingsObj.isSeaGlass()) {
@@ -462,7 +468,7 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
             tb_selectall.setVisible(settingsObj.getShowAllIcons());
             tb_strike.setVisible(settingsObj.getShowAllIcons());
         }
-        if (settingsObj.isMacAqua()) makeMacToolbar();
+        if (settingsObj.isMacStyle()) makeMacToolbar();
         if (settingsObj.isSeaGlass()) makeSeaGlassToolbar();
     }
 
@@ -1051,436 +1057,475 @@ public class CModifyDesktopEntry extends javax.swing.JFrame implements WindowLis
     
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // Generated using JFormDesigner Evaluation license - Ralf Barkow
     private void initComponents() {
-
-        jPopupMenuMain = new javax.swing.JPopupMenu();
-        popupMainCut = new javax.swing.JMenuItem();
-        popupMainCopy = new javax.swing.JMenuItem();
-        popupMainPaste = new javax.swing.JMenuItem();
-        jSeparator26 = new javax.swing.JSeparator();
-        popupMainSelectAll = new javax.swing.JMenuItem();
-        jSeparator25 = new javax.swing.JSeparator();
-        popupMainUndo = new javax.swing.JMenuItem();
-        popupMainRedo = new javax.swing.JMenuItem();
-        jSeparator20 = new javax.swing.JSeparator();
-        formatSubmenu = new javax.swing.JMenu();
-        popupMainBold = new javax.swing.JMenuItem();
-        popupMainItalic = new javax.swing.JMenuItem();
-        popupMainUnderline = new javax.swing.JMenuItem();
-        popupMainStrikeThrough = new javax.swing.JMenuItem();
-        jSeparator16 = new javax.swing.JSeparator();
-        popupMainHeader1 = new javax.swing.JMenuItem();
-        poupMainHeader2 = new javax.swing.JMenuItem();
-        jSeparator35 = new javax.swing.JSeparator();
-        popupMainCite = new javax.swing.JMenuItem();
-        jSeparator17 = new javax.swing.JSeparator();
-        popupMainTextcolor = new javax.swing.JMenuItem();
-        popupMainHighlight = new javax.swing.JMenuItem();
-        jSeparator18 = new javax.swing.JSeparator();
-        popupMainCenter = new javax.swing.JMenuItem();
-        popupMainMargin = new javax.swing.JMenuItem();
-        popupMainList = new javax.swing.JMenuItem();
-        jSeparator15 = new javax.swing.JSeparator();
-        popupMainSup = new javax.swing.JMenuItem();
-        popupMainSub = new javax.swing.JMenuItem();
-        jSeparator19 = new javax.swing.JSeparator();
-        removeSubMenu = new javax.swing.JMenu();
-        popupRemoveDoubleLine = new javax.swing.JMenuItem();
-        jSeparator31 = new javax.swing.JSeparator();
-        popupRemoveDoubleSpace = new javax.swing.JMenuItem();
-        jSeparator32 = new javax.swing.JSeparator();
-        popupRemoveTab = new javax.swing.JMenuItem();
-        jSeparator33 = new javax.swing.JSeparator();
-        popupRemoveSingleLine = new javax.swing.JMenuItem();
-        jToolBar1 = new javax.swing.JToolBar();
-        tb_cut = new javax.swing.JButton();
-        tb_copy = new javax.swing.JButton();
-        tb_paste = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JToolBar.Separator();
-        tb_selectall = new javax.swing.JButton();
-        jSeparator3 = new javax.swing.JToolBar.Separator();
-        tb_undo = new javax.swing.JButton();
-        tb_redo = new javax.swing.JButton();
-        jSeparator2 = new javax.swing.JToolBar.Separator();
-        tb_bold = new javax.swing.JButton();
-        tb_italic = new javax.swing.JButton();
-        tb_underline = new javax.swing.JButton();
-        tb_strike = new javax.swing.JButton();
-        jButtonApply = new javax.swing.JButton();
-        mainPanel = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButtonCancel = new javax.swing.JButton();
-
-        jPopupMenuMain.setName("jPopupMenuMain"); // NOI18N
-
-        popupMainCut.setAction(actionMap.get("cut"));
-        popupMainCut.setName("popupMainCut"); // NOI18N
-        jPopupMenuMain.add(popupMainCut);
-
-        popupMainCopy.setAction(actionMap.get("copy"));
-        popupMainCopy.setName("popupMainCopy"); // NOI18N
-        jPopupMenuMain.add(popupMainCopy);
-
-        popupMainPaste.setAction(actionMap.get("paste"));
-        popupMainPaste.setName("popupMainPaste"); // NOI18N
-        jPopupMenuMain.add(popupMainPaste);
-
-        jSeparator26.setName("jSeparator26"); // NOI18N
-        jPopupMenuMain.add(jSeparator26);
-
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CModifyDesktopEntry.class, this);
-        popupMainSelectAll.setAction(actionMap.get("selectAllText")); // NOI18N
-        popupMainSelectAll.setName("popupMainSelectAll"); // NOI18N
-        jPopupMenuMain.add(popupMainSelectAll);
-
-        jSeparator25.setName("jSeparator25"); // NOI18N
-        jPopupMenuMain.add(jSeparator25);
-
-        popupMainUndo.setAction(actionMap.get("undoAction")); // NOI18N
-        popupMainUndo.setName("popupMainUndo"); // NOI18N
-        jPopupMenuMain.add(popupMainUndo);
-
-        popupMainRedo.setAction(actionMap.get("redoAction")); // NOI18N
-        popupMainRedo.setName("popupMainRedo"); // NOI18N
-        jPopupMenuMain.add(popupMainRedo);
-
-        jSeparator20.setName("jSeparator20"); // NOI18N
-        jPopupMenuMain.add(jSeparator20);
-
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CModifyDesktopEntry.class);
-        formatSubmenu.setText(resourceMap.getString("formatSubmenu.text")); // NOI18N
-        formatSubmenu.setName("formatSubmenu"); // NOI18N
-
-        popupMainBold.setAction(actionMap.get("formatBold")); // NOI18N
-        popupMainBold.setName("popupMainBold"); // NOI18N
-        formatSubmenu.add(popupMainBold);
-
-        popupMainItalic.setAction(actionMap.get("formatItalic")); // NOI18N
-        popupMainItalic.setName("popupMainItalic"); // NOI18N
-        formatSubmenu.add(popupMainItalic);
-
-        popupMainUnderline.setAction(actionMap.get("formatUnderline")); // NOI18N
-        popupMainUnderline.setName("popupMainUnderline"); // NOI18N
-        formatSubmenu.add(popupMainUnderline);
-
-        popupMainStrikeThrough.setAction(actionMap.get("formatStrikeThrough")); // NOI18N
-        popupMainStrikeThrough.setName("popupMainStrikeThrough"); // NOI18N
-        formatSubmenu.add(popupMainStrikeThrough);
-
-        jSeparator16.setName("jSeparator16"); // NOI18N
-        formatSubmenu.add(jSeparator16);
-
-        popupMainHeader1.setAction(actionMap.get("formatHeading1")); // NOI18N
-        popupMainHeader1.setName("popupMainHeader1"); // NOI18N
-        formatSubmenu.add(popupMainHeader1);
-
-        poupMainHeader2.setAction(actionMap.get("formatHeading2")); // NOI18N
-        poupMainHeader2.setName("poupMainHeader2"); // NOI18N
-        formatSubmenu.add(poupMainHeader2);
-
-        jSeparator35.setName("jSeparator35"); // NOI18N
-        formatSubmenu.add(jSeparator35);
-
-        popupMainCite.setAction(actionMap.get("formatCite")); // NOI18N
-        popupMainCite.setName("popupMainCite"); // NOI18N
-        formatSubmenu.add(popupMainCite);
-
-        jSeparator17.setName("jSeparator17"); // NOI18N
-        formatSubmenu.add(jSeparator17);
-
-        popupMainTextcolor.setAction(actionMap.get("formatColor")); // NOI18N
-        popupMainTextcolor.setName("popupMainTextcolor"); // NOI18N
-        formatSubmenu.add(popupMainTextcolor);
-
-        popupMainHighlight.setAction(actionMap.get("formatHighlight")); // NOI18N
-        popupMainHighlight.setName("popupMainHighlight"); // NOI18N
-        formatSubmenu.add(popupMainHighlight);
-
-        jSeparator18.setName("jSeparator18"); // NOI18N
-        formatSubmenu.add(jSeparator18);
-
-        popupMainCenter.setAction(actionMap.get("alignCenter")); // NOI18N
-        popupMainCenter.setName("popupMainCenter"); // NOI18N
-        formatSubmenu.add(popupMainCenter);
-
-        popupMainMargin.setAction(actionMap.get("alignMargin")); // NOI18N
-        popupMainMargin.setName("popupMainMargin"); // NOI18N
-        formatSubmenu.add(popupMainMargin);
-
-        popupMainList.setAction(actionMap.get("formatList")); // NOI18N
-        popupMainList.setName("popupMainList"); // NOI18N
-        formatSubmenu.add(popupMainList);
-
-        jSeparator15.setName("jSeparator15"); // NOI18N
-        formatSubmenu.add(jSeparator15);
-
-        popupMainSup.setAction(actionMap.get("formatSup")); // NOI18N
-        popupMainSup.setName("popupMainSup"); // NOI18N
-        formatSubmenu.add(popupMainSup);
-
-        popupMainSub.setAction(actionMap.get("formatSub")); // NOI18N
-        popupMainSub.setName("popupMainSub"); // NOI18N
-        formatSubmenu.add(popupMainSub);
-
-        jPopupMenuMain.add(formatSubmenu);
-
-        jSeparator19.setName("jSeparator19"); // NOI18N
-        jPopupMenuMain.add(jSeparator19);
-
-        removeSubMenu.setText(resourceMap.getString("removeSubMenu.text")); // NOI18N
-        removeSubMenu.setName("removeSubMenu"); // NOI18N
-
-        popupRemoveDoubleLine.setAction(actionMap.get("removeDoubleLineSeparators")); // NOI18N
-        popupRemoveDoubleLine.setName("popupRemoveDoubleLine"); // NOI18N
-        removeSubMenu.add(popupRemoveDoubleLine);
-
-        jSeparator31.setName("jSeparator31"); // NOI18N
-        removeSubMenu.add(jSeparator31);
-
-        popupRemoveDoubleSpace.setAction(actionMap.get("removeDoubleSpaceChars")); // NOI18N
-        popupRemoveDoubleSpace.setName("popupRemoveDoubleSpace"); // NOI18N
-        removeSubMenu.add(popupRemoveDoubleSpace);
-
-        jSeparator32.setName("jSeparator32"); // NOI18N
-        removeSubMenu.add(jSeparator32);
-
-        popupRemoveTab.setAction(actionMap.get("removeTabChars")); // NOI18N
-        popupRemoveTab.setName("popupRemoveTab"); // NOI18N
-        removeSubMenu.add(popupRemoveTab);
-
-        jSeparator33.setName("jSeparator33"); // NOI18N
-        removeSubMenu.add(jSeparator33);
-
-        popupRemoveSingleLine.setAction(actionMap.get("removeSingleLineSeparators")); // NOI18N
-        popupRemoveSingleLine.setName("popupRemoveSingleLine"); // NOI18N
-        removeSubMenu.add(popupRemoveSingleLine);
-
-        jPopupMenuMain.add(removeSubMenu);
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle(resourceMap.getString("FormCModifyDesktopEntry.title")); // NOI18N
-        setMinimumSize(new java.awt.Dimension(300, 200));
-        setName("FormCModifyDesktopEntry"); // NOI18N
-
-        jToolBar1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, resourceMap.getColor("jToolBar1.border.matteColor"))); // NOI18N
-        jToolBar1.setFloatable(false);
-        jToolBar1.setRollover(true);
-        jToolBar1.setMinimumSize(new java.awt.Dimension(200, 10));
-        jToolBar1.setName("jToolBar1"); // NOI18N
-
-        tb_cut.setAction(actionMap.get("cut"));
-        tb_cut.setText(resourceMap.getString("tb_cut.text")); // NOI18N
-        tb_cut.setBorderPainted(false);
-        tb_cut.setFocusPainted(false);
-        tb_cut.setFocusable(false);
-        tb_cut.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_cut.setName("tb_cut"); // NOI18N
-        tb_cut.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(tb_cut);
-
-        tb_copy.setAction(actionMap.get("copy"));
-        tb_copy.setText(resourceMap.getString("tb_copy.text")); // NOI18N
-        tb_copy.setBorderPainted(false);
-        tb_copy.setFocusPainted(false);
-        tb_copy.setFocusable(false);
-        tb_copy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_copy.setName("tb_copy"); // NOI18N
-        tb_copy.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(tb_copy);
-
-        tb_paste.setAction(actionMap.get("paste"));
-        tb_paste.setText(resourceMap.getString("tb_paste.text")); // NOI18N
-        tb_paste.setBorderPainted(false);
-        tb_paste.setFocusPainted(false);
-        tb_paste.setFocusable(false);
-        tb_paste.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_paste.setName("tb_paste"); // NOI18N
-        tb_paste.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(tb_paste);
-
-        jSeparator1.setName("jSeparator1"); // NOI18N
-        jToolBar1.add(jSeparator1);
-
-        tb_selectall.setAction(actionMap.get("selectAllText")); // NOI18N
-        tb_selectall.setText(resourceMap.getString("tb_selectall.text")); // NOI18N
-        tb_selectall.setBorderPainted(false);
-        tb_selectall.setFocusPainted(false);
-        tb_selectall.setFocusable(false);
-        tb_selectall.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_selectall.setName("tb_selectall"); // NOI18N
-        tb_selectall.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(tb_selectall);
-
-        jSeparator3.setName("jSeparator3"); // NOI18N
-        jToolBar1.add(jSeparator3);
-
-        tb_undo.setAction(actionMap.get("undoAction")); // NOI18N
-        tb_undo.setBorderPainted(false);
-        tb_undo.setFocusPainted(false);
-        tb_undo.setFocusable(false);
-        tb_undo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_undo.setName("tb_undo"); // NOI18N
-        tb_undo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(tb_undo);
-
-        tb_redo.setAction(actionMap.get("redoAction")); // NOI18N
-        tb_redo.setBorderPainted(false);
-        tb_redo.setFocusPainted(false);
-        tb_redo.setFocusable(false);
-        tb_redo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_redo.setName("tb_redo"); // NOI18N
-        tb_redo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(tb_redo);
-
-        jSeparator2.setName("jSeparator2"); // NOI18N
-        jToolBar1.add(jSeparator2);
-
-        tb_bold.setAction(actionMap.get("formatBold")); // NOI18N
-        tb_bold.setBorderPainted(false);
-        tb_bold.setFocusPainted(false);
-        tb_bold.setFocusable(false);
-        tb_bold.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_bold.setName("tb_bold"); // NOI18N
-        tb_bold.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(tb_bold);
-
-        tb_italic.setAction(actionMap.get("formatItalic")); // NOI18N
-        tb_italic.setBorderPainted(false);
-        tb_italic.setFocusPainted(false);
-        tb_italic.setFocusable(false);
-        tb_italic.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_italic.setName("tb_italic"); // NOI18N
-        tb_italic.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(tb_italic);
-
-        tb_underline.setAction(actionMap.get("formatUnderline")); // NOI18N
-        tb_underline.setBorderPainted(false);
-        tb_underline.setFocusPainted(false);
-        tb_underline.setFocusable(false);
-        tb_underline.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_underline.setName("tb_underline"); // NOI18N
-        tb_underline.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(tb_underline);
-
-        tb_strike.setAction(actionMap.get("formatStrikeThrough")); // NOI18N
-        tb_strike.setBorderPainted(false);
-        tb_strike.setFocusPainted(false);
-        tb_strike.setFocusable(false);
-        tb_strike.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        tb_strike.setName("tb_strike"); // NOI18N
-        tb_strike.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(tb_strike);
-
-        jButtonApply.setAction(actionMap.get("applyChanges")); // NOI18N
-        jButtonApply.setName("jButtonApply"); // NOI18N
-
-        mainPanel.setMinimumSize(new java.awt.Dimension(200, 100));
-        mainPanel.setName("mainPanel"); // NOI18N
-        mainPanel.setLayout(new java.awt.BorderLayout());
-
-        jScrollPane1.setBorder(null);
-        jScrollPane1.setMinimumSize(new java.awt.Dimension(20, 20));
-        jScrollPane1.setName("jScrollPane1"); // NOI18N
-
-        jTextArea1.setLineWrap(true);
-        jTextArea1.setWrapStyleWord(true);
-        jTextArea1.setName("jTextArea1"); // NOI18N
-        jScrollPane1.setViewportView(jTextArea1);
-
-        mainPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
-
-        jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
-        jButtonCancel.setName("jButtonCancel"); // NOI18N
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButtonCancel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonApply)
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        ResourceBundle bundle = ResourceBundle.getBundle("de.danielluedecke.zettelkasten.resources.CModifyDesktopEntry");
+        jToolBar1 = new JToolBar();
+        tb_cut = new JButton();
+        tb_copy = new JButton();
+        tb_paste = new JButton();
+        tb_selectall = new JButton();
+        tb_undo = new JButton();
+        tb_redo = new JButton();
+        tb_bold = new JButton();
+        tb_italic = new JButton();
+        tb_underline = new JButton();
+        tb_strike = new JButton();
+        jButtonApply = new JButton();
+        mainPanel = new JPanel();
+        jScrollPane1 = new JScrollPane();
+        jTextArea1 = new JTextArea();
+        jButtonCancel = new JButton();
+        jPopupMenuMain = new JPopupMenu();
+        popupMainCut = new JMenuItem();
+        popupMainCopy = new JMenuItem();
+        popupMainPaste = new JMenuItem();
+        jSeparator26 = new JSeparator();
+        popupMainSelectAll = new JMenuItem();
+        jSeparator25 = new JSeparator();
+        popupMainUndo = new JMenuItem();
+        popupMainRedo = new JMenuItem();
+        jSeparator20 = new JSeparator();
+        formatSubmenu = new JMenu();
+        popupMainBold = new JMenuItem();
+        popupMainItalic = new JMenuItem();
+        popupMainUnderline = new JMenuItem();
+        popupMainStrikeThrough = new JMenuItem();
+        jSeparator16 = new JSeparator();
+        popupMainHeader1 = new JMenuItem();
+        poupMainHeader2 = new JMenuItem();
+        jSeparator35 = new JSeparator();
+        popupMainCite = new JMenuItem();
+        jSeparator17 = new JSeparator();
+        popupMainTextcolor = new JMenuItem();
+        popupMainHighlight = new JMenuItem();
+        jSeparator18 = new JSeparator();
+        popupMainCenter = new JMenuItem();
+        popupMainMargin = new JMenuItem();
+        popupMainList = new JMenuItem();
+        jSeparator15 = new JSeparator();
+        popupMainSup = new JMenuItem();
+        popupMainSub = new JMenuItem();
+        jSeparator19 = new JSeparator();
+        removeSubMenu = new JMenu();
+        popupRemoveDoubleLine = new JMenuItem();
+        jSeparator31 = new JSeparator();
+        popupRemoveDoubleSpace = new JMenuItem();
+        jSeparator32 = new JSeparator();
+        popupRemoveTab = new JMenuItem();
+        jSeparator33 = new JSeparator();
+        popupRemoveSingleLine = new JMenuItem();
+
+        //======== this ========
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle(bundle.getString("FormCModifyDesktopEntry.title"));
+        setMinimumSize(new Dimension(300, 200));
+        setName("FormCModifyDesktopEntry");
+        Container contentPane = getContentPane();
+
+        //======== jToolBar1 ========
+        {
+            jToolBar1.setBorder(new MatteBorder(0, 0, 1, 0, Color.black));
+            jToolBar1.setFloatable(false);
+            jToolBar1.setRollover(true);
+            jToolBar1.setMinimumSize(new Dimension(200, 10));
+            jToolBar1.setName("jToolBar1");
+
+            //---- tb_cut ----
+            tb_cut.setAction(actionMap.get("cut"));
+            tb_cut.setText(bundle.getString("tb_cut.text"));
+            tb_cut.setBorderPainted(false);
+            tb_cut.setFocusPainted(false);
+            tb_cut.setFocusable(false);
+            tb_cut.setHorizontalTextPosition(SwingConstants.CENTER);
+            tb_cut.setName("tb_cut");
+            tb_cut.setVerticalTextPosition(SwingConstants.BOTTOM);
+            jToolBar1.add(tb_cut);
+
+            //---- tb_copy ----
+            tb_copy.setAction(actionMap.get("copy"));
+            tb_copy.setText(bundle.getString("tb_copy.text"));
+            tb_copy.setBorderPainted(false);
+            tb_copy.setFocusPainted(false);
+            tb_copy.setFocusable(false);
+            tb_copy.setHorizontalTextPosition(SwingConstants.CENTER);
+            tb_copy.setName("tb_copy");
+            tb_copy.setVerticalTextPosition(SwingConstants.BOTTOM);
+            jToolBar1.add(tb_copy);
+
+            //---- tb_paste ----
+            tb_paste.setAction(actionMap.get("paste"));
+            tb_paste.setText(bundle.getString("tb_paste.text"));
+            tb_paste.setBorderPainted(false);
+            tb_paste.setFocusPainted(false);
+            tb_paste.setFocusable(false);
+            tb_paste.setHorizontalTextPosition(SwingConstants.CENTER);
+            tb_paste.setName("tb_paste");
+            tb_paste.setVerticalTextPosition(SwingConstants.BOTTOM);
+            jToolBar1.add(tb_paste);
+
+            //---- jSeparator1 ----
+            //jSeparator1.setName("jSeparator1");
+            jToolBar1.addSeparator();
+
+            //---- tb_selectall ----
+            tb_selectall.setText(bundle.getString("tb_selectall.text"));
+            tb_selectall.setBorderPainted(false);
+            tb_selectall.setFocusPainted(false);
+            tb_selectall.setFocusable(false);
+            tb_selectall.setHorizontalTextPosition(SwingConstants.CENTER);
+            tb_selectall.setName("tb_selectall");
+            tb_selectall.setVerticalTextPosition(SwingConstants.BOTTOM);
+            jToolBar1.add(tb_selectall);
+
+            //---- jSeparator3 ----
+            //jSeparator3.setName("jSeparator3");
+            jToolBar1.addSeparator();
+
+            //---- tb_undo ----
+            tb_undo.setBorderPainted(false);
+            tb_undo.setFocusPainted(false);
+            tb_undo.setFocusable(false);
+            tb_undo.setHorizontalTextPosition(SwingConstants.CENTER);
+            tb_undo.setName("tb_undo");
+            tb_undo.setVerticalTextPosition(SwingConstants.BOTTOM);
+            jToolBar1.add(tb_undo);
+
+            //---- tb_redo ----
+            tb_redo.setBorderPainted(false);
+            tb_redo.setFocusPainted(false);
+            tb_redo.setFocusable(false);
+            tb_redo.setHorizontalTextPosition(SwingConstants.CENTER);
+            tb_redo.setName("tb_redo");
+            tb_redo.setVerticalTextPosition(SwingConstants.BOTTOM);
+            jToolBar1.add(tb_redo);
+
+            //---- jSeparator2 ----
+           //jSeparator2.setName("jSeparator2");
+            jToolBar1.addSeparator();
+
+            //---- tb_bold ----
+            tb_bold.setBorderPainted(false);
+            tb_bold.setFocusPainted(false);
+            tb_bold.setFocusable(false);
+            tb_bold.setHorizontalTextPosition(SwingConstants.CENTER);
+            tb_bold.setName("tb_bold");
+            tb_bold.setVerticalTextPosition(SwingConstants.BOTTOM);
+            jToolBar1.add(tb_bold);
+
+            //---- tb_italic ----
+            tb_italic.setBorderPainted(false);
+            tb_italic.setFocusPainted(false);
+            tb_italic.setFocusable(false);
+            tb_italic.setHorizontalTextPosition(SwingConstants.CENTER);
+            tb_italic.setName("tb_italic");
+            tb_italic.setVerticalTextPosition(SwingConstants.BOTTOM);
+            jToolBar1.add(tb_italic);
+
+            //---- tb_underline ----
+            tb_underline.setBorderPainted(false);
+            tb_underline.setFocusPainted(false);
+            tb_underline.setFocusable(false);
+            tb_underline.setHorizontalTextPosition(SwingConstants.CENTER);
+            tb_underline.setName("tb_underline");
+            tb_underline.setVerticalTextPosition(SwingConstants.BOTTOM);
+            jToolBar1.add(tb_underline);
+
+            //---- tb_strike ----
+            tb_strike.setBorderPainted(false);
+            tb_strike.setFocusPainted(false);
+            tb_strike.setFocusable(false);
+            tb_strike.setHorizontalTextPosition(SwingConstants.CENTER);
+            tb_strike.setName("tb_strike");
+            tb_strike.setVerticalTextPosition(SwingConstants.BOTTOM);
+            jToolBar1.add(tb_strike);
+        }
+
+        //---- jButtonApply ----
+        jButtonApply.setName("jButtonApply");
+
+        //======== mainPanel ========
+        {
+            mainPanel.setMinimumSize(new Dimension(200, 100));
+            mainPanel.setName("mainPanel");
+            mainPanel.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder
+            ( 0, 0, 0, 0) , "JF\u006frmDesi\u0067ner Ev\u0061luatio\u006e", javax. swing. border. TitledBorder. CENTER, javax. swing. border
+            . TitledBorder. BOTTOM, new java .awt .Font ("Dialo\u0067" ,java .awt .Font .BOLD ,12 ), java. awt
+            . Color. red) ,mainPanel. getBorder( )) ); mainPanel. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void
+            propertyChange (java .beans .PropertyChangeEvent e) {if ("borde\u0072" .equals (e .getPropertyName () )) throw new RuntimeException( )
+            ; }} );
+            mainPanel.setLayout(new BorderLayout());
+
+            //======== jScrollPane1 ========
+            {
+                jScrollPane1.setBorder(null);
+                jScrollPane1.setMinimumSize(new Dimension(20, 20));
+                jScrollPane1.setName("jScrollPane1");
+
+                //---- jTextArea1 ----
+                jTextArea1.setLineWrap(true);
+                jTextArea1.setWrapStyleWord(true);
+                jTextArea1.setName("jTextArea1");
+                jScrollPane1.setViewportView(jTextArea1);
+            }
+            mainPanel.add(jScrollPane1, BorderLayout.CENTER);
+        }
+
+        //---- jButtonCancel ----
+        jButtonCancel.setName("jButtonCancel");
+
+        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
+        contentPane.setLayout(contentPaneLayout);
+        contentPaneLayout.setHorizontalGroup(
+            contentPaneLayout.createParallelGroup()
+                .addComponent(jToolBar1, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(mainPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonCancel)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(jButtonApply)
-                    .addComponent(jButtonCancel))
-                .addGap(3, 3, 3))
+                    .addContainerGap())
         );
-
+        contentPaneLayout.setVerticalGroup(
+            contentPaneLayout.createParallelGroup()
+                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                    .addComponent(jToolBar1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, 0)
+                    .addComponent(mainPanel, GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButtonApply)
+                        .addComponent(jButtonCancel))
+                    .addGap(3, 3, 3))
+        );
         pack();
+        setLocationRelativeTo(getOwner());
+
+        //======== jPopupMenuMain ========
+        {
+            jPopupMenuMain.setName("jPopupMenuMain");
+
+            //---- popupMainCut ----
+            popupMainCut.setAction(actionMap.get("cut"));
+            popupMainCut.setName("popupMainCut");
+            jPopupMenuMain.add(popupMainCut);
+
+            //---- popupMainCopy ----
+            popupMainCopy.setAction(actionMap.get("copy"));
+            popupMainCopy.setName("popupMainCopy");
+            jPopupMenuMain.add(popupMainCopy);
+
+            //---- popupMainPaste ----
+            popupMainPaste.setAction(actionMap.get("paste"));
+            popupMainPaste.setName("popupMainPaste");
+            jPopupMenuMain.add(popupMainPaste);
+
+            //---- jSeparator26 ----
+            jSeparator26.setName("jSeparator26");
+            jPopupMenuMain.add(jSeparator26);
+
+            //---- popupMainSelectAll ----
+            popupMainSelectAll.setName("popupMainSelectAll");
+            jPopupMenuMain.add(popupMainSelectAll);
+
+            //---- jSeparator25 ----
+            jSeparator25.setName("jSeparator25");
+            jPopupMenuMain.add(jSeparator25);
+
+            //---- popupMainUndo ----
+            popupMainUndo.setName("popupMainUndo");
+            jPopupMenuMain.add(popupMainUndo);
+
+            //---- popupMainRedo ----
+            popupMainRedo.setName("popupMainRedo");
+            jPopupMenuMain.add(popupMainRedo);
+
+            //---- jSeparator20 ----
+            jSeparator20.setName("jSeparator20");
+            jPopupMenuMain.add(jSeparator20);
+
+            //======== formatSubmenu ========
+            {
+                formatSubmenu.setText(bundle.getString("formatSubmenu.text"));
+                formatSubmenu.setName("formatSubmenu");
+
+                //---- popupMainBold ----
+                popupMainBold.setName("popupMainBold");
+                formatSubmenu.add(popupMainBold);
+
+                //---- popupMainItalic ----
+                popupMainItalic.setName("popupMainItalic");
+                formatSubmenu.add(popupMainItalic);
+
+                //---- popupMainUnderline ----
+                popupMainUnderline.setName("popupMainUnderline");
+                formatSubmenu.add(popupMainUnderline);
+
+                //---- popupMainStrikeThrough ----
+                popupMainStrikeThrough.setName("popupMainStrikeThrough");
+                formatSubmenu.add(popupMainStrikeThrough);
+
+                //---- jSeparator16 ----
+                jSeparator16.setName("jSeparator16");
+                formatSubmenu.add(jSeparator16);
+
+                //---- popupMainHeader1 ----
+                popupMainHeader1.setName("popupMainHeader1");
+                formatSubmenu.add(popupMainHeader1);
+
+                //---- poupMainHeader2 ----
+                poupMainHeader2.setName("poupMainHeader2");
+                formatSubmenu.add(poupMainHeader2);
+
+                //---- jSeparator35 ----
+                jSeparator35.setName("jSeparator35");
+                formatSubmenu.add(jSeparator35);
+
+                //---- popupMainCite ----
+                popupMainCite.setName("popupMainCite");
+                formatSubmenu.add(popupMainCite);
+
+                //---- jSeparator17 ----
+                jSeparator17.setName("jSeparator17");
+                formatSubmenu.add(jSeparator17);
+
+                //---- popupMainTextcolor ----
+                popupMainTextcolor.setName("popupMainTextcolor");
+                formatSubmenu.add(popupMainTextcolor);
+
+                //---- popupMainHighlight ----
+                popupMainHighlight.setName("popupMainHighlight");
+                formatSubmenu.add(popupMainHighlight);
+
+                //---- jSeparator18 ----
+                jSeparator18.setName("jSeparator18");
+                formatSubmenu.add(jSeparator18);
+
+                //---- popupMainCenter ----
+                popupMainCenter.setName("popupMainCenter");
+                formatSubmenu.add(popupMainCenter);
+
+                //---- popupMainMargin ----
+                popupMainMargin.setName("popupMainMargin");
+                formatSubmenu.add(popupMainMargin);
+
+                //---- popupMainList ----
+                popupMainList.setName("popupMainList");
+                formatSubmenu.add(popupMainList);
+
+                //---- jSeparator15 ----
+                jSeparator15.setName("jSeparator15");
+                formatSubmenu.add(jSeparator15);
+
+                //---- popupMainSup ----
+                popupMainSup.setName("popupMainSup");
+                formatSubmenu.add(popupMainSup);
+
+                //---- popupMainSub ----
+                popupMainSub.setName("popupMainSub");
+                formatSubmenu.add(popupMainSub);
+            }
+            jPopupMenuMain.add(formatSubmenu);
+
+            //---- jSeparator19 ----
+            jSeparator19.setName("jSeparator19");
+            jPopupMenuMain.add(jSeparator19);
+
+            //======== removeSubMenu ========
+            {
+                removeSubMenu.setText(bundle.getString("removeSubMenu.text"));
+                removeSubMenu.setName("removeSubMenu");
+
+                //---- popupRemoveDoubleLine ----
+                popupRemoveDoubleLine.setName("popupRemoveDoubleLine");
+                removeSubMenu.add(popupRemoveDoubleLine);
+
+                //---- jSeparator31 ----
+                jSeparator31.setName("jSeparator31");
+                removeSubMenu.add(jSeparator31);
+
+                //---- popupRemoveDoubleSpace ----
+                popupRemoveDoubleSpace.setName("popupRemoveDoubleSpace");
+                removeSubMenu.add(popupRemoveDoubleSpace);
+
+                //---- jSeparator32 ----
+                jSeparator32.setName("jSeparator32");
+                removeSubMenu.add(jSeparator32);
+
+                //---- popupRemoveTab ----
+                popupRemoveTab.setName("popupRemoveTab");
+                removeSubMenu.add(popupRemoveTab);
+
+                //---- jSeparator33 ----
+                jSeparator33.setName("jSeparator33");
+                removeSubMenu.add(jSeparator33);
+
+                //---- popupRemoveSingleLine ----
+                popupRemoveSingleLine.setName("popupRemoveSingleLine");
+                removeSubMenu.add(popupRemoveSingleLine);
+            }
+            jPopupMenuMain.add(removeSubMenu);
+        }
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenu formatSubmenu;
-    private javax.swing.JButton jButtonApply;
-    private javax.swing.JButton jButtonCancel;
-    private javax.swing.JPopupMenu jPopupMenuMain;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JToolBar.Separator jSeparator1;
-    private javax.swing.JSeparator jSeparator15;
-    private javax.swing.JSeparator jSeparator16;
-    private javax.swing.JSeparator jSeparator17;
-    private javax.swing.JSeparator jSeparator18;
-    private javax.swing.JSeparator jSeparator19;
-    private javax.swing.JToolBar.Separator jSeparator2;
-    private javax.swing.JSeparator jSeparator20;
-    private javax.swing.JSeparator jSeparator25;
-    private javax.swing.JSeparator jSeparator26;
-    private javax.swing.JToolBar.Separator jSeparator3;
-    private javax.swing.JSeparator jSeparator31;
-    private javax.swing.JSeparator jSeparator32;
-    private javax.swing.JSeparator jSeparator33;
-    private javax.swing.JSeparator jSeparator35;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JPanel mainPanel;
-    private javax.swing.JMenuItem popupMainBold;
-    private javax.swing.JMenuItem popupMainCenter;
-    private javax.swing.JMenuItem popupMainCite;
-    private javax.swing.JMenuItem popupMainCopy;
-    private javax.swing.JMenuItem popupMainCut;
-    private javax.swing.JMenuItem popupMainHeader1;
-    private javax.swing.JMenuItem popupMainHighlight;
-    private javax.swing.JMenuItem popupMainItalic;
-    private javax.swing.JMenuItem popupMainList;
-    private javax.swing.JMenuItem popupMainMargin;
-    private javax.swing.JMenuItem popupMainPaste;
-    private javax.swing.JMenuItem popupMainRedo;
-    private javax.swing.JMenuItem popupMainSelectAll;
-    private javax.swing.JMenuItem popupMainStrikeThrough;
-    private javax.swing.JMenuItem popupMainSub;
-    private javax.swing.JMenuItem popupMainSup;
-    private javax.swing.JMenuItem popupMainTextcolor;
-    private javax.swing.JMenuItem popupMainUnderline;
-    private javax.swing.JMenuItem popupMainUndo;
-    private javax.swing.JMenuItem popupRemoveDoubleLine;
-    private javax.swing.JMenuItem popupRemoveDoubleSpace;
-    private javax.swing.JMenuItem popupRemoveSingleLine;
-    private javax.swing.JMenuItem popupRemoveTab;
-    private javax.swing.JMenuItem poupMainHeader2;
-    private javax.swing.JMenu removeSubMenu;
-    private javax.swing.JButton tb_bold;
-    private javax.swing.JButton tb_copy;
-    private javax.swing.JButton tb_cut;
-    private javax.swing.JButton tb_italic;
-    private javax.swing.JButton tb_paste;
-    private javax.swing.JButton tb_redo;
-    private javax.swing.JButton tb_selectall;
-    private javax.swing.JButton tb_strike;
-    private javax.swing.JButton tb_underline;
-    private javax.swing.JButton tb_undo;
+    // Generated using JFormDesigner Evaluation license - Ralf Barkow
+    private JToolBar jToolBar1;
+    private JButton tb_cut;
+    private JButton tb_copy;
+    private JButton tb_paste;
+    private JButton tb_selectall;
+    private JButton tb_undo;
+    private JButton tb_redo;
+    private JButton tb_bold;
+    private JButton tb_italic;
+    private JButton tb_underline;
+    private JButton tb_strike;
+    private JButton jButtonApply;
+    private JPanel mainPanel;
+    private JScrollPane jScrollPane1;
+    private JTextArea jTextArea1;
+    private JButton jButtonCancel;
+    private JPopupMenu jPopupMenuMain;
+    private JMenuItem popupMainCut;
+    private JMenuItem popupMainCopy;
+    private JMenuItem popupMainPaste;
+    private JSeparator jSeparator26;
+    private JMenuItem popupMainSelectAll;
+    private JSeparator jSeparator25;
+    private JMenuItem popupMainUndo;
+    private JMenuItem popupMainRedo;
+    private JSeparator jSeparator20;
+    private JMenu formatSubmenu;
+    private JMenuItem popupMainBold;
+    private JMenuItem popupMainItalic;
+    private JMenuItem popupMainUnderline;
+    private JMenuItem popupMainStrikeThrough;
+    private JSeparator jSeparator16;
+    private JMenuItem popupMainHeader1;
+    private JMenuItem poupMainHeader2;
+    private JSeparator jSeparator35;
+    private JMenuItem popupMainCite;
+    private JSeparator jSeparator17;
+    private JMenuItem popupMainTextcolor;
+    private JMenuItem popupMainHighlight;
+    private JSeparator jSeparator18;
+    private JMenuItem popupMainCenter;
+    private JMenuItem popupMainMargin;
+    private JMenuItem popupMainList;
+    private JSeparator jSeparator15;
+    private JMenuItem popupMainSup;
+    private JMenuItem popupMainSub;
+    private JSeparator jSeparator19;
+    private JMenu removeSubMenu;
+    private JMenuItem popupRemoveDoubleLine;
+    private JSeparator jSeparator31;
+    private JMenuItem popupRemoveDoubleSpace;
+    private JSeparator jSeparator32;
+    private JMenuItem popupRemoveTab;
+    private JSeparator jSeparator33;
+    private JMenuItem popupRemoveSingleLine;
     // End of variables declaration//GEN-END:variables
 
     @Override

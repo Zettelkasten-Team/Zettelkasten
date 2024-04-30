@@ -1,0 +1,86 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.6" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.danielluedecke.zettelkasten.resources"
+	"i18n.bundleName": "CErrorLog"
+	"i18n.autoExternalize": false
+	"i18n.keyPrefix": "CErrorLog"
+	contentType: "form/swing"
+	root: new FormRoot {
+		"$setComponentNames": true
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {comp jTabbedPane1::l:::x, seq t {space :::x, comp jButton2:::p::p, space :::p, comp jButton1:::p::p, space :::p}}"
+			"$verticalGroup": "par l {seq t {comp jTabbedPane1::::413:x, space :p::p, par b {comp jButton1::b:p::p, comp jButton2::b:p::p}, space :p:3:p}}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"title": new FormMessage( null, "FormErrorLog.title" )
+			"modal": true
+			"name": "FormErrorLog"
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButton1"
+				"text": new FormMessage( null, "jButton1.text" )
+				"name": "jButton1"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jButton1ActionPerformed", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButton2"
+				"text": new FormMessage( null, "jButton2.text" )
+				"name": "jButton2"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jButton2ActionPerformed", true ) )
+			} )
+			add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
+				name: "jTabbedPane1"
+				"minimumSize": new java.awt.Dimension( 60, 60 )
+				"name": "jTabbedPane1"
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+					"$horizontalGroup": "par l {comp jScrollPane1::l:::x}"
+					"$verticalGroup": "par l {comp jScrollPane1::l::367:x}"
+				} ) {
+					name: "jPanel1"
+					"minimumSize": new java.awt.Dimension( 25, 25 )
+					"name": "jPanel1"
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "jScrollPane1"
+						"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+						"horizontalScrollBarPolicy": 31
+						"minimumSize": new java.awt.Dimension( 25, 25 )
+						"name": "jScrollPane1"
+						add( new FormComponent( "javax.swing.JTextArea" ) {
+							name: "jTextArea1"
+							"lineWrap": true
+							"wrapStyleWord": true
+							"minimumSize": new java.awt.Dimension( 25, 25 )
+							"name": "jTextArea1"
+						} )
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "jPanel1.TabConstraints.tabTitle" )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+					"$horizontalGroup": "par l {comp jScrollPane2::l:::x}"
+					"$verticalGroup": "par l {comp jScrollPane2::l::367:x}"
+				} ) {
+					name: "jPanel2"
+					"minimumSize": new java.awt.Dimension( 25, 25 )
+					"name": "jPanel2"
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "jScrollPane2"
+						"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+						"minimumSize": new java.awt.Dimension( 25, 25 )
+						"name": "jScrollPane2"
+						add( new FormComponent( "javax.swing.JTextArea" ) {
+							name: "jTextArea2"
+							"lineWrap": true
+							"wrapStyleWord": true
+							"minimumSize": new java.awt.Dimension( 25, 25 )
+							"name": "jTextArea2"
+						} )
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "jPanel2.TabConstraints.tabTitle" )
+				} )
+			} )
+		}, new FormLayoutConstraints( null ) )
+	}
+}

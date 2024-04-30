@@ -1,0 +1,61 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.6" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.danielluedecke.zettelkasten.resources"
+	"i18n.bundleName": "CBiggerEditField"
+	"i18n.autoExternalize": false
+	"i18n.keyPrefix": "CBiggerEditField"
+	contentType: "form/swing"
+	root: new FormRoot {
+		"$setComponentNames": true
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq t {space ::274:x, comp jButton2:::p::p, space :::p, comp jButton1:::p::p, space :::p}, comp jScrollPane1::l:::x, comp jPanel1::l:::x}"
+			"$verticalGroup": "par l {seq t {comp jScrollPane1::::278:x, space :::p, comp jPanel1:::p::p, space :::p, par b {comp jButton2::b:p::p, comp jButton1::b:p::p}, space :p:3:p}}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"minimumSize": new java.awt.Dimension( 200, 100 )
+			"modal": true
+			"name": "FormBiggerEdit"
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "jScrollPane1"
+				"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				"horizontalScrollBarPolicy": 31
+				"minimumSize": new java.awt.Dimension( 100, 50 )
+				"name": "jScrollPane1"
+				add( new FormComponent( "javax.swing.JTextArea" ) {
+					name: "jTextAreaBigEdit"
+					"columns": 20
+					"lineWrap": true
+					"rows": 5
+					"wrapStyleWord": true
+					"name": "jTextAreaBigEdit"
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButton2"
+				"name": "jButton2"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButton1"
+				"name": "jButton1"
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq l {space :::p, comp jLabel1:::p::p, space :::p, comp jTextFieldBibKey:::::x, space :::p}}"
+				"$verticalGroup": "par l {par b {comp jLabel1::b:p::p, comp jTextFieldBibKey::b:p::p}}"
+			} ) {
+				name: "jPanel1"
+				"name": "jPanel1"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "jLabel1"
+					"text": new FormMessage( null, "jLabel1.text" )
+					"name": "jLabel1"
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "jTextFieldBibKey"
+					"name": "jTextFieldBibKey"
+				} )
+			} )
+		}, new FormLayoutConstraints( null ) )
+	}
+}

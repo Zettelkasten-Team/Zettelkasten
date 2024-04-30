@@ -1,0 +1,42 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.6" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.danielluedecke.zettelkasten.resources"
+	"i18n.bundleName": "CDesktopMultipleExport"
+	"i18n.autoExternalize": false
+	"i18n.keyPrefix": "CDesktopMultipleExport"
+	contentType: "form/swing"
+	root: new FormRoot {
+		"$setComponentNames": true
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq t {space ::154:x, comp jButtonCancel:::p::p, space :::p, comp jButtonApply:::p::p, space :::p}, comp jScrollPane1::l::400:x}"
+			"$verticalGroup": "par l {seq t {comp jScrollPane1::::262:x, space :::p, par b {comp jButtonApply::b:p::p, comp jButtonCancel::b:p::p}, space :p:3:p}}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"title": new FormMessage( null, "FormDeskMultipleExport.title" )
+			"modal": true
+			"name": "FormDeskMultipleExport"
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "jScrollPane1"
+				"name": "jScrollPane1"
+				add( new FormComponent( "javax.swing.JList" ) {
+					name: "jList1"
+					"name": "jList1"
+					auxiliary() {
+						"JavaCodeGenerator.preInitCode": "${field}.setModel(desktopListModel);"
+						"JavaCodeGenerator.customCreateCode": "MacSourceList.createMacSourceList();"
+					}
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButtonApply"
+				"name": "jButtonApply"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "jButtonCancel"
+				"name": "jButtonCancel"
+			} )
+		}, new FormLayoutConstraints( null ) )
+	}
+}

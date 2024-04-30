@@ -1,0 +1,110 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.6" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.danielluedecke.zettelkasten.resources"
+	"i18n.bundleName": "CRateEntry"
+	"i18n.autoExternalize": false
+	"i18n.keyPrefix": "CRateEntry"
+	contentType: "form/swing"
+	root: new FormRoot {
+		"$setComponentNames": true
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq l {space :::p, comp jPanel1:::::x, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp jPanel1:::::x, space :::p}}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"title": new FormMessage( null, "FormRateEntry.title" )
+			"modal": true
+			"name": "FormRateEntry"
+			"resizable": false
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq {space :::p, par l {comp jPanel3::l:::x:1, comp jPanel2::l:::x, seq t {comp jButtonCancel:::p::p, space :::p, comp jButtonApply:::p::p}}, space :::p}}"
+				"$verticalGroup": "par l {seq l {space :::p, comp jPanel2:::p::p, space u:::p, comp jPanel3:::p::p, space ::12:x, par b {comp jButtonCancel::b:p::p, comp jButtonApply::b:p::p}, space :::p}}"
+			} ) {
+				name: "jPanel1"
+				"name": "jPanel1"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "jButtonApply"
+					"name": "jButtonApply"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "jButtonCancel"
+					"name": "jButtonCancel"
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+					"$horizontalGroup": "par l {seq l {space :::p, par t:::p {comp jSlider1::l:::x:1, seq l {comp jLabel1:::p::p, space :::p, comp jLabelRate1:::p::p, space :::p, comp jLabelRate2:::p::p, space :::p, comp jLabelRate3:::p::p, space :::p, comp jLabelRate4:::p::p, space :::p, comp jLabelRate5:::p::p}}, space :::x}}"
+					"$verticalGroup": "par l {seq l {space :::p, par l {comp jLabelRate5::l:p:16:p, comp jLabelRate4::l:p:16:p, comp jLabelRate3::l:p:16:p, par b:l {comp jLabel1::b:p::p, comp jLabelRate1::b:p:16:p}, comp jLabelRate2::l:p:16:p}, space :::p, comp jSlider1:::p::p, space :::x}}"
+				} ) {
+					name: "jPanel2"
+					"border": new javax.swing.border.EtchedBorder( 1, null, null )
+					"name": "jPanel2"
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "jLabel1"
+						"text": new FormMessage( null, "jLabel1.text" )
+						"name": "jLabel1"
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "jLabelRate2"
+						"name": "jLabelRate2"
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "jLabelRate1"
+						"name": "jLabelRate1"
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "jLabelRate4"
+						"name": "jLabelRate4"
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "jLabelRate5"
+						"name": "jLabelRate5"
+					} )
+					add( new FormComponent( "javax.swing.JSlider" ) {
+						name: "jSlider1"
+						"maximum": 10
+						"snapToTicks": true
+						"value": 0
+						"name": "jSlider1"
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "jLabelRate3"
+						"name": "jLabelRate3"
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+					"$horizontalGroup": "par l {seq {space :::p, par l {seq l {comp jLabelCR:::p::p, space :::p, comp jLabelCurrentRating:::p::p, space :::p, comp jButtonResetRating:::p::p}, seq l {comp jLabel2:::p::p, space :::p, comp jLabelRatingCount:::p::p}}, space :::x}}"
+					"$verticalGroup": "par l {seq {space :::p, par c {comp jLabelCurrentRating::c:p::p, comp jLabelCR::c:p::p, comp jButtonResetRating::c:p::p}, space :::p, par b {comp jLabel2::b:p::p, comp jLabelRatingCount::b:p::p}, space :::x}}"
+				} ) {
+					name: "jPanel3"
+					"border": new javax.swing.border.EtchedBorder( 1, null, null )
+					"name": "jPanel3"
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "jLabelCurrentRating"
+						"text": new FormMessage( null, "jLabelCurrentRating.text" )
+						"name": "jLabelCurrentRating"
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "jLabelCR"
+						"text": new FormMessage( null, "jLabelCR.text" )
+						"name": "jLabelCR"
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "jButtonResetRating"
+						"name": "jButtonResetRating"
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "jLabel2"
+						"text": new FormMessage( null, "jLabel2.text" )
+						"name": "jLabel2"
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "jLabelRatingCount"
+						"text": new FormMessage( null, "jLabelRatingCount.text" )
+						"name": "jLabelRatingCount"
+					} )
+				} )
+			} )
+		}, new FormLayoutConstraints( null ) )
+	}
+}

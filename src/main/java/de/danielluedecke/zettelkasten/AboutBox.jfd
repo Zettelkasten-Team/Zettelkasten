@@ -1,0 +1,36 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.6" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.danielluedecke.zettelkasten.resources"
+	"i18n.bundleName": "AboutBox"
+	"i18n.autoExternalize": false
+	"i18n.keyPrefix": "AboutBox"
+	contentType: "form/swing"
+	root: new FormRoot {
+		"$setComponentNames": true
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {comp jScrollPane1::l::550:x}"
+			"$verticalGroup": "par l {comp jScrollPane1::l::350:x}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"title": new FormMessage( null, "FormAboutBox.title" )
+			"modal": true
+			"name": "FormAboutBox"
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "jScrollPane1"
+				"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				"horizontalScrollBarPolicy": 31
+				"name": "jScrollPane1"
+				add( new FormComponent( "javax.swing.JEditorPane" ) {
+					name: "jEditorPane1"
+					"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+					"contentType": new FormMessage( null, "jEditorPane1.contentType" )
+					"editable": false
+					"name": "jEditorPane1"
+					addEvent( new FormEvent( "javax.swing.event.HyperlinkListener", "hyperlinkUpdate", "jEditorPane1HyperlinkUpdate", true ) )
+				} )
+			} )
+		}, new FormLayoutConstraints( null ) )
+	}
+}

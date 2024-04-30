@@ -9,7 +9,7 @@
  * GNU General Public License as published by the Free Software Foundation; either version 3 of 
  * the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  * 
@@ -32,6 +32,11 @@
  */
 package de.danielluedecke.zettelkasten;
 
+import java.awt.*;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.GroupLayout;
+import javax.swing.LayoutStyle;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
 import de.danielluedecke.zettelkasten.util.Constants;
@@ -142,7 +147,7 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
         jTableAutoKorrektur.setAutoCreateRowSorter(true);
         jTableAutoKorrektur.setGridColor(settingsObj.getTableGridColor());
         // make extra table-sorter for itunes-tables
-        if (settingsObj.isMacAqua()) {
+        if (settingsObj.isMacStyle()) {
             TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
                 @Override
                 public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
@@ -285,86 +290,90 @@ public class CAutoKorrekturEdit extends javax.swing.JDialog {
      */
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // Generated using JFormDesigner Evaluation license - Ralf Barkow
     private void initComponents() {
+        ResourceBundle bundle = ResourceBundle.getBundle("de.danielluedecke.zettelkasten.resources.CAutoKorrekturEdit");
+        jScrollPane1 = new JScrollPane();
+        jTableAutoKorrektur = (settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+        jButtonCancel = new JButton();
+        jButtonApply = new JButton();
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTableAutoKorrektur = (settingsObj.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
-        jButtonCancel = new javax.swing.JButton();
-        jButtonApply = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CAutoKorrekturEdit.class);
-        setTitle(resourceMap.getString("FormAutokorrektur.title")); // NOI18N
+        //======== this ========
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle(bundle.getString("FormAutokorrektur.title"));
         setModal(true);
-        setName("FormAutokorrektur"); // NOI18N
+        setName("FormAutokorrektur");
+        Container contentPane = getContentPane();
 
-        jScrollPane1.setBorder(null);
-        jScrollPane1.setName("jScrollPane1"); // NOI18N
+        //======== jScrollPane1 ========
+        {
+            jScrollPane1.setBorder(null);
+            jScrollPane1.setName("jScrollPane1");
 
-        jTableAutoKorrektur.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
-            },
-            new String [] {
-                "Falsch", "Richtig"
-            }
-        ) {
-            Class<?>[] types = new Class<?>[] {
-                java.lang.String.class, java.lang.String.class
-            };
+            //---- jTableAutoKorrektur ----
+            jTableAutoKorrektur.setModel(new DefaultTableModel(
+                new Object[][] {
+                    {null, null},
+                    {null, null},
+                    {null, null},
+                    {null, null},
+                },
+                new String[] {
+                    "Falsch", "Richtig"
+                }
+            ) {
+                Class<?>[] columnTypes = new Class<?>[] {
+                    String.class, String.class
+                };
+                @Override
+                public Class<?> getColumnClass(int columnIndex) {
+                    return columnTypes[columnIndex];
+                }
+            });
+            jTableAutoKorrektur.setCellSelectionEnabled(true);
+            jTableAutoKorrektur.setName("jTableAutoKorrektur");
+            jScrollPane1.setViewportView(jTableAutoKorrektur);
+        }
 
-            public Class<?> getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jTableAutoKorrektur.setCellSelectionEnabled(true);
-        jTableAutoKorrektur.setName("jTableAutoKorrektur"); // NOI18N
-        jScrollPane1.setViewportView(jTableAutoKorrektur);
-        jTableAutoKorrektur.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableAutoKorrektur.columnModel.title0")); // NOI18N
-        jTableAutoKorrektur.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableAutoKorrektur.columnModel.title1")); // NOI18N
+        //---- jButtonCancel ----
+        jButtonCancel.setName("jButtonCancel");
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CAutoKorrekturEdit.class, this);
-        jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
-        jButtonCancel.setName("jButtonCancel"); // NOI18N
+        //---- jButtonApply ----
+        jButtonApply.setName("jButtonApply");
 
-        jButtonApply.setAction(actionMap.get("applyChanges")); // NOI18N
-        jButtonApply.setName("jButtonApply"); // NOI18N
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(254, Short.MAX_VALUE)
-                .addComponent(jButtonCancel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonApply)
-                .addContainerGap())
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
+        contentPane.setLayout(contentPaneLayout);
+        contentPaneLayout.setHorizontalGroup(
+            contentPaneLayout.createParallelGroup()
+                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                    .addContainerGap(254, Short.MAX_VALUE)
+                    .addComponent(jButtonCancel)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(jButtonApply)
-                    .addComponent(jButtonCancel))
-                .addGap(3, 3, 3))
+                    .addContainerGap())
+                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
         );
-
+        contentPaneLayout.setVerticalGroup(
+            contentPaneLayout.createParallelGroup()
+                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                    .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButtonApply)
+                        .addComponent(jButtonCancel))
+                    .addGap(3, 3, 3))
+        );
         pack();
+        setLocationRelativeTo(getOwner());
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonApply;
-    private javax.swing.JButton jButtonCancel;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTableAutoKorrektur;
+    // Generated using JFormDesigner Evaluation license - Ralf Barkow
+    private JScrollPane jScrollPane1;
+    private JTable jTableAutoKorrektur;
+    private JButton jButtonCancel;
+    private JButton jButtonApply;
     // End of variables declaration//GEN-END:variables
 
 }
