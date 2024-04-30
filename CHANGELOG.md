@@ -8,6 +8,7 @@ See [Conventional Commits](https://conventionalcommits.org/) for commit guidelin
 
 - askUserAndMaybeSaveChanges (within ZettelkastenView), ensure that settings.getMainDataFile() does not return null before calling toString() on it.
 - refactor(ZettelkastenApp): showMainWindow method with visibility set to package-private. This change allows better unit testing by enabling direct access to the method from test classes within the same package.
+- Updated the initialization logic in the constructor of the ZettelkastenView class to handle the case where the 'settings' parameter is null. Previously, the constructor assumed that 'settings' would always be non-null, leading to potential NullPointerExceptions if the assumption was violated.
 
 <a name="v3.2022.8"></a>
 # [3.2022.8](https://github.com/Zettelkasten-Team/Zettelkasten/compare/v3.3.1...v3.2022.8) (August 2022)

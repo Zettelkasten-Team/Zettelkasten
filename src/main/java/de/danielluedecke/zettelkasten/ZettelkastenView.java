@@ -396,9 +396,20 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		taskinfo = td;
 		settings = st;
-		bookmarks = new Bookmarks(this, settings);
-		bibtex = new BibTeX(this, settings);
-		data = new Daten(this, settings, settings.getSynonyms(), bibtex);
+
+		if (settings != null) {
+			bookmarks = new Bookmarks(this, settings);
+			bibtex = new BibTeX(this, settings);
+			data = new Daten(this, settings, settings.getSynonyms(), bibtex);
+		} else {
+			// Handle the case where settings is null
+			bookmarks = null; // or initialize with default value
+			bibtex = null;    // or initialize with default value
+			// Handle any other initialization or error handling
+			// For example, you could throw an exception or log an error message
+			// depending on how you want to handle the null settings scenario.
+			throw new IllegalArgumentException("Settings cannot be null.");
+		}
 
 		// Init Java look and feel.
 		initUIManagerLookAndFeel();
