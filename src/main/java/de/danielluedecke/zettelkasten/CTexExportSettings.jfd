@@ -23,7 +23,7 @@ new FormModel {
 				"$verticalGroup": "par l {seq l {space :::p, comp jPanel2:::p::p, space :::p, comp jCheckBoxPreamble:::p::p, space s:::p, comp jCheckBoxUseFootnote:::p::p, space :::p, comp jCheckBoxCreateFormTags:::p::p, space :::p, comp jCheckBoxCenterForm:::p::p, space :::p, comp jCheckBoxStatisticsTablesStyle:::p::p, space :::p, comp jCheckBoxConvertQuotes:::p::p, space :::p, comp jCheckBoxNoUmlautConvert:::p::p, space :::p, comp jCheckBoxRemoveTag:::p::p, space s:::p, par b {comp jButtonCancel::b:p::p, comp jButtonApply::b:p::p}, space :::p}}"
 			} ) {
 				name: "jPanel1"
-				"border": new javax.swing.border.TitledBorder( "LaTex-Exportoptionen" )
+				"border": new javax.swing.border.TitledBorder( "LaTeX-Exportoptionen" )
 				"name": "jPanel1"
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
 					name: "jCheckBoxUseFootnote"
