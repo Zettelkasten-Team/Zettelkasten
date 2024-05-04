@@ -360,6 +360,12 @@
             <version>2.28.2</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.github.furstenheim</groupId>
+            <artifactId>copy_down</artifactId>
+            <version>1.1</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
