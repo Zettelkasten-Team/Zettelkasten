@@ -14997,7 +14997,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private JPanel jPanelSearchBox;
 	private JLabel jLabelLupe;
 	private TaskProgressDialog taskDlg;
-	private EditorFrame editEntryDlg;
+	EditorFrame editEntryDlg;
 	private CImport importWindow;
 	private CUpdateInfoBox updateInfoDlg;
 	private CExport exportWindow;
