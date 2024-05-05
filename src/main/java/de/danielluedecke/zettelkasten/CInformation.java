@@ -115,7 +115,7 @@ public class CInformation extends javax.swing.JDialog {
             jTextAreaDescription.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaDescription.border.title"), null, settingsObj));
             jTextAreaSysInfo.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaSysInfo.border.title"), null, settingsObj));
         }
-        if (settingsObj.isMacAqua()) {
+        if (settingsObj.isMacStyle()) {
             jTextAreaDescription.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaDescription.border.title"), ColorUtil.colorJTreeText, settingsObj));
             jTextAreaSysInfo.setBorder(ZknMacWidgetFactory.getTitledBorder(resourceMap.getString("jTextAreaSysInfo.border.title"), ColorUtil.colorJTreeText, settingsObj));
         }
