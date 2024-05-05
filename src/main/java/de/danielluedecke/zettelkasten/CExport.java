@@ -59,7 +59,7 @@ import org.jdesktop.application.Action;
  *
  * @author danielludecke
  */
-public class CExport extends javax.swing.JDialog {
+    public class CExport extends javax.swing.JDialog {
 
     /**
      * get the strings for file descriptions from the resource map
@@ -458,7 +458,7 @@ public class CExport extends javax.swing.JDialog {
             
         } else {
             filepath = FileOperationsUtil.chooseFile(this,
-                    (settingsObj.isMacAqua()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG,
+                    (settingsObj.isMacStyle()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG,
                     JFileChooser.FILES_ONLY,
                     (null == exportdir) ? null : exportdir.getPath(),
                     (null == exportdir) ? null : exportdir.getName(),
