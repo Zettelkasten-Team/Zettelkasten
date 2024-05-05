@@ -32,12 +32,6 @@
  */
 package de.danielluedecke.zettelkasten;
 
-import java.awt.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.util.Tools;
@@ -464,7 +458,7 @@ public class CExport extends javax.swing.JDialog {
             
         } else {
             filepath = FileOperationsUtil.chooseFile(this,
-                    (settingsObj.isMacStyle()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG,
+                    (settingsObj.isMacAqua()) ? FileDialog.SAVE : JFileChooser.SAVE_DIALOG,
                     JFileChooser.FILES_ONLY,
                     (null == exportdir) ? null : exportdir.getPath(),
                     (null == exportdir) ? null : exportdir.getName(),
@@ -747,389 +741,342 @@ public class CExport extends javax.swing.JDialog {
      */
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    // Generated using JFormDesigner Evaluation license - Ralf Barkow
     private void initComponents() {
-        ResourceBundle bundle = ResourceBundle.getBundle("de.danielluedecke.zettelkasten.resources.CExport");
-        jPanel1 = new JPanel();
-        jLabel1 = new JLabel();
-        jComboBox_exportType = new JComboBox();
-        jCheckBoxSeparateFile = new JCheckBox();
-        jLabelBrowseDir = new JLabel();
-        jButtonBrowse = new JButton();
-        jTextFieldFilepath = new JTextField();
-        jButtonApply = new JButton();
-        jButtonCancel = new JButton();
-        jPanel2 = new JPanel();
-        jPanel3 = new JPanel();
-        jCheckBox2 = new JCheckBox();
-        jCheckBox3 = new JCheckBox();
-        jCheckBox4 = new JCheckBox();
-        jPanel4 = new JPanel();
-        jCheckBox6 = new JCheckBox();
-        jCheckBox7 = new JCheckBox();
-        jCheckBox8 = new JCheckBox();
-        jPanel5 = new JPanel();
-        jCheckBox5 = new JCheckBox();
-        jCheckBox10 = new JCheckBox();
-        jCheckBox9 = new JCheckBox();
-        jSeparator1 = new JSeparator();
-        jCheckBoxHighlightKeywords = new JCheckBox();
-        jCheckBoxSetTitleNumber = new JCheckBox();
-        jCheckBoxRemoveFormatTags = new JCheckBox();
-        jLabelCSVSeparator = new JLabel();
-        jComboBoxCSVSeparator = new JComboBox<>();
-        jCheckBoxExportBibTex = new JCheckBox();
 
-        //======== this ========
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(bundle.getString("FormExportDialog.title"));
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jComboBox_exportType = new javax.swing.JComboBox<String>();
+        jCheckBoxSeparateFile = new javax.swing.JCheckBox();
+        jLabelBrowseDir = new javax.swing.JLabel();
+        jButtonBrowse = new javax.swing.JButton();
+        jTextFieldFilepath = new javax.swing.JTextField();
+        jButtonApply = new javax.swing.JButton();
+        jButtonCancel = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jCheckBox2 = new javax.swing.JCheckBox();
+        jCheckBox3 = new javax.swing.JCheckBox();
+        jCheckBox4 = new javax.swing.JCheckBox();
+        jPanel4 = new javax.swing.JPanel();
+        jCheckBox6 = new javax.swing.JCheckBox();
+        jCheckBox7 = new javax.swing.JCheckBox();
+        jCheckBox8 = new javax.swing.JCheckBox();
+        jPanel5 = new javax.swing.JPanel();
+        jCheckBox5 = new javax.swing.JCheckBox();
+        jCheckBox10 = new javax.swing.JCheckBox();
+        jCheckBox9 = new javax.swing.JCheckBox();
+        jSeparator1 = new javax.swing.JSeparator();
+        jCheckBoxHighlightKeywords = new javax.swing.JCheckBox();
+        jCheckBoxSetTitleNumber = new javax.swing.JCheckBox();
+        jCheckBoxRemoveFormatTags = new javax.swing.JCheckBox();
+        jLabelCSVSeparator = new javax.swing.JLabel();
+        jComboBoxCSVSeparator = new javax.swing.JComboBox<String>();
+        jCheckBoxExportBibTex = new javax.swing.JCheckBox();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CExport.class);
+        setTitle(resourceMap.getString("FormExportDialog.title")); // NOI18N
         setModal(true);
-        setName("FormExportDialog");
+        setName("FormExportDialog"); // NOI18N
         setResizable(false);
-        Container contentPane = getContentPane();
 
-        //======== jPanel1 ========
-        {
-            jPanel1.setName("jPanel1");
-            jPanel1.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(
-            0,0,0,0), "JFor\u006dDesi\u0067ner \u0045valu\u0061tion",javax.swing.border.TitledBorder.CENTER,javax.swing.border.TitledBorder
-            .BOTTOM,new java.awt.Font("Dia\u006cog",java.awt.Font.BOLD,12),java.awt.Color.
-            red),jPanel1. getBorder()));jPanel1. addPropertyChangeListener(new java.beans.PropertyChangeListener(){@Override public void propertyChange(java.
-            beans.PropertyChangeEvent e){if("bord\u0065r".equals(e.getPropertyName()))throw new RuntimeException();}});
+        jPanel1.setName("jPanel1"); // NOI18N
 
-            //---- jLabel1 ----
-            jLabel1.setText(bundle.getString("jLabel1.text"));
-            jLabel1.setName("jLabel1");
+        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setName("jLabel1"); // NOI18N
 
-            //---- jComboBox_exportType ----
-            jComboBox_exportType.setName("jComboBox_exportType");
+        jComboBox_exportType.setName("jComboBox_exportType"); // NOI18N
 
-            //---- jCheckBoxSeparateFile ----
-            jCheckBoxSeparateFile.setText(bundle.getString("jCheckBoxSeparateFile.text"));
-            jCheckBoxSeparateFile.setToolTipText(bundle.getString("jCheckBoxSeparateFile.toolTipText"));
-            jCheckBoxSeparateFile.setName("jCheckBoxSeparateFile");
+        jCheckBoxSeparateFile.setText(resourceMap.getString("jCheckBoxSeparateFile.text")); // NOI18N
+        jCheckBoxSeparateFile.setToolTipText(resourceMap.getString("jCheckBoxSeparateFile.toolTipText")); // NOI18N
+        jCheckBoxSeparateFile.setName("jCheckBoxSeparateFile"); // NOI18N
 
-            //---- jLabelBrowseDir ----
-            jLabelBrowseDir.setText(bundle.getString("jLabelBrowseDir.text"));
-            jLabelBrowseDir.setName("jLabelBrowseDir");
+        jLabelBrowseDir.setText(resourceMap.getString("jLabelBrowseDir.text")); // NOI18N
+        jLabelBrowseDir.setName("jLabelBrowseDir"); // NOI18N
 
-            //---- jButtonBrowse ----
-            jButtonBrowse.setName("jButtonBrowse");
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CExport.class, this);
+        jButtonBrowse.setAction(actionMap.get("save")); // NOI18N
+        jButtonBrowse.setName("jButtonBrowse"); // NOI18N
 
-            //---- jTextFieldFilepath ----
-            jTextFieldFilepath.setEditable(false);
-            jTextFieldFilepath.setText(bundle.getString("jTextFieldFilepath.text"));
-            jTextFieldFilepath.setName("jTextFieldFilepath");
+        jTextFieldFilepath.setEditable(false);
+        jTextFieldFilepath.setText(resourceMap.getString("jTextFieldFilepath.text")); // NOI18N
+        jTextFieldFilepath.setName("jTextFieldFilepath"); // NOI18N
 
-            //---- jButtonApply ----
-            jButtonApply.setName("jButtonApply");
+        jButtonApply.setAction(actionMap.get("startExport")); // NOI18N
+        jButtonApply.setName("jButtonApply"); // NOI18N
 
-            //---- jButtonCancel ----
-            jButtonCancel.setName("jButtonCancel");
+        jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
+        jButtonCancel.setName("jButtonCancel"); // NOI18N
 
-            //======== jPanel2 ========
-            {
-                jPanel2.setBorder(new TitledBorder("Welche Elemente sollen exportiert werden?"));
-                jPanel2.setName("jPanel2");
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel2.border.title"))); // NOI18N
+        jPanel2.setName("jPanel2"); // NOI18N
 
-                //======== jPanel3 ========
-                {
-                    jPanel3.setName("jPanel3");
+        jPanel3.setName("jPanel3"); // NOI18N
 
-                    //---- jCheckBox2 ----
-                    jCheckBox2.setText(bundle.getString("jCheckBox2.text"));
-                    jCheckBox2.setName("jCheckBox2");
+        jCheckBox2.setText(resourceMap.getString("jCheckBox2.text")); // NOI18N
+        jCheckBox2.setName("jCheckBox2"); // NOI18N
 
-                    //---- jCheckBox3 ----
-                    jCheckBox3.setText(bundle.getString("jCheckBox3.text"));
-                    jCheckBox3.setName("jCheckBox3");
+        jCheckBox3.setText(resourceMap.getString("jCheckBox3.text")); // NOI18N
+        jCheckBox3.setName("jCheckBox3"); // NOI18N
 
-                    //---- jCheckBox4 ----
-                    jCheckBox4.setText(bundle.getString("jCheckBox4.text"));
-                    jCheckBox4.setName("jCheckBox4");
+        jCheckBox4.setText(resourceMap.getString("jCheckBox4.text")); // NOI18N
+        jCheckBox4.setName("jCheckBox4"); // NOI18N
 
-                    GroupLayout jPanel3Layout = new GroupLayout(jPanel3);
-                    jPanel3.setLayout(jPanel3Layout);
-                    jPanel3Layout.setHorizontalGroup(
-                        jPanel3Layout.createParallelGroup()
-                            .addComponent(jCheckBox2)
-                            .addComponent(jCheckBox3)
-                            .addComponent(jCheckBox4)
-                    );
-                    jPanel3Layout.setVerticalGroup(
-                        jPanel3Layout.createParallelGroup()
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jCheckBox2)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBox3)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBox4)
-                                .addContainerGap())
-                    );
-                }
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jCheckBox2)
+            .addComponent(jCheckBox3)
+            .addComponent(jCheckBox4)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jCheckBox2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox4)
+                .addContainerGap())
+        );
 
-                //======== jPanel4 ========
-                {
-                    jPanel4.setName("jPanel4");
+        jPanel4.setName("jPanel4"); // NOI18N
 
-                    //---- jCheckBox6 ----
-                    jCheckBox6.setText(bundle.getString("jCheckBox6.text"));
-                    jCheckBox6.setName("jCheckBox6");
+        jCheckBox6.setText(resourceMap.getString("jCheckBox6.text")); // NOI18N
+        jCheckBox6.setName("jCheckBox6"); // NOI18N
 
-                    //---- jCheckBox7 ----
-                    jCheckBox7.setText(bundle.getString("jCheckBox7.text"));
-                    jCheckBox7.setName("jCheckBox7");
+        jCheckBox7.setText(resourceMap.getString("jCheckBox7.text")); // NOI18N
+        jCheckBox7.setName("jCheckBox7"); // NOI18N
 
-                    //---- jCheckBox8 ----
-                    jCheckBox8.setText(bundle.getString("jCheckBox8.text"));
-                    jCheckBox8.setName("jCheckBox8");
+        jCheckBox8.setText(resourceMap.getString("jCheckBox8.text")); // NOI18N
+        jCheckBox8.setName("jCheckBox8"); // NOI18N
 
-                    GroupLayout jPanel4Layout = new GroupLayout(jPanel4);
-                    jPanel4.setLayout(jPanel4Layout);
-                    jPanel4Layout.setHorizontalGroup(
-                        jPanel4Layout.createParallelGroup()
-                            .addComponent(jCheckBox6)
-                            .addComponent(jCheckBox8)
-                            .addComponent(jCheckBox7)
-                    );
-                    jPanel4Layout.setVerticalGroup(
-                        jPanel4Layout.createParallelGroup()
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jCheckBox6)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBox7)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBox8)
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    );
-                }
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jCheckBox6)
+            .addComponent(jCheckBox8)
+            .addComponent(jCheckBox7)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jCheckBox6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox8)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-                //======== jPanel5 ========
-                {
-                    jPanel5.setName("jPanel5");
+        jPanel5.setName("jPanel5"); // NOI18N
 
-                    //---- jCheckBox5 ----
-                    jCheckBox5.setText(bundle.getString("jCheckBox5.text"));
-                    jCheckBox5.setName("jCheckBox5");
+        jCheckBox5.setText(resourceMap.getString("jCheckBox5.text")); // NOI18N
+        jCheckBox5.setName("jCheckBox5"); // NOI18N
 
-                    //---- jCheckBox10 ----
-                    jCheckBox10.setText(bundle.getString("jCheckBox10.text"));
-                    jCheckBox10.setName("jCheckBox10");
+        jCheckBox10.setText(resourceMap.getString("jCheckBox10.text")); // NOI18N
+        jCheckBox10.setName("jCheckBox10"); // NOI18N
 
-                    //---- jCheckBox9 ----
-                    jCheckBox9.setText(bundle.getString("jCheckBox9.text"));
-                    jCheckBox9.setName("jCheckBox9");
+        jCheckBox9.setText(resourceMap.getString("jCheckBox9.text")); // NOI18N
+        jCheckBox9.setName("jCheckBox9"); // NOI18N
 
-                    GroupLayout jPanel5Layout = new GroupLayout(jPanel5);
-                    jPanel5.setLayout(jPanel5Layout);
-                    jPanel5Layout.setHorizontalGroup(
-                        jPanel5Layout.createParallelGroup()
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addGroup(jPanel5Layout.createParallelGroup()
-                                    .addComponent(jCheckBox5)
-                                    .addComponent(jCheckBox10)
-                                    .addComponent(jCheckBox9))
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    );
-                    jPanel5Layout.setVerticalGroup(
-                        jPanel5Layout.createParallelGroup()
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jCheckBox5)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBox10)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBox9)
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    );
-                }
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBox5)
+                    .addComponent(jCheckBox10)
+                    .addComponent(jCheckBox9))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(jCheckBox5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox9)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-                //---- jSeparator1 ----
-                jSeparator1.setName("jSeparator1");
+        jSeparator1.setName("jSeparator1"); // NOI18N
 
-                //---- jCheckBoxHighlightKeywords ----
-                jCheckBoxHighlightKeywords.setText(bundle.getString("jCheckBoxHighlightKeywords.text"));
-                jCheckBoxHighlightKeywords.setToolTipText(bundle.getString("jCheckBoxHighlightKeywords.toolTipText"));
-                jCheckBoxHighlightKeywords.setName("jCheckBoxHighlightKeywords");
+        jCheckBoxHighlightKeywords.setText(resourceMap.getString("jCheckBoxHighlightKeywords.text")); // NOI18N
+        jCheckBoxHighlightKeywords.setToolTipText(resourceMap.getString("jCheckBoxHighlightKeywords.toolTipText")); // NOI18N
+        jCheckBoxHighlightKeywords.setName("jCheckBoxHighlightKeywords"); // NOI18N
 
-                //---- jCheckBoxSetTitleNumber ----
-                jCheckBoxSetTitleNumber.setText(bundle.getString("jCheckBoxSetTitleNumber.text"));
-                jCheckBoxSetTitleNumber.setToolTipText(bundle.getString("jCheckBoxSetTitleNumber.toolTipText"));
-                jCheckBoxSetTitleNumber.setName("jCheckBoxSetTitleNumber");
+        jCheckBoxSetTitleNumber.setText(resourceMap.getString("jCheckBoxSetTitleNumber.text")); // NOI18N
+        jCheckBoxSetTitleNumber.setToolTipText(resourceMap.getString("jCheckBoxSetTitleNumber.toolTipText")); // NOI18N
+        jCheckBoxSetTitleNumber.setName("jCheckBoxSetTitleNumber"); // NOI18N
 
-                GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
-                jPanel2.setLayout(jPanel2Layout);
-                jPanel2Layout.setHorizontalGroup(
-                    jPanel2Layout.createParallelGroup()
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(jPanel2Layout.createParallelGroup()
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addComponent(jPanel3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jPanel5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jPanel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jSeparator1)
-                                .addComponent(jCheckBoxHighlightKeywords)
-                                .addComponent(jCheckBoxSetTitleNumber))
-                            .addContainerGap())
-                );
-                jPanel2Layout.setVerticalGroup(
-                    jPanel2Layout.createParallelGroup()
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                .addGroup(jPanel2Layout.createParallelGroup()
-                                    .addComponent(jPanel5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jPanel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jPanel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jSeparator1, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jCheckBoxHighlightKeywords)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jCheckBoxSetTitleNumber)
-                            .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                );
-            }
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSeparator1)
+                    .addComponent(jCheckBoxHighlightKeywords)
+                    .addComponent(jCheckBoxSetTitleNumber))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxHighlightKeywords)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxSetTitleNumber)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-            //---- jCheckBoxRemoveFormatTags ----
-            jCheckBoxRemoveFormatTags.setText(bundle.getString("jCheckBoxRemoveFormatTags.text"));
-            jCheckBoxRemoveFormatTags.setToolTipText(bundle.getString("jCheckBoxRemoveFormatTags.toolTipText"));
-            jCheckBoxRemoveFormatTags.setName("jCheckBoxRemoveFormatTags");
+        jCheckBoxRemoveFormatTags.setText(resourceMap.getString("jCheckBoxRemoveFormatTags.text")); // NOI18N
+        jCheckBoxRemoveFormatTags.setToolTipText(resourceMap.getString("jCheckBoxRemoveFormatTags.toolTipText")); // NOI18N
+        jCheckBoxRemoveFormatTags.setName("jCheckBoxRemoveFormatTags"); // NOI18N
 
-            //---- jLabelCSVSeparator ----
-            jLabelCSVSeparator.setText(bundle.getString("jLabelCSVSeparator.text"));
-            jLabelCSVSeparator.setToolTipText(bundle.getString("jLabelCSVSeparator.toolTipText"));
-            jLabelCSVSeparator.setName("jLabelCSVSeparator");
+        jLabelCSVSeparator.setText(resourceMap.getString("jLabelCSVSeparator.text")); // NOI18N
+        jLabelCSVSeparator.setToolTipText(resourceMap.getString("jLabelCSVSeparator.toolTipText")); // NOI18N
+        jLabelCSVSeparator.setName("jLabelCSVSeparator"); // NOI18N
 
-            //---- jComboBoxCSVSeparator ----
-            jComboBoxCSVSeparator.setModel(new DefaultComboBoxModel<>(new String[] {
-                ",",
-                ";",
-                "Tabulator"
-            }));
-            jComboBoxCSVSeparator.setName("jComboBoxCSVSeparator");
+        jComboBoxCSVSeparator.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { ",", ";", "Tabulator" }));
+        jComboBoxCSVSeparator.setName("jComboBoxCSVSeparator"); // NOI18N
 
-            //---- jCheckBoxExportBibTex ----
-            jCheckBoxExportBibTex.setText(bundle.getString("jCheckBoxExportBibTex.text"));
-            jCheckBoxExportBibTex.setToolTipText(bundle.getString("jCheckBoxExportBibTex.toolTipText"));
-            jCheckBoxExportBibTex.setName("jCheckBoxExportBibTex");
+        jCheckBoxExportBibTex.setText(resourceMap.getString("jCheckBoxExportBibTex.text")); // NOI18N
+        jCheckBoxExportBibTex.setToolTipText(resourceMap.getString("jCheckBoxExportBibTex.toolTipText")); // NOI18N
+        jCheckBoxExportBibTex.setName("jCheckBoxExportBibTex"); // NOI18N
 
-            GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
-            jPanel1.setLayout(jPanel1Layout);
-            jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup()
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup()
-                            .addComponent(jLabel1)
-                            .addComponent(jCheckBoxSeparateFile)
-                            .addComponent(jCheckBoxRemoveFormatTags)
-                            .addComponent(jComboBox_exportType, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jCheckBoxExportBibTex)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabelCSVSeparator)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jComboBoxCSVSeparator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jLabelBrowseDir)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jButtonBrowse)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jTextFieldFilepath))
-                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jButtonCancel)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButtonApply))
-                                    .addComponent(jPanel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            );
-            jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup()
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox_exportType, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBoxSeparateFile)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBoxRemoveFormatTags)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jCheckBoxSeparateFile)
+                    .addComponent(jCheckBoxRemoveFormatTags)
+                    .addComponent(jComboBox_exportType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jCheckBoxExportBibTex)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(jLabelCSVSeparator)
-                            .addComponent(jComboBoxCSVSeparator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jComboBoxCSVSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(jLabelBrowseDir)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(jButtonBrowse)
-                            .addComponent(jTextFieldFilepath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButtonApply)
-                            .addComponent(jButtonCancel))
-                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            );
-        }
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jTextFieldFilepath))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButtonCancel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonApply))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBox_exportType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxSeparateFile)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxRemoveFormatTags)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxExportBibTex)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelCSVSeparator)
+                    .addComponent(jComboBoxCSVSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabelBrowseDir)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonBrowse)
+                    .addComponent(jTextFieldFilepath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonApply)
+                    .addComponent(jButtonCancel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
-        contentPane.setLayout(contentPaneLayout);
-        contentPaneLayout.setHorizontalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addContainerGap())
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
-        contentPaneLayout.setVerticalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addContainerGap())
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
+
         pack();
-        setLocationRelativeTo(getOwner());
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - Ralf Barkow
-    private JPanel jPanel1;
-    private JLabel jLabel1;
-    private JComboBox jComboBox_exportType;
-    private JCheckBox jCheckBoxSeparateFile;
-    private JLabel jLabelBrowseDir;
-    private JButton jButtonBrowse;
-    private JTextField jTextFieldFilepath;
-    private JButton jButtonApply;
-    private JButton jButtonCancel;
-    private JPanel jPanel2;
-    private JPanel jPanel3;
-    private JCheckBox jCheckBox2;
-    private JCheckBox jCheckBox3;
-    private JCheckBox jCheckBox4;
-    private JPanel jPanel4;
-    private JCheckBox jCheckBox6;
-    private JCheckBox jCheckBox7;
-    private JCheckBox jCheckBox8;
-    private JPanel jPanel5;
-    private JCheckBox jCheckBox5;
-    private JCheckBox jCheckBox10;
-    private JCheckBox jCheckBox9;
-    private JSeparator jSeparator1;
-    private JCheckBox jCheckBoxHighlightKeywords;
-    private JCheckBox jCheckBoxSetTitleNumber;
-    private JCheckBox jCheckBoxRemoveFormatTags;
-    private JLabel jLabelCSVSeparator;
-    private JComboBox<String> jComboBoxCSVSeparator;
-    private JCheckBox jCheckBoxExportBibTex;
+    private javax.swing.JButton jButtonApply;
+    private javax.swing.JButton jButtonBrowse;
+    private javax.swing.JButton jButtonCancel;
+    private javax.swing.JCheckBox jCheckBox10;
+    private javax.swing.JCheckBox jCheckBox2;
+    private javax.swing.JCheckBox jCheckBox3;
+    private javax.swing.JCheckBox jCheckBox4;
+    private javax.swing.JCheckBox jCheckBox5;
+    private javax.swing.JCheckBox jCheckBox6;
+    private javax.swing.JCheckBox jCheckBox7;
+    private javax.swing.JCheckBox jCheckBox8;
+    private javax.swing.JCheckBox jCheckBox9;
+    private javax.swing.JCheckBox jCheckBoxExportBibTex;
+    private javax.swing.JCheckBox jCheckBoxHighlightKeywords;
+    private javax.swing.JCheckBox jCheckBoxRemoveFormatTags;
+    private javax.swing.JCheckBox jCheckBoxSeparateFile;
+    private javax.swing.JCheckBox jCheckBoxSetTitleNumber;
+    private javax.swing.JComboBox<String> jComboBoxCSVSeparator;
+    private javax.swing.JComboBox<String> jComboBox_exportType;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabelBrowseDir;
+    private javax.swing.JLabel jLabelCSVSeparator;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextField jTextFieldFilepath;
     // End of variables declaration//GEN-END:variables
 
 }
