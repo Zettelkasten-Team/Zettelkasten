@@ -1,42 +1,69 @@
 package playground;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class JavaFXMenuExample extends Application {
+
     @Override
     public void start(Stage primaryStage) {
-        // Create a MenuBar
+        BorderPane root = new BorderPane();
+
+        // Create a menu bar
         MenuBar menuBar = new MenuBar();
 
-        // Create Menus
+        // Create a menu
         Menu fileMenu = new Menu("File");
-        Menu editMenu = new Menu("Edit");
 
-        // Create MenuItems
-        MenuItem openItem = new MenuItem("Open");
-        MenuItem saveItem = new MenuItem("Save");
-        MenuItem exitItem = new MenuItem("Exit");
+        // Create menu items
+        MenuItem aboutItem = new MenuItem("About");
+        MenuItem preferencesItem = new MenuItem("Preferences");
+        MenuItem quitItem = new MenuItem("Quit");
 
-        // Add MenuItems to File menu
-        fileMenu.getItems().addAll(openItem, saveItem, exitItem);
+        // Add event handlers to menu items
+        aboutItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // Handle About event
+                System.out.println("About event triggered");
+            }
+        });
 
-        // Add Menus to MenuBar
-        menuBar.getMenus().addAll(fileMenu, editMenu);
+        preferencesItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // Handle Preferences event
+                System.out.println("Preferences event triggered");
+            }
+        });
 
-        // Create a BorderPane to hold the MenuBar
-        BorderPane root = new BorderPane();
+        quitItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // Handle Quit event
+                System.out.println("Quit event triggered");
+                primaryStage.close();
+            }
+        });
+
+        // Add menu items to the menu
+        fileMenu.getItems().addAll(aboutItem, preferencesItem, quitItem);
+
+        // Add the menu to the menu bar
+        menuBar.getMenus().add(fileMenu);
+
+        // Set the menu bar as the top node of the BorderPane
         root.setTop(menuBar);
 
-        // Create the Scene
         Scene scene = new Scene(root, 400, 300);
 
-        // Set the Scene and show the Stage
         primaryStage.setScene(scene);
         primaryStage.setTitle("JavaFX Menu Example");
         primaryStage.show();
