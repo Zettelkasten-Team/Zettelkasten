@@ -1,8 +1,5 @@
 package playground;
 
-import playground.JavaFXMenuExample;
-
-
 import javafx.application.Application;
 
 public class Launcher {
