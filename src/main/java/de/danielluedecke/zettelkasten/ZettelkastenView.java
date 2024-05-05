@@ -9504,15 +9504,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		ZettelkastenApp.getApplication().show(searchResultsDlg);
 	}
 
-	@Action
-	public void showNewEntryWindow() {
-		if (editEntryDlg != null) {
-			editEntryDlg.setAlwaysOnTop(true);
-			editEntryDlg.toFront();
-			editEntryDlg.requestFocus();
-			editEntryDlg.setAlwaysOnTop(false);
-		}
-	}
+    @Action
+    public void showNewEntryWindow() {
+        if (editEntryDlg != null) {
+            editEntryDlg.setAlwaysOnTop(true);
+            editEntryDlg.toFront();
+            editEntryDlg.requestFocus();
+            editEntryDlg.setAlwaysOnTop(false);
+        } else {
+            openEditWindow(false, -1, false, false, -1, ""); // Create a new input window
+        }
+    }
+
 
 	/**
 	 * Shows the desktop/outliner window. If it hasn't been created yet, a new
