@@ -3590,6 +3590,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 		if (!isEntryNodeSelected()) {
 			return;
 		}
+
 		// check whether an entry is already being edited, i.e. the edit-window is
 		// already created
 		if (isEditModeActive) {
@@ -3615,6 +3616,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 			// center window
 			modifyEntryDlg.setLocationRelativeTo(this);
 			ZettelkastenApp.getApplication().show(modifyEntryDlg);
+
 			// edit window was initialized
 			isEditModeActive = true;
 		}
@@ -3707,8 +3709,10 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 		// delete the input-dialog
 		modifyEntryDlg.dispose();
 		modifyEntryDlg = null;
+
 		// reset flag
 		isEditModeActive = false;
+
 		// check for valid return value
 		if (newconmodified && newcontent != null && !newcontent.isEmpty()) {
 			// change modified entry
