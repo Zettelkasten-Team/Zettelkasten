@@ -7815,26 +7815,27 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This method opens the window for editing new entries. All the stuff like
-	 * saving the data to the main-data-object is done within the class
-	 * "CNewEntry.java"
+	 * This method opens the view for editing new entries. 
+	 * "Neuer Zettel" (German for new note)
 	 */
 	@Action
 	public void newEntry() {
 		openEditWindow(false, -1, false, false, -1);
 	}
         
-        @Action
-        public void showNewEntryWindow() {
-            if (editEntryDlg != null) {
-                editEntryDlg.setAlwaysOnTop(true);
-                editEntryDlg.toFront();
-                editEntryDlg.requestFocus();
-                editEntryDlg.setAlwaysOnTop(false);
-            } else {
-                newEntry(); // Create a new input window
-            }
+	@Action
+    public void showNewEntryWindow() {
+        if (editEntryDlg != null) {
+        	 // Debugging: Log the current value of editEntryDlg
+        	System.out.println("editEntryDlg value: " + editEntryDlg);
+            editEntryDlg.setAlwaysOnTop(true);
+            editEntryDlg.toFront();
+            editEntryDlg.requestFocus();
+            editEntryDlg.setAlwaysOnTop(false);
+        } else {
+            newEntry(); // Create a new input window
         }
+    }
 
 	/**
 	 * This method opens the window for editing existing entries. All the stuff like
@@ -8158,7 +8159,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		createEntryAndAddAsSubEntry();
 	}
 
-	private void createEntryAndAddAsSubEntry() {
+	void createEntryAndAddAsSubEntry() {
 		openEditWindow(/* isEditing */false, displayedZettel, /* isLuhmann */true, /* isDeleted */false,
 				displayedZettel);
 	}
@@ -14475,8 +14476,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}// GEN-LAST:event_viewAuthorsCopyActionPerformed
 
 	/**
-	 * This event catches mouse-cicks which occur when the user clicks a hyperlink
-	 * in the main editor-pane. First has to be checked, wether the clicked
+	 * This event catches mouse-clicks which occur when the user clicks a hyperlink
+	 * in the main editor-pane. First has to be checked, whether the clicked
 	 * hyperlink was an web-url or links to a local file. Then the url or file will
 	 * be opened
 	 *
@@ -15020,7 +15021,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private JPanel jPanelSearchBox;
 	private JLabel jLabelLupe;
 	private TaskProgressDialog taskDlg;
-	EditorFrame editEntryDlg;
+	private EditorFrame editEntryDlg;
 	private CImport importWindow;
 	private CUpdateInfoBox updateInfoDlg;
 	private CExport exportWindow;
