@@ -116,17 +116,18 @@ public class DesktopData {
 	 *
 	 */
 	private ArrayList<String> timestampList;
-	/**
-	 * get the strings for file descriptions from the resource map
-	 */
-	private final org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application
-			.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
-			.getResourceMap(DesktopFrame.class);
+    /**
+     * get the strings for file descriptions from the resource map
+     */
+	private final org.jdesktop.application.ResourceMap resourceMap;
 
 	/**
 	 * @param zkn
 	 */
 	public DesktopData(ZettelkastenView zkn) {
+        this.resourceMap = org.jdesktop.application.Application
+                .getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
+                .getResourceMap(DesktopFrame.class);
 		zknframe = zkn;
 		clear();
 	}

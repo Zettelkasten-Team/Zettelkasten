@@ -204,6 +204,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	boolean isLiveSearchActive = false;
 
 	private boolean isbnc = false;
+	
+	private ApplicationContext context;
 
 	public boolean isBackupNecessary() {
 		return isbnc;
@@ -2628,23 +2630,27 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * If the user has changed the default look and feel
 	 * and we need to set something other than the default.
 	 */
-	void initUIManagerLookAndFeel() {
-		try {
+	public void initUIManagerLookAndFeel() {
+		SwingUtilities.invokeLater(() -> {
 			String laf = settings.getLookAndFeel();
-			UIManager.setLookAndFeel(laf);
-			JFrame frame = getFrame();
-			if (frame != null) {
-				SwingUtilities.updateComponentTreeUI(frame);
-				Constants.zknlogger.log(Level.INFO, "Using following LookAndFeel: {0}", settings.getLookAndFeel());
-			} else {
-				Constants.zknlogger.log(Level.WARNING, "Frame is null");
+			if (laf == null) {
+				// Set a default LookAndFeel if laf is null
+				laf = UIManager.getCrossPlatformLookAndFeelClassName();
 			}
-		} catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException
-				 | IllegalAccessException ex) {
-			Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
-		}
-	}
+			try {
+				UIManager.setLookAndFeel(laf);
+			} catch (Exception e) {
+				// Handle the exception gracefully, e.g., log the error
+				System.err.println("Failed to set LookAndFeel: " + e.getMessage());
+				return;
+			}
 
+			// Update the UI after changing the look and feel (not necessary)
+			// This line can be removed as UIManager.setLookAndFeel(laf) already updates the UI
+			// JFrame frame = getFrame();
+			// SwingUtilities.updateComponentTreeUI(frame);
+		});
+	}
 
 	public final void setNewDisplayedEntryAndUpdateDisplay(int inputDisplayedEntry) {
 		setNewDisplayedEntryAndUpdateDisplay(inputDisplayedEntry, UpdateDisplayOptions.defaultOptions());
@@ -6285,6 +6291,21 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 	}
 
+    // Setter method for EditorFrame
+    public void setEditorFrame(EditorFrame editorFrame) {
+        this.editEntryDlg = editorFrame;
+    }
+
+    // Getter method for EditorFrame
+    public EditorFrame getEditorFrame() {
+        return editEntryDlg;
+    }
+
+	public void setContext(ApplicationContext applicationContext) {
+		this.context = applicationContext;
+	}
+
+
 	/**
 	 * This Action creates the links between of the currently displayed entry with
 	 * all other entries, based on matching keywords. These hyperlinks are stored in
@@ -7802,6 +7823,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	public void newEntry() {
 		openEditWindow(false, -1, false, false, -1);
 	}
+        
+        @Action
+        public void showNewEntryWindow() {
+            if (editEntryDlg != null) {
+                editEntryDlg.setAlwaysOnTop(true);
+                editEntryDlg.toFront();
+                editEntryDlg.requestFocus();
+                editEntryDlg.setAlwaysOnTop(false);
+            } else {
+                newEntry(); // Create a new input window
+            }
+        }
 
 	/**
 	 * This method opens the window for editing existing entries. All the stuff like
@@ -9503,19 +9536,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 		ZettelkastenApp.getApplication().show(searchResultsDlg);
 	}
-
-    @Action
-    public void showNewEntryWindow() {
-        if (editEntryDlg != null) {
-            editEntryDlg.setAlwaysOnTop(true);
-            editEntryDlg.toFront();
-            editEntryDlg.requestFocus();
-            editEntryDlg.setAlwaysOnTop(false);
-        } else {
-            openEditWindow(false, -1, false, false, -1, ""); // Create a new input window
-        }
-    }
-
 
 	/**
 	 * Shows the desktop/outliner window. If it hasn't been created yet, a new
