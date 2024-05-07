@@ -33,11 +33,6 @@
 
 package de.danielluedecke.zettelkasten;
 
-import java.awt.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
 import de.danielluedecke.zettelkasten.mac.MacSourceList;
 import de.danielluedecke.zettelkasten.database.DesktopData;
 import de.danielluedecke.zettelkasten.database.Settings;
@@ -171,70 +166,64 @@ public class CDesktopMultipleExport extends javax.swing.JDialog {
      */
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    // Generated using JFormDesigner Evaluation license - Ralf Barkow
     private void initComponents() {
-        ResourceBundle bundle = ResourceBundle.getBundle("de.danielluedecke.zettelkasten.resources.CDesktopMultipleExport");
-        jScrollPane1 = new JScrollPane();
+
+        jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = MacSourceList.createMacSourceList();
-        jButtonApply = new JButton();
-        jButtonCancel = new JButton();
+        jButtonApply = new javax.swing.JButton();
+        jButtonCancel = new javax.swing.JButton();
 
-        //======== this ========
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(bundle.getString("FormDeskMultipleExport.title"));
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CDesktopMultipleExport.class);
+        setTitle(resourceMap.getString("FormDeskMultipleExport.title")); // NOI18N
         setModal(true);
-        setName("FormDeskMultipleExport");
-        Container contentPane = getContentPane();
+        setName("FormDeskMultipleExport"); // NOI18N
 
-        //======== jScrollPane1 ========
-        {
-            jScrollPane1.setName("jScrollPane1");
+        jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-            //---- jList1 ----
-            jList1.setModel(desktopListModel);
-            jList1.setName("jList1");
-            jScrollPane1.setViewportView(jList1);
-        }
+        jList1.setModel(desktopListModel);
+        jList1.setName("jList1"); // NOI18N
+        jScrollPane1.setViewportView(jList1);
 
-        //---- jButtonApply ----
-        jButtonApply.setName("jButtonApply");
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CDesktopMultipleExport.class, this);
+        jButtonApply.setAction(actionMap.get("apply")); // NOI18N
+        jButtonApply.setName("jButtonApply"); // NOI18N
 
-        //---- jButtonCancel ----
-        jButtonCancel.setName("jButtonCancel");
+        jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
+        jButtonCancel.setName("jButtonCancel"); // NOI18N
 
-        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
-        contentPane.setLayout(contentPaneLayout);
-        contentPaneLayout.setHorizontalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                    .addContainerGap(154, Short.MAX_VALUE)
-                    .addComponent(jButtonCancel)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(154, Short.MAX_VALUE)
+                .addComponent(jButtonCancel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonApply)
+                .addContainerGap())
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonApply)
-                    .addContainerGap())
-                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                    .addComponent(jButtonCancel))
+                .addGap(3, 3, 3))
         );
-        contentPaneLayout.setVerticalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                    .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButtonApply)
-                        .addComponent(jButtonCancel))
-                    .addGap(3, 3, 3))
-        );
+
         pack();
-        setLocationRelativeTo(getOwner());
     }// </editor-fold>//GEN-END:initComponents
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - Ralf Barkow
-    private JScrollPane jScrollPane1;
-    private JList jList1;
-    private JButton jButtonApply;
-    private JButton jButtonCancel;
+    private javax.swing.JButton jButtonApply;
+    private javax.swing.JButton jButtonCancel;
+    private javax.swing.JList<String> jList1;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
 }

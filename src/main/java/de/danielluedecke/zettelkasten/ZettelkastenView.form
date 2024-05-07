@@ -334,7 +334,7 @@
                                         </Property>
                                       </Properties>
                                       <AuxValues>
-                                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="(settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable()"/>
+                                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="(settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable()"/>
                                       </AuxValues>
                                     </Component>
                                   </SubComponents>
@@ -413,7 +413,7 @@
                                         </Property>
                                       </Properties>
                                       <AuxValues>
-                                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="(settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable()"/>
+                                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="(settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable()"/>
                                       </AuxValues>
                                     </Component>
                                   </SubComponents>
@@ -700,7 +700,7 @@
                                     </Property>
                                   </Properties>
                                   <AuxValues>
-                                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="(settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable()"/>
+                                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="(settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable()"/>
                                   </AuxValues>
                                 </Component>
                               </SubComponents>
@@ -837,7 +837,7 @@
                                         </Property>
                                       </Properties>
                                       <AuxValues>
-                                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="(settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable()"/>
+                                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="(settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable()"/>
                                       </AuxValues>
                                     </Component>
                                   </SubComponents>
@@ -1019,7 +1019,7 @@
                                 </Property>
                               </Properties>
                               <AuxValues>
-                                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="(settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable()"/>
+                                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="(settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable()"/>
                               </AuxValues>
                             </Component>
                           </SubComponents>
@@ -1305,7 +1305,7 @@
                                     </Property>
                                   </Properties>
                                   <AuxValues>
-                                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="(settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable()"/>
+                                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="(settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable()"/>
                                   </AuxValues>
                                 </Component>
                               </SubComponents>
@@ -1438,7 +1438,7 @@
                                 </Property>
                               </Properties>
                               <AuxValues>
-                                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="(settings.isMacAqua()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable()"/>
+                                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="(settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable()"/>
                               </AuxValues>
                             </Component>
                           </SubComponents>

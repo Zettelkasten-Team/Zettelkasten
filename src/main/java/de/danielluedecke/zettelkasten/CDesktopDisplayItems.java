@@ -32,11 +32,6 @@
  */
 package de.danielluedecke.zettelkasten;
 
-import java.awt.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
 import java.awt.event.ActionEvent;
@@ -177,124 +172,123 @@ public class CDesktopDisplayItems extends javax.swing.JDialog {
      */
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    // Generated using JFormDesigner Evaluation license - Ralf Barkow
     private void initComponents() {
-        ResourceBundle bundle = ResourceBundle.getBundle("de.danielluedecke.zettelkasten.resources.CDesktopDisplayItems");
-        jPanel1 = new JPanel();
-        jLabel1 = new JLabel();
-        jCheckBoxRemarks = new JCheckBox();
-        jCheckBoxAuthors = new JCheckBox();
-        jCheckBoxAttachments = new JCheckBox();
-        jCheckBoxKeywords = new JCheckBox();
-        jButtonApply = new JButton();
-        jButtonCancel = new JButton();
 
-        //======== this ========
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(bundle.getString("FormDesktopDisplayItems.title"));
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jCheckBoxRemarks = new javax.swing.JCheckBox();
+        jCheckBoxAuthors = new javax.swing.JCheckBox();
+        jCheckBoxAttachments = new javax.swing.JCheckBox();
+        jCheckBoxKeywords = new javax.swing.JCheckBox();
+        jButtonApply = new javax.swing.JButton();
+        jButtonCancel = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CDesktopDisplayItems.class);
+        setTitle(resourceMap.getString("FormDesktopDisplayItems.title")); // NOI18N
         setModal(true);
-        setName("FormDesktopDisplayItems");
+        setName("FormDesktopDisplayItems"); // NOI18N
         setResizable(false);
-        Container contentPane = getContentPane();
 
-        //======== jPanel1 ========
-        {
-            jPanel1.setName("jPanel1");
-            jPanel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing
-            . border. EmptyBorder( 0, 0, 0, 0) , "JF\u006frm\u0044es\u0069gn\u0065r \u0045va\u006cua\u0074io\u006e", javax. swing. border. TitledBorder
-            . CENTER, javax. swing. border. TitledBorder. BOTTOM, new java .awt .Font ("D\u0069al\u006fg" ,java .
-            awt .Font .BOLD ,12 ), java. awt. Color. red) ,jPanel1. getBorder( )) )
-            ; jPanel1. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e
-            ) {if ("\u0062or\u0064er" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} )
-            ;
+        jPanel1.setName("jPanel1"); // NOI18N
 
-            //---- jLabel1 ----
-            jLabel1.setText(bundle.getString("jLabel1.text"));
-            jLabel1.setName("jLabel1");
+        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setName("jLabel1"); // NOI18N
 
-            //---- jCheckBoxRemarks ----
-            jCheckBoxRemarks.setText(bundle.getString("jCheckBoxRemarks.text"));
-            jCheckBoxRemarks.setName("jCheckBoxRemarks");
-            jCheckBoxRemarks.addActionListener(e -> checkBoxClicked(e));
+        jCheckBoxRemarks.setText(resourceMap.getString("jCheckBoxRemarks.text")); // NOI18N
+        jCheckBoxRemarks.setName("jCheckBoxRemarks"); // NOI18N
+        jCheckBoxRemarks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBoxClicked(evt);
+            }
+        });
 
-            //---- jCheckBoxAuthors ----
-            jCheckBoxAuthors.setText(bundle.getString("jCheckBoxAuthors.text"));
-            jCheckBoxAuthors.setName("jCheckBoxAuthors");
-            jCheckBoxAuthors.addActionListener(e -> checkBoxClicked(e));
+        jCheckBoxAuthors.setText(resourceMap.getString("jCheckBoxAuthors.text")); // NOI18N
+        jCheckBoxAuthors.setName("jCheckBoxAuthors"); // NOI18N
+        jCheckBoxAuthors.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBoxClicked(evt);
+            }
+        });
 
-            //---- jCheckBoxAttachments ----
-            jCheckBoxAttachments.setText(bundle.getString("jCheckBoxAttachments.text"));
-            jCheckBoxAttachments.setName("jCheckBoxAttachments");
-            jCheckBoxAttachments.addActionListener(e -> checkBoxClicked(e));
+        jCheckBoxAttachments.setText(resourceMap.getString("jCheckBoxAttachments.text")); // NOI18N
+        jCheckBoxAttachments.setName("jCheckBoxAttachments"); // NOI18N
+        jCheckBoxAttachments.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBoxClicked(evt);
+            }
+        });
 
-            //---- jCheckBoxKeywords ----
-            jCheckBoxKeywords.setText(bundle.getString("jCheckBoxKeywords.text"));
-            jCheckBoxKeywords.setName("jCheckBoxKeywords");
-            jCheckBoxKeywords.addActionListener(e -> checkBoxClicked(e));
+        jCheckBoxKeywords.setText(resourceMap.getString("jCheckBoxKeywords.text")); // NOI18N
+        jCheckBoxKeywords.setName("jCheckBoxKeywords"); // NOI18N
+        jCheckBoxKeywords.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBoxClicked(evt);
+            }
+        });
 
-            //---- jButtonApply ----
-            jButtonApply.setText(bundle.getString("jButtonApply.text"));
-            jButtonApply.setName("jButtonApply");
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CDesktopDisplayItems.class, this);
+        jButtonApply.setAction(actionMap.get("applyChanges")); // NOI18N
+        jButtonApply.setText(resourceMap.getString("jButtonApply.text")); // NOI18N
+        jButtonApply.setName("jButtonApply"); // NOI18N
 
-            //---- jButtonCancel ----
-            jButtonCancel.setName("jButtonCancel");
+        jButtonCancel.setAction(actionMap.get("cancelWindow")); // NOI18N
+        jButtonCancel.setName("jButtonCancel"); // NOI18N
 
-            GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
-            jPanel1.setLayout(jPanel1Layout);
-            jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup()
-                    .addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonCancel)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonApply))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup()
-                            .addComponent(jCheckBoxRemarks)
-                            .addComponent(jCheckBoxAuthors)
-                            .addComponent(jCheckBoxAttachments)
-                            .addComponent(jCheckBoxKeywords)
-                            .addComponent(jLabel1))
-                        .addContainerGap())
-            );
-            jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup()
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBoxRemarks)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBoxAuthors)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBoxAttachments)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBoxKeywords)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButtonApply)
-                            .addComponent(jButtonCancel)))
-            );
-        }
-
-        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
-        contentPane.setLayout(contentPaneLayout);
-        contentPaneLayout.setHorizontalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addContainerGap())
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jCheckBoxRemarks)
+            .addComponent(jCheckBoxAuthors)
+            .addComponent(jCheckBoxAttachments)
+            .addComponent(jCheckBoxKeywords)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(146, Short.MAX_VALUE)
+                .addComponent(jButtonCancel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonApply))
         );
-        contentPaneLayout.setVerticalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxRemarks)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxAuthors)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxAttachments)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxKeywords)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonApply)
+                    .addComponent(jButtonCancel)))
         );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         pack();
-        setLocationRelativeTo(getOwner());
     }// </editor-fold>//GEN-END:initComponents
 
 private void checkBoxClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxClicked
@@ -314,15 +308,14 @@ private void checkBoxClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - Ralf Barkow
-    private JPanel jPanel1;
-    private JLabel jLabel1;
-    private JCheckBox jCheckBoxRemarks;
-    private JCheckBox jCheckBoxAuthors;
-    private JCheckBox jCheckBoxAttachments;
-    private JCheckBox jCheckBoxKeywords;
-    private JButton jButtonApply;
-    private JButton jButtonCancel;
+    private javax.swing.JButton jButtonApply;
+    private javax.swing.JButton jButtonCancel;
+    private javax.swing.JCheckBox jCheckBoxAttachments;
+    private javax.swing.JCheckBox jCheckBoxAuthors;
+    private javax.swing.JCheckBox jCheckBoxKeywords;
+    private javax.swing.JCheckBox jCheckBoxRemarks;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 
 }

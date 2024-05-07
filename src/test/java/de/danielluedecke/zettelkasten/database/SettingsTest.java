@@ -131,7 +131,7 @@ public class SettingsTest {
 	}
 
 	@Test
-	void isMacAqua_MacOSWithAquaLookAndFeel_ReturnsTrue() {
+	void isMacStyle_MacOSWithAquaLookAndFeel_ReturnsTrue() {
 		Settings settings = new Settings();
 		// Set up the environment to simulate macOS with Aqua look and feel
 		// For example:

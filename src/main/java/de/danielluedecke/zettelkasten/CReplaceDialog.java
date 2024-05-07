@@ -33,12 +33,6 @@
 
 package de.danielluedecke.zettelkasten;
 
-import java.awt.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
 import java.awt.Color;
@@ -356,297 +350,261 @@ public class CReplaceDialog extends javax.swing.JDialog {
      */
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    // Generated using JFormDesigner Evaluation license - Ralf Barkow
     private void initComponents() {
-        ResourceBundle bundle = ResourceBundle.getBundle("de.danielluedecke.zettelkasten.resources.CReplaceDialog");
-        jPanel1 = new JPanel();
-        jLabel1 = new JLabel();
-        jTextFieldFind = new JTextField();
-        jLabel2 = new JLabel();
-        jTextFieldReplace = new JTextField();
-        jPanel2 = new JPanel();
-        jCheckBoxMatchCase = new JCheckBox();
-        jCheckBoxWholeWord = new JCheckBox();
-        jPanel3 = new JPanel();
-        jCheckBoxReplaceTitles = new JCheckBox();
-        jCheckBoxReplaceContent = new JCheckBox();
-        jCheckBoxReplaceRemarks = new JCheckBox();
-        jCheckBoxReplaceKeywords = new JCheckBox();
-        jCheckBoxReplaceAuthors = new JCheckBox();
-        jCheckBoxReplaceAttachments = new JCheckBox();
-        jButtonCancel = new JButton();
-        jButtonReplace = new JButton();
-        jCheckBoxRegEx = new JCheckBox();
-        jPopupMenuCCP = new JPopupMenu();
-        popupCCPcut = new JMenuItem();
-        popupCCPcopy = new JMenuItem();
-        popupCCPpaste = new JMenuItem();
 
-        //======== this ========
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(bundle.getString("FormReplaceDialog.title"));
+        jPopupMenuCCP = new javax.swing.JPopupMenu();
+        popupCCPcut = new javax.swing.JMenuItem();
+        popupCCPcopy = new javax.swing.JMenuItem();
+        popupCCPpaste = new javax.swing.JMenuItem();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jTextFieldFind = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jTextFieldReplace = new javax.swing.JTextField();
+        jPanel2 = new javax.swing.JPanel();
+        jCheckBoxMatchCase = new javax.swing.JCheckBox();
+        jCheckBoxWholeWord = new javax.swing.JCheckBox();
+        jPanel3 = new javax.swing.JPanel();
+        jCheckBoxReplaceTitles = new javax.swing.JCheckBox();
+        jCheckBoxReplaceContent = new javax.swing.JCheckBox();
+        jCheckBoxReplaceRemarks = new javax.swing.JCheckBox();
+        jCheckBoxReplaceKeywords = new javax.swing.JCheckBox();
+        jCheckBoxReplaceAuthors = new javax.swing.JCheckBox();
+        jCheckBoxReplaceAttachments = new javax.swing.JCheckBox();
+        jButtonCancel = new javax.swing.JButton();
+        jButtonReplace = new javax.swing.JButton();
+        jCheckBoxRegEx = new javax.swing.JCheckBox();
+
+        jPopupMenuCCP.setName("jPopupMenuCCP"); // NOI18N
+
+        popupCCPcut.setName("popupCCPcut"); // NOI18N
+        jPopupMenuCCP.add(popupCCPcut);
+
+        popupCCPcopy.setName("popupCCPcopy"); // NOI18N
+        jPopupMenuCCP.add(popupCCPcopy);
+
+        popupCCPpaste.setName("popupCCPpaste"); // NOI18N
+        jPopupMenuCCP.add(popupCCPpaste);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CReplaceDialog.class);
+        setTitle(resourceMap.getString("FormReplaceDialog.title")); // NOI18N
         setModal(true);
-        setName("FormReplaceDialog");
+        setName("FormReplaceDialog"); // NOI18N
         setResizable(false);
-        Container contentPane = getContentPane();
 
-        //======== jPanel1 ========
-        {
-            jPanel1.setName("jPanel1");
-            jPanel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border.
-            EmptyBorder( 0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax. swing. border. TitledBorder. CENTER, javax. swing
-            . border. TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ),
-            java. awt. Color. red) ,jPanel1. getBorder( )) ); jPanel1. addPropertyChangeListener (new java. beans. PropertyChangeListener( )
-            { @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("\u0062ord\u0065r" .equals (e .getPropertyName () ))
-            throw new RuntimeException( ); }} );
+        jPanel1.setName("jPanel1"); // NOI18N
 
-            //---- jLabel1 ----
-            jLabel1.setLabelFor(jTextFieldFind);
-            jLabel1.setText(bundle.getString("jLabel1.text"));
-            jLabel1.setName("jLabel1");
+        jLabel1.setLabelFor(jTextFieldFind);
+        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setName("jLabel1"); // NOI18N
 
-            //---- jTextFieldFind ----
-            jTextFieldFind.setName("jTextFieldFind");
+        jTextFieldFind.setName("jTextFieldFind"); // NOI18N
 
-            //---- jLabel2 ----
-            jLabel2.setLabelFor(jTextFieldReplace);
-            jLabel2.setText(bundle.getString("jLabel2.text"));
-            jLabel2.setName("jLabel2");
+        jLabel2.setLabelFor(jTextFieldReplace);
+        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
+        jLabel2.setName("jLabel2"); // NOI18N
 
-            //---- jTextFieldReplace ----
-            jTextFieldReplace.setName("jTextFieldReplace");
+        jTextFieldReplace.setName("jTextFieldReplace"); // NOI18N
 
-            //======== jPanel2 ========
-            {
-                jPanel2.setBorder(new TitledBorder("Suchoptionen"));
-                jPanel2.setName("jPanel2");
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel2.border.title"))); // NOI18N
+        jPanel2.setName("jPanel2"); // NOI18N
 
-                //---- jCheckBoxMatchCase ----
-                jCheckBoxMatchCase.setText(bundle.getString("jCheckBoxMatchCase.text"));
-                jCheckBoxMatchCase.setName("jCheckBoxMatchCase");
+        jCheckBoxMatchCase.setText(resourceMap.getString("jCheckBoxMatchCase.text")); // NOI18N
+        jCheckBoxMatchCase.setName("jCheckBoxMatchCase"); // NOI18N
 
-                //---- jCheckBoxWholeWord ----
-                jCheckBoxWholeWord.setText(bundle.getString("jCheckBoxWholeWord.text"));
-                jCheckBoxWholeWord.setName("jCheckBoxWholeWord");
+        jCheckBoxWholeWord.setText(resourceMap.getString("jCheckBoxWholeWord.text")); // NOI18N
+        jCheckBoxWholeWord.setName("jCheckBoxWholeWord"); // NOI18N
 
-                GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
-                jPanel2.setLayout(jPanel2Layout);
-                jPanel2Layout.setHorizontalGroup(
-                    jPanel2Layout.createParallelGroup()
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(jPanel2Layout.createParallelGroup()
-                                .addComponent(jCheckBoxMatchCase)
-                                .addComponent(jCheckBoxWholeWord))
-                            .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                );
-                jPanel2Layout.setVerticalGroup(
-                    jPanel2Layout.createParallelGroup()
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jCheckBoxMatchCase)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jCheckBoxWholeWord)
-                            .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                );
-            }
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBoxMatchCase)
+                    .addComponent(jCheckBoxWholeWord))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCheckBoxMatchCase)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxWholeWord)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-            //======== jPanel3 ========
-            {
-                jPanel3.setBorder(new TitledBorder("Ersetzen in"));
-                jPanel3.setName("jPanel3");
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel3.border.title"))); // NOI18N
+        jPanel3.setName("jPanel3"); // NOI18N
 
-                //---- jCheckBoxReplaceTitles ----
-                jCheckBoxReplaceTitles.setText(bundle.getString("jCheckBoxReplaceTitles.text"));
-                jCheckBoxReplaceTitles.setName("jCheckBoxReplaceTitles");
+        jCheckBoxReplaceTitles.setText(resourceMap.getString("jCheckBoxReplaceTitles.text")); // NOI18N
+        jCheckBoxReplaceTitles.setName("jCheckBoxReplaceTitles"); // NOI18N
 
-                //---- jCheckBoxReplaceContent ----
-                jCheckBoxReplaceContent.setText(bundle.getString("jCheckBoxReplaceContent.text"));
-                jCheckBoxReplaceContent.setName("jCheckBoxReplaceContent");
+        jCheckBoxReplaceContent.setText(resourceMap.getString("jCheckBoxReplaceContent.text")); // NOI18N
+        jCheckBoxReplaceContent.setName("jCheckBoxReplaceContent"); // NOI18N
 
-                //---- jCheckBoxReplaceRemarks ----
-                jCheckBoxReplaceRemarks.setText(bundle.getString("jCheckBoxReplaceRemarks.text"));
-                jCheckBoxReplaceRemarks.setName("jCheckBoxReplaceRemarks");
+        jCheckBoxReplaceRemarks.setText(resourceMap.getString("jCheckBoxReplaceRemarks.text")); // NOI18N
+        jCheckBoxReplaceRemarks.setName("jCheckBoxReplaceRemarks"); // NOI18N
 
-                //---- jCheckBoxReplaceKeywords ----
-                jCheckBoxReplaceKeywords.setText(bundle.getString("jCheckBoxReplaceKeywords.text"));
-                jCheckBoxReplaceKeywords.setName("jCheckBoxReplaceKeywords");
+        jCheckBoxReplaceKeywords.setText(resourceMap.getString("jCheckBoxReplaceKeywords.text")); // NOI18N
+        jCheckBoxReplaceKeywords.setName("jCheckBoxReplaceKeywords"); // NOI18N
 
-                //---- jCheckBoxReplaceAuthors ----
-                jCheckBoxReplaceAuthors.setText(bundle.getString("jCheckBoxReplaceAuthors.text"));
-                jCheckBoxReplaceAuthors.setName("jCheckBoxReplaceAuthors");
+        jCheckBoxReplaceAuthors.setText(resourceMap.getString("jCheckBoxReplaceAuthors.text")); // NOI18N
+        jCheckBoxReplaceAuthors.setName("jCheckBoxReplaceAuthors"); // NOI18N
 
-                //---- jCheckBoxReplaceAttachments ----
-                jCheckBoxReplaceAttachments.setText(bundle.getString("jCheckBoxReplaceAttachments.text"));
-                jCheckBoxReplaceAttachments.setName("jCheckBoxReplaceAttachments");
+        jCheckBoxReplaceAttachments.setText(resourceMap.getString("jCheckBoxReplaceAttachments.text")); // NOI18N
+        jCheckBoxReplaceAttachments.setName("jCheckBoxReplaceAttachments"); // NOI18N
 
-                GroupLayout jPanel3Layout = new GroupLayout(jPanel3);
-                jPanel3.setLayout(jPanel3Layout);
-                jPanel3Layout.setHorizontalGroup(
-                    jPanel3Layout.createParallelGroup()
-                        .addGroup(jPanel3Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(jPanel3Layout.createParallelGroup()
-                                .addComponent(jCheckBoxReplaceRemarks)
-                                .addComponent(jCheckBoxReplaceTitles)
-                                .addComponent(jCheckBoxReplaceContent))
-                            .addGap(18, 18, 18)
-                            .addGroup(jPanel3Layout.createParallelGroup()
-                                .addComponent(jCheckBoxReplaceAuthors)
-                                .addComponent(jCheckBoxReplaceKeywords)
-                                .addComponent(jCheckBoxReplaceAttachments))
-                            .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                );
-                jPanel3Layout.setVerticalGroup(
-                    jPanel3Layout.createParallelGroup()
-                        .addGroup(jPanel3Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(jPanel3Layout.createParallelGroup()
-                                .addGroup(jPanel3Layout.createSequentialGroup()
-                                    .addComponent(jCheckBoxReplaceKeywords)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jCheckBoxReplaceAuthors)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jCheckBoxReplaceAttachments))
-                                .addGroup(jPanel3Layout.createSequentialGroup()
-                                    .addComponent(jCheckBoxReplaceTitles)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jCheckBoxReplaceContent)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jCheckBoxReplaceRemarks)))
-                            .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                );
-            }
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBoxReplaceRemarks)
+                    .addComponent(jCheckBoxReplaceTitles)
+                    .addComponent(jCheckBoxReplaceContent))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBoxReplaceAuthors)
+                    .addComponent(jCheckBoxReplaceKeywords)
+                    .addComponent(jCheckBoxReplaceAttachments))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jCheckBoxReplaceKeywords)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBoxReplaceAuthors)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBoxReplaceAttachments))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jCheckBoxReplaceTitles)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBoxReplaceContent)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBoxReplaceRemarks)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-            //---- jButtonCancel ----
-            jButtonCancel.setName("jButtonCancel");
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CReplaceDialog.class, this);
+        jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
+        jButtonCancel.setName("jButtonCancel"); // NOI18N
 
-            //---- jButtonReplace ----
-            jButtonReplace.setName("jButtonReplace");
+        jButtonReplace.setAction(actionMap.get("replace")); // NOI18N
+        jButtonReplace.setName("jButtonReplace"); // NOI18N
 
-            //---- jCheckBoxRegEx ----
-            jCheckBoxRegEx.setText(bundle.getString("jCheckBoxRegEx.text"));
-            jCheckBoxRegEx.setToolTipText(bundle.getString("jCheckBoxRegEx.toolTipText"));
-            jCheckBoxRegEx.setName("jCheckBoxRegEx");
+        jCheckBoxRegEx.setText(resourceMap.getString("jCheckBoxRegEx.text")); // NOI18N
+        jCheckBoxRegEx.setToolTipText(resourceMap.getString("jCheckBoxRegEx.toolTipText")); // NOI18N
+        jCheckBoxRegEx.setName("jCheckBoxRegEx"); // NOI18N
 
-            GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
-            jPanel1.setLayout(jPanel1Layout);
-            jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup()
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup()
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup()
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jCheckBoxRegEx)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jTextFieldFind)
-                            .addComponent(jTextFieldReplace))
-                        .addContainerGap())
-                    .addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonCancel)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonReplace)
-                        .addGap(6, 6, 6))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jPanel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jPanel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-            );
-            jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup()
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(jTextFieldFind, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, 0)
                         .addComponent(jCheckBoxRegEx)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(jTextFieldReplace, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButtonCancel)
-                            .addComponent(jButtonReplace)))
-            );
-        }
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jTextFieldFind)
+                    .addComponent(jTextFieldReplace))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonCancel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonReplace)
+                .addGap(6, 6, 6))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jTextFieldFind, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addComponent(jCheckBoxRegEx)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jTextFieldReplace, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonCancel)
+                    .addComponent(jButtonReplace)))
+        );
 
-        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
-        contentPane.setLayout(contentPaneLayout);
-        contentPaneLayout.setHorizontalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        contentPaneLayout.setVerticalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addGap(3, 3, 3))
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3))
         );
+
         pack();
-        setLocationRelativeTo(getOwner());
-
-        //======== jPopupMenuCCP ========
-        {
-            jPopupMenuCCP.setName("jPopupMenuCCP");
-
-            //---- popupCCPcut ----
-            popupCCPcut.setName("popupCCPcut");
-            jPopupMenuCCP.add(popupCCPcut);
-
-            //---- popupCCPcopy ----
-            popupCCPcopy.setName("popupCCPcopy");
-            jPopupMenuCCP.add(popupCCPcopy);
-
-            //---- popupCCPpaste ----
-            popupCCPpaste.setName("popupCCPpaste");
-            jPopupMenuCCP.add(popupCCPpaste);
-        }
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - Ralf Barkow
-    private JPanel jPanel1;
-    private JLabel jLabel1;
-    private JTextField jTextFieldFind;
-    private JLabel jLabel2;
-    private JTextField jTextFieldReplace;
-    private JPanel jPanel2;
-    private JCheckBox jCheckBoxMatchCase;
-    private JCheckBox jCheckBoxWholeWord;
-    private JPanel jPanel3;
-    private JCheckBox jCheckBoxReplaceTitles;
-    private JCheckBox jCheckBoxReplaceContent;
-    private JCheckBox jCheckBoxReplaceRemarks;
-    private JCheckBox jCheckBoxReplaceKeywords;
-    private JCheckBox jCheckBoxReplaceAuthors;
-    private JCheckBox jCheckBoxReplaceAttachments;
-    private JButton jButtonCancel;
-    private JButton jButtonReplace;
-    private JCheckBox jCheckBoxRegEx;
-    private JPopupMenu jPopupMenuCCP;
-    private JMenuItem popupCCPcut;
-    private JMenuItem popupCCPcopy;
-    private JMenuItem popupCCPpaste;
+    private javax.swing.JButton jButtonCancel;
+    private javax.swing.JButton jButtonReplace;
+    private javax.swing.JCheckBox jCheckBoxMatchCase;
+    private javax.swing.JCheckBox jCheckBoxRegEx;
+    private javax.swing.JCheckBox jCheckBoxReplaceAttachments;
+    private javax.swing.JCheckBox jCheckBoxReplaceAuthors;
+    private javax.swing.JCheckBox jCheckBoxReplaceContent;
+    private javax.swing.JCheckBox jCheckBoxReplaceKeywords;
+    private javax.swing.JCheckBox jCheckBoxReplaceRemarks;
+    private javax.swing.JCheckBox jCheckBoxReplaceTitles;
+    private javax.swing.JCheckBox jCheckBoxWholeWord;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPopupMenu jPopupMenuCCP;
+    private javax.swing.JTextField jTextFieldFind;
+    private javax.swing.JTextField jTextFieldReplace;
+    private javax.swing.JMenuItem popupCCPcopy;
+    private javax.swing.JMenuItem popupCCPcut;
+    private javax.swing.JMenuItem popupCCPpaste;
     // End of variables declaration//GEN-END:variables
 
 }
