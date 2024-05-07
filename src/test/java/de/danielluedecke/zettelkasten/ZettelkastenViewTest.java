@@ -3,6 +3,7 @@ package de.danielluedecke.zettelkasten;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.database.Daten;
+import de.danielluedecke.zettelkasten.database.DesktopData;
 import de.danielluedecke.zettelkasten.database.SearchRequests;
 
 import org.jdesktop.application.SingleFrameApplication;
@@ -27,12 +28,16 @@ public class ZettelkastenViewTest {
         Settings mockSettings = mock(Settings.class);
         TasksData mockTasksData = mock(TasksData.class);
         SearchRequests mockSearchRequests = mock(SearchRequests.class);
+        DesktopData mockDesktopData = mock(DesktopData.class);
 
         // Create ZettelkastenView instance with mock dependencies
         zettelkastenView = new ZettelkastenView(mockApp, mockSettings, mockTasksData);
         
         // Set the mock SearchRequests object using the setter method
         zettelkastenView.setSearchRequests(mockSearchRequests);
+        
+        // Set the mock DesktopData object using the setter method
+        zettelkastenView.setDesktopData(mockDesktopData);
     }
 
     @Test
@@ -120,44 +125,6 @@ public class ZettelkastenViewTest {
         // Verifying if tabbed pane is updated if keyword list is not up to date
         verify(daten, times(1)).isKeywordlistUpToDate();
         verify(zettelkastenView, times(0)).updateDisplay(); // No need to update display if keyword list is up-to-date
-    }
-
-    @Test
-    public void testModifySynonymsInSettings() {
-        // Simulate opening settings window
-        // Modify synonyms
-        // Save settings
-        // Assert that synonyms are modified, backup is necessary, save is enabled, and display is updated
-    }
-
-    @Test
-    public void testUpdateDisplayAfterSettingsChange() {
-        // Simulate modifying display settings in settings window and saving
-        // Assert that display settings are updated, display is refreshed, and related dialogs are updated
-    }
-
-    @Test
-    public void testUpdateVisualSettings() {
-        // Simulate changing visual settings in settings window and saving
-        // Assert that visual settings are updated, tables are initialized, toolbar icons are refreshed, and display is updated
-    }
-
-    @Test
-    public void testShowRestartMessage() {
-        // Simulate changing settings that require a restart and saving
-        // Assert that restart message dialog is displayed
-    }
-
-    @Test
-    public void testHandleSettingsSaveError() {
-        // Simulate attempt to save settings but encounter an error
-        // Assert that error message is displayed
-    }
-
-    @Test
-    public void testCloseSettingsWindow() {
-        // Simulate closing the settings window/dialog
-        // Assert that settings window is closed and resources are released
     }
 
 }

@@ -109,7 +109,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private final TasksData taskinfo;
 	private final Bookmarks bookmarks;
 	private final BibTeX bibtex;
-	private final DesktopData desktop = new DesktopData(this);
+	private DesktopData desktop;
 	private final Settings settings;
 
 	/**
@@ -397,6 +397,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException {
 		super(app);
                 this.searchRequests = new SearchRequests(this); // Initialize searchRequests
+                this.desktop = new DesktopData(this);
                 this.settings = st;
 		this.taskinfo = td;
 
@@ -450,6 +451,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         // Method to get the search requests
         public SearchRequests getSearchRequests() {
             return searchRequests;
+        }
+        
+        // Method to set the desktop
+        public void setDesktopData(DesktopData desktop) {
+            this.desktop = desktop;
+        }
+        
+        // Method to get the desktop
+        public DesktopData getDesktopData() {
+            return desktop;
         }
 
 	// Common code to prepare and start a foreground task in ZettelkastenView.
