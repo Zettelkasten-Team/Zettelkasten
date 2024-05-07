@@ -172,14 +172,38 @@ public class ZettelkastenApp extends SingleFrameApplication {
 	}
 
 	void showMainWindow() {
-		Constants.zknlogger.log(Level.INFO, "Starting Main Window.");
 		try {
-			show(new ZettelkastenView(this, settings, taskData));
-		} catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException
-				 | IllegalAccessException | IOException e) {
+			logStartingMainWindow();
+			validateSettings();
+			createMainWindow();
+		} catch (IllegalArgumentException e) {
 			handleMainWindowException(e);
 		}
 	}
+
+	void logStartingMainWindow() {
+		Constants.zknlogger.log(Level.INFO, "Starting Main Window.");
+	}
+
+	void validateSettings() {
+		//TODO use default settings
+		if (settings == null) throw new IllegalArgumentException("Settings cannot be null.");
+	}
+
+	void createMainWindow() {
+		try {
+            // Get the main frame of the application
+            JFrame mainFrame = getMainFrame();
+
+            // Create an instance of ZettelkastenView
+            ZettelkastenView zettelkastenView = new ZettelkastenView(this, settings, taskData);
+
+            show(zettelkastenView);
+        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException
+                | IllegalAccessException | IOException e) {
+            handleMainWindowException(e);
+        }
+    }
 
 	private void handleMainWindowException(Exception e) {
 		e.printStackTrace();
