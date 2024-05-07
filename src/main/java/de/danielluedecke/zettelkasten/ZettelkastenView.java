@@ -103,7 +103,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * searchRequests manages all searches and searchresults for the loaded
 	 * datafile.
 	 */
-	private final SearchRequests searchRequests = new SearchRequests(this);
+	private SearchRequests searchRequests;
 
 	private final Daten data;
 	private final TasksData taskinfo;
@@ -391,13 +391,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private final ResourceMap toolbarResourceMap = Application
 			.getInstance(ZettelkastenApp.class).getContext()
 			.getResourceMap(ToolbarIcons.class);
-
+                        
+        //Constructor
 	public ZettelkastenView(SingleFrameApplication app, Settings st, TasksData td) throws ClassNotFoundException,
 			UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException {
 		super(app);
-
-		taskinfo = td;
-		settings = st;
+                this.searchRequests = new SearchRequests(this); // Initialize searchRequests
+                this.settings = st;
+		this.taskinfo = td;
 
 		if (settings != null) {
 			bookmarks = new Bookmarks(this, settings);
@@ -440,6 +441,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		makeAutoBackupTimer.schedule(new AutoBackupTimer(), Constants.autobackupUpdateStart,
 				Constants.autobackupUpdateInterval);
 	}
+        
+        // Method to set the search requests
+        public void setSearchRequests(SearchRequests searchRequests) {
+            this.searchRequests = searchRequests;
+        }
+        
+        // Method to get the search requests
+        public SearchRequests getSearchRequests() {
+            return searchRequests;
+        }
 
 	// Common code to prepare and start a foreground task in ZettelkastenView.
 	private void prepareAndStartTask(Task<?, ?> task) {
