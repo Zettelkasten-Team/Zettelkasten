@@ -32,11 +32,6 @@
  */
 package de.danielluedecke.zettelkasten;
 
-import java.awt.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
 import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.Tools;
@@ -694,206 +689,191 @@ public class CSetBibKey extends javax.swing.JDialog {
      */
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    // Generated using JFormDesigner Evaluation license - Ralf Barkow
     private void initComponents() {
-        ResourceBundle bundle = ResourceBundle.getBundle("de.danielluedecke.zettelkasten.resources.CSetBibKey");
-        jRadioButtonManualBibkey = new JRadioButton();
-        jLabelManualBibkey = new JLabel();
-        jTextFieldManualBibkey = new JTextField();
-        jRadioButtonFileBibkey = new JRadioButton();
-        jButtonCancel = new JButton();
-        jButtonApply = new JButton();
-        jScrollPane1 = new JScrollPane();
+
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        jRadioButtonManualBibkey = new javax.swing.JRadioButton();
+        jLabelManualBibkey = new javax.swing.JLabel();
+        jTextFieldManualBibkey = new javax.swing.JTextField();
+        jRadioButtonFileBibkey = new javax.swing.JRadioButton();
+        jButtonCancel = new javax.swing.JButton();
+        jButtonApply = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
         jTablePreview = (settingsObj.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
-        jLabelTitle = new JLabel();
-        jButtonRefreshView = new JButton();
-        jTextFieldFilterTable = new JTextField();
-        jComboBoxShowBibTex = new JComboBox<>();
-        jLabel1 = new JLabel();
-        buttonGroup1 = new ButtonGroup();
+        jLabelTitle = new javax.swing.JLabel();
+        jButtonRefreshView = new javax.swing.JButton();
+        jTextFieldFilterTable = new javax.swing.JTextField();
+        jComboBoxShowBibTex = new javax.swing.JComboBox<String>();
+        jLabel1 = new javax.swing.JLabel();
 
-        //======== this ========
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(bundle.getString("CFormSetBibKey.title"));
-        setName("CFormSetBibKey");
-        Container contentPane = getContentPane();
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(CSetBibKey.class);
+        setTitle(resourceMap.getString("CFormSetBibKey.title")); // NOI18N
+        setName("CFormSetBibKey"); // NOI18N
 
-        //---- jRadioButtonManualBibkey ----
+        buttonGroup1.add(jRadioButtonManualBibkey);
         jRadioButtonManualBibkey.setSelected(true);
-        jRadioButtonManualBibkey.setText(bundle.getString("jRadioButtonManualBibkey.text"));
-        jRadioButtonManualBibkey.setToolTipText(bundle.getString("jRadioButtonManualBibkey.toolTipText"));
-        jRadioButtonManualBibkey.setName("jRadioButtonManualBibkey");
+        jRadioButtonManualBibkey.setText(resourceMap.getString("jRadioButtonManualBibkey.text")); // NOI18N
+        jRadioButtonManualBibkey.setToolTipText(resourceMap.getString("jRadioButtonManualBibkey.toolTipText")); // NOI18N
+        jRadioButtonManualBibkey.setName("jRadioButtonManualBibkey"); // NOI18N
 
-        //---- jLabelManualBibkey ----
-        jLabelManualBibkey.setText(bundle.getString("jLabelManualBibkey.text"));
-        jLabelManualBibkey.setName("jLabelManualBibkey");
+        jLabelManualBibkey.setText(resourceMap.getString("jLabelManualBibkey.text")); // NOI18N
+        jLabelManualBibkey.setName("jLabelManualBibkey"); // NOI18N
 
-        //---- jTextFieldManualBibkey ----
-        jTextFieldManualBibkey.setText(bundle.getString("jTextFieldManualBibkey.text"));
-        jTextFieldManualBibkey.setName("jTextFieldManualBibkey");
+        jTextFieldManualBibkey.setText(resourceMap.getString("jTextFieldManualBibkey.text")); // NOI18N
+        jTextFieldManualBibkey.setName("jTextFieldManualBibkey"); // NOI18N
 
-        //---- jRadioButtonFileBibkey ----
-        jRadioButtonFileBibkey.setText(bundle.getString("jRadioButtonFileBibkey.text"));
-        jRadioButtonFileBibkey.setToolTipText(bundle.getString("jRadioButtonFileBibkey.toolTipText"));
-        jRadioButtonFileBibkey.setName("jRadioButtonFileBibkey");
+        buttonGroup1.add(jRadioButtonFileBibkey);
+        jRadioButtonFileBibkey.setText(resourceMap.getString("jRadioButtonFileBibkey.text")); // NOI18N
+        jRadioButtonFileBibkey.setToolTipText(resourceMap.getString("jRadioButtonFileBibkey.toolTipText")); // NOI18N
+        jRadioButtonFileBibkey.setName("jRadioButtonFileBibkey"); // NOI18N
 
-        //---- jButtonCancel ----
-        jButtonCancel.setName("jButtonCancel");
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(CSetBibKey.class, this);
+        jButtonCancel.setAction(actionMap.get("cancel")); // NOI18N
+        jButtonCancel.setName("jButtonCancel"); // NOI18N
 
-        //---- jButtonApply ----
-        jButtonApply.setName("jButtonApply");
+        jButtonApply.setAction(actionMap.get("applyChanges")); // NOI18N
+        jButtonApply.setName("jButtonApply"); // NOI18N
 
-        //======== jScrollPane1 ========
-        {
-            jScrollPane1.setName("jScrollPane1");
-            jScrollPane1.setPreferredSize(new Dimension(100, 100));
+        jScrollPane1.setBorder(null);
+        jScrollPane1.setName("jScrollPane1"); // NOI18N
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(100, 100));
 
-            //---- jTablePreview ----
-            jTablePreview.setModel(new DefaultTableModel(
-                new Object[][] {
-                    {null, null},
-                    {null, null},
-                    {null, null},
-                    {null, null},
-                },
-                new String[] {
-                    "Bibkey", "Eintrag"
-                }
-            ) {
-                Class<?>[] columnTypes = new Class<?>[] {
-                    String.class, String.class
-                };
-                boolean[] columnEditable = new boolean[] {
-                    false, false
-                };
-                @Override
-                public Class<?> getColumnClass(int columnIndex) {
-                    return columnTypes[columnIndex];
-                }
-                @Override
-                public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return columnEditable[columnIndex];
-                }
-            });
-            jTablePreview.setName("jTablePreview");
-            jTablePreview.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            jScrollPane1.setViewportView(jTablePreview);
-        }
+        jTablePreview.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Bibkey", "Eintrag"
+            }
+        ) {
+            Class<?>[] types = new Class<?>[] {
+                java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
 
-        //---- jLabelTitle ----
-        jLabelTitle.setText(bundle.getString("jLabelTitle.text"));
-        jLabelTitle.setName("jLabelTitle");
+            public Class<?> getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
-        //---- jButtonRefreshView ----
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTablePreview.setName("jTablePreview"); // NOI18N
+        jTablePreview.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTablePreview.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(jTablePreview);
+        jTablePreview.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTablePreview.columnModel.title0")); // NOI18N
+        jTablePreview.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTablePreview.columnModel.title1")); // NOI18N
+
+        jLabelTitle.setText(resourceMap.getString("jLabelTitle.text")); // NOI18N
+        jLabelTitle.setName("jLabelTitle"); // NOI18N
+
+        jButtonRefreshView.setAction(actionMap.get("refreshList")); // NOI18N
+        jButtonRefreshView.setIcon(resourceMap.getIcon("jButtonRefreshView.icon")); // NOI18N
         jButtonRefreshView.setBorderPainted(false);
         jButtonRefreshView.setContentAreaFilled(false);
         jButtonRefreshView.setFocusPainted(false);
-        jButtonRefreshView.setName("jButtonRefreshView");
-        jButtonRefreshView.setPreferredSize(new Dimension(20, 20));
+        jButtonRefreshView.setName("jButtonRefreshView"); // NOI18N
+        jButtonRefreshView.setPreferredSize(new java.awt.Dimension(20, 20));
 
-        //---- jTextFieldFilterTable ----
-        jTextFieldFilterTable.setToolTipText(bundle.getString("jTextFieldFilterTable.toolTipText"));
-        jTextFieldFilterTable.setName("jTextFieldFilterTable");
+        jTextFieldFilterTable.setToolTipText(resourceMap.getString("jTextFieldFilterTable.toolTipText")); // NOI18N
+        jTextFieldFilterTable.setName("jTextFieldFilterTable"); // NOI18N
 
-        //---- jComboBoxShowBibTex ----
-        jComboBoxShowBibTex.setModel(new DefaultComboBoxModel<>(new String[] {
-            "Nur neue BibTex-Eintr\u00e4ge anzeigen",
-            "Nur vorhandene BibTex-Eintr\u00e4ge anzeigen",
-            "Alle BibTex-Eintr\u00e4ge anzeigen"
-        }));
-        jComboBoxShowBibTex.setName("jComboBoxShowBibTex");
+        jComboBoxShowBibTex.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "Nur neue BibTeX-Einträge anzeigen", "Nur vorhandene BibTeX-Einträge anzeigen", "Alle BibTeX-Einträge anzeigen" }));
+        jComboBoxShowBibTex.setName("jComboBoxShowBibTex"); // NOI18N
 
-        //---- jLabel1 ----
-        jLabel1.setText(bundle.getString("jLabel1.text"));
-        jLabel1.setName("jLabel1");
+        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setName("jLabel1"); // NOI18N
 
-        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
-        contentPane.setLayout(contentPaneLayout);
-        contentPaneLayout.setHorizontalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(contentPaneLayout.createParallelGroup()
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addGap(21, 21, 21)
-                            .addGroup(contentPaneLayout.createParallelGroup()
-                                .addGroup(contentPaneLayout.createSequentialGroup()
-                                    .addComponent(jComboBoxShowBibTex, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel1)
-                                    .addGap(0, 209, Short.MAX_VALUE))
-                                .addGroup(contentPaneLayout.createSequentialGroup()
-                                    .addComponent(jLabelManualBibkey)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jTextFieldManualBibkey))))
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addComponent(jTextFieldFilterTable)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jButtonRefreshView, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jButtonCancel)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jButtonApply))
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addGroup(contentPaneLayout.createParallelGroup()
-                                .addComponent(jRadioButtonManualBibkey)
-                                .addComponent(jLabelTitle)
-                                .addComponent(jRadioButtonFileBibkey))
-                            .addGap(0, 0, Short.MAX_VALUE)))
-                    .addContainerGap())
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jComboBoxShowBibTex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel1)
+                                .addGap(0, 209, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabelManualBibkey)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldManualBibkey))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jTextFieldFilterTable)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonRefreshView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonCancel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonApply))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jRadioButtonManualBibkey)
+                            .addComponent(jLabelTitle)
+                            .addComponent(jRadioButtonFileBibkey))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
-        contentPaneLayout.setVerticalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jLabelTitle)
-                    .addGap(18, 18, 18)
-                    .addComponent(jRadioButtonManualBibkey)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextFieldManualBibkey, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabelManualBibkey))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(jRadioButtonFileBibkey)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(jComboBoxShowBibTex, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1))
-                    .addGap(18, 18, 18)
-                    .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jTextFieldFilterTable, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButtonCancel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonApply, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonRefreshView, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGap(3, 3, 3))
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabelTitle)
+                .addGap(18, 18, 18)
+                .addComponent(jRadioButtonManualBibkey)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldManualBibkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelManualBibkey))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jRadioButtonFileBibkey)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBoxShowBibTex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jTextFieldFilterTable, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonCancel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonApply, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonRefreshView, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(3, 3, 3))
         );
+
         pack();
-        setLocationRelativeTo(getOwner());
-
-        //---- buttonGroup1 ----
-        buttonGroup1.add(jRadioButtonManualBibkey);
-        buttonGroup1.add(jRadioButtonFileBibkey);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - Ralf Barkow
-    private JRadioButton jRadioButtonManualBibkey;
-    private JLabel jLabelManualBibkey;
-    private JTextField jTextFieldManualBibkey;
-    private JRadioButton jRadioButtonFileBibkey;
-    private JButton jButtonCancel;
-    private JButton jButtonApply;
-    private JScrollPane jScrollPane1;
-    private JTable jTablePreview;
-    private JLabel jLabelTitle;
-    private JButton jButtonRefreshView;
-    private JTextField jTextFieldFilterTable;
-    private JComboBox<String> jComboBoxShowBibTex;
-    private JLabel jLabel1;
-    private ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JButton jButtonApply;
+    private javax.swing.JButton jButtonCancel;
+    private javax.swing.JButton jButtonRefreshView;
+    private javax.swing.JComboBox<String> jComboBoxShowBibTex;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabelManualBibkey;
+    private javax.swing.JLabel jLabelTitle;
+    private javax.swing.JRadioButton jRadioButtonFileBibkey;
+    private javax.swing.JRadioButton jRadioButtonManualBibkey;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTablePreview;
+    private javax.swing.JTextField jTextFieldFilterTable;
+    private javax.swing.JTextField jTextFieldManualBibkey;
     // End of variables declaration//GEN-END:variables
 
 }

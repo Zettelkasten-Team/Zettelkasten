@@ -33,10 +33,6 @@
 
 package de.danielluedecke.zettelkasten;
 
-import java.awt.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.Version;
 
@@ -62,9 +58,9 @@ public class AboutBox extends javax.swing.JDialog {
     /**
      * 
      * @param parent
-     * @param ismacaqua 
+     * @param isMacStyle 
      */
-    public AboutBox(java.awt.Frame parent, boolean ismacaqua) {
+    public AboutBox(java.awt.Frame parent, boolean isMacStyle) {
         super(parent);
         initComponents();
         // set application icon
@@ -96,46 +92,44 @@ public class AboutBox extends javax.swing.JDialog {
      */
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    // Generated using JFormDesigner Evaluation license - Ralf Barkow
     private void initComponents() {
-        ResourceBundle bundle = ResourceBundle.getBundle("de.danielluedecke.zettelkasten.resources.AboutBox");
-        jScrollPane1 = new JScrollPane();
-        jEditorPane1 = new JEditorPane();
 
-        //======== this ========
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(bundle.getString("FormAboutBox.title"));
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jEditorPane1 = new javax.swing.JEditorPane();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getResourceMap(AboutBox.class);
+        setTitle(resourceMap.getString("FormAboutBox.title")); // NOI18N
         setModal(true);
-        setName("FormAboutBox");
-        Container contentPane = getContentPane();
+        setName("FormAboutBox"); // NOI18N
 
-        //======== jScrollPane1 ========
-        {
-            jScrollPane1.setBorder(null);
-            jScrollPane1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-            jScrollPane1.setName("jScrollPane1");
+        jScrollPane1.setBorder(null);
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-            //---- jEditorPane1 ----
-            jEditorPane1.setBorder(null);
-            jEditorPane1.setContentType(bundle.getString("jEditorPane1.contentType"));
-            jEditorPane1.setEditable(false);
-            jEditorPane1.setName("jEditorPane1");
-            jEditorPane1.addHyperlinkListener(e -> jEditorPane1HyperlinkUpdate(e));
-            jScrollPane1.setViewportView(jEditorPane1);
-        }
+        jEditorPane1.setBorder(null);
+        jEditorPane1.setContentType(resourceMap.getString("jEditorPane1.contentType")); // NOI18N
+        jEditorPane1.setEditable(false);
+        jEditorPane1.setName("jEditorPane1"); // NOI18N
+        jEditorPane1.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
+            public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
+                jEditorPane1HyperlinkUpdate(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jEditorPane1);
 
-        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
-        contentPane.setLayout(contentPaneLayout);
-        contentPaneLayout.setHorizontalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
         );
-        contentPaneLayout.setVerticalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
         );
+
         pack();
-        setLocationRelativeTo(getOwner());
     }// </editor-fold>//GEN-END:initComponents
 
     private void jEditorPane1HyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_jEditorPane1HyperlinkUpdate
@@ -166,9 +160,8 @@ public class AboutBox extends javax.swing.JDialog {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - Ralf Barkow
-    private JScrollPane jScrollPane1;
-    private JEditorPane jEditorPane1;
+    private javax.swing.JEditorPane jEditorPane1;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
 }
