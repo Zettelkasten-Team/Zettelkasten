@@ -22,14 +22,12 @@ public class ZettelkastenAppTest {
         loggerMock = mock(Logger.class);
         settingsMock = mock(Settings.class); // Assign to class-level variable
         tasksDataMock = mock(TasksData.class);
-        //zettelkastenApp.configureLogger(loggerMock);
+        zettelkastenApp.configureLogger(loggerMock);
     }
 
     @Test
     void startup_ShouldInitializeLoggerAndSettings() {
-        // Arrange
-        zettelkastenApp.configureLogger(loggerMock);
-
+        
         // Act
         zettelkastenApp.startup();
 
