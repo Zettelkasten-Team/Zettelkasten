@@ -191,24 +191,16 @@ public class ZettelkastenApp extends SingleFrameApplication {
 	}
 
 	void createMainWindow() {
-		try {
-            // Get the main frame of the application
-            JFrame mainFrame = getMainFrame();
-
-            // Create an instance of ZettelkastenView
-            ZettelkastenView zettelkastenView = new ZettelkastenView(this, settings, taskData);
-
-            show(zettelkastenView);
-        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException
-                | IllegalAccessException | IOException e) {
-            handleMainWindowException(e);
+            try {
+                show(new ZettelkastenView(this, settings, taskData));
+            } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException | IllegalAccessException | IOException e) {
+                handleMainWindowException(e);
+            }
         }
-    }
 
 	private void handleMainWindowException(Exception e) {
 		e.printStackTrace();
 	}
-
 
 	/**
 	 * A convenient static getter for the application instance.
