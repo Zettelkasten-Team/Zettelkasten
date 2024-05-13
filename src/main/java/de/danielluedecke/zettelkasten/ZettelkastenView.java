@@ -103,13 +103,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * searchRequests manages all searches and searchresults for the loaded
 	 * datafile.
 	 */
-	private SearchRequests searchRequests;
+	public SearchRequests searchRequests;
 
 	private final Daten data;
 	private final TasksData taskinfo;
-	private final Bookmarks bookmarks;
+	public final Bookmarks bookmarks;
 	private final BibTeX bibtex;
-	private DesktopData desktop;
+	public DesktopData desktop;
 	private final Settings settings;
 
 	/**

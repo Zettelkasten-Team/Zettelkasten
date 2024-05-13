@@ -1,101 +1,125 @@
 package de.danielluedecke.zettelkasten.tasks;
 
+import de.danielluedecke.zettelkasten.TestObjectFactory;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
-import de.danielluedecke.zettelkasten.database.BibTeX;
-import de.danielluedecke.zettelkasten.database.Bookmarks;
-import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.database.SearchRequests;
-import de.danielluedecke.zettelkasten.database.Settings;
-import de.danielluedecke.zettelkasten.database.Synonyms;
+import de.danielluedecke.zettelkasten.database.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+
+import javax.swing.JLabel;
 import java.io.File;
 import java.io.IOException;
 import org.jdesktop.application.Application;
-import static org.junit.Assert.assertEquals;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.jdesktop.application.ApplicationContext;
+import org.jdesktop.application.ResourceMap;
+import org.jdesktop.application.SingleFrameApplication;
+
 import static org.mockito.Mockito.*;
+import org.mockito.MockitoAnnotations;
+import org.mockito.stubbing.OngoingStubbing;
 
 public class AutoBackupTaskTest {
 
-    private AutoBackupTask autoBackupTaskMock;
-    private Daten dataObjMock;
-    private Settings settingsObjMock;
-    private ZettelkastenView zknframeMock;
-    private javax.swing.JLabel statusMsgLabelMock;
+    private AutoBackupTask autoBackupTask;
+
+    @Mock
+    private SingleFrameApplication app;
+
+    public ZettelkastenView zknframe;
+
+    @Mock
+    private JLabel statusMsgLabelMock;
+
+    private Daten dataObj;
+
+    public DesktopData desktop;
+
+    public Settings settingsObj;
+
+    public SearchRequests searchRequests;
+
+    public Synonyms synonymsObj;
+
+    public Bookmarks bookmarks;
+
+    public BibTeX bibtexObj;
 
     @BeforeEach
-    public void setUp() {
-        dataObjMock = mock(Daten.class);
-        settingsObjMock = mock(Settings.class);
-        zknframeMock = mock(ZettelkastenView.class);
-        statusMsgLabelMock = mock(javax.swing.JLabel.class);
+    public void setUp() throws Exception {
+        // Initialize mocks
+        MockitoAnnotations.initMocks(this);
 
-        // Properly initialize AutoBackupTask with mocked dependencies
-        autoBackupTaskMock = new AutoBackupTask(mock(Application.class), zknframeMock, statusMsgLabelMock, dataObjMock,
-                mock(DesktopData.class), settingsObjMock, mock(SearchRequests.class),
-                mock(Synonyms.class), mock(Bookmarks.class), mock(BibTeX.class));
+        // Use TestObjectFactory to get Daten object
+        dataObj = TestObjectFactory.getDaten(TestObjectFactory.ZKN3Settings.ZKN3_SAMPLE);
 
-        // Stub method calls to ensure proper behavior during testing
-        File mainDataFileMock = mock(File.class);
-        when(settingsObjMock.getMainDataFile()).thenReturn(mainDataFileMock);
-        File backupFileMock = mock(File.class);
-        when(autoBackupTaskMock.createBackupFile()).thenReturn(backupFileMock);
+        // Retrieve settings from Daten object
+        settingsObj = dataObj.settings;
+
+        zknframe = dataObj.zknframe;
+        desktop = dataObj.zknframe.desktop;
+
+        searchRequests = dataObj.zknframe.searchRequests;
+        synonymsObj = dataObj.synonymsObj;
+        bookmarks = dataObj.zknframe.bookmarks;
+        bibtexObj = dataObj.bibtexObj;
+
+        // Mock the behavior of SingleFrameApplication and ApplicationContext
+        Application applicationMock = mock(Application.class);
+        ApplicationContext applicationContextMock = mock(ApplicationContext.class);
+        when(applicationMock.getContext()).thenReturn(applicationContextMock);
+
+        // Mock the behavior of getResourceMap() to return a valid ResourceMap
+        ResourceMap resourceMapMock = mock(ResourceMap.class);
+        when(applicationContextMock.getResourceMap(any(Class.class), any(Class.class))).thenReturn(resourceMapMock);
+
+        // Initialize the autoBackupTask with the mocked application
+        autoBackupTask = createAutoBackupTask();
+
+    }
+
+    private AutoBackupTask createAutoBackupTask() {
+        return new AutoBackupTask(app, zknframe, statusMsgLabelMock, dataObj,
+                desktop, settingsObj, searchRequests, synonymsObj, bookmarks, bibtexObj);
     }
 
     @Test
     public void testBackupErrorHandling() throws IOException {
-        // Stubbing settingsObjMock to return a valid main data file
-        File mainDataFileMock = mock(File.class);
-        when(settingsObjMock.getMainDataFile()).thenReturn(mainDataFileMock);
-
         // Stubbing createBackupFile() to return a valid backup file
         File backupFileMock = mock(File.class);
-        when(autoBackupTaskMock.createBackupFile()).thenReturn(backupFileMock);
+        when(autoBackupTask.createBackupFile()).thenReturn(backupFileMock);
 
         // Stubbing performBackup() to throw an IOException
         IOException ioExceptionMock = mock(IOException.class);
-        doThrow(ioExceptionMock).when(autoBackupTaskMock).performBackup(backupFileMock);
+        doThrow(ioExceptionMock).when(autoBackupTask).performBackup(backupFileMock);
+
+        // Call the method being tested
+        autoBackupTask.doInBackground();
 
         // Verify that handleBackupError() is called when IOException occurs during backup
-        autoBackupTaskMock.doInBackground();
-        verify(autoBackupTaskMock).handleBackupError(ioExceptionMock);
+        verify(autoBackupTask).handleBackupError(ioExceptionMock);
     }
 
-    /**
-     * Test of doInBackground method, of class AutoBackupTask.
-     */
     @Test
     public void testDoInBackground() throws Exception {
-        System.out.println("doInBackground");
         // AutoBackupTask instance is already initialized in setUp method
         Object expResult = null;
-        Object result = autoBackupTaskMock.doInBackground();
-        assertEquals(expResult, result);
-        // No need to call fail(), as it's already handled by the assertion
+        Object result = autoBackupTask.doInBackground();
+        assert expResult == result;
     }
 
-    /**
-     * Test of succeeded method, of class AutoBackupTask.
-     */
     @Test
     public void testSucceeded() {
-        System.out.println("succeeded");
-        Object result_2 = null;
         // AutoBackupTask instance is already initialized in setUp method
-        autoBackupTaskMock.succeeded(result_2);
-        // No need to call fail(), as it's already handled by the method
+        Object result_2 = null;
+        autoBackupTask.succeeded(result_2);
+        // Add verification if necessary
     }
 
-    /**
-     * Test of finished method, of class AutoBackupTask.
-     */
     @Test
     public void testFinished() {
-        System.out.println("finished");
         // AutoBackupTask instance is already initialized in setUp method
-        autoBackupTaskMock.finished();
-        // No need to call fail(), as it's already handled by the method
+        autoBackupTask.finished();
+        // Add verification if necessary
     }
-
 }
