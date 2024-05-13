@@ -15,6 +15,9 @@
             <Property name="name" type="java.lang.String" value="jSplitPaneMain1" noResource="true"/>
             <Property name="oneTouchExpandable" type="boolean" value="true"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="ZettelkastenView_jSplitPaneMain1"/>
+          </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
               <BorderConstraints direction="Center"/>

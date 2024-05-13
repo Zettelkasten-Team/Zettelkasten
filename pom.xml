@@ -379,6 +379,13 @@
             <artifactId>javafx-controls</artifactId>
             <version>12.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.5</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>

@@ -1,6 +1,7 @@
 package de.danielluedecke.zettelkasten.tasks;
 
 import de.danielluedecke.zettelkasten.TestObjectFactory;
+import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.database.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +14,6 @@ import java.io.IOException;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ApplicationContext;
 import org.jdesktop.application.ResourceMap;
-import org.jdesktop.application.SingleFrameApplication;
 
 import static org.mockito.Mockito.*;
 import org.mockito.MockitoAnnotations;
@@ -21,65 +21,76 @@ import org.mockito.MockitoAnnotations;
 public class AutoBackupTaskTest {
 
     private AutoBackupTask autoBackupTask;
+    private ResourceMap rm;
 
     @Mock
-    private SingleFrameApplication app;
+    Application appSpy;
 
-    public ZettelkastenView zknframe;
+    //@Mock
+    ZettelkastenView zkn;
 
     @Mock
-    private JLabel statusMsgLabelMock;
+    JLabel statusMsgLabel;
 
-    private Daten dataObj;
+    Daten dataObj;
 
-    public DesktopData desktop;
+    @Mock
+    DesktopData desktopObj;
 
-    public Settings settingsObj;
+    //@Mock
+    Settings settingsObj;
 
-    public SearchRequests searchRequests;
+    @Mock
+    SearchRequests searchObj;
 
-    public Synonyms synonymsObj;
+    //@Mock
+    Synonyms synonymsObj;
 
-    public Bookmarks bookmarks;
+    @Mock
+    Bookmarks bookmarksObj;
 
-    public BibTeX bibtexObj;
+    //@Mock
+    BibTeX bibtexObj;
 
     @BeforeEach
     public void setUp() throws Exception {
         // Initialize mocks
         MockitoAnnotations.initMocks(this);
 
+        // Mock the behavior of the ApplicationContext within the Application mock
+        ApplicationContext applicationContextMock = mock(ApplicationContext.class);
+
+        // Create a spy instead of a mock for the Application instance
+        appSpy = spy(ZettelkastenApp.class);
+
+        // Stub the getContext() method on the spy
+        doReturn(applicationContextMock).when(appSpy).getContext();
+
+        rm = org.jdesktop.application.Application
+                .getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
+                .getResourceMap(ZettelkastenView.class);
+
         // Use TestObjectFactory to get Daten object
         dataObj = TestObjectFactory.getDaten(TestObjectFactory.ZKN3Settings.ZKN3_SAMPLE);
 
-        // Retrieve settings from Daten object
+        zkn = dataObj.zknframe;
+
         settingsObj = dataObj.settings;
-
-        zknframe = dataObj.zknframe;
-        desktop = dataObj.zknframe.desktop;
-
-        searchRequests = dataObj.zknframe.searchRequests;
-        synonymsObj = dataObj.synonymsObj;
-        bookmarks = dataObj.zknframe.bookmarks;
         bibtexObj = dataObj.bibtexObj;
-
-        // Mock the behavior of SingleFrameApplication and ApplicationContext
-        Application applicationMock = mock(Application.class);
-        ApplicationContext applicationContextMock = mock(ApplicationContext.class);
-        when(applicationMock.getContext()).thenReturn(applicationContextMock);
-
-        // Mock the behavior of getResourceMap() to return a valid ResourceMap
-        ResourceMap resourceMapMock = mock(ResourceMap.class);
-        when(applicationContextMock.getResourceMap(any(Class.class), any(Class.class))).thenReturn(resourceMapMock);
+        synonymsObj = dataObj.synonymsObj;
 
         // Initialize the autoBackupTask with the mocked application
         autoBackupTask = createAutoBackupTask();
 
+        // Stubbing createBackupFile() to return a valid backup file
+        File backupFileMock = mock(File.class);
+        when(autoBackupTask.createBackupFile()).thenReturn(backupFileMock);
+
     }
 
     private AutoBackupTask createAutoBackupTask() {
-        return new AutoBackupTask(app, zknframe, statusMsgLabelMock, dataObj,
-                desktop, settingsObj, searchRequests, synonymsObj, bookmarks, bibtexObj);
+        return new AutoBackupTask(appSpy, zkn, statusMsgLabel, dataObj, desktopObj, settingsObj, searchObj, synonymsObj,
+                bookmarksObj, bibtexObj);
     }
 
     @Test
