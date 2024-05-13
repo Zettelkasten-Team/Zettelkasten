@@ -127,7 +127,7 @@ public class SettingsTest {
 		assertEquals(null, settings.getMainDataFileNameWithoutExtension());
 		// Now with an existing main data file.
 		testPath.toFile().createNewFile();
-		assertEquals("ANY_VALUE", settings.getMainDataFileNameWithoutExtension().toString());
+		assertEquals("ANY_VALUE", settings.getMainDataFileNameWithoutExtension());
 	}
 
 	@Test
