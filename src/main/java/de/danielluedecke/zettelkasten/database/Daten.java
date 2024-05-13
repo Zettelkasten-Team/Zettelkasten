@@ -77,15 +77,15 @@ public class Daten {
 	/**
 	 * A reference to the settings class
 	 */
-	private final Settings settings;
+	public final Settings settings;
 	/**
 	 * A reference to the {@link BibTeX} class
 	 */
-	private final BibTeX bibtexObj;
+	public final BibTeX bibtexObj;
 	/**
 	 * A reference to the synonyms class
 	 */
-	private final Synonyms synonymsObj;
+	public final Synonyms synonymsObj;
 	/**
 	 * XML Document that Stores the main data
 	 */
@@ -251,7 +251,7 @@ public class Daten {
 	/**
 	 * Reference to the main frame.
 	 */
-	private final ZettelkastenView zknframe;
+	public final ZettelkastenView zknframe;
 
 	public static final String DOCUMENT_ZETTELKASTEN = "zettelkasten";
 	public static final String DOCUMENT_AUTHORS = "authors";
