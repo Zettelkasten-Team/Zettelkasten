@@ -25,8 +25,8 @@ public class AutoBackupTask extends org.jdesktop.application.Task<Object, Void> 
     private final SearchRequests searchObj;
     private final DesktopData desktopObj;
     private final ZettelkastenView zknframe;
-    private String oldmsg;
     private final javax.swing.JLabel statusMsgLabel;
+    private String oldmsg;
 
     public AutoBackupTask(org.jdesktop.application.Application app, ZettelkastenView zkn,
             javax.swing.JLabel statusMsgLabel, Daten dataObj,
