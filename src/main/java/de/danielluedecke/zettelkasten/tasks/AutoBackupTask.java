@@ -1,16 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.danielluedecke.zettelkasten.tasks;
 
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.database.*;
-import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
 import java.io.ByteArrayOutputStream;
+import org.jdom2.output.XMLOutputter;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,18 +14,9 @@ import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.swing.JOptionPane;
-import org.jdom2.output.XMLOutputter;
 
-/**
- *
- * @author Luedeke
- */
 public class AutoBackupTask extends org.jdesktop.application.Task<Object, Void> {
 
-    /**
-     * Store old value of status-label, so we can restore it after task is
-     * finished
-     */
     private final Daten dataObj;
     private final Settings settingsObj;
     private final Bookmarks bookmarksObj;
@@ -37,189 +24,103 @@ public class AutoBackupTask extends org.jdesktop.application.Task<Object, Void> 
     private final Synonyms synonymsObj;
     private final SearchRequests searchObj;
     private final DesktopData desktopObj;
-    /**
-     * Reference to the main frame.
-     */
     private final ZettelkastenView zknframe;
-    /**
-     * get the strings for file descriptions from the resource map
-     */
     private String oldmsg;
     private final javax.swing.JLabel statusMsgLabel;
-    private final org.jdesktop.application.ResourceMap rm
-            = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
-            getContext().getResourceMap(ZettelkastenView.class);
 
     public AutoBackupTask(org.jdesktop.application.Application app, ZettelkastenView zkn,
-            javax.swing.JLabel ml, Daten d, 
-            DesktopData desk, Settings s, SearchRequests sr, Synonyms sy, Bookmarks bm, BibTeX bt) {
-        // Runs on the EDT.  Copy GUI state that
-        // doInBackground() depends on from parameters
-        // to ImportFileTask fields, here.
+            javax.swing.JLabel statusMsgLabel, Daten dataObj,
+            DesktopData desktopObj, Settings settingsObj,
+            SearchRequests searchObj, Synonyms synonymsObj,
+            Bookmarks bookmarksObj, BibTeX bibtexObj) {
         super(app);
-        dataObj = d;
-        settingsObj = s;
-        bookmarksObj = bm;
-        bibtexObj = bt;
-        searchObj = sr;
-        synonymsObj = sy;
-        statusMsgLabel = ml;
-        desktopObj = desk;
-        zknframe = zkn;
+        this.dataObj = dataObj;
+        this.settingsObj = settingsObj;
+        this.bookmarksObj = bookmarksObj;
+        this.bibtexObj = bibtexObj;
+        this.searchObj = searchObj;
+        this.synonymsObj = synonymsObj;
+        this.statusMsgLabel = statusMsgLabel;
+        this.desktopObj = desktopObj;
+        this.zknframe = zkn;
     }
 
     @Override
-    protected Object doInBackground() throws IOException {
-        // Your Task's code here.  This method runs
-        // on a background thread, so don't reference
-        // the Swing GUI from here.
-        // prevent task from processing when the file path is incorrect
+    protected Object doInBackground() {
+        try {
+            File backupFile = createBackupFile();
+            if (backupFile == null) {
+                return null;
+            }
+            performBackup(backupFile);
+        } catch (IOException e) {
+            handleBackupError(e);
+        }
+        return null;
+    }
 
-        // get filepath
-        File fp = settingsObj.getMainDataFile();
-        // copy current filepath to string
-        String newfp = fp.toString();
-        // look for last occurence of the extension-period. this
-        // is needed to set another extension for the backup-file
-        int lastDot = newfp.lastIndexOf(".");
-        // if extension was found...
-        if (-1 == lastDot) {
-            // log error
-            Constants.zknlogger.log(Level.WARNING, "Couldn't find file-extension! Auto-backup was not created!");
+    File createBackupFile() {
+        File mainDataFile = settingsObj.getMainDataFile();
+        if (mainDataFile == null) {
             return null;
         }
-        // create backup-file, with new extension
-        File backup = new File(newfp.substring(0, lastDot) + ".zkb3");
-        new File(newfp.substring(0, lastDot) + "_zkb3");
-        // and copy original file to backupfile
-        // if the user did not cancel and the destination file does not already exist, go on here
-        // tell programm that task is running
-        zknframe.setAutoBackupRunning(true);
-        // check whether file is write protected
-        if (!backup.canWrite()) {
-            // log error-message
-            Constants.zknlogger.log(Level.WARNING, "Autobackup-file is write-protected. Removing write protection...");
-            try {
-                // try to remove write protection
-                backup.setWritable(true);
-            } catch (SecurityException ex) {
-                // log error-message
-                Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
-                Constants.zknlogger.log(Level.SEVERE, "Autobackup-file is write-protected. Write protection could not be removed!");
-            }
+        String filePath = mainDataFile.toString();
+        int lastDotIndex = filePath.lastIndexOf(".");
+        if (lastDotIndex == -1) {
+            Constants.zknlogger.log(Level.WARNING, "Couldn't find file extension! Auto-backup was not created!");
+            return null;
         }
-        ByteArrayOutputStream bout = null;
-        ZipOutputStream zip = null;
-        // open the outputstream
-        try {
-            zip = new ZipOutputStream(new FileOutputStream(backup));
-            // I first wanted to use a pretty output format, so advanced users who
-            // extract the data file can better watch the xml-files. but somehow, this
-            // lead to an error within the method "retrieveElement" in the class "CDaten.java",
-            // saying the a org.jdom.text cannot be converted to org.jdom.element?!?
-            // XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
-            XMLOutputter out = new XMLOutputter();
-            // save old statustext
-            oldmsg = statusMsgLabel.getText();
-            // show status text
-            statusMsgLabel.setText(rm.getString("createAutoBackupMsg"));
-            // save metainformation
-            zip.putNextEntry(new ZipEntry(Constants.metainfFileName));
-            out.output(dataObj.getMetaInformationData(), zip);
-            // save main data.
-            zip.putNextEntry(new ZipEntry(Constants.zknFileName));
-            out.output(dataObj.getZknData(), zip);
-            // save authors
-            zip.putNextEntry(new ZipEntry(Constants.authorFileName));
-            out.output(dataObj.getAuthorData(), zip);
-            // save keywords
-            zip.putNextEntry(new ZipEntry(Constants.keywordFileName));
-            out.output(dataObj.getKeywordData(), zip);
-            // save bookmarks
-            zip.putNextEntry(new ZipEntry(Constants.bookmarksFileName));
-            out.output(bookmarksObj.getBookmarkData(), zip);
-            // save searchrequests
-            zip.putNextEntry(new ZipEntry(Constants.searchrequestsFileName));
-            out.output(searchObj.getSearchData(), zip);
-            // save synonyms
-            zip.putNextEntry(new ZipEntry(Constants.synonymsFileName));
-            out.output(synonymsObj.getDocument(), zip);
-            // save bibtex file
-            zip.putNextEntry(new ZipEntry(Constants.bibTexFileName));
-            bout = bibtexObj.saveFile();
-            bout.writeTo(zip);
-            // save desktops
-            zip.putNextEntry(new ZipEntry(Constants.desktopFileName));
-            out.output(desktopObj.getDesktopData(), zip);
-            zip.putNextEntry(new ZipEntry(Constants.desktopModifiedEntriesFileName));
-            out.output(desktopObj.getDesktopModifiedEntriesData(), zip);
-            zip.putNextEntry(new ZipEntry(Constants.desktopNotesFileName));
-            out.output(desktopObj.getDesktopNotesData(), zip);
-        } catch (IOException e) {
-            // log error message
-            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-            // create a copy of the data file in case we have problems creating the auto-backup
-            File datafiledummy = settingsObj.getMainDataFile();
-            // check for valid value
-            if (datafiledummy != null && datafiledummy.exists()) {
-                try {
-                    // first, create basic backup-file
-                    File checkbackup = FileOperationsUtil.getBackupFilePath(datafiledummy);
-                    // copy data file as backup-file
-                    FileOperationsUtil.copyFile(datafiledummy, checkbackup, 1024);
-                    // log path.
-                    Constants.zknlogger.log(Level.INFO, "A backup of the data file was saved to {0}", checkbackup.toString());
-                    // check whether file is write protected
-                    if (!backup.canWrite()) {
-                        // log error-message
-                        Constants.zknlogger.log(Level.SEVERE, "Autobackup failed. The file is write-protected.");
-                        // show error message
-                        JOptionPane.showMessageDialog(zknframe.getFrame(), rm.getString("errorSavingWriteProtectedMsg"), rm.getString("autobackupSaveErrTitle"), JOptionPane.PLAIN_MESSAGE);
-                    }
-                    // tell user that an error occured
-                    JOptionPane.showMessageDialog(zknframe.getFrame(), rm.getString("autobackupSaveErrMsg", "\"" + checkbackup.getName() + "\""),
-                            rm.getString("autobackupSaveErrTitle"),
-                            JOptionPane.PLAIN_MESSAGE);
-                } catch (IOException e2) {
-                    Constants.zknlogger.log(Level.SEVERE, e2.getLocalizedMessage());
-                }
-            }
-        } catch (SecurityException e) {
-            // log error message
-            Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-            // create a copy of the data file in case we have problems creating the auto-backup
-            File datafiledummy = settingsObj.getMainDataFile();
-            // check for valid value
-            if (datafiledummy != null && datafiledummy.exists()) {
-                try {
-                    // first, create basic backup-file
-                    File checkbackup = FileOperationsUtil.getBackupFilePath(datafiledummy);
-                    // copy data file as backup-file
-                    FileOperationsUtil.copyFile(datafiledummy, checkbackup, 1024);
-                    // log path.
-                    Constants.zknlogger.log(Level.INFO, "A backup of the data file was saved to {0}", checkbackup.toString());
-                    // tell user that an error occured
-                    JOptionPane.showMessageDialog(zknframe.getFrame(), rm.getString("autobackupSaveErrMsg", "\"" + checkbackup.getName() + "\""),
-                            rm.getString("autobackupSaveErrTitle"),
-                            JOptionPane.PLAIN_MESSAGE);
-                } catch (IOException e2) {
-                    Constants.zknlogger.log(Level.SEVERE, e2.getLocalizedMessage());
-                }
-            }
-        } finally {
-            try {
-                if (bout != null) {
-                    bout.close();
-                }
-                if (zip != null) {
-                    zip.close();
-                }
-            } catch (IOException e) {
-                Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
-            }
-        }
+        return new File(filePath.substring(0, lastDotIndex) + ".zkb3");
+    }
 
-        return null;  // return your result
+    void performBackup(File backupFile) throws IOException {
+        try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(backupFile))) {
+            XMLOutputter out = new XMLOutputter();
+            // Check if the backup file is write-protected
+            if (!backupFile.canWrite()) {
+                // Log a warning message
+                Constants.zknlogger.log(Level.WARNING, "Autobackup-file is write-protected. Removing write protection...");
+                try {
+                    // Attempt to remove write protection
+                    backupFile.setWritable(true);
+                } catch (SecurityException ex) {
+                    // Log an error message if write protection couldn't be removed
+                    Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
+                    Constants.zknlogger.log(Level.SEVERE, "Autobackup-file is write-protected. Write protection could not be removed!");
+                    // Handle the situation where write protection cannot be removed
+                    // For example, you might prompt the user to manually remove write protection or choose a different location for the backup file
+                    // You can also choose to abort the backup process here
+                    return; // or throw an exception
+                }
+            }
+            saveDataToZip(zip, out);
+        }
+    }
+
+    private void saveDataToZip(ZipOutputStream zip, XMLOutputter out) throws IOException {
+        zip.putNextEntry(new ZipEntry(Constants.metainfFileName));
+        out.output(dataObj.getMetaInformationData(), zip);
+        zip.putNextEntry(new ZipEntry(Constants.zknFileName));
+        out.output(dataObj.getZknData(), zip);
+        zip.putNextEntry(new ZipEntry(Constants.authorFileName));
+        out.output(dataObj.getAuthorData(), zip);
+        zip.putNextEntry(new ZipEntry(Constants.keywordFileName));
+        out.output(dataObj.getKeywordData(), zip);
+        zip.putNextEntry(new ZipEntry(Constants.bookmarksFileName));
+        out.output(bookmarksObj.getBookmarkData(), zip);
+        zip.putNextEntry(new ZipEntry(Constants.searchrequestsFileName));
+        out.output(searchObj.getSearchData(), zip);
+        zip.putNextEntry(new ZipEntry(Constants.synonymsFileName));
+        out.output(synonymsObj.getDocument(), zip);
+        zip.putNextEntry(new ZipEntry(Constants.bibTexFileName));
+        ByteArrayOutputStream bout = bibtexObj.saveFile();
+        bout.writeTo(zip);
+        zip.putNextEntry(new ZipEntry(Constants.desktopFileName));
+        out.output(desktopObj.getDesktopData(), zip);
+        zip.putNextEntry(new ZipEntry(Constants.desktopModifiedEntriesFileName));
+        out.output(desktopObj.getDesktopModifiedEntriesData(), zip);
+        zip.putNextEntry(new ZipEntry(Constants.desktopNotesFileName));
+        out.output(desktopObj.getDesktopNotesData(), zip);
     }
 
     @Override
@@ -233,11 +134,54 @@ public class AutoBackupTask extends org.jdesktop.application.Task<Object, Void> 
         super.finished();
         // restore old status message
         statusMsgLabel.setText(oldmsg);
-        // tell programm that task has finished
+        // tell program that task has finished
         zknframe.setAutoBackupRunning(false);
-        // no autoback necessary at the moment
+        // no autobackup necessary at the moment
         zknframe.backupNecessary(false);
         // and log info message
         Constants.zknlogger.log(Level.INFO, "Automatic backup was successfully created.");
+    }
+
+    void handleBackupError(IOException e) {
+        Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+        // Log error message
+        Constants.zknlogger.log(Level.SEVERE, "Error creating auto-backup. Creating a copy of the data file...");
+
+        // Attempt to create a copy of the data file
+        File fallbackBackupFile = settingsObj.getMainDataFile();
+        if (fallbackBackupFile != null && fallbackBackupFile.exists()) {
+            try {
+                File backupCopy = FileOperationsUtil.getBackupFilePath(fallbackBackupFile);
+                FileOperationsUtil.copyFile(fallbackBackupFile, backupCopy, 1024);
+                // Log path
+                Constants.zknlogger.log(Level.INFO, "A backup of the data file was saved to {0}", backupCopy.toString());
+
+                // Check if the file is write-protected
+                if (!backupCopy.canWrite()) {
+                    // Log error message
+                    Constants.zknlogger.log(Level.SEVERE, "Autobackup failed. The file is write-protected.");
+                    // Show error message
+                    JOptionPane.showMessageDialog(
+                            zknframe.getFrame(),
+                            "Error message here", // Message to display
+                            "Error Title", // Title of the dialog
+                            JOptionPane.PLAIN_MESSAGE
+                    );
+                }
+
+                // Show error message
+                JOptionPane.showMessageDialog(
+                        zknframe.getFrame(),
+                        "Error message here", // Message to display
+                        "Error Title", // Title of the dialog
+                        JOptionPane.PLAIN_MESSAGE
+                );
+            } catch (IOException e2) {
+                Constants.zknlogger.log(Level.SEVERE, e2.getLocalizedMessage());
+            }
+        } else {
+            // Log error message if the main data file is null or doesn't exist
+            Constants.zknlogger.log(Level.SEVERE, "Main data file is null or doesn't exist.");
+        }
     }
 }
