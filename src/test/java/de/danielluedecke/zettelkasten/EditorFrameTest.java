@@ -23,6 +23,7 @@ public class EditorFrameTest extends SwingTestCase {
     }
 
     @Before
+    @Override
     public void setUp() throws Exception {
 
         // TODO: maybe we should use the TestObjectFactory here.
@@ -73,6 +74,7 @@ public class EditorFrameTest extends SwingTestCase {
     }
 
     @After
+    @Override
     public void tearDown() throws Exception {
     }
 }
