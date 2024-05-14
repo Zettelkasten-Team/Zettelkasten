@@ -131,15 +131,15 @@ public class SettingsTest {
 	}
 
 	@Test
-	void isMacStyle_MacOSWithAquaLookAndFeel_ReturnsTrue() {
-		Settings settings = new Settings();
-		// Set up the environment to simulate macOS with Aqua look and feel
-		// For example:
-		// Mocking PlatformUtil to return true for isMacOS()
-		// Mocking getLookAndFeel() to return a value containing "Aqua"
+        void isMacStyle_MacOSWithAquaLookAndFeel_ReturnsTrue() {
+            Settings settings = new Settings();
 
-		assertTrue(settings.isMacStyle());
-	}
+            if (System.getProperty("os.name").toLowerCase().startsWith("mac os") == true) {
+                assertTrue(settings.isMacStyle());
+            } else {
+                assertFalse(settings.isMacStyle());
+            }
+        }
 
 	@Test
 	void loadSettings_FileNotFound_ReturnsFalse() {

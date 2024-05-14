@@ -114,7 +114,7 @@ public class Settings {
 	 *         feel
 	 */
 	public boolean isMacStyle() {
-		return PlatformUtil.isMacOS() & getLookAndFeel().contains("Aqua");
+		return getLookAndFeel().contains("Aqua") && PlatformUtil.isMacOS();
 	}
 
 	public boolean isSeaGlass() {
