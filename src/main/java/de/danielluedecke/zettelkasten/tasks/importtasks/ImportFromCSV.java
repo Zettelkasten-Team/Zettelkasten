@@ -9,6 +9,7 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvException;
 
 import de.danielluedecke.zettelkasten.database.Bookmarks;
 import de.danielluedecke.zettelkasten.database.Daten;
@@ -138,7 +139,7 @@ public class ImportFromCSV extends org.jdesktop.application.Task<Object, Void> {
 	}
 
 	@Override
-	protected Object doInBackground() {
+	protected Object doInBackground() throws CsvException {
 		// Your Task's code here. This method runs
 		// on a background thread, so don't reference
 		// the Swing GUI from here.
