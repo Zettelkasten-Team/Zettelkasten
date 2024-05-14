@@ -219,7 +219,8 @@ public class ZettelkastenApp extends SingleFrameApplication {
     void validateSettings() {
         //TODO use default settings
         if (settings == null) {
-            throw new IllegalArgumentException("Settings cannot be null.");
+            Settings settings = new Settings();
+            settings.initDefaultSettingsIfMissing();
         }
     }
 
