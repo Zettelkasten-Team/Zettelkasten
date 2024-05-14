@@ -195,7 +195,7 @@ public class ZettelkastenApp extends SingleFrameApplication {
 
     void initializeSettings() {
         settings = new Settings();
-        //updateSettingsWithCommandLineParams(params);
+        updateSettingsWithCommandLineParams(params);
     }
 
     void initializeLocale() {
