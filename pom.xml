@@ -10,7 +10,7 @@
         <zkn.supportsDmg>false</zkn.supportsDmg>
         <zkn.useGenIsoImage>false</zkn.useGenIsoImage>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <slf4j.version>1.7.32</slf4j.version>
+        <slf4j.version>1.7.36</slf4j.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -78,7 +78,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
+                <version>3.13.0</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -92,7 +92,7 @@
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
-                <version>2.2.5</version>
+                <version>4.9.10</version>
                 <executions>
                     <execution>
                         <id>get-the-git-infos</id>
@@ -109,7 +109,7 @@
             <plugin>
                 <groupId>com.amashchenko.maven.plugin</groupId>
                 <artifactId>gitflow-maven-plugin</artifactId>
-                <version>1.14.0</version>
+                <version>1.21.0</version>
                 <configuration>
                     <!-- optional configuration -->
                     <gitFlowConfig>
@@ -121,7 +121,7 @@
             <plugin>
                 <groupId>de.perdian.maven.plugins</groupId>
                 <artifactId>macosappbundler-maven-plugin</artifactId>
-                <version>1.10.0</version>
+                <version>1.18.1</version>
                 <configuration>
                     <jdk>
                         <include>false</include>
@@ -178,7 +178,7 @@
             <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
                 <artifactId>launch4j-maven-plugin</artifactId>
-                <version>2.1.2</version>
+                <version>2.5.0</version>
                 <executions>
                     <execution>
                         <id>launch4j</id>
@@ -240,7 +240,7 @@
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.10.1</version>
+            <version>3.13.0</version>
             <type>maven-plugin</type>
             <exclusions>
                 <exclusion>
@@ -248,8 +248,8 @@
                     <artifactId>plexus-component-annotations</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>commons-io</groupId>
-                    <artifactId>commons-io</artifactId>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -267,11 +267,17 @@
             <groupId>org.kohsuke</groupId>
             <artifactId>github-api</artifactId>
             <version>1.321</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jdom</groupId>
             <artifactId>jdom2</artifactId>
-            <version>2.0.6</version>
+            <version>2.0.6.1</version>
         </dependency>
         <dependency>
             <groupId>com.seaglasslookandfeel</groupId>
@@ -342,7 +348,7 @@
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
-            <version>3.2.5</version>
+            <version>3.4.1</version>
         </dependency>
         <dependency>
             <groupId>io.github.furstenheim</groupId>
@@ -361,11 +367,23 @@
             <version>7.10.2</version>
             <scope>test</scope>
             <type>jar</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.6</version> <!-- or the latest version -->
+            <version>1.5.6</version> <!-- or the latest version -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     <repositories>
