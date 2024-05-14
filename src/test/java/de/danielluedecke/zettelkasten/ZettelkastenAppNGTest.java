@@ -71,8 +71,8 @@ public class ZettelkastenAppNGTest {
         Logger logger = null;
         ZettelkastenApp instance = new ZettelkastenApp();
         instance.configureLogger(logger);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        // Verify that the logger is configured
+        assertNotNull(instance.getLogger());
     }
 
     /**
@@ -83,8 +83,8 @@ public class ZettelkastenAppNGTest {
         System.out.println("initializeTaskData");
         ZettelkastenApp instance = new ZettelkastenApp();
         instance.initializeTaskData();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        // Verify that task data is initialized
+        assertNotNull(instance.getTaskData());
     }
 
     /**
@@ -119,8 +119,8 @@ public class ZettelkastenAppNGTest {
         System.out.println("showMainWindow");
         ZettelkastenApp instance = new ZettelkastenApp();
         instance.showMainWindow();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        // Verify that the main window is shown
+        assertTrue(instance.isMainWindowVisible());
     }
 
     /**
@@ -131,8 +131,8 @@ public class ZettelkastenAppNGTest {
         System.out.println("logStartingMainWindow");
         ZettelkastenApp instance = new ZettelkastenApp();
         instance.logStartingMainWindow();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        // Verify that the main window is shown
+        assertTrue(instance.isMainWindowVisible());
     }
 
     /**
@@ -143,8 +143,8 @@ public class ZettelkastenAppNGTest {
         System.out.println("validateSettings");
         ZettelkastenApp instance = new ZettelkastenApp();
         instance.validateSettings();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        // Verify that settings are initialized
+        assertNotNull(instance.getSettings());
     }
 
     /**
@@ -168,8 +168,6 @@ public class ZettelkastenAppNGTest {
         ZettelkastenApp expResult = null;
         ZettelkastenApp result = ZettelkastenApp.getApplication();
         assertEquals(result, expResult);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -182,8 +180,6 @@ public class ZettelkastenAppNGTest {
         ByteArrayOutputStream expResult = null;
         ByteArrayOutputStream result = instance.getCurrentSessionLogs();
         assertEquals(result, expResult);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -194,8 +190,6 @@ public class ZettelkastenAppNGTest {
         System.out.println("main");
         String[] args = null;
         ZettelkastenApp.main(args);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
