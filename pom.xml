@@ -141,7 +141,6 @@
                     <dmg>
                         <generate>${zkn.supportsDmg}</generate>
                         <useGenIsoImage>${zkn.useGenIsoImage}</useGenIsoImage>
-                        <dmgFileName>${project.build.finalName}</dmgFileName>
                     </dmg>
                 </configuration>
                 <executions>
