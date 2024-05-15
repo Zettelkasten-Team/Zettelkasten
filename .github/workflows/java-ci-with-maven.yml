@@ -21,11 +21,8 @@ jobs:
         with:
           java-version: 18.0.2+101
           distribution: temurin
-      - name: Set up Xvfb
-        run: |
-        sudo apt-get install xvfb
-        export DISPLAY=:99
-        Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+      - name: Run headless test
+        uses: coactions/setup-xvfb@v1
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - run: mkdir staging && cp target/*.jar target/*.exe staging  
