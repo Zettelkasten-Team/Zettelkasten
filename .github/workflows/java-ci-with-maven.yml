@@ -24,7 +24,7 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - run: mkdir staging && cp target/*.jar target/*.exe staging  
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Package (.jar and .exe)
           path: staging
@@ -43,7 +43,7 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - run: mkdir staging && cp target/*.dmg staging
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Package (.dmg)
           path: staging
