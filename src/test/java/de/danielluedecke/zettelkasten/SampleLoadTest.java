@@ -1,6 +1,5 @@
 package de.danielluedecke.zettelkasten;
 
-import de.danielluedecke.zettelkasten.TestObjectFactory;
 import de.danielluedecke.zettelkasten.database.Daten;
 import org.junit.Before;
 import org.junit.Test;
