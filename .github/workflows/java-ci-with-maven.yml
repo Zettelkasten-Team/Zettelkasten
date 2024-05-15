@@ -21,8 +21,6 @@ jobs:
         with:
           java-version: 18.0.2+101
           distribution: temurin
-      - name: Run headless test
-        uses: coactions/setup-xvfb@v1
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - run: mkdir staging && cp target/*.jar target/*.exe staging  
