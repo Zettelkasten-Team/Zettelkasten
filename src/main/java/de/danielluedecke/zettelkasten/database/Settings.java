@@ -334,11 +334,6 @@ public class Settings {
 	 * <br>
 	 * We combine several xml-files and compress them into a single zip-container,
 	 * named "zettelkasten-settings.zks3" and "zettelkasten-data.zkd3".
-	 *
-	 * @param ak
-	 * @param ac
-	 * @param syn
-	 * @param stn
 	 */
 	public Settings() {
 		// Init settings file and acceleratorKeys.
@@ -459,11 +454,11 @@ public class Settings {
 	}
 
 	/**
-	 * This method adds the file from the filepath {@code fp} to the list of recent
-	 * documents and rotates that list, if necessary.
+	 * This method adds the file from the filepath {@code fp} to the list 
+         * of recent documents and rotates that list, if necessary.
 	 *
-	 * @param fp the filepath to the document that should be added to the list of
-	 *           recent documents
+	 * @param fp the filepath to the document that should be added to the 
+         *           list of recent documents
 	 */
 	public void addToRecentDocs(String fp) {
 		// check for valid parameter

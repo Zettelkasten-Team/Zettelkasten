@@ -1443,28 +1443,30 @@ public class BibTeX {
 	}
 
 	/**
-	 * This method returns a formatted string consisting of the author-, year- and
-	 * title-value of an bibtex-entry of the currently attached bibtex-file. This
-	 * method does the work for both
+	 * This method returns a formatted string consisting of the author-, 
+         * year- and title-value of an bibtex-entry of the currently attached 
+         * bibtex-file. Thismethod does the work for both
 	 * {@link #getFormattedEntryFromAttachedFile(java.lang.String)
 	 * getFormattedEntryFromAttachedFile(String)} and
 	 * {@link #getFormattedEntryFromAttachedFile(int)
 	 * getFormattedEntryFromAttachedFile(int)}.<br>
 	 * <br>
-	 * The way an author-value from the imported bibtex-value is formatted and
-	 * output as string is defined via the {@link #initStyles()
-	 * initStyles()}-method. There we create linked hashmaps that contain the
-	 * elements for different literatur-types (books, articles, abstracts...).<br>
+	 * The way an author-value from the imported bibtex-value is formatted 
+         * and output as string is defined via the {@link #initStyles()
+	 * initStyles()}-method. There we create linked hashmaps that contain 
+         * the elements for different literatur-types (books, articles, 
+         * abstracts...).<br>
 	 * <br>
-	 * In this method, we first check out the <i>type</i> of the bibtex-entry (book,
-	 * article...) and then get the related LinkedHashMap. In this HashMap, we have
-	 * the single elements of the literatur (author, title, year, publisher...) in a
-	 * certain order, with special values associated to each element. This is the
-	 * formatting.<br>
+	 * In this method, we first check out the <i>type</i> of the bibtex-
+         * entry (book, article...) and then get the related LinkedHashMap. 
+         * In this HashMap, we have the single elements of the literatur 
+         * (author, title, year, publisher...) in a certain order, with special 
+         * values associated to each element. This is the formatting.<br>
 	 * <br>
-	 * E.g.: The key <b>"year"</b> has the value <b>" (*):"</b>, where the asterisk
-	 * is replaced by the year-value, if the bibtex-entry contains a year-value. The
-	 * formatted year thus would be for instance <b>" (2009):"</b>.
+	 * E.g.: The key <b>"year"</b> has the value <b>" (*):"</b>, where the 
+         * asterisk is replaced by the year-value, if the bibtex-entry contains 
+         * a year-value. The formatted year thus would be for instance 
+         * <b>" (2009):"</b>.
 	 *
 	 * @param be               the BibtexEntry that should be formatted
 	 * @param fromAttachedFile

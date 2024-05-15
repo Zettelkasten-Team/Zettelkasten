@@ -211,11 +211,14 @@ public class ZettelkastenApp extends SingleFrameApplication {
             handleMainWindowException(e);
         }
     }
-
+    
     void logStartingMainWindow() {
         Constants.zknlogger.log(Level.INFO, "Starting Main Window.");
     }
-
+    
+    /**
+     * @see Settings#resetSettings()
+     */
     void validateSettings() {
         //TODO use default settings
         if (settings == null) {
