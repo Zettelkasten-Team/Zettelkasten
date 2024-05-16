@@ -124,7 +124,7 @@
                         <CFBundleDisplayName>${project.name}</CFBundleDisplayName>
                         <CFBundleIdentifier>de.danielluedecke.zettelkasten.ZettelkastenApp</CFBundleIdentifier>
                         <CFBundleShortVersionString>${project.version}</CFBundleShortVersionString>
-                        <CFBundleIconFile>zkn3_2.icns</CFBundleIconFile>
+                        <CFBundleIconFile>src/main/resources/logo/zkn3_2.icns</CFBundleIconFile>
                     </plist>
                     <dmg>
                         <generate>${zkn.supportsDmg}</generate>
@@ -184,7 +184,7 @@
                             <stayAlive>false</stayAlive>
                             <restartOnCrash>false</restartOnCrash>
                             <manifest/>
-                            <icon>zkn2.ico</icon>
+                            <icon>src/main/resources/logo/zkn2.ico</icon>
                             <jre>
                                 <minVersion>1.7.0</minVersion>
                                 <bundledJre64Bit>false</bundledJre64Bit>
@@ -193,7 +193,7 @@
                                 <runtimeBits>32/64</runtimeBits>
                             </jre>
                             <splash>
-                                <file>splash.bmp</file>
+                                <file>src/main/resources/logo/splash.bmp</file>
                                 <waitForWindow>true</waitForWindow>
                                 <timeout>60</timeout>
                                 <timeoutErr>true</timeoutErr>
