@@ -45,7 +45,10 @@ import java.awt.Frame;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Locale;
+import java.util.Properties;
+import java.util.Set;
 import java.util.logging.*;
 
 import org.jdesktop.application.Application;
@@ -109,35 +112,60 @@ public class ZettelkastenApp extends SingleFrameApplication {
 
         Locale.setDefault(newLocale);
     }
+    
+     private void logSystemProperties(String[] args) {
+        Properties props = System.getProperties();
+        Set<Object> keys = props.keySet();
+        for (Object key : keys) {
+            String keyStr = (String) key;
+            String value = props.getProperty(keyStr);
+            Constants.zknlogger.log(Level.INFO, "System property: {0}={1}", new Object[]{keyStr, value});
+        }
+    }
 
     private void updateSettingsWithCommandLineParams(String[] params) {
-        // Check params for:
-        // - data file (first param that ends with .zkn3).
-        // - initial entry number (first param that is a valid number)
+        //logSystemProperties(params);
+
         for (String param : params) {
-            // Is param a data file?
-            if (param.toLowerCase().endsWith(Constants.ZKN_FILEEXTENSION)) {
-                File file = new File(param);
-                if (file.exists()) {
-                    Constants.zknlogger.log(Level.INFO,
-                            "Setting data file to '{0}' from the Zettelkasten command line arguments.",
-                            file.toString());
-                    settings.setMainDataFile(file);
-                    break;
-                }
-            }
-            // Is param a number?
+            processCommandLineParameter(param);
+        }
+    }
+
+    private void processCommandLineParameter(String param) {
+        Constants.zknlogger.log(Level.INFO, "Processing command line parameter: {0}", param);
+
+        if (param.toLowerCase().endsWith(Constants.ZKN_FILEEXTENSION)) {
+            processAsDataFile(param);
+        } else {
             try {
-                int initalZettellNr = Integer.parseInt(param);
-                if (initalZettellNr > 0) {
-                    settings.setInitialParamZettel(initalZettellNr);
-                    Constants.zknlogger.log(Level.INFO,
-                            "Setting initial entry number to '{0}' from the Zettelkasten command line arguments.",
-                            initalZettellNr);
-                    break;
-                }
+                processAsInitialEntryNumber(param);
             } catch (NumberFormatException ex) {
+                Constants.zknlogger.log(Level.WARNING, "Invalid command line parameter: {0}. Skipping.", param);
             }
+        }
+    }
+
+    private void processAsDataFile(String param) {
+        File file = new File(param);
+        if (file.exists()) {
+            Constants.zknlogger.log(Level.INFO, 
+                    "Setting data file to {0} from the command line arguments.", 
+                    file.toString());
+            settings.setMainDataFile(file);
+        } else {
+            Constants.zknlogger.log(Level.WARNING, "Data file does not exist: '{0}'. Skipping.", param);
+        }
+    }
+
+    private void processAsInitialEntryNumber(String param) {
+        int initialZettellNr = Integer.parseInt(param);
+        if (initialZettellNr > 0) {
+            settings.setInitialParamZettel(initialZettellNr);
+            Constants.zknlogger.log(Level.INFO,
+                    "Setting initial entry number to {0} from the command line arguments.",
+                    initialZettellNr); // Passing initialZettellNr as an argument
+        } else {
+            Constants.zknlogger.log(Level.WARNING, "Initial entry number is not positive: {0}. Skipping.", initialZettellNr);
         }
     }
 

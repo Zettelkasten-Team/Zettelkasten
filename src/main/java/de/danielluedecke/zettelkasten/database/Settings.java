@@ -551,7 +551,7 @@ public class Settings {
 	}
 
 	/**
-	 * If an entry-number was passed as paramter, use this method to store the
+	 * If an entry-number was passed as parameter, use this method to store the
 	 * entry-number, so the entry can be displayed immediately after opening a data
 	 * file. Use -1 to indicate that no parameter-entry-number should be set
 	 *
