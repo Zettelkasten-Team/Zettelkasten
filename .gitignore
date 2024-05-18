@@ -158,3 +158,4 @@ Zettelkasten.iml
 .classpath
 venv
 /nbproject/
+.project
