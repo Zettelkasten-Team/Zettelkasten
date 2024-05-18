@@ -63,55 +63,61 @@ public class CHighlightSearchSettings extends javax.swing.JDialog {
     private org.jdesktop.application.ResourceMap resourceMap = 
         org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).
         getContext().getResourceMap(CHighlightSearchSettings.class);
+	private Settings settings;
     
     
     /**
-     * 
-     * @param parent
-     * @param s 
+     * Constructor for CHighlightSearchSettings.
+     *
+     * @param parent the parent frame
+     * @param settings the settings object
+     * @param style the highlight style
      */
-    public CHighlightSearchSettings(java.awt.Frame parent, Settings s, int style) {
+    public CHighlightSearchSettings(java.awt.Frame parent, Settings settings, int style) {
         super(parent);
         initComponents();
+
+        this.settings = settings;
+        this.highlightstyle = style;
         
-        settingsObj = s;
-        highlightstyle = style;
-        // these codelines add an escape-listener to the dialog. so, when the user
-        // presses the escape-key, the same action is performed as if the user
+        // These code lines add an escape-listener to the dialog. So, when the user
+        // presses the escape key, the same action is performed as if the user
         // presses the cancel button...
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
         ActionListener cancelAction = new java.awt.event.ActionListener() {
-            @Override public void actionPerformed(ActionEvent evt) {
+            @Override 
+            public void actionPerformed(ActionEvent evt) {
                 cancel();
             }
         };
         getRootPane().registerKeyboardAction(cancelAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
-        // set default button
+        
+        // Set default button
         getRootPane().setDefaultButton(jButtonApply);
-        // init the slider for the default table and list fontsize
-//        Map<Integer, JLabel> labelTable = new HashMap<Integer, JLabel>();
-//        labelTable.put(new Integer(0), new JLabel(resourceMap.getString("smallFontSize")));
-//        labelTable.put(new Integer(5), new JLabel(resourceMap.getString("bigFontSize")));
-//        jSliderSize.setLabelTable((Dictionary)labelTable);
-        Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
-        labelTable.put(new Integer(0), new JLabel(resourceMap.getString("smallFontSize")));
-        labelTable.put(new Integer(5), new JLabel(resourceMap.getString("bigFontSize")));
+
+        // Initialize the slider for the default table and list font size
+        Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
+        labelTable.put(Integer.valueOf(0), new JLabel(resourceMap.getString("smallFontSize")));
+        labelTable.put(Integer.valueOf(5), new JLabel(resourceMap.getString("bigFontSize")));
         jSliderSize.setLabelTable(labelTable);
-        jSliderSize.setValue(Integer.parseInt(settingsObj.getHighlightSearchStyle(Settings.FONTSIZE, highlightstyle)));
+        jSliderSize.setValue(Integer.parseInt(settings.getHighlightSearchStyle(Settings.FONTSIZE, highlightstyle)));
 
-        jCheckBoxBold.setSelected(settingsObj.getHighlightSearchStyle(Settings.FONTWEIGHT, highlightstyle).equalsIgnoreCase("bold"));
-        jCheckBoxItalic.setSelected(settingsObj.getHighlightSearchStyle(Settings.FONTSTYLE, highlightstyle).equalsIgnoreCase("italic"));
-        jCheckBoxShowHighlight.setSelected(settingsObj.getShowHighlightBackground(highlightstyle));
+        jCheckBoxBold.setSelected(settings.getHighlightSearchStyle(Settings.FONTWEIGHT, highlightstyle).equalsIgnoreCase("bold"));
+        jCheckBoxItalic.setSelected(settings.getHighlightSearchStyle(Settings.FONTSTYLE, highlightstyle).equalsIgnoreCase("italic"));
+        jCheckBoxShowHighlight.setSelected(settings.getShowHighlightBackground(highlightstyle));
 
-        jLabelColor.setForeground(new Color(Integer.parseInt(settingsObj.getHighlightSearchStyle(Settings.FONTCOLOR, highlightstyle), 16)));
-        if (settingsObj.getShowHighlightBackground(highlightstyle)) jLabelColor.setBackground(new Color(Integer.parseInt(settingsObj.getHighlightBackgroundColor(highlightstyle), 16)));
-        if (settingsObj.isSeaGlass()) {
+        jLabelColor.setForeground(new Color(Integer.parseInt(settings.getHighlightSearchStyle(Settings.FONTCOLOR, highlightstyle), 16)));
+        if (settings.getShowHighlightBackground(highlightstyle)) {
+            jLabelColor.setBackground(new Color(Integer.parseInt(settings.getHighlightBackgroundColor(highlightstyle), 16)));
+        }
+        if (settings.isSeaGlass()) {
             jButtonApply.putClientProperty("JComponent.sizeVariant", "small");
             jButtonBackgroundColor.putClientProperty("JComponent.sizeVariant", "small");
             jButtonCancel.putClientProperty("JComponent.sizeVariant", "small");
             jButtonChangeColor.putClientProperty("JComponent.sizeVariant", "small");
         }
     }
+
 
     private String chooseColor(String col) {
         // first, show an color-chooser-dialog and let the user choose the color
