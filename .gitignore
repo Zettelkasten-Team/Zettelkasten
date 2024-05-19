@@ -159,3 +159,6 @@ Zettelkasten.iml
 venv
 /nbproject/
 .project
+test-output
+jdt2famix-import.problems
+Zettelkasten.mse
