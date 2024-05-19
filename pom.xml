@@ -129,6 +129,7 @@
                 <configuration>
                     <verbose>true</verbose>
                     <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                    <offline>true</offline>
                 </configuration>
             </plugin>
             <plugin>
