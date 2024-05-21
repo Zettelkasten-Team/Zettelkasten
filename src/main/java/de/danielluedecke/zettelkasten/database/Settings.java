@@ -571,44 +571,16 @@ public class Settings {
 	 * settings-file-versions.
 	 */
 	public void initDefaultSettingsIfMissing() {
+		// Initialize default accelerator keys
 		acceleratorKeys.initDefaultAcceleratorKeysIfMissing();
 
+		// Initialize recent document settings
 		for (int cnt = 0; cnt < RECENT_DOC_COUNT; cnt++) {
 			genericElementInitIfMissing(SETTING_RECENT_DOC + String.valueOf(cnt + 1), "");
 		}
 
-		{
-			// Install FlatLafs Light and Dark with Ubuntu accent colour (Todo: make colors / themeing flexible, not hardcoded)
-			UIManager.installLookAndFeel("FlatLightLaf", "com.formdev.flatlaf.FlatLightLaf");
-			FlatLightLaf.setGlobalExtraDefaults(Collections.singletonMap("@accentColor", "#ea5420"));
-			UIManager.installLookAndFeel("FlatDarkLaf", "com.formdev.flatlaf.FlatDarkLaf");
-			FlatDarkLaf.setGlobalExtraDefaults(Collections.singletonMap("@accentColor", "#ea5420"));
-			// Retrieve all installed LookAndFeels
-			UIManager.LookAndFeelInfo[] installed_laf = UIManager.getInstalledLookAndFeels();
-			boolean lafAquaFound = false;
-			String aquaclassname = "";
-			String flatlightlafclassname = "";
-
-			// Give Aqua and FlatLightLaf proper classnames
-			for (UIManager.LookAndFeelInfo laf : installed_laf) {
-				if (laf.getName().equalsIgnoreCase("mac os x") || laf.getClassName().contains("Aqua")) {
-					lafAquaFound = true;
-					aquaclassname = laf.getClassName();
-				}
-				if (laf.getName().equalsIgnoreCase("FlatLightLaf") || laf.getClassName().contains("com.formdev.flatlaf.FlatLightLaf")) {
-					flatlightlafclassname = laf.getClassName();
-				}
-			}
-			// Set Aqua as default on MacOS, FlatLightLaf on Linux and System Laf on Windows
-			if (lafAquaFound) {
-				genericElementInitIfMissing(SETTING_LAF, aquaclassname);
-			} else if (PlatformUtil.isLinux()) {
-				genericElementInitIfMissing(SETTING_LAF, flatlightlafclassname);
-			}
-			else {
-				genericElementInitIfMissing(SETTING_LAF, UIManager.getSystemLookAndFeelClassName());
-			}
-		}
+		// Setup LookAndFeel
+		initializeLookAndFeel();
 
 		// Default font is the "SansSerif" logical font name.
 		String defaultFont = Font.SANS_SERIF;
@@ -932,6 +904,39 @@ public class Settings {
 			el.setAttribute("style", "normal");
 			el.setAttribute("weight", "bold");
 			el.setAttribute("color", "000000");
+		}
+	}
+
+	private void initializeLookAndFeel() {
+		// Install FlatLafs Light and Dark with Ubuntu accent colour (Todo: make colors / themeing flexible, not hardcoded)
+		UIManager.installLookAndFeel("FlatLightLaf", "com.formdev.flatlaf.FlatLightLaf");
+		FlatLightLaf.setGlobalExtraDefaults(Collections.singletonMap("@accentColor", "#ea5420"));
+		UIManager.installLookAndFeel("FlatDarkLaf", "com.formdev.flatlaf.FlatDarkLaf");
+		FlatDarkLaf.setGlobalExtraDefaults(Collections.singletonMap("@accentColor", "#ea5420"));
+		// Retrieve all installed LookAndFeels
+		UIManager.LookAndFeelInfo[] installed_laf = UIManager.getInstalledLookAndFeels();
+		boolean lafAquaFound = false;
+		String aquaclassname = "";
+		String flatlightlafclassname = "";
+
+		// Give Aqua and FlatLightLaf proper classnames
+		for (UIManager.LookAndFeelInfo laf : installed_laf) {
+			if (laf.getName().equalsIgnoreCase("mac os x") || laf.getClassName().contains("Aqua")) {
+				lafAquaFound = true;
+				aquaclassname = laf.getClassName();
+			}
+			if (laf.getName().equalsIgnoreCase("FlatLightLaf") || laf.getClassName().contains("com.formdev.flatlaf.FlatLightLaf")) {
+				flatlightlafclassname = laf.getClassName();
+			}
+		}
+		// Set Aqua as default on MacOS, FlatLightLaf on Linux and System Laf on Windows
+		if (lafAquaFound) {
+			genericElementInitIfMissing(SETTING_LAF, aquaclassname);
+		} else if (PlatformUtil.isLinux()) {
+			genericElementInitIfMissing(SETTING_LAF, flatlightlafclassname);
+		}
+		else {
+			genericElementInitIfMissing(SETTING_LAF, UIManager.getSystemLookAndFeelClassName());
 		}
 	}
 
