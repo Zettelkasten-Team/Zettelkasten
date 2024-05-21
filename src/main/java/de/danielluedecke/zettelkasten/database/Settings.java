@@ -585,6 +585,10 @@ public class Settings {
 		// Default font is the "SansSerif" logical font name.
 		String defaultFont = Font.SANS_SERIF;
 
+		initializeSettings(defaultFont);
+	}
+
+	private void initializeSettings(String defaultFont) {
 		String pandoc = "pandoc";
 		if (PlatformUtil.isMacOS()) {
 			pandoc = "/usr/local/bin/pandoc";
