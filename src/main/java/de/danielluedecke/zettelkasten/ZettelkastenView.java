@@ -1143,7 +1143,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 		});
 
-		// Init the JTable selection listeners.
+		// Initialize the JTable selection listeners.
 		JTable[] tables = new JTable[] { jTableLinks, jTableManLinks, jTableAuthors,
 				jTableTitles, jTableBookmarks, jTableAttachments };
 		for (JTable t : tables) {
@@ -3478,7 +3478,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This methoid toggles the highlight-setting for the keywords. When activated,
+	 * This method toggles the highlight-setting for the keywords. When activated,
 	 * the keywords of the current displayed entry are highlighted in the entry's
 	 * content-text.
 	 */
@@ -5255,12 +5255,20 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * Adds the displayed entry to the bookmark list.
-	 */
-	@Action(enabledProperty = "entryBookmarked")
-	public void addToBookmark() {
-		addToBookmarks(new int[] { displayedZettel }, false);
-	}
+     * Adds the displayed entry to the bookmark list.
+     */
+    @Action(enabledProperty = "entryBookmarked")
+    public void addToBookmark() {
+        Constants.zknlogger.log(Level.INFO, "Attempting to add the displayed entry to the bookmark list.");
+        Constants.zknlogger.log(Level.INFO, String.format("Displayed entry: %d", displayedZettel));
+
+        try {
+            addToBookmarks(new int[] { displayedZettel }, false);
+            Constants.zknlogger.log(Level.INFO, String.format("Entry %d added to bookmarks successfully.", displayedZettel));
+        } catch (Exception e) {
+            Constants.zknlogger.log(Level.SEVERE, "Error adding entry to bookmarks", e);
+        }
+    }
 
 	/**
 	 * Adds one or more bookmarks to the bookmark-datafile.
@@ -7374,8 +7382,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This method rerieves the selected entries from the current activated tab in
-	 * the tabbedpane and adds them to the bookmarks of the current entry.
+	 * This method gets the selected entries from the current activated tab in
+	 * the tabbed pane and adds them to the current item's bookmarks.
 	 */
 	@Action(enabledProperty = "tableEntriesSelected")
 	public void addBookmarks() {
@@ -11131,26 +11139,44 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			// Get list selection model.
 			ListSelectionModel lsm = (ListSelectionModel) e.getSource();
-			// Set value-adjusting to true, so we don't fire multiple value-changed
-			// events.
+			// Set value-adjusting to true, so we don't fire multiple value-changed events.
 			lsm.setValueIsAdjusting(true);
-			if (table == jTableAuthors) {
-				showAuthorText();
-				if (setBibKeyDlg != null) {
-					setBibKeyDlg.initTitleAndBibkey();
+
+			// Retrieve the selected row index
+			int selectedRow = table.getSelectedRow();
+			if (selectedRow == -1) {
+				return; // No selection
+			}
+
+			try {
+				int modelRowIndex = table.convertRowIndexToModel(selectedRow);
+				if (modelRowIndex < 0 || modelRowIndex >= table.getModel().getRowCount()) {
+					throw new ArrayIndexOutOfBoundsException("Invalid row index: " + modelRowIndex);
 				}
-			} else if (table == jTableTitles) {
-				showEntryFromTitles();
-			} else if (table == jTableAttachments) {
-				showEntryFromAttachments();
-			} else if (table == jTableLinks) {
-				// If the user selects an entry from the links table, highlight the
-				// keyword in jListEntryKeywords that is responsible for the link.
-				updateDisplayedEntryAndKeywordsListWithSelectedEntryFromLinksInteraction();
-			} else if (table == jTableManLinks) {
-				updateDisplayedEntryWithSelectedEntryFromManualLinks();
-			} else if (table == jTableBookmarks) {
-				showEntryFromBookmarks();
+
+				// Handle different tables
+
+				if (table == jTableAuthors) {
+					showAuthorText();
+					if (setBibKeyDlg != null) {
+						setBibKeyDlg.initTitleAndBibkey();
+					}
+				} else if (table == jTableTitles) {
+					showEntryFromTitles();
+				} else if (table == jTableAttachments) {
+					showEntryFromAttachments();
+				} else if (table == jTableLinks) {
+					// If the user selects an entry from the links table, highlight the
+					// keyword in jListEntryKeywords that is responsible for the link.
+					updateDisplayedEntryAndKeywordsListWithSelectedEntryFromLinksInteraction();
+				} else if (table == jTableManLinks) {
+					updateDisplayedEntryWithSelectedEntryFromManualLinks();
+				} else if (table == jTableBookmarks) {
+					showEntryFromBookmarks();
+				}
+			} catch (ArrayIndexOutOfBoundsException ex) {
+				Constants.zknlogger.log(Level.WARNING,
+						"Attempted to access an invalid row index in table: " + selectedRow, ex);
 			}
 		}
 	}
