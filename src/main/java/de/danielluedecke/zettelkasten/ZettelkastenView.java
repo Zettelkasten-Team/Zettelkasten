@@ -1143,7 +1143,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 		});
 
-		// Initialize the JTable selection listeners.
+		// Init the JTable selection listeners.
 		JTable[] tables = new JTable[] { jTableLinks, jTableManLinks, jTableAuthors,
 				jTableTitles, jTableBookmarks, jTableAttachments };
 		for (JTable t : tables) {
@@ -3478,7 +3478,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This method toggles the highlight-setting for the keywords. When activated,
+	 * This methoid toggles the highlight-setting for the keywords. When activated,
 	 * the keywords of the current displayed entry are highlighted in the entry's
 	 * content-text.
 	 */
@@ -5255,20 +5255,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-     * Adds the displayed entry to the bookmark list.
-     */
-    @Action(enabledProperty = "entryBookmarked")
-    public void addToBookmark() {
-        Constants.zknlogger.log(Level.INFO, "Attempting to add the displayed entry to the bookmark list.");
-        Constants.zknlogger.log(Level.INFO, String.format("Displayed entry: %d", displayedZettel));
-
-        try {
-            addToBookmarks(new int[] { displayedZettel }, false);
-            Constants.zknlogger.log(Level.INFO, String.format("Entry %d added to bookmarks successfully.", displayedZettel));
-        } catch (Exception e) {
-            Constants.zknlogger.log(Level.SEVERE, "Error adding entry to bookmarks", e);
-        }
-    }
+	 * Adds the displayed entry to the bookmark list.
+	 */
+	@Action(enabledProperty = "entryBookmarked")
+	public void addToBookmark() {
+		addToBookmarks(new int[] { displayedZettel }, false);
+	}
 
 	/**
 	 * Adds one or more bookmarks to the bookmark-datafile.
@@ -5310,8 +5302,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This method retrieves the selected authors(s) from the jTableAuthors and adds
-	 * them to the author-textfield of the entry.
+	 * Gets the selected author(s) from the jTableAuthors and 
+	 * adds them to the author-textfield of the entry.
 	 */
 	@Action(enabledProperty = "tableEntriesSelected")
 	public void addAuthorToList() {
@@ -7382,8 +7374,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This method gets the selected entries from the current activated tab in
-	 * the tabbed pane and adds them to the current item's bookmarks.
+	 * This method rerieves the selected entries from the current activated tab in
+	 * the tabbedpane and adds them to the bookmarks of the current entry.
 	 */
 	@Action(enabledProperty = "tableEntriesSelected")
 	public void addBookmarks() {
@@ -8428,11 +8420,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	public void setNewActivatedEntryAndUpdateDisplay(int entryNumber, UpdateDisplayOptions options) {
 		if (data.activateEntry(entryNumber)) {
-			// Reset displayedZettel.
-			displayedZettel = -1;
 			updateDisplay(options);
 		} else {
-			// This should never happen.
+			// Log a warning if the entry number is invalid
 			Constants.zknlogger.log(Level.WARNING,
 					"setNewActivatedEntryAndUpdateDisplay was called with invalid entry number: {0}", entryNumber);
 		}

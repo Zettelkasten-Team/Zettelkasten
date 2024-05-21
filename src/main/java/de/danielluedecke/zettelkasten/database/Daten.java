@@ -5056,21 +5056,25 @@ public class Daten {
 			activatedEntryNumber = history[historyPosition];
 		}
 	}
-
 	/**
-	 * This method sets the currently activated entry to the given number. If number
-	 * is invalid, returns false without any change.
+	 * Sets the currently activated entry to the given number.
+	 * If the number is invalid, returns false without any change.
 	 *
-	 * @param entryNumber the number of the entry which should be activated
-	 * @return success or not
+	 * @param entryNumber the number of the entry to activate
+	 * @return true if the entry was successfully activated, false otherwise
 	 */
 	public boolean activateEntry(int entryNumber) {
+		// Check if the entry exists and is not deleted
 		if (!zettelExists(entryNumber) || isDeleted(entryNumber)) {
 			return false;
 		}
+
+		// Set the activated entry number
 		activatedEntryNumber = entryNumber;
-		// Update history.
+
+		// Update history with the new activated entry
 		addToHistory();
+
 		return true;
 	}
 
