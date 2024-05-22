@@ -100,7 +100,7 @@ public class TaskProgressDialog extends javax.swing.JDialog {
 	private BibTeX bibTeX;
 
 	private TaskMonitor taskMonitor;
-	private Task<?, ?> foregroundTask; // FIXME Provide the parametrized type for this generic.
+	private Task<?, ?> foregroundTask; // FIXME Provide the parameterized type for this generic.
 
 	public static final int TASK_LOAD = 1;
 	public static final int TASK_SAVE = 2;

@@ -49,6 +49,7 @@ import com.explodingpixels.widgets.WindowUtils;
 import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
 import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
+import de.danielluedecke.zettelkasten.settings.AcceleratorKeys;
 import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;

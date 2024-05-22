@@ -31,9 +31,11 @@
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
 
-package de.danielluedecke.zettelkasten.database;
+package de.danielluedecke.zettelkasten.settings;
 
 import de.danielluedecke.zettelkasten.util.Constants;
+import de.danielluedecke.zettelkasten.util.PlatformUtil;
+
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.XMLOutputter;
@@ -49,7 +51,7 @@ import java.util.logging.Level;
  * AcceleratorKeys is part of the overall program settings. (It is a member
  * field of the class Settings.) It is organized as XML files.
  *
- * @author danielludecke
+ * @author Daniel Lüdecke
  */
 public class AcceleratorKeys {
 
@@ -59,17 +61,17 @@ public class AcceleratorKeys {
 	private Document acceleratorKeysSearchResults;
 
 	/**
-	 * this is the mask key. on mac os, we ususally have the "meta"-key as mask, on
-	 * windows or linux, however, ctrl is used
+	 * this is the mask key. on macOS, we usually have the "meta"-key as mask, on
+	 * windows or Linux, however, ctrl is used
 	 */
-	private String mask = null;
-	private String delkey = null;
-	private String pluskey = null;
-	private String minuskey = null;
-	private String renamekey = null;
-	private String historykey = null;
-	private String numbersign = null;
-	private String ctrlkey = null;
+	private String mask; // refers to a modifier key used in combination with other keys to perform keyboard shortcuts (accelerator keys)
+    private String delkey;
+    private String pluskey;
+    private String minuskey;
+    private String renamekey;
+    private String historykey;
+    private String numbersign;
+    private String ctrlkey;
 
 	/**
 	 * Constant used as parameter for the getCount method
@@ -118,8 +120,8 @@ public class AcceleratorKeys {
 	 * settings-file-versions.
 	 */
 	public final void initDefaultAcceleratorKeysIfMissing() {
-		// check out which os we have, and set the appropriate mask-key
-		if (System.getProperty("os.name").toLowerCase().startsWith("mac os")) {
+		// Check which OS we have, and set the appropriate mask-key
+        if (PlatformUtil.isMacOS()) {
 			mask = "meta";
 			delkey = "BACK_SPACE";
 			pluskey = "CLOSE_BRACKET";
@@ -156,7 +158,7 @@ public class AcceleratorKeys {
 	 * xml-document, and create elements and default values for all new elements.
 	 * This ensures compatibility to older/news settings-file-versions.
 	 */
-	private void initDefaultMainKeysIfMissing() {
+	void initDefaultMainKeysIfMissing() {
 		// this is our element variable which will be used below to set all the child
 		// elements
 		Element acckey;
@@ -567,7 +569,7 @@ public class AcceleratorKeys {
 	 * separate the initialisation of the accelerator tables for each window to keep
 	 * an better overiew.
 	 */
-	private void initDefaultNewEntryKeysIfMissing() {
+	void initDefaultNewEntryKeysIfMissing() {
 		// this is our element variable which will be used below to set all the child
 		// elements
 		Element acckey;
@@ -962,7 +964,7 @@ public class AcceleratorKeys {
 	 * separate the initialisation of the accelerator tables for each window to keep
 	 * an better overiew.
 	 */
-	private void initDefaultDesktopKeysIfMissing() {
+	void initDefaultDesktopKeysIfMissing() {
 		// this is our element variable which will be used below to set all the child
 		// elements
 		Element acckey;
@@ -1213,7 +1215,7 @@ public class AcceleratorKeys {
 	 * separate the initialisation of the accelerator tables for each window to keep
 	 * an better overiew.
 	 */
-	private void initDefaultSearchResultsKeysIfMissing() {
+	void initDefaultSearchResultsKeysIfMissing() {
 		// this is our element variable which will be used below to set all the child
 		// elements
 		Element acckey;
@@ -1566,9 +1568,9 @@ public class AcceleratorKeys {
 	}
 
 	/**
-	 * This method looks for the occurence of the attribute "attr". All elements of
+	 * This method looks for the occurrence of the attribute "attr". All elements of
 	 * an xml-file are searched for the given attribute. If an element contains that
-	 * atrtribut, the method returns true, false otherwise.
+	 * attribute, the method returns true, false otherwise.
 	 * 
 	 * @param doc  (the xml-document where to look for the attribute)
 	 * @param attr (the attribute we want to find)
@@ -1663,4 +1665,14 @@ public class AcceleratorKeys {
 			return null;
 		}
 	}
+	
+	// Getter methods
+    public String getMask() { return mask; }
+    public String getDelkey() { return delkey; }
+    public String getPluskey() { return pluskey; }
+    public String getMinuskey() { return minuskey; }
+    public String getRenamekey() { return renamekey; }
+    public String getHistorykey() { return historykey; }
+    public String getNumbersign() { return numbersign; }
+    public String getCtrlkey() { return ctrlkey; }
 }

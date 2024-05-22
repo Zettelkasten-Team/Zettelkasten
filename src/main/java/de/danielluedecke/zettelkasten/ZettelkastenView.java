@@ -39,6 +39,7 @@ import de.danielluedecke.zettelkasten.mac.MacSourceList;
 import de.danielluedecke.zettelkasten.mac.MacSourceTree;
 import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
 import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
+import de.danielluedecke.zettelkasten.settings.AcceleratorKeys;
 import de.danielluedecke.zettelkasten.tasks.AutoBackupTask;
 import de.danielluedecke.zettelkasten.tasks.FindDoubleEntriesTask;
 import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
@@ -6710,7 +6711,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * Action with background task, which imorts the file
+	 * Action with background task, which imports the file
 	 *
 	 * @return
 	 */
@@ -6725,7 +6726,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	/**
 	 * This task creates the related (clustered) keywords from the current entry.
 	 * Therefore, the current entry's keywords are retrieved. Then, in each entry of
-	 * the data-file we look for occurences of the current entry's keywords. If we
+	 * the data-file we look for occurrences of the current entry's keywords. If we
 	 * found any matches, the related entry's other keywords are added to the final
 	 * keyword-list.
 	 *
