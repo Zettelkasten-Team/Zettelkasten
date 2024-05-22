@@ -33,20 +33,6 @@
 
 package de.danielluedecke.zettelkasten.settings;
 
-import com.formdev.flatlaf.FlatLightLaf;
-import com.formdev.flatlaf.FlatDarkLaf;
-
-import de.danielluedecke.zettelkasten.CImportBibTex;
-import de.danielluedecke.zettelkasten.CSetBibKey;
-import de.danielluedecke.zettelkasten.ZettelkastenView;
-import de.danielluedecke.zettelkasten.database.AutoKorrektur;
-import de.danielluedecke.zettelkasten.database.StenoData;
-import de.danielluedecke.zettelkasten.database.Synonyms;
-import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
-import de.danielluedecke.zettelkasten.util.Tools;
-import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
-import de.danielluedecke.zettelkasten.util.PlatformUtil;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -62,6 +48,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.RowSorter;
@@ -75,6 +62,21 @@ import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.XMLOutputter;
+
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
+
+import de.danielluedecke.zettelkasten.CImportBibTex;
+import de.danielluedecke.zettelkasten.CSetBibKey;
+import de.danielluedecke.zettelkasten.ZettelkastenView;
+import de.danielluedecke.zettelkasten.database.AutoKorrektur;
+import de.danielluedecke.zettelkasten.database.StenoData;
+import de.danielluedecke.zettelkasten.database.Synonyms;
+import de.danielluedecke.zettelkasten.util.Constants;
+import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
+import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
+import de.danielluedecke.zettelkasten.util.PlatformUtil;
+import de.danielluedecke.zettelkasten.util.Tools;
 
 /**
  *
@@ -339,19 +341,19 @@ public class Settings {
 	 * named "zettelkasten-settings.zks3" and "zettelkasten-data.zkd3".
 	 */
 	public Settings() {
-		// Init settings file and acceleratorKeys.
+		// Initialize settings file and acceleratorKeys.
 		zipSettingsFile = locateSettingsZipFileWithName("zettelkasten-settings.zks3");
 		if (zipSettingsFile == null || !loadZettelkastenSettingsFile(zipSettingsFile)) {
 			resetSettingsSettingsDocuments();
 		}
 
-		// Init foreignWordsFile, synonyms, autoKorrekt, steno objects.
+		// Initialize foreignWordsFile, synonyms, autoKorrekt, steno objects.
 		zipMetadataFile = locateSettingsZipFileWithName("zettelkasten-data.zkd3");
 		if (zipMetadataFile == null || !loadZettelkastenMetadataFile(zipMetadataFile)) {
 			resetMetadataSettingsDocuments();
 		}
 
-		// Always init default settings of missing fields.
+		// Always initialize default settings of missing fields.
 		initDefaultSettingsIfMissing();
 	}
 
@@ -364,7 +366,7 @@ public class Settings {
 	 * 2. Zettelkasten directory in the user's home directory.<br>
 	 * <br>
 	 */
-	private File locateSettingsZipFileWithName(String filename) {
+	File locateSettingsZipFileWithName(String filename) {
 		Path currentDir = Paths.get(System.getProperty("user.dir"));
 		Path currentDirFilePath = Paths.get(currentDir.toString(), filename);
 		File currentDirFile = currentDirFilePath.toFile();
@@ -5149,4 +5151,5 @@ public class Settings {
 			el.setText("");
 		}
 	}
+
 }
