@@ -6,6 +6,7 @@
 package de.danielluedecke.zettelkasten.mac;
 
 import de.danielluedecke.zettelkasten.database.DesktopData;
+import de.danielluedecke.zettelkasten.settings.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
 import com.explodingpixels.macwidgets.MacWidgetFactory;
 import com.explodingpixels.macwidgets.SourceListBadgeContentProvider;
@@ -22,7 +23,6 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.util.TreeUtil;
 import java.awt.Color;
 import java.awt.Component;

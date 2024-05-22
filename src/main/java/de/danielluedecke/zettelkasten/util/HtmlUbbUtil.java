@@ -35,7 +35,7 @@ package de.danielluedecke.zettelkasten.util;
 import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.Settings;
+import de.danielluedecke.zettelkasten.settings.Settings;
 import de.danielluedecke.zettelkasten.tasks.export.ExportTools;
 import java.awt.Image;
 import java.io.File;

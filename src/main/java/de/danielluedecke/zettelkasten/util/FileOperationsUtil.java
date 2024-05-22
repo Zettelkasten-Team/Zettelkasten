@@ -33,7 +33,8 @@
 package de.danielluedecke.zettelkasten.util;
 
 import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.Settings;
+import de.danielluedecke.zettelkasten.settings.Settings;
+
 import java.awt.FileDialog;
 import java.io.File;
 import java.io.FileInputStream;

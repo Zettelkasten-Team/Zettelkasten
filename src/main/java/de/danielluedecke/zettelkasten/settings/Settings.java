@@ -31,7 +31,7 @@
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
 
-package de.danielluedecke.zettelkasten.database;
+package de.danielluedecke.zettelkasten.settings;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.FlatDarkLaf;
@@ -39,7 +39,9 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import de.danielluedecke.zettelkasten.CImportBibTex;
 import de.danielluedecke.zettelkasten.CSetBibKey;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
-import de.danielluedecke.zettelkasten.settings.AcceleratorKeys;
+import de.danielluedecke.zettelkasten.database.AutoKorrektur;
+import de.danielluedecke.zettelkasten.database.StenoData;
+import de.danielluedecke.zettelkasten.database.Synonyms;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.Tools;
@@ -76,7 +78,7 @@ import org.jdom2.output.XMLOutputter;
 
 /**
  *
- * @author danielludecke
+ * @author Daniel Lüdecke
  */
 public class Settings {
 

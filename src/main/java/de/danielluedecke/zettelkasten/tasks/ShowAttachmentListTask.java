@@ -33,7 +33,7 @@
 package de.danielluedecke.zettelkasten.tasks;
 
 import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.Settings;
+import de.danielluedecke.zettelkasten.settings.Settings;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;

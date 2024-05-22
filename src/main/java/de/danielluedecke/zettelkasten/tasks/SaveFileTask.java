@@ -34,6 +34,8 @@ package de.danielluedecke.zettelkasten.tasks;
 
 import de.danielluedecke.zettelkasten.database.*;
 import de.danielluedecke.zettelkasten.database.BibTeX;
+import de.danielluedecke.zettelkasten.settings.Settings;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

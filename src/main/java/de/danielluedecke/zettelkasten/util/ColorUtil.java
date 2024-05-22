@@ -32,8 +32,9 @@
  */
 package de.danielluedecke.zettelkasten.util;
 
-import de.danielluedecke.zettelkasten.database.Settings;
 import java.awt.Color;
+
+import de.danielluedecke.zettelkasten.settings.Settings;
 
 /**
  *

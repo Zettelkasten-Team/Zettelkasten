@@ -44,14 +44,14 @@ import org.jdom2.IllegalDataException;
 
 /**
  *
- * @author danielludecke
+ * @author Daniel Lüdecke
  */
 public class AutoKorrektur {
 
     /**
-     * XML document that holds the data for auto-correction. Each element "entry"
-     * has an attribute named "id" that contains the wrong, mispelled word. the
-     * entry's text is the correct writing of the word.
+     * XML document containing the autocorrect data. Each "entry" element
+     * has an attribute named "id" that contains the incorrect misspelled word. 
+     * The text of the entry is the correct spelling of the word.
      */
     private Document autokorrektur;
     /**

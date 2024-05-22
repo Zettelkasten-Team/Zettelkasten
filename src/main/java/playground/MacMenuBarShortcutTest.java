@@ -1,4 +1,4 @@
-package de.danielluedecke.zettelkasten;
+package playground;
 
 import com.apple.eawt.Application;
 

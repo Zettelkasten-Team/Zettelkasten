@@ -32,7 +32,7 @@
  */
 package de.danielluedecke.zettelkasten.mac;
 
-import de.danielluedecke.zettelkasten.database.Settings;
+import de.danielluedecke.zettelkasten.settings.Settings;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import java.awt.Color;
 import java.awt.Font;

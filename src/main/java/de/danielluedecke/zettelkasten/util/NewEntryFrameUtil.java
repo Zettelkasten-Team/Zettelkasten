@@ -34,8 +34,9 @@
 package de.danielluedecke.zettelkasten.util;
 
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
-import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.StenoData;
+import de.danielluedecke.zettelkasten.settings.Settings;
+
 import java.awt.event.KeyEvent;
 import javax.swing.text.BadLocationException;
 

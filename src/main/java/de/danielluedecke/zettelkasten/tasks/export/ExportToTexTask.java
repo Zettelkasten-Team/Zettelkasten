@@ -35,8 +35,8 @@ package de.danielluedecke.zettelkasten.tasks.export;
 import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.database.Settings;
 import de.danielluedecke.zettelkasten.database.TasksData;
+import de.danielluedecke.zettelkasten.settings.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.Tools;
@@ -1012,7 +1012,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         dummy = dummy.replaceAll(Pattern.quote("↓"), Matcher.quoteReplacement("\\textdownarrow"));
         dummy = dummy.replaceAll(Pattern.quote("<"), Matcher.quoteReplacement("\\langle"));
 
-        // TODO XXX Hack: ">" should only be convered if Markdown is not enabled, otherwise, it will be
+        // TODO XXX Hack: ">" should only be converted if Markdown is not enabled, otherwise, it will be
         // taken as a quotation by subsequent components. (fixes bug reproduced by
         // "testBugMarkdownZitatWirdNichtKorrektNachLatexExportiert")  
         if (!settingsObj.getMarkdownActivated()) {
