@@ -4536,7 +4536,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			// on a background thread, so don't reference
 			// the Swing GUI from here.
 
-			// tell programm that task is running
+			// tell program that task is running
 			qiAuthorTaskIsRunning = true;
 			// tell selection listener we are working and selection listener should not
 			// react on changes now
@@ -4874,7 +4874,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	/**
 	 * This class sets up a selection listener for the tables. each table which
 	 * shall react on selections, e.g. by showing an entry, gets this
-	 * selectionlistener in the method {@link #initSelectionListeners()
+	 * SelectionListener in the method {@link #initSelectionListeners()
 	 * initSelectionListeners()}.
 	 */
 	public class SelectionListener implements ListSelectionListener {
@@ -4894,7 +4894,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 				return;
 			}
 			// get list selection model
-			ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+			ListSelectionModel lsm = ((JList<?>) e.getSource()).getSelectionModel();
 			// set value-adjusting to true, so we don't fire multiple value-changed
 			// events...
 			lsm.setValueIsAdjusting(true);
