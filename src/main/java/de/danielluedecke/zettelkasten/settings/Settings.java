@@ -110,10 +110,10 @@ public class Settings {
 	private Document foreignWordsFile;
 
 	/**
-	 * Indicates whether the programm is running on a mac with aqua-look and feel or
+	 * Indicates whether the program is running on macOS with aqua-look and feel or
 	 * not...
 	 * 
-	 * @return {@code true}, if the programm is running on a mac with aqua-look and
+	 * @return {@code true}, if the program is running on macOS with aqua-look and
 	 *         feel
 	 */
 	public boolean isMacStyle() {
@@ -132,7 +132,7 @@ public class Settings {
 	 * Indicates whether the memory-logging in the main window is activated. See
 	 * method {@code toggleMemoryTimer()} in {@code ZettelkastenView.class}. We
 	 * store this toggle as a "global variable", so we can check whether
-	 * memory-logging is enbaled or not from different jFrames...
+	 * memory-logging is enabled or not from different jFrames...
 	 */
 	public boolean isMemoryUsageLogged = false;
 

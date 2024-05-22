@@ -1,10 +1,16 @@
 package de.danielluedecke.zettelkasten.tasks;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JLabel;
 
+import org.jdesktop.application.ApplicationContext;
+import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,13 +33,9 @@ public class AutoBackupTaskTest {
 	public void setUp() throws Exception {
 		// Setup dependencies
 
-		// app
-		SingleFrameApplication app = new SingleFrameApplication() {
-			@Override
-			protected void startup() {
-
-			}
-		};
+		// Mock dependencies
+        SingleFrameApplication app = mock(SingleFrameApplication.class);
+        ApplicationContext context = mock(ApplicationContext.class);
 
 		TasksData tasksData = new TasksData();
 
@@ -41,10 +43,10 @@ public class AutoBackupTaskTest {
 		Settings settingsObj = new Settings();
 
 		// zknFrame
-		ZettelkastenView zknFrame = new ZettelkastenView(app, settingsObj, tasksData);
+		ZettelkastenView zknFrame = mock(ZettelkastenView.class); // Mock ZettelkastenView
 
 		// statusMsgLabel
-		JLabel statusMsgLabel = new JLabel();
+		JLabel statusMsgLabel = mock(JLabel.class);
 
 		// bibtexObj
 		BibTeX bibtexObj = new BibTeX(zknFrame, settingsObj);
@@ -63,10 +65,18 @@ public class AutoBackupTaskTest {
 
 		// bookmarksObj
 		Bookmarks bookmarksObj = new Bookmarks(zknFrame, settingsObj);
+		
+		// Mock behavior of defaultResourceMap
+	    ResourceMap resourceMap = mock(ResourceMap.class);
+	    when(context.getResourceMap()).thenReturn(resourceMap);
+	    when(app.getContext()).thenReturn(context);
 
 		// Instantiate AutoBackupTask
 		autoBackupTask = new AutoBackupTask(app, zknFrame, statusMsgLabel, dataObj, desktopObj, settingsObj, searchObj,
 				synonymsObj, bookmarksObj, bibtexObj);
+		
+		// Mock behavior of ZettelkastenView methods
+	    doNothing().when(zknFrame).initComponents(); // Mock initComponents() to avoid NullPointerException
 
 	}
 	

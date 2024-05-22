@@ -422,14 +422,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		initBibtexFile();
 
-		// Init all swing components. (initComponents is auto-generated.)
+		// Initialize all swing components. (initComponents is auto-generated.)
 		initComponents();
 
 		// initComponents is auto-generated, so further initialization is done in
 		// postInitComponentsSetup.
 		postInitComponentsSetup(getFrame());
 
-		// Init exit-listener: what to do when exiting.
+		// Initialize exit-listener: what to do when exiting.
 		app.addExitListener(new ConfirmExit());
 
 		// If the file in settings exists, load it.
@@ -11428,9 +11428,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
+	public
 	// <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+ void initComponents() {
 
         mainPanel = new javax.swing.JPanel();
         jSplitPaneMain1 = new javax.swing.JSplitPane();
