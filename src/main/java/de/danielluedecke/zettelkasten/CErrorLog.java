@@ -122,11 +122,11 @@ public class CErrorLog extends javax.swing.JDialog {
         StringBuilder sb = new StringBuilder("");
         try {
             // some text for the user
-            sb.append(resourceMap.getString("errorMsg")).append(System.lineSeparator()).append(System.lineSeparator());
+            //sb.append(resourceMap.getString("errorMsg")).append(System.lineSeparator()).append(System.lineSeparator());
             // a separator line for a better overview
             sb.append("------------------------------").append(System.lineSeparator());
             // first, show programme-version
-            sb.append("Zettelkasten-Version: " + Version.get().getVersionString()).append(System.lineSeparator()).append(System.lineSeparator());
+            sb.append("Zettelkasten-Version: ").append(Version.get().getVersionString()).append(System.lineSeparator()).append(System.lineSeparator());
             // now show system-information (jre, os etc.)
             sb.append("System-Information:").append(System.lineSeparator()).append(Tools.getSystemInformation()).append(System.lineSeparator());
             // a separator line for a better overview
@@ -315,7 +315,7 @@ public class CErrorLog extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton2)
-                .addGap(228, 228, 228))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
