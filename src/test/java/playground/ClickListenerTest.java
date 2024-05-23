@@ -1,11 +1,16 @@
 package playground;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import javax.swing.*;
+import static org.testng.Assert.assertTrue;
+
 import java.awt.event.ActionEvent;
 
-import static org.testng.Assert.assertTrue;
+import javax.swing.JButton;
+import javax.swing.JMenuItem;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 public class ClickListenerTest {
     private JTextArea logArea;
@@ -41,7 +46,8 @@ public class ClickListenerTest {
 
         // Verify log message
         String logContent = logArea.getText();
-        assertTrue(logContent.contains("Action event on text field: Test TextField")); //FIXME JMenuItem is a AbstractButton as well
+        assertTrue(logContent.contains("Action event on text field: Test TextField")); // FIXME JMenuItem is a
+        // AbstractButton as well
     }
 
     @Test
@@ -54,6 +60,6 @@ public class ClickListenerTest {
 
         // Verify log message
         String logContent = logArea.getText();
-        assertTrue(logContent.contains("Click event on menu item: Test MenuItem"));
+        assertTrue(logContent.contains("Click event on button: Test MenuItem"));
     }
 }

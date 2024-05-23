@@ -17,19 +17,40 @@ public class ClickListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
+        ComponentType componentType = getComponentType(source);
         String logMessage;
-        if (source instanceof AbstractButton) {
-            AbstractButton button = (AbstractButton) source;
-            logMessage = "Click event on button: " + button.getText();
-        } else if (source instanceof JTextField) {
-            JTextField textField = (JTextField) source;
-            logMessage = "Action event on text field: " + textField.getText();
-        } else if (source instanceof JMenuItem) {
-            JMenuItem menuItem = (JMenuItem) source;
-            logMessage = "Click event on menu item: " + menuItem.getText();
-        } else {
-            logMessage = "Click event on unknown component";
+
+        switch (componentType) {
+            case BUTTON:
+                AbstractButton button = (AbstractButton) source;
+                logMessage = "Click event on button: " + button.getText();
+                break;
+            case TEXT_FIELD:
+                JTextField textField = (JTextField) source;
+                logMessage = "Action event on text field: " + textField.getText();
+                break;
+            case MENU_ITEM:
+                JMenuItem menuItem = (JMenuItem) source;
+                logMessage = "Click event on menu item: " + menuItem.getText();
+                break;
+            case UNKNOWN:
+            default:
+                logMessage = "Click event on unknown component";
+                break;
         }
+
         logArea.append(logMessage + "\n");
+    }
+
+    private ComponentType getComponentType(Object component) {
+        if (component instanceof AbstractButton) {
+            return ComponentType.BUTTON;
+        } else if (component instanceof JTextField) {
+            return ComponentType.TEXT_FIELD;
+        } else if (component instanceof JMenuItem) {
+            return ComponentType.MENU_ITEM;
+        } else {
+            return ComponentType.UNKNOWN;
+        }
     }
 }
