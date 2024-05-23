@@ -41,7 +41,7 @@ public class ClickListenerTest {
 
         // Verify log message
         String logContent = logArea.getText();
-        assertTrue(logContent.contains("Action event on text field: Test TextField"));
+        assertTrue(logContent.contains("Action event on text field: Test TextField")); //FIXME JMenuItem is a AbstractButton as well
     }
 
     @Test
