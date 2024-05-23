@@ -1,4 +1,5 @@
 package playground;
+
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,10 +12,10 @@ public class ZettelkastenApp {
     public ZettelkastenApp() {
         frame = new JFrame("Zettelkasten");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 400);
+        frame.setSize(800, 600);
 
         // Log area to display click events
-        logArea = new JTextArea(10, 50);
+        logArea = new JTextArea(15, 70);
         logArea.setEditable(false);
         JScrollPane logScrollPane = new JScrollPane(logArea);
 
@@ -22,11 +23,15 @@ public class ZettelkastenApp {
         JButton button1 = new JButton("New Note");
         JButton button2 = new JButton("Save Note");
         JTextField textField = new JTextField("Enter text here", 20);
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("File");
+        JMenuItem menuItem1 = new JMenuItem("Open");
+        JMenuItem menuItem2 = new JMenuItem("Close");
 
-        // Add ClickListener to components
-        button1.addActionListener(new ClickListener(logArea));
-        button2.addActionListener(new ClickListener(logArea));
-        textField.addActionListener(new ClickListener(logArea));
+        // Add components to the menu
+        menu.add(menuItem1);
+        menu.add(menuItem2);
+        menuBar.add(menu);
 
         // Layout setup
         JPanel panel = new JPanel();
@@ -34,37 +39,17 @@ public class ZettelkastenApp {
         panel.add(button2);
         panel.add(textField);
 
+        frame.setJMenuBar(menuBar);
         frame.getContentPane().add(panel, BorderLayout.NORTH);
         frame.getContentPane().add(logScrollPane, BorderLayout.CENTER);
+
+        // Recursively add ClickListener to all interactive components
+        ClickLogger.ClickListener clickListener = new ClickLogger.ClickListener(logArea);
+        ComponentUtils.addClickListenerToAllComponents(frame, clickListener);
     }
 
     public void show() {
         frame.setVisible(true);
-    }
-
-    // ClickListener class
-    static class ClickListener implements ActionListener {
-        private JTextArea logArea;
-
-        public ClickListener(JTextArea logArea) {
-            this.logArea = logArea;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            Object source = e.getSource();
-            String logMessage;
-            if (source instanceof JButton) {
-                JButton button = (JButton) source;
-                logMessage = "Click event on button: " + button.getText();
-            } else if (source instanceof JTextField) {
-                JTextField textField = (JTextField) source;
-                logMessage = "Action event on text field: " + textField.getText();
-            } else {
-                logMessage = "Click event on unknown component";
-            }
-            logArea.append(logMessage + "\n");
-        }
     }
 
     public static void main(String[] args) {
@@ -74,4 +59,3 @@ public class ZettelkastenApp {
         });
     }
 }
-
