@@ -3176,30 +3176,51 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	public void updateSelectedEntryPane(int inputDisplayedEntry) {
-		String dataEntryAsHtml = data.getEntryAsHtml(inputDisplayedEntry,
-				(settings.getHighlightSegments()) ? retrieveSelectedKeywordsFromList() : null, Constants.FRAME_MAIN);
+	    String dataEntryAsHtml = getDataEntryAsHtml(inputDisplayedEntry);
 
-		if (Tools.isValidHTML(dataEntryAsHtml, inputDisplayedEntry)) {
-			jEditorPaneEntry.setText(dataEntryAsHtml);
-		} else {
-			StringBuilder cleanedContent = new StringBuilder("");
-			cleanedContent
-					.append("<body><div style=\"margin:5px;padding:5px;background-color:#dddddd;color:#800000;\">");
-			URL imgURL = Application
-					.getInstance(ZettelkastenApp.class).getClass()
-					.getResource("/de/danielluedecke/zettelkasten/resources/icons/error.png");
-			cleanedContent.append("<img border=\"0\" src=\"").append(imgURL).append("\">&#8195;");
-			cleanedContent.append(getResourceMap().getString("incorrectNestedTagsText"));
-			cleanedContent.append("</div>").append(data.getCleanZettelContent(inputDisplayedEntry)).append("</body>");
-			// display clean content instead
-			jEditorPaneEntry.setText(cleanedContent.toString());
-		}
+	    if (Tools.isValidHTML(dataEntryAsHtml, inputDisplayedEntry)) {
+	        displayHtmlContent(dataEntryAsHtml);
+	    } else {
+	        displayErrorContent(inputDisplayedEntry);
+	    }
 
-		// place caret, so content scrolls to top
-		jEditorPaneEntry.setCaretPosition(0);
+	    resetCaretPosition();
+	    updateEntryNumberTextField();
+	}
 
-		// Update entryNumberJTextField with activated entry.
-		jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
+	private String getDataEntryAsHtml(int inputDisplayedEntry) {
+	    return data.getEntryAsHtml(
+	        inputDisplayedEntry,
+	        settings.getHighlightSegments() ? retrieveSelectedKeywordsFromList() : null,
+	        Constants.FRAME_MAIN
+	    );
+	}
+
+	private void displayHtmlContent(String htmlContent) {
+	    jEditorPaneEntry.setText(htmlContent);
+	}
+
+	private void displayErrorContent(int inputDisplayedEntry) {
+	    StringBuilder cleanedContent = new StringBuilder();
+	    cleanedContent.append("<body><div style=\"margin:5px;padding:5px;background-color:#dddddd;color:#800000;\">");
+	    URL imgURL = getErrorIconUrl();
+	    cleanedContent.append("<img border=\"0\" src=\"").append(imgURL).append("\">&#8195;");
+	    cleanedContent.append(getResourceMap().getString("incorrectNestedTagsText"));
+	    cleanedContent.append("</div>").append(data.getCleanZettelContent(inputDisplayedEntry)).append("</body>");
+	    jEditorPaneEntry.setText(cleanedContent.toString());
+	}
+
+	private URL getErrorIconUrl() {
+	    return Application.getInstance(ZettelkastenApp.class).getClass()
+	                      .getResource("/de/danielluedecke/zettelkasten/resources/icons/error.png");
+	}
+
+	private void resetCaretPosition() {
+	    jEditorPaneEntry.setCaretPosition(0);
+	}
+
+	private void updateEntryNumberTextField() {
+	    jTextFieldEntryNumber.setText(String.valueOf(data.getActivatedEntryNumber()));
 	}
 
 	/**
