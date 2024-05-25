@@ -1,4 +1,4 @@
-package playground;
+package playground.javafx;
 
 public class Launcher {
 

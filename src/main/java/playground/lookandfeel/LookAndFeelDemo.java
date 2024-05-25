@@ -29,7 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package lookandfeel;
+package playground.lookandfeel;
 
 /*
  * LookAndFeelDemo.java is a Java SE 6 example that requires

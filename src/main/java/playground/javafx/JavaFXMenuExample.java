@@ -1,4 +1,4 @@
-package playground;
+package playground.javafx;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
