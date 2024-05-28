@@ -150,7 +150,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 */
 	private boolean tableUpdateActive = false;
 	/**
-	 * This variable gets the graphic device and ist needed for
+	 * This variable gets the graphic device and is needed for
 	 * full-screen-functionality. see {@link #viewFullScreen() viewFullScreen()} for
 	 * more details.
 	 */
@@ -1457,7 +1457,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		return sts;
 	}
 
-	private void displayZettelContent(int nr, String[] highlightterms) {
+	void displayZettelContent(int nr, String[] highlightterms) {
 		// Set highlight search terms
 		HtmlUbbUtil.setHighlighTerms(highlightterms, HtmlUbbUtil.HIGHLIGHT_STYLE_SEARCHRESULTS,
 				settingsObj.getHighlightWholeWordSearch());
@@ -1489,8 +1489,8 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 
 	@Action
 	public void exportEntries() {
-		// retrieve the selected index from the combobox, so we know the search result.
-		// then get the related searchresults (entries as integer array) from the
+		// retrieve the selected index from the combo box, so we know the search result.
+		// then get the related search results (entries as integer array) from the
 		// search-reuest
 		// finally, call the mainframe's exportwindow-method and pass the int-array with
 		// the entry-numbers
@@ -1541,7 +1541,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			// return complete array
 			return values.toArray(new String[values.size()]);
 		}
-		// ...or null, if error occured.
+		// ...or null, if error occurred.
 		return null;
 	}
 
@@ -2133,7 +2133,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 * deactivated yet.
 	 */
 	private void quitFullScreen() {
-		// check whether fullscreen is supported, and if we currently have a
+		// check whether full screen is supported, and if we currently have a
 		// fullscreen-window
 		if (graphicdevice.isFullScreenSupported() && graphicdevice.getFullScreenWindow() != null) {
 			// disable fullscreen-mode
@@ -2199,7 +2199,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 					Integer.parseInt(jTableResults.getValueAt(jTableResults.getSelectedRow(), 0).toString()));
 			// check whether we have a return value. this might be the case either when the
 			// user clicked on
-			// a footenote, or on the rating-stars
+			// a footnote, or on the rating-stars
 			if (returnValue != null) {
 				// here we have a reference to another entry
 				if (returnValue.startsWith("#z_") || returnValue.startsWith("#cr_")) {
@@ -3013,7 +3013,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	private javax.swing.JButton jButtonDeleteSearch;
 	private javax.swing.JButton jButtonResetList;
 	private javax.swing.JComboBox<String> jComboBoxSearches;
-	private javax.swing.JEditorPane jEditorPaneSearchEntry;
+	javax.swing.JEditorPane jEditorPaneSearchEntry;
 	private javax.swing.JLabel jLabel1;
 	private javax.swing.JLabel jLabelHits;
 	private javax.swing.JList<String> jListKeywords;

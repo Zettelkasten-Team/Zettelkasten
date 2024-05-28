@@ -55,7 +55,7 @@ import javax.swing.ImageIcon;
 import org.jdom2.Element;
 
 /**
- * This class is responsible for the creation of a html page of an zettelkasten
+ * This class is responsible for the creation of a HTML page of an Zettelkasten
  * entry which is then displayed in the main window's JEditorPane.
  *
  * @author danielludecke
@@ -207,9 +207,9 @@ public class HtmlUbbUtil {
     }
 
     /**
-     * This method creates a HTML-layer ({@code div}-tag) which contains the
-     * graphical elements for the rating of an entry. This methods returns a
-     * HTML-snippet as string which can be inserted anywhere inside a
+     * This method creates an HTML-layer ({@code div}-tag) which contains the
+     * graphical elements for the rating of an entry. This method returns an
+     * HTML-snippet as a string which can be inserted anywhere inside a
      * {@code body}-element.
      *
      * @param dataObj a reference to the {@code CDaten}-class, needed for
@@ -223,125 +223,108 @@ public class HtmlUbbUtil {
      * {@code body}-element.
      */
     private static String getEntryHeadline(Daten dataObj, int entrynr, int sourceframe) {
-        // retrieve rating value
-        float ratingvalue = dataObj.getZettelRating(entrynr);
-        // init return value which will contain the html-snippet
-        StringBuilder htmlrating = new StringBuilder("");
-        // ***********************************************
-        // count total words of entry
-        // ***********************************************
-        // get complete entry-content, i.e. title and content
-        String wordcoutnstring = dataObj.getZettelTitle(entrynr) + " " + dataObj.getCleanZettelContent(entrynr);
-        // split complete content at each word
-        String[] words = wordcoutnstring.toLowerCase().
-                replace("ä", "ae").
-                replace("ö", "oe").
-                replace("ü", "ue").
-                replace("ß", "ss").
-                split("\\W");
-        // init wordcounter
-        int wordcount = 0;
-        // iterate all words of the entry
-        for (String word : words) {
-            // remove all non-letter-chars
-            word = word.replace("([^A-Za-z0-9]+)", "");
-            // trim spaces
-            word = word.trim();
-            // if we have a "word" with more than one char, count it as word...
-            if (!word.isEmpty() /* && word.length()>1 */) {
-                wordcount++;
-            }
-        }
-        // ***********************************************
-        // init div and table tag
-        // ***********************************************
-        htmlrating.append(System.lineSeparator()).append("<div class=\"entryrating\">");
-        htmlrating.append("<table ");
+        float ratingValue = dataObj.getZettelRating(entrynr);
+        StringBuilder htmlRating = new StringBuilder();
+        int wordCount = calculateWordCount(dataObj, entrynr);
+
+        htmlRating.append(System.lineSeparator()).append("<div class=\"entryrating\">")
+                  .append("<table ").append(getTableAttributes()).append("class=\"tabentryrating\"><tr>")
+                  .append(System.lineSeparator())
+                  .append("<td colspan=\"2\" class=\"leftcellentryrating\">")
+                  .append(getEntryHeading(dataObj, entrynr, sourceframe, wordCount))
+                  .append("</td><td class=\"midcellentryrating\">")
+                  .append(getEntryTimestamp(dataObj, entrynr))
+                  .append("</td><td class=\"rightcellentryrating\">")
+                  .append(getRatingHtml(entrynr, ratingValue))
+                  .append("</td></tr>").append(System.lineSeparator())
+                  .append(getManualLinksHtml(dataObj, entrynr))
+                  .append("</table></div>").append(System.lineSeparator());
+
+        return htmlRating.toString();
+    }
+
+    private static String getTableAttributes() {
         if (PlatformUtil.isJava7OnMac() || PlatformUtil.isJava7OnWindows()) {
-            htmlrating.append("cellspacing=\"0\" ");
+            return "cellspacing=\"0\" ";
         }
-        htmlrating.append("class=\"tabentryrating\"><tr>").append(System.lineSeparator());
-        // ***********************************************
-        // init entry heading with entry nr and word count
-        // ***********************************************
-        htmlrating.append("<td colspan=\"2\" class=\"leftcellentryrating\">");
-        // when the displayed entry differs from the current activated, show this to the user
+        return "";
+    }
+
+    private static String getEntryHeading(Daten dataObj, int entrynr, int sourceframe, int wordCount) {
+        StringBuilder heading = new StringBuilder();
+        heading.append(resourceMap.getString("zettelDesc")).append(" ");
+
         if (entrynr != dataObj.getActivatedEntryNumber() && sourceframe != Constants.FRAME_SEARCH) {
-            htmlrating.append(resourceMap.getString("zettelDesc"));
-            htmlrating.append("<a class=\"elink\" href=\"#activatedEntry\">");
-            htmlrating.append(" ").append(String.valueOf(dataObj.getActivatedEntryNumber())).append("&nbsp;</a>&raquo;");
-            htmlrating.append("&nbsp;<a class=\"elink\" href=\"#cr_");
-            htmlrating.append(String.valueOf(entrynr)).append("\">").append(String.valueOf(entrynr));
-            htmlrating.append("&nbsp;</a>(").append(String.valueOf(wordcount)).append(" ").append(resourceMap.getString("activatedZettelWordCount")).append(")");
-        } // else show usual entry nr
-        else {
-            htmlrating.append(resourceMap.getString("zettelDesc"));
-            htmlrating.append(" ");
-            htmlrating.append(String.valueOf(entrynr));
-            htmlrating.append(" (").append(String.valueOf(wordcount)).append(" ").append(resourceMap.getString("activatedZettelWordCount")).append(")");
-        }
-        htmlrating.append("</td><td class=\"midcellentryrating\">");
-        // ***********************************************
-        // now we have to add the timestamp of the entry
-        // ***********************************************
-        htmlrating.append(getEntryTimestamp(dataObj, entrynr));
-        // ***********************************************
-        // entry rating
-        // ***********************************************
-        htmlrating.append("</td><td class=\"rightcellentryrating\">");
-        // start hyperlink-tag
-        htmlrating.append("<a class=\"rlink\" href=\"#rateentry").append(String.valueOf(entrynr)).append("\">");
-        htmlrating.append(resourceMap.getString("ratingText")).append(": ");
-        // count down 5 steps, so we have a maximum of five images
-        int cnt = 5;
-        // loop
-        while (cnt-- > 0) {
-            // add image. therefore, check whether the rating has at least one star
-            if (ratingvalue >= 1.0) {
-                htmlrating.append(getRatingSymbol(RATING_VALUE_FULL));
-            } // if not, check whether at least a half point is needed
-            else if (ratingvalue >= 0.5) {
-                htmlrating.append(getRatingSymbol(RATING_VALUE_HALF));
-            } // or, finally, use the image for no rating-points
-            else {
-                htmlrating.append(getRatingSymbol(RATING_VALUE_NONE));
-            }
-            // decrease rating value by one
-            ratingvalue--;
-        }
-        // close hyperlink
-        htmlrating.append("</a>");
-        // close tag
-        htmlrating.append("</td></tr>").append(System.lineSeparator());
-
-        // check whether entry has manual links
-        String[] manualLinksAsString = Daten.getManualLinksAsString(entrynr);
-        if (manualLinksAsString != null && manualLinksAsString.length > 0) {
-            // append manual links
-            htmlrating.append("<tr><td class=\"crtitle\" valign=\"top\"><a href=\"#crt\">");
-            htmlrating.append(resourceMap.getString("crossRefText")).append(":</a>&nbsp;</td><td class=\"mlink\" colspan=\"3\">");
-            // create string builder
-            StringBuilder crossrefs = new StringBuilder("");
-            // iterate string array
-            for (String ml : manualLinksAsString) {
-                String title = "";
-                try {
-                    title = dataObj.getZettelTitle(Integer.parseInt(ml));
-                    title = title.replace("\"", "").replace("'", "");
-                    title = title.trim();
-                } catch (NumberFormatException ex) {
-                }
-                crossrefs.append("<a href=\"#cr_").append(ml).append("\" title=\"").append(title).append("\" alt=\"").append(title).append("\">").append(ml).append("</a>");
-                crossrefs.append(" &middot; ");
-            }
-            // append string, but delete last 10 chars, which are " &middot; "
-            htmlrating.append(crossrefs.toString().substring(0, crossrefs.length() - 10));
-            htmlrating.append("</td></tr>").append(System.lineSeparator());
+            heading.append("<a class=\"elink\" href=\"#activatedEntry\">")
+                   .append(" ").append(dataObj.getActivatedEntryNumber()).append("&nbsp;</a>&raquo;&nbsp;")
+                   .append("<a class=\"elink\" href=\"#cr_").append(entrynr).append("\">")
+                   .append(entrynr).append("&nbsp;</a>(").append(wordCount).append(" ")
+                   .append(resourceMap.getString("activatedZettelWordCount")).append(")");
+        } else {
+            heading.append(entrynr).append(" (").append(wordCount).append(" ")
+                   .append(resourceMap.getString("activatedZettelWordCount")).append(")");
         }
 
-        htmlrating.append("</table></div>").append(System.lineSeparator());
-        // return result
-        return htmlrating.toString();
+        return heading.toString();
+    }
+
+    private static int calculateWordCount(Daten dataObj, int entrynr) {
+        String wordCountString = dataObj.getZettelTitle(entrynr) + " " + dataObj.getCleanZettelContent(entrynr);
+        String[] words = wordCountString.toLowerCase()
+                                       .replace("ä", "ae")
+                                       .replace("ö", "oe")
+                                       .replace("ü", "ue")
+                                       .replace("ß", "ss")
+                                       .split("\\W+");
+        return (int) Arrays.stream(words).filter(word -> word.trim().length() > 1).count();
+    }
+
+    private static String getRatingHtml(int entrynr, float ratingValue) {
+        StringBuilder ratingHtml = new StringBuilder();
+        ratingHtml.append("<a class=\"rlink\" href=\"#rateentry").append(entrynr).append("\">")
+                  .append(resourceMap.getString("ratingText")).append(": ");
+
+        for (int cnt = 5; cnt > 0; cnt--) {
+            if (ratingValue >= 1.0) {
+                ratingHtml.append(getRatingSymbol(RATING_VALUE_FULL));
+            } else if (ratingValue >= 0.5) {
+                ratingHtml.append(getRatingSymbol(RATING_VALUE_HALF));
+            } else {
+                ratingHtml.append(getRatingSymbol(RATING_VALUE_NONE));
+            }
+            ratingValue--;
+        }
+
+        ratingHtml.append("</a>");
+        return ratingHtml.toString();
+    }
+
+    private static String getManualLinksHtml(Daten dataObj, int entrynr) {
+        String[] manualLinks = Daten.getManualLinksAsString(entrynr);
+        if (manualLinks == null || manualLinks.length == 0) {
+            return "";
+        }
+
+        StringBuilder linksHtml = new StringBuilder();
+        linksHtml.append("<tr><td class=\"crtitle\" valign=\"top\"><a href=\"#crt\">")
+                 .append(resourceMap.getString("crossRefText")).append(":</a>&nbsp;</td><td class=\"mlink\" colspan=\"3\">");
+
+        for (String ml : manualLinks) {
+            String title = "";
+            try {
+                title = dataObj.getZettelTitle(Integer.parseInt(ml));
+                title = title.replace("\"", "").replace("'", "").trim();
+            } catch (NumberFormatException e) {
+                // handle exception
+            }
+            linksHtml.append("<a href=\"#cr_").append(ml).append("\" title=\"").append(title).append("\" alt=\"").append(title).append("\">")
+                     .append(ml).append("</a> &middot; ");
+        }
+
+        linksHtml.setLength(linksHtml.length() - " &middot; ".length());
+        linksHtml.append("</td></tr>").append(System.lineSeparator());
+
+        return linksHtml.toString();
     }
 
     /**
@@ -585,7 +568,7 @@ public class HtmlUbbUtil {
         if (settings.getShowEntryHeadline()) {
             retval.append(getEntryHeadline(dataObj, entrynr, sourceframe));
         }
-        // now start with the html content itself
+        // now start with the HTMLªª content itself
         retval.append("<div class=\"content\">");
         // ***********************************************
         // get entry's title
@@ -848,7 +831,7 @@ public class HtmlUbbUtil {
      * display. in case no highlighting is requested, use {@code null} as
      * parameter.
      *
-     * @param ht the highlighterms as string-array. These terms will be
+     * @param ht the highligh terms as string-array. These terms will be
      * highlighted in the display. USe {@code null} when no highlight is
      * requested.
      * @param style
@@ -951,7 +934,7 @@ public class HtmlUbbUtil {
                 dummy = highlightSearchTerms(dummy, HIGHLIGHT_STYLE_KEYWORDS);
             }
         }
-        // when we exort data to HTML-format, we can create tooltips for the footnotes...
+        // when we export data to HTML-format, we can create tooltips for the footnotes...
         if (isExport && createHTMLFootnotes) {
             // create tooltips for the footnotes.
             pos = 0;
@@ -989,7 +972,7 @@ public class HtmlUbbUtil {
     /**
      * This method replaces footnote tags with the associated authors, thus returning well formatted
      * author values instead of cryptic footnote tags. The formatted author value is returned
-     * in plain text w/o any Markdown, Tex or HTML-formatting.
+     * in plain text w/o any Markdown, TeX or HTML-formatting.
      * 
      * @param data
      * @param bibtexObj
@@ -1009,11 +992,11 @@ public class HtmlUbbUtil {
             List<Integer> start = new ArrayList<>();
             List<Integer> end = new ArrayList<>();
             try {
-                // create foot note patterm
+                // create foot note pattern
                 Pattern p = Pattern.compile("\\[fn ([^\\[]*)\\]");
                 // create matcher
                 Matcher m = p.matcher(content);
-                // check for occurences
+                // check for occurrences
                 while (m.find()) {
                     // save grouping-positions
                     start.add(m.start());

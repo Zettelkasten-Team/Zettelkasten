@@ -1710,7 +1710,7 @@ public class Daten {
 	 * @return the number of the first empty element, or -1 if no empty element was
 	 *         found
 	 */
-	private int retrieveFirstEmptyEntry() {
+	public int retrieveFirstEmptyEntry() {
 		int result = -1;
 		// create a list of all elements from the given xml file
 		try {
@@ -1739,11 +1739,11 @@ public class Daten {
 
 	/**
 	 * This method deletes a keyword by removing the content from the element inside
-	 * of the keyword xml datafile. the element itself is kept and left empty. this
+	 * of the keyword XML data file. the element itself is kept and left empty. this
 	 * ensures that the order and numbering of a keyword never changes. Since the
-	 * zettelkasten datafile stores the index-numbers of the keywords a changing in
-	 * the position/order/numbering of the keyword datafile would lead to corrupted
-	 * keyword associations in the zettelkasten data file
+	 * Zettelkasten data file stores the index-numbers of the keywords a changing in
+	 * the position/order/numbering of the keyword data file would lead to corrupted
+	 * keyword associations in the Zettelkasten data file
 	 *
 	 * @param pos (position of keyword which should be deleted)
 	 */
@@ -2959,7 +2959,7 @@ public class Daten {
 	}
 
 	/**
-	 * This method adds a new entry to the datafile. The needed parameters come from
+	 * This method adds a new entry to the data file. The needed parameters come from
 	 * the JDialog "CNewEntry.java". This dialog opens an edit-mask so the user can
 	 * input the necessary information. If everything is done, the JDialog retrieves
 	 * all the information as string(-array)-variables and simply passes these as
@@ -2968,7 +2968,7 @@ public class Daten {
 	 * What we have to do here is to check whether the keywords or links e.g. partly
 	 * exist, and if so, find out the related index number. Keywords which until now
 	 * do not already exist in the keyword file have to be added to the keyword file
-	 * and the new index number has to be addes to the keyword-element of the entry.
+	 * and the new index number has to be added to the keyword-element of the entry.
 	 * and so on...
 	 *
 	 * @param title     the entry's title as string
@@ -2996,10 +2996,10 @@ public class Daten {
 	 *         added<br>
 	 *         {@link #ADD_LUHMANNENTRY_OK ADD_LUHMANNENTRY_OK} if a follower-entry
 	 *         (trailing entry) was successfully added<br>
-	 *         {@link #ADD_ENTRY_ERR ADD_ENTRY_ERR} if an error occured when adding
+	 *         {@link #ADD_ENTRY_ERR ADD_ENTRY_ERR} if an error occurred when adding
 	 *         a normal entry<br>
 	 *         {@link #ADD_LUHMANNENTRY_ERR ADD_LUHMANNENTRY_ERR} if an error
-	 *         occured when adding a follower-entry (trailing entry)
+	 *         occurred when adding a follower-entry (trailing entry)
 	 */
 	public int addEntry(String title, String content, String[] authors, String[] keywords, String remarks,
 			String[] links, String timestamp, int luhmann) {
@@ -5731,7 +5731,6 @@ public class Daten {
 	 *         entry does not exist
 	 */
 	public String getZettelContent(int pos) {
-		// retrieve the element from the main xml-file
 		Element el = retrieveElement(zknFile, pos);
 		// if element or child element is null, return empty string
 		if (null == el || null == el.getChild(ELEMENT_CONTENT)) {
@@ -5762,7 +5761,7 @@ public class Daten {
 		if (null == el || null == el.getChild(ELEMENT_CONTENT)) {
 			return "";
 		}
-		// else return entry as html
+		// else return entry as HTML
 		return HtmlUbbUtil.convertUbbToHtml(settings, this, bibtexObj, el.getChild(ELEMENT_CONTENT).getText(),
 				Constants.FRAME_MAIN, false, false);
 	}
@@ -5865,7 +5864,6 @@ public class Daten {
 	 * @return the cleaned content of that entry, with all formatting-tags removed
 	 */
 	public String getCleanZettelContent(int pos) {
-		// get the zettel content
 		String content = getZettelContent(pos);
 		// if the content is not empty...
 		if (!content.isEmpty()) {
