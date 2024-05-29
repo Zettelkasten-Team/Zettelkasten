@@ -3116,7 +3116,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// create new string builder for border-text. we set the amount of keywords
 		// as new border-title
 		StringBuilder bordertext = new StringBuilder("");
-		// get localised description
+		// get localized description
 		bordertext.append(getResourceMap().getString("jListEntryKeywords.border.title"));
 		// if we have any keywords...
 		// copy amount of keywords behind description
