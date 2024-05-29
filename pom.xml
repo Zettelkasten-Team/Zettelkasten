@@ -309,26 +309,21 @@
             <artifactId>opencsv</artifactId>
             <version>5.9</version>
         </dependency>
+		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.16.1</version>
+		</dependency>
         <dependency>
             <groupId>org.kohsuke</groupId>
             <artifactId>github-api</artifactId>
             <version>1.321</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-io</groupId>
-                    <artifactId>commons-io</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jdom</groupId>
             <artifactId>jdom2</artifactId>
             <version>2.0.6.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.seaglasslookandfeel</groupId>
-            <artifactId>seaglasslookandfeel</artifactId>
-            <version>0.2.1</version>
         </dependency>
         <dependency>
             <groupId>org.jdesktop</groupId>
@@ -365,7 +360,7 @@
             <artifactId>AppleJavaExtensions</artifactId>
             <version>1.4</version>
         </dependency>
-        <!-- https://www.formdev.com/flatlaf/#download -->
+		<!-- https://www.formdev.com/flatlaf/#download -->
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>

@@ -41,7 +41,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -57,14 +56,12 @@ import javax.swing.SortOrder;
 import javax.swing.UIManager;
 import javax.swing.table.TableModel;
 
-import org.apache.commons.io.FilenameUtils;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.XMLOutputter;
 
-import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatLightLaf;
+import org.apache.commons.io.FilenameUtils;
 
 import de.danielluedecke.zettelkasten.CImportBibTex;
 import de.danielluedecke.zettelkasten.CSetBibKey;
@@ -917,18 +914,17 @@ public class Settings {
 	}
 
 	private void initializeLookAndFeel() {
-		// Install FlatLafs Light and Dark with Ubuntu accent colour (Todo: make colors / themeing flexible, not hardcoded)
+		// Install FlatLafs Light and Dark with Ubuntu accent color (Todo: make colors / themeing flexible, not hardcoded)
 		UIManager.installLookAndFeel("FlatLightLaf", "com.formdev.flatlaf.FlatLightLaf");
-		FlatLightLaf.setGlobalExtraDefaults(Collections.singletonMap("@accentColor", "#ea5420"));
 		UIManager.installLookAndFeel("FlatDarkLaf", "com.formdev.flatlaf.FlatDarkLaf");
-		FlatDarkLaf.setGlobalExtraDefaults(Collections.singletonMap("@accentColor", "#ea5420"));
+
 		// Retrieve all installed LookAndFeels
 		UIManager.LookAndFeelInfo[] installed_laf = UIManager.getInstalledLookAndFeels();
 		boolean lafAquaFound = false;
 		String aquaclassname = "";
 		String flatlightlafclassname = "";
 
-		// Give Aqua and FlatLightLaf proper classnames
+		// Give Aqua and FlatLightLaf proper class names
 		for (UIManager.LookAndFeelInfo laf : installed_laf) {
 			if (laf.getName().equalsIgnoreCase("mac os x") || laf.getClassName().contains("Aqua")) {
 				lafAquaFound = true;
@@ -1228,7 +1224,7 @@ public class Settings {
 	public String getMainDataFileNameWithoutExtension() {
 		File f = getMainDataFile();
 		if (f != null && f.exists()) {
-			String extension = FilenameUtils.getExtension(f.getName());
+			String extension = org.apache.commons.io.FilenameUtils.getExtension(f.getName());
 			if (("." + extension).equals(Constants.ZKN_FILEEXTENSION)) {
 				return FilenameUtils.removeExtension(f.getName());
 			}
