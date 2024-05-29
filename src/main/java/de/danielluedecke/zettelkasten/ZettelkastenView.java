@@ -2230,7 +2230,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private void setCustomTableRowSorter(JTable table, int column) {
 		// create new table sorter
 		TableRowSorter<TableModel> sorter = new TableRowSorter<>();
-		// Tell tgis jtable that it has an own sorter
+		// Tell this jTable that it has an own sorter
 		table.setRowSorter(sorter);
 		// and tell the sorter, which table model to sort.
 		sorter.setModel((DefaultTableModel) table.getModel());
@@ -11108,7 +11108,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			// Get list selection model.
-			ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+			ListSelectionModel lsm = ((JTable) e.getSource()).getSelectionModel();
 			// Set value-adjusting to true, so we don't fire multiple value-changed events.
 			lsm.setValueIsAdjusting(true);
 
