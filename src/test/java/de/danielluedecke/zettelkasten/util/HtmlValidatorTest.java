@@ -13,12 +13,27 @@ public class HtmlValidatorTest {
     }
 
     @Test
-    public void testInvalidHTML() {
-        String invalidHtmlContent = "<html><body><p>This is invalid HTML content.</body></html>";
-        boolean isValid = HtmlValidator.isValidHTML(invalidHtmlContent, 2);
-        Assert.assertFalse(isValid, "Invalid HTML content should return false.");
+    public void testWellFormedHTML() {
+        String validHtml = "<html><body><div><p>This is valid HTML content.</p></div></body></html>";
+        Assert.assertTrue(HtmlValidator.isWellFormed(validHtml));
     }
 
-    // Add more test cases to cover edge cases and additional scenarios
+    @Test
+    public void testInvalidHTML() {
+        String invalidHtml = "<html><body><div><p>This is invalid HTML content.</div></p></body></html>";
+        Assert.assertFalse(HtmlValidator.isWellFormed(invalidHtml));
+    }
+
+    @Test
+    public void testNullHTML() {
+        String nullHtml = null;
+        Assert.assertFalse(HtmlValidator.isWellFormed(nullHtml));
+    }
+
+    @Test
+    public void testEmptyHTML() {
+        String emptyHtml = "";
+        Assert.assertFalse(HtmlValidator.isWellFormed(emptyHtml));
+    }
 
 }
