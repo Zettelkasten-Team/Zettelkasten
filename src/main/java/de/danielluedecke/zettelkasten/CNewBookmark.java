@@ -94,9 +94,7 @@ public class CNewBookmark extends javax.swing.JDialog {
         initComboBox();
         initListeners();
         initBorders(settingsObj);
-        if (settingsObj.isSeaGlass()) {
-            setupSeaGlassStyle();
-        }
+
         // when the user wants to edit a bookmark, init fields
         if (editbookmark) {
             // get the bookmark
