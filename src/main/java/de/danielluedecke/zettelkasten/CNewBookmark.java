@@ -121,12 +121,6 @@ public class CNewBookmark extends javax.swing.JDialog {
         }
     }
 
-    private void setupSeaGlassStyle() {
-        jButtonApply.putClientProperty("JComponent.sizeVariant", "small");
-        jButtonCancel.putClientProperty("JComponent.sizeVariant", "small");
-        jButtonAddCat.putClientProperty("JComponent.sizeVariant", "small");
-    }
-
     private void initBorders(Settings settingsObj) {
         /*
          * Constructor for Matte Border

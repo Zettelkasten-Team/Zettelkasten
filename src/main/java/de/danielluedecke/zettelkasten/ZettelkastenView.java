@@ -1805,9 +1805,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			if (settings.isMacStyle() && bottomBarNeedsUdpate) {
 				makeMacToolbar();
 			}
-			if (settings.isSeaGlass()) {
-				makeSeaGlassToolbar();
-			}
+
 		} else {
 			// if not, hide it and leave.
 			toolBar.setVisible(false);
@@ -1937,7 +1935,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	private void initTables() {
 		// Create custom tablerow-sorter for sorting certain table rows that
-		// might contain german umlauts
+		// might contain German umlauts
 		setCustomTableRowSorter(jTableAuthors, 0);
 		setCustomTableRowSorter(jTableKeywords, 0);
 		setCustomTableRowSorter(jTableTitles, 1);
@@ -4125,7 +4123,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 		// if we have just a single selection, use phrasing for that message
 		String msg = (1 == rowcount) ? getResourceMap().getString("askForDeleteBookmarkMsgSingle")
-				// else if we have multiple selectios, use phrasing with appropriate wording
+				// else if we have multiple selections, use phrasing with appropriate wording
 				: getResourceMap().getString("askForDeleteBookmarkMsgMultiple", String.valueOf(rowcount));
 		// ask whether author really should be deleted
 		int option = JOptionPane.showConfirmDialog(getFrame(), msg,
@@ -7397,7 +7395,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This method rerieves the selected entries from the current activated tab in
+	 * This method retrieves the selected entries from the current activated tab in
 	 * the tabbedpane and adds them to the bookmarks of the current entry.
 	 */
 	@Action(enabledProperty = "tableEntriesSelected")
@@ -7814,7 +7812,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				// If dialog window isn't already created, do this now.
 				if (taskDlg == null) {
 					// open export dialog
-					// get parent und init window
+					// get parent and init window
 					taskDlg = new TaskProgressDialog(getFrame(), TaskProgressDialog.TASK_EXPORTDATA, taskinfo, data,
 							bookmarks, desktop, settings, bibtex, settings.getSynonyms(), exportWindow.getFilePath(),
 							entries, exportWindow.getExportType(), exportWindow.getExportParts(),
@@ -7826,7 +7824,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 				waitForTaskDialog();
 
-				// if an error occured, show error-log
+				// if an error occurred, show error-log
 				if (!taskinfo.isExportOk()) {
 					showErrorIcon();
 				} // else tell user that everything went fine
@@ -9582,7 +9580,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * Shows the desktop/outliner window. If it hasn't been created yet, a new
+	 * Shows the desktop/outline window. If it hasn't been created yet, a new
 	 * instance will be created. <br>
 	 * <br>
 	 * The window is modal, thus we don't wait for reactions here.
@@ -9596,7 +9594,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * Shows the desktop/outliner window. If it hasn't been created yet, a new
+	 * Shows the desktop/outline window. If it hasn't been created yet, a new
 	 * instance will be created. <br>
 	 * <br>
 	 * The window is modal, thus we don't wait for reactions here.
@@ -10977,47 +10975,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTextFieldFilterAttachments.putClientProperty("JTextField.variant", "search");
 	}
 
-	private void makeSeaGlassToolbar() {
-		Tools.makeTexturedToolBarButton(tb_newEntry, Tools.SEGMENT_POSITION_FIRST);
-		Tools.makeTexturedToolBarButton(tb_open, Tools.SEGMENT_POSITION_MIDDLE);
-		Tools.makeTexturedToolBarButton(tb_save, Tools.SEGMENT_POSITION_LAST);
-
-		if (settings.getShowAllIcons()) {
-			Tools.makeTexturedToolBarButton(tb_edit, Tools.SEGMENT_POSITION_FIRST);
-			Tools.makeTexturedToolBarButton(tb_delete, Tools.SEGMENT_POSITION_MIDDLE);
-			Tools.makeTexturedToolBarButton(tb_copy, Tools.SEGMENT_POSITION_MIDDLE);
-			Tools.makeTexturedToolBarButton(tb_paste, Tools.SEGMENT_POSITION_MIDDLE);
-			Tools.makeTexturedToolBarButton(tb_selectall, Tools.SEGMENT_POSITION_LAST);
-		} else {
-			Tools.makeTexturedToolBarButton(tb_copy, Tools.SEGMENT_POSITION_FIRST);
-			Tools.makeTexturedToolBarButton(tb_paste, Tools.SEGMENT_POSITION_LAST);
-		}
-
-		Tools.makeTexturedToolBarButton(tb_addmanlinks, Tools.SEGMENT_POSITION_FIRST);
-		Tools.makeTexturedToolBarButton(tb_addluhmann, Tools.SEGMENT_POSITION_MIDDLE);
-
-		if (settings.getShowAllIcons()) {
-			Tools.makeTexturedToolBarButton(tb_addbookmark, Tools.SEGMENT_POSITION_MIDDLE);
-			Tools.makeTexturedToolBarButton(tb_addtodesktop, Tools.SEGMENT_POSITION_LAST);
-		} else {
-			Tools.makeTexturedToolBarButton(tb_addbookmark, Tools.SEGMENT_POSITION_LAST);
-		}
-
-		if (settings.getShowAllIcons()) {
-			Tools.makeTexturedToolBarButton(tb_find, Tools.SEGMENT_POSITION_FIRST);
-			Tools.makeTexturedToolBarButton(tb_first, Tools.SEGMENT_POSITION_MIDDLE);
-		} else {
-			Tools.makeTexturedToolBarButton(tb_first, Tools.SEGMENT_POSITION_FIRST);
-		}
-
-		Tools.makeTexturedToolBarButton(tb_prev, Tools.SEGMENT_POSITION_MIDDLE);
-		Tools.makeTexturedToolBarButton(tb_next, Tools.SEGMENT_POSITION_MIDDLE);
-		Tools.makeTexturedToolBarButton(tb_last, Tools.SEGMENT_POSITION_LAST);
-
-		toolBar.setPreferredSize(new Dimension(toolBar.getSize().width, Constants.seaGlassToolbarHeight));
-		toolBar.add(new JToolBar.Separator(), 0);
-	}
-
 	/**
 	 *
 	 * @param bottomBarNeedsUpdate if {@code true}, the bottom bar on mac aqua style
@@ -11327,7 +11284,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This variable indicates whether we have seleced text, so we can en- or
+	 * This variable indicates whether we have selected text, so we can enable or
 	 * disable the related actions.
 	 */
 	private boolean bibtexFileLoaded = false;
@@ -11360,7 +11317,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	/**
 	 * This variable indicates whether the a luhmann-number (i.e. entry in the
-	 * jTreeLuhmann) is selected or not. so we can en- or disable the
+	 * jTreeLuhmann) is selected or not. so we can enable or disable the
 	 * bookmark-action.
 	 */
 	private boolean luhmannSelected = false;
@@ -11540,7 +11497,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jComboBoxBookmarkCategory = new javax.swing.JComboBox();
             jSplitPane3 = new javax.swing.JSplitPane();
             jScrollPane9 = new javax.swing.JScrollPane();
-            jTableBookmarks = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+            jTableBookmarks = new javax.swing.JTable();
             jScrollPane14 = new javax.swing.JScrollPane();
             jEditorPaneBookmarkComment = new javax.swing.JEditorPane();
             jPanel13 = new javax.swing.JPanel();
