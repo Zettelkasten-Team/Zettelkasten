@@ -393,8 +393,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private final ResourceMap toolbarResourceMap = Application
 			.getInstance(ZettelkastenApp.class).getContext()
 			.getResourceMap(ToolbarIcons.class);
-                        
-        //Constructor
+	
+	//Constructor
 	public ZettelkastenView(SingleFrameApplication app, Settings st, TasksData td) throws ClassNotFoundException,
 			UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException {
 		super(app);
@@ -11091,7 +11091,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * this SelectionListener in the {@link #initSelectionListeners()
 	 * initSelectionListeners()} method.
 	 */
-	private class SelectionListener implements ListSelectionListener {
+	class SelectionListener implements ListSelectionListener {
 		JTable table;
 
 		// It is necessary to keep the table since it is not possible
