@@ -135,7 +135,6 @@ Session.vim
 Sessionx.vim
 .netrwhist
 *~
-tags
 [._]*.un~
 .DS_Store
 .AppleDouble

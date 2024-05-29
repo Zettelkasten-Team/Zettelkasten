@@ -1,0 +1,1 @@
+package de.danielluedecke.zettelkasten.tags;
