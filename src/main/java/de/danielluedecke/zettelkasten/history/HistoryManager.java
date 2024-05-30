@@ -1,6 +1,7 @@
 package de.danielluedecke.zettelkasten.history;
 
 import de.danielluedecke.zettelkasten.database.Daten;
+import de.danielluedecke.zettelkasten.util.Constants;
 
 /**
  * Manages the history of entries in the program.
@@ -36,12 +37,11 @@ public class HistoryManager {
         } else {
             System.arraycopy(history, 1, history, 0, HISTORY_MAX - 1);
             history[HISTORY_MAX - 1] = entryNr;
+            historyPosition = HISTORY_MAX - 1;
         }
-
-        // Update historyCount correctly
-        if (historyCount < HISTORY_MAX) {
-            historyCount++;
-        }
+        historyCount = Math.min(historyCount + 1, HISTORY_MAX);
+        Constants.zknlogger.info("Added to history: " + entryNr);
+        data.displayHistory(history, historyCount);
     }
 
     /**
