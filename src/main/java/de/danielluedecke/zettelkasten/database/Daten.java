@@ -35,6 +35,7 @@ package de.danielluedecke.zettelkasten.database;
 import de.danielluedecke.zettelkasten.CMakeFormImage;
 import de.danielluedecke.zettelkasten.EntryID;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
+import de.danielluedecke.zettelkasten.history.HistoryManager;
 import de.danielluedecke.zettelkasten.settings.Settings;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import de.danielluedecke.zettelkasten.util.Constants;
@@ -75,6 +76,7 @@ public class Daten {
 	 */
 	private static final String currentVersion = "3.8";
 	public static final String backwardCompatibleVersion = "3.4";
+	
 	/**
 	 * A reference to the settings class
 	 */
@@ -130,17 +132,9 @@ public class Daten {
 	 * previously accessed entries and so on...
 	 */
 	private int[] history;
-	/**
-	 * Indicates the current position in that array, i.e. when the user activates
-	 * the history function, we have to know which element of the history array is
-	 * currently "active".
-	 */
-	private int historyPosition;
-	/**
-	 * The array's maximum limit does not automatically equal the amount of saved
-	 * history steps. so we use this as internal counter.
-	 */
-	private int historyCount;
+	
+	private HistoryManager historyManager;
+
 	/**
 	 * Stores the files which we want to retrieve from the main data file
 	 * (filename.zkn3). This file is a zip-container with the file-extension ".zkn3"
@@ -392,6 +386,7 @@ public class Daten {
 		bibtexObj = bib;
 		activatedEntryNumber = 1;
 		reset();
+		historyManager = new HistoryManager(this);
 	}
 
 	/**
@@ -405,6 +400,7 @@ public class Daten {
 		activatedEntryNumber = 1;
 		reset();
 		zknFile = zettelkastenDocument;
+		historyManager = new HistoryManager(this);
 	}
 
 	/**
@@ -425,24 +421,24 @@ public class Daten {
 		keywordFile = null;
 		metainfFile = null;
 		zknFileExport = null;
-		// init the history array
-		history = new int[HISTORY_MAX];
-		// current position in the history array refers to the first element
-		historyPosition = 0;
-		// indicates that we have one (initial) element
-		historyCount = 1;
-		// the one and only element is the first entry
-		history[0] = 1;
+		
+		// Initialize the HistoryManager
+        historyManager = new HistoryManager(this);
+        historyManager.addToHistory(1);
+		
+		
 		// no update to the tabbed panes in the main window when nothing is loaded
 		keywordlistUpToDate = true;
 		authorlistUpToDate = true;
 		titlelistUpToDate = true;
 		clusterlistUpToDate = true;
 		attachmentlistUpToDate = true;
+		
 		// Create "empty" XML JDOM objects
 		zknFile = new Document(new Element(DOCUMENT_ZETTELKASTEN));
 		authorFile = new Document(new Element(DOCUMENT_AUTHORS));
 		keywordFile = new Document(new Element(DOCUMENT_KEYWORDS));
+		
 		// prepare the metainformation-file
 		metainfFile = new Document(new Element("metainformation"));
 		// first create an attribute for the fileversion-number
@@ -450,17 +446,19 @@ public class Daten {
 		fileversion.setAttribute("id", currentVersion);
 		// and add it to the document
 		metainfFile.getRootElement().addContent(fileversion);
-		// than create an empty description and add it
+		// then create an empty description and add it
 		Element desc = new Element(ELEMEMT_DESCRIPTION);
 		metainfFile.getRootElement().addContent(desc);
-		// than create an empty atachment-path and add it
+		// then create an empty atachment-path and add it
 		Element attpath = new Element(ELEMENT_ATTACHMENT_PATH);
 		metainfFile.getRootElement().addContent(attpath);
-		// than create an empty atachment-path and add it
+		// then create an empty atachment-path and add it
 		Element imgpath = new Element(ELEMENT_IMAGE_PATH);
 		metainfFile.getRootElement().addContent(imgpath);
+		
 		// init zettel-position-index
 		activatedEntryNumber = 1;
+		
 		// here we add all files which are stored in the zipped data-file in a
 		// list-array
 		filesToLoad.clear();
@@ -475,6 +473,7 @@ public class Daten {
 		filesToLoad.add(Constants.desktopNotesFileName);
 		filesToLoad.add(Constants.synonymsFileName);
 		filesToLoad.add(Constants.bibTexFileName);
+		
 		// reset list
 		allLuhmannNumbers.clear();
 	}
@@ -3283,7 +3282,7 @@ public class Daten {
 			// set again
 			child.removeChildren(ELEMENT_ATTCHILD);
 			// add each hyperlink string
-			// therefor, iterate the array
+			// therefore, iterate the array
 			for (String l : links) {
 				// create a new subchuld-element
 				Element sublink = new Element(ELEMENT_ATTCHILD);
@@ -4978,86 +4977,33 @@ public class Daten {
 		addToHistory(activatedEntryNumber);
 	}
 
-	/**
-	 * This method adds the entry-number {@code entryNr} to the history, so the user
-	 * can go back and fore to previous selected entries.
-	 *
-	 * @param entryNr the number of the entry that should be added to the history
-	 */
-	public void addToHistory(int entryNr) {
-		// when the last history-entry equals the current entry, don't add
-		// that to the history, so we don't have the same entry several times
-		if (history[historyPosition] == entryNr) {
-			return;
-		}
-		// when we reached the end of the array, rotate it...
-		if (historyPosition >= (HISTORY_MAX - 1)) {
-			// go through history array...
-			// copy the next element the previous position
-			for (int cnt = 0; cnt < (HISTORY_MAX - 1); cnt++) {
-				history[cnt] = history[cnt + 1];
-			}
-			// add new value to history
-			history[HISTORY_MAX - 1] = entryNr;
-			// set position and counter
-			historyCount = HISTORY_MAX;
-			historyPosition = HISTORY_MAX - 1;
-		} else {
-			// in any other case, simply increase the history counter
-			historyPosition++;
-			// add the new value
-			history[historyPosition] = entryNr;
-			// and set the internal counter.
-			historyCount = historyPosition + 1;
-		}
-	}
-
-	/**
-	 * Indicates whether the history-back function is possible or not.
-	 *
-	 * @return {@code true}, if the history-back-function is enabled, false otherwise
-	 */
-	public boolean canHistoryBack() {
-		return (historyPosition > 0);
-	}
-
-	/**
-	 * Indicates whether the history-fore function is possible or not.
-	 *
-	 * @return {@code true}, if the histor-fore-function is enabled, false otherwise
-	 */
-	public boolean canHistoryFore() {
-		return (historyPosition < (historyCount - 1));
-	}
-
-	/**
-	 * This methods goes back through the history and sets the current entry to the
-	 * related entry in the history...
-	 */
-	public void historyBack() {
-		// check whether we can go back through history
-		if (historyPosition > 0) {
-			// if yes, decrease history position counter
-			historyPosition--;
-			// and set new zettel-position
-			activatedEntryNumber = history[historyPosition];
-		}
-	}
-
-	/**
-	 * This methods goes fore through the history and sets the current entry to the
-	 * related entry in the history...
-	 */
-	public void historyFore() {
-		// check whether we can go fore through history
-		if (historyPosition < (historyCount - 1)) {
-			// if yes, increase history position counter
-			historyPosition++;
-			// and set new zettel-position
-			activatedEntryNumber = history[historyPosition];
-		}
-	}
 	
+	public void addToHistory(int entryNr) {
+        historyManager.addToHistory(entryNr);
+    }
+
+    public boolean canHistoryBack() {
+        return historyManager.canHistoryBack();
+    }
+
+    public boolean canHistoryFore() {
+        return historyManager.canHistoryFore();
+    }
+
+    public int historyBack() {
+        return historyManager.historyBack();
+    }
+
+    public int historyFore() {
+        return historyManager.historyFore();
+    }
+    
+    public void displayHistory(int[] history, int historyCount) {
+        if (zknframe != null) {
+            zknframe.displayHistory(history, historyCount);
+        }
+    }
+    
 	/**
 	 * Sets the currently activated entry to the given number.
 	 * If the number is invalid, returns false without any change.

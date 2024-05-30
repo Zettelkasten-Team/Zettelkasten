@@ -15151,4 +15151,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	public HistoryManager getHistoryManager() {
 		return historyManager;
 	}
+
+	public void displayHistory(int[] history, int historyCount) {
+        StringBuilder historyDisplay = new StringBuilder("Verlauf:\n");
+        for (int i = 0; i < historyCount; i++) {
+            historyDisplay.append(history[i]).append("\n");
+        }
+        // Assuming there is a method to display this text, e.g., in a JTextArea
+        System.out.println(historyDisplay.toString()); // Placeholder for actual display method
+
+        // Logging the history display
+        Constants.zknlogger.info(historyDisplay.toString());
+    }
 }

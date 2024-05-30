@@ -367,8 +367,8 @@ public class SearchRequests {
 	}
 
 	/**
-	 * Adds a new searchterm from a search-request to the history of search terms.
-	 * This histroy, a linked list of type String, stores the 20 last used search
+	 * Adds a new search term from a search-request to the history of search terms.
+	 * This history, a linked list of type String, stores the 20 last used search
 	 * terms. If this list is already "full", the first (oldest) element will be
 	 * removed and the new search term will be added to the end of this list.
 	 *
