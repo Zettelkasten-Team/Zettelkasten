@@ -1,19 +1,15 @@
-package de.danielluedecke.zettelkasten.config;
+package de.danielluedecke.zettelkasten;
 
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 
-import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.settings.Settings;
 import org.jdesktop.application.SingleFrameApplication;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.swing.*;
-import java.io.IOException;
 
 public class ZettelkastenViewTest {
     private ZettelkastenView zettelkastenView;
