@@ -5015,7 +5015,7 @@ public class Daten {
 	/**
 	 * Indicates whether the history-back function is possible or not.
 	 *
-	 * @return {@code true}, if the histor-back-function is enabled, false otherwise
+	 * @return {@code true}, if the history-back-function is enabled, false otherwise
 	 */
 	public boolean canHistoryBack() {
 		return (historyPosition > 0);
@@ -5057,6 +5057,7 @@ public class Daten {
 			activatedEntryNumber = history[historyPosition];
 		}
 	}
+	
 	/**
 	 * Sets the currently activated entry to the given number.
 	 * If the number is invalid, returns false without any change.
