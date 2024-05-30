@@ -159,7 +159,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	/**
 	 * CDaten object, which contains the XML data of the Zettelkasten
 	 */
-	private final Daten dataObj;
+	private final Daten data;
 	/**
 	 *
 	 */
@@ -176,7 +176,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	/**
 	 *
 	 */
-	private final Settings settingsObj;
+	private final Settings settings;
 	/**
 	 *
 	 */
@@ -326,11 +326,11 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		mainframe = zkn;
 
 		// init the variables from the parameters
-		dataObj = d;
+		data = d;
 		taskinfo = td;
 		stenoObj = stn;
 		accKeys = ak;
-		settingsObj = s;
+		settings = s;
 		synonymsObj = syn;
 		spellObj = ac;
 		isDeleted = isdel;
@@ -338,12 +338,12 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		editmode = isEditingParam;
 		// check whether memory usage is logged. if so, tell logger that new entry
 		// windows was opened
-		if (settingsObj.isMemoryUsageLogged) {
+		if (settings.isMemoryUsageLogged) {
 			// log info
 			Constants.zknlogger.log(Level.INFO, "Memory usage logged. New Entry Window opened.");
 		}
 		// create brushed look for window, so toolbar and window-bar become a unit
-		if (settingsObj.isMacStyle()) {
+		if (settings.isMacStyle()) {
 			MacUtils.makeWindowLeopardStyle(getRootPane());
 			// WindowUtils.createAndInstallRepaintWindowFocusListener(this);
 			WindowUtils.installJComponentRepainterOnWindowFocusChanged(this.getRootPane());
@@ -362,22 +362,22 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		// init all our document, window, and component-listeners
 		initListeners();
 		// set borders manually
-		initBorders(settingsObj);
+		initBorders(settings);
 		// clear the listviews
 		keywordListModel.clear();
 		linkListModel.clear();
 		quickInputKeywordsListModel.clear();
 		quickInputAuthorListModel.clear();
 		// show/hide quickkeyword-goon-button and quickinput-menu-items
-		jButtonQuickKeyword.setVisible(settingsObj.getQuickInput());
-		jCheckBoxQuickInput.setSelected(settingsObj.getQuickInput());
+		jButtonQuickKeyword.setVisible(settings.getQuickInput());
+		jCheckBoxQuickInput.setSelected(settings.getQuickInput());
 		initComboBox();
 		// if we have mac os x with aqua/leopard-style make window look like native
 		// leopard
-		if (settingsObj.isMacStyle()) {
+		if (settings.isMacStyle()) {
 			setupMacOSXLeopardStyle();
 		}
-		if (settingsObj.isSeaGlass()) {
+		if (settings.isSeaGlass()) {
 			setupSeaGlassStyle();
 		}
 		// init default font-size for tables, lists and textfields...
@@ -507,14 +507,14 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		jComboBoxQuickInput.addItem(resourceMap.getString("quickInputMore"));
 		jComboBoxQuickInput.addItem(resourceMap.getString("quickInputLess"));
 		// select requested item
-		jComboBoxQuickInput.setEnabled(settingsObj.getQuickInput());
-		jComboBoxQuickInput.setSelectedIndex(settingsObj.getQuickInputExtended());
+		jComboBoxQuickInput.setEnabled(settings.getQuickInput());
+		jComboBoxQuickInput.setSelectedIndex(settings.getQuickInputExtended());
 		// add action listener to combo box
 		jComboBoxQuickInput.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
 				// update selected quickinput-type
-				settingsObj.setQuickInputExtended(jComboBoxQuickInput.getSelectedIndex());
+				settings.setQuickInputExtended(jComboBoxQuickInput.getSelectedIndex());
 				// indicate that keywordlist needs update
 				keywordsListUpToDate = false;
 				// if the keyword-tab is visible, refresh the view
@@ -846,7 +846,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 				}
 			}
 		});
-		if (settingsObj.isMacStyle()) {
+		if (settings.isMacStyle()) {
 			jTextFieldAddKeyword.addFocusListener(new java.awt.event.FocusAdapter() {
 				@Override
 				public void focusGained(java.awt.event.FocusEvent evt) {
@@ -1038,8 +1038,8 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		jTextAreaEntry.addKeyListener(new java.awt.event.KeyAdapter() {
 			@Override
 			public void keyReleased(java.awt.event.KeyEvent evt) {
-				NewEntryFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaEntry, settingsObj, spellObj);
-				if (settingsObj.getAutoCompleteTags()) {
+				NewEntryFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaEntry, settings, spellObj);
+				if (settings.getAutoCompleteTags()) {
 					NewEntryFrameUtil.autoCompleteTags(jTextAreaEntry, evt.getKeyChar());
 				}
 				enableBySelection();
@@ -1065,7 +1065,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		jTextAreaAuthor.addKeyListener(new java.awt.event.KeyAdapter() {
 			@Override
 			public void keyReleased(java.awt.event.KeyEvent evt) {
-				NewEntryFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaAuthor, settingsObj, spellObj);
+				NewEntryFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaAuthor, settings, spellObj);
 			}
 		});
 		jTextAreaRemarks.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1088,7 +1088,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		jTextAreaRemarks.addKeyListener(new java.awt.event.KeyAdapter() {
 			@Override
 			public void keyReleased(java.awt.event.KeyEvent evt) {
-				NewEntryFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaRemarks, settingsObj, spellObj);
+				NewEntryFrameUtil.checkSpelling(evt.getKeyCode(), jTextAreaRemarks, settings, spellObj);
 			}
 		});
 		jTextFieldFilterAuthorlist.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1173,7 +1173,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	 */
 	public final void initToolbarIcons() {
 		// check whether the toolbar should be displayed at all...
-		if (!settingsObj.getShowIcons() && !settingsObj.getShowIconText()) {
+		if (!settings.getShowIcons() && !settings.getShowIconText()) {
 			// if not, hide it and leave.
 			jToolBarNewEntry.setVisible(false);
 			// and set a border to the main panel, because the toolbar's dark border is
@@ -1201,7 +1201,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 				"formatStrikeThroughIcon", "formatColorIcon", "highlightKeywordsIcon" };
 
 		// set toolbar-icons' text
-		if (settingsObj.getShowIconText()) {
+		if (settings.getShowIconText()) {
 			for (int cnt = 0; cnt < toolbarButtons.length; cnt++) {
 				toolbarButtons[cnt].setText(toolbarResourceMap.getString(buttonNames[cnt]));
 			}
@@ -1211,9 +1211,9 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			}
 		}
 		// show icons, if requested
-		if (settingsObj.getShowIcons()) {
+		if (settings.getShowIcons()) {
 			// retrieve icon theme path
-			String icontheme = settingsObj.getIconThemePath();
+			String icontheme = settings.getIconThemePath();
 			for (int cnt = 0; cnt < toolbarButtons.length; cnt++) {
 				toolbarButtons[cnt].setIcon(new ImageIcon(
 						ZettelkastenView.class.getResource(icontheme + toolbarResourceMap.getString(iconNames[cnt]))));
@@ -1237,16 +1237,16 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		popupMainCut.setAction(actionMap.get("cut"));
 		popupMainCopy.setAction(actionMap.get("copy"));
 		popupMainPaste.setAction(actionMap.get("paste"));
-		if (settingsObj.getShowIcons()) {
-			tb_selectall.setVisible(settingsObj.getShowAllIcons());
-			tb_newauthor.setVisible(settingsObj.getShowAllIcons());
-			tb_highlight.setVisible(settingsObj.getShowAllIcons());
-			tb_strike.setVisible(settingsObj.getShowAllIcons());
+		if (settings.getShowIcons()) {
+			tb_selectall.setVisible(settings.getShowAllIcons());
+			tb_newauthor.setVisible(settings.getShowAllIcons());
+			tb_highlight.setVisible(settings.getShowAllIcons());
+			tb_strike.setVisible(settings.getShowAllIcons());
 		}
-		if (settingsObj.isMacStyle()) {
+		if (settings.isMacStyle()) {
 			makeMacToolbar();
 		}
-		if (settingsObj.isSeaGlass()) {
+		if (settings.isSeaGlass()) {
 			makeSeaGlassToolbar();
 		}
 	}
@@ -1276,14 +1276,14 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		jButtonAddKeywords.putClientProperty("JButton.buttonType", "segmentedRoundRect");
 		jButtonQuickKeyword.putClientProperty("JButton.buttonType", "segmentedRoundRect");
 		jButtonAddKeywords.putClientProperty("JButton.segmentPosition",
-				(settingsObj.getQuickInput()) ? "first" : "only");
+				(settings.getQuickInput()) ? "first" : "only");
 		jButtonQuickKeyword.putClientProperty("JButton.segmentPosition", "last");
 		// also change design of author-button
 		jButtonAddAuthors.putClientProperty("JButton.buttonType", "roundRect");
 		jTextFieldFilterKeywordlist.putClientProperty("JTextField.variant", "search");
 		jTextFieldFilterAuthorlist.putClientProperty("JTextField.variant", "search");
 		// change button size
-		if (settingsObj.isSeaGlass()) {
+		if (settings.isSeaGlass()) {
 			jButtonAddKeywords.putClientProperty("JComponent.sizeVariant", "small");
 			jButtonQuickKeyword.putClientProperty("JComponent.sizeVariant", "small");
 			jButtonAddAuthors.putClientProperty("JComponent.sizeVariant", "small");
@@ -1296,12 +1296,12 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		Tools.makeTexturedToolBarButton(tb_cut, Tools.SEGMENT_POSITION_FIRST);
 		Tools.makeTexturedToolBarButton(tb_copy, Tools.SEGMENT_POSITION_MIDDLE);
 		Tools.makeTexturedToolBarButton(tb_paste, Tools.SEGMENT_POSITION_LAST);
-		if (settingsObj.getShowAllIcons()) {
+		if (settings.getShowAllIcons()) {
 			Tools.makeTexturedToolBarButton(tb_selectall, Tools.SEGMENT_POSITION_ONLY);
 		}
 		Tools.makeTexturedToolBarButton(tb_undo, Tools.SEGMENT_POSITION_FIRST);
 		Tools.makeTexturedToolBarButton(tb_redo, Tools.SEGMENT_POSITION_LAST);
-		if (settingsObj.getShowAllIcons()) {
+		if (settings.getShowAllIcons()) {
 			Tools.makeTexturedToolBarButton(tb_newauthor, Tools.SEGMENT_POSITION_ONLY);
 		}
 		Tools.makeTexturedToolBarButton(tb_footnote, Tools.SEGMENT_POSITION_FIRST);
@@ -1312,13 +1312,13 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 
 		Tools.makeTexturedToolBarButton(tb_bold, Tools.SEGMENT_POSITION_FIRST);
 		Tools.makeTexturedToolBarButton(tb_italic, Tools.SEGMENT_POSITION_MIDDLE);
-		if (settingsObj.getShowAllIcons()) {
+		if (settings.getShowAllIcons()) {
 			Tools.makeTexturedToolBarButton(tb_underline, Tools.SEGMENT_POSITION_MIDDLE);
 			Tools.makeTexturedToolBarButton(tb_strike, Tools.SEGMENT_POSITION_LAST);
 		} else {
 			Tools.makeTexturedToolBarButton(tb_underline, Tools.SEGMENT_POSITION_LAST);
 		}
-		if (settingsObj.getShowAllIcons()) {
+		if (settings.getShowAllIcons()) {
 			Tools.makeTexturedToolBarButton(tb_textcolor, Tools.SEGMENT_POSITION_FIRST);
 			Tools.makeTexturedToolBarButton(tb_highlight, Tools.SEGMENT_POSITION_LAST);
 		} else {
@@ -1334,7 +1334,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		jToolBarNewEntry.setVisible(false);
 		this.remove(jToolBarNewEntry);
 		// and create mac toolbar
-		if (settingsObj.getShowIcons() || settingsObj.getShowIconText()) {
+		if (settings.getShowIcons() || settings.getShowIconText()) {
 
 			UnifiedToolBar mactoolbar = new UnifiedToolBar();
 
@@ -1345,7 +1345,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			mactoolbar.addComponentToLeft(
 					MacToolbarButton.makeTexturedToolBarButton(tb_paste, MacToolbarButton.SEGMENT_POSITION_LAST));
 			mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-			if (settingsObj.getShowAllIcons()) {
+			if (settings.getShowAllIcons()) {
 				mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_selectall,
 						MacToolbarButton.SEGMENT_POSITION_ONLY));
 				mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
@@ -1355,7 +1355,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			mactoolbar.addComponentToLeft(
 					MacToolbarButton.makeTexturedToolBarButton(tb_redo, MacToolbarButton.SEGMENT_POSITION_LAST));
 			mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-			if (settingsObj.getShowAllIcons()) {
+			if (settings.getShowAllIcons()) {
 				mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_newauthor,
 						MacToolbarButton.SEGMENT_POSITION_ONLY));
 				mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
@@ -1373,7 +1373,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 					MacToolbarButton.makeTexturedToolBarButton(tb_bold, MacToolbarButton.SEGMENT_POSITION_FIRST));
 			mactoolbar.addComponentToLeft(
 					MacToolbarButton.makeTexturedToolBarButton(tb_italic, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-			if (settingsObj.getShowAllIcons()) {
+			if (settings.getShowAllIcons()) {
 				mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_underline,
 						MacToolbarButton.SEGMENT_POSITION_MIDDLE));
 				mactoolbar.addComponentToLeft(
@@ -1383,7 +1383,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 						MacToolbarButton.SEGMENT_POSITION_LAST));
 			}
 			mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
-			if (settingsObj.getShowAllIcons()) {
+			if (settings.getShowAllIcons()) {
 				mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_textcolor,
 						MacToolbarButton.SEGMENT_POSITION_FIRST));
 				mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_highlight,
@@ -1424,17 +1424,17 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	 */
 	private void initDefaultFontSize() {
 		// set default fonts
-		Font f = settingsObj.getMainFont();
+		Font f = settings.getMainFont();
 		f = new Font(f.getName(), f.getStyle(), f.getSize() + 4);
 		jTextAreaEntry.setFont(f);
-		f = settingsObj.getAuthorFont();
+		f = settings.getAuthorFont();
 		f = new Font(f.getName(), f.getStyle(), f.getSize() + 4);
 		jTextAreaAuthor.setFont(f);
-		f = settingsObj.getRemarksFont();
+		f = settings.getRemarksFont();
 		f = new Font(f.getName(), f.getStyle(), f.getSize() + 4);
 		jTextAreaRemarks.setFont(f);
 
-		Font settingsTableFont = settingsObj.getTableFont();
+		Font settingsTableFont = settings.getTableFont();
 		jListQuickInputAuthor.setFont(settingsTableFont);
 		jListQuickInputKeywords.setFont(settingsTableFont);
 		jListKeywords.setFont(settingsTableFont);
@@ -1442,7 +1442,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		jTextFieldTitle.setFont(settingsTableFont);
 
 		// get the default fontsize for textfields
-		int defaultsize = settingsObj.getTextfieldFontSize();
+		int defaultsize = settings.getTextfieldFontSize();
 		// only set new fonts, when fontsize differs from the initial value
 		if (defaultsize > 0) {
 			// get current font
@@ -1517,7 +1517,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		// ATTENTION! Mnemonic keys are NOT applied on Mac OS, see Apple guidelines for
 		// further details:
 		// http://developer.apple.com/DOCUMENTATION/Java/Conceptual/Java14Development/07-NativePlatformIntegration/NativePlatformIntegration.html#//apple_ref/doc/uid/TP40001909-211867-BCIBDHFJ
-		if (!settingsObj.isMacStyle()) {
+		if (!settings.isMacStyle()) {
 			// init the variables
 			String menutext;
 			char mkey;
@@ -1631,13 +1631,13 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (jTextAreaEntry == e.getSource()) {
-					NewEntryFrameUtil.checkSteno(settingsObj, stenoObj, jTextAreaEntry);
+					NewEntryFrameUtil.checkSteno(settings, stenoObj, jTextAreaEntry);
 				}
 				if (jTextAreaAuthor == e.getSource()) {
-					NewEntryFrameUtil.checkSteno(settingsObj, stenoObj, jTextAreaAuthor);
+					NewEntryFrameUtil.checkSteno(settings, stenoObj, jTextAreaAuthor);
 				}
 				if (jTextAreaRemarks == e.getSource()) {
-					NewEntryFrameUtil.checkSteno(settingsObj, stenoObj, jTextAreaRemarks);
+					NewEntryFrameUtil.checkSteno(settings, stenoObj, jTextAreaRemarks);
 				}
 			}
 		};
@@ -1718,10 +1718,10 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 				}
 			}
 		};
-		// put action to the tables' actionmaps
+		// put action to the tables' action maps
 		jTextFieldFilterKeywordlist.getActionMap().put("AddKeyPressed", a_add);
 		jTextFieldFilterAuthorlist.getActionMap().put("AddKeyPressed", a_add);
-		// check for os, and use appropriate controlKey
+		// check for OS, and use appropriate controlKey
 		ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS()) ? "meta F10" : "ctrl F10");
 		jTextFieldFilterKeywordlist.getInputMap().put(ks, "AddKeyPressed");
 		jTextFieldFilterAuthorlist.getInputMap().put(ks, "AddKeyPressed");
@@ -1729,20 +1729,19 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 
 	/**
 	 * This method is called when the user wants to edit an entry. Here we fill all
-	 * the components (textareas, litviews) with the related texts/list-items.
+	 * the components (text areas, litviews) with the related texts/list-items.
 	 */
 	private void initFields() {
-		// get the title and fill textfield
-		jTextFieldTitle.setText(dataObj.getZettelTitle(entryNumber));
-		// get the content of that entry
-		String text = dataObj.getZettelContent(entryNumber);
-		// add new lines after each bullet-point, so they are display in a better
+		// Get the title and fill text field
+		jTextFieldTitle.setText(data.getZettelTitle(entryNumber)); //FIXME NoSuchMethodError if command-E
+		// Get the content of that entry
+		String text = data.getZettelContent(entryNumber);
+		// Add new lines after each bullet-point, so they are display in a better
 		// overview.
-		// usually, to avoid <br>-tags within <ul> and <li>-tags when the entry is
-		// converted
-		// to html, an entered list will be converted to a single line, removing all new
-		// lines.
-		// but for editing and display, it is better to have them in single lines each.
+		// Usually, to avoid <br>-tags within <ul> and <li>-tags when the entry is
+		// converted to HTML, an entered list will be converted to a single line, 
+		// removing all new lines.
+		// But for editing and display, it is better to have them in single lines each.
 		text = text.replace(Constants.FORMAT_LIST_OPEN, Constants.FORMAT_LIST_OPEN + System.lineSeparator());
 		text = text.replace(Constants.FORMAT_LIST_CLOSE, Constants.FORMAT_LIST_CLOSE + System.lineSeparator());
 		text = text.replace(Constants.FORMAT_NUMBEREDLIST_OPEN,
@@ -1750,16 +1749,16 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		text = text.replace(Constants.FORMAT_NUMBEREDLIST_CLOSE,
 				Constants.FORMAT_NUMBEREDLIST_CLOSE + System.lineSeparator());
 		text = text.replace(Constants.FORMAT_LISTITEM_CLOSE, Constants.FORMAT_LISTITEM_CLOSE + System.lineSeparator());
-		// and set the text to the textarea
+		// and set the text to the text area
 		jTextAreaEntry.setText(Tools.replaceUbbToUnicode(text));
-		// get the authors and set them to the textarea
-		String[] authors = dataObj.getAuthors(entryNumber);
-		// stringbuffer for temporatily saving the authors
+		// get the authors and set them to the text area
+		String[] authors = data.getAuthors(entryNumber);
+		// string buffer for temporarily saving the authors
 		StringBuilder sb = new StringBuilder("");
 		// if we have any authors, go on and build author list
 		if (authors != null) {
 			// iterate array and add each author to the buffer, and append a new line
-			// after each author. we use a temporary stringbuffer here, so we can
+			// after each author. we use a temporary string buffer here, so we can
 			// delete the last newline ("\n") which is not needed...
 			for (String au : authors) {
 				sb.append(au);
@@ -1770,10 +1769,10 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		if (sb.length() > 0) {
 			sb.setLength(sb.length() - (System.lineSeparator().length()));
 		}
-		// and set the string to the textarea
+		// and set the string to the text area
 		jTextAreaAuthor.setText(sb.toString());
 		// retrieve the current keywords
-		String[] kws = dataObj.getKeywords(entryNumber);
+		String[] kws = data.getKeywords(entryNumber);
 		// prepare the JList which will display the keywords
 		keywordListModel.clear();
 		// check whether any keywords have been found
@@ -1788,16 +1787,16 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			}
 		}
 		// get the remarks of that entry
-		text = dataObj.getRemarks(entryNumber);
-		// and set the text to the textarea
+		text = data.getRemarks(entryNumber);
+		// and set the text to the text area
 		jTextAreaRemarks.setText(Tools.replaceUbbToUnicode(text));
-		// empty the JList with hyperlinks
+		// empty the JList with hyper links
 		linkListModel.clear();
 		// now retrieve the (hyper-)links of an entry
-		hyperlinks = dataObj.getAttachments(entryNumber);
+		hyperlinks = data.getAttachments(entryNumber);
 		// if we have (hyper-)links, continue
 		if (hyperlinks != null && hyperlinks.size() > 0) {
-			// iterare the child elements of the hyperlinks. these were
+			// Iterate the child elements of the hyper links. these were
 			// passed as parameter as a List-type
 			Iterator<?> iterator = hyperlinks.iterator();
 
@@ -1812,7 +1811,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		}
 		// finally, change title
 		setTitle(resourceMap.getString("frametitleEdit") + " (" + String.valueOf(entryNumber) + ")");
-		// if we have editmode, enable apply-button
+		// if we have edit mode, enable apply-button
 		setTextfieldFilled(!jTextAreaEntry.getText().isEmpty());
 	}
 
@@ -1827,14 +1826,14 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	 * But: when editing an entry, the text-content in the jTextAreaEntry could be
 	 * filled, while the user changes the author-values - these changes are
 	 * recognized in the modified-value, but do usually not enable the apply-button.
-	 * thus, when we have editmode (true), we also enable the apply-button here...
+	 * thus, when we have edit mode (true), we also enable the apply-button here...
 	 *
 	 * @param m whether the modified state is true or false
 	 */
 	private void setModified(boolean m) {
 		// change modified state
 		modified = m;
-		// if we have editmode, enable apply-button
+		// if we have edit mode, enable apply-button
 		setTextfieldFilled(!jTextAreaEntry.getText().isEmpty());
 	}
 
@@ -1895,7 +1894,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	}
 
 	private void setRefreshKeywords() {
-		if (settingsObj.getQuickInput() && (dataObj.getCount(Daten.KWCOUNT) > 0)) {
+		if (settings.getQuickInput() && (data.getCount(Daten.KWCOUNT) > 0)) {
 			// only the first and the third step are using the text-content to retrieve
 			// the keywords, so we only need to enable the refresh-button for the
 			// keyword-quickinput
@@ -1912,7 +1911,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	@Action
 	public void editSynonyms() {
 		if (null == synonymsDlg) {
-			synonymsDlg = new CSynonymsEdit(null, synonymsObj, settingsObj, dataObj);
+			synonymsDlg = new CSynonymsEdit(null, synonymsObj, settings, data);
 			synonymsDlg.setLocationRelativeTo(null);
 		}
 		ZettelkastenApp.getApplication().show(synonymsDlg);
@@ -1960,7 +1959,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			return;
 		}
 		// en/disable keyword quick-input function depending on the amount of keywords
-		int aucount = dataObj.getCount(Daten.AUCOUNT);
+		int aucount = data.getCount(Daten.AUCOUNT);
 		jTextFieldFilterAuthorlist.setEnabled(aucount > 0);
 		// disbale button, will only be enabled on selection
 		// jButtonAddAuthors.setEnabled(false);
@@ -1994,7 +1993,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	@Action
 	public synchronized void showKeywords() {
 		// en/disable keyword quick-input function depending on the amount of keywords
-		int kwcount = dataObj.getCount(Daten.KWCOUNT);
+		int kwcount = data.getCount(Daten.KWCOUNT);
 		// no author selected
 		setAuthorSelected(false);
 		// enable textfield for filtering
@@ -2002,13 +2001,13 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		// disable buttons. will only be enabled on table selection
 		// jButtonAddKeywords.setEnabled(false);
 		// show special button if we have quickinput
-		jButtonQuickKeyword.setVisible((stepcounter < 4) && settingsObj.getQuickInput());
+		jButtonQuickKeyword.setVisible((stepcounter < 4) && settings.getQuickInput());
 		// when we have no keywords, quit
 		if (kwcount < 1) {
 			return;
 		}
 		// if we don't have quick-input settings, show whole keywords.
-		if (!settingsObj.getQuickInput()) {
+		if (!settings.getQuickInput()) {
 			// enable combobox
 			jComboBoxQuickInput.setEnabled(false);
 			// reset linked lists...
@@ -2105,8 +2104,8 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 				text = jTextFieldTitle.getText() + " " + jTextAreaEntry.getText();
 			}
 			// get parent und init window
-			taskDlg = new TaskProgressDialog(this, TaskProgressDialog.TASK_KEYWORDSUGGESTIONS, taskinfo, dataObj,
-					synonymsObj, settingsObj, settingsObj.getQuickInputExtended(), stepcounter, selectedKeywords,
+			taskDlg = new TaskProgressDialog(this, TaskProgressDialog.TASK_KEYWORDSUGGESTIONS, taskinfo, data,
+					synonymsObj, settings, settings.getQuickInputExtended(), stepcounter, selectedKeywords,
 					remainingKeywords, keywordStep1, text);
 			// center window
 			taskDlg.setLocationRelativeTo(this);
@@ -2188,7 +2187,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		// open an input-dialog, setting the selected value as default-value
 		if (null == biggerEditDlg) {
 			// create a new dialog with the bigger edit-field, passing some initial values
-			biggerEditDlg = new CBiggerEditField(this, settingsObj, resourceMap.getString("newAuthorTitle"), "", "",
+			biggerEditDlg = new CBiggerEditField(this, settings, resourceMap.getString("newAuthorTitle"), "", "",
 					Constants.EDIT_AUTHOR);
 			// center window
 			biggerEditDlg.setLocationRelativeTo(this);
@@ -2227,17 +2226,17 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 					// add author. used below for the array "selectedAuthors"
 					newaus.add(a);
 					// check whether the value already exists
-					if (-1 == dataObj.getAuthorPosition(a)) {
+					if (-1 == data.getAuthorPosition(a)) {
 						// check whether author already exisrs in textfield
 						if (!checkForDoubleAuthors(a)) {
 							// if not, append author string
 							// therefore, add a new line, but only if the textfield is not empty
 							// (i.e. we already have an author)
 							// add author to data file
-							dataObj.addAuthor(a, 0);
+							data.addAuthor(a, 0);
 							// change bibkey
 							if (newBibKey != null) {
-								dataObj.setAuthorBibKey(a, newBibKey);
+								data.setAuthorBibKey(a, newBibKey);
 								// reset bibkey, so we only use it once in case we have multiple authors
 								newBibKey = null;
 							}
@@ -2254,7 +2253,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 							authorListUpToDate = false;
 							// we need to do this so we know in our mainframe that we
 							// have new authors and the authorlist is out of date.
-							dataObj.setAuthorlistUpToDate(false);
+							data.setAuthorlistUpToDate(false);
 						}
 					} else {
 						// display error message box
@@ -2340,7 +2339,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			// so open the window for edting them...
 			if (null == stenoEdit) {
 				// get parent und init window
-				stenoEdit = new CStenoEdit(this, stenoObj, settingsObj, ta.getSelectedText());
+				stenoEdit = new CStenoEdit(this, stenoObj, settings, ta.getSelectedText());
 				// center window
 				stenoEdit.setLocationRelativeTo(this);
 			}
@@ -2375,7 +2374,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			// so open the window for edting them...
 			if (null == autoKorrektEdit) {
 				// get parent und init window
-				autoKorrektEdit = new CAutoKorrekturEdit(this, spellObj, settingsObj,
+				autoKorrektEdit = new CAutoKorrekturEdit(this, spellObj, settings,
 						ta.getSelectedText().toLowerCase());
 				// center window
 				autoKorrektEdit.setLocationRelativeTo(this);
@@ -2457,7 +2456,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	public void formatBold() {
 		// since we have multiple usage of the folliwing code, we simply
 		// put it in an own method
-		if (settingsObj.getMarkdownActivated()) {
+		if (settings.getMarkdownActivated()) {
 			surroundSelection(Constants.FORMAT_MD_BOLD_OPEN, Constants.FORMAT_MD_BOLD_CLOSE);
 		} else {
 			surroundSelection(Constants.FORMAT_BOLD_OPEN, Constants.FORMAT_BOLD_CLOSE);
@@ -2472,7 +2471,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	public void formatItalic() {
 		// since we have multiple usage of the folliwing code, we simply
 		// put it in an own method
-		if (settingsObj.getMarkdownActivated()) {
+		if (settings.getMarkdownActivated()) {
 			surroundSelection(Constants.FORMAT_MD_ITALIC_OPEN, Constants.FORMAT_MD_ITALIC_CLOSE);
 		} else {
 			surroundSelection(Constants.FORMAT_ITALIC_OPEN, Constants.FORMAT_ITALIC_CLOSE);
@@ -2498,7 +2497,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	public void formatStrikeThrough() {
 		// since we have multiple usage of the folliwing code, we simply
 		// put it in an own method
-		if (settingsObj.getMarkdownActivated()) {
+		if (settings.getMarkdownActivated()) {
 			surroundSelection(Constants.FORMAT_MD_STRIKE_OPEN, Constants.FORMAT_MD_STRIKE_CLOSE);
 		} else {
 			surroundSelection(Constants.FORMAT_STRIKE_OPEN, Constants.FORMAT_STRIKE_CLOSE);
@@ -2513,7 +2512,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	public void formatHeading1() {
 		// since we have multiple usage of the folliwing code, we simply
 		// put it in an own method
-		if (settingsObj.getMarkdownActivated()) {
+		if (settings.getMarkdownActivated()) {
 			surroundSelection(Constants.FORMAT_MD_H1_OPEN, Constants.FORMAT_MD_H1_CLOSE);
 		} else {
 			surroundSelection(Constants.FORMAT_H1_OPEN, Constants.FORMAT_H1_CLOSE);
@@ -2528,7 +2527,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	public void formatHeading2() {
 		// since we have multiple usage of the folliwing code, we simply
 		// put it in an own method
-		if (settingsObj.getMarkdownActivated()) {
+		if (settings.getMarkdownActivated()) {
 			surroundSelection(Constants.FORMAT_MD_H2_OPEN, Constants.FORMAT_MD_H2_CLOSE);
 		} else {
 			surroundSelection(Constants.FORMAT_H2_OPEN, Constants.FORMAT_H2_CLOSE);
@@ -2606,7 +2605,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	public void formatCite() {
 		// since we have multiple usage of the folliwing code, we simply
 		// put it in an own method
-		if (settingsObj.getMarkdownActivated()) {
+		if (settings.getMarkdownActivated()) {
 			surroundSelection(Constants.FORMAT_MD_QUOTE_OPEN, Constants.FORMAT_MD_QUOTE_CLOSE);
 		} else {
 			surroundSelection(Constants.FORMAT_QUOTE_OPEN, Constants.FORMAT_QUOTE_CLOSE);
@@ -2632,7 +2631,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	public void formatCode() {
 		// since we have multiple usage of the folliwing code, we simply
 		// put it in an own method
-		if (settingsObj.getMarkdownActivated()) {
+		if (settings.getMarkdownActivated()) {
 			surroundSelection(Constants.FORMAT_MD_CODE_OPEN, Constants.FORMAT_MD_CODE_CLOSE);
 		} else {
 			surroundSelection(Constants.FORMAT_CODE_OPEN, Constants.FORMAT_CODE_CLOSE);
@@ -2872,7 +2871,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		// so open the window for edting them...
 		if (null == insertTableDlg) {
 			// get parent und init window
-			insertTableDlg = new CInsertTable(this, settingsObj, edittable);
+			insertTableDlg = new CInsertTable(this, settings, edittable);
 			// center window
 			insertTableDlg.setLocationRelativeTo(this);
 		}
@@ -2897,7 +2896,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		// so open the window for edting them...
 		if (null == manualLinkEditDlg) {
 			// get parent und init window
-			manualLinkEditDlg = new CInsertManualLink(this, jTextAreaEntry.getSelectedText(), settingsObj);
+			manualLinkEditDlg = new CInsertManualLink(this, jTextAreaEntry.getSelectedText(), settings);
 			// center window
 			manualLinkEditDlg.setLocationRelativeTo(this);
 		}
@@ -2927,8 +2926,8 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		// if we have selections, go on
 		if (!o.isEmpty()) {
 			// check whether to insert braces around footnotes
-			String fnbraceopen = settingsObj.getFootnoteBraces() ? "(" : "";
-			String fnbraceclose = settingsObj.getFootnoteBraces() ? ")" : "";
+			String fnbraceopen = settings.getFootnoteBraces() ? "(" : "";
+			String fnbraceclose = settings.getFootnoteBraces() ? ")" : "";
 			// create stringbuilder for footnote-tags
 			StringBuilder fn = new StringBuilder("");
 			// create list iterator
@@ -2949,7 +2948,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 					setModified(true);
 				}
 				// find the authorposition for the footnote
-				int aunr = dataObj.getAuthorPosition(au);
+				int aunr = data.getAuthorPosition(au);
 				// when we have a valid author, go on...
 				if (aunr != -1) {
 					// if the stringbuilder already contains values, we have more than one footnote.
@@ -3279,7 +3278,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			// no table header
 			table.setTableHeader(null);
 			// grid-color
-			table.setGridColor(settingsObj.getTableGridColor());
+			table.setGridColor(settings.getTableGridColor());
 			// single cells can be selected, of course
 			table.setCellSelectionEnabled(true);
 			table.setFillsViewportHeight(true);
@@ -3287,7 +3286,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			table.setRowHeight(table.getRowHeight() + 15);
 			// increase font
 			Font f = table.getFont();
-			f = new Font(settingsObj.getMainfont(Settings.FONTNAME), f.getStyle(), f.getSize() + 10);
+			f = new Font(settings.getMainfont(Settings.FONTNAME), f.getStyle(), f.getSize() + 10);
 			table.setFont(f);
 			// add a scrollpane
 			JScrollPane scrollPane = new JScrollPane(table);
@@ -3316,7 +3315,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	@Action
 	public void insertManualTimestamp() {
 		// create dateformat from user-settings...
-		DateFormat df = new SimpleDateFormat(Constants.manualTimestamp[settingsObj.getManualTimestamp()]);
+		DateFormat df = new SimpleDateFormat(Constants.manualTimestamp[settings.getManualTimestamp()]);
 		// create string-timestamp
 		String timestamp = df.format(new Date());
 		// the timestamp can be inserted anywhere...
@@ -3467,7 +3466,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			// set input focus to main textfield
 			jTextAreaEntry.requestFocusInWindow();
 			// create a new dialog with the bigger edit-field, passing some initial values
-			findReplaceDlg = new CFindReplaceDialog(this, jTextAreaEntry, settingsObj);
+			findReplaceDlg = new CFindReplaceDialog(this, jTextAreaEntry, settings);
 			// center window
 			findReplaceDlg.setLocationRelativeTo(this);
 		}
@@ -3487,7 +3486,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	public void insertImage() {
 		// get the title for the file dialog and use it as function parameter
 		JFileChooser fc = FileOperationsUtil.createFileChooser(resourceMap.getString("insertImageDialogTitle"),
-				JFileChooser.FILES_ONLY, settingsObj.getLastOpenedImageDir(),
+				JFileChooser.FILES_ONLY, settings.getLastOpenedImageDir(),
 				// TODO andere Grafikformate später, wenn unterstützt
 				// new String[] {".jpg",".jpeg",".bmp",".png",".gif",".tif",".tiff"},
 				new String[] { ".jpg", ".jpeg", ".png", ".gif" }, resourceMap.getString("imageFileText"));
@@ -3507,7 +3506,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		// store open and close tags for images
 		String imgopen, imgclose;
 		// check whether markdown is used
-		if (settingsObj.getMarkdownActivated()) {
+		if (settings.getMarkdownActivated()) {
 			imgopen = Constants.FORMAT_MD_IMG_OPEN;
 			imgclose = Constants.FORMAT_MD_IMG_CLOSE;
 		} else {
@@ -3522,7 +3521,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		// check whether we already have a saved data file or not. if not, we have no
 		// related
 		// path for the subdirectory "img", thus we cannot copy the images
-		if (null == settingsObj.getMainDataFile() || !settingsObj.getMainDataFile().exists()) {
+		if (null == settings.getMainDataFile() || !settings.getMainDataFile().exists()) {
 			// display error message box
 			JOptionPane.showMessageDialog(this, resourceMap.getString("noDataFileSavedMsg"),
 					resourceMap.getString("noDataFileSavedTitle"), JOptionPane.PLAIN_MESSAGE);
@@ -3530,7 +3529,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		}
 		// store the imagepath, needed now and for later use, see below
 		// the image path always equals the filepath of the
-		String simagedir = settingsObj.getImagePath(dataObj.getUserImagePath(), false);
+		String simagedir = settings.getImagePath(data.getUserImagePath(), false);
 		// create new linked list that will contain a "cleaned" list of files, i.e. only
 		// contains
 		// those selected files that haven't been copied to the attachment directory
@@ -3620,7 +3619,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 				// and append the file name of the image file. we need this string already now
 				// for the
 				// message box to tell the user where the file will be copied to.
-				File dest = new File(settingsObj.getImagePath(dataObj.getUserImagePath(), true) + f.getName());
+				File dest = new File(settings.getImagePath(data.getUserImagePath(), true) + f.getName());
 				// check whether the file exists. if yes, the user should enter another name
 				while (dest.exists()) {
 					// open an option dialog and let the user prompt a new filename
@@ -3639,7 +3638,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 						newfilename = newfilename.concat("." + fileextension);
 					}
 					// and create a new file
-					dest = new File(settingsObj.getImagePath(dataObj.getUserImagePath(), true) + newfilename);
+					dest = new File(settings.getImagePath(data.getUserImagePath(), true) + newfilename);
 				}
 
 				try {
@@ -3671,7 +3670,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 					// set the modified state
 					setModified(true);
 					// set new default directory
-					settingsObj.setLastOpenedImageDir(f);
+					settings.setLastOpenedImageDir(f);
 				} catch (IOException ex) {
 					Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
 					JOptionPane.showMessageDialog(this, resourceMap.getString("errMsgFileCopy"),
@@ -3694,7 +3693,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 				// set the modified state
 				setModified(true);
 				// set new default directory
-				settingsObj.setLastOpenedImageDir(f);
+				settings.setLastOpenedImageDir(f);
 			}
 		}
 	}
@@ -3707,7 +3706,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		// so open the window for edting them...
 		if (null == formEditDlg) {
 			// get parent und init window
-			formEditDlg = new CFormEditor(this, settingsObj);
+			formEditDlg = new CFormEditor(this, settings);
 			// center window
 			formEditDlg.setLocationRelativeTo(this);
 		}
@@ -3732,7 +3731,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		// so open the window for edting them...
 		if (null == hyperlinkEditDlg) {
 			// get parent und init window
-			hyperlinkEditDlg = new CInsertHyperlink(this, jTextAreaEntry.getSelectedText(), settingsObj);
+			hyperlinkEditDlg = new CInsertHyperlink(this, jTextAreaEntry.getSelectedText(), settings);
 			// center window
 			hyperlinkEditDlg.setLocationRelativeTo(this);
 		}
@@ -3761,7 +3760,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	public void insertAttachment() {
 		// get the title for the file dialog and use it as function parameter
 		JFileChooser fc = FileOperationsUtil.createFileChooser(resourceMap.getString("insertAttachmentDialogTitle"),
-				JFileChooser.FILES_ONLY, settingsObj.getLastOpenedAttachmentDir(), null, null);
+				JFileChooser.FILES_ONLY, settings.getLastOpenedAttachmentDir(), null, null);
 		// enable multiple selection
 		fc.setMultiSelectionEnabled(true);
 		// open dialog
@@ -3782,7 +3781,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	 */
 	private void insertAttachments(File[] sources) {
 		// insert attachments
-		boolean mod = FileOperationsUtil.insertAttachments(dataObj, settingsObj, this, sources, linkListModel);
+		boolean mod = FileOperationsUtil.insertAttachments(data, settings, this, sources, linkListModel);
 		// check for modifications
 		if (mod) {
 			// switch mod flag
@@ -3837,7 +3836,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		jButtonRefreshKeywordlist.setEnabled(true);
 		// when we don't have quickinput, we need to set this value to false
 		// otherwise the task to create/refresh the list won't start
-		if (!settingsObj.getQuickInput()) {
+		if (!settings.getQuickInput()) {
 			keywordsListUpToDate = false;
 		}
 		// work done...
@@ -4031,13 +4030,13 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		LinkedList<Integer> knownauthors = new LinkedList<>();
 		for (String a : authors) {
 			// find author position
-			int ap = dataObj.getAuthorPosition(a);
+			int ap = data.getAuthorPosition(a);
 			if (ap != -1) {
 				knownauthors.add(ap);
 			}
 		}
 		// find all authos that have been referenced by footnotes
-		LinkedList<Integer> referredauthors = Tools.getFootnoteIDs(dataObj, content);
+		LinkedList<Integer> referredauthors = Tools.getFootnoteIDs(data, content);
 		// now match given authors with referred authors. if user has referenced authors
 		// with footnotes, but did not add these authors to the reference list,
 		// we now add them automatically
@@ -4045,7 +4044,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			// no match?
 			if (-1 == knownauthors.indexOf(rai)) {
 				// get author
-				String au = dataObj.getAuthor(rai);
+				String au = data.getAuthor(rai);
 				// add to authors
 				if (au != null && !au.isEmpty()) {
 					authors.add(au);
@@ -4075,7 +4074,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 
 		if (isEditMode()) {
 			// change entry and fetch result
-			if (!dataObj.changeEntry(title, content, authors.toArray(new String[authors.size()]), keywords, remarks,
+			if (!data.changeEntry(title, content, authors.toArray(new String[authors.size()]), keywords, remarks,
 					links, Tools.getTimeStamp(), entryNumber)) {
 				JOptionPane.showMessageDialog(this, resourceMap.getString("errMsgChangeEntry"),
 						resourceMap.getString("errMsgChangeEntryTitle"), JOptionPane.PLAIN_MESSAGE);
@@ -4090,7 +4089,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			// should be stored.
 			if (isDeleted) {
 				// add entry, and fetch result
-				int result = dataObj.addEntry(title, content, authors.toArray(new String[authors.size()]), keywords,
+				int result = data.addEntry(title, content, authors.toArray(new String[authors.size()]), keywords,
 						remarks, links, Tools.getTimeStamp(), -1, true, entryNumber);
 				// check whether result was an error when adding a follower-entry (trailing
 				// entry(
@@ -4120,7 +4119,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 				// should be
 				// included in the entry "entryNumber" luhmann-tag (that indicates follower- and
 				// sub-entrties).
-				int result = dataObj.addEntry(title, content, authors.toArray(new String[authors.size()]), keywords,
+				int result = data.addEntry(title, content, authors.toArray(new String[authors.size()]), keywords,
 						remarks, links, Tools.getTimeStamp(), entryNumber);
 				// check whether result was an error when adding a follower-entry (trailing
 				// entry(
@@ -4138,10 +4137,10 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		}
 		Constants.zknlogger.log(Level.INFO, "Entry save finished.");
 
-		dataObj.setAuthorlistUpToDate(false);
-		dataObj.setKeywordlistUpToDate(false);
-		dataObj.setTitlelistUpToDate(false);
-		dataObj.setAttachmentlistUpToDate(false);
+		data.setAuthorlistUpToDate(false);
+		data.setKeywordlistUpToDate(false);
+		data.setTitlelistUpToDate(false);
+		data.setAttachmentlistUpToDate(false);
 
 		return true;
 	}
@@ -4200,7 +4199,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	 */
 	@Action
 	public void retrieveKeywordsFromDisplayedEntry() {
-		addKeywords(dataObj.getKeywords(mainframe.displayedZettel, true), false);
+		addKeywords(data.getKeywords(mainframe.displayedZettel, true), false);
 	}
 
 	/**
@@ -4330,7 +4329,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			// get selected value
 			String kw = keywordListModel.get(in).toString();
 			// if selected keyword is in selected list, remove it from there
-			if (settingsObj.getQuickInput() && selectedKeywords != null && selectedKeywords.size() > 0
+			if (settings.getQuickInput() && selectedKeywords != null && selectedKeywords.size() > 0
 					&& selectedKeywords.contains(kw)) {
 				selectedKeywords.remove(kw);
 			}
@@ -4416,7 +4415,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	@Action(enabledProperty = "quickKeywordSelected")
 	public void addQuickKeywordToList() {
 		// when we have no selected keywords yet, create list now...
-		if (settingsObj.getQuickInput() && (null == selectedKeywords)) {
+		if (settings.getQuickInput() && (null == selectedKeywords)) {
 			selectedKeywords = new LinkedList<>();
 		}
 		// retrieve all selected keywords
@@ -4432,7 +4431,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 					// if not, add keyword to listmodel
 					keywordListModel.addElement((String) kw);
 					// add selections to our linked list
-					if (settingsObj.getQuickInput()) {
+					if (settings.getQuickInput()) {
 						selectedKeywords.add(kw);
 					}
 					// remove applied keyword from keyword-display-list
@@ -4464,12 +4463,12 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 
 	@Action
 	public void toggleQuickInput() {
-		settingsObj.setQuickInput(!settingsObj.getQuickInput());
-		jButtonQuickKeyword.setVisible(settingsObj.getQuickInput());
-		jCheckBoxQuickInput.setSelected(settingsObj.getQuickInput());
+		settings.setQuickInput(!settings.getQuickInput());
+		jButtonQuickKeyword.setVisible(settings.getQuickInput());
+		jCheckBoxQuickInput.setSelected(settings.getQuickInput());
 		// update the segment-button-appearance
 		jButtonAddKeywords.putClientProperty("JButton.segmentPosition",
-				(settingsObj.getQuickInput()) ? "first" : "only");
+				(settings.getQuickInput()) ? "first" : "only");
 		stepcounter = 1;
 		keywordsListUpToDate = false;
 		// if the keyword-tab is visible, refresh the view
@@ -4542,7 +4541,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			// react on changes now
 			listUpdateActive = true;
 			// get the amount of keywords
-			int count = dataObj.getCount(Daten.AUCOUNT);
+			int count = data.getCount(Daten.AUCOUNT);
 			int cnt;
 			// create new list that will contain the array, but without
 			// possible empty elements. when an author or keyword is deleted,
@@ -4553,7 +4552,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			// go through all keywords of the keyword datafile
 			for (cnt = 0; cnt < count; cnt++) {
 				// get the author as string and add it to list
-				String au = dataObj.getAuthor(cnt + 1);
+				String au = data.getAuthor(cnt + 1);
 				// if author is not empty, add it.
 				if (!au.isEmpty()) {
 					taskauthorlist.add(au);
@@ -4651,7 +4650,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			// react on changes now
 			listUpdateActive = true;
 			// get the amount of keywords
-			int count = dataObj.getCount(Daten.KWCOUNT);
+			int count = data.getCount(Daten.KWCOUNT);
 			int cnt;
 			// create new list that will contain the array, but without
 			// possible empty elements. when an author or keyword is deleted,
@@ -4662,7 +4661,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			// go through all keywords of the keyword datafile
 			for (cnt = 0; cnt < count; cnt++) {
 				// get the keyword as string and add them to the array
-				String kw = dataObj.getKeyword(cnt + 1);
+				String kw = data.getKeyword(cnt + 1);
 				// if keyword is not empry, add it to liszt
 				if (!kw.isEmpty()) {
 					displayedKeywordList.add(kw);
@@ -4918,7 +4917,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 					// retrieve selected value
 					String text = jListQuickInputKeywords.getSelectedValue().toString().toLowerCase();
 					// first, get the separated parts from the selected value
-					String[] findterms = Tools.getKeywordsAndSynonymsParts(settingsObj, synonymsObj, text, false);
+					String[] findterms = Tools.getKeywordsAndSynonymsParts(settings, synonymsObj, text, false);
 					// create a new highlighter
 					Highlighter hilite = jTextAreaEntry.getHighlighter();
 					// get entry-text
@@ -5100,7 +5099,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		jPanel4 = new javax.swing.JPanel();
 		jScrollPane3 = new javax.swing.JScrollPane();
 		jListKeywords = MacSourceList.createMacSourceList();
-		jTextFieldAddKeyword = (settingsObj.isMacStyle())
+		jTextFieldAddKeyword = (settings.isMacStyle())
 				? ZknMacWidgetFactory.createHudTreeTextField(resourceMap.getString("textFieldDefaultText"))
 				: new javax.swing.JTextField();
 		jPanel6 = new javax.swing.JPanel();
@@ -5108,7 +5107,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		jTextAreaRemarks = new javax.swing.JTextArea();
 		jScrollPane5 = new javax.swing.JScrollPane();
 		jListLinks = MacSourceList.createMacSourceList();
-		jTextFieldAddLink = (settingsObj.isMacStyle())
+		jTextFieldAddLink = (settings.isMacStyle())
 				? ZknMacWidgetFactory.createHudTreeTextField(resourceMap.getString("textFieldDefaultText"))
 				: new javax.swing.JTextField();
 		jPanel2 = new javax.swing.JPanel();
