@@ -11409,7 +11409,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	public
 	// <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    void initComponents() {
 
         mainPanel = new javax.swing.JPanel();
         jSplitPaneMain1 = new javax.swing.JSplitPane();
@@ -15131,4 +15131,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private AboutBox zknAboutBox;
 	private FindDoubleEntriesTask doubleEntriesDlg;
 	private CRateEntry rateEntryDlg;
+
+	public void setData(Daten mockData) {
+		// TODO Auto-generated method stub
+		
+	}
 }
