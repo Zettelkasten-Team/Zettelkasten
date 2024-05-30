@@ -2301,7 +2301,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * components.
 	 */
 	private void initActionMaps() {
-		// Init the locale for the default actions cut/copy/paste.
+		// Sets the locale for the default actions cut/copy/paste.
 		Tools.initLocaleForDefaultActions(
 				Application.getInstance(ZettelkastenApp.class)
 						.getContext().getActionMap(ZettelkastenView.class, this));
@@ -5601,7 +5601,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * (jTableTitles). This method is especially called from the mouse-clicked and
 	 * key-released events from the jTableTitle.
 	 */
-	private void showEntryFromTitles() {
+	void showEntryFromTitles() {
 		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			// If no data available, do nothing.
 			return;
@@ -5691,7 +5691,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * (jTableBookmarks). This method is especially called from the mouse-clicked
 	 * and key-released events from the jTableBookmarks.
 	 */
-	private void showEntryFromBookmarks() {
+	void showEntryFromBookmarks() {
 		// if no data available, do nothing.
 		if (data.getCount(Daten.ZKNCOUNT) == 0) {
 			return;
@@ -11108,7 +11108,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			}
 
 			// Get list selection model.
-			ListSelectionModel lsm = ((JTable) e.getSource()).getSelectionModel();
+			ListSelectionModel lsm = table.getSelectionModel();
 			// Set value-adjusting to true, so we don't fire multiple value-changed events.
 			lsm.setValueIsAdjusting(true);
 
@@ -15127,7 +15127,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private CExportEntries exportEntriesDlg;
 	private CImportBibTex importBibTexDlg;
 	private CShowMultipleDesktopOccurences multipleOccurencesDlg;
-	private CSetBibKey setBibKeyDlg;
+	CSetBibKey setBibKeyDlg;
 	private AboutBox zknAboutBox;
 	private FindDoubleEntriesTask doubleEntriesDlg;
 	private CRateEntry rateEntryDlg;
