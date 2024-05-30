@@ -565,7 +565,7 @@
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="jCheckBoxShowSynonyms" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="0" pref="102" max="32767" attributes="0"/>
+                                          <EmptySpace min="0" pref="119" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
@@ -1210,14 +1210,14 @@
                         </Container>
                       </SubComponents>
                     </Container>
-                    <Container class="javax.swing.JPanel" name="jPanel9">
+                    <Container class="javax.swing.JPanel" name="jPanelBookmarks">
                       <Properties>
-                        <Property name="name" type="java.lang.String" value="jPanel9" noResource="true"/>
+                        <Property name="name" type="java.lang.String" value="jPanelBookmarks" noResource="true"/>
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                           <JTabbedPaneConstraints tabName="Lesezeichen">
-                            <Property name="tabTitle" type="java.lang.String" resourceKey="jPanel9.TabConstraints.tabTitle"/>
+                            <Property name="tabTitle" type="java.lang.String" resourceKey="jPanelBookmarks.TabConstraints.tabTitle"/>
                           </JTabbedPaneConstraints>
                         </Constraint>
                       </Constraints>

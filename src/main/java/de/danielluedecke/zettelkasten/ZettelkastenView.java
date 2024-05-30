@@ -11409,7 +11409,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	public
 	// <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
- void initComponents() {
+    private void initComponents() {
 
         mainPanel = new javax.swing.JPanel();
         jSplitPaneMain1 = new javax.swing.JSplitPane();
@@ -11493,11 +11493,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jEditorPaneClusterEntries = new javax.swing.JEditorPane();
             jScrollPane11 = new javax.swing.JScrollPane();
             jTreeCluster = new javax.swing.JTree();
-            jPanel9 = new javax.swing.JPanel();
+            jPanelBookmarks = new javax.swing.JPanel();
             jComboBoxBookmarkCategory = new javax.swing.JComboBox();
             jSplitPane3 = new javax.swing.JSplitPane();
             jScrollPane9 = new javax.swing.JScrollPane();
-            jTableBookmarks = new javax.swing.JTable();
+            jTableBookmarks = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
             jScrollPane14 = new javax.swing.JScrollPane();
             jEditorPaneBookmarkComment = new javax.swing.JEditorPane();
             jPanel13 = new javax.swing.JPanel();
@@ -12295,7 +12295,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                             .addComponent(jButtonRefreshKeywords, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel2Layout.createSequentialGroup()
                             .addComponent(jCheckBoxShowSynonyms)
-                            .addGap(0, 102, Short.MAX_VALUE)))
+                            .addGap(0, 119, Short.MAX_VALUE)))
                     .addContainerGap())
             );
             jPanel2Layout.setVerticalGroup(
@@ -12600,7 +12600,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
             jTabbedPaneMain.addTab(resourceMap.getString("jPanel11.TabConstraints.tabTitle"), jPanel11); // NOI18N
 
-            jPanel9.setName("jPanel9"); // NOI18N
+            jPanelBookmarks.setName("jPanelBookmarks"); // NOI18N
 
             jComboBoxBookmarkCategory.setToolTipText(resourceMap.getString("jComboBoxBookmarkCategory.toolTipText")); // NOI18N
             jComboBoxBookmarkCategory.setName("jComboBoxBookmarkCategory"); // NOI18N
@@ -12662,26 +12662,26 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
             jSplitPane3.setRightComponent(jScrollPane14);
 
-            javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-            jPanel9.setLayout(jPanel9Layout);
-            jPanel9Layout.setHorizontalGroup(
-                jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+            javax.swing.GroupLayout jPanelBookmarksLayout = new javax.swing.GroupLayout(jPanelBookmarks);
+            jPanelBookmarks.setLayout(jPanelBookmarksLayout);
+            jPanelBookmarksLayout.setHorizontalGroup(
+                jPanelBookmarksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelBookmarksLayout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(jComboBoxBookmarkCategory, 0, 258, Short.MAX_VALUE)
                     .addContainerGap())
                 .addComponent(jSplitPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             );
-            jPanel9Layout.setVerticalGroup(
-                jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+            jPanelBookmarksLayout.setVerticalGroup(
+                jPanelBookmarksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelBookmarksLayout.createSequentialGroup()
                     .addComponent(jSplitPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(jComboBoxBookmarkCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap())
             );
 
-            jTabbedPaneMain.addTab(resourceMap.getString("jPanel9.TabConstraints.tabTitle"), jPanel9); // NOI18N
+            jTabbedPaneMain.addTab(resourceMap.getString("jPanelBookmarks.TabConstraints.tabTitle"), jPanelBookmarks); // NOI18N
 
             jPanel13.setName("jPanel13"); // NOI18N
 
@@ -14676,7 +14676,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
+    private javax.swing.JPanel jPanelBookmarks;
     private javax.swing.JPanel jPanelDispAuthor;
     private javax.swing.JPanel jPanelLiveSearch;
     private javax.swing.JPanel jPanelMainRight;
