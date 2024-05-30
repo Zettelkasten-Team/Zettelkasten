@@ -26,17 +26,22 @@ public class HistoryManager {
      * @param entryNr the number of the entry to be added to the history
      */
     public void addToHistory(int entryNr) {
+        // Avoid duplicates
         if (historyPosition >= 0 && history[historyPosition] == entryNr) {
-            return; // Avoid duplicates
+            return;
         }
-        if (historyPosition >= (HISTORY_MAX - 1)) {
+
+        if (historyPosition < HISTORY_MAX - 1) {
+            history[++historyPosition] = entryNr;
+        } else {
             System.arraycopy(history, 1, history, 0, HISTORY_MAX - 1);
             history[HISTORY_MAX - 1] = entryNr;
-            historyPosition = HISTORY_MAX - 1;
-        } else {
-            history[++historyPosition] = entryNr;
         }
-        historyCount = Math.min(historyCount + 1, HISTORY_MAX); // Update history count
+
+        // Update historyCount correctly
+        if (historyCount < HISTORY_MAX) {
+            historyCount++;
+        }
     }
 
     /**
