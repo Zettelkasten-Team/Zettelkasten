@@ -35,6 +35,7 @@ package de.danielluedecke.zettelkasten;
 import com.explodingpixels.macwidgets.*;
 import com.explodingpixels.widgets.TableUtils;
 import de.danielluedecke.zettelkasten.database.*;
+import de.danielluedecke.zettelkasten.history.HistoryManager;
 import de.danielluedecke.zettelkasten.mac.MacSourceList;
 import de.danielluedecke.zettelkasten.mac.MacSourceTree;
 import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
@@ -102,17 +103,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	// <editor-fold defaultstate="collapsed" desc="Variablendeklaration">
 	/**
-	 * searchRequests manages all searches and searchresults for the loaded
-	 * datafile.
+	 * searchRequests manages all searches and search results for the loaded
+	 * data file.
 	 */
 	public SearchRequests searchRequests;
 
-	private final Daten data;
+	private Daten data;
 	private final TasksData taskinfo;
 	public final Bookmarks bookmarks;
 	private final BibTeX bibtex;
 	public DesktopData desktop;
 	private final Settings settings;
+	private HistoryManager historyManager;
+
 
 	/**
 	 * This list model is used for the JList-component which displays the keywords
@@ -3021,7 +3024,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		buttonHistoryFore.setEnabled(data.canHistoryFore());
 		setHistoryBackAvailable(data.canHistoryBack());
 		setHistoryForAvailable(data.canHistoryFore());
-		// desktop and search results avaiable
+		// desktop and search results available
 		setDesktopAvailable(desktop.getCount() > 0);
 		setSearchResultsAvailable(searchRequests.getCount() > 0);
 		showSearchResultsMenuItem.setEnabled(searchRequests.getCount() > 0);
@@ -11405,7 +11408,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * @throws InstantiationException
 	 * @throws ClassNotFoundException
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "serial" })
 	public
 	// <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -12046,14 +12049,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     "Zettel", "Überschrift", "Relevanz", "Bewertung"
                 }
             ) {
-                Class[] types = new Class [] {
+                Class<?>[] types = new Class<?>[] {
                     java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Float.class
                 };
                 boolean[] canEdit = new boolean [] {
                     false, false, false, false
                 };
 
-                public Class getColumnClass(int columnIndex) {
+                public Class<?> getColumnClass(int columnIndex) {
                     return types [columnIndex];
                 }
 
@@ -15132,13 +15135,20 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private FindDoubleEntriesTask doubleEntriesDlg;
 	private CRateEntry rateEntryDlg;
 
-	public void setData(Daten mockData) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void setData(Daten data) {
+        this.data = data;
+    }
 
 	public Object getDisplayedZettel() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void setHistoryManager(HistoryManager historyManager) {
+		this.historyManager = historyManager;
+	}
+
+	public HistoryManager getHistoryManager() {
+		return historyManager;
 	}
 }

@@ -121,7 +121,7 @@ public class Daten {
 	 */
 	private boolean metamodified;
 	/**
-	 * Indicates whether saving the data file was ok, or whether an error occured.
+	 * Indicates whether saving the data file was OK, or whether an error occurred.
 	 */
 	private boolean saveOk;
 	/**
@@ -147,7 +147,7 @@ public class Daten {
 	 * and contains several XML-Files. We cannot retrieve those file simply with the
 	 * method "zip.getNextEntry()", since the SAXBuilder closes the zip-inputstream.
 	 * To retrieve all XML-files from within the zip-file, without saving them
-	 * temporarily to harddisk(!), we need to re-open the zip-container again for
+	 * temporarily to hard disk(!), we need to re-open the zip-container again for
 	 * each file.
 	 *
 	 * See class "CLoadDialog.java" for more details.
@@ -4979,15 +4979,15 @@ public class Daten {
 	}
 
 	/**
-	 * This method adds the entry-number {@code entrynr} to the history, so the user
+	 * This method adds the entry-number {@code entryNr} to the history, so the user
 	 * can go back and fore to previous selected entries.
 	 *
-	 * @param entrynr the number of the entry that should be added to the history
+	 * @param entryNr the number of the entry that should be added to the history
 	 */
-	public void addToHistory(int entrynr) {
+	public void addToHistory(int entryNr) {
 		// when the last history-entry equals the current entry, don't add
 		// that to the history, so we don't have the same entry several times
-		if (history[historyPosition] == entrynr) {
+		if (history[historyPosition] == entryNr) {
 			return;
 		}
 		// when we reached the end of the array, rotate it...
@@ -4998,7 +4998,7 @@ public class Daten {
 				history[cnt] = history[cnt + 1];
 			}
 			// add new value to history
-			history[HISTORY_MAX - 1] = entrynr;
+			history[HISTORY_MAX - 1] = entryNr;
 			// set position and counter
 			historyCount = HISTORY_MAX;
 			historyPosition = HISTORY_MAX - 1;
@@ -5006,7 +5006,7 @@ public class Daten {
 			// in any other case, simply increase the history counter
 			historyPosition++;
 			// add the new value
-			history[historyPosition] = entrynr;
+			history[historyPosition] = entryNr;
 			// and set the internal counter.
 			historyCount = historyPosition + 1;
 		}
@@ -7706,9 +7706,9 @@ public class Daten {
 		return (lnr != null && !lnr.isEmpty());
 	}
 
-	public Object canGoBackInHistory() {
+	public boolean canGoBackInHistory() {
 		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 
 }
