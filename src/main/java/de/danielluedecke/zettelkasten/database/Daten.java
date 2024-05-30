@@ -7706,4 +7706,9 @@ public class Daten {
 		return (lnr != null && !lnr.isEmpty());
 	}
 
+	public Object canGoBackInHistory() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

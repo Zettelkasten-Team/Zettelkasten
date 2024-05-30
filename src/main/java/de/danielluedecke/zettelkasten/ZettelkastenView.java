@@ -15136,4 +15136,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// TODO Auto-generated method stub
 		
 	}
+
+	public Object getDisplayedZettel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -100,7 +100,6 @@ public class Bookmarks {
 	public Bookmarks(ZettelkastenView zkn, Settings s) {
 		zknframe = zkn;
 		settingsObj = s;
-		// init everything
 		clear();
 	}
 
@@ -108,7 +107,7 @@ public class Bookmarks {
 	 * clears the bookmarks data and creates empty root elements
 	 */
 	public final void clear() {
-		// create empty bookmakrs element
+		// create empty bookmarks element
 		bookmarks = new Document(new Element("bookmarks"));
 		// create the two sub-parts. we have on the one hand the string labels
 		// for the categories of the bookmarks. This element contains child-elements
