@@ -397,6 +397,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			.getInstance(ZettelkastenApp.class).getContext()
 			.getResourceMap(ToolbarIcons.class);
 	
+	private boolean isAcceleratorTableInitialized = false;
+	
 	//Constructor
 	public ZettelkastenView(SingleFrameApplication app, Settings st, TasksData td) throws ClassNotFoundException,
 			UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException {
@@ -1828,6 +1830,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * CSettings-class
 	 */
 	private void initAcceleratorTable() {
+		if (isAcceleratorTableInitialized) {
+			return;
+			}
+		
 		// setting up the accelerator table. we have two possibilities: either assigning
 		// accelerator keys directly with an action like this:
 		//
@@ -1852,25 +1858,47 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		ActionMap actionMap = Application
 				.getInstance(ZettelkastenApp.class).getContext()
 				.getActionMap(ZettelkastenView.class, this);
-		// iterate the xml file with the accelerator keys for the main window
+		
+		// Log the start of the method
+	    Constants.zknlogger.info("Initializing accelerator table...");
+	    
+		// Iterate the XML file with the accelerator keys for the main window
 		for (int cnt = 1; cnt <= settings.getAcceleratorKeys().getCount(AcceleratorKeys.MAINKEYS); cnt++) {
 			// get the action's name
 			String actionname = settings.getAcceleratorKeys().getAcceleratorAction(AcceleratorKeys.MAINKEYS, cnt);
+			Constants.zknlogger.info("Processing action: " + actionname);
+
 			// check whether we have found any valid action name
 			if (actionname != null && !actionname.isEmpty()) {
 				// retrieve action
 				AbstractAction ac = (AbstractAction) actionMap.get(actionname);
+				
+				// Check if action is null
+	            if (ac == null) {
+	                Constants.zknlogger.severe("Action not found: " + actionname);
+	                continue;
+	            }
+				
 				// get the action's accelerator key
 				String actionkey = settings.getAcceleratorKeys().getAcceleratorKey(AcceleratorKeys.MAINKEYS, cnt);
-				// check whether we have any valid actionkey
+				Constants.zknlogger.info("Action key for " + actionname + ": " + actionkey);
+				
+				// check whether we have any valid action key
 				if (actionkey != null && !actionkey.isEmpty()) {
 					// retrieve keystroke setting
 					KeyStroke ks = KeyStroke.getKeyStroke(actionkey);
 					// and put them together :-)
 					ac.putValue(AbstractAction.ACCELERATOR_KEY, ks);
+					Constants.zknlogger.info("Set accelerator key for action: " + actionname);
 				}
 			}
+			
+			// Log the end of the method
+	        Constants.zknlogger.info("Finished initializing accelerator table.");
+
+	        isAcceleratorTableInitialized = true; // Set the flag to true
 		}
+		
 		// now set the mnemonic keys of the menus (i.e. the accelerator keys, which give
 		// access
 		// to the menu via "alt"+key). since the menus might have different texts,

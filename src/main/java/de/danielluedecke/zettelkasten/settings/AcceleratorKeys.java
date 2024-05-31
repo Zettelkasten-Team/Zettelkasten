@@ -389,20 +389,31 @@ public class AcceleratorKeys {
 			acckey.setText(ctrlkey + " " + numbersign);
 			acceleratorKeysMain.getRootElement().addContent(acckey);
 		}
-		// the accelerator for the "historyFor" action
-		if (!findElement(MAINKEYS, "historyFor")) {
+		
+		// the accelerator for the "historyFore" action
+		if (!findElement(MAINKEYS, "historyFore")) {
 			acckey = new Element("key");
-			acckey.setAttribute("action", "historyFor");
+			acckey.setAttribute("action", "historyFore");
 			acckey.setText(historykey + " RIGHT");
 			acceleratorKeysMain.getRootElement().addContent(acckey);
+			
+			// Log the key binding configuration
+	        Constants.zknlogger.info("Key binding set for historyFore: " + historykey + " LEFT");
+
 		}
+		
 		// the accelerator for the "historyBack" action
 		if (!findElement(MAINKEYS, "historyBack")) {
 			acckey = new Element("key");
 			acckey.setAttribute("action", "historyBack");
 			acckey.setText(historykey + " LEFT");
 			acceleratorKeysMain.getRootElement().addContent(acckey);
+			
+			// Log the key binding configuration
+	        Constants.zknlogger.info("Key binding set for historyBack: " + historykey + " LEFT");
+	 
 		}
+		
 		// the accelerator for the "showLastEntry" action
 		if (!findElement(MAINKEYS, "showLastEntry")) {
 			acckey = new Element("key");
