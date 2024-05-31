@@ -32,7 +32,7 @@
  */
 package de.danielluedecke.zettelkasten.database;
 
-import de.danielluedecke.zettelkasten.ZettelkastenView;
+import de.danielluedecke.zettelkasten.view.ZettelkastenView;
 import de.danielluedecke.zettelkasten.settings.Settings;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import de.danielluedecke.zettelkasten.util.Constants;

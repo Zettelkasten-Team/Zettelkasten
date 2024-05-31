@@ -38,7 +38,7 @@ import bibtex.dom.BibtexFile;
 import bibtex.parser.BibtexParser;
 import bibtex.parser.ParseException;
 import de.danielluedecke.zettelkasten.ZettelkastenApp;
-import de.danielluedecke.zettelkasten.ZettelkastenView;
+import de.danielluedecke.zettelkasten.view.ZettelkastenView;
 import de.danielluedecke.zettelkasten.settings.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;

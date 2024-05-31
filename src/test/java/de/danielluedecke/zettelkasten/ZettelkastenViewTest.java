@@ -1,5 +1,6 @@
 package de.danielluedecke.zettelkasten;
 
+import de.danielluedecke.zettelkasten.view.ZettelkastenView;
 import static org.testng.Assert.assertEquals;
 
 import org.mockito.Mock;

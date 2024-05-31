@@ -32,8 +32,8 @@
  */
 package de.danielluedecke.zettelkasten.database;
 
-import de.danielluedecke.zettelkasten.DesktopFrame;
-import de.danielluedecke.zettelkasten.ZettelkastenView;
+import de.danielluedecke.zettelkasten.view.DesktopFrame;
+import de.danielluedecke.zettelkasten.view.ZettelkastenView;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.Tools;
 import org.jdom2.*;
