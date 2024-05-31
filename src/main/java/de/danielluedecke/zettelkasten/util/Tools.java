@@ -51,6 +51,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -62,6 +63,7 @@ import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
+import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.text.html.HTMLEditorKit;
@@ -1008,7 +1010,7 @@ public class Tools {
 	 * This method sets the locale descriptions for the standard-actions cut, copy
 	 * and paste - which are in English by default.
 	 *
-	 * @param actionMap the class's actionmap
+	 * @param actionMap the class's action map
 	 */
 	public static void initLocaleForDefaultActions(javax.swing.ActionMap actionMap) {
 		String[] actions = new String[] { "cut", "copy", "paste" };
@@ -1019,12 +1021,9 @@ public class Tools {
 			aac.putValue(AbstractAction.NAME, toolbarResourceMap.getString(ac + ".Action.text"));
 			aac.putValue(AbstractAction.SHORT_DESCRIPTION,
 					toolbarResourceMap.getString(ac + ".Action.shortDescription"));
-//            // get the new icon-path from the resource-map
-//            URL imgURL = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass().getResource(resourceMap.getString(ac+".Action.largeIcon"));
-//            // create icon
-//            ImageIcon img = new ImageIcon(imgURL);
-//            aac.putValue(AbstractAction.LARGE_ICON_KEY, img);
-			aac.putValue(AbstractAction.SMALL_ICON, null);
+			URL imgURL = org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass().getResource(resourceMap.getString(ac+".Action.largeIcon"));
+			ImageIcon img = new ImageIcon(imgURL);
+			aac.putValue(AbstractAction.LARGE_ICON_KEY, img);
 		}
 	}
 

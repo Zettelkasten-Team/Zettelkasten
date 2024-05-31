@@ -390,13 +390,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			Constants.zknlogger.log(Level.WARNING, "Could not create URL Data Flavor!");
 		}
 	}
-
-	/**
-	 * get the strings for file descriptions from the resource map
-	 */
-	private final ResourceMap toolbarResourceMap = Application
-			.getInstance(ZettelkastenApp.class).getContext()
-			.getResourceMap(ToolbarIcons.class);
 	
 	private boolean isAcceleratorTableInitialized = false;
 	
@@ -424,10 +417,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			throw new IllegalArgumentException("Settings cannot be null.");
 		}
 
+		// Init Java look and feel
 		initUIManagerLookAndFeel();
+
 		initBibtexFile();
+		
+		// Initialize all swing components. (initComponents is auto-generated.)
 		initComponents();
+			    
+	    // initComponents is auto-generated, so further initialization is done in
+	    // postInitComponentsSetup.
 		postInitComponentsSetup(getFrame());
+		
+		// Initialize exit-listener: what to do when exiting.
 		app.addExitListener(new ConfirmExit());
 
 		if (!loadDataDocumentFromSettings()) {
@@ -1767,10 +1769,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					"addDesktopIcon", "addBookmarksIcon", "deleteIcon", "addLuhmannIcon", "addManLinksIcon",
 					"selectAllIcon", "showLastEntryIcon" };
 
+			UIManager toolbarResourceMap = null;
 			// Show icon names ?
 			if (settings.getShowIconText()) {
 				for (int cnt = 0; cnt < toolbarButtons.length; cnt++) {
-					toolbarButtons[cnt].setText(toolbarResourceMap.getString(buttonNames[cnt]));
+					toolbarButtons[cnt].setText(UIManager.getString(buttonNames[cnt]));
 				}
 			} else {
 				for (JButton tbb : toolbarButtons) {
@@ -1783,7 +1786,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				String icontheme = settings.getIconThemePath();
 				for (int cnt = 0; cnt < toolbarButtons.length; cnt++) {
 					toolbarButtons[cnt].setIcon(new ImageIcon(ZettelkastenView.class
-							.getResource(icontheme + toolbarResourceMap.getString(iconNames[cnt]))));
+							.getResource(icontheme + UIManager.getString(iconNames[cnt]))));
 				}
 			} else {
 				for (JButton tbb : toolbarButtons) {
@@ -2373,7 +2376,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		};
-		// put action to the tables' actionmaps
+		// put action to the tables' action maps
 		jTableAuthors.getActionMap().put("EnterKeyPressed", a_enter);
 		jTableKeywords.getActionMap().put("EnterKeyPressed", a_enter);
 		jTableLinks.getActionMap().put("EnterKeyPressed", a_enter);
@@ -2463,7 +2466,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		};
-		// put action to the tables' actionmaps
+		// put action to the tables' action maps
 		jTableAuthors.getActionMap().put("AddKeyPressed", a_add);
 		jTableManLinks.getActionMap().put("AddKeyPressed", a_add);
 		jTableKeywords.getActionMap().put("AddKeyPressed", a_add);
@@ -2494,7 +2497,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		};
-		// put action to the tables' actionmaps
+		// put action to the tables' action maps
 		jTableAuthors.getActionMap().put("EditKeyPressed", a_edit);
 		jTableKeywords.getActionMap().put("EditKeyPressed", a_edit);
 		jTableTitles.getActionMap().put("EditKeyPressed", a_edit);
@@ -2504,7 +2507,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		jTextFieldFilterKeywords.getActionMap().put("EditKeyPressed", a_edit);
 		jTextFieldFilterTitles.getActionMap().put("EditKeyPressed", a_edit);
 		jTextFieldFilterAttachments.getActionMap().put("EditKeyPressed", a_edit);
-		// check for os, and use appropriate controlKey
+		// check for OS, and use appropriate controlKey
 		ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS()) ? "meta ENTER" : "F2");
 		jTableAuthors.getInputMap().put(ks, "EditKeyPressed");
 		jTableKeywords.getInputMap().put(ks, "EditKeyPressed");
@@ -2527,10 +2530,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		};
-		// put action to the tables' actionmaps
+		// put action to the tables' action maps
 		jTableAuthors.getActionMap().put("NewKeyPressed", a_new);
 		jTableKeywords.getActionMap().put("NewKeyPressed", a_new);
-		// check for os, and use appropriate controlKey
+		// check for OS, and use appropriate controlKey
 		ks = KeyStroke.getKeyStroke((PlatformUtil.isMacOS()) ? "meta BACK_SPACE" : "INSERT");
 		jTableAuthors.getInputMap().put(ks, "NewKeyPressed");
 		jTableKeywords.getInputMap().put(ks, "NewKeyPressed");
@@ -2542,10 +2545,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				searchLogOr();
 			}
 		};
-		// put action to the tables' actionmaps
+		// put action to the tables' action maps
 		jTextFieldFilterKeywords.getActionMap().put("FindKeyPressed", a_find);
 		jTextFieldFilterAuthors.getActionMap().put("FindKeyPressed", a_find);
-		// check for os, and use appropriate controlKey
+		// check for OS, and use appropriate controlKey
 		ks = KeyStroke.getKeyStroke("shift ENTER");
 		jTextFieldFilterKeywords.getInputMap().put(ks, "FindKeyPressed");
 		jTextFieldFilterAuthors.getInputMap().put(ks, "FindKeyPressed");
@@ -2565,12 +2568,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 			}
 		};
-		// put action to the tables' actionmaps
+		// put action to the tables' action maps
 		jTextFieldFilterKeywords.getActionMap().put("FindRegExKeyPressed", a_findregex);
 		jTextFieldFilterAuthors.getActionMap().put("FindRegExKeyPressed", a_findregex);
 		jTextFieldFilterTitles.getActionMap().put("FindRegExKeyPressed", a_findregex);
 		jTextFieldFilterAttachments.getActionMap().put("FindRegExKeyPressed", a_findregex);
-		// check for os, and use appropriate controlKey
+		// check for OS, and use appropriate controlKey
 		ks = KeyStroke.getKeyStroke("alt ENTER");
 		jTextFieldFilterKeywords.getInputMap().put(ks, "FindRegExKeyPressed");
 		jTextFieldFilterAuthors.getInputMap().put(ks, "FindRegExKeyPressed");
@@ -3039,10 +3042,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// retrieve modified data-files
 		setSaveEnabled(settings.getSynonyms().isModified() | data.isMetaModified() | bibtex.isModified()
 				| data.isModified() | bookmarks.isModified() | searchRequests.isModified() | desktop.isModified());
-		buttonHistoryBack.setEnabled(data.canHistoryBack());
-		buttonHistoryFore.setEnabled(data.canHistoryFore());
-		setHistoryBackAvailable(data.canHistoryBack());
-		setHistoryForAvailable(data.canHistoryFore());
+		buttonHistoryBack.setEnabled(historyManager.canHistoryBack());
+		buttonHistoryFore.setEnabled(historyManager.canHistoryFore());
+		setHistoryBackAvailable(historyManager.canHistoryBack());
+		setHistoryForeAvailable(historyManager.canHistoryFore());
 		// desktop and search results available
 		setDesktopAvailable(desktop.getCount() > 0);
 		setSearchResultsAvailable(searchRequests.getCount() > 0);
@@ -9515,12 +9518,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This methods goes back through the history and sets the current entry to the
-	 * related entry in the history...
+	 * goToFirstParentEntry goes to the first parent entry of the current entry. If
+	 * the current entry is invalid or does not have a parent entry, it does
+	 * nothing.
 	 */
-	@Action(enabledProperty = "historyBackAvailable")
-	public void historyBack() {
-		data.historyBack();
+	@Action
+	public void goToFirstParentEntry() {
+		data.goToFirstParentEntry();
 
 		// Reset displayedZettel.
 		displayedZettel = -1;
@@ -9529,13 +9533,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * goToFirstParentEntry goes to the first parent entry of the current entry. If
-	 * the current entry is invalid or does not have a parent entry, it does
-	 * nothing.
+	 * This methods goes back through the history and sets the current entry to the
+	 * related entry in the history...
 	 */
-	@Action
-	public void goToFirstParentEntry() {
-		data.goToFirstParentEntry();
+	@Action(enabledProperty = "historyBackAvailable")
+	public void historyBack() {
+		historyManager.historyBack();
 
 		// Reset displayedZettel.
 		displayedZettel = -1;
@@ -9552,7 +9555,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	/**
 	 * Copies the current selection, or the whole text if no selection is made, of
-	 * the textfield which currently has the focus to the clipboard. If no textfield
+	 * the text field which currently has the focus to the clipboard. If no text field
 	 * is the focus owner, the selected values of the list or table which has the
 	 * focus is copied to the clipboard.
 	 */
@@ -11383,22 +11386,21 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	/**
 	 * This variable indicates whether the history-function is available or not.
 	 */
-	private boolean historyForAvailable = false;
-
-	public boolean isHistoryForAvailable() {
-		return historyForAvailable;
+	public boolean isHistoryForeAvailable() {
+		return historyForeAvailable;
 	}
 
-	public void setHistoryForAvailable(boolean b) {
-		boolean old = isHistoryForAvailable();
-		this.historyForAvailable = b;
-		firePropertyChange("historyForAvailable", old, isHistoryForAvailable());
+	public void setHistoryForeAvailable(boolean b) {
+		boolean old = isHistoryForeAvailable();
+		this.historyForeAvailable = b;
+		firePropertyChange("historyForeAvailable", old, isHistoryForeAvailable());
 	}
 
 	/**
 	 * This variable indicates whether the history-function is available or not.
 	 */
 	private boolean historyBackAvailable = false;
+	private boolean historyForeAvailable = false;
 
 	public boolean isHistoryBackAvailable() {
 		return historyBackAvailable;
@@ -11967,7 +11969,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jEditorPaneEntry.setEditable(false);
             jEditorPaneEntry.setBorder(null);
             org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(ZettelkastenView.class);
-            jEditorPaneEntry.setContentType(resourceMap.getString("jEditorPaneEntry.contentType")); // NOI18N
+            //jEditorPaneEntry.setContentType(resourceMap.getString("jEditorPaneEntry.contentType")); // NOI18N
             jEditorPaneEntry.setName("jEditorPaneEntry"); // NOI18N
             jScrollPane1.setViewportView(jEditorPaneEntry);
 
@@ -12403,7 +12405,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jScrollPane16.setName("jScrollPane16"); // NOI18N
 
             jEditorPaneDispAuthor.setEditable(false);
-            jEditorPaneDispAuthor.setContentType(resourceMap.getString("jEditorPaneDispAuthor.contentType")); // NOI18N
+            //jEditorPaneDispAuthor.setContentType(resourceMap.getString("jEditorPaneDispAuthor.contentType")); // NOI18N
             jEditorPaneDispAuthor.setName("jEditorPaneDispAuthor"); // NOI18N
             jScrollPane16.setViewportView(jEditorPaneDispAuthor);
 
@@ -12670,7 +12672,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
             jEditorPaneBookmarkComment.setEditable(false);
             jEditorPaneBookmarkComment.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jEditorPaneBookmarkComment.border.title"))); // NOI18N
-            jEditorPaneBookmarkComment.setContentType(resourceMap.getString("jEditorPaneBookmarkComment.contentType")); // NOI18N
+            //jEditorPaneBookmarkComment.setContentType(resourceMap.getString("jEditorPaneBookmarkComment.contentType")); // NOI18N
             jEditorPaneBookmarkComment.setName("jEditorPaneBookmarkComment"); // NOI18N
             jScrollPane14.setViewportView(jEditorPaneBookmarkComment);
 
