@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.danielluedecke.zettelkasten.view.EntryID;
+import de.danielluedecke.zettelkasten.EntryID;
 
 public class EntryIDUtils {
 	static public List<EntryID> csvToEntryIDList(String csv) {

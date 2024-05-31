@@ -63,9 +63,9 @@ import org.jdom2.output.XMLOutputter;
 
 import org.apache.commons.io.FilenameUtils;
 
-import de.danielluedecke.zettelkasten.view.CImportBibTex;
-import de.danielluedecke.zettelkasten.view.CSetBibKey;
-import de.danielluedecke.zettelkasten.view.ZettelkastenView;
+import de.danielluedecke.zettelkasten.CImportBibTex;
+import de.danielluedecke.zettelkasten.CSetBibKey;
+import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
 import de.danielluedecke.zettelkasten.database.StenoData;
 import de.danielluedecke.zettelkasten.database.Synonyms;

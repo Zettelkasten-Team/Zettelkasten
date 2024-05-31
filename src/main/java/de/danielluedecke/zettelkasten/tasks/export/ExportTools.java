@@ -33,7 +33,7 @@
 package de.danielluedecke.zettelkasten.tasks.export;
 
 import bibtex.dom.BibtexEntry;
-import de.danielluedecke.zettelkasten.view.CTexExportSettings;
+import de.danielluedecke.zettelkasten.CTexExportSettings;
 import de.danielluedecke.zettelkasten.ZettelkastenApp;
 import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Daten;

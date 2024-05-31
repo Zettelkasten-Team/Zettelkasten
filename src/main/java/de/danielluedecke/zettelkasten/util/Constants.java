@@ -32,7 +32,7 @@
  */
 package de.danielluedecke.zettelkasten.util;
 
-import de.danielluedecke.zettelkasten.view.ZettelkastenView;
+import de.danielluedecke.zettelkasten.ZettelkastenView;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.logging.Logger;

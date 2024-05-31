@@ -1,6 +1,5 @@
 package de.danielluedecke.zettelkasten;
 
-import de.danielluedecke.zettelkasten.view.ZettelkastenView;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;

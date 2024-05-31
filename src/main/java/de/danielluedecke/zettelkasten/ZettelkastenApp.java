@@ -40,19 +40,21 @@ import de.danielluedecke.zettelkasten.settings.AcceleratorKeys;
 import de.danielluedecke.zettelkasten.settings.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
-import de.danielluedecke.zettelkasten.view.ZettelkastenView;
-import org.jdesktop.application.Application;
-import org.jdesktop.application.SingleFrameApplication;
+import java.awt.Frame;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.*;
+
+import org.jdesktop.application.Application;
+import org.jdesktop.application.SingleFrameApplication;
+
+import javax.swing.*;
 
 /**
  * The main class of the application.
@@ -111,7 +113,7 @@ public class ZettelkastenApp extends SingleFrameApplication {
         Locale.setDefault(newLocale);
     }
     
-    private void logSystemProperties(String[] args) {
+     private void logSystemProperties(String[] args) {
         Properties props = System.getProperties();
         Set<Object> keys = props.keySet();
         for (Object key : keys) {

@@ -35,7 +35,7 @@ package de.danielluedecke.zettelkasten.tasks;
 
 import com.explodingpixels.macwidgets.MacWidgetFactory;
 import com.explodingpixels.widgets.TableUtils;
-import de.danielluedecke.zettelkasten.view.ZettelkastenView;
+import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.settings.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;

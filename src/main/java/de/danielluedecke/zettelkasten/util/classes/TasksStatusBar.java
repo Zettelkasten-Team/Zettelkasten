@@ -34,7 +34,7 @@
 
 package de.danielluedecke.zettelkasten.util.classes;
 
-import de.danielluedecke.zettelkasten.view.ZettelkastenView;
+import de.danielluedecke.zettelkasten.ZettelkastenView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Icon;

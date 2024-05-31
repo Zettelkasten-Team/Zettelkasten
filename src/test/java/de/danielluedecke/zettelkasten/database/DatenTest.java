@@ -1,6 +1,6 @@
 package de.danielluedecke.zettelkasten.database;
 
-import de.danielluedecke.zettelkasten.view.EntryID;
+import de.danielluedecke.zettelkasten.EntryID;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
