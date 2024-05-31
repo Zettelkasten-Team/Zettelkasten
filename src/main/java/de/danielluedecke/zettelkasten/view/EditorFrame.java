@@ -4883,7 +4883,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 
 		// It is necessary to keep the table since it is not possible
 		// to determine the table from the event's source
-		SelectionListener(JList<String> list) {
+		public SelectionListener(JList<String> list) {
 			this.list = list;
 		}
 
@@ -5100,13 +5100,13 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
         jPanel4 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jListKeywords = MacSourceList.createMacSourceList();
-        jTextFieldAddKeyword = (settingsObj.isMacStyle()) ? ZknMacWidgetFactory.createHudTreeTextField(resourceMap.getString("textFieldDefaultText")) : new javax.swing.JTextField();
+        jTextFieldAddKeyword = new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTextAreaRemarks = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
         jListLinks = MacSourceList.createMacSourceList();
-        jTextFieldAddLink = (settingsObj.isMacStyle()) ? ZknMacWidgetFactory.createHudTreeTextField(resourceMap.getString("textFieldDefaultText")) : new javax.swing.JTextField();
+        jTextFieldAddLink = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jTabbedPaneNewEntry1 = new javax.swing.JTabbedPane();
         jPanel7 = new javax.swing.JPanel();
