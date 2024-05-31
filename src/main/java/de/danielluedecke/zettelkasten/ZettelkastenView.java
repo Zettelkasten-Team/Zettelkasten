@@ -7930,7 +7930,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 *
 	 * @param isEditing        true if we want to edit an existing entry, false if a
 	 *                         new entry is to be created
-	 * @param entrynumber      the entrynumber. relevant for editing existing
+	 * @param entryNumber      the entry number. relevant for editing existing
 	 *                         entries.
 	 * @param isLuhmann        true if the new entry should be inserted as follower
 	 *                         of the current entry.
@@ -7942,12 +7942,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 *                         {@code -1} to add entry to the end of entry order.
 	 * @param String           content
 	 */
-	private void openEditWindow(boolean isEditing, int entrynumber, boolean isLuhmann, boolean isDeleted,
+	private void openEditWindow(boolean isEditing, int entryNumber, boolean isLuhmann, boolean isDeleted,
 			int insertAfterEntry, String content) {
 		if (isEditModeActive) {
 			// If an entry is already being edited, bring the existing EditorFrame window to
 			// the front.
-			editEntryDlg.toFront();
+			editEntryDlg.toFront(); //FIXME NullPointerException showNewEntryWindow(ZettelkastenView.java:7882)
 			return;
 		}
 
@@ -7957,7 +7957,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// Create new EditorFrame window and show it.
 		editEntryDlg = new EditorFrame(this, data, taskinfo, settings.getAcceleratorKeys(), settings,
 				settings.getAutoKorrektur(), settings.getSynonyms(), settings.getStenoData(), content, isEditing,
-				entrynumber, isLuhmann, isDeleted);
+				entryNumber, isLuhmann, isDeleted);
 		editEntryDlg.setLocationRelativeTo(getFrame());
 		ZettelkastenApp.getApplication().show(editEntryDlg);
 		editEntryDlg.toFront();
