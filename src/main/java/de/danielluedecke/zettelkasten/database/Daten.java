@@ -32,9 +32,9 @@
  */
 package de.danielluedecke.zettelkasten.database;
 
-import de.danielluedecke.zettelkasten.CMakeFormImage;
-import de.danielluedecke.zettelkasten.EntryID;
-import de.danielluedecke.zettelkasten.ZettelkastenView;
+import de.danielluedecke.zettelkasten.view.CMakeFormImage;
+import de.danielluedecke.zettelkasten.view.EntryID;
+import de.danielluedecke.zettelkasten.view.ZettelkastenView;
 import de.danielluedecke.zettelkasten.history.HistoryManager;
 import de.danielluedecke.zettelkasten.settings.Settings;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
@@ -2688,7 +2688,7 @@ public class Daten {
 
 	/**
 	 * This method adds a new entry to the datafile. The needed parameters come from
-	 * the JDialog {@link de.danielluedecke.zettelkasten.EditorFrame}. This dialog
+	 * the JDialog {@link de.danielluedecke.zettelkasten.view.EditorFrame}. This dialog
 	 * opens an edit-mask so the user can input the necessary information. If
 	 * everything is done, the JDialog retrieves all the information as
 	 * string(-array)-variables and simply passes these as parameters to this

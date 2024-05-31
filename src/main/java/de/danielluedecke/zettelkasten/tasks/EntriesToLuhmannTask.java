@@ -32,7 +32,7 @@
  */
 package de.danielluedecke.zettelkasten.tasks;
 
-import de.danielluedecke.zettelkasten.EntryID;
+import de.danielluedecke.zettelkasten.view.EntryID;
 import de.danielluedecke.zettelkasten.database.Daten;
 
 /**

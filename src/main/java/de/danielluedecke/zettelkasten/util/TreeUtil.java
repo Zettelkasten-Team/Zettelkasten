@@ -32,7 +32,7 @@
  */
 package de.danielluedecke.zettelkasten.util;
 
-import de.danielluedecke.zettelkasten.EntryID;
+import de.danielluedecke.zettelkasten.view.EntryID;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.util.classes.TreeUserObject;
 import java.util.Enumeration;

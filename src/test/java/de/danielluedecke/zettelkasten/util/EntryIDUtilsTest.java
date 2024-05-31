@@ -5,7 +5,7 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-import de.danielluedecke.zettelkasten.EntryID;
+import de.danielluedecke.zettelkasten.view.EntryID;
 
 public class EntryIDUtilsTest {
 	@Test

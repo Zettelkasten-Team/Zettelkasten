@@ -32,6 +32,7 @@
  */
 package de.danielluedecke.zettelkasten;
 
+import de.danielluedecke.zettelkasten.view.ZettelkastenView;
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
 import de.danielluedecke.zettelkasten.database.StenoData;
 import de.danielluedecke.zettelkasten.database.Synonyms;

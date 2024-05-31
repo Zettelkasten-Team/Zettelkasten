@@ -1,5 +1,6 @@
 package de.danielluedecke.zettelkasten;
 
+import de.danielluedecke.zettelkasten.view.EditorFrame;
 import javax.swing.JList;
 import javax.swing.JTextArea;
 import javax.swing.event.ListSelectionEvent;
@@ -9,7 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import de.danielluedecke.zettelkasten.EditorFrame.SelectionListener;
+import de.danielluedecke.zettelkasten.view.EditorFrame.SelectionListener;
 
 public class SelectionListenerTest {
 

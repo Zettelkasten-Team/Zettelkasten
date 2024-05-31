@@ -32,8 +32,8 @@
  */
 package de.danielluedecke.zettelkasten.util;
 
-import de.danielluedecke.zettelkasten.ToolbarIcons;
-import de.danielluedecke.zettelkasten.ZettelkastenView;
+import de.danielluedecke.zettelkasten.view.ToolbarIcons;
+import de.danielluedecke.zettelkasten.view.ZettelkastenView;
 import de.danielluedecke.zettelkasten.database.*;
 import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.settings.Settings;
