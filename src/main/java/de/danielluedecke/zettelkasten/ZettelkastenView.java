@@ -109,12 +109,20 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	public SearchRequests searchRequests;
 
 	private Daten data;
+	private HistoryManager historyManager;
 	private final TasksData taskinfo;
 	public final Bookmarks bookmarks;
 	private final BibTeX bibtex;
 	public DesktopData desktop;
 	private final Settings settings;
-	private HistoryManager historyManager;
+
+	/**
+	 * This variables stores the currently displayed zettel. The currently
+	 * <i>displayed</i> Zettel may differ from the currently <i>active</i> Zettel,
+	 * if we e.g. select an entry by single-clicking it from a jTable, but do not
+	 * activate it by double-clicking it.
+	 */
+	public int displayedZettel = -1;
 
 
 	/**
@@ -246,7 +254,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private String lastClusterRelationKeywords = "";
 
 	/**
-	 * This variable stores the treepath of the node that should bes elected within
+	 * This variable stores the tree path of the node that should bes elected within
 	 * the jtreeluhmann when all followers, including parents, should be displayed
 	 */
 	private DefaultMutableTreeNode selectedLuhmannNode = null;
@@ -312,14 +320,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * selected tab when the tabbedpane state changed.
 	 */
 	private int previousSelectedTab = -1;
-
-	/**
-	 * This variables stores the currently displayed zettel. The currently
-	 * <i>displayed</i> Zettel may differ from the currently <i>active</i> Zettel,
-	 * if we e.g. select an entry by single-clicking it from a jTable, but do not
-	 * activate it by double-clicking it.
-	 */
-	public int displayedZettel = -1;
 
 	/**
 	 * Indicates whether the thread "createLinksTask" is running or not...
@@ -403,15 +403,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	public ZettelkastenView(SingleFrameApplication app, Settings st, TasksData td) throws ClassNotFoundException,
 			UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException {
 		super(app);
-                this.searchRequests = new SearchRequests(this); // Initialize searchRequests
-                this.desktop = new DesktopData(this);
-                this.settings = st;
+		this.searchRequests = new SearchRequests(this); // Initialize searchRequests
+        this.desktop = new DesktopData(this);
+        this.settings = st;
 		this.taskinfo = td;
 
 		if (settings != null) {
 			bookmarks = new Bookmarks(this, settings);
 			bibtex = new BibTeX(this, settings);
 			data = new Daten(this, settings, settings.getSynonyms(), bibtex);
+			historyManager = new HistoryManager(data); // Initialize HistoryManager with Daten
 		} else {
 			// Handle the case where settings is null
 			bookmarks = null; // or initialize with default value
@@ -422,29 +423,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			throw new IllegalArgumentException("Settings cannot be null.");
 		}
 
-		// Init Java look and feel.
 		initUIManagerLookAndFeel();
-
 		initBibtexFile();
-
-		// Initialize all swing components. (initComponents is auto-generated.)
 		initComponents();
-
-		// initComponents is auto-generated, so further initialization is done in
-		// postInitComponentsSetup.
 		postInitComponentsSetup(getFrame());
-
-		// Initialize exit-listener: what to do when exiting.
 		app.addExitListener(new ConfirmExit());
 
-		// If the file in settings exists, load it.
 		if (!loadDataDocumentFromSettings()) {
 			// Failed to load. Update display for an empty data document.
 			initVariables();
 			updateDisplay();
 		}
 
-		// Init AutoBackupTimer.
 		makeAutoBackupTimer = new Timer();
 		makeAutoBackupTimer.schedule(new AutoBackupTimer(), Constants.autobackupUpdateStart,
 				Constants.autobackupUpdateInterval);
@@ -1744,7 +1734,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * This method initialises the toolbar buttons. depending on the user-setting,
+	 * This method initializes the toolbar buttons. depending on the user-setting,
 	 * we either display small, medium or large icons as toolbar-icons.
 	 *
 	 * @param bottomBarNeedsUdpate if {@code true}, the bottom bar on mac aqua style
@@ -9552,19 +9542,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		updateDisplay();
 	}
 
-	/**
-	 * This methods goes fore through the history and sets the current entry to the
-	 * related entry in the history...
-	 */
-	@Action(enabledProperty = "historyForAvailable")
-	public void historyFor() {
-		data.historyFore();
-
-		// Reset displayedZettel.
-		displayedZettel = -1;
-
-		updateDisplay();
-	}
+	@Action(enabledProperty = "historyForeAvailable")
+    public void historyFore() {
+        historyManager.historyFore();
+        displayedZettel = -1;
+        updateDisplay();
+    }
 
 	/**
 	 * Copies the current selection, or the whole text if no selection is made, of

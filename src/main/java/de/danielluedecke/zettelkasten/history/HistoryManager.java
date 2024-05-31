@@ -6,7 +6,7 @@ import de.danielluedecke.zettelkasten.util.Constants;
 /**
  * Manages the history of entries in the program.
  */
-public class HistoryManager {
+public class HistoryManager implements HistoryNavigationListener {
     private final Daten data;
     private static final int HISTORY_MAX = 100; // Adjust as needed
     private int[] history;
@@ -85,4 +85,9 @@ public class HistoryManager {
         }
         return activatedEntryNumber;
     }
+
+	@Override
+	public void navigateForwardInHistory() {
+		data.historyFore();		
+	}
 }

@@ -95,7 +95,7 @@ public class TasksData {
     }
     /**
      * Stores global information from the {@code ReplaceTask}, the number of replaced
-     * occurences.
+     * occurrences.
      *
      * @return the final message with the results from the {@code ReplaceTask}.
      */
@@ -193,22 +193,22 @@ public class TasksData {
     /**
      * 
      * @param list
-     * @param whichlist 
+     * @param whichList 
      */
-    public void setKeywordSuggestionList(LinkedList<String> list, int whichlist) {
-        switch (whichlist) {
+    public void setKeywordSuggestionList(LinkedList<String> list, int whichList) {
+        switch (whichList) {
             case REMAINING_KW: remainingKeywords = list; break;
             case NEW_KW: newKeywords = list; break;
         }
     }
     /**
      * 
-     * @param whichlist
+     * @param whichList
      * @return 
      */
-    public LinkedList<String> getKeywordSuggesionList(int whichlist) {
+    public LinkedList<String> getKeywordSuggesionList(int whichList) {
         LinkedList<String> retval = null;
-        switch (whichlist) {
+        switch (whichList) {
             case REMAINING_KW: retval = remainingKeywords; break;
             case NEW_KW: retval = newKeywords; break;
         }
