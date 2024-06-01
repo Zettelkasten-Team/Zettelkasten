@@ -86,8 +86,8 @@ public class HistoryManager implements HistoryNavigationListener {
         return activatedEntryNumber;
     }
 
-	@Override
-	public void navigateForwardInHistory() {
-		data.historyFore();		
-	}
+    @Override
+    public void navigateForwardInHistory() {
+        historyFore();
+    }
 }

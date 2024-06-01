@@ -20,17 +20,12 @@ public class HistoryManagerTest {
 
     @Test
     public void testAddToHistory() {
-        // Initially, there should be no history, so canHistoryBack should return false
         assertFalse(historyManager.canHistoryBack(), "Initially, canHistoryBack should be false");
 
-        // Add an entry to the history
         historyManager.addToHistory(1);
-        // After adding one entry, canHistoryBack should still be false because there's no previous entry to go back to
         assertFalse(historyManager.canHistoryBack(), "After adding the first entry, canHistoryBack should still be false");
 
-        // Add another entry to the history
         historyManager.addToHistory(2);
-        // After adding the second entry, canHistoryBack should return true because now we have a previous entry to go back to
         assertTrue(historyManager.canHistoryBack(), "After adding the second entry, canHistoryBack should be true");
     }
 
@@ -66,5 +61,14 @@ public class HistoryManagerTest {
         assertTrue(historyManager.canHistoryFore(), "canHistoryFore should be true after going back to the first entry");
         historyManager.historyFore();
         assertFalse(historyManager.canHistoryFore(), "canHistoryFore should be false after going forward to the last entry");
+    }
+
+    @Test
+    public void testNavigateForwardInHistory() {
+        historyManager.addToHistory(1);
+        historyManager.addToHistory(2);
+        historyManager.historyBack();
+        historyManager.navigateForwardInHistory();
+        assertEquals(historyManager.historyFore(), 2, "navigateForwardInHistory should call historyFore and return the next entry");
     }
 }
