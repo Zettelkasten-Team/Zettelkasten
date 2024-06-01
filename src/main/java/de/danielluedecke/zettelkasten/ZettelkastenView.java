@@ -117,7 +117,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private final Settings settings;
 
 	/**
-	 * This variables stores the currently displayed zettel. The currently
+	 * This variables stores the currently displayed Zettel. The currently
 	 * <i>displayed</i> Zettel may differ from the currently <i>active</i> Zettel,
 	 * if we e.g. select an entry by single-clicking it from a jTable, but do not
 	 * activate it by double-clicking it.
@@ -664,7 +664,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			@Override
 			public void mouseClicked(MouseEvent evt) {
 				// This listener should only react on left-mouse-button-clicks...
-				// if other button then left-button clicked, leeave...
+				// if other button then left-button clicked, leave...
 				if (evt.getButton() != MouseEvent.BUTTON1) {
 					return;
 				}
@@ -3041,12 +3041,79 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		buttonHistoryBack.setEnabled(data.canHistoryBack());
 		buttonHistoryFore.setEnabled(data.canHistoryFore());
 		setHistoryBackAvailable(data.canHistoryBack());
-		setHistoryForAvailable(data.canHistoryFore());
+		setHistoryForeAvailable(data.canHistoryFore());
 		// desktop and search results available
 		setDesktopAvailable(desktop.getCount() > 0);
 		setSearchResultsAvailable(searchRequests.getCount() > 0);
 		showSearchResultsMenuItem.setEnabled(searchRequests.getCount() > 0);
 		showDesktopMenuItem.setEnabled(desktop.getCount() > 0);
+	}
+	
+	@Action(enabledProperty = "historyForeAvailable")
+    public void historyFore() {
+        data.historyFore();
+        displayedZettel = -1;
+        updateDisplay();
+    }
+	
+	/**
+	 * This variable indicates whether the history-function is available or not.
+	 */
+	private boolean historyForeAvailable = false;
+
+	public boolean isHistoryForeAvailable() {
+		return historyForeAvailable;
+	}
+
+	public void setHistoryForeAvailable(boolean b) {
+		boolean old = isHistoryForeAvailable();
+		this.historyForeAvailable = b;
+		firePropertyChange("historyForeAvailable", old, isHistoryForeAvailable());
+	}
+
+	/**
+	 * This variable indicates whether the history-function is available or not.
+	 */
+	private boolean historyBackAvailable = false;
+
+	public boolean isHistoryBackAvailable() {
+		return historyBackAvailable;
+	}
+
+	public void setHistoryBackAvailable(boolean b) {
+		boolean old = isHistoryBackAvailable();
+		this.historyBackAvailable = b;
+		firePropertyChange("historyBackAvailable", old, isHistoryBackAvailable());
+	}
+	
+	/**
+	 */
+	private void makeMacBottomBar() {
+		jPanel12.setVisible(false);
+		BottomBar macbottombar = new BottomBar(BottomBarSize.LARGE);
+		// history buttons
+		buttonHistoryBack.setBorderPainted(true);
+		buttonHistoryFore.setBorderPainted(true);
+		buttonHistoryBack.putClientProperty("JButton.buttonType", "segmentedTextured");
+		buttonHistoryFore.putClientProperty("JButton.buttonType", "segmentedTextured");
+		buttonHistoryBack.putClientProperty("JButton.segmentPosition", "only");
+		buttonHistoryFore.putClientProperty("JButton.segmentPosition", "only");
+		buttonHistoryBack.putClientProperty("JComponent.sizeVariant", "small");
+		buttonHistoryFore.putClientProperty("JComponent.sizeVariant", "small");
+		macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(statusEntryLabel), 5);
+		macbottombar.addComponentToLeft(jTextFieldEntryNumber, 5);
+		macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(statusOfEntryLabel), 10);
+		macbottombar.addComponentToLeft(buttonHistoryBack);
+		macbottombar.addComponentToLeft(buttonHistoryFore, 10);
+		macbottombar.addComponentToLeft(MacButtonFactory.makeUnifiedToolBarButton(statusErrorButton), 5);
+		macbottombar.addComponentToLeft(MacButtonFactory.makeUnifiedToolBarButton(statusDesktopEntryButton));
+		macbottombar.addComponentToCenter(MacWidgetFactory.makeEmphasizedLabel(jLabelMemory));
+		macbottombar.addComponentToRight(MacWidgetFactory.makeEmphasizedLabel(statusMsgLabel));
+		macbottombar.addComponentToRight(statusAnimationLabel, 4);
+		statusPanel.remove(jPanel12);
+		statusPanel.setBorder(null);
+		statusPanel.setLayout(new BorderLayout());
+		statusPanel.add(macbottombar.getComponent(), BorderLayout.PAGE_START);
 	}
 
 	/**
@@ -9542,16 +9609,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		updateDisplay();
 	}
 
-	@Action(enabledProperty = "historyForeAvailable")
-    public void historyFore() {
-        historyManager.historyFore();
-        displayedZettel = -1;
-        updateDisplay();
-    }
-
 	/**
 	 * Copies the current selection, or the whole text if no selection is made, of
-	 * the textfield which currently has the focus to the clipboard. If no textfield
+	 * the text field which currently has the focus to the clipboard. If no text field
 	 * is the focus owner, the selected values of the list or table which has the
 	 * focus is copied to the clipboard.
 	 */
@@ -9641,7 +9701,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		String selection = jEditorPaneEntry.getSelectedText();
 		// check whether we have any selection at all
 		if (selection != null && !selection.isEmpty()) {
-			// TODO zeilenumbrüche auslesen
+			// TODO Zeilenumbrüche auslesen
 			// since new-lines are not recognized when selecting text (instead, new lines
 			// are
 			// simple space-chars, thus multiple lines appear as one line with several
@@ -11071,36 +11131,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 */
-	private void makeMacBottomBar() {
-		jPanel12.setVisible(false);
-		BottomBar macbottombar = new BottomBar(BottomBarSize.LARGE);
-		// history buttons
-		buttonHistoryBack.setBorderPainted(true);
-		buttonHistoryFore.setBorderPainted(true);
-		buttonHistoryBack.putClientProperty("JButton.buttonType", "segmentedTextured");
-		buttonHistoryFore.putClientProperty("JButton.buttonType", "segmentedTextured");
-		buttonHistoryBack.putClientProperty("JButton.segmentPosition", "only");
-		buttonHistoryFore.putClientProperty("JButton.segmentPosition", "only");
-		buttonHistoryBack.putClientProperty("JComponent.sizeVariant", "small");
-		buttonHistoryFore.putClientProperty("JComponent.sizeVariant", "small");
-		macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(statusEntryLabel), 5);
-		macbottombar.addComponentToLeft(jTextFieldEntryNumber, 5);
-		macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(statusOfEntryLabel), 10);
-		macbottombar.addComponentToLeft(buttonHistoryBack);
-		macbottombar.addComponentToLeft(buttonHistoryFore, 10);
-		macbottombar.addComponentToLeft(MacButtonFactory.makeUnifiedToolBarButton(statusErrorButton), 5);
-		macbottombar.addComponentToLeft(MacButtonFactory.makeUnifiedToolBarButton(statusDesktopEntryButton));
-		macbottombar.addComponentToCenter(MacWidgetFactory.makeEmphasizedLabel(jLabelMemory));
-		macbottombar.addComponentToRight(MacWidgetFactory.makeEmphasizedLabel(statusMsgLabel));
-		macbottombar.addComponentToRight(statusAnimationLabel, 4);
-		statusPanel.remove(jPanel12);
-		statusPanel.setBorder(null);
-		statusPanel.setLayout(new BorderLayout());
-		statusPanel.add(macbottombar.getComponent(), BorderLayout.PAGE_START);
-	}
-
-	/**
 	 * Selection listener for the tables. Each table that reacts to selections gets
 	 * this SelectionListener in the {@link #initSelectionListeners()
 	 * initSelectionListeners()} method.
@@ -11377,36 +11407,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		boolean old = isSaveEnabled();
 		this.saveEnabled = b;
 		firePropertyChange("saveEnabled", old, isSaveEnabled());
-	}
-
-	/**
-	 * This variable indicates whether the history-function is available or not.
-	 */
-	private boolean historyForAvailable = false;
-
-	public boolean isHistoryForAvailable() {
-		return historyForAvailable;
-	}
-
-	public void setHistoryForAvailable(boolean b) {
-		boolean old = isHistoryForAvailable();
-		this.historyForAvailable = b;
-		firePropertyChange("historyForAvailable", old, isHistoryForAvailable());
-	}
-
-	/**
-	 * This variable indicates whether the history-function is available or not.
-	 */
-	private boolean historyBackAvailable = false;
-
-	public boolean isHistoryBackAvailable() {
-		return historyBackAvailable;
-	}
-
-	public void setHistoryBackAvailable(boolean b) {
-		boolean old = isHistoryBackAvailable();
-		this.historyBackAvailable = b;
-		firePropertyChange("historyBackAvailable", old, isHistoryBackAvailable());
 	}
 
 	/**
@@ -13144,7 +13144,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             historyForMenuItem.setName("historyForMenuItem"); // NOI18N
             findMenu.add(historyForMenuItem);
 
-            histroyBackMenuItem.setAction(actionMap.get("historyFor")); // NOI18N
+            histroyBackMenuItem.setAction(actionMap.get("historyFore")); // NOI18N
             histroyBackMenuItem.setText(resourceMap.getString("histroyBackMenuItem.text")); // NOI18N
             histroyBackMenuItem.setName("histroyBackMenuItem"); // NOI18N
             findMenu.add(histroyBackMenuItem);
@@ -13813,7 +13813,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             buttonHistoryBack.setMargin(new java.awt.Insets(0, 0, 0, 0));
             buttonHistoryBack.setName("buttonHistoryBack"); // NOI18N
 
-            buttonHistoryFore.setAction(actionMap.get("historyFor")); // NOI18N
+            buttonHistoryFore.setAction(actionMap.get("historyFore")); // NOI18N
             buttonHistoryFore.setIcon(resourceMap.getIcon("buttonHistoryFore.icon")); // NOI18N
             buttonHistoryFore.setBorderPainted(false);
             buttonHistoryFore.setContentAreaFilled(false);

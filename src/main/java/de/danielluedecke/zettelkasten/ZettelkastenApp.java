@@ -32,6 +32,24 @@
  */
 package de.danielluedecke.zettelkasten;
 
+import java.awt.Frame;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.StreamHandler;
+
+import javax.swing.UnsupportedLookAndFeelException;
+
+import org.jdesktop.application.Application;
+import org.jdesktop.application.SingleFrameApplication;
+
 import de.danielluedecke.zettelkasten.database.AutoKorrektur;
 import de.danielluedecke.zettelkasten.database.StenoData;
 import de.danielluedecke.zettelkasten.database.Synonyms;
@@ -40,19 +58,6 @@ import de.danielluedecke.zettelkasten.settings.AcceleratorKeys;
 import de.danielluedecke.zettelkasten.settings.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
-import de.danielluedecke.zettelkasten.view.ZettelkastenView;
-import org.jdesktop.application.Application;
-import org.jdesktop.application.SingleFrameApplication;
-
-import javax.swing.*;
-import java.awt.*;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.Set;
-import java.util.logging.*;
 
 /**
  * The main class of the application.

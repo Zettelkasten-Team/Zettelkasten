@@ -90,4 +90,9 @@ public class HistoryManager implements HistoryNavigationListener {
     public void navigateForwardInHistory() {
         historyFore();
     }
+
+	@Override
+	public void navigateBackwardInHistory() {
+		historyBack();		
+	}
 }
