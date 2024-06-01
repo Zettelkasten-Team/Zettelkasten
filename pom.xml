@@ -75,6 +75,35 @@
                 <directory>src/test/resources</directory>
             </testResource>
         </testResources>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.github.zetten</groupId>
+                    <artifactId>xvfb-maven-plugin</artifactId>
+                    <version>${xvfb-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>wrap-tests</id>
+                            <goals>
+                                <goal>run</goal>
+                                <goal>stop</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.eclipse.tycho</groupId>
+                    <artifactId>tycho-surefire-plugin</artifactId>
+                    <version>${tycho.version}</version>
+                    <configuration>
+                        <useUIHarness>true</useUIHarness>
+                        <environmentVariables>
+                            <DISPLAY>${xvfb.display}</DISPLAY>
+                        </environmentVariables>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -291,6 +320,12 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
             <version>4.11.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>openjfx-monocle</artifactId>
+            <version>1.8.0_20</version> <!-- 17.0.10 For OpenJFX 17, 11.0.2 For OpenJFX 11, jdk-8.0.372 for Java 8 -->
             <scope>test</scope>
         </dependency>
         <dependency>
