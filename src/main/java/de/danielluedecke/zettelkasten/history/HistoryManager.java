@@ -79,7 +79,7 @@ public class HistoryManager implements HistoryNavigationListener {
      * 
      * @return the activated entry number after navigating forward in history
      */
-    public int historyFore() {
+    public int historyForward() {
         if (canHistoryFore()) {
             activatedEntryNumber = history[++historyPosition];
         }
@@ -88,7 +88,7 @@ public class HistoryManager implements HistoryNavigationListener {
 
     @Override
     public void navigateForwardInHistory() {
-        historyFore();
+        historyForward();
     }
 
 	@Override

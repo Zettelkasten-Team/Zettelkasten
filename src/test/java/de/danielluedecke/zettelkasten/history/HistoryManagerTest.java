@@ -41,7 +41,7 @@ public class HistoryManagerTest {
         historyManager.addToHistory(1);
         historyManager.addToHistory(2);
         historyManager.historyBack();
-        assertEquals(historyManager.historyFore(), 2, "historyFore should return the next entry");
+        assertEquals(historyManager.historyForward(), 2, "historyForward should return the next entry");
     }
 
     @Test
@@ -59,7 +59,7 @@ public class HistoryManagerTest {
         historyManager.addToHistory(2);
         historyManager.historyBack();
         assertTrue(historyManager.canHistoryFore(), "canHistoryFore should be true after going back to the first entry");
-        historyManager.historyFore();
+        historyManager.historyForward();
         assertFalse(historyManager.canHistoryFore(), "canHistoryFore should be false after going forward to the last entry");
     }
 
@@ -69,6 +69,6 @@ public class HistoryManagerTest {
         historyManager.addToHistory(2);
         historyManager.historyBack();
         historyManager.navigateForwardInHistory();
-        assertEquals(historyManager.historyFore(), 2, "navigateForwardInHistory should call historyFore and return the next entry");
+        assertEquals(historyManager.historyForward(), 2, "navigateForwardInHistory should call historyForward and return the next entry");
     }
 }

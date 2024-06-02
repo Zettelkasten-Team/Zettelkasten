@@ -2136,7 +2136,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="histroyBackMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="historyFor" methodName="historyFor"/>
+                  <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="historyForward" methodName="historyForward"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="histroyBackMenuItem.text"/>
                 <Property name="name" type="java.lang.String" value="histroyBackMenuItem" noResource="true"/>
@@ -3457,7 +3457,7 @@
             <Component class="javax.swing.JButton" name="buttonHistoryFore">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="historyFor" methodName="historyFor"/>
+                  <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="historyForward" methodName="historyForward"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" resourceKey="buttonHistoryFore.icon"/>
                 <Property name="borderPainted" type="boolean" value="false"/>

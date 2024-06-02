@@ -4994,8 +4994,8 @@ public class Daten {
         return historyManager.historyBack();
     }
 
-    public int historyFore() {
-        return historyManager.historyFore();
+    public int historyForward() {
+        return historyManager.historyForward();
     }
     
     public void displayHistory(int[] history, int historyCount) {

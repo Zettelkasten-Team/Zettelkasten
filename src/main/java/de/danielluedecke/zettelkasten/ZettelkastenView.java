@@ -3049,13 +3049,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		showDesktopMenuItem.setEnabled(desktop.getCount() > 0);
 	}
 	
-	@Action(enabledProperty = "historyForeAvailable")
-    public void historyFore() {
-        data.historyFore();
-        displayedZettel = -1;
-        updateDisplay();
-    }
-	
 	/**
 	 * This variable indicates whether the history-function is available or not.
 	 */
@@ -9593,6 +9586,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		updateDisplay();
 	}
+        
+        @Action(enabledProperty = "historyForeAvailable")
+        public void historyForward() {
+            data.historyForward();
+            displayedZettel = -1;
+            updateDisplay();
+        }
 
 	/**
 	 * goToFirstParentEntry goes to the first parent entry of the current entry. If
@@ -13144,7 +13144,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             historyForMenuItem.setName("historyForMenuItem"); // NOI18N
             findMenu.add(historyForMenuItem);
 
-            histroyBackMenuItem.setAction(actionMap.get("historyFore")); // NOI18N
+            histroyBackMenuItem.setAction(actionMap.get("historyForward")); // NOI18N
             histroyBackMenuItem.setText(resourceMap.getString("histroyBackMenuItem.text")); // NOI18N
             histroyBackMenuItem.setName("histroyBackMenuItem"); // NOI18N
             findMenu.add(histroyBackMenuItem);
@@ -13813,7 +13813,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             buttonHistoryBack.setMargin(new java.awt.Insets(0, 0, 0, 0));
             buttonHistoryBack.setName("buttonHistoryBack"); // NOI18N
 
-            buttonHistoryFore.setAction(actionMap.get("historyFore")); // NOI18N
+            buttonHistoryFore.setAction(actionMap.get("historyForward")); // NOI18N
             buttonHistoryFore.setIcon(resourceMap.getIcon("buttonHistoryFore.icon")); // NOI18N
             buttonHistoryFore.setBorderPainted(false);
             buttonHistoryFore.setContentAreaFilled(false);

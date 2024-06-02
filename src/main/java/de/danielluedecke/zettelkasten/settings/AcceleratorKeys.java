@@ -390,15 +390,15 @@ public class AcceleratorKeys {
 			acceleratorKeysMain.getRootElement().addContent(acckey);
 		}
 		
-		// the accelerator for the "historyFore" action
-		if (!findElement(MAINKEYS, "historyFore")) {
+		// the accelerator for the "historyForward" action
+		if (!findElement(MAINKEYS, "historyForward")) {
 			acckey = new Element("key");
-			acckey.setAttribute("action", "historyFore");
+			acckey.setAttribute("action", "historyForward");
 			acckey.setText(historykey + " RIGHT");
 			acceleratorKeysMain.getRootElement().addContent(acckey);
 			
 			// Log the key binding configuration
-	        Constants.zknlogger.info("Key binding set for historyFore: " + historykey + " LEFT");
+	        Constants.zknlogger.info("Key binding set for historyForward: " + historykey + " LEFT");
 
 		}
 		
