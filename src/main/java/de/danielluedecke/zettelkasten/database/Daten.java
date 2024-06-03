@@ -55,7 +55,7 @@ import org.jdom2.IllegalDataException;
 import org.jdom2.IllegalNameException;
 
 /**
- * This is the data class. This class stores all the programme data in a JDOM
+ * This is the data class. This class stores all the program data in a JDOM
  * XML Tree. It also provides typical methods like getters and setters, stores
  * the file path, the modified state and so on. All relevant operations need for
  * managing the data file can be found here, except loading (open file) and

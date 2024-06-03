@@ -8553,7 +8553,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * displays the first entry in the zettelkasten
+	 * Displays the first entry in the Zettelkasten
 	 */
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showPrevEntry() {
