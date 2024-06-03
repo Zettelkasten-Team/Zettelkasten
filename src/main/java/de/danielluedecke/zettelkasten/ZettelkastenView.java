@@ -2727,6 +2727,246 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		updateToolbarAndMenu();
 		updateTabbedPane(options);
 	}
+	
+	/**
+	 * Changes the text in the application's titlebar, by adding the filename of the
+	 * currently opened file to it.
+	 */
+	private void updateFrameTitle() {
+		String filename = settings.getMainDataFileNameWithoutExtension();
+		if (filename == null) {
+			// Defaults to the application's title.
+			getFrame().setTitle(getResourceMap().getString("Application.title"));
+			return;
+		}
+		// Set file-name and application's title to the title-bar.
+		getFrame().setTitle("[" + filename + "] - " + getResourceMap().getString("Application.title"));
+	}	
+
+	/**
+	 * This method is used to update the content of the textfields/lists, but not
+	 * the whole display like tabbed pane as well. Usually this method is called
+	 * when a link to another entry or a follower entry or any entry in one of the
+	 * tabbed pane's tables is selected. This selection does just show the content
+	 * of the related entry, which means the jEditorPanes and the jListKeywords are
+	 * filled with the entry's data. but: the data in the tabbed pane, like the
+	 * entry's follower-numbers, links and manual links etc. are <i>not</i> updated.
+	 * this only occurs, when an entry is <i>activated</i>. e.g. by double-clicking
+	 * on an entry in on of the tabbed pane's tables.
+	 *
+	 * @param inputDisplayedEntry the number of the entry that should be displayed
+	 */
+	private void updateEntryPaneAndKeywordsPane(int inputDisplayedEntry) {
+		// If we have an invalid entry, reset panes.
+		if (data.getCount(Daten.ZKNCOUNT) == 0 || inputDisplayedEntry == 0) {
+			jEditorPaneEntry.setText("");
+
+			Color bcol = (settings.isMacStyle()) ? ColorUtil.colorJTreeText : null;
+			jListEntryKeywords.setBorder(ZknMacWidgetFactory
+					.getTitledBorder(getResourceMap().getString("jListEntryKeywords.border.title"), bcol, settings));
+			keywordListModel.clear();
+
+			jTextFieldEntryNumber.setText("");
+			statusOfEntryLabel.setText(getResourceMap().getString("entryOfText"));
+			return;
+		}
+
+		// If the user wants to add all displayed entries to the history, include new
+		// displayed entry to the history.
+		if (settings.getAddAllToHistory()) {
+			data.addToHistory(inputDisplayedEntry);
+			// Update buttons for navigating through history.
+			buttonHistoryBack.setEnabled(data.canHistoryBack());
+			buttonHistoryFore.setEnabled(data.canHistoryFore());
+		}
+
+		updateHighlightingTerms(inputDisplayedEntry);
+		updateSelectedEntryPane(inputDisplayedEntry);
+		updateKeywordsPane(inputDisplayedEntry);
+
+		statusOfEntryLabel.setText(
+				getResourceMap().getString("entryOfText") + " " + String.valueOf(data.getCount(Daten.ZKNCOUNT)));
+	}
+	
+	/**
+	 * This method is called by the {@link #updateDisplay} method. This method activates or
+	 * deactivates the toolbar and menu bar icons, depending on whether their
+	 * function is available or not. This depends on the number of entries in the
+	 * program.
+	 */
+	public void updateToolbarAndMenu() {
+		// store the amount of entries
+		int count = data.getCount(Daten.ZKNCOUNT);
+		// at least one entry necessary to enable following functions
+		setEntriesAvailable(count > 0);
+		// more than one entry necessary to enable following functions
+		setMoreEntriesAvailable(count > 1);
+		// check each selected entries for followers
+		setMoreLuhmann(data.hasLuhmannNumbers(data.getActivatedEntryNumber()));
+		// check whether the current entry is bookmarked or not...
+		setEntryBookmarked((-1 == bookmarks.getBookmarkPosition(displayedZettel)) && (count > 0));
+		// check whether current entry is on any desktop or not
+		statusDesktopEntryButton.setVisible(desktop.isEntryInAnyDesktop(displayedZettel) && (count > 0));
+		statusDesktopEntryButton.setEnabled(desktop.isEntryInAnyDesktop(displayedZettel) && (count > 0));
+		// retrieve modified data-files
+		setSaveEnabled(settings.getSynonyms().isModified() | data.isMetaModified() | bibtex.isModified()
+				| data.isModified() | bookmarks.isModified() | searchRequests.isModified() | desktop.isModified());
+		buttonHistoryBack.setEnabled(data.canHistoryBack());
+		buttonHistoryFore.setEnabled(data.canHistoryFore());
+		setHistoryBackAvailable(data.canHistoryBack());
+		setHistoryForeAvailable(data.canHistoryFore());
+		// desktop and search results available
+		setDesktopAvailable(desktop.getCount() > 0);
+		setSearchResultsAvailable(searchRequests.getCount() > 0);
+		showSearchResultsMenuItem.setEnabled(searchRequests.getCount() > 0);
+		showDesktopMenuItem.setEnabled(desktop.getCount() > 0);
+	}
+	
+	/**
+	 * Here we set up the jTabbedPane according to the page to be displayed the
+	 * keyword list e.g. is only to be displayed when selected - this is done within
+	 * the change listener of the jTabbedPane. The connections of each entry to other
+	 * entries e.g. has to be updated each time
+	 */
+	private void updateTabbedPane(UpdateDisplayOptions options) {
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
+			clearTabbedPaneModels();
+		}
+
+		// Enable refresh-button if we have a linked list.
+		jButtonRefreshKeywords.setEnabled(linkedkeywordlist != null);
+		jButtonRefreshTitles.setEnabled(linkedtitlelist != null);
+		jButtonRefreshAuthors.setEnabled(linkedauthorlist != null);
+		jButtonRefreshCluster.setEnabled(linkedclusterlist);
+		jButtonRefreshAttachments.setEnabled(linkedattachmentlist != null);
+
+		// Enable filter text-field if we have more than 1 element in the associated
+		// jTable.
+		jTextFieldFilterKeywords.setEnabled(jTableKeywords.getRowCount() > 0);
+		jTextFieldFilterAuthors.setEnabled(jTableAuthors.getRowCount() > 0);
+		jTextFieldFilterTitles.setEnabled(jTableTitles.getRowCount() > 0);
+		jTextFieldFilterCluster.setEnabled(jTreeCluster.getRowCount() > 0);
+		jTextFieldFilterAttachments.setEnabled(jTableAttachments.getRowCount() > 0);
+
+		// Remove all tab menus. Code below will show the correct tab menus.
+		removeTabMenus();
+
+		// Reset status text.
+		statusMsgLabel.setText("");
+
+		if (data.getCount(Daten.ZKNCOUNT) == 0) {
+			// Do nothing when we have zero notes.
+			return;
+		}
+
+		int selectedTab = jTabbedPaneMain.getSelectedIndex();
+
+		// We always need an update of the links.
+		needsLinkUpdate = true;
+		// When the previous tab was the links-tab, stop the background-task.
+		if ((TAB_LINKS == previousSelectedTab || TAB_LINKS != selectedTab) && (cLinksTask != null)
+				&& !cLinksTask.isDone()) {
+			cLinksTask.cancel(true);
+		}
+
+		previousSelectedTab = selectedTab;
+
+		switch (selectedTab) {
+		case TAB_LINKS:
+			if (options.shouldUpdateLinksTable()) {
+				updateLinksTab();
+			}
+			break;
+		case TAB_LUHMANN:
+			updateNoteSequencesTab(options);
+			break;
+		case TAB_KEYWORDS:
+			showKeywords();
+			break;
+		case TAB_AUTHORS:
+			showAuthors();
+			break;
+		case TAB_TITLES:
+			if (options.shouldUpdateTitlesTab()) {
+				updateTitlesTab();
+			}
+			break;
+		case TAB_CLUSTER:
+			showCluster();
+			break;
+		case TAB_BOOKMARKS:
+			showBookmarks();
+			break;
+		case TAB_ATTACHMENTS:
+			showAttachments();
+			break;
+		default:
+			if (options.shouldUpdateLinksTable()) {
+				updateLinksTab();
+			}
+			break;
+		}
+	}
+
+	/**
+	 * This variable indicates whether the history-function is available or not.
+	 */
+	private boolean historyForeAvailable = false;
+
+	public boolean isHistoryForeAvailable() {
+		return historyForeAvailable;
+	}
+
+	public void setHistoryForeAvailable(boolean b) {
+		boolean old = isHistoryForeAvailable();
+		this.historyForeAvailable = b;
+		firePropertyChange("historyForeAvailable", old, isHistoryForeAvailable());
+	}
+
+	/**
+	 * This variable indicates whether the history-function is available or not.
+	 */
+	private boolean historyBackAvailable = false;
+
+	public boolean isHistoryBackAvailable() {
+		return historyBackAvailable;
+	}
+
+	public void setHistoryBackAvailable(boolean b) {
+		boolean old = isHistoryBackAvailable();
+		this.historyBackAvailable = b;
+		firePropertyChange("historyBackAvailable", old, isHistoryBackAvailable());
+	}
+	
+	/**
+	 */
+	private void makeMacBottomBar() {
+		jPanel12.setVisible(false);
+		BottomBar macbottombar = new BottomBar(BottomBarSize.LARGE);
+		// history buttons
+		buttonHistoryBack.setBorderPainted(true);
+		buttonHistoryFore.setBorderPainted(true);
+		buttonHistoryBack.putClientProperty("JButton.buttonType", "segmentedTextured");
+		buttonHistoryFore.putClientProperty("JButton.buttonType", "segmentedTextured");
+		buttonHistoryBack.putClientProperty("JButton.segmentPosition", "only");
+		buttonHistoryFore.putClientProperty("JButton.segmentPosition", "only");
+		buttonHistoryBack.putClientProperty("JComponent.sizeVariant", "small");
+		buttonHistoryFore.putClientProperty("JComponent.sizeVariant", "small");
+		macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(statusEntryLabel), 5);
+		macbottombar.addComponentToLeft(jTextFieldEntryNumber, 5);
+		macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(statusOfEntryLabel), 10);
+		macbottombar.addComponentToLeft(buttonHistoryBack);
+		macbottombar.addComponentToLeft(buttonHistoryFore, 10);
+		macbottombar.addComponentToLeft(MacButtonFactory.makeUnifiedToolBarButton(statusErrorButton), 5);
+		macbottombar.addComponentToLeft(MacButtonFactory.makeUnifiedToolBarButton(statusDesktopEntryButton));
+		macbottombar.addComponentToCenter(MacWidgetFactory.makeEmphasizedLabel(jLabelMemory));
+		macbottombar.addComponentToRight(MacWidgetFactory.makeEmphasizedLabel(statusMsgLabel));
+		macbottombar.addComponentToRight(statusAnimationLabel, 4);
+		statusPanel.remove(jPanel12);
+		statusPanel.setBorder(null);
+		statusPanel.setLayout(new BorderLayout());
+		statusPanel.add(macbottombar.getComponent(), BorderLayout.PAGE_START);
+	}
 
 	/**
 	 * Switches the logical filtering of the entry's keyword-list
@@ -2930,186 +3170,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	/**
-	 * Here we set up the jTabbedPane according to the page to be displayed the
-	 * keyword list e.g. is only to be displayed when selected - this is done within
-	 * the changelistener of the jTabbedPane. The connections of each entry to other
-	 * entries e.g. has to be updated each time
-	 */
-	private void updateTabbedPane(UpdateDisplayOptions options) {
-		if (data.getCount(Daten.ZKNCOUNT) == 0) {
-			clearTabbedPaneModels();
-		}
-
-		// Enable refresh-button if we have a linked list.
-		jButtonRefreshKeywords.setEnabled(linkedkeywordlist != null);
-		jButtonRefreshTitles.setEnabled(linkedtitlelist != null);
-		jButtonRefreshAuthors.setEnabled(linkedauthorlist != null);
-		jButtonRefreshCluster.setEnabled(linkedclusterlist);
-		jButtonRefreshAttachments.setEnabled(linkedattachmentlist != null);
-
-		// Enable filter text-field if we have more than 1 element in the associated
-		// jTable.
-		jTextFieldFilterKeywords.setEnabled(jTableKeywords.getRowCount() > 0);
-		jTextFieldFilterAuthors.setEnabled(jTableAuthors.getRowCount() > 0);
-		jTextFieldFilterTitles.setEnabled(jTableTitles.getRowCount() > 0);
-		jTextFieldFilterCluster.setEnabled(jTreeCluster.getRowCount() > 0);
-		jTextFieldFilterAttachments.setEnabled(jTableAttachments.getRowCount() > 0);
-
-		// Remove all tab menus. Code below will show the correct tab menus.
-		removeTabMenus();
-
-		// Reset status text.
-		statusMsgLabel.setText("");
-
-		if (data.getCount(Daten.ZKNCOUNT) == 0) {
-			// Do nothing when we have zero notes.
-			return;
-		}
-
-		int selectedTab = jTabbedPaneMain.getSelectedIndex();
-
-		// We always need an update of the links.
-		needsLinkUpdate = true;
-		// When the previous tab was the links-tab, stop the background-task.
-		if ((TAB_LINKS == previousSelectedTab || TAB_LINKS != selectedTab) && (cLinksTask != null)
-				&& !cLinksTask.isDone()) {
-			cLinksTask.cancel(true);
-		}
-
-		previousSelectedTab = selectedTab;
-
-		switch (selectedTab) {
-		case TAB_LINKS:
-			if (options.shouldUpdateLinksTable()) {
-				updateLinksTab();
-			}
-			break;
-		case TAB_LUHMANN:
-			updateNoteSequencesTab(options);
-			break;
-		case TAB_KEYWORDS:
-			showKeywords();
-			break;
-		case TAB_AUTHORS:
-			showAuthors();
-			break;
-		case TAB_TITLES:
-			if (options.shouldUpdateTitlesTab()) {
-				updateTitlesTab();
-			}
-			break;
-		case TAB_CLUSTER:
-			showCluster();
-			break;
-		case TAB_BOOKMARKS:
-			showBookmarks();
-			break;
-		case TAB_ATTACHMENTS:
-			showAttachments();
-			break;
-		default:
-			if (options.shouldUpdateLinksTable()) {
-				updateLinksTab();
-			}
-			break;
-		}
-	}
-
-	/**
-	 * This method is called from within the "updateDisplay" method. This method
-	 * enables or disables the toolbar icons and menubars, dependent on whether
-	 * their function is available or not. This depends on the amount of entries in
-	 * the program.
-	 */
-	public void updateToolbarAndMenu() {
-		// store the amount of entries
-		int count = data.getCount(Daten.ZKNCOUNT);
-		// at least one entry necessary to enable following functions
-		setEntriesAvailable(count > 0);
-		// more than one entry necessary to enable following functions
-		setMoreEntriesAvailable(count > 1);
-		// check each selected entries for followers
-		setMoreLuhmann(data.hasLuhmannNumbers(data.getActivatedEntryNumber()));
-		// check whether the current entry is bookmarked or not...
-		setEntryBookmarked((-1 == bookmarks.getBookmarkPosition(displayedZettel)) && (count > 0));
-		// check whether current entry is on any desktop or not
-		statusDesktopEntryButton.setVisible(desktop.isEntryInAnyDesktop(displayedZettel) && (count > 0));
-		statusDesktopEntryButton.setEnabled(desktop.isEntryInAnyDesktop(displayedZettel) && (count > 0));
-		// retrieve modified data-files
-		setSaveEnabled(settings.getSynonyms().isModified() | data.isMetaModified() | bibtex.isModified()
-				| data.isModified() | bookmarks.isModified() | searchRequests.isModified() | desktop.isModified());
-		buttonHistoryBack.setEnabled(data.canHistoryBack());
-		buttonHistoryFore.setEnabled(data.canHistoryFore());
-		setHistoryBackAvailable(data.canHistoryBack());
-		setHistoryForeAvailable(data.canHistoryFore());
-		// desktop and search results available
-		setDesktopAvailable(desktop.getCount() > 0);
-		setSearchResultsAvailable(searchRequests.getCount() > 0);
-		showSearchResultsMenuItem.setEnabled(searchRequests.getCount() > 0);
-		showDesktopMenuItem.setEnabled(desktop.getCount() > 0);
-	}
-	
-	/**
-	 * This variable indicates whether the history-function is available or not.
-	 */
-	private boolean historyForeAvailable = false;
-
-	public boolean isHistoryForeAvailable() {
-		return historyForeAvailable;
-	}
-
-	public void setHistoryForeAvailable(boolean b) {
-		boolean old = isHistoryForeAvailable();
-		this.historyForeAvailable = b;
-		firePropertyChange("historyForeAvailable", old, isHistoryForeAvailable());
-	}
-
-	/**
-	 * This variable indicates whether the history-function is available or not.
-	 */
-	private boolean historyBackAvailable = false;
-
-	public boolean isHistoryBackAvailable() {
-		return historyBackAvailable;
-	}
-
-	public void setHistoryBackAvailable(boolean b) {
-		boolean old = isHistoryBackAvailable();
-		this.historyBackAvailable = b;
-		firePropertyChange("historyBackAvailable", old, isHistoryBackAvailable());
-	}
-	
-	/**
-	 */
-	private void makeMacBottomBar() {
-		jPanel12.setVisible(false);
-		BottomBar macbottombar = new BottomBar(BottomBarSize.LARGE);
-		// history buttons
-		buttonHistoryBack.setBorderPainted(true);
-		buttonHistoryFore.setBorderPainted(true);
-		buttonHistoryBack.putClientProperty("JButton.buttonType", "segmentedTextured");
-		buttonHistoryFore.putClientProperty("JButton.buttonType", "segmentedTextured");
-		buttonHistoryBack.putClientProperty("JButton.segmentPosition", "only");
-		buttonHistoryFore.putClientProperty("JButton.segmentPosition", "only");
-		buttonHistoryBack.putClientProperty("JComponent.sizeVariant", "small");
-		buttonHistoryFore.putClientProperty("JComponent.sizeVariant", "small");
-		macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(statusEntryLabel), 5);
-		macbottombar.addComponentToLeft(jTextFieldEntryNumber, 5);
-		macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(statusOfEntryLabel), 10);
-		macbottombar.addComponentToLeft(buttonHistoryBack);
-		macbottombar.addComponentToLeft(buttonHistoryFore, 10);
-		macbottombar.addComponentToLeft(MacButtonFactory.makeUnifiedToolBarButton(statusErrorButton), 5);
-		macbottombar.addComponentToLeft(MacButtonFactory.makeUnifiedToolBarButton(statusDesktopEntryButton));
-		macbottombar.addComponentToCenter(MacWidgetFactory.makeEmphasizedLabel(jLabelMemory));
-		macbottombar.addComponentToRight(MacWidgetFactory.makeEmphasizedLabel(statusMsgLabel));
-		macbottombar.addComponentToRight(statusAnimationLabel, 4);
-		statusPanel.remove(jPanel12);
-		statusPanel.setBorder(null);
-		statusPanel.setLayout(new BorderLayout());
-		statusPanel.add(macbottombar.getComponent(), BorderLayout.PAGE_START);
-	}
-
-	/**
 	 * This method displays the information of an entry that is selected from the
 	 * tree jTreeLuhmann, i.e. displaying a follower- or sub-entry of the current
 	 * entry. we use an extra display-method here because we don't want to "lose"
@@ -3207,51 +3267,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// set new border text
 		Color bcol = (settings.isMacStyle()) ? ColorUtil.colorJTreeText : null;
 		jListEntryKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(bordertext.toString(), bcol, settings));
-	}
-
-	/**
-	 * This method is used to update the content of the textfields/lists, but not
-	 * the whole display like tabbed pane as well. Usually this method is called
-	 * when a link to another entry or a follower entry or any entry in one of the
-	 * tabbed pane's tables is selected. This selection does just show the content
-	 * of the related entry, which means the jEditorPanes and the jListKeywords are
-	 * filled with the entry's data. but: the data in the tabbed pane, like the
-	 * entry's follower-numbers, links and manual links etc. are <i>not</i> updated.
-	 * this only occurs, when an entry is <i>activated</i>. e.g. by double-clicking
-	 * on an entry in on of the tabbed pane's tables.
-	 *
-	 * @param inputDisplayedEntry the number of the entry that should be displayed
-	 */
-	private void updateEntryPaneAndKeywordsPane(int inputDisplayedEntry) {
-		// If we have an invalid entry, reset panes.
-		if (data.getCount(Daten.ZKNCOUNT) == 0 || inputDisplayedEntry == 0) {
-			jEditorPaneEntry.setText("");
-
-			Color bcol = (settings.isMacStyle()) ? ColorUtil.colorJTreeText : null;
-			jListEntryKeywords.setBorder(ZknMacWidgetFactory
-					.getTitledBorder(getResourceMap().getString("jListEntryKeywords.border.title"), bcol, settings));
-			keywordListModel.clear();
-
-			jTextFieldEntryNumber.setText("");
-			statusOfEntryLabel.setText(getResourceMap().getString("entryOfText"));
-			return;
-		}
-
-		// If the user wants to add all displayed entries to the history, include new
-		// displayed entry to the history.
-		if (settings.getAddAllToHistory()) {
-			data.addToHistory(inputDisplayedEntry);
-			// Update buttons for navigating through history.
-			buttonHistoryBack.setEnabled(data.canHistoryBack());
-			buttonHistoryFore.setEnabled(data.canHistoryFore());
-		}
-
-		updateHighlightingTerms(inputDisplayedEntry);
-		updateSelectedEntryPane(inputDisplayedEntry);
-		updateKeywordsPane(inputDisplayedEntry);
-
-		statusOfEntryLabel.setText(
-				getResourceMap().getString("entryOfText") + " " + String.valueOf(data.getCount(Daten.ZKNCOUNT)));
 	}
 
 	public void updateSelectedEntryPane(int inputDisplayedEntry) {
@@ -10653,21 +10668,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// reset all necessary variables and clear all tables
 		initVariables();
 		updateDisplay();
-	}
-
-	/**
-	 * Changes the text in the application's titlebar, by adding the filename of the
-	 * currently opened file to it.
-	 */
-	private void updateFrameTitle() {
-		String filename = settings.getMainDataFileNameWithoutExtension();
-		if (filename == null) {
-			// Defaults to the application's title.
-			getFrame().setTitle(getResourceMap().getString("Application.title"));
-			return;
-		}
-		// Set file-name and application's title to the title-bar.
-		getFrame().setTitle("[" + filename + "] - " + getResourceMap().getString("Application.title"));
 	}
 
 	/**

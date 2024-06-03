@@ -40,8 +40,10 @@ public class HistoryManager implements HistoryNavigationListener {
             historyPosition = HISTORY_MAX - 1;
         }
         historyCount = Math.min(historyCount + 1, HISTORY_MAX);
-        Constants.zknlogger.info("Added to history: " + entryNr);
+
         data.displayHistory(history, historyCount);
+        
+        Constants.zknlogger.info("Added to history: " + entryNr);
     }
 
     /**
