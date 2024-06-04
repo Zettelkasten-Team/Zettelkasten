@@ -386,7 +386,7 @@ public class Daten {
 		bibtexObj = bib;
 		activatedEntryNumber = 1;
 		reset();
-		historyManager = new HistoryManager(this);
+		historyManager = new HistoryManager();
 	}
 
 	/**
@@ -400,7 +400,6 @@ public class Daten {
 		activatedEntryNumber = 1;
 		reset();
 		zknFile = zettelkastenDocument;
-		historyManager = new HistoryManager(this);
 	}
 
 	/**
@@ -423,7 +422,7 @@ public class Daten {
 		zknFileExport = null;
 		
 		// Initialize the HistoryManager
-        historyManager = new HistoryManager(this);
+        historyManager = new HistoryManager();
         historyManager.addToHistory(1);
 		
 		
