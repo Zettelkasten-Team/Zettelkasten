@@ -10,6 +10,6 @@ public interface HistoryNavigationListener {
 	 * `navigateBackwardInHistory()`, which any class implementing this interface
 	 * must provide.
 	 */
-	void navigateForwardInHistory();
+	int navigateForwardInHistory();
 	void navigateBackwardInHistory();
 }

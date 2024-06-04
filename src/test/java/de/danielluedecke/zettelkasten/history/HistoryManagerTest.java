@@ -1,12 +1,13 @@
 package de.danielluedecke.zettelkasten.history;
 
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.view.Display;
 
 public class HistoryManagerTest {
@@ -42,7 +43,7 @@ public class HistoryManagerTest {
         historyManager.addToHistory(1);
         historyManager.addToHistory(2);
         historyManager.historyBack();
-        assertEquals(historyManager.historyForward(), 2, "historyForward should return the next entry");
+        assertEquals(historyManager.navigateForwardInHistory(), 2, "historyForward should return the next entry");
     }
 
     @Test
@@ -60,7 +61,7 @@ public class HistoryManagerTest {
         historyManager.addToHistory(2);
         historyManager.historyBack();
         assertTrue(historyManager.canHistoryFore(), "canHistoryFore should be true after going back to the first entry");
-        historyManager.historyForward();
+        historyManager.navigateForwardInHistory();
         assertFalse(historyManager.canHistoryFore(), "canHistoryFore should be false after going forward to the last entry");
     }
 
@@ -70,6 +71,6 @@ public class HistoryManagerTest {
         historyManager.addToHistory(2);
         historyManager.historyBack();
         historyManager.navigateForwardInHistory();
-        assertEquals(historyManager.historyForward(), 2, "navigateForwardInHistory should call historyForward and return the next entry");
+        assertEquals(historyManager.navigateForwardInHistory(), 2, "navigateForwardInHistory should call historyForward and return the next entry");
     }
 }

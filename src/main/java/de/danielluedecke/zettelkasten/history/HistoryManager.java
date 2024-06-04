@@ -99,8 +99,8 @@ public class HistoryManager implements HistoryNavigationListener {
     }
 
     @Override
-    public void navigateForwardInHistory() {
-        historyFore();
+    public int navigateForwardInHistory() {
+        return historyFore();
     }
 
 	@Override
