@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.web.HTMLEditor?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ch.dreyeck.zettelkasten.box.ZettelController">
+    <children>
+        <TextArea fx:id="textAreaZettelTitle" layoutX="45.0" layoutY="14.0" prefHeight="66.0" prefWidth="506.0" />
+      <HTMLEditor fx:id="htmlEditorZettelContent" htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot;&gt;&lt;/body&gt;&lt;/html&gt;" layoutX="47.0" layoutY="87.0" prefHeight="299.0" prefWidth="506.0" />
+    </children>
+</AnchorPane>

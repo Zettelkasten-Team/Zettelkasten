@@ -400,6 +400,11 @@
             <version>2.2.8</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>3.0.1</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
