@@ -32,6 +32,7 @@
  */
 package de.danielluedecke.zettelkasten;
 
+import ch.dreyeck.zettelkasten.xml.Zettel;
 import com.explodingpixels.macwidgets.*;
 import com.explodingpixels.widgets.TableUtils;
 import de.danielluedecke.zettelkasten.database.*;

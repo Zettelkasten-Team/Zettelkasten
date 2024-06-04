@@ -12,7 +12,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import de.danielluedecke.zettelkasten.ZettelkastenView;
-import de.danielluedecke.zettelkasten.database.Zettel;
+import ch.dreyeck.zettelkasten.xml.Zettel;
 import de.danielluedecke.zettelkasten.history.HistoryManager;
 
 public class DisplayTest {
@@ -38,7 +38,7 @@ public class DisplayTest {
         int entryNr = 123;
         Zettel zettel = new Zettel();
         zettel.setContent("Test content");
-        zettel.setKeywords(Arrays.asList("keyword1", "keyword2"));
+        zettel.setKeywords(Arrays.asList("keyword1", "keyword2").toString());
         when(zettelkastenViewMock.getDisplayedZettel()).thenReturn(new Zettel());
 
         display.getDisplayedZettel();

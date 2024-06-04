@@ -1,7 +1,7 @@
 package de.danielluedecke.zettelkasten.view;
 
 import de.danielluedecke.zettelkasten.ZettelkastenView;
-import de.danielluedecke.zettelkasten.database.Zettel;
+import ch.dreyeck.zettelkasten.xml.Zettel;
 import de.danielluedecke.zettelkasten.history.HistoryManager;
 
 public class Display {
