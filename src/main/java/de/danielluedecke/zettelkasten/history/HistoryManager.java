@@ -1,21 +1,33 @@
 package de.danielluedecke.zettelkasten.history;
 
-import de.danielluedecke.zettelkasten.database.Daten;
+import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.util.Constants;
+import de.danielluedecke.zettelkasten.view.Display;
 
 /**
  * Manages the history of entries in the program.
  */
 public class HistoryManager implements HistoryNavigationListener {
-    private final Daten data;
     private static final int HISTORY_MAX = 100; // Adjust as needed
     private int[] history;
     private int historyPosition;
     private int historyCount;
     private int activatedEntryNumber;
+    
+    // Constructor without parameters
+    public HistoryManager() {
+        this.history = new int[HISTORY_MAX];
+        this.historyPosition = -1;
+        this.historyCount = 0;
+    }
 
-    public HistoryManager(Daten data) {
-        this.data = data;
+    // Constructor with ZettelkastenView parameter (if needed later)
+    public HistoryManager(ZettelkastenView zkn) {
+        this(); // Call the default constructor
+        // Additional initialization if needed
+    }
+
+    public HistoryManager(Display display) {
         this.history = new int[HISTORY_MAX];
         this.historyPosition = -1; // Initialize to -1 to indicate no history yet
         this.historyCount = 0;
@@ -41,7 +53,7 @@ public class HistoryManager implements HistoryNavigationListener {
         }
         historyCount = Math.min(historyCount + 1, HISTORY_MAX);
         Constants.zknlogger.info("Added to history: " + entryNr);
-        data.displayHistory(history, historyCount);
+        //display.displayHistory(history, historyCount);
     }
 
     /**

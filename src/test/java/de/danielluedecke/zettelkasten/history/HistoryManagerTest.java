@@ -7,15 +7,16 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import de.danielluedecke.zettelkasten.database.Daten;
+import de.danielluedecke.zettelkasten.view.Display;
 
 public class HistoryManagerTest {
     private HistoryManager historyManager;
-    private Daten mockData;
+    private Display mockDisplay;
 
     @BeforeMethod
     public void setUp() {
-        mockData = mock(Daten.class);
-        historyManager = new HistoryManager(mockData);
+        mockDisplay = mock(Display.class);
+        historyManager = new HistoryManager(mockDisplay);
     }
 
     @Test

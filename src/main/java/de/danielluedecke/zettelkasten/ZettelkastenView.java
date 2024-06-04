@@ -48,6 +48,8 @@ import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
 import de.danielluedecke.zettelkasten.tasks.export.ExportTools;
 import de.danielluedecke.zettelkasten.util.*;
 import de.danielluedecke.zettelkasten.util.classes.*;
+import de.danielluedecke.zettelkasten.view.Display;
+
 import org.jdesktop.application.Action;
 import org.jdesktop.application.*;
 import org.jdom2.Document;
@@ -398,6 +400,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			.getResourceMap(ToolbarIcons.class);
 	
 	private boolean isAcceleratorTableInitialized = false;
+
+	private Display display;
 	
 	//Constructor
 	public ZettelkastenView(SingleFrameApplication app, Settings st, TasksData td) throws ClassNotFoundException,
@@ -412,7 +416,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			bookmarks = new Bookmarks(this, settings);
 			bibtex = new BibTeX(this, settings);
 			data = new Daten(this, settings, settings.getSynonyms(), bibtex);
-			historyManager = new HistoryManager(data); // Initialize HistoryManager with Daten
+			historyManager = new HistoryManager(this);
+			display = new Display(this, historyManager);
 		} else {
 			// Handle the case where settings is null
 			bookmarks = null; // or initialize with default value
@@ -4299,7 +4304,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				jEditorPaneEntry, displayedZettel);
 		// check whether we have a return value. this might be the case either when the
 		// user clicked on
-		// a footenote, or on the rating-stars
+		// a footnote, or on the rating-stars
 		if (returnValue != null) {
 			// here we have a reference to another entry
 			if (returnValue.startsWith("#z_") || returnValue.equals("#activatedEntry")
@@ -15150,7 +15155,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         this.data = data;
     }
 
-	public Object getDisplayedZettel() {
+	public Zettel getDisplayedZettel() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -15173,5 +15178,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
         // Logging the history display
         Constants.zknlogger.info(historyDisplay.toString());
+    }
+
+	public Zettel getZettelByNr(int entryNr) {
+        // Implement logic to get the Zettel by entryNr
+        // This method should decide whether to use jEditorPaneEntry or webView based on the feature toggle
+        return new Zettel(); // Placeholder implementation
     }
 }
