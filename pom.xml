@@ -6,9 +6,7 @@
     <version>3.2024.06</version>
     <name>Zettelkasten</name>
     <properties>
-        <zkn.launch4jVersion>${project.version}.0</zkn.launch4jVersion>
-        <zkn.supportsDmg>false</zkn.supportsDmg>
-        <zkn.useGenIsoImage>false</zkn.useGenIsoImage>
+        <exec.mainClass>de.danielluedecke.zettelkasten.ZettelkastenApp</exec.mainClass>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j.version>2.0.13</slf4j.version>
     </properties>
@@ -159,119 +157,17 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>de.perdian.maven.plugins</groupId>
-                <artifactId>macosappbundler-maven-plugin</artifactId>
-                <version>1.10.0</version>
-                <configuration>
-                    <jdk>
-                        <include>false</include>
-                        <!--  <location>target/jre</location> maybe an option for later-->
-                    </jdk>
-                    <plist>
-                        <CFBundleDisplayName>${project.name}</CFBundleDisplayName>
-                        <JVMMainClassName>de.danielluedecke.zettelkasten.ZettelkastenApp</JVMMainClassName>
-                        <JVMVersion>8+</JVMVersion>
-                        <CFBundleDevelopmentRegion>German</CFBundleDevelopmentRegion>
-                        <CFBundleName>${project.name}</CFBundleName>
-                        <CFBundleDisplayName>${project.name}</CFBundleDisplayName>
-                        <CFBundleIdentifier>de.danielluedecke.zettelkasten.ZettelkastenApp</CFBundleIdentifier>
-                        <CFBundleShortVersionString>${project.version}</CFBundleShortVersionString>
-                        <CFBundleIconFile>src/main/resources/logo/zkn3_2.icns</CFBundleIconFile>
-                    </plist>
-                    <dmg>
-                        <generate>${zkn.supportsDmg}</generate>
-                        <useGenIsoImage>${zkn.useGenIsoImage}</useGenIsoImage>
-                    </dmg>
-                </configuration>
+                <groupId>io.github.fvarrui</groupId>
+                <artifactId>javapackager</artifactId>
+                <version>1.7.5</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
-                            <goal>bundle</goal>
+                            <goal>package</goal>
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <transformers>
-                                <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>de.danielluedecke.zettelkasten.ZettelkastenApp</mainClass>
-                                </transformer>
-                            </transformers>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.akathist.maven.plugins.launch4j</groupId>
-                <artifactId>launch4j-maven-plugin</artifactId>
-                <version>2.5.0</version>
-                <executions>
-                    <execution>
-                        <id>launch4j</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>launch4j</goal>
-                        </goals>
-                        <configuration>
-                            <dontWrapJar>false</dontWrapJar>
-                            <headerType>gui</headerType>
-                            <jar>target/${project.build.finalName}.jar</jar>
-                            <outfile>target/${project.build.finalName}.exe</outfile>
-                            <chdir>.</chdir>
-                            <priority>normal</priority>
-                            <downloadUrl>http://java.com/download</downloadUrl>
-                            <stayAlive>false</stayAlive>
-                            <restartOnCrash>false</restartOnCrash>
-                            <manifest/>
-                            <icon>src/main/resources/logo/zkn2.ico</icon>
-                            <jre>
-                                <minVersion>1.7.0</minVersion>
-                                <bundledJre64Bit>false</bundledJre64Bit>
-                                <bundledJreAsFallback>false</bundledJreAsFallback>
-                                <jdkPreference>preferJre</jdkPreference>
-                                <runtimeBits>32/64</runtimeBits>
-                            </jre>
-                            <splash>
-                                <file>src/main/resources/logo/splash.bmp</file>
-                                <waitForWindow>true</waitForWindow>
-                                <timeout>60</timeout>
-                                <timeoutErr>true</timeoutErr>
-                            </splash>
-                            <versionInfo>
-                                <fileVersion>${zkn.launch4jVersion}</fileVersion>
-                                <txtFileVersion>Zettelkasten 3</txtFileVersion>
-                                <fileDescription>Zettelkasten - nach Niklas Luhmann</fileDescription>
-                                <copyright>Daniel Luedecke</copyright>
-                                <productVersion>${zkn.launch4jVersion}</productVersion>
-                                <txtProductVersion>${project.version}</txtProductVersion>
-                                <productName>${project.build.finalName}</productName>
-                                <internalName>zkn</internalName>
-                                <originalFilename>${project.build.finalName}.exe</originalFilename>
-                            </versionInfo>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
-                <configuration>
-                    <mainClass>playground/Launcher</mainClass>
-                </configuration>
             </plugin>
         </plugins>
     </build>
