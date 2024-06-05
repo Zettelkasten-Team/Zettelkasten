@@ -41,7 +41,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '8'
+          java-version: 18.0.2+101
       - name: Show Toolchain
         run: cat ~/.m2/toolchains.xml
       - name: Build with Maven
