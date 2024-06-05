@@ -103,6 +103,10 @@
                         <version>[8, 11, 17, 21]</version>
                         <vendor>temurin</vendor>
                     </jdk>
+                    <jdk>
+                        <version>18.0.2+101</version>
+                        <vendor>temurin</vendor>
+                    </jdk>
                   </toolchains>
                 </configuration>
             </plugin>

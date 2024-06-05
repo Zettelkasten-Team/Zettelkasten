@@ -21,6 +21,8 @@ jobs:
         with:
           java-version: 18.0.2+101
           distribution: temurin
+      - name: Show Toolchain
+        run: cat ~/.m2/toolchains.xml
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - run: mkdir staging && cp target/*.jar target/*.exe staging  
@@ -40,6 +42,8 @@ jobs:
         with:
           java-version: 18.0.2+101
           distribution: temurin
+      - name: Show Toolchain
+        run: cat ~/.m2/toolchains.xml
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - run: mkdir staging && cp target/*.dmg staging
