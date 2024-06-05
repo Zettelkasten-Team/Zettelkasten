@@ -85,9 +85,28 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-toolchains-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                  <execution>
+                    <goals>
+                      <goal>toolchain</goal>
+                    </goals>
+                  </execution>
+                </executions>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                  <toolchains>
+                    <jdk>
+                        <version></version>
+                    </jdk>
+                    <jdk>
+                      <version>1.8</version>
+                      <vendor>oracle</vendor>
+                    </jdk>
+                  </toolchains>
                 </configuration>
             </plugin>
             <plugin>
