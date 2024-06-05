@@ -2310,7 +2310,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	/**
 	 * This method inits the action map for several components like the tables, the
-	 * treeviews or the lists. here we can associate certain keystrokes with related
+	 * tree views or the lists. Here we can associate certain keystrokes with related
 	 * methods. e.g. hitting the enter-key in a table shows (activates) the related
 	 * entry. <br>
 	 * <br>
@@ -2319,7 +2319,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * same purpose. <br>
 	 * <br>
 	 * The advantage of action maps is, that dependent from the operating system we
-	 * need only to associte a single action. with key-events, for each component we
+	 * need only to associate a single action. with key-events, for each component we
 	 * have to check whether the operating system is mac os or windows, and then
 	 * checking for different keys, thus doubling each command: checking for F2 to
 	 * edit, or checking for command+enter and also call the edit-method. using
@@ -8563,8 +8563,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// init variable
 		int randomnumber = -1;
 		// create a random number and check, whether the entry with the created random
-		// number
-		// is deleted or not
+		// number is deleted or not
 		while (-1 == randomnumber || data.isDeleted(randomnumber)) {
 			// create new random number until we have found a valid, non-deleted entry
 			randomnumber = (int) (Math.random() * data.getCount(Daten.ZKNCOUNT)) + 1;

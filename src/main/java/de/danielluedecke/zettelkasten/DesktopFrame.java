@@ -1204,7 +1204,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 	 */
 	@Action(enabledProperty = "entryNodeSelected")
 	public void displayEntryInMainframe() {
-		// retrieve selection from jtree
+		// retrieve selection from jTree
 		int nr = getSelectedEntryNumber();
 		// when we have a valid selection, go on
 		if (nr != -1) {
