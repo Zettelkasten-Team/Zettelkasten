@@ -108,6 +108,12 @@
                         <vendor>temurin</vendor>
                     </jdk>
                   </toolchains>
+                    <toolchains>
+                        <jdk>
+                            <version>1.8</version>
+                            <vendor>Oracle Corporation</vendor>
+                        </jdk>
+                    </toolchains>
                 </configuration>
             </plugin>
             <plugin>
