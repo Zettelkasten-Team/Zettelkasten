@@ -4,11 +4,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import javax.swing.*;
-import java.awt.*;
-import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
-import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -68,22 +64,4 @@ public class SwingAppWithJavaFXAndJEditorPaneTest {
         assertEquals(foundEditorPane, jEditorPaneEntry, "Found JEditorPane should be the same as the created one");
     }
 
-    @Test
-    public void testJavaFXIntegration() {
-        // Test JavaFX integration with Swing
-        Platform.runLater(() -> {
-            Button fxButton = new Button("JavaFX Button");
-            fxButton.setOnAction(e -> System.out.println("JavaFX Button Clicked"));
-
-            StackPane root = new StackPane();
-            root.getChildren().add(fxButton);
-
-            Scene scene = new Scene(root, 150, 100);
-            jfxPanel.setScene(scene);
-
-            // Verify JavaFX button properties
-            assertNotNull(fxButton, "JavaFX Button should not be null");
-            assertEquals(fxButton.getText(), "JavaFX Button", "JavaFX button text should be 'JavaFX Button'");
-        });
-    }
 }

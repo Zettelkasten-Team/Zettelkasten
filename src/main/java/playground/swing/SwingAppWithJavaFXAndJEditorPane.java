@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 
 public class SwingAppWithJavaFXAndJEditorPane {
+
     public static void main(String[] args) {
         // Create the main Swing frame
         JFrame frame = new JFrame("Swing and JavaFX Application");
@@ -27,7 +28,7 @@ public class SwingAppWithJavaFXAndJEditorPane {
         // Create and add JFXPanel
         JFXPanel jfxPanel = new JFXPanel();
         panel.add(jfxPanel);
-        
+
         // Load JavaFX content into JFXPanel
         Platform.runLater(() -> {
             // Find JEditorPane by name
