@@ -1,5 +1,6 @@
 package playground.swing;
 
+import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -19,6 +20,11 @@ public class SwingAppWithJavaFXAndJEditorPaneTest {
 
     @BeforeClass
     public void setUp() {
+    	
+        if (System.getenv("DISPLAY") == null) {
+            throw new SkipException("Skipping GUI tests as no DISPLAY is set");
+        }
+        
         // Initialize the application components
         frame = new JFrame("Swing and JavaFX Application");
         panel = new JPanel();
