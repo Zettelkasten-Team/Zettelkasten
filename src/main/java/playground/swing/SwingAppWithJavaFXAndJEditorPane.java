@@ -8,7 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 
 public class SwingAppWithJavaFXAndJEditorPane {
-
+    
     public static void main(String[] args) {
         // Create the main Swing frame
         JFrame frame = new JFrame("Swing and JavaFX Application");
