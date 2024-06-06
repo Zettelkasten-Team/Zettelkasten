@@ -119,7 +119,6 @@
                         </property>
                     </properties>
                     <threadCount>1</threadCount>
-      
                 </configuration>
                 <dependencies>
                     <dependency>
