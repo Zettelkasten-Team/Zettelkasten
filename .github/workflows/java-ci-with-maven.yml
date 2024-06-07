@@ -16,10 +16,10 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-      - name: Set up JDK 1.8
+      - name: Set up
         uses: actions/setup-java@v4
         with:
-          java-version: 18.0.2+101
+          java-version: 11
           distribution: temurin
       - name: Show Toolchain
         run: cat ~/.m2/toolchains.xml
@@ -37,10 +37,10 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-      - name: Set up JDK 1.8
+      - name: Set up
         uses: actions/setup-java@v4
         with:
-          java-version: 18.0.2+101
+          java-version: 11
           distribution: temurin
       - name: Show Toolchain
         run: cat ~/.m2/toolchains.xml
