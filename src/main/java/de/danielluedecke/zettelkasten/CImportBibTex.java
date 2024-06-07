@@ -739,7 +739,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                                     // only create content/new entry, if any abstract was found...
                                     if (content != null && !content.isEmpty()) {
                                         // finally, add entry to dataset
-                                        dataObj.addEntryFromBibTex("", content, new String[]{au.toString()}, keywords, Tools.getTimeStamp());
+                                        dataObj.addEntryFromBibTeX("", content, new String[]{au.toString()}, keywords, Tools.getTimeStamp());
                                         // and increase entry counter
                                         newEntries++;
                                     } // if nothing found, add at least the keywords
@@ -816,7 +816,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                                                             keywords = (jRadioButtonSourceDB.isSelected()) ? bibtexObj.getKeywords(bibkey.toString()) : bibtexObj.getKeywordsFromAttachedFile(bibkey.toString());
                                                         }
                                                         // finally, add entry to dataset
-                                                        dataObj.addEntryFromBibTex("", content, new String[]{au.toString()}, keywords, Tools.getTimeStamp());
+                                                        dataObj.addEntryFromBibTeX("", content, new String[]{au.toString()}, keywords, Tools.getTimeStamp());
                                                         // and delete BibTeX attribute from the *old* entry...
                                                         dataObj.setContentFromBibTexRemark(counter, false);
                                                         // update found-variable
@@ -877,7 +877,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                                         keywords = (jRadioButtonSourceDB.isSelected()) ? bibtexObj.getKeywords(bibkey.toString()) : bibtexObj.getKeywordsFromAttachedFile(bibkey.toString());
                                     }
                                     // finally, add entry to dataset
-                                    dataObj.addEntryFromBibTex("", content, new String[]{au.toString()}, keywords, Tools.getTimeStamp());
+                                    dataObj.addEntryFromBibTeX("", content, new String[]{au.toString()}, keywords, Tools.getTimeStamp());
                                     // and increase entry counter
                                     newEntries++;
                                 }

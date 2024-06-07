@@ -38,6 +38,7 @@ import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.history.History;
 import de.danielluedecke.zettelkasten.settings.Settings;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
+import de.danielluedecke.zettelkasten.view.Display;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.Tools;
@@ -133,7 +134,7 @@ public class Daten {
 	 * previously accessed entries and so on...
 	 */
 	//private int[] history;
-	private History history;
+	private History history = new History();
 
 	/**
 	 * Stores the files which we want to retrieve from the main data file
@@ -2923,7 +2924,7 @@ public class Daten {
 				this.activatedEntryNumber = getCount(ZKNCOUNT);
 			}
 			// and add the new position to the history...
-			addToHistory();
+			addToHistory(activatedEntryNumber);
 			// set modified state
 			setModified(true);
 		} catch (IllegalAddException | IllegalDataException ex) {
@@ -3032,7 +3033,7 @@ public class Daten {
 	 *         {@link #ADD_LUHMANNENTRY_ERR ADD_LUHMANNENTRY_ERR} if an error
 	 *         occured when adding a follower-entry (trailing entry)
 	 */
-	public int addEntryFromBibTex(String title, String content, String[] authors, String[] keywords, String timestamp) {
+	public int addEntryFromBibTeX(String title, String content, String[] authors, String[] keywords, String timestamp) {
 		// add entry
 		int succeeded = addEntry(title, content, authors, keywords, "", null, timestamp, -1, false, -1);
 		// if operation was successful...
@@ -3308,7 +3309,7 @@ public class Daten {
 			// update the current zettel-position
 			this.activatedEntryNumber = entrynumber;
 			// and add the new position to the history...
-			addToHistory();
+			addToHistory(activatedEntryNumber);
 			// set modified state
 			setModified(true);
 		} catch (IllegalAddException | IllegalDataException ex) {
@@ -4965,12 +4966,7 @@ public class Daten {
 	/**
 	 * This method adds the new zettel-position to the history, so the user can go
 	 * back and fore to previous selected entries.
-	 */
-	private void addToHistory() {
-		addToHistory(activatedEntryNumber);
-	}
-
-	
+	 */	
 	public void addToHistory(int entryNr) {
         history.addToHistory(entryNr);
     }
@@ -5014,7 +5010,7 @@ public class Daten {
 		activatedEntryNumber = entryNumber;
 
 		// Update history with the new activated entry
-		addToHistory();
+		addToHistory(activatedEntryNumber);
 
 		return true;
 	}
@@ -5030,7 +5026,7 @@ public class Daten {
 			activatedEntryNumber = 1;
 		}
 		// update History
-		addToHistory();
+		addToHistory(activatedEntryNumber);
 	}
 
 	/**
@@ -5044,7 +5040,7 @@ public class Daten {
 			activatedEntryNumber = getCount(ZKNCOUNT);
 		}
 		// update History
-		addToHistory();
+		addToHistory(activatedEntryNumber);
 	}
 
 	/**
@@ -5055,7 +5051,7 @@ public class Daten {
 		// set counter for currently display entry to 1
 		activatedEntryNumber = 1;
 		// update History
-		addToHistory();
+		addToHistory(activatedEntryNumber);
 	}
 
 	/**
@@ -5066,7 +5062,7 @@ public class Daten {
 		// set counter for currently display entry to last element
 		activatedEntryNumber = getCount(ZKNCOUNT);
 		// update History
-		addToHistory();
+		addToHistory(activatedEntryNumber);
 	}
 
 	/**
@@ -5076,7 +5072,7 @@ public class Daten {
 	 * 
 	 * It adds a the new entry (first parent entry) to the history.
 	 */
-	public void goToFirstParentEntry() {
+	public void goToFirstTopOfTopic() { // was: goToFirstParentEntry ; cf. "Inhaltlich-logische Navigation" in https://niklas-luhmann-archiv.de/bestand/zettelkasten/tutorial
 		int firstParentEntry = findParentlLuhmann(activatedEntryNumber, /* firstParent= */true);
 		if (firstParentEntry == -1) {
 			// No valid parent entry, do nothing.
@@ -5087,7 +5083,7 @@ public class Daten {
 		activatedEntryNumber = firstParentEntry;
 
 		// Update history.
-		addToHistory();
+		addToHistory(activatedEntryNumber);
 	}
 
 	/**
@@ -7484,49 +7480,24 @@ public class Daten {
 	 *         {@code -1} if the entry {@code nr} has no luhmann (follower) parent,
 	 *         resp. if the entry {@code nr} also has no follower entries.
 	 */
-	public int findParentlLuhmann(int nr, boolean firstParent) {
-		// init find value
-		boolean found = true;
-		//
-		int retval = -1;
-		//
-		while (found) {
-			// indicates, whether any luhmann parent was found
-			boolean innerLoopFound = false;
-			// counter for looping through entries
-			int cnt = 1;
-			// get current entry number as string
-			String currentEntry = String.valueOf(nr);
-			// go through complete data set
-			while (!innerLoopFound && cnt <= getCount(Daten.ZKNCOUNT)) {
-				// get the luhmann numbers of each entry
-				String[] lnrs = getSubEntriesCsv(cnt).split(",");
-				// now check each number for the occurrence of the current entry number
-				for (String l : lnrs) {
-					// when one of the luhmann numbers equals the current entry number...
-					if (l.equals(currentEntry)) {
-						// we found a parent
-						nr = retval = cnt;
-						// find only first parent?
-						if (firstParent) {
-							return retval;
-						}
-						// indicate that parent was found
-						innerLoopFound = true;
-						break;
-					}
+	public int findParentLuhmann(int entryNumber, boolean firstParent) {
+		int parentNumber = -1;
+
+		for (int currentEntry = 1; currentEntry <= getCount(Daten.ZKNCOUNT); currentEntry++) {
+			String subEntriesCsv = getSubEntriesCsv(currentEntry);
+			String[] subEntries = subEntriesCsv.split(",");
+
+			if (Arrays.asList(subEntries).contains(String.valueOf(entryNumber))) {
+				parentNumber = currentEntry;
+				if (firstParent) {
+					break; // Found the first parent, so exit loop
 				}
-				// increase loop counter
-				cnt++;
-			}
-			// when all entries have been checked and no parent was found
-			// leave complete routine and return result.
-			if (!innerLoopFound) {
-				found = false;
 			}
 		}
-		return retval;
+
+		return parentNumber;
 	}
+
 
 	/**
 	 * This method retrieves all follower and follower's follower of the entry

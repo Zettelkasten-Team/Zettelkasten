@@ -38,17 +38,17 @@ public class DatenTest {
 	}
 
 	@Test
-	void testGoToFirstParentEntryParent() {
-		// daten by default has current entry == 1.
-		Daten daten = new Daten(document);
+	void testGoToFirstTopOfTopic() {
+		// data by default has current entry == 1.
+		Daten data = new Daten(document);
 
 		// The first (and only) parent of entry 1 is entry 2.
-		daten.goToFirstParentEntry();
-		assertEquals(daten.getActivatedEntryNumber(), 2);
+		data.goToFirstTopOfTopic();
+		assertEquals(data.getActivatedEntryNumber(), 2);
 
 		// Entry 2 doesn't have a parent. Keep at the same Zettel number.
-		daten.goToFirstParentEntry();
-		assertEquals(daten.getActivatedEntryNumber(), 2);
+		data.goToFirstTopOfTopic();
+		assertEquals(data.getActivatedEntryNumber(), 2);
 	}
 
 	@Test

@@ -2734,7 +2734,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 	
 	/**
-	 * Changes the text in the application's titlebar, by adding the filename of the
+	 * Changes the text in the application's title bar, by adding the filename of the
 	 * currently opened file to it.
 	 */
 	private void updateFrameTitle() {
@@ -8801,8 +8801,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	/**
 	 * load the document by opening a modal dialog, which opens the data via a
-	 * background task. the dialog only displays a progressbar and an animated
-	 * busyicon while opening the file, no user-interaction possible.... <br>
+	 * background task. the dialog only displays a progress bar and an animated
+	 * busy icon while opening the file, no user-interaction possible.... <br>
 	 * <br>
 	 * We have this part of code "outsourced" into an own method because we need
 	 * this more often, e.g. when automatically loading the data at program

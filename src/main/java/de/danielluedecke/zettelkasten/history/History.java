@@ -2,93 +2,128 @@ package de.danielluedecke.zettelkasten.history;
 
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.view.Display;
-import ch.dreyeck.zettelkasten.xml.Zettel;
 
 /**
  * Manages the history of entries in the program.
  */
 public class History implements HistoryNavigationListener {
-    private static final int HISTORY_MAX = 100; // Adjust as needed
-    private int[] history;
-    private int historyPosition;
-    private int historyCount;
-    private int activatedEntryNumber;
-    private Display display;
+	private static final int HISTORY_MAX = 100; // Adjust as needed
+	private int[] history;
+	private int historyPosition;
+	private int historyCount;
+	private int activatedEntryNumber;
+	private int[] displayedEntries;
+	private int displayedCount;
 
-    public History(Display display) {
-        this.history = new int[HISTORY_MAX];
-        this.historyPosition = -1; // Initialize to -1 to indicate no history yet
-        this.historyCount = 0;
-        this.display = display;
-    }
+	// Constructor without parameters
+	public History() {
+		this.history = new int[HISTORY_MAX];
+		this.displayedEntries = new int[HISTORY_MAX]; // Initialize displayedEntries array
+		this.historyPosition = -1;
+		this.historyCount = 0;
+		this.displayedCount = 0; // Initialize displayedCount
+	}
 
-    /**
-     * Adds the given entry number to the history if a Zettel is displayed.
-     * 
-     * @param entryNr the number of the entry to be added to the history
-     */
-    public void addToHistory(int entryNr) {
-        Zettel currentZettel = display.getDisplayedZettel();
-        if (currentZettel == null) {
-            Constants.zknlogger.info("No Zettel displayed. Entry not added to history: " + entryNr);
-            return;
-        }
+	public History(Display display) {
+		this.history = new int[HISTORY_MAX];
+		this.historyPosition = -1; // Initialize to -1 to indicate no history yet
+		this.historyCount = 0;
+	}
 
-        // Avoid duplicates
-        if (historyPosition >= 0 && history[historyPosition] == entryNr) {
-            return;
-        }
+	/**
+	 * Adds the given entry number to the history.
+	 * 
+	 * @param entryNr the number of the entry to be added to the history
+	 */
+	public void addToHistory(int entryNr) {
+	    // Log the current history before adding the new entry
+	    logCurrentHistory();
 
-        if (historyPosition < HISTORY_MAX - 1) {
-            history[++historyPosition] = entryNr;
-        } else {
-            System.arraycopy(history, 1, history, 0, HISTORY_MAX - 1);
-            history[HISTORY_MAX - 1] = entryNr;
-            historyPosition = HISTORY_MAX - 1;
-        }
-        historyCount = Math.min(historyCount + 1, HISTORY_MAX);
-        activatedEntryNumber = entryNr; // Update activated entry number
-        Constants.zknlogger.info("Added to history: " + entryNr);
-    }
+	    // Avoid duplicates in history
+	    if (historyPosition >= 0 && history[historyPosition] == entryNr) {
+	        return;
+	    }
 
-    public boolean canHistoryBack() {
-        return (historyPosition > 0);
-    }
+	    if (historyPosition < HISTORY_MAX - 1) {
+	        history[++historyPosition] = entryNr;
+	    } else {
+	        System.arraycopy(history, 1, history, 0, HISTORY_MAX - 1);
+	        history[HISTORY_MAX - 1] = entryNr;
+	        historyPosition = HISTORY_MAX - 1;
+	    }
+	    historyCount = Math.min(historyCount + 1, HISTORY_MAX);
 
-    public boolean canHistoryFore() {
-        return (historyPosition >= 0 && historyPosition < (historyCount - 1));
-    }
+	    // Log the added entry to history
+	    Constants.zknlogger.info("Added to history: " + entryNr);
+	}
 
-    public int historyBack() {
-        if (canHistoryBack()) {
-            activatedEntryNumber = history[--historyPosition];
-        }
-        return activatedEntryNumber;
-    }
+	/**
+	 * Logs the current history.
+	 */
+	private void logCurrentHistory() {
+	    StringBuilder historyBuilder = new StringBuilder("Current history: [");
+	    for (int i = 0; i <= historyPosition; i++) {
+	        historyBuilder.append(history[i]);
+	        if (i < historyPosition) {
+	            historyBuilder.append(", ");
+	        }
+	    }
+	    historyBuilder.append("]");
+	    Constants.zknlogger.info(historyBuilder.toString());
+	}
 
-    public int historyFore() {
-        if (canHistoryFore()) {
-            activatedEntryNumber = history[++historyPosition];
-        }
-        return activatedEntryNumber;
-    }
 
-    @Override
-    public int navigateForwardInHistory() {
-        return historyFore();
-    }
+	/**
+	 * Checks if history back navigation is possible.
+	 * 
+	 * @return {@code true} if history back navigation is enabled, {@code false}
+	 *         otherwise
+	 */
+	public boolean canHistoryBack() {
+		return (historyPosition > 0);
+	}
 
-    @Override
-    public void navigateBackwardInHistory() {
-        historyBack();        
-    }
+	/**
+	 * Checks if history forward navigation is possible.
+	 * 
+	 * @return {@code true} if history forward navigation is enabled, {@code false}
+	 *         otherwise
+	 */
+	public boolean canHistoryFore() {
+		return (historyPosition >= 0 && historyPosition < (historyCount - 1));
+	}
 
-    // Getters for testing purposes
-    public int getHistoryCount() {
-        return historyCount;
-    }
+	/**
+	 * Moves back through the history and returns the activated entry number.
+	 * 
+	 * @return the activated entry number after navigating back in history
+	 */
+	public int historyBack() {
+		if (canHistoryBack()) {
+			activatedEntryNumber = history[--historyPosition];
+		}
+		return activatedEntryNumber;
+	}
 
-    public int[] getHistory() {
-        return history;
-    }
+	/**
+	 * Moves forward through the history and returns the activated entry number.
+	 * 
+	 * @return the activated entry number after navigating forward in history
+	 */
+	public int historyFore() {
+		if (canHistoryFore()) {
+			activatedEntryNumber = history[++historyPosition];
+		}
+		return activatedEntryNumber;
+	}
+
+	@Override
+	public int navigateForwardInHistory() {
+		return historyFore();
+	}
+
+	@Override
+	public void navigateBackwardInHistory() {
+		historyBack();
+	}
 }
