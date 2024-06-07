@@ -47,7 +47,7 @@ public class ShowTitleListTask extends org.jdesktop.application.Task<Object, Voi
     /**
      * Reference to the data class
      */
-    private final Daten dataObj;
+    private final Daten data;
     /**
      * the table model from the main window's jtable, passed as parameter
      */
@@ -69,7 +69,7 @@ public class ShowTitleListTask extends org.jdesktop.application.Task<Object, Voi
         // doInBackground() depends on from parameters
         // to ImportFileTask fields, here.
         super(app);
-        dataObj = d;
+        data = d;
         tableModel = tm;
         parentDialog = parent;
         msgLabel = label;
@@ -83,7 +83,7 @@ public class ShowTitleListTask extends org.jdesktop.application.Task<Object, Voi
         // the Swing GUI from here.
 
         // check whether we have any keywords at all
-        if (dataObj.getCount(Daten.ZKNCOUNT) < 1) {
+        if (data.getCount(Daten.ZKNCOUNT) < 1) {
             // reset list
             list = null;
             // leave thread
@@ -92,18 +92,18 @@ public class ShowTitleListTask extends org.jdesktop.application.Task<Object, Voi
         // create new instance of that variable
         list = new LinkedList<>();
         // reset progress counter
-        int total_count = dataObj.getCount(Daten.ZKNCOUNT);
+        int total_count = data.getCount(Daten.ZKNCOUNT);
         // start loop
-        for (int cnt = 1; cnt <= dataObj.getCount(Daten.ZKNCOUNT); cnt++) {
+        for (int cnt = 1; cnt <= data.getCount(Daten.ZKNCOUNT); cnt++) {
             // is entry deleted?
-            if (dataObj.isDeleted(cnt)) {
+            if (data.isDeleted(cnt)) {
                 // skip entry
                 continue;
             }
             // get zettel-title
-            String title = dataObj.getZettelTitle(cnt);
+            String title = data.getZettelTitle(cnt);
             // get timestamp
-            String[] timestamp = dataObj.getTimestamp(cnt);
+            String[] timestamp = data.getTimestamp(cnt);
             // init timestamp variables.
             String created = "";
             String edited = "";
@@ -118,10 +118,10 @@ public class ShowTitleListTask extends org.jdesktop.application.Task<Object, Voi
             
             // Make Note Sequences column sortable.
             String luhmannindex = "0";
-            if (dataObj.isTopLevelLuhmann(cnt)) {
+            if (data.isTopLevelLuhmann(cnt)) {
                 luhmannindex = "3";
-            } else if (dataObj.findParentlLuhmann(cnt, true) != -1) {
-                if (dataObj.hasLuhmannNumbers(cnt)) {
+            } else if (data.findParentLuhmann(cnt, true) != -1) {
+                if (data.hasLuhmannNumbers(cnt)) {
                     luhmannindex = "2";
                 } else {
                     luhmannindex = "1";
@@ -134,7 +134,7 @@ public class ShowTitleListTask extends org.jdesktop.application.Task<Object, Voi
             ob[1] = title;
             ob[2] = created;
             ob[3] = edited;
-            ob[4] = dataObj.getZettelRating(cnt);
+            ob[4] = data.getZettelRating(cnt);
             ob[5] = luhmannindex;
             // and add it to the table
             list.add(ob);
@@ -164,7 +164,7 @@ public class ShowTitleListTask extends org.jdesktop.application.Task<Object, Voi
                 tableModel.setRowCount(0);
             }
         }
-        dataObj.setTitlelistUpToDate(true);
+        data.setTitlelistUpToDate(true);
     }
 
     @Override

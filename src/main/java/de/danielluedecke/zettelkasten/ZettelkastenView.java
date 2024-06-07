@@ -6749,7 +6749,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private EntryID getRootEntryForLuhmannTree() {
 		int rootEntry = -1;
 		if (settings.getShowAllLuhmann()) {
-			rootEntry = data.findParentlLuhmann(data.getActivatedEntryNumber(), /* firstParent= */false);
+			rootEntry = data.findParentLuhmann(data.getActivatedEntryNumber(), /* firstParent= */false);
 
 		}
 		if (rootEntry == -1) {

@@ -5072,8 +5072,8 @@ public class Daten {
 	 * 
 	 * It adds a the new entry (first parent entry) to the history.
 	 */
-	public void goToFirstTopOfTopic() { // was: goToFirstParentEntry ; cf. "Inhaltlich-logische Navigation" in https://niklas-luhmann-archiv.de/bestand/zettelkasten/tutorial
-		int firstParentEntry = findParentlLuhmann(activatedEntryNumber, /* firstParent= */true);
+	public void goToFirstParentEntry() { // See:  "Inhaltlich-logische Navigation" in https://niklas-luhmann-archiv.de/bestand/zettelkasten/tutorial
+		int firstParentEntry = findParentLuhmann(activatedEntryNumber, /* firstParent= */true);
 		if (firstParentEntry == -1) {
 			// No valid parent entry, do nothing.
 			return;
@@ -7456,7 +7456,7 @@ public class Daten {
 		if (!hasLuhmannNumbers(nr)) {
 			return false;
 		}
-		return (-1 == findParentlLuhmann(nr, true));
+		return (-1 == findParentLuhmann(nr, true));
 	}
 
 	/**

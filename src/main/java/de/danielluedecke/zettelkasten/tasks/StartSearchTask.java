@@ -674,7 +674,7 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
 	private void doSearchForLuhmanParent() {
 		// get the amount of entries
 		int len = searchEntries.length;
-		// init a stringbuffer that temporarily stores the found entry-numbers
+		// init a string buffer that temporarily stores the found entry-numbers
 		List<Integer> finalresults = new ArrayList<>();
 		// iterate all entries where the search should be applied to...
 		// this may differ. a search request from the main-window usually searches
@@ -687,19 +687,19 @@ public class StartSearchTask extends org.jdesktop.application.Task<Object, Void>
 			// get the number of the entry which we want to search through...
 			int searchnr = searchEntries[counter];
 			// find first parent
-			int lp = dataObj.findParentlLuhmann(searchnr, true);
+			int lp = dataObj.findParentLuhmann(searchnr, true);
 			// check whether entry is a follower and has a first-level parent
 			if (lp != -1) {
-				// check if entry is not already in searchresults
+				// check if entry is not already in search results
 				// if not, add search result
 				if (!finalresults.contains(searchnr)) {
 					finalresults.add(searchnr);
 				}
 			}
-			// update progressbar
+			// update progress bar
 			setProgress(counter, 0, len);
 		}
-		// finally, check whether we have any searchresults at all...
+		// finally, check whether we have any search results at all...
 		if (finalresults.size() > 0) {
 			// create search results array, create search description and
 			// add search results to the search-data-class.

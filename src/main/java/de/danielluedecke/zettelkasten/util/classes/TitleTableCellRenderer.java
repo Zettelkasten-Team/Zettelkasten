@@ -64,7 +64,7 @@ public class TitleTableCellRenderer extends JLabel implements TableCellRenderer 
             // get note
             if (dataObj.isTopLevelLuhmann(nr)) {
                 returnLabel = this.iconLabelParentLuhmann;
-            } else if (dataObj.findParentlLuhmann(nr, true) != -1) {
+            } else if (dataObj.findParentLuhmann(nr, true) != -1) {
                 if (dataObj.hasLuhmannNumbers(nr)) {
                     returnLabel = this.iconLabelMiddleLuhmann;
                 } else {
