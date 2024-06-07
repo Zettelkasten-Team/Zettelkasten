@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
 
 import de.danielluedecke.zettelkasten.ZettelkastenView;
 import ch.dreyeck.zettelkasten.xml.Zettel;
-import de.danielluedecke.zettelkasten.history.HistoryManager;
+import de.danielluedecke.zettelkasten.history.History;
 
 public class DisplayTest {
     private Display display;
@@ -21,7 +21,7 @@ public class DisplayTest {
 
     // Annotate historyManagerMock with @Mock
     @Mock
-    private HistoryManager historyManagerMock;
+    private History historyManagerMock;
 
 
     @BeforeMethod

@@ -35,7 +35,7 @@ package de.danielluedecke.zettelkasten.database;
 import de.danielluedecke.zettelkasten.CMakeFormImage;
 import de.danielluedecke.zettelkasten.EntryID;
 import de.danielluedecke.zettelkasten.ZettelkastenView;
-import de.danielluedecke.zettelkasten.history.HistoryManager;
+import de.danielluedecke.zettelkasten.history.History;
 import de.danielluedecke.zettelkasten.settings.Settings;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import de.danielluedecke.zettelkasten.util.Constants;
@@ -126,14 +126,14 @@ public class Daten {
 	 * Indicates whether saving the data file was OK, or whether an error occurred.
 	 */
 	private boolean saveOk;
+	
 	/**
 	 * This array stores all watched entries in the order the user "surfed" through
 	 * the entries, so we have a history-function. The user can then go back to
 	 * previously accessed entries and so on...
 	 */
-	private int[] history;
-	
-	private HistoryManager historyManager;
+	//private int[] history;
+	private History history;
 
 	/**
 	 * Stores the files which we want to retrieve from the main data file
@@ -386,7 +386,6 @@ public class Daten {
 		bibtexObj = bib;
 		activatedEntryNumber = 1;
 		reset();
-		historyManager = new HistoryManager();
 	}
 
 	/**
@@ -420,12 +419,7 @@ public class Daten {
 		keywordFile = null;
 		metainfFile = null;
 		zknFileExport = null;
-		
-		// Initialize the HistoryManager
-        historyManager = new HistoryManager();
-        historyManager.addToHistory(1);
-		
-		
+			
 		// no update to the tabbed panes in the main window when nothing is loaded
 		keywordlistUpToDate = true;
 		authorlistUpToDate = true;
@@ -4978,23 +4972,23 @@ public class Daten {
 
 	
 	public void addToHistory(int entryNr) {
-        historyManager.addToHistory(entryNr);
+        history.addToHistory(entryNr);
     }
 
     public boolean canHistoryBack() {
-        return historyManager.canHistoryBack();
+        return history.canHistoryBack();
     }
 
     public boolean canHistoryFore() {
-        return historyManager.canHistoryFore();
+        return history.canHistoryFore();
     }
 
     public int historyBack() {
-        return historyManager.historyBack();
+        return history.historyBack();
     }
 
     public int historyForward() {
-        return historyManager.navigateForwardInHistory();
+        return history.navigateForwardInHistory();
     }
     
     public void displayHistory(int[] history, int historyCount) {

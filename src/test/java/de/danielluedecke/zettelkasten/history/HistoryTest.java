@@ -1,6 +1,7 @@
 package de.danielluedecke.zettelkasten.history;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -9,15 +10,19 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import de.danielluedecke.zettelkasten.view.Display;
+import ch.dreyeck.zettelkasten.xml.Zettel;
 
-public class HistoryManagerTest {
-    private HistoryManager historyManager;
+public class HistoryTest {
+    private History historyManager;
     private Display mockDisplay;
+    private Zettel mockZettel;
 
     @BeforeMethod
     public void setUp() {
         mockDisplay = mock(Display.class);
-        historyManager = new HistoryManager(mockDisplay);
+        mockZettel = mock(Zettel.class);
+        when(mockDisplay.getDisplayedZettel()).thenReturn(mockZettel); // Ensure a Zettel is displayed
+        historyManager = new History(mockDisplay);
     }
 
     @Test
@@ -70,7 +75,6 @@ public class HistoryManagerTest {
         historyManager.addToHistory(1);
         historyManager.addToHistory(2);
         historyManager.historyBack();
-        historyManager.navigateForwardInHistory();
         assertEquals(historyManager.navigateForwardInHistory(), 2, "navigateForwardInHistory should call historyForward and return the next entry");
     }
 }

@@ -1,44 +1,39 @@
 package de.danielluedecke.zettelkasten.history;
 
-import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.view.Display;
+import ch.dreyeck.zettelkasten.xml.Zettel;
 
 /**
  * Manages the history of entries in the program.
  */
-public class HistoryManager implements HistoryNavigationListener {
+public class History implements HistoryNavigationListener {
     private static final int HISTORY_MAX = 100; // Adjust as needed
     private int[] history;
     private int historyPosition;
     private int historyCount;
     private int activatedEntryNumber;
-    
-    // Constructor without parameters
-    public HistoryManager() {
-        this.history = new int[HISTORY_MAX];
-        this.historyPosition = -1;
-        this.historyCount = 0;
-    }
+    private Display display;
 
-    // Constructor with ZettelkastenView parameter (if needed later)
-    public HistoryManager(ZettelkastenView zkn) {
-        this(); // Call the default constructor
-        // Additional initialization if needed
-    }
-
-    public HistoryManager(Display display) {
+    public History(Display display) {
         this.history = new int[HISTORY_MAX];
         this.historyPosition = -1; // Initialize to -1 to indicate no history yet
         this.historyCount = 0;
+        this.display = display;
     }
 
     /**
-     * Adds the given entry number to the history.
+     * Adds the given entry number to the history if a Zettel is displayed.
      * 
      * @param entryNr the number of the entry to be added to the history
      */
     public void addToHistory(int entryNr) {
+        Zettel currentZettel = display.getDisplayedZettel();
+        if (currentZettel == null) {
+            Constants.zknlogger.info("No Zettel displayed. Entry not added to history: " + entryNr);
+            return;
+        }
+
         // Avoid duplicates
         if (historyPosition >= 0 && history[historyPosition] == entryNr) {
             return;
@@ -52,33 +47,18 @@ public class HistoryManager implements HistoryNavigationListener {
             historyPosition = HISTORY_MAX - 1;
         }
         historyCount = Math.min(historyCount + 1, HISTORY_MAX);
+        activatedEntryNumber = entryNr; // Update activated entry number
         Constants.zknlogger.info("Added to history: " + entryNr);
-        //display.displayHistory(history, historyCount);
     }
 
-    /**
-     * Checks if history back navigation is possible.
-     * 
-     * @return {@code true} if history back navigation is enabled, {@code false} otherwise
-     */
     public boolean canHistoryBack() {
         return (historyPosition > 0);
     }
 
-    /**
-     * Checks if history forward navigation is possible.
-     * 
-     * @return {@code true} if history forward navigation is enabled, {@code false} otherwise
-     */
     public boolean canHistoryFore() {
         return (historyPosition >= 0 && historyPosition < (historyCount - 1));
     }
 
-    /**
-     * Moves back through the history and returns the activated entry number.
-     * 
-     * @return the activated entry number after navigating back in history
-     */
     public int historyBack() {
         if (canHistoryBack()) {
             activatedEntryNumber = history[--historyPosition];
@@ -86,11 +66,6 @@ public class HistoryManager implements HistoryNavigationListener {
         return activatedEntryNumber;
     }
 
-    /**
-     * Moves forward through the history and returns the activated entry number.
-     * 
-     * @return the activated entry number after navigating forward in history
-     */
     public int historyFore() {
         if (canHistoryFore()) {
             activatedEntryNumber = history[++historyPosition];
@@ -103,8 +78,17 @@ public class HistoryManager implements HistoryNavigationListener {
         return historyFore();
     }
 
-	@Override
-	public void navigateBackwardInHistory() {
-		historyBack();		
-	}
+    @Override
+    public void navigateBackwardInHistory() {
+        historyBack();        
+    }
+
+    // Getters for testing purposes
+    public int getHistoryCount() {
+        return historyCount;
+    }
+
+    public int[] getHistory() {
+        return history;
+    }
 }
