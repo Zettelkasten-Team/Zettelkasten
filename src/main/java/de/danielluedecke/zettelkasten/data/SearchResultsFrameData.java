@@ -25,32 +25,32 @@ public class SearchResultsFrameData {
 	/**
 	 * CDaten object, which contains the XML data of the Zettelkasten
 	 */
-	private Daten dataObj;
-	private DesktopData desktopObj;
+	private Daten data;
+	private DesktopData desktopData;
 	/**
-	 * A reference to the CSearchRequests-class which stores the searchterms and
+	 * A reference to the CSearchRequests-class which stores the search terms and
 	 * other search settings like case-sensitive search, where to search in and so
 	 * on...
 	 */
-	private SearchRequests searchrequest;
+	private SearchRequests searchRequests;
 	/**
 	 * CAccelerator object, which contains the XML data of the accelerator table for
 	 * the menus
 	 */
-	private AcceleratorKeys accKeys;
+	private AcceleratorKeys acceleratorKeys;
 	/**
 	 * Reference to the settings class.
 	 */
-	private Settings settingsObj;
-	private BibTeX bibtexObj;
+	private Settings settings;
+	private BibTeX bibTeX;
 	/**
 	 *
 	 */
-	private Synonyms synonymsObj;
+	private Synonyms synonyms;
 	/**
 	 * Reference to the main frame.
 	 */
-	private ZettelkastenView mainframe;
+	private ZettelkastenView mainFrame;
 	/**
 	 * create a variable for a list model. this list model is used for the
 	 * JList-component which displays the keywords of the current entry.
@@ -67,8 +67,8 @@ public class SearchResultsFrameData {
 	 * full-screen-functionality. see {@link #viewFullScreen() viewFullScreen()} for
 	 * more details.
 	 */
-	private GraphicsDevice graphicdevice;
-	private JFrame searchframe;
+	private GraphicsDevice graphicDevice;
+	private JFrame searchFrame;
 	/**
 	 * get the strings for file descriptions from the resource map
 	 */
@@ -96,10 +96,10 @@ public class SearchResultsFrameData {
 	 */
 	private boolean desktopEntrySelected;
 	/**
-	 * This variable indicates whether or not the fullscreen mode is supportet on
+	 * This variable indicates whether or not the full screen mode is supported on
 	 * the current system. if not, disable related icons...
 	 */
-	private boolean fullScreenSupp;
+	private boolean fullScreenSupport;
 	private CHighlightSearchSettings highlightSettingsDlg;
 	private CSearchDlg searchDlg;
 	private TaskProgressDialog taskDlg;
@@ -108,80 +108,80 @@ public class SearchResultsFrameData {
 
 	public SearchResultsFrameData(DefaultListModel<String> keywordListModel, boolean tableUpdateActive,
 			GraphicsDevice graphicdevice, ResourceMap resourceMap, ResourceMap toolbarResourceMap, boolean textSelected,
-			boolean listSelected, boolean desktopEntrySelected, boolean fullScreenSupp) {
+			boolean listSelected, boolean desktopEntrySelected, boolean fullScreenSupport) {
 		this.keywordListModel = keywordListModel;
 		this.tableUpdateActive = tableUpdateActive;
-		this.graphicdevice = graphicdevice;
+		this.graphicDevice = graphicdevice;
 		this.resourceMap = resourceMap;
 		this.toolbarResourceMap = toolbarResourceMap;
 		this.textSelected = textSelected;
 		this.listSelected = listSelected;
 		this.desktopEntrySelected = desktopEntrySelected;
-		this.fullScreenSupp = fullScreenSupp;
+		this.fullScreenSupport = fullScreenSupport;
 	}
 
-	public Daten getDataObj() {
-		return dataObj;
+	public Daten getData() {
+		return data;
 	}
 
-	public void setDataObj(Daten dataObj) {
-		this.dataObj = dataObj;
+	public void setData(Daten data) {
+		this.data = data;
 	}
 
-	public DesktopData getDesktopObj() {
-		return desktopObj;
+	public DesktopData getDesktopData() {
+		return desktopData;
 	}
 
-	public void setDesktopObj(DesktopData desktopObj) {
-		this.desktopObj = desktopObj;
+	public void setDesktopData(DesktopData desktopData) {
+		this.desktopData = desktopData;
 	}
 
-	public SearchRequests getSearchrequest() {
-		return searchrequest;
+	public SearchRequests getSearchRequests() {
+		return searchRequests;
 	}
 
-	public void setSearchrequest(SearchRequests searchrequest) {
-		this.searchrequest = searchrequest;
+	public void setSearchRequests(SearchRequests searchRequests) {
+		this.searchRequests = searchRequests;
 	}
 
-	public AcceleratorKeys getAccKeys() {
-		return accKeys;
+	public AcceleratorKeys getAcceleratorKeys() {
+		return acceleratorKeys;
 	}
 
-	public void setAccKeys(AcceleratorKeys accKeys) {
-		this.accKeys = accKeys;
+	public void setAcceleratorKeys(AcceleratorKeys acceleratorKeys) {
+		this.acceleratorKeys = acceleratorKeys;
 	}
 
-	public Settings getSettingsObj() {
-		return settingsObj;
+	public Settings getSettings() {
+		return settings;
 	}
 
-	public void setSettingsObj(Settings settingsObj) {
-		this.settingsObj = settingsObj;
+	public void setSettings(Settings settings) {
+		this.settings = settings;
 	}
 
-	public BibTeX getBibtexObj() {
-		return bibtexObj;
+	public BibTeX getBibTeX() {
+		return bibTeX;
 	}
 
-	public void setBibtexObj(BibTeX bibtexObj) {
-		this.bibtexObj = bibtexObj;
+	public void setBibTeX(BibTeX bibTeX) {
+		this.bibTeX = bibTeX;
 	}
 
-	public Synonyms getSynonymsObj() {
-		return synonymsObj;
+	public Synonyms getSynonyms() {
+		return synonyms;
 	}
 
-	public void setSynonymsObj(Synonyms synonymsObj) {
-		this.synonymsObj = synonymsObj;
+	public void setSynonyms(Synonyms synonyms) {
+		this.synonyms = synonyms;
 	}
 
-	public ZettelkastenView getMainframe() {
-		return mainframe;
+	public ZettelkastenView getMainFrame() {
+		return mainFrame;
 	}
 
-	public void setMainframe(ZettelkastenView mainframe) {
-		this.mainframe = mainframe;
+	public void setMainFrame(ZettelkastenView mainFrame) {
+		this.mainFrame = mainFrame;
 	}
 
 	public DefaultListModel<String> getKeywordListModel() {
@@ -200,20 +200,20 @@ public class SearchResultsFrameData {
 		this.tableUpdateActive = tableUpdateActive;
 	}
 
-	public GraphicsDevice getGraphicdevice() {
-		return graphicdevice;
+	public GraphicsDevice getGraphicDevice() {
+		return graphicDevice;
 	}
 
-	public void setGraphicdevice(GraphicsDevice graphicdevice) {
-		this.graphicdevice = graphicdevice;
+	public void setGraphicDevice(GraphicsDevice graphicDevice) {
+		this.graphicDevice = graphicDevice;
 	}
 
-	public JFrame getSearchframe() {
-		return searchframe;
+	public JFrame getSearchFrame() {
+		return searchFrame;
 	}
 
-	public void setSearchframe(JFrame searchframe) {
-		this.searchframe = searchframe;
+	public void setSearchFrame(JFrame searchFrame) {
+		this.searchFrame = searchFrame;
 	}
 
 	public ResourceMap getResourceMap() {
@@ -256,12 +256,12 @@ public class SearchResultsFrameData {
 		this.desktopEntrySelected = desktopEntrySelected;
 	}
 
-	public boolean isFullScreenSupp() {
-		return fullScreenSupp;
+	public boolean isFullScreenSupported() {
+		return fullScreenSupport;
 	}
 
-	public void setFullScreenSupp(boolean fullScreenSupp) {
-		this.fullScreenSupp = fullScreenSupp;
+	public void setFullScreenSupport(boolean fullScreenSupport) {
+		this.fullScreenSupport = fullScreenSupport;
 	}
 
 	public CHighlightSearchSettings getHighlightSettingsDlg() {
