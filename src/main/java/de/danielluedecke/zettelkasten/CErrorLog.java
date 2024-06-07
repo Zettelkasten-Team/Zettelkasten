@@ -230,12 +230,12 @@ public class CErrorLog extends javax.swing.JDialog {
 
         jButton2 = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(CErrorLog.class);
@@ -253,6 +253,32 @@ public class CErrorLog extends javax.swing.JDialog {
 
         jTabbedPane1.setMinimumSize(new java.awt.Dimension(60, 60));
         jTabbedPane1.setName("jTabbedPane1"); // NOI18N
+
+        jPanel2.setMinimumSize(new java.awt.Dimension(25, 25));
+        jPanel2.setName("jPanel2"); // NOI18N
+
+        jScrollPane2.setBorder(null);
+        jScrollPane2.setMinimumSize(new java.awt.Dimension(25, 25));
+        jScrollPane2.setName("jScrollPane2"); // NOI18N
+
+        jTextArea2.setLineWrap(true);
+        jTextArea2.setWrapStyleWord(true);
+        jTextArea2.setMinimumSize(new java.awt.Dimension(25, 25));
+        jTextArea2.setName("jTextArea2"); // NOI18N
+        jScrollPane2.setViewportView(jTextArea2);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab(resourceMap.getString("jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
 
         jPanel1.setMinimumSize(new java.awt.Dimension(25, 25));
         jPanel1.setName("jPanel1"); // NOI18N
@@ -280,32 +306,6 @@ public class CErrorLog extends javax.swing.JDialog {
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
-
-        jPanel2.setMinimumSize(new java.awt.Dimension(25, 25));
-        jPanel2.setName("jPanel2"); // NOI18N
-
-        jScrollPane2.setBorder(null);
-        jScrollPane2.setMinimumSize(new java.awt.Dimension(25, 25));
-        jScrollPane2.setName("jScrollPane2"); // NOI18N
-
-        jTextArea2.setLineWrap(true);
-        jTextArea2.setWrapStyleWord(true);
-        jTextArea2.setMinimumSize(new java.awt.Dimension(25, 25));
-        jTextArea2.setName("jTextArea2"); // NOI18N
-        jScrollPane2.setViewportView(jTextArea2);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab(resourceMap.getString("jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
