@@ -35,6 +35,8 @@ package de.danielluedecke.zettelkasten;
 
 import com.explodingpixels.macwidgets.BottomBar;
 import com.explodingpixels.macwidgets.BottomBarSize;
+
+import de.danielluedecke.zettelkasten.data.SearchResultsFrameData;
 import de.danielluedecke.zettelkasten.database.*;
 import de.danielluedecke.zettelkasten.mac.MacSourceList;
 import de.danielluedecke.zettelkasten.util.Tools;

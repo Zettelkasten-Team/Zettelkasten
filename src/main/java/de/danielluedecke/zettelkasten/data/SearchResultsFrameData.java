@@ -1,4 +1,4 @@
-package de.danielluedecke.zettelkasten;
+package de.danielluedecke.zettelkasten.data;
 
 import java.awt.GraphicsDevice;
 
@@ -24,6 +24,11 @@ import javax.swing.JToolBar.Separator;
 
 import org.jdesktop.application.ResourceMap;
 
+import de.danielluedecke.zettelkasten.CFilterSearch;
+import de.danielluedecke.zettelkasten.CHighlightSearchSettings;
+import de.danielluedecke.zettelkasten.CRateEntry;
+import de.danielluedecke.zettelkasten.CSearchDlg;
+import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.database.BibTeX;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.DesktopData;
