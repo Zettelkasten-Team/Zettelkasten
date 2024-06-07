@@ -36,7 +36,7 @@ import ch.dreyeck.zettelkasten.xml.Zettel;
 import com.explodingpixels.macwidgets.*;
 import com.explodingpixels.widgets.TableUtils;
 import de.danielluedecke.zettelkasten.database.*;
-import de.danielluedecke.zettelkasten.history.HistoryManager;
+import de.danielluedecke.zettelkasten.history.History;
 import de.danielluedecke.zettelkasten.mac.MacSourceList;
 import de.danielluedecke.zettelkasten.mac.MacSourceTree;
 import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
@@ -112,7 +112,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	public SearchRequests searchRequests;
 
 	private Daten data;
-	private HistoryManager historyManager;
+	private History historyManager;
 	private final TasksData taskinfo;
 	public final Bookmarks bookmarks;
 	private final BibTeX bibtex;
@@ -417,7 +417,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			bookmarks = new Bookmarks(this, settings);
 			bibtex = new BibTeX(this, settings);
 			data = new Daten(this, settings, settings.getSynonyms(), bibtex);
-			historyManager = new HistoryManager(this);
 			display = new Display(this, historyManager);
 		} else {
 			// Handle the case where settings is null
@@ -15160,11 +15159,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		return null;
 	}
 
-	public void setHistoryManager(HistoryManager historyManager) {
+	public void setHistoryManager(History historyManager) {
 		this.historyManager = historyManager;
 	}
 
-	public HistoryManager getHistoryManager() {
+	public History getHistoryManager() {
 		return historyManager;
 	}
 

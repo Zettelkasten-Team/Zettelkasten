@@ -7,14 +7,14 @@ import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import de.danielluedecke.zettelkasten.history.HistoryManager;
+import de.danielluedecke.zettelkasten.history.History;
 
 public class ZettelkastenViewTest {
 
 	private ZettelkastenView instance;
 
 	@Mock
-	private HistoryManager mockHistoryManager;
+	private History mockHistoryManager;
 
 	@BeforeMethod
 	public void setUp() {
