@@ -33,6 +33,7 @@
 
 package de.danielluedecke.zettelkasten;
 
+import de.danielluedecke.zettelkasten.data.SearchResultsFrameData;
 import com.explodingpixels.macwidgets.BottomBar;
 import com.explodingpixels.macwidgets.BottomBarSize;
 import de.danielluedecke.zettelkasten.database.*;
@@ -59,7 +60,7 @@ import java.awt.AWTKeyStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.IllegalComponentStateException;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
@@ -84,7 +85,6 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
@@ -102,61 +102,13 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.html.HTML;
 import org.jdesktop.application.Action;
+import org.jdesktop.application.Application;
 
 /**
  *
  * @author danielludecke
  */
 public class SearchResultsFrame extends javax.swing.JFrame {
-
-	/**
-	 * CDaten object, which contains the XML data of the Zettelkasten
-	 */
-	private final Daten dataObj;
-	private final DesktopData desktopObj;
-	/**
-	 * A reference to the CSearchRequests-class which stores the searchterms and
-	 * other search settings like case-sensitive search, where to search in and so
-	 * on...
-	 */
-	private final SearchRequests searchrequest;
-	/**
-	 * CAccelerator object, which contains the XML data of the accelerator table for
-	 * the menus
-	 */
-	private final AcceleratorKeys accKeys;
-	/**
-	 * Reference to the settings class.
-	 */
-	private final Settings settingsObj;
-	private final BibTeX bibtexObj;
-	/**
-	 *
-	 */
-	private final Synonyms synonymsObj;
-	/**
-	 * Reference to the main frame.
-	 */
-	private final ZettelkastenView mainframe;
-	/**
-	 * create a variable for a list model. this list model is used for the
-	 * JList-component which displays the keywords of the current entry.
-	 */
-	private final DefaultListModel<String> keywordListModel = new DefaultListModel<String>();
-	/**
-	 * Indicated whether a table's content is changed, e.g. entries deleted. if so,
-	 * we have to tell this the selection listener which - otherwise - would be
-	 * called several times...
-	 */
-	private boolean tableUpdateActive = false;
-	/**
-	 * This variable gets the graphic device and is needed for
-	 * full-screen-functionality. see {@link #viewFullScreen() viewFullScreen()} for
-	 * more details.
-	 */
-	private final GraphicsDevice graphicdevice = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment()
-			.getDefaultScreenDevice();
-	private final JFrame searchframe;
 
 	/**
 	 * Returns the table component of the search results window.
@@ -166,19 +118,6 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	public JTable getSearchFrameTable() {
 		return jTableResults;
 	}
-
-	/**
-	 * get the strings for file descriptions from the resource map
-	 */
-	private final org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application
-			.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
-			.getResourceMap(SearchResultsFrame.class);
-	/**
-	 * get the strings for file descriptions from the resource map
-	 */
-	private final org.jdesktop.application.ResourceMap toolbarResourceMap = org.jdesktop.application.Application
-			.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
-			.getResourceMap(ToolbarIcons.class);
 
 	/**
 	 * 
@@ -193,24 +132,24 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 */
 	public SearchResultsFrame(ZettelkastenView zkn, Daten d, SearchRequests sr, DesktopData desk, Settings s,
 			AcceleratorKeys ak, Synonyms syn, BibTeX bib) {
-		searchframe = this;
+		data.setSearchframe(this);
 		// init variables from parameters
-		dataObj = d;
-		desktopObj = desk;
-		bibtexObj = bib;
-		searchrequest = sr;
-		synonymsObj = syn;
-		accKeys = ak;
-		settingsObj = s;
-		mainframe = zkn;
+		data.setDataObj(d);
+		data.setDesktopObj(desk);
+		data.setBibtexObj(bib);
+		data.setSearchrequest(sr);
+		data.setSynonymsObj(syn);
+		data.setAccKeys(ak);
+		data.setSettingsObj(s);
+		data.setMainframe(zkn);
 		// check whether memory usage is logged. if so, tell logger that new entry
 		// windows was opened
-		if (settingsObj.isMemoryUsageLogged) {
+		if (data.getSettingsObj().isMemoryUsageLogged) {
 			// log info
 			Constants.zknlogger.log(Level.INFO, "Memory usage logged. Search Results Window opened.");
 		}
 		// create brushed look for window, so toolbar and window-bar become a unit
-		if (settingsObj.isMacStyle()) {
+		if (data.getSettingsObj().isMacStyle()) {
 			MacUtils.makeWindowLeopardStyle(getRootPane());
 			// WindowUtils.createAndInstallRepaintWindowFocusListener(this);
 			WindowUtils.installJComponentRepainterOnWindowFocusChanged(this.getRootPane());
@@ -222,21 +161,21 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		initComponents();
 		initListeners();
 		// remove border, gui-builder doesn't do this
-		initBorders(settingsObj);
+		initBorders(data.getSettingsObj());
 		// set application icon
 		setIconImage(Constants.zknicon.getImage());
 		// if we have mac os x with aqua, make the window look like typical
 		// cocoa-applications
-		if (settingsObj.isMacStyle()) {
+		if (data.getSettingsObj().isMacStyle()) {
 			setupMacOSXLeopardStyle();
 		}
-		if (settingsObj.isSeaGlass()) {
+		if (data.getSettingsObj().isSeaGlass()) {
 			setupSeaGlassStyle();
 		}
 		// init toggle-items
-		viewMenuHighlight.setSelected(settingsObj.getHighlightSearchResults());
-		tb_highlight.setSelected(settingsObj.getHighlightSearchResults());
-		viewMenuShowEntry.setSelected(settingsObj.getShowSearchEntry());
+		viewMenuHighlight.setSelected(data.getSettingsObj().getHighlightSearchResults());
+		tb_highlight.setSelected(data.getSettingsObj().getHighlightSearchResults());
+		viewMenuShowEntry.setSelected(data.getSettingsObj().getShowSearchEntry());
 		jButtonResetList.setEnabled(false);
 		// init table
 		initTable();
@@ -263,7 +202,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		String currentTitle = getTitle();
 		// get filename and find out where extension begins, so we can just set the
 		// filename as title
-		File f = settingsObj.getMainDataFile();
+		File f = data.getSettingsObj().getMainDataFile();
 		// check whether we have any valid filepath at all
 		if (f != null && f.exists()) {
 			String fname = f.getName();
@@ -295,7 +234,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			jPanel3.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(settingsObj)));
 			jPanel4.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
 			jListKeywords.setBorder(ZknMacWidgetFactory
-					.getTitledBorder(resourceMap.getString("jListKeywords.border.title"), settingsObj));
+					.getTitledBorder(data.getResourceMap().getString("jListKeywords.border.title"), settingsObj));
 			if (settingsObj.getSearchFrameSplitLayout() == JSplitPane.HORIZONTAL_SPLIT) {
 				jPanel1.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(settingsObj)));
 				jPanel2.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
@@ -310,7 +249,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			ZknMacWidgetFactory.updateSplitPane(jSplitPaneSearch1);
 			ZknMacWidgetFactory.updateSplitPane(jSplitPaneSearch2);
 			jListKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(
-					resourceMap.getString("jListKeywords.border.title"), ColorUtil.colorJTreeText, settingsObj));
+					data.getResourceMap().getString("jListKeywords.border.title"), ColorUtil.colorJTreeText, settingsObj));
 		}
 	}
 
@@ -320,7 +259,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 */
 	public final void initToolbarIcons() {
 		// check whether the toolbar should be displayed at all...
-		if (!settingsObj.getShowIcons() && !settingsObj.getShowIconText()) {
+		if (!data.getSettingsObj().getShowIcons() && !data.getSettingsObj().getShowIconText()) {
 			// if not, hide it and leave.
 			searchToolbar.setVisible(false);
 			// and set a border to the main panel, because the toolbar's dark border is
@@ -342,9 +281,9 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		String[] iconNames = new String[] { "copyIcon", "selectAllIcon", "editEntryIcon", "deleteIcon",
 				"addManLinksIcon", "addLuhmannIcon", "addBookmarksIcon", "addDesktopIcon", "highlightKeywordsIcon" };
 		// set toolbar-icons' text
-		if (settingsObj.getShowIconText()) {
+		if (data.getSettingsObj().getShowIconText()) {
 			for (int cnt = 0; cnt < toolbarButtons.length; cnt++) {
-				toolbarButtons[cnt].setText(toolbarResourceMap.getString(buttonNames[cnt]));
+				toolbarButtons[cnt].setText(data.getToolbarResourceMap().getString(buttonNames[cnt]));
 			}
 		} else {
 			for (javax.swing.JButton tbb : toolbarButtons) {
@@ -352,21 +291,21 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			}
 		}
 		// show icons, if requested
-		if (settingsObj.getShowIcons()) {
+		if (data.getSettingsObj().getShowIcons()) {
 			// retrieve icon theme path
-			String icontheme = settingsObj.getIconThemePath();
+			String icontheme = data.getSettingsObj().getIconThemePath();
 			for (int cnt = 0; cnt < toolbarButtons.length; cnt++) {
 				toolbarButtons[cnt].setIcon(new ImageIcon(
-						ZettelkastenView.class.getResource(icontheme + toolbarResourceMap.getString(iconNames[cnt]))));
+						ZettelkastenView.class.getResource(icontheme + data.getToolbarResourceMap().getString(iconNames[cnt]))));
 			}
 		} else {
 			for (javax.swing.JButton tbb : toolbarButtons) {
 				tbb.setIcon(null);
 			}
 		}
-		if (settingsObj.isMacStyle())
+		if (data.getSettingsObj().isMacStyle())
 			makeMacToolBar();
-		if (settingsObj.isSeaGlass())
+		if (data.getSettingsObj().isSeaGlass())
 			makeSeaGlassToolbar();
 	}
 
@@ -396,7 +335,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		Tools.makeTexturedToolBarButton(tb_remove, Tools.SEGMENT_POSITION_LAST);
 		Tools.makeTexturedToolBarButton(tb_manlinks, Tools.SEGMENT_POSITION_FIRST);
 		Tools.makeTexturedToolBarButton(tb_luhmann, Tools.SEGMENT_POSITION_MIDDLE);
-		if (settingsObj.getShowAllIcons()) {
+		if (data.getSettingsObj().getShowAllIcons()) {
 			Tools.makeTexturedToolBarButton(tb_bookmark, Tools.SEGMENT_POSITION_MIDDLE);
 			Tools.makeTexturedToolBarButton(tb_desktop, Tools.SEGMENT_POSITION_LAST);
 		} else {
@@ -413,7 +352,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		searchToolbar.setVisible(false);
 		this.remove(searchToolbar);
 		// and create mac toolbar
-		if (settingsObj.getShowIcons() || settingsObj.getShowIconText()) {
+		if (data.getSettingsObj().getShowIcons() || data.getSettingsObj().getShowIconText()) {
 
 			UnifiedToolBar mactoolbar = new UnifiedToolBar();
 
@@ -431,7 +370,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 					MacToolbarButton.makeTexturedToolBarButton(tb_manlinks, MacToolbarButton.SEGMENT_POSITION_FIRST));
 			mactoolbar.addComponentToLeft(
 					MacToolbarButton.makeTexturedToolBarButton(tb_luhmann, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
-			if (settingsObj.getShowAllIcons()) {
+			if (data.getSettingsObj().getShowAllIcons()) {
 				mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_bookmark,
 						MacToolbarButton.SEGMENT_POSITION_MIDDLE));
 				mactoolbar.addComponentToLeft(
@@ -474,7 +413,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 * font-size will be applied to the components here.
 	 */
 	private void initDefaultFontSize() {
-        Font settingsTableFont = settingsObj.getTableFont();
+        Font settingsTableFont = data.getSettingsObj().getTableFont();
 		jTableResults.setFont(settingsTableFont);
 		jListKeywords.setFont(settingsTableFont);
 	}
@@ -494,11 +433,11 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// these codelines add an escape-listener to the dialog. so, when the user
 		// presses the escape-key, the same action is performed as if the user
 		// presses the cancel button...
-		stroke = KeyStroke.getKeyStroke(accKeys.getAcceleratorKey(AcceleratorKeys.MAINKEYS, "showDesktopWindow"));
+		stroke = KeyStroke.getKeyStroke(data.getAccKeys().getAcceleratorKey(AcceleratorKeys.MAINKEYS, "showDesktopWindow"));
 		ActionListener showDesktopWindowAction = new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				mainframe.showDesktopWindow();
+				data.getMainframe().showDesktopWindow();
 			}
 		};
 		getRootPane().registerKeyboardAction(showDesktopWindowAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -509,18 +448,18 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		ActionListener showMainFrameAction = new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				mainframe.bringToFront();
+				data.getMainframe().bringToFront();
 			}
 		};
 		getRootPane().registerKeyboardAction(showMainFrameAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
 		// these codelines add an escape-listener to the dialog. so, when the user
 		// presses the escape-key, the same action is performed as if the user
 		// presses the cancel button...
-		stroke = KeyStroke.getKeyStroke(accKeys.getAcceleratorKey(AcceleratorKeys.MAINKEYS, "showNewEntryWindow"));
+		stroke = KeyStroke.getKeyStroke(data.getAccKeys().getAcceleratorKey(AcceleratorKeys.MAINKEYS, "showNewEntryWindow"));
 		ActionListener showNewEntryFrameAction = new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				mainframe.showNewEntryWindow();
+				data.getMainframe().showNewEntryWindow();
 			}
 		};
 		getRootPane().registerKeyboardAction(showNewEntryFrameAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -552,8 +491,8 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 					// when we have a valid selection, go on
 					if (row != -1) {
 						int displayedZettel = Integer.parseInt(jTableResults.getValueAt(row, 0).toString());
-						if (Tools.removeHyperlink(evt.getDescription(), dataObj, displayedZettel)) {
-							mainframe.updateDisplay();
+						if (Tools.removeHyperlink(evt.getDescription(), data.getDataObj(), displayedZettel)) {
+							data.getMainframe().updateDisplay();
 						}
 					}
 				} else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {
@@ -681,7 +620,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 
 	private void highlightSegs() {
 		// and highlight text segments
-		if (settingsObj.getHighlightSegments()) {
+		if (data.getSettingsObj().getHighlightSegments()) {
 			int[] selectedValues = getSelectedEntriesFromTable();
 			if (selectedValues != null && selectedValues.length > 0) {
 				displayZettelContent(selectedValues[0], null);
@@ -722,15 +661,15 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 				.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
 				.getActionMap(SearchResultsFrame.class, this);
 		// iterate the xml file with the accelerator keys for the main window
-		for (int cnt = 1; cnt <= accKeys.getCount(AcceleratorKeys.SEARCHRESULTSKEYS); cnt++) {
+		for (int cnt = 1; cnt <= data.getAccKeys().getCount(AcceleratorKeys.SEARCHRESULTSKEYS); cnt++) {
 			// get the action's name
-			String actionname = accKeys.getAcceleratorAction(AcceleratorKeys.SEARCHRESULTSKEYS, cnt);
+			String actionname = data.getAccKeys().getAcceleratorAction(AcceleratorKeys.SEARCHRESULTSKEYS, cnt);
 			// check whether we have found any valid action name
 			if (actionname != null && !actionname.isEmpty()) {
 				// retrieve action
 				AbstractAction ac = (AbstractAction) actionMap.get(actionname);
 				// get the action's accelerator key
-				String actionkey = accKeys.getAcceleratorKey(AcceleratorKeys.SEARCHRESULTSKEYS, cnt);
+				String actionkey = data.getAccKeys().getAcceleratorKey(AcceleratorKeys.SEARCHRESULTSKEYS, cnt);
 				// check whether we have any valid actionkey
 				if (actionkey != null && !actionkey.isEmpty()) {
 					// retrieve keystroke setting
@@ -750,7 +689,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// ATTENTION! Mnemonic keys are NOT applied on Mac OS, see Apple guidelines for
 		// further details:
 		// http://developer.apple.com/DOCUMENTATION/Java/Conceptual/Java14Development/07-NativePlatformIntegration/NativePlatformIntegration.html#//apple_ref/doc/uid/TP40001909-211867-BCIBDHFJ
-		if (!settingsObj.isMacStyle()) {
+		if (!data.getSettingsObj().isMacStyle()) {
 			// init the variables
 			String menutext;
 			char mkey;
@@ -781,13 +720,13 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// menu items, since these are locates on the program's menu item in the
 		// apple-menu-bar
 		if (PlatformUtil.isMacOS())
-			searchFileMenu.setText(resourceMap.getString("macFileMenuText"));
+			searchFileMenu.setText(data.getResourceMap().getString("macFileMenuText"));
 		// en- or disable fullscreen icons
-		setFullScreenSupp(graphicdevice.isFullScreenSupported());
+		setFullScreenSupp(data.getGraphicdevice().isFullScreenSupported());
 		// if fullscreen is not supportet, tell this in the tooltip
-		if (!graphicdevice.isFullScreenSupported()) {
+		if (!data.getGraphicdevice().isFullScreenSupported()) {
 			AbstractAction ac = (AbstractAction) actionMap.get("viewFullScreen");
-			ac.putValue(AbstractAction.SHORT_DESCRIPTION, resourceMap.getString("fullScreenNotSupported"));
+			ac.putValue(AbstractAction.SHORT_DESCRIPTION, data.getResourceMap().getString("fullScreenNotSupported"));
 		}
 	}
 
@@ -797,7 +736,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 */
 	@Action
 	public void showEntryImmediately() {
-		settingsObj.setShowSearchEntry(!settingsObj.getShowSearchEntry());
+		data.getSettingsObj().setShowSearchEntry(!data.getSettingsObj().getShowSearchEntry());
 	}
 
 	@Action
@@ -828,7 +767,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// convert to lowercase, we don't want case-sensitive search
 		String text = jTextFieldFilterList.getText().toLowerCase();
 		// tell selection listener to do nothing...
-		tableUpdateActive = true;
+		data.setTableUpdateActive(true);
 		// when we have no text, do nothing
 		if (!text.isEmpty()) {
 			// get table model
@@ -883,13 +822,13 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			sb.append("(");
 			sb.append(String.valueOf(dtm.getRowCount()));
 			sb.append(" ");
-			sb.append(resourceMap.getString("hitsText"));
+			sb.append(data.getResourceMap().getString("hitsText"));
 			sb.append(")");
 			// set labeltext
 			jLabelHits.setText(sb.toString());
 		}
 		// tell selection listener action is possible again...
-		tableUpdateActive = false;
+		data.setTableUpdateActive(false);
 	}
 
 	/**
@@ -899,21 +838,21 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	@Action
 	public void toggleHighlightResults() {
 		// check whether highlighting is activated
-		if (!settingsObj.getHighlightSearchResults()) {
+		if (!data.getSettingsObj().getHighlightSearchResults()) {
 			// if not, activate it
-			settingsObj.setHighlightSearchResults(true);
+			data.getSettingsObj().setHighlightSearchResults(true);
 		} else {
 			// nex, if highlighting is activated,
 			// check whether whole word highlighting is activated
-			if (!settingsObj.getHighlightWholeWordSearch()) {
+			if (!data.getSettingsObj().getHighlightWholeWordSearch()) {
 				// if not, activate whole-word-highlighting and do not
 				// deactivate general highlighting
-				settingsObj.setHighlightWholeWordSearch(true);
+				data.getSettingsObj().setHighlightWholeWordSearch(true);
 			}
 			// else if both were activated, deactivate all
 			else {
-				settingsObj.setHighlightSearchResults(false);
-				settingsObj.setHighlightWholeWordSearch(false);
+				data.getSettingsObj().setHighlightSearchResults(false);
+				data.getSettingsObj().setHighlightWholeWordSearch(false);
 			}
 		}
 		updateDisplay();
@@ -924,62 +863,62 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// create linked list as parameter for filter-dialog
 		LinkedList<String> keywords = new LinkedList<>();
 		// go through all keyword-entries
-		for (int cnt = 1; cnt <= dataObj.getCount(Daten.KWCOUNT); cnt++) {
+		for (int cnt = 1; cnt <= data.getDataObj().getCount(Daten.KWCOUNT); cnt++) {
 			// get keyword
-			String k = dataObj.getKeyword(cnt);
+			String k = data.getDataObj().getKeyword(cnt);
 			// add it to list
 			if (!k.isEmpty())
 				keywords.add(k);
 		}
 		// if dialog window isn't already created, do this now
-		if (null == filterSearchDlg) {
+		if (null == data.getFilterSearchDlg()) {
 			// create a new dialog window
-			filterSearchDlg = new CFilterSearch(this, settingsObj, keywords,
-					resourceMap.getString("addKeywordsToEntriesTitle"), false);
+			data.setFilterSearchDlg(new CFilterSearch(this, data.getSettingsObj(), keywords,
+					data.getResourceMap().getString("addKeywordsToEntriesTitle"), false));
 			// center window
-			filterSearchDlg.setLocationRelativeTo(this);
+			data.getFilterSearchDlg().setLocationRelativeTo(this);
 		}
-		ZettelkastenApp.getApplication().show(filterSearchDlg);
+		ZettelkastenApp.getApplication().show(data.getFilterSearchDlg());
 		// when we have any selected keywords, go on and add them all to all the
 		// selected
 		// entries in the search result
-		if (filterSearchDlg.getFilterTerms() != null) {
+		if (data.getFilterSearchDlg().getFilterTerms() != null) {
 			// get all selected entries
 			int[] entries = getSelectedEntriesFromTable();
 			// go through all selected entries
 			// now iterate the chosen keywords
 			// and add each keyword to all selected entries
 			for (int e : entries)
-				dataObj.addKeywordsToEntry(filterSearchDlg.getFilterTerms(), e, 1);
+				data.getDataObj().addKeywordsToEntry(data.getFilterSearchDlg().getFilterTerms(), e, 1);
 			// keyword-list is not up-to-date
-			dataObj.setKeywordlistUpToDate(false);
+			data.getDataObj().setKeywordlistUpToDate(false);
 			// update the display
 			updateDisplay();
 		}
 		// dispose window...
-		filterSearchDlg.dispose();
-		filterSearchDlg = null;
+		data.getFilterSearchDlg().dispose();
+		data.setFilterSearchDlg(null);
 	}
 
 	@Action
 	public void switchLayout() {
-		int currentlayout = settingsObj.getSearchFrameSplitLayout();
+		int currentlayout = data.getSettingsObj().getSearchFrameSplitLayout();
 		if (JSplitPane.HORIZONTAL_SPLIT == currentlayout) {
 			currentlayout = JSplitPane.VERTICAL_SPLIT;
-			if (settingsObj.isSeaGlass()) {
-				jPanel1.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-				jPanel2.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
+			if (data.getSettingsObj().isSeaGlass()) {
+				jPanel1.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(data.getSettingsObj())));
+				jPanel2.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 0, ColorUtil.getBorderGray(data.getSettingsObj())));
 			}
 		} else {
 			currentlayout = JSplitPane.HORIZONTAL_SPLIT;
-			if (settingsObj.isSeaGlass()) {
-				jPanel1.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(settingsObj)));
-				jPanel2.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
+			if (data.getSettingsObj().isSeaGlass()) {
+				jPanel1.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(data.getSettingsObj())));
+				jPanel2.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(data.getSettingsObj())));
 			}
 		}
-		settingsObj.setSearchFrameSplitLayout(currentlayout);
+		data.getSettingsObj().setSearchFrameSplitLayout(currentlayout);
 		jSplitPaneSearch1.setOrientation(currentlayout);
-		if (settingsObj.isMacStyle())
+		if (data.getSettingsObj().isMacStyle())
 			ZknMacWidgetFactory.updateSplitPane(jSplitPaneSearch1);
 	}
 
@@ -991,8 +930,8 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		if (row != -1) {
 			try {
 				int nr = Integer.parseInt(jTableResults.getValueAt(row, 0).toString());
-				if (desktopObj.isEntryInAnyDesktop(nr)) {
-					mainframe.showEntryInDesktopWindow(nr);
+				if (data.getDesktopObj().isEntryInAnyDesktop(nr)) {
+					data.getMainframe().showEntryInDesktopWindow(nr);
 				}
 			} catch (NumberFormatException ex) {
 			}
@@ -1004,43 +943,43 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// create linked list as parameter for filter-dialog
 		LinkedList<String> suthors = new LinkedList<>();
 		// go through all author-entries
-		for (int cnt = 1; cnt <= dataObj.getCount(Daten.AUCOUNT); cnt++) {
+		for (int cnt = 1; cnt <= data.getDataObj().getCount(Daten.AUCOUNT); cnt++) {
 			// get authors
-			String a = dataObj.getAuthor(cnt);
+			String a = data.getDataObj().getAuthor(cnt);
 			// add it to list
 			if (!a.isEmpty())
 				suthors.add(a);
 		}
 		// if dialog window isn't already created, do this now
-		if (null == filterSearchDlg) {
+		if (null == data.getFilterSearchDlg()) {
 			// create a new dialog window
-			filterSearchDlg = new CFilterSearch(this, settingsObj, suthors,
-					resourceMap.getString("addAuthorsToEntriesTitle"), false);
+			data.setFilterSearchDlg(new CFilterSearch(this, data.getSettingsObj(), suthors,
+					data.getResourceMap().getString("addAuthorsToEntriesTitle"), false));
 			// center window
-			filterSearchDlg.setLocationRelativeTo(this);
+			data.getFilterSearchDlg().setLocationRelativeTo(this);
 		}
-		ZettelkastenApp.getApplication().show(filterSearchDlg);
+		ZettelkastenApp.getApplication().show(data.getFilterSearchDlg());
 		// when we have any selected keywords, go on and add them all to all the
 		// selected
 		// entries in the search result
-		if (filterSearchDlg.getFilterTerms() != null) {
+		if (data.getFilterSearchDlg().getFilterTerms() != null) {
 			// get all selected entries
 			int[] entries = getSelectedEntriesFromTable();
 			// go through all selected entries
 			for (int e : entries) {
 				// now iterate the chosen authors
 				// and add each author to all selected entries
-				for (String a : filterSearchDlg.getFilterTerms())
-					dataObj.addAuthorToEntry(a, e, 1);
+				for (String a : data.getFilterSearchDlg().getFilterTerms())
+					data.getDataObj().addAuthorToEntry(a, e, 1);
 			}
 			// author-list is not up-to-date
-			dataObj.setAuthorlistUpToDate(false);
+			data.getDataObj().setAuthorlistUpToDate(false);
 			// update the display
 			updateDisplay();
 		}
 		// dispose window...
-		filterSearchDlg.dispose();
-		filterSearchDlg = null;
+		data.getFilterSearchDlg().dispose();
+		data.setFilterSearchDlg(null);
 	}
 
 	/**
@@ -1053,8 +992,8 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// clear combobox
 		jComboBoxSearches.removeAllItems();
 
-		for (int cnt = 0; cnt < searchrequest.getCount(); cnt++) {
-			jComboBoxSearches.addItem(searchrequest.getShortDescription(cnt));
+		for (int cnt = 0; cnt < data.getSearchrequest().getCount(); cnt++) {
+			jComboBoxSearches.addItem(data.getSearchrequest().getShortDescription(cnt));
 		}
 		// add action listener to combo box
 		jComboBoxSearches.addActionListener(new java.awt.event.ActionListener() {
@@ -1127,7 +1066,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
 		}
 		// get last table sorting
-		RowSorter.SortKey sk = settingsObj.getTableSorting(jTableResults);
+		RowSorter.SortKey sk = data.getSettingsObj().getTableSorting(jTableResults);
 		// any sorting found?
 		if (sk != null) {
 			// create array with sort key
@@ -1139,7 +1078,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			sorter.sort();
 		}
 		// make extra table-sorter for itunes-tables
-		if (settingsObj.isMacStyle()) {
+		if (data.getSettingsObj().isMacStyle()) {
 			TableUtils.SortDelegate sortDelegate = new TableUtils.SortDelegate() {
 				@Override
 				public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
@@ -1150,12 +1089,12 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			// since the default for those is "auto resize off"
 			jTableResults.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
 		}
-		jTableResults.setShowHorizontalLines(settingsObj.getShowGridHorizontal());
-		jTableResults.setShowVerticalLines(settingsObj.getShowGridVertical());
-		jTableResults.setIntercellSpacing(settingsObj.getCellSpacing());
+		jTableResults.setShowHorizontalLines(data.getSettingsObj().getShowGridHorizontal());
+		jTableResults.setShowVerticalLines(data.getSettingsObj().getShowGridVertical());
+		jTableResults.setIntercellSpacing(data.getSettingsObj().getCellSpacing());
 		jTableResults.getTableHeader().setReorderingAllowed(false);
 		// if the user wants to see grids, we need to change the gridcolor on mac-aqua
-		jTableResults.setGridColor(settingsObj.getTableGridColor());
+		jTableResults.setGridColor(data.getSettingsObj().getTableGridColor());
 		SelectionListener listener = new SelectionListener(jTableResults);
 		jTableResults.getSelectionModel().addListSelectionListener(listener);
 		jTableResults.getColumnModel().getSelectionModel().addListSelectionListener(listener);
@@ -1203,8 +1142,8 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// clear combobox
 		jComboBoxSearches.removeAllItems();
 		// add search descriptions to combobox
-		for (int cnt = 0; cnt < searchrequest.getCount(); cnt++)
-			jComboBoxSearches.addItem(searchrequest.getShortDescription(cnt));
+		for (int cnt = 0; cnt < data.getSearchrequest().getCount(); cnt++)
+			jComboBoxSearches.addItem(data.getSearchrequest().getShortDescription(cnt));
 		// add action listener to combo box
 		jComboBoxSearches.addActionListener(new java.awt.event.ActionListener() {
 			@Override
@@ -1225,10 +1164,10 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			}
 		});
 		// if we have any searchrequests at all, go on here
-		if (searchrequest.getCount() > 0) {
+		if (data.getSearchrequest().getCount() > 0) {
 			// check whether the last selected searchrequest is still available
 			// if not, choose the last search request in the combobox...
-			if (selection != searchrequest.getCurrentSearch())
+			if (selection != data.getSearchrequest().getCurrentSearch())
 				selection = jComboBoxSearches.getItemCount() - 1;
 			// Select search request
 			jComboBoxSearches.setSelectedIndex(selection);
@@ -1252,7 +1191,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		else {
 			setVisible(false);
 			// and disable hotkey
-			mainframe.setSearchResultsAvailable(false);
+			data.getMainframe().setSearchResultsAvailable(false);
 		}
 	}
 
@@ -1266,13 +1205,13 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 */
 	private void prepareResultList(int searchrequestnr) {
 		// get search results
-		int[] result = searchrequest.getSearchResults(searchrequestnr);
+		int[] result = data.getSearchrequest().getSearchResults(searchrequestnr);
 		// Save current search request number
-		searchrequest.setCurrentSearch(searchrequestnr);
+		data.getSearchrequest().setCurrentSearch(searchrequestnr);
 		// check whether we have any results
 		if (result != null) {
 			// tell selection listener to do nothing...
-			tableUpdateActive = true;
+			data.setTableUpdateActive(true);
 			// Sort the array with the entry-numbers of the search result
 			if (result.length > 0)
 				Arrays.sort(result);
@@ -1288,9 +1227,9 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 				// first the entry number
 				ob[0] = result[cnt];
 				// then the entry's title
-				ob[1] = dataObj.getZettelTitle(result[cnt]);
+				ob[1] = data.getDataObj().getZettelTitle(result[cnt]);
 				// get timestamp
-				String[] timestamp = dataObj.getTimestamp(result[cnt]);
+				String[] timestamp = data.getDataObj().getTimestamp(result[cnt]);
 				// init timestamp variables.
 				String created = "";
 				String edited = "";
@@ -1305,10 +1244,10 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 				ob[2] = created;
 				ob[3] = edited;
 				// now, the entry's rating
-				ob[4] = dataObj.getZettelRating(result[cnt]);
+				ob[4] = data.getDataObj().getZettelRating(result[cnt]);
 				// finally, check whether entry is on any desktop, and if so,
 				// use desktop name in that column
-				ob[5] = desktopObj.getDesktopNameOfEntry(result[cnt]);
+				ob[5] = data.getDesktopObj().getDesktopNameOfEntry(result[cnt]);
 				// and add that content as a new row to the table
 				dtm.addRow(ob);
 			}
@@ -1318,12 +1257,12 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			sb.append("(");
 			sb.append(String.valueOf(dtm.getRowCount()));
 			sb.append(" ");
-			sb.append(resourceMap.getString("hitsText"));
+			sb.append(data.getResourceMap().getString("hitsText"));
 			sb.append(")");
 			// Set labeltext
 			jLabelHits.setText(sb.toString());
 			// work done
-			tableUpdateActive = false;
+			data.setTableUpdateActive(false);
 			// enable filter text field
 			jTextFieldFilterList.setEnabled(true);
 		}
@@ -1351,9 +1290,9 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 				// Here we set up the keywordlist for the JList
 				//
 				// retrieve the keywords of the selected entry
-				String[] kws = dataObj.getKeywords(selection);
+				String[] kws = data.getDataObj().getKeywords(selection);
 				// prepare the JList which will display the keywords
-				keywordListModel.clear();
+				data.getKeywordListModel().clear();
 				// check whether any keywords have been found
 				if (kws != null) {
 					// Sort the array
@@ -1361,7 +1300,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 						Arrays.sort(kws);
 					// iterate the string array and add its content to the list model
 					for (String kw : kws)
-						keywordListModel.addElement(kw);
+						data.getKeywordListModel().addElement(kw);
 				}
 				// if we have any search terms, we want to select the related keywords...
 				if (sts != null) {
@@ -1370,8 +1309,8 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 					// iterate all search terms
 					for (String s : sts) {
 						// try to find the keyword in the jList
-						for (int cnt = 0; cnt < keywordListModel.getSize(); cnt++)
-							if (s.equalsIgnoreCase(keywordListModel.get(cnt).toString()))
+						for (int cnt = 0; cnt < data.getKeywordListModel().getSize(); cnt++)
+							if (s.equalsIgnoreCase(data.getKeywordListModel().get(cnt).toString()))
 								l.add(cnt);
 					}
 					// create int-array
@@ -1386,8 +1325,8 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 				else
 					jListKeywords.clearSelection();
 				// if we want to update the entry immediately, show entry in mainframe as well
-				if (settingsObj.getShowSearchEntry())
-					mainframe.setNewActivatedEntryAndUpdateDisplay(selection);
+				if (data.getSettingsObj().getShowSearchEntry())
+					data.getMainframe().setNewActivatedEntryAndUpdateDisplay(selection);
 				// finally, set desktop selected
 				// setDesktopEntrySelected(desktopObj.isEntryInAnyDesktop(selection));
 			} catch (NumberFormatException e) {
@@ -1395,7 +1334,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			}
 		} else {
 			jEditorPaneSearchEntry.setText("");
-			keywordListModel.clear();
+			data.getKeywordListModel().clear();
 		}
 	}
 
@@ -1422,21 +1361,21 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// prepare array for search terms which might be highlighted
 		String[] sts = null;
 		// get search terms, if highlighting is requested
-		if (settingsObj.getHighlightSearchResults()) {
+		if (data.getSettingsObj().getHighlightSearchResults()) {
 			// get the selected index, i.e. the searchrequest we want to retrieve
 			int index = jComboBoxSearches.getSelectedIndex();
 			// get the related search terms
-			sts = searchrequest.getSearchTerms(index);
+			sts = data.getSearchrequest().getSearchTerms(index);
 			// check whether the search was a synonym-search. if yes, add synonyms to search
 			// terms
-			if (searchrequest.isSynonymSearch(index)) {
+			if (data.getSearchrequest().isSynonymSearch(index)) {
 				// create new linked list that will contain all highlight-terms, including
 				// the related synonyms of the highlight-terms
 				LinkedList<String> highlight = new LinkedList<>();
 				// go through all searchterms
 				for (String s : sts) {
 					// get the synonym-line for each search term
-					String[] synline = synonymsObj.getSynonymLineFromAny(s, false);
+					String[] synline = data.getSynonymsObj().getSynonymLineFromAny(s, false);
 					// if we have synonyms...
 					if (synline != null) {
 						// add them to the linked list, if they are new
@@ -1460,10 +1399,10 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	void displayZettelContent(int nr, String[] highlightterms) {
 		// Set highlight search terms
 		HtmlUbbUtil.setHighlighTerms(highlightterms, HtmlUbbUtil.HIGHLIGHT_STYLE_SEARCHRESULTS,
-				settingsObj.getHighlightWholeWordSearch());
+				data.getSettingsObj().getHighlightWholeWordSearch());
 		// retrieve the string array of the first entry
-		String disp = dataObj.getEntryAsHtml(nr,
-				(settingsObj.getHighlightSegments()) ? getSelectedKeywordsFromList() : null, Constants.FRAME_SEARCH);
+		String disp = data.getDataObj().getEntryAsHtml(nr,
+				(data.getSettingsObj().getHighlightSegments()) ? getSelectedKeywordsFromList() : null, Constants.FRAME_SEARCH);
 		// in case parsing was ok, display the entry
 		if (Tools.isValidHTML(disp, nr)) {
 			// Set entry information in the main textfield
@@ -1478,8 +1417,8 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 					.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass()
 					.getResource("/de/danielluedecke/zettelkasten/resources/icons/error.png");
 			cleanedContent.append("<img border=\"0\" src=\"").append(imgURL).append("\">&#8195;");
-			cleanedContent.append(resourceMap.getString("incorrectNestedTagsText"));
-			cleanedContent.append("</div>").append(dataObj.getCleanZettelContent(nr)).append("</body>");
+			cleanedContent.append(data.getResourceMap().getString("incorrectNestedTagsText"));
+			cleanedContent.append("</div>").append(data.getDataObj().getCleanZettelContent(nr)).append("</body>");
 			// and display clean content instead
 			jEditorPaneSearchEntry.setText(cleanedContent.toString());
 		}
@@ -1494,7 +1433,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// search-reuest
 		// finally, call the mainframe's exportwindow-method and pass the int-array with
 		// the entry-numbers
-		mainframe.exportEntries(searchrequest.getSearchResults(jComboBoxSearches.getSelectedIndex()));
+		data.getMainframe().exportEntries(data.getSearchrequest().getSearchResults(jComboBoxSearches.getSelectedIndex()));
 	}
 
 	@Action
@@ -1504,16 +1443,16 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// when we have a valid selection, go on
 		if (row != -1) {
 			// remember that entry editing came from search window
-			mainframe.editEntryFromSearchWindow = true;
+			data.getMainframe().editEntryFromSearchWindow = true;
 			// open edit window
-			mainframe.openEditWindow(true, Integer.parseInt(jTableResults.getValueAt(row, 0).toString()), false, false,
+			data.getMainframe().openEditWindow(true, Integer.parseInt(jTableResults.getValueAt(row, 0).toString()), false, false,
 					-1);
 		}
 	}
 
 	@Action
 	public void duplicateSearch() {
-		searchrequest.duplicateSearchRequest();
+		data.getSearchrequest().duplicateSearchRequest();
 		updateComboBox(0, -1);
 	}
 
@@ -1521,7 +1460,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	public void findAndReplace() {
 		// find and replace within search-results-entries, and update display if we have
 		// any replacements.
-		if (mainframe.replace(searchframe, null, getSelectedEntriesFromTable()))
+		if (data.getMainframe().replace(data.getSearchframe(), null, getSelectedEntriesFromTable()))
 			updateDisplay();
 	}
 
@@ -1549,14 +1488,14 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	public void newSearchFromSelection() {
 		// open the search dialog
 		// the parameters are as following:
-		mainframe.startSearch(new String[] { jEditorPaneSearchEntry.getSelectedText() }, // string-array with search
+		data.getMainframe().startSearch(new String[] { jEditorPaneSearchEntry.getSelectedText() }, // string-array with search
 																							// terms
 				Constants.SEARCH_AUTHOR, // the type of search, i.e. where to look
 				Constants.LOG_OR, // the logical combination
 				false, // whole-word-search
 				false, // match-case-search
-				settingsObj.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
-				settingsObj.getSearchAlwaysAccentInsensitive(), false, // time-period search
+				data.getSettingsObj().getSearchAlwaysSynonyms(), // whether synonyms should be included or not
+				data.getSettingsObj().getSearchAlwaysAccentInsensitive(), false, // time-period search
 				false, // whether the search terms contain regular expressions or not
 				"", // timestamp, date from (period start)
 				"", // timestamp, date to (period end)
@@ -1574,13 +1513,13 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	public void newSearchFromKeywordsLogOr() {
 		// open the search dialog
 		// the parameters are as following:
-		mainframe.startSearch(getSelectedKeywordsFromList(), // string-array with search terms
+		data.getMainframe().startSearch(getSelectedKeywordsFromList(), // string-array with search terms
 				Constants.SEARCH_KEYWORDS, // the type of search, i.e. where to look
 				Constants.LOG_OR, // the logical combination
 				true, // whole-word-search
 				true, // match-case-search
-				settingsObj.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
-				settingsObj.getSearchAlwaysAccentInsensitive(), false, // time-period search
+				data.getSettingsObj().getSearchAlwaysSynonyms(), // whether synonyms should be included or not
+				data.getSettingsObj().getSearchAlwaysAccentInsensitive(), false, // time-period search
 				false, // whether the search terms contain regular expressions or not
 				"", // timestamp, date from (period start)
 				"", // timestamp, date to (period end)
@@ -1598,13 +1537,13 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	public void newSearchFromKeywordsLogAnd() {
 		// open the search dialog
 		// the parameters are as following:
-		mainframe.startSearch(getSelectedKeywordsFromList(), // string-array with search terms
+		data.getMainframe().startSearch(getSelectedKeywordsFromList(), // string-array with search terms
 				Constants.SEARCH_KEYWORDS, // the type of search, i.e. where to look
 				Constants.LOG_AND, // the logical combination
 				true, // whole-word-search
 				true, // match-case-search
-				settingsObj.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
-				settingsObj.getSearchAlwaysAccentInsensitive(), false, // time-period search
+				data.getSettingsObj().getSearchAlwaysSynonyms(), // whether synonyms should be included or not
+				data.getSettingsObj().getSearchAlwaysAccentInsensitive(), false, // time-period search
 				false, // whether the search terms contain regular expressions or not
 				"", // timestamp, date from (period start)
 				"", // timestamp, date to (period end)
@@ -1622,13 +1561,13 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	public void newSearchFromKeywordsLogNot() {
 		// open the search dialog
 		// the parameters are as following:
-		mainframe.startSearch(getSelectedKeywordsFromList(), // string-array with search terms
+		data.getMainframe().startSearch(getSelectedKeywordsFromList(), // string-array with search terms
 				Constants.SEARCH_KEYWORDS, // the type of search, i.e. where to look
 				Constants.LOG_NOT, // the logical combination
 				true, // whole-word-search
 				true, // match-case-search
-				settingsObj.getSearchAlwaysSynonyms(), // whether synonyms should be included or not
-				settingsObj.getSearchAlwaysAccentInsensitive(), false, // time-period search
+				data.getSettingsObj().getSearchAlwaysSynonyms(), // whether synonyms should be included or not
+				data.getSettingsObj().getSearchAlwaysAccentInsensitive(), false, // time-period search
 				false, // whether the search terms contain regular expressions or not
 				"", // timestamp, date from (period start)
 				"", // timestamp, date to (period end)
@@ -1654,13 +1593,13 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	@Action
 	public void filterSearch() {
 		// if dialog window isn't already created, do this now
-		if (null == searchDlg) {
+		if (null == data.getSearchDlg()) {
 			// create a new dialog window
-			searchDlg = new CSearchDlg(this, searchrequest, settingsObj, null);
+			data.setSearchDlg(new CSearchDlg(this, data.getSearchrequest(), data.getSettingsObj(), null));
 			// center window
-			searchDlg.setLocationRelativeTo(this);
+			data.getSearchDlg().setLocationRelativeTo(this);
 		}
-		ZettelkastenApp.getApplication().show(searchDlg);
+		ZettelkastenApp.getApplication().show(data.getSearchDlg());
 		// open the search dialog
 		// the parameters are as following:
 		// - string-array with search results
@@ -1668,17 +1607,17 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// - logical-and-combination
 		// - whole words
 		// - case-sensitive search
-		if (!searchDlg.isCancelled()) {
-			startSearch(Constants.SEARCH_USUAL, searchDlg.getSearchTerms(),
-					searchrequest.getSearchResults(jComboBoxSearches.getSelectedIndex()), searchDlg.getWhereToSearch(),
-					searchDlg.getLogical(), searchDlg.isWholeWord(), searchDlg.isMatchCase(),
-					searchDlg.isSynonymsIncluded(), searchDlg.isAccentInsensitive(), searchDlg.isRegExSearch(),
-					searchDlg.isTimestampSearch(), searchDlg.getDateFromValue(), searchDlg.getDateToValue(),
-					searchDlg.getTimestampIndex());
+		if (!data.getSearchDlg().isCancelled()) {
+			startSearch(Constants.SEARCH_USUAL, data.getSearchDlg().getSearchTerms(),
+					data.getSearchrequest().getSearchResults(jComboBoxSearches.getSelectedIndex()), data.getSearchDlg().getWhereToSearch(),
+					data.getSearchDlg().getLogical(), data.getSearchDlg().isWholeWord(), data.getSearchDlg().isMatchCase(),
+					data.getSearchDlg().isSynonymsIncluded(), data.getSearchDlg().isAccentInsensitive(), data.getSearchDlg().isRegExSearch(),
+					data.getSearchDlg().isTimestampSearch(), data.getSearchDlg().getDateFromValue(), data.getSearchDlg().getDateToValue(),
+					data.getSearchDlg().getTimestampIndex());
 		}
 
-		searchDlg.dispose();
-		searchDlg = null;
+		data.getSearchDlg().dispose();
+		data.setSearchDlg(null);
 	}
 
 	/**
@@ -1691,13 +1630,13 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	@Action
 	public void filterKeywords() {
 		// retrieve current entries from the list
-		int[] entries = searchrequest.getSearchResults(jComboBoxSearches.getSelectedIndex());
+		int[] entries = data.getSearchrequest().getSearchResults(jComboBoxSearches.getSelectedIndex());
 		// create linked list as parameter for filter-dialog
 		LinkedList<String> keywords = new LinkedList<>();
 		// go through all entries
 		for (int e : entries) {
 			// get keywords of each entries
-			String[] kws = dataObj.getKeywords(e);
+			String[] kws = data.getDataObj().getKeywords(e);
 			// now go through all keywords of that entry
 			// if keyword does not exist, add it to list
 			if (kws != null)
@@ -1706,13 +1645,13 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 						keywords.add(k);
 		}
 		// if dialog window isn't already created, do this now
-		if (null == filterSearchDlg) {
+		if (null == data.getFilterSearchDlg()) {
 			// create a new dialog window
-			filterSearchDlg = new CFilterSearch(this, settingsObj, keywords, null, true);
+			data.setFilterSearchDlg(new CFilterSearch(this, data.getSettingsObj(), keywords, null, true));
 			// center window
-			filterSearchDlg.setLocationRelativeTo(this);
+			data.getFilterSearchDlg().setLocationRelativeTo(this);
 		}
-		ZettelkastenApp.getApplication().show(filterSearchDlg);
+		ZettelkastenApp.getApplication().show(data.getFilterSearchDlg());
 		// open the search dialog
 		// the parameters are as following:
 		// - string-array with search results
@@ -1720,15 +1659,15 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// - logical-and-combination
 		// - whole words
 		// - case-sensitive search
-		if (filterSearchDlg.getFilterTerms() != null) {
-			startSearch(Constants.SEARCH_USUAL, filterSearchDlg.getFilterTerms(),
-					searchrequest.getSearchResults(jComboBoxSearches.getSelectedIndex()), Constants.SEARCH_KEYWORDS,
-					filterSearchDlg.getLogical(), true, true, settingsObj.getSearchAlwaysSynonyms(), false,
+		if (data.getFilterSearchDlg().getFilterTerms() != null) {
+			startSearch(Constants.SEARCH_USUAL, data.getFilterSearchDlg().getFilterTerms(),
+					data.getSearchrequest().getSearchResults(jComboBoxSearches.getSelectedIndex()), Constants.SEARCH_KEYWORDS,
+					data.getFilterSearchDlg().getLogical(), true, true, data.getSettingsObj().getSearchAlwaysSynonyms(), false,
 					/* accentInsensitive= */false, false, "", "", 0);
 		}
 
-		filterSearchDlg.dispose();
-		filterSearchDlg = null;
+		data.getFilterSearchDlg().dispose();
+		data.setFilterSearchDlg(null);
 	}
 
 	@Action
@@ -1741,7 +1680,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// - whole words
 		// - case-sensitive search
 		startSearch(Constants.SEARCH_TOP_LEVEL_LUHMANN, null,
-				searchrequest.getSearchResults(jComboBoxSearches.getSelectedIndex()), -1, Constants.LOG_OR, false,
+				data.getSearchrequest().getSearchResults(jComboBoxSearches.getSelectedIndex()), -1, Constants.LOG_OR, false,
 				false, false, false, /* accentInsensitive= */false, false, null, null, 0);
 	}
 
@@ -1755,13 +1694,13 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	@Action
 	public void filterAuthors() {
 		// retrieve current entries from the list
-		int[] entries = searchrequest.getSearchResults(jComboBoxSearches.getSelectedIndex());
+		int[] entries = data.getSearchrequest().getSearchResults(jComboBoxSearches.getSelectedIndex());
 		// create linked list as parameter for filter-dialog
 		LinkedList<String> authors = new LinkedList<>();
 		// go through all entries
 		for (int e : entries) {
 			// get authors of each entries
-			String[] aus = dataObj.getAuthors(e);
+			String[] aus = data.getDataObj().getAuthors(e);
 			// now go through all keywords of that entry
 			// if keyword does not exist, add it to list
 			if (aus != null)
@@ -1770,13 +1709,13 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 						authors.add(a);
 		}
 		// if dialog window isn't already created, do this now
-		if (null == filterSearchDlg) {
+		if (null == data.getFilterSearchDlg()) {
 			// create a new dialog window
-			filterSearchDlg = new CFilterSearch(this, settingsObj, authors, null, true);
+			data.setFilterSearchDlg(new CFilterSearch(this, data.getSettingsObj(), authors, null, true));
 			// center window
-			filterSearchDlg.setLocationRelativeTo(this);
+			data.getFilterSearchDlg().setLocationRelativeTo(this);
 		}
-		ZettelkastenApp.getApplication().show(filterSearchDlg);
+		ZettelkastenApp.getApplication().show(data.getFilterSearchDlg());
 		// open the search dialog
 		// the parameters are as following:
 		// - string-array with search results
@@ -1784,15 +1723,15 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// - logical-and-combination
 		// - whole words
 		// - case-sensitive search
-		if (filterSearchDlg.getFilterTerms() != null) {
-			startSearch(Constants.SEARCH_USUAL, filterSearchDlg.getFilterTerms(),
-					searchrequest.getSearchResults(jComboBoxSearches.getSelectedIndex()), Constants.SEARCH_AUTHOR,
-					filterSearchDlg.getLogical(), true, true, settingsObj.getSearchAlwaysSynonyms(), false,
+		if (data.getFilterSearchDlg().getFilterTerms() != null) {
+			startSearch(Constants.SEARCH_USUAL, data.getFilterSearchDlg().getFilterTerms(),
+					data.getSearchrequest().getSearchResults(jComboBoxSearches.getSelectedIndex()), Constants.SEARCH_AUTHOR,
+					data.getFilterSearchDlg().getLogical(), true, true, data.getSettingsObj().getSearchAlwaysSynonyms(), false,
 					/* accentInsensitive= */false, false, "", "", 0);
 		}
 
-		filterSearchDlg.dispose();
-		filterSearchDlg = null;
+		data.getFilterSearchDlg().dispose();
+		data.setFilterSearchDlg(null);
 	}
 
 	/**
@@ -1834,50 +1773,50 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		if ((null == searchterms || searchterms.length < 1) && searchtype != Constants.SEARCH_TOP_LEVEL_LUHMANN)
 			return;
 		// if dialog window isn't already created, do this now
-		if (null == taskDlg) {
+		if (null == data.getTaskDlg()) {
 			// get parent und init window
-			taskDlg = new TaskProgressDialog(this, TaskProgressDialog.TASK_SEARCH, dataObj, searchrequest, synonymsObj,
+			data.setTaskDlg(new TaskProgressDialog(this, TaskProgressDialog.TASK_SEARCH, data.getDataObj(), data.getSearchrequest(), data.getSynonymsObj(),
 					searchtype, searchterms, searchin, where, logical, wholeword, matchcase, syno, accentInsensitive,
 					regex, timesearch, datefrom, dateto, timestampindex, false,
-					settingsObj.getSearchRemovesFormatTags());
+					data.getSettingsObj().getSearchRemovesFormatTags()));
 			// center window
-			taskDlg.setLocationRelativeTo(this);
+			data.getTaskDlg().setLocationRelativeTo(this);
 		}
-		ZettelkastenApp.getApplication().show(taskDlg);
+		ZettelkastenApp.getApplication().show(data.getTaskDlg());
 		// we have to manually dispose the window and release the memory
 		// because next time this method is called, the showKwlDlg is still not null,
 		// i.e. the constructor is not called (because the if-statement above is not
 		// true)
 		// dispose the window and clear the object
-		taskDlg.dispose();
-		taskDlg = null;
+		data.getTaskDlg().dispose();
+		data.setTaskDlg(null);
 		// check whether we have any search results at all
-		if (searchrequest.getCurrentSearchResults() != null) {
+		if (data.getSearchrequest().getCurrentSearchResults() != null) {
 			showLatestSearchResult();
 		} else {
 			// display error message box that nothing was found
-			JOptionPane.showMessageDialog(this, resourceMap.getString("errNothingFoundMsg"),
-					resourceMap.getString("errNothingFoundTitle"), JOptionPane.PLAIN_MESSAGE);
+			JOptionPane.showMessageDialog(this, data.getResourceMap().getString("errNothingFoundMsg"),
+					data.getResourceMap().getString("errNothingFoundTitle"), JOptionPane.PLAIN_MESSAGE);
 		}
 	}
 
 	@Action
 	public void showLongDesc() {
 		// display long description
-		JOptionPane.showMessageDialog(null, searchrequest.getLongDescription(jComboBoxSearches.getSelectedIndex()),
-				resourceMap.getString("longDescTitle"), JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(null, data.getSearchrequest().getLongDescription(jComboBoxSearches.getSelectedIndex()),
+				data.getResourceMap().getString("longDescTitle"), JOptionPane.PLAIN_MESSAGE);
 	}
 
 	@Action
 	public void showHighlightSettings() {
-		if (null == highlightSettingsDlg) {
-			highlightSettingsDlg = new CHighlightSearchSettings(this, settingsObj,
-					HtmlUbbUtil.HIGHLIGHT_STYLE_SEARCHRESULTS);
-			highlightSettingsDlg.setLocationRelativeTo(this);
+		if (null == data.getHighlightSettingsDlg()) {
+			data.setHighlightSettingsDlg(new CHighlightSearchSettings(this, data.getSettingsObj(),
+					HtmlUbbUtil.HIGHLIGHT_STYLE_SEARCHRESULTS));
+			data.getHighlightSettingsDlg().setLocationRelativeTo(this);
 		}
-		ZettelkastenApp.getApplication().show(highlightSettingsDlg);
-		highlightSettingsDlg.dispose();
-		highlightSettingsDlg = null;
+		ZettelkastenApp.getApplication().show(data.getHighlightSettingsDlg());
+		data.getHighlightSettingsDlg().dispose();
+		data.setHighlightSettingsDlg(null);
 
 		updateDisplay();
 	}
@@ -1892,7 +1831,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		int[] entries = getSelectedEntriesFromTable();
 		// if we have any valid values, add them to desktop
 		if ((entries != null) && (entries.length > 0))
-			mainframe.addToDesktop(entries);
+			data.getMainframe().addToDesktop(entries);
 	}
 
 	/**
@@ -1906,9 +1845,9 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// if we have any valid values...
 		if ((entries != null) && (entries.length > 0)) {
 			// add them as bookmarks
-			mainframe.addToBookmarks(entries, false);
+			data.getMainframe().addToBookmarks(entries, false);
 			// and display related tab
-			mainframe.menuShowBookmarks();
+			data.getMainframe().menuShowBookmarks();
 		}
 	}
 
@@ -1924,9 +1863,9 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// if we have any valid values...
 		if ((entries != null) && (entries.length > 0)) {
 			// add them as followers
-			mainframe.addToLuhmann(entries);
+			data.getMainframe().addToLuhmann(entries);
 			// and display related tab
-			mainframe.menuShowLuhmann();
+			data.getMainframe().menuShowLuhmann();
 		}
 	}
 
@@ -1941,9 +1880,9 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// if we have any valid values...
 		if ((entries != null) && (entries.length > 0)) {
 			// add them as followers
-			mainframe.addToManLinks(entries);
+			data.getMainframe().addToManLinks(entries);
 			// and display related tab
-			mainframe.menuShowLinks();
+			data.getMainframe().menuShowLinks();
 		}
 	}
 
@@ -2002,7 +1941,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 				// ...and try to convert it to an integer value
 				int selection = Integer.parseInt(o.toString());
 				// delete the entry from the search request
-				searchrequest.deleteResultEntry(i, selection);
+				data.getSearchrequest().deleteResultEntry(i, selection);
 			}
 			updateComboBox(rows[0], -1);
 		}
@@ -2019,7 +1958,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		displayEntryInMainframe();
 		// try to delete the entry
 		// and bring search results frame to front...
-		if (mainframe.deleteEntries(getSelectedEntriesFromTable()))
+		if (data.getMainframe().deleteEntries(getSelectedEntriesFromTable()))
 			this.toFront();
 	}
 
@@ -2030,12 +1969,12 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	@Action
 	public void removeAllSearchResults() {
 		// and create a JOptionPane with yes/no/cancel options
-		int msgOption = JOptionPane.showConfirmDialog(null, resourceMap.getString("askForDeleteAllMsg"),
-				resourceMap.getString("askForDeleteAllTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+		int msgOption = JOptionPane.showConfirmDialog(null, data.getResourceMap().getString("askForDeleteAllMsg"),
+				data.getResourceMap().getString("askForDeleteAllTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
 		// if the user wants to proceed, copy the image now
 		if (JOptionPane.YES_OPTION == msgOption) {
 			// completeley remove all search requests
-			searchrequest.deleteAllSearchRequests();
+			data.getSearchrequest().deleteAllSearchRequests();
 			// reset combobox
 			updateComboBox(-1, -1);
 		}
@@ -2046,7 +1985,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		int row = jTableResults.getSelectedRow();
 		// when we have a valid selection, go on
 		if (row != -1)
-			mainframe.setNewActivatedEntryAndUpdateDisplay(Integer.parseInt(jTableResults.getValueAt(row, 0).toString()));
+			data.getMainframe().setNewActivatedEntryAndUpdateDisplay(Integer.parseInt(jTableResults.getValueAt(row, 0).toString()));
 	}
 
 	/**
@@ -2055,14 +1994,14 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	@Action
 	public void removeSearchResult() {
 		// and create a JOptionPane with yes/no/cancel options
-		int msgOption = JOptionPane.showConfirmDialog(null, resourceMap.getString("askForDeleteSearchMsg"),
-				resourceMap.getString("askForDeleteSearchTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+		int msgOption = JOptionPane.showConfirmDialog(null, data.getResourceMap().getString("askForDeleteSearchMsg"),
+				data.getResourceMap().getString("askForDeleteSearchTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
 		// if the user wants to proceed, copy the image now
 		if (JOptionPane.YES_OPTION == msgOption) {
 			// get the selected searchrequest
 			int i = jComboBoxSearches.getSelectedIndex();
 			// delete complete search request
-			searchrequest.deleteSearchRequest(i);
+			data.getSearchrequest().deleteSearchRequest(i);
 			// update combo box
 			updateComboBox(0, -1);
 		}
@@ -2075,7 +2014,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	public void closeWindow() {
 		// check whether memory usage is logged. if so, tell logger that new entry
 		// windows was opened
-		if (settingsObj.isMemoryUsageLogged) {
+		if (data.getSettingsObj().isMemoryUsageLogged) {
 			// log info
 			Constants.zknlogger.log(Level.INFO, "Memory usage logged. Search Results Window closed.");
 		}
@@ -2090,9 +2029,9 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	@Action(enabledProperty = "fullScreenSupp")
 	public void viewFullScreen() {
 		// check whether fullscreen is possible or not...
-		if (graphicdevice.isFullScreenSupported()) {
+		if (data.getGraphicdevice().isFullScreenSupported()) {
 			// if we already have a fullscreen window, quit fullscreen
-			if (graphicdevice.getFullScreenWindow() != null)
+			if (data.getGraphicdevice().getFullScreenWindow() != null)
 				quitFullScreen();
 			// else show fullscreen window
 			else
@@ -2108,23 +2047,23 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	private void showFullScreen() {
 		// check whether fullscreen is supported, and if we currently have a
 		// fullscreen-window
-		if (graphicdevice.isFullScreenSupported() && null == graphicdevice.getFullScreenWindow()) {
+		if (data.getGraphicdevice().isFullScreenSupported() && null == data.getGraphicdevice().getFullScreenWindow()) {
 			// dispose frame, so we can remove the decoration when setting full screen mode
-			searchframe.dispose();
+			data.getSearchframe().dispose();
 			// hide menubar
 			searchMenuBar.setVisible(false);
 			// set frame non-resizable
-			searchframe.setResizable(false);
+			data.getSearchframe().setResizable(false);
 			try {
 				// remove decoration
-				searchframe.setUndecorated(true);
+				data.getSearchframe().setUndecorated(true);
 			} catch (IllegalComponentStateException e) {
 				Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
 			}
 			// show frame again
-			searchframe.setVisible(true);
+			data.getSearchframe().setVisible(true);
 			// set fullscreen mode to this window
-			graphicdevice.setFullScreenWindow(this);
+			data.getGraphicdevice().setFullScreenWindow(this);
 		}
 	}
 
@@ -2135,23 +2074,23 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	private void quitFullScreen() {
 		// check whether full screen is supported, and if we currently have a
 		// fullscreen-window
-		if (graphicdevice.isFullScreenSupported() && graphicdevice.getFullScreenWindow() != null) {
+		if (data.getGraphicdevice().isFullScreenSupported() && data.getGraphicdevice().getFullScreenWindow() != null) {
 			// disable fullscreen-mode
-			graphicdevice.setFullScreenWindow(null);
+			data.getGraphicdevice().setFullScreenWindow(null);
 			// hide menubar
 			searchMenuBar.setVisible(true);
 			// make frame resizable again
-			searchframe.setResizable(true);
+			data.getSearchframe().setResizable(true);
 			// dispose frame, so we can restore the decoration
-			searchframe.dispose();
+			data.getSearchframe().dispose();
 			try {
 				// set decoration
-				searchframe.setUndecorated(false);
+				data.getSearchframe().setUndecorated(false);
 			} catch (IllegalComponentStateException e) {
 				Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
 			}
 			// show frame again
-			searchframe.setVisible(true);
+			data.getSearchframe().setVisible(true);
 		}
 	}
 
@@ -2169,7 +2108,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// an item, which is done in this method, fires an action to the action
 		// listener,
 		// the display update should be achieved through the combobox's actionlistener.
-		updateComboBox(-1, searchrequest.getCount() - 1);
+		updateComboBox(-1, data.getSearchrequest().getCount() - 1);
 		// and make dialog visible
 		setVisible(true);
 		// repaint the components (necessary, since the components are not properly
@@ -2194,8 +2133,8 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// if the link was clicked, proceed
 		if (typ == HyperlinkEvent.EventType.ACTIVATED) {
 			// call method that handles the hyperlink-click
-			String returnValue = Tools.openHyperlink(linktype, this, Constants.FRAME_SEARCH, dataObj, bibtexObj,
-					settingsObj, jEditorPaneSearchEntry,
+			String returnValue = Tools.openHyperlink(linktype, this, Constants.FRAME_SEARCH, data.getDataObj(), data.getBibtexObj(),
+					data.getSettingsObj(), jEditorPaneSearchEntry,
 					Integer.parseInt(jTableResults.getValueAt(jTableResults.getSelectedRow(), 0).toString()));
 			// check whether we have a return value. this might be the case either when the
 			// user clicked on
@@ -2204,11 +2143,11 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 				// here we have a reference to another entry
 				if (returnValue.startsWith("#z_") || returnValue.startsWith("#cr_")) {
 					// show entry
-					mainframe.setNewActivatedEntryAndUpdateDisplay(dataObj.getActivatedEntryNumber());
+					data.getMainframe().setNewActivatedEntryAndUpdateDisplay(data.getDataObj().getActivatedEntryNumber());
 				}
 				// edit cross references
 				else if (returnValue.equalsIgnoreCase("#crt")) {
-					mainframe.editManualLinks();
+					data.getMainframe().editManualLinks();
 				}
 				// check whether a rating was requested
 				else if (returnValue.startsWith("#rateentry")) {
@@ -2216,18 +2155,18 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 						// retrieve entry-number
 						int entrynr = Integer.parseInt(linktype.substring(10));
 						// open rating-dialog
-						if (null == rateEntryDlg) {
-							rateEntryDlg = new CRateEntry(this, dataObj, entrynr);
-							rateEntryDlg.setLocationRelativeTo(this);
+						if (null == data.getRateEntryDlg()) {
+							data.setRateEntryDlg(new CRateEntry(this, data.getDataObj(), entrynr));
+							data.getRateEntryDlg().setLocationRelativeTo(this);
 						}
-						ZettelkastenApp.getApplication().show(rateEntryDlg);
+						ZettelkastenApp.getApplication().show(data.getRateEntryDlg());
 						// check whether dialog was cancelled or not
-						if (!rateEntryDlg.isCancelled()) {
+						if (!data.getRateEntryDlg().isCancelled()) {
 							// update display
 							displayZettelContent(entrynr, null);
 						}
-						rateEntryDlg.dispose();
-						rateEntryDlg = null;
+						data.getRateEntryDlg().dispose();
+						data.setRateEntryDlg(null);
 					} catch (NumberFormatException ex) {
 						// log error
 						Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
@@ -2257,7 +2196,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 			// if we have an update, don't react on selection changes
-			if (tableUpdateActive)
+			if (data.isTableUpdateActive())
 				return;
 			// get list selection model
 			ListSelectionModel lsm = (ListSelectionModel) e.getSource();
@@ -2269,54 +2208,33 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		}
 	}
 
-	/**
-	 * This variable indicates whether we have selected text or not - and
-	 * en/disables the new-search-functions. see {@link #newSearchFromAuthor()
-	 * newSearchFromAuthor()} and {@link #newSearchFromSelection()
-	 * newSearchFromSelection()}.
-	 */
-	private boolean textSelected = false;
-
 	public boolean isTextSelected() {
-		return textSelected;
+		return data.isTextSelected();
 	}
 
 	public void setTextSelected(boolean b) {
 		boolean old = isTextSelected();
-		this.textSelected = b;
+		this.data.setTextSelected(b);
 		firePropertyChange("textSelected", old, isTextSelected());
 	}
 
-	/**
-	 * This variable indicates whether we have selected an item in the jListKeywords
-	 * or not - and en/disables the new-search-functions. see
-	 * {@link #newSearchFromKeywordsLogOr() newSearchFromKeywordsLogOr()}
-	 */
-	private boolean listSelected = false;
-
 	public boolean isListSelected() {
-		return listSelected;
+		return data.isListSelected();
 	}
 
 	public void setListSelected(boolean b) {
 		boolean old = isListSelected();
-		this.listSelected = b;
+		this.data.setListSelected(b);
 		firePropertyChange("listSelected", old, isListSelected());
 	}
 
-	/**
-	 * This variable indicates whether we have selected an entry from the search
-	 * results list (jTableResults) that is also present on any desktop.
-	 */
-	private boolean desktopEntrySelected = false;
-
 	public boolean isDesktopEntrySelected() {
-		return desktopEntrySelected;
+		return data.isDesktopEntrySelected();
 	}
 
 	public void setDesktopEntrySelected(boolean b) {
 		boolean old = isDesktopEntrySelected();
-		this.desktopEntrySelected = b;
+		this.data.setDesktopEntrySelected(b);
 		firePropertyChange("desktopEntrySelected", old, isDesktopEntrySelected());
 	}
 
@@ -2346,7 +2264,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         jSplitPaneSearch1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTableResults = (settingsObj.isMacStyle()) ? com.explodingpixels.macwidgets.MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+        jTableResults = (data.getSettingsObj().isMacStyle()) ? com.explodingpixels.macwidgets.MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
         jTextFieldFilterList = new javax.swing.JTextField();
         jButtonResetList = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
@@ -2533,7 +2451,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         searchMainPanel.setLayout(new java.awt.BorderLayout());
 
         jSplitPaneSearch1.setDividerLocation(240);
-        jSplitPaneSearch1.setOrientation(settingsObj.getSearchFrameSplitLayout());
+        jSplitPaneSearch1.setOrientation(data.getSettingsObj().getSearchFrameSplitLayout());
         jSplitPaneSearch1.setName("jSplitPaneSearch1"); // NOI18N
         jSplitPaneSearch1.setOneTouchExpandable(true);
 
@@ -2648,7 +2566,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         jScrollPane4.setName("jScrollPane4"); // NOI18N
 
         jListKeywords.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jListKeywords.border.title"))); // NOI18N
-        jListKeywords.setModel(keywordListModel);
+        jListKeywords.setModel(data.getKeywordListModel());
         jListKeywords.setName("jListKeywords"); // NOI18N
         jScrollPane4.setViewportView(jListKeywords);
 
@@ -2979,19 +2897,13 @@ public class SearchResultsFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-	/**
-	 * This variable indicates whether or not the fullscreen mode is supportet on
-	 * the current system. if not, disable related icons...
-	 */
-	private boolean fullScreenSupp = false;
-
 	public boolean isFullScreenSupp() {
-		return fullScreenSupp;
+		return data.isFullScreenSupp();
 	}
 
 	public void setFullScreenSupp(boolean b) {
 		boolean old = isFullScreenSupp();
-		this.fullScreenSupp = b;
+		this.data.setFullScreenSupp(b);
 		firePropertyChange("fullScreenSupp", old, isFullScreenSupp());
 	}
 
@@ -3089,9 +3001,11 @@ public class SearchResultsFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem viewMenuShowOnDesktop;
     // End of variables declaration//GEN-END:variables
 
-	private CHighlightSearchSettings highlightSettingsDlg;
-	private CSearchDlg searchDlg;
-	private TaskProgressDialog taskDlg;
-	private CFilterSearch filterSearchDlg;
-	private CRateEntry rateEntryDlg;
+	private SearchResultsFrameData data = new SearchResultsFrameData(new DefaultListModel<String>(), false, java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment()
+			.getDefaultScreenDevice(), org.jdesktop.application.Application
+			.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
+			.getResourceMap(SearchResultsFrame.class),
+			org.jdesktop.application.Application
+					.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
+					.getResourceMap(ToolbarIcons.class), false, false, false, false);
 }
