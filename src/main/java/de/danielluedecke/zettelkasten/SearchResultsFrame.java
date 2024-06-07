@@ -33,10 +33,9 @@
 
 package de.danielluedecke.zettelkasten;
 
+import de.danielluedecke.zettelkasten.data.SearchResultsFrameData;
 import com.explodingpixels.macwidgets.BottomBar;
 import com.explodingpixels.macwidgets.BottomBarSize;
-
-import de.danielluedecke.zettelkasten.data.SearchResultsFrameData;
 import de.danielluedecke.zettelkasten.database.*;
 import de.danielluedecke.zettelkasten.mac.MacSourceList;
 import de.danielluedecke.zettelkasten.util.Tools;
@@ -117,7 +116,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 * @return the table component of the search results window.
 	 */
 	public JTable getSearchFrameTable() {
-		return data.getjTableResults();
+		return jTableResults;
 	}
 
 	/**
@@ -174,10 +173,10 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			setupSeaGlassStyle();
 		}
 		// init toggle-items
-		data.getViewMenuHighlight().setSelected(data.getSettingsObj().getHighlightSearchResults());
-		data.getTb_highlight().setSelected(data.getSettingsObj().getHighlightSearchResults());
-		data.getViewMenuShowEntry().setSelected(data.getSettingsObj().getShowSearchEntry());
-		data.getjButtonResetList().setEnabled(false);
+		viewMenuHighlight.setSelected(data.getSettingsObj().getHighlightSearchResults());
+		tb_highlight.setSelected(data.getSettingsObj().getHighlightSearchResults());
+		viewMenuShowEntry.setSelected(data.getSettingsObj().getShowSearchEntry());
+		jButtonResetList.setEnabled(false);
 		// init table
 		initTable();
 		// init combobox. The automatic display-update should be managed
@@ -224,58 +223,58 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		 * Constructor for Matte Border public MatteBorder(int top, int left, int
 		 * bottom, int right, Color matteColor)
 		 */
-		data.getjScrollPane1().setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-		data.getjScrollPane4().setBorder(null);
+		jScrollPane1.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
+		jScrollPane4.setBorder(null);
 		if (settingsObj.getUseMacBackgroundColor() || settingsObj.isMacStyle()) {
-			data.getjListKeywords().setBackground(
+			jListKeywords.setBackground(
 					(settingsObj.isMacStyle()) ? ColorUtil.colorJTreeBackground : ColorUtil.colorJTreeLighterBackground);
-			data.getjListKeywords().setForeground(ColorUtil.colorJTreeDarkText);
+			jListKeywords.setForeground(ColorUtil.colorJTreeDarkText);
 		}
 		if (settingsObj.isSeaGlass()) {
-			data.getjPanel3().setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(settingsObj)));
-			data.getjPanel4().setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
-			data.getjListKeywords().setBorder(ZknMacWidgetFactory
+			jPanel3.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(settingsObj)));
+			jPanel4.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
+			jListKeywords.setBorder(ZknMacWidgetFactory
 					.getTitledBorder(data.getResourceMap().getString("jListKeywords.border.title"), settingsObj));
 			if (settingsObj.getSearchFrameSplitLayout() == JSplitPane.HORIZONTAL_SPLIT) {
-				data.getjPanel1().setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(settingsObj)));
-				data.getjPanel2().setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
+				jPanel1.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(settingsObj)));
+				jPanel2.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
 			} else {
-				data.getjPanel1().setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
-				data.getjPanel2().setBorder(BorderFactory.createMatteBorder(1, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
+				jPanel1.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(settingsObj)));
+				jPanel2.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 0, ColorUtil.getBorderGray(settingsObj)));
 			}
 			// jPanel3.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1,
 			// ColorUtil.getBorderGray(settingsObj)));
 		}
 		if (settingsObj.isMacStyle()) {
-			ZknMacWidgetFactory.updateSplitPane(data.getjSplitPaneSearch1());
-			ZknMacWidgetFactory.updateSplitPane(data.getjSplitPaneSearch2());
-			data.getjListKeywords().setBorder(ZknMacWidgetFactory.getTitledBorder(
+			ZknMacWidgetFactory.updateSplitPane(jSplitPaneSearch1);
+			ZknMacWidgetFactory.updateSplitPane(jSplitPaneSearch2);
+			jListKeywords.setBorder(ZknMacWidgetFactory.getTitledBorder(
 					data.getResourceMap().getString("jListKeywords.border.title"), ColorUtil.colorJTreeText, settingsObj));
 		}
 	}
 
 	/**
-	 * This method initializes the toolbar buttons. depending on the user-setting,
+	 * This method initialises the toolbar buttons. depending on the user-setting,
 	 * we either display small, medium or large icons as toolbar-icons.
 	 */
 	public final void initToolbarIcons() {
 		// check whether the toolbar should be displayed at all...
 		if (!data.getSettingsObj().getShowIcons() && !data.getSettingsObj().getShowIconText()) {
 			// if not, hide it and leave.
-			data.getSearchToolbar().setVisible(false);
+			searchToolbar.setVisible(false);
 			// and set a border to the main panel, because the toolbar's dark border is
 			// hidden
 			// and remove border from the main panel
-			data.getSearchMainPanel().setBorder(new MatteBorder(1, 0, 0, 0, ColorUtil.colorDarkLineGray));
+			searchMainPanel.setBorder(new MatteBorder(1, 0, 0, 0, ColorUtil.colorDarkLineGray));
 			return;
 		}
 		// set toolbar visible
-		data.getSearchToolbar().setVisible(true);
+		searchToolbar.setVisible(true);
 		// and remove border from the main panel
-		data.getSearchMainPanel().setBorder(null);
+		searchMainPanel.setBorder(null);
 		// init toolbar button array
-		javax.swing.JButton toolbarButtons[] = new javax.swing.JButton[] { data.getTb_copy(), data.getTb_selectall(), data.getTb_editentry(),
-				data.getTb_remove(), data.getTb_manlinks(), data.getTb_luhmann(), data.getTb_bookmark(), data.getTb_desktop(), data.getTb_highlight() };
+		javax.swing.JButton toolbarButtons[] = new javax.swing.JButton[] { tb_copy, tb_selectall, tb_editentry,
+				tb_remove, tb_manlinks, tb_luhmann, tb_bookmark, tb_desktop, tb_highlight };
 		String[] buttonNames = new String[] { "tb_copyText", "tb_selectallText", "tb_editText", "tb_deleteText",
 				"tb_addmanlinksText", "tb_addluhmannText", "tb_addbookmarkText", "tb_addtodesktopText",
 				"tb_highlightText" };
@@ -312,10 +311,10 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 
 	private void setupSeaGlassStyle() {
 		getRootPane().setBackground(ColorUtil.colorSeaGlassGray);
-		data.getjTextFieldFilterList().putClientProperty("JTextField.variant", "search");
-		data.getjEditorPaneSearchEntry().setBackground(Color.white);
-		data.getjButtonDeleteSearch().setBorderPainted(true);
-		data.getjButtonDeleteSearch().putClientProperty("JButton.buttonType", "textured");
+		jTextFieldFilterList.putClientProperty("JTextField.variant", "search");
+		jEditorPaneSearchEntry.setBackground(Color.white);
+		jButtonDeleteSearch.setBorderPainted(true);
+		jButtonDeleteSearch.putClientProperty("JButton.buttonType", "textured");
 	}
 
 	/**
@@ -324,88 +323,88 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 */
 	private void setupMacOSXLeopardStyle() {
 
-		data.getjTextFieldFilterList().putClientProperty("JTextField.variant", "search");
-		MacWidgetFactory.makeEmphasizedLabel(data.getjLabel1());
-		MacWidgetFactory.makeEmphasizedLabel(data.getjLabelHits());
+		jTextFieldFilterList.putClientProperty("JTextField.variant", "search");
+		MacWidgetFactory.makeEmphasizedLabel(jLabel1);
+		MacWidgetFactory.makeEmphasizedLabel(jLabelHits);
 	}
 
 	private void makeSeaGlassToolbar() {
-		Tools.makeTexturedToolBarButton(data.getTb_copy(), Tools.SEGMENT_POSITION_FIRST);
-		Tools.makeTexturedToolBarButton(data.getTb_selectall(), Tools.SEGMENT_POSITION_LAST);
-		Tools.makeTexturedToolBarButton(data.getTb_editentry(), Tools.SEGMENT_POSITION_FIRST);
-		Tools.makeTexturedToolBarButton(data.getTb_remove(), Tools.SEGMENT_POSITION_LAST);
-		Tools.makeTexturedToolBarButton(data.getTb_manlinks(), Tools.SEGMENT_POSITION_FIRST);
-		Tools.makeTexturedToolBarButton(data.getTb_luhmann(), Tools.SEGMENT_POSITION_MIDDLE);
+		Tools.makeTexturedToolBarButton(tb_copy, Tools.SEGMENT_POSITION_FIRST);
+		Tools.makeTexturedToolBarButton(tb_selectall, Tools.SEGMENT_POSITION_LAST);
+		Tools.makeTexturedToolBarButton(tb_editentry, Tools.SEGMENT_POSITION_FIRST);
+		Tools.makeTexturedToolBarButton(tb_remove, Tools.SEGMENT_POSITION_LAST);
+		Tools.makeTexturedToolBarButton(tb_manlinks, Tools.SEGMENT_POSITION_FIRST);
+		Tools.makeTexturedToolBarButton(tb_luhmann, Tools.SEGMENT_POSITION_MIDDLE);
 		if (data.getSettingsObj().getShowAllIcons()) {
-			Tools.makeTexturedToolBarButton(data.getTb_bookmark(), Tools.SEGMENT_POSITION_MIDDLE);
-			Tools.makeTexturedToolBarButton(data.getTb_desktop(), Tools.SEGMENT_POSITION_LAST);
+			Tools.makeTexturedToolBarButton(tb_bookmark, Tools.SEGMENT_POSITION_MIDDLE);
+			Tools.makeTexturedToolBarButton(tb_desktop, Tools.SEGMENT_POSITION_LAST);
 		} else {
-			Tools.makeTexturedToolBarButton(data.getTb_bookmark(), Tools.SEGMENT_POSITION_LAST);
+			Tools.makeTexturedToolBarButton(tb_bookmark, Tools.SEGMENT_POSITION_LAST);
 		}
-		Tools.makeTexturedToolBarButton(data.getTb_highlight(), Tools.SEGMENT_POSITION_ONLY);
-		data.getSearchToolbar().setPreferredSize(
-				new java.awt.Dimension(data.getSearchToolbar().getSize().width, Constants.seaGlassToolbarHeight));
-		data.getSearchToolbar().add(new javax.swing.JToolBar.Separator(), 0);
+		Tools.makeTexturedToolBarButton(tb_highlight, Tools.SEGMENT_POSITION_ONLY);
+		searchToolbar.setPreferredSize(
+				new java.awt.Dimension(searchToolbar.getSize().width, Constants.seaGlassToolbarHeight));
+		searchToolbar.add(new javax.swing.JToolBar.Separator(), 0);
 	}
 
 	private void makeMacToolBar() {
 		// hide default toolbr
-		data.getSearchToolbar().setVisible(false);
-		this.remove(data.getSearchToolbar());
+		searchToolbar.setVisible(false);
+		this.remove(searchToolbar);
 		// and create mac toolbar
 		if (data.getSettingsObj().getShowIcons() || data.getSettingsObj().getShowIconText()) {
 
 			UnifiedToolBar mactoolbar = new UnifiedToolBar();
 
 			mactoolbar.addComponentToLeft(
-					MacToolbarButton.makeTexturedToolBarButton(data.getTb_copy(), MacToolbarButton.SEGMENT_POSITION_FIRST));
+					MacToolbarButton.makeTexturedToolBarButton(tb_copy, MacToolbarButton.SEGMENT_POSITION_FIRST));
 			mactoolbar.addComponentToLeft(
-					MacToolbarButton.makeTexturedToolBarButton(data.getTb_selectall(), MacToolbarButton.SEGMENT_POSITION_LAST));
+					MacToolbarButton.makeTexturedToolBarButton(tb_selectall, MacToolbarButton.SEGMENT_POSITION_LAST));
 			mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
 			mactoolbar.addComponentToLeft(
-					MacToolbarButton.makeTexturedToolBarButton(data.getTb_editentry(), MacToolbarButton.SEGMENT_POSITION_FIRST));
+					MacToolbarButton.makeTexturedToolBarButton(tb_editentry, MacToolbarButton.SEGMENT_POSITION_FIRST));
 			mactoolbar.addComponentToLeft(
-					MacToolbarButton.makeTexturedToolBarButton(data.getTb_remove(), MacToolbarButton.SEGMENT_POSITION_LAST));
+					MacToolbarButton.makeTexturedToolBarButton(tb_remove, MacToolbarButton.SEGMENT_POSITION_LAST));
 			mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
 			mactoolbar.addComponentToLeft(
-					MacToolbarButton.makeTexturedToolBarButton(data.getTb_manlinks(), MacToolbarButton.SEGMENT_POSITION_FIRST));
+					MacToolbarButton.makeTexturedToolBarButton(tb_manlinks, MacToolbarButton.SEGMENT_POSITION_FIRST));
 			mactoolbar.addComponentToLeft(
-					MacToolbarButton.makeTexturedToolBarButton(data.getTb_luhmann(), MacToolbarButton.SEGMENT_POSITION_MIDDLE));
+					MacToolbarButton.makeTexturedToolBarButton(tb_luhmann, MacToolbarButton.SEGMENT_POSITION_MIDDLE));
 			if (data.getSettingsObj().getShowAllIcons()) {
-				mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(data.getTb_bookmark(),
+				mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_bookmark,
 						MacToolbarButton.SEGMENT_POSITION_MIDDLE));
 				mactoolbar.addComponentToLeft(
-						MacToolbarButton.makeTexturedToolBarButton(data.getTb_desktop(), MacToolbarButton.SEGMENT_POSITION_LAST));
+						MacToolbarButton.makeTexturedToolBarButton(tb_desktop, MacToolbarButton.SEGMENT_POSITION_LAST));
 			} else {
-				mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(data.getTb_bookmark(),
+				mactoolbar.addComponentToLeft(MacToolbarButton.makeTexturedToolBarButton(tb_bookmark,
 						MacToolbarButton.SEGMENT_POSITION_LAST));
 			}
 			mactoolbar.addComponentToLeft(MacWidgetFactory.createSpacer(16, 1));
 			mactoolbar.addComponentToLeft(
-					MacToolbarButton.makeTexturedToolBarButton(data.getTb_highlight(), MacToolbarButton.SEGMENT_POSITION_ONLY));
+					MacToolbarButton.makeTexturedToolBarButton(tb_highlight, MacToolbarButton.SEGMENT_POSITION_ONLY));
 
 			mactoolbar.installWindowDraggerOnWindow(this);
-			data.getSearchMainPanel().add(mactoolbar.getComponent(), BorderLayout.PAGE_START);
+			searchMainPanel.add(mactoolbar.getComponent(), BorderLayout.PAGE_START);
 		}
 		makeMacBottomBar();
 	}
 
 	private void makeMacBottomBar() {
-		data.getjPanel9().setVisible(false);
+		jPanel9.setVisible(false);
 
 		BottomBar macbottombar = new BottomBar(BottomBarSize.LARGE);
-		macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(data.getjLabelHits()), 20);
-		macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(data.getjLabel1()), 4);
-		macbottombar.addComponentToLeft(data.getjComboBoxSearches(), 4);
-		macbottombar.addComponentToLeft(data.getjButtonDeleteSearch(), 4);
+		macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(jLabelHits), 20);
+		macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(jLabel1), 4);
+		macbottombar.addComponentToLeft(jComboBoxSearches, 4);
+		macbottombar.addComponentToLeft(jButtonDeleteSearch, 4);
 
-		data.getjButtonDeleteSearch().setBorderPainted(true);
-		data.getjButtonDeleteSearch().putClientProperty("JButton.buttonType", "textured");
+		jButtonDeleteSearch.setBorderPainted(true);
+		jButtonDeleteSearch.putClientProperty("JButton.buttonType", "textured");
 
-		data.getSearchStatusPanel().remove(data.getjPanel9());
-		data.getSearchStatusPanel().setBorder(null);
-		data.getSearchStatusPanel().setLayout(new BorderLayout());
-		data.getSearchStatusPanel().add(macbottombar.getComponent(), BorderLayout.PAGE_START);
+		searchStatusPanel.remove(jPanel9);
+		searchStatusPanel.setBorder(null);
+		searchStatusPanel.setLayout(new BorderLayout());
+		searchStatusPanel.add(macbottombar.getComponent(), BorderLayout.PAGE_START);
 	}
 
 	/**
@@ -415,8 +414,8 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 */
 	private void initDefaultFontSize() {
         Font settingsTableFont = data.getSettingsObj().getTableFont();
-		data.getjTableResults().setFont(settingsTableFont);
-		data.getjListKeywords().setFont(settingsTableFont);
+		jTableResults.setFont(settingsTableFont);
+		jListKeywords.setFont(settingsTableFont);
 	}
 
 	private void initListeners() {
@@ -464,11 +463,11 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			}
 		};
 		getRootPane().registerKeyboardAction(showNewEntryFrameAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
-		data.getSearchSearchMenu().addMenuListener(new javax.swing.event.MenuListener() {
+		searchSearchMenu.addMenuListener(new javax.swing.event.MenuListener() {
 			@Override
 			public void menuSelected(javax.swing.event.MenuEvent evt) {
-				setListSelected(data.getjListKeywords().getSelectedIndex() != -1);
-				String t1 = data.getjEditorPaneSearchEntry().getSelectedText();
+				setListSelected(jListKeywords.getSelectedIndex() != -1);
+				String t1 = jEditorPaneSearchEntry.getSelectedText();
 				setTextSelected(t1 != null && !t1.isEmpty());
 			}
 
@@ -480,7 +479,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			public void menuCanceled(javax.swing.event.MenuEvent evt) {
 			}
 		});
-		data.getjEditorPaneSearchEntry().addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
+		jEditorPaneSearchEntry.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
 			@Override
 			public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
 				// get input event with additional modifiers
@@ -488,10 +487,10 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 				// check whether shift key was pressed, and if so, remove manual link
 				if (inev.isControlDown() || inev.isMetaDown()) {
 					// get selected entry
-					int row = data.getjTableResults().getSelectedRow();
+					int row = jTableResults.getSelectedRow();
 					// when we have a valid selection, go on
 					if (row != -1) {
-						int displayedZettel = Integer.parseInt(data.getjTableResults().getValueAt(row, 0).toString());
+						int displayedZettel = Integer.parseInt(jTableResults.getValueAt(row, 0).toString());
 						if (Tools.removeHyperlink(evt.getDescription(), data.getDataObj(), displayedZettel)) {
 							data.getMainframe().updateDisplay();
 						}
@@ -502,17 +501,17 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 						AttributeSet attr = elem.getAttributes();
 						AttributeSet a = (AttributeSet) attr.getAttribute(HTML.Tag.A);
 						if (a != null) {
-							data.getjEditorPaneSearchEntry().setToolTipText((String) a.getAttribute(HTML.Attribute.TITLE));
+							jEditorPaneSearchEntry.setToolTipText((String) a.getAttribute(HTML.Attribute.TITLE));
 						}
 					}
 				} else if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) {
-					data.getjEditorPaneSearchEntry().setToolTipText(null);
+					jEditorPaneSearchEntry.setToolTipText(null);
 				} else {
 					openAttachment(evt);
 				}
 			}
 		});
-		data.getjTableResults().addMouseListener(new java.awt.event.MouseAdapter() {
+		jTableResults.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				// this listener should only react on left-mouse-button-clicks...
@@ -524,15 +523,15 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 					displayEntryInMainframe();
 			}
 		});
-		data.getjTextFieldFilterList().addKeyListener(new java.awt.event.KeyAdapter() {
+		jTextFieldFilterList.addKeyListener(new java.awt.event.KeyAdapter() {
 			@Override
 			public void keyReleased(java.awt.event.KeyEvent evt) {
 				if (Tools.isNavigationKey(evt.getKeyCode())) {
 					// if user pressed navigation key, select next table entry
-					de.danielluedecke.zettelkasten.util.TableUtils.navigateThroughList(data.getjTableResults(), evt.getKeyCode());
+					de.danielluedecke.zettelkasten.util.TableUtils.navigateThroughList(jTableResults, evt.getKeyCode());
 				} else {
 					// select table-entry live, while the user is typing...
-					de.danielluedecke.zettelkasten.util.TableUtils.selectByTyping(data.getjTableResults(), data.getjTextFieldFilterList(),
+					de.danielluedecke.zettelkasten.util.TableUtils.selectByTyping(jTableResults, jTextFieldFilterList,
 							1);
 				}
 			}
@@ -545,7 +544,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// should react on mouse-clicks. a single click filters the jTableLinks, a
 		// double-click
 		// starts a keyword-search
-		data.getjListKeywords().addMouseListener(new java.awt.event.MouseAdapter() {
+		jListKeywords.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				// this listener should only react on left-mouse-button-clicks...
@@ -554,7 +553,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 					return;
 				// on double click
 				if (2 == evt.getClickCount()) {
-					if (data.getjListKeywords().getSelectedIndex() != -1)
+					if (jListKeywords.getSelectedIndex() != -1)
 						newSearchFromKeywordsLogOr();
 				}
 				// on single click...
@@ -563,7 +562,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 				}
 			}
 		});
-		data.getjListKeywords().addKeyListener(new java.awt.event.KeyAdapter() {
+		jListKeywords.addKeyListener(new java.awt.event.KeyAdapter() {
 			@Override
 			public void keyReleased(java.awt.event.KeyEvent evt) {
 				// if a navigation-key (arrows, page-down/up, home etc.) is pressed,
@@ -603,19 +602,19 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		AbstractAction a_enter = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (data.getjTextFieldFilterList() == e.getSource())
+				if (jTextFieldFilterList == e.getSource())
 					filterResultList();
-				if (data.getjTableResults() == e.getSource())
+				if (jTableResults == e.getSource())
 					displayEntryInMainframe();
 			}
 		};
 		// put action to the tables' actionmaps
-		data.getjTextFieldFilterList().getActionMap().put("EnterKeyPressed", a_enter);
-		data.getjTableResults().getActionMap().put("EnterKeyPressed", a_enter);
+		jTextFieldFilterList.getActionMap().put("EnterKeyPressed", a_enter);
+		jTableResults.getActionMap().put("EnterKeyPressed", a_enter);
 		// associate enter-keystroke with that action
 		KeyStroke ks = KeyStroke.getKeyStroke("ENTER");
-		data.getjTextFieldFilterList().getInputMap().put(ks, "EnterKeyPressed");
-		data.getjTableResults().getInputMap().put(ks, "EnterKeyPressed");
+		jTextFieldFilterList.getInputMap().put(ks, "EnterKeyPressed");
+		jTableResults.getInputMap().put(ks, "EnterKeyPressed");
 		// </editor-fold>
 	}
 
@@ -695,25 +694,25 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			String menutext;
 			char mkey;
 			// the mnemonic key for the file menu
-			menutext = data.getSearchFileMenu().getText();
+			menutext = searchFileMenu.getText();
 			mkey = menutext.charAt(0);
-			data.getSearchFileMenu().setMnemonic(mkey);
+			searchFileMenu.setMnemonic(mkey);
 			// the mnemonic key for the edit menu
-			menutext = data.getSearchEditMenu().getText();
+			menutext = searchEditMenu.getText();
 			mkey = menutext.charAt(0);
-			data.getSearchEditMenu().setMnemonic(mkey);
+			searchEditMenu.setMnemonic(mkey);
 			// the mnemonic key for the filter menu
-			menutext = data.getSearchFilterMenu().getText();
+			menutext = searchFilterMenu.getText();
 			mkey = menutext.charAt(0);
-			data.getSearchFilterMenu().setMnemonic(mkey);
+			searchFilterMenu.setMnemonic(mkey);
 			// the mnemonic key for the search menu
-			menutext = data.getSearchSearchMenu().getText();
+			menutext = searchSearchMenu.getText();
 			mkey = menutext.charAt(0);
-			data.getSearchSearchMenu().setMnemonic(mkey);
+			searchSearchMenu.setMnemonic(mkey);
 			// the mnemonic key for the view menu
-			menutext = data.getSearchViewMenu().getText();
+			menutext = searchViewMenu.getText();
 			mkey = menutext.charAt(0);
-			data.getSearchViewMenu().setMnemonic(mkey);
+			searchViewMenu.setMnemonic(mkey);
 		}
 		// on Mac OS, at least for the German locale, the File menu is called different
 		// compared to windows or linux. Furthermore, we don't need the about and
@@ -721,10 +720,10 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// menu items, since these are locates on the program's menu item in the
 		// apple-menu-bar
 		if (PlatformUtil.isMacOS())
-			data.getSearchFileMenu().setText(data.getResourceMap().getString("macFileMenuText"));
+			searchFileMenu.setText(data.getResourceMap().getString("macFileMenuText"));
 		// en- or disable fullscreen icons
 		setFullScreenSupp(data.getGraphicdevice().isFullScreenSupported());
-		// if full screen is not supported, tell this in the tool tip
+		// if fullscreen is not supportet, tell this in the tooltip
 		if (!data.getGraphicdevice().isFullScreenSupported()) {
 			AbstractAction ac = (AbstractAction) actionMap.get("viewFullScreen");
 			ac.putValue(AbstractAction.SHORT_DESCRIPTION, data.getResourceMap().getString("fullScreenNotSupported"));
@@ -742,17 +741,17 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 
 	@Action
 	public void resetResultslist() {
-		prepareResultList(data.getjComboBoxSearches().getSelectedIndex());
-		// set input focus to the table, so key-navigation can start immediately
-		data.getjTableResults().requestFocusInWindow();
+		prepareResultList(jComboBoxSearches.getSelectedIndex());
+		// set inputfocus to the table, so key-navigation can start immediately
+		jTableResults.requestFocusInWindow();
 		// finally, select first entry
 		try {
-			data.getjTableResults().setRowSelectionInterval(0, 0);
+			jTableResults.setRowSelectionInterval(0, 0);
 		} catch (IllegalArgumentException e) {
 			Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
 		}
 		// enable refresh button
-		data.getjButtonResetList().setEnabled(false);
+		jButtonResetList.setEnabled(false);
 	}
 
 	private void filterResultList() {
@@ -766,17 +765,17 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 
 		// get text from the textfield containing the filter string
 		// convert to lowercase, we don't want case-sensitive search
-		String text = data.getjTextFieldFilterList().getText().toLowerCase();
+		String text = jTextFieldFilterList.getText().toLowerCase();
 		// tell selection listener to do nothing...
 		data.setTableUpdateActive(true);
 		// when we have no text, do nothing
 		if (!text.isEmpty()) {
 			// get table model
-			DefaultTableModel dtm = (DefaultTableModel) data.getjTableResults().getModel();
+			DefaultTableModel dtm = (DefaultTableModel) jTableResults.getModel();
 			// go through table and delete all rows that don't contain the filter text
-			for (int cnt = (data.getjTableResults().getRowCount() - 1); cnt >= 0; cnt--) {
+			for (int cnt = (jTableResults.getRowCount() - 1); cnt >= 0; cnt--) {
 				// retrieve row-index from the model
-				int rowindex = data.getjTableResults().convertRowIndexToModel(cnt);
+				int rowindex = jTableResults.convertRowIndexToModel(cnt);
 				// get the string (author) value from the table
 				// convert to lowercase, we don't want case-sensitive search
 				String value = dtm.getValueAt(rowindex, 1).toString().toLowerCase();
@@ -811,12 +810,12 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 					dtm.removeRow(rowindex);
 			}
 			// reset textfield
-			data.getjTextFieldFilterList().setText("");
-			data.getjTextFieldFilterList().requestFocusInWindow();
+			jTextFieldFilterList.setText("");
+			jTextFieldFilterList.requestFocusInWindow();
 			// enable textfield only if we have more than 1 element in the jtable
-			data.getjTextFieldFilterList().setEnabled(data.getjTableResults().getRowCount() > 0);
+			jTextFieldFilterList.setEnabled(jTableResults.getRowCount() > 0);
 			// enable refresh button
-			data.getjButtonResetList().setEnabled(true);
+			jButtonResetList.setEnabled(true);
 			// create a new stringbuilder to prepare the label
 			// that shows the amount of found entries
 			StringBuilder sb = new StringBuilder("");
@@ -826,7 +825,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			sb.append(data.getResourceMap().getString("hitsText"));
 			sb.append(")");
 			// set labeltext
-			data.getjLabelHits().setText(sb.toString());
+			jLabelHits.setText(sb.toString());
 		}
 		// tell selection listener action is possible again...
 		data.setTableUpdateActive(false);
@@ -907,30 +906,30 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		if (JSplitPane.HORIZONTAL_SPLIT == currentlayout) {
 			currentlayout = JSplitPane.VERTICAL_SPLIT;
 			if (data.getSettingsObj().isSeaGlass()) {
-				data.getjPanel1().setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(data.getSettingsObj())));
-				data.getjPanel2().setBorder(BorderFactory.createMatteBorder(1, 1, 0, 0, ColorUtil.getBorderGray(data.getSettingsObj())));
+				jPanel1.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.getBorderGray(data.getSettingsObj())));
+				jPanel2.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 0, ColorUtil.getBorderGray(data.getSettingsObj())));
 			}
 		} else {
 			currentlayout = JSplitPane.HORIZONTAL_SPLIT;
 			if (data.getSettingsObj().isSeaGlass()) {
-				data.getjPanel1().setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(data.getSettingsObj())));
-				data.getjPanel2().setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(data.getSettingsObj())));
+				jPanel1.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ColorUtil.getBorderGray(data.getSettingsObj())));
+				jPanel2.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, ColorUtil.getBorderGray(data.getSettingsObj())));
 			}
 		}
 		data.getSettingsObj().setSearchFrameSplitLayout(currentlayout);
-		data.getjSplitPaneSearch1().setOrientation(currentlayout);
+		jSplitPaneSearch1.setOrientation(currentlayout);
 		if (data.getSettingsObj().isMacStyle())
-			ZknMacWidgetFactory.updateSplitPane(data.getjSplitPaneSearch1());
+			ZknMacWidgetFactory.updateSplitPane(jSplitPaneSearch1);
 	}
 
 	@Action
 	public void showEntryInDesktop() {
 		// get selected row
-		int row = data.getjTableResults().getSelectedRow();
+		int row = jTableResults.getSelectedRow();
 		// check for valid value
 		if (row != -1) {
 			try {
-				int nr = Integer.parseInt(data.getjTableResults().getValueAt(row, 0).toString());
+				int nr = Integer.parseInt(jTableResults.getValueAt(row, 0).toString());
 				if (data.getDesktopObj().isEntryInAnyDesktop(nr)) {
 					data.getMainframe().showEntryInDesktopWindow(nr);
 				}
@@ -991,33 +990,33 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 */
 	private void initComboBox() {
 		// clear combobox
-		data.getjComboBoxSearches().removeAllItems();
+		jComboBoxSearches.removeAllItems();
 
 		for (int cnt = 0; cnt < data.getSearchrequest().getCount(); cnt++) {
-			data.getjComboBoxSearches().addItem(data.getSearchrequest().getShortDescription(cnt));
+			jComboBoxSearches.addItem(data.getSearchrequest().getShortDescription(cnt));
 		}
 		// add action listener to combo box
-		data.getjComboBoxSearches().addActionListener(new java.awt.event.ActionListener() {
+		jComboBoxSearches.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
 				// set all results, i.e. all entry-numbers and the entries' titles, into the
 				// search result table
-				prepareResultList(data.getjComboBoxSearches().getSelectedIndex());
+				prepareResultList(jComboBoxSearches.getSelectedIndex());
 				// and update the display, i.e. show the entry's content
 				updateDisplay();
 				// finally, select first entry
 				try {
-					data.getjTableResults().setRowSelectionInterval(0, 0);
+					jTableResults.setRowSelectionInterval(0, 0);
 				} catch (IllegalArgumentException e) {
 					Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
 				}
 				// set inputfocus to the table, so key-navigation can start immediately
-				data.getjTableResults().requestFocusInWindow();
+				jTableResults.requestFocusInWindow();
 			}
 		});
 		try {
 			// select first item
-			data.getjComboBoxSearches().setSelectedIndex(0);
+			jComboBoxSearches.setSelectedIndex(0);
 		} catch (IllegalArgumentException ex) {
 			// log error
 			Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
@@ -1039,20 +1038,20 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// bind our new forward focus traversal keys
 		Set<AWTKeyStroke> newForwardKeys = new HashSet<>(1);
 		newForwardKeys.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_TAB, 0));
-		data.getjTableResults().setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
+		jTableResults.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
 				Collections.unmodifiableSet(newForwardKeys));
 		// bind our new backward focus traversal keys
 		Set<AWTKeyStroke> newBackwardKeys = new HashSet<>(1);
 		newBackwardKeys
 				.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_TAB, KeyEvent.SHIFT_MASK + KeyEvent.SHIFT_DOWN_MASK));
-		data.getjTableResults().setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,
+		jTableResults.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,
 				Collections.unmodifiableSet(newBackwardKeys));
 		// create new table sorter
 		TableRowSorter<TableModel> sorter = new TableRowSorter<>();
 		// tell tgis jtable that it has an own sorter
-		data.getjTableResults().setRowSorter(sorter);
+		jTableResults.setRowSorter(sorter);
 		// and tell the sorter, which table model to sort.
-		sorter.setModel((DefaultTableModel) data.getjTableResults().getModel());
+		sorter.setModel((DefaultTableModel) jTableResults.getModel());
 		// in this table, the first column needs a custom comparator.
 		try {
 			// sorter for titles
@@ -1067,7 +1066,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
 		}
 		// get last table sorting
-		RowSorter.SortKey sk = data.getSettingsObj().getTableSorting(data.getjTableResults());
+		RowSorter.SortKey sk = data.getSettingsObj().getTableSorting(jTableResults);
 		// any sorting found?
 		if (sk != null) {
 			// create array with sort key
@@ -1085,20 +1084,20 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 				public void sort(int columnModelIndex, TableUtils.SortDirection sortDirection) {
 				}
 			};
-			TableUtils.makeSortable(data.getjTableResults(), sortDelegate);
+			TableUtils.makeSortable(jTableResults, sortDelegate);
 			// change back default column-resize-behaviour when we have itunes-tables,
 			// since the default for those is "auto resize off"
-			data.getjTableResults().setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+			jTableResults.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
 		}
-		data.getjTableResults().setShowHorizontalLines(data.getSettingsObj().getShowGridHorizontal());
-		data.getjTableResults().setShowVerticalLines(data.getSettingsObj().getShowGridVertical());
-		data.getjTableResults().setIntercellSpacing(data.getSettingsObj().getCellSpacing());
-		data.getjTableResults().getTableHeader().setReorderingAllowed(false);
+		jTableResults.setShowHorizontalLines(data.getSettingsObj().getShowGridHorizontal());
+		jTableResults.setShowVerticalLines(data.getSettingsObj().getShowGridVertical());
+		jTableResults.setIntercellSpacing(data.getSettingsObj().getCellSpacing());
+		jTableResults.getTableHeader().setReorderingAllowed(false);
 		// if the user wants to see grids, we need to change the gridcolor on mac-aqua
-		data.getjTableResults().setGridColor(data.getSettingsObj().getTableGridColor());
-		SelectionListener listener = new SelectionListener(data.getjTableResults());
-		data.getjTableResults().getSelectionModel().addListSelectionListener(listener);
-		data.getjTableResults().getColumnModel().getSelectionModel().addListSelectionListener(listener);
+		jTableResults.setGridColor(data.getSettingsObj().getTableGridColor());
+		SelectionListener listener = new SelectionListener(jTableResults);
+		jTableResults.getSelectionModel().addListSelectionListener(listener);
+		jTableResults.getColumnModel().getSelectionModel().addListSelectionListener(listener);
 	}
 
 	/**
@@ -1125,7 +1124,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			selection = searchnr;
 		// remember current selection for later use, see below
 		else
-			selection = data.getjComboBoxSearches().getSelectedIndex();
+			selection = jComboBoxSearches.getSelectedIndex();
 		// used for tablerowselection
 		int row;
 		// if we have a parameter for row-selection, set it here
@@ -1133,32 +1132,32 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			row = selectedrow;
 		// remember selected row...
 		else
-			row = data.getjTableResults().getSelectedRow();
+			row = jTableResults.getSelectedRow();
 		// get all action listeners from the combo box
-		ActionListener[] al = data.getjComboBoxSearches().getActionListeners();
+		ActionListener[] al = jComboBoxSearches.getActionListeners();
 		// remove all action listeners so we don't fire several action-events
 		// when we update the combo box. we can set the action listener later again
 		for (ActionListener listener : al)
-			data.getjComboBoxSearches().removeActionListener(listener);
+			jComboBoxSearches.removeActionListener(listener);
 		// clear combobox
-		data.getjComboBoxSearches().removeAllItems();
+		jComboBoxSearches.removeAllItems();
 		// add search descriptions to combobox
 		for (int cnt = 0; cnt < data.getSearchrequest().getCount(); cnt++)
-			data.getjComboBoxSearches().addItem(data.getSearchrequest().getShortDescription(cnt));
+			jComboBoxSearches.addItem(data.getSearchrequest().getShortDescription(cnt));
 		// add action listener to combo box
-		data.getjComboBoxSearches().addActionListener(new java.awt.event.ActionListener() {
+		jComboBoxSearches.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
 				// Set all results, i.e. all entry-numbers and the entries' titles, into the
 				// search result table
-				prepareResultList(data.getjComboBoxSearches().getSelectedIndex());
+				prepareResultList(jComboBoxSearches.getSelectedIndex());
 				// and update the display, i.e. show the entry's content
 				updateDisplay();
 				// Set inputfocus to the table, so key-navigation can start immediately
-				data.getjTableResults().requestFocusInWindow();
+				jTableResults.requestFocusInWindow();
 				// finally, select first entry
 				try {
-					data.getjTableResults().setRowSelectionInterval(0, 0);
+					jTableResults.setRowSelectionInterval(0, 0);
 				} catch (IllegalArgumentException e) {
 					Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
 				}
@@ -1169,21 +1168,21 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			// check whether the last selected searchrequest is still available
 			// if not, choose the last search request in the combobox...
 			if (selection != data.getSearchrequest().getCurrentSearch())
-				selection = data.getjComboBoxSearches().getItemCount() - 1;
+				selection = jComboBoxSearches.getItemCount() - 1;
 			// Select search request
-			data.getjComboBoxSearches().setSelectedIndex(selection);
+			jComboBoxSearches.setSelectedIndex(selection);
 			// if we had no prevous selection, set row-selector to first item.
 			if (-1 == row)
 				row = 0;
 			// if the selected row was the last value, set row-counter to last row
-			else if (row >= data.getjTableResults().getRowCount())
-				row = data.getjTableResults().getRowCount() - 1;
+			else if (row >= jTableResults.getRowCount())
+				row = jTableResults.getRowCount() - 1;
 			// finally...
 			try {
 				// Select the appropriate table-entry
-				data.getjTableResults().setRowSelectionInterval(row, row);
+				jTableResults.setRowSelectionInterval(row, row);
 				// and make sure it is visible...
-				data.getjTableResults().scrollRectToVisible(data.getjTableResults().getCellRect(row, 0, false));
+				jTableResults.scrollRectToVisible(jTableResults.getCellRect(row, 0, false));
 			} catch (IllegalArgumentException e) {
 				Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
 			}
@@ -1217,7 +1216,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			if (result.length > 0)
 				Arrays.sort(result);
 			// get the table model
-			DefaultTableModel dtm = (DefaultTableModel) data.getjTableResults().getModel();
+			DefaultTableModel dtm = (DefaultTableModel) jTableResults.getModel();
 			// clear table
 			dtm.setRowCount(0);
 			// iterate the result-array
@@ -1261,11 +1260,11 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			sb.append(data.getResourceMap().getString("hitsText"));
 			sb.append(")");
 			// Set labeltext
-			data.getjLabelHits().setText(sb.toString());
+			jLabelHits.setText(sb.toString());
 			// work done
 			data.setTableUpdateActive(false);
 			// enable filter text field
-			data.getjTextFieldFilterList().setEnabled(true);
+			jTextFieldFilterList.setEnabled(true);
 		}
 	}
 
@@ -1276,11 +1275,11 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 */
 	private void updateDisplay() {
 		// get selected row
-		int row = data.getjTableResults().getSelectedRow();
+		int row = jTableResults.getSelectedRow();
 		// if we have any selections, go on
 		if (row != -1) {
 			// retrieve the value...
-			Object o = data.getjTableResults().getValueAt(row, 0);
+			Object o = jTableResults.getValueAt(row, 0);
 			try {
 				// ...and try to convert it to an integer value
 				int selection = Integer.parseInt(o.toString());
@@ -1320,11 +1319,11 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 					for (int cnt = 0; cnt < l.size(); cnt++)
 						selections[cnt] = l.get(cnt);
 					// Set selected indices for the jList
-					data.getjListKeywords().setSelectedIndices(selections);
+					jListKeywords.setSelectedIndices(selections);
 				}
 				// if we don't have highlighting, clear selection
 				else
-					data.getjListKeywords().clearSelection();
+					jListKeywords.clearSelection();
 				// if we want to update the entry immediately, show entry in mainframe as well
 				if (data.getSettingsObj().getShowSearchEntry())
 					data.getMainframe().setNewActivatedEntryAndUpdateDisplay(selection);
@@ -1334,18 +1333,18 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 				Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
 			}
 		} else {
-			data.getjEditorPaneSearchEntry().setText("");
+			jEditorPaneSearchEntry.setText("");
 			data.getKeywordListModel().clear();
 		}
 	}
 
 	public void updateDisplayAfterEditing() {
 		// get selected row
-		int row = data.getjTableResults().getSelectedRow();
+		int row = jTableResults.getSelectedRow();
 		// if we have any selections, go on
 		if (row != -1) {
 			// retrieve the value...
-			Object o = data.getjTableResults().getValueAt(row, 0);
+			Object o = jTableResults.getValueAt(row, 0);
 			try {
 				// ...and try to convert it to an integer value
 				int selection = Integer.parseInt(o.toString());
@@ -1364,7 +1363,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// get search terms, if highlighting is requested
 		if (data.getSettingsObj().getHighlightSearchResults()) {
 			// get the selected index, i.e. the searchrequest we want to retrieve
-			int index = data.getjComboBoxSearches().getSelectedIndex();
+			int index = jComboBoxSearches.getSelectedIndex();
 			// get the related search terms
 			sts = data.getSearchrequest().getSearchTerms(index);
 			// check whether the search was a synonym-search. if yes, add synonyms to search
@@ -1407,7 +1406,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// in case parsing was ok, display the entry
 		if (Tools.isValidHTML(disp, nr)) {
 			// Set entry information in the main textfield
-			data.getjEditorPaneSearchEntry().setText(disp);
+			jEditorPaneSearchEntry.setText(disp);
 		}
 		// else show error message box to user and tell him what to do
 		else {
@@ -1421,10 +1420,10 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			cleanedContent.append(data.getResourceMap().getString("incorrectNestedTagsText"));
 			cleanedContent.append("</div>").append(data.getDataObj().getCleanZettelContent(nr)).append("</body>");
 			// and display clean content instead
-			data.getjEditorPaneSearchEntry().setText(cleanedContent.toString());
+			jEditorPaneSearchEntry.setText(cleanedContent.toString());
 		}
 		// place caret, so content scrolls to top
-		data.getjEditorPaneSearchEntry().setCaretPosition(0);
+		jEditorPaneSearchEntry.setCaretPosition(0);
 	}
 
 	@Action
@@ -1434,19 +1433,19 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// search-reuest
 		// finally, call the mainframe's exportwindow-method and pass the int-array with
 		// the entry-numbers
-		data.getMainframe().exportEntries(data.getSearchrequest().getSearchResults(data.getjComboBoxSearches().getSelectedIndex()));
+		data.getMainframe().exportEntries(data.getSearchrequest().getSearchResults(jComboBoxSearches.getSelectedIndex()));
 	}
 
 	@Action
 	public void editEntry() {
 		// get selected entry
-		int row = data.getjTableResults().getSelectedRow();
+		int row = jTableResults.getSelectedRow();
 		// when we have a valid selection, go on
 		if (row != -1) {
 			// remember that entry editing came from search window
 			data.getMainframe().editEntryFromSearchWindow = true;
 			// open edit window
-			data.getMainframe().openEditWindow(true, Integer.parseInt(data.getjTableResults().getValueAt(row, 0).toString()), false, false,
+			data.getMainframe().openEditWindow(true, Integer.parseInt(jTableResults.getValueAt(row, 0).toString()), false, false,
 					-1);
 		}
 	}
@@ -1474,7 +1473,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 */
 	private String[] getSelectedKeywordsFromList() {
 		// get selected values
-		List<String> values = data.getjListKeywords().getSelectedValuesList();
+		List<String> values = jListKeywords.getSelectedValuesList();
 		// if we have any selections, go on
 		if (!values.isEmpty()) {
 			// create string array for selected values
@@ -1489,7 +1488,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	public void newSearchFromSelection() {
 		// open the search dialog
 		// the parameters are as following:
-		data.getMainframe().startSearch(new String[] { data.getjEditorPaneSearchEntry().getSelectedText() }, // string-array with search
+		data.getMainframe().startSearch(new String[] { jEditorPaneSearchEntry.getSelectedText() }, // string-array with search
 																							// terms
 				Constants.SEARCH_AUTHOR, // the type of search, i.e. where to look
 				Constants.LOG_OR, // the logical combination
@@ -1610,7 +1609,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// - case-sensitive search
 		if (!data.getSearchDlg().isCancelled()) {
 			startSearch(Constants.SEARCH_USUAL, data.getSearchDlg().getSearchTerms(),
-					data.getSearchrequest().getSearchResults(data.getjComboBoxSearches().getSelectedIndex()), data.getSearchDlg().getWhereToSearch(),
+					data.getSearchrequest().getSearchResults(jComboBoxSearches.getSelectedIndex()), data.getSearchDlg().getWhereToSearch(),
 					data.getSearchDlg().getLogical(), data.getSearchDlg().isWholeWord(), data.getSearchDlg().isMatchCase(),
 					data.getSearchDlg().isSynonymsIncluded(), data.getSearchDlg().isAccentInsensitive(), data.getSearchDlg().isRegExSearch(),
 					data.getSearchDlg().isTimestampSearch(), data.getSearchDlg().getDateFromValue(), data.getSearchDlg().getDateToValue(),
@@ -1631,7 +1630,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	@Action
 	public void filterKeywords() {
 		// retrieve current entries from the list
-		int[] entries = data.getSearchrequest().getSearchResults(data.getjComboBoxSearches().getSelectedIndex());
+		int[] entries = data.getSearchrequest().getSearchResults(jComboBoxSearches.getSelectedIndex());
 		// create linked list as parameter for filter-dialog
 		LinkedList<String> keywords = new LinkedList<>();
 		// go through all entries
@@ -1662,7 +1661,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// - case-sensitive search
 		if (data.getFilterSearchDlg().getFilterTerms() != null) {
 			startSearch(Constants.SEARCH_USUAL, data.getFilterSearchDlg().getFilterTerms(),
-					data.getSearchrequest().getSearchResults(data.getjComboBoxSearches().getSelectedIndex()), Constants.SEARCH_KEYWORDS,
+					data.getSearchrequest().getSearchResults(jComboBoxSearches.getSelectedIndex()), Constants.SEARCH_KEYWORDS,
 					data.getFilterSearchDlg().getLogical(), true, true, data.getSettingsObj().getSearchAlwaysSynonyms(), false,
 					/* accentInsensitive= */false, false, "", "", 0);
 		}
@@ -1681,7 +1680,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// - whole words
 		// - case-sensitive search
 		startSearch(Constants.SEARCH_TOP_LEVEL_LUHMANN, null,
-				data.getSearchrequest().getSearchResults(data.getjComboBoxSearches().getSelectedIndex()), -1, Constants.LOG_OR, false,
+				data.getSearchrequest().getSearchResults(jComboBoxSearches.getSelectedIndex()), -1, Constants.LOG_OR, false,
 				false, false, false, /* accentInsensitive= */false, false, null, null, 0);
 	}
 
@@ -1695,7 +1694,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	@Action
 	public void filterAuthors() {
 		// retrieve current entries from the list
-		int[] entries = data.getSearchrequest().getSearchResults(data.getjComboBoxSearches().getSelectedIndex());
+		int[] entries = data.getSearchrequest().getSearchResults(jComboBoxSearches.getSelectedIndex());
 		// create linked list as parameter for filter-dialog
 		LinkedList<String> authors = new LinkedList<>();
 		// go through all entries
@@ -1726,7 +1725,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// - case-sensitive search
 		if (data.getFilterSearchDlg().getFilterTerms() != null) {
 			startSearch(Constants.SEARCH_USUAL, data.getFilterSearchDlg().getFilterTerms(),
-					data.getSearchrequest().getSearchResults(data.getjComboBoxSearches().getSelectedIndex()), Constants.SEARCH_AUTHOR,
+					data.getSearchrequest().getSearchResults(jComboBoxSearches.getSelectedIndex()), Constants.SEARCH_AUTHOR,
 					data.getFilterSearchDlg().getLogical(), true, true, data.getSettingsObj().getSearchAlwaysSynonyms(), false,
 					/* accentInsensitive= */false, false, "", "", 0);
 		}
@@ -1804,7 +1803,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	@Action
 	public void showLongDesc() {
 		// display long description
-		JOptionPane.showMessageDialog(null, data.getSearchrequest().getLongDescription(data.getjComboBoxSearches().getSelectedIndex()),
+		JOptionPane.showMessageDialog(null, data.getSearchrequest().getLongDescription(jComboBoxSearches.getSelectedIndex()),
 				data.getResourceMap().getString("longDescTitle"), JOptionPane.PLAIN_MESSAGE);
 	}
 
@@ -1892,7 +1891,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 */
 	@Action
 	public void selectAll() {
-		data.getjTableResults().selectAll();
+		jTableResults.selectAll();
 	}
 
 	/**
@@ -1904,7 +1903,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 */
 	private int[] getSelectedEntriesFromTable() {
 		// get selected rows
-		int[] rows = data.getjTableResults().getSelectedRows();
+		int[] rows = jTableResults.getSelectedRows();
 		// if we have any selections, go on
 		if (rows != null && rows.length > 0) {
 			// create string array for selected values
@@ -1913,7 +1912,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 				// iterate array
 				for (int cnt = 0; cnt < rows.length; cnt++) {
 					// copy value from table to array
-					entries[cnt] = Integer.parseInt(data.getjTableResults().getValueAt(rows[cnt], 0).toString());
+					entries[cnt] = Integer.parseInt(jTableResults.getValueAt(rows[cnt], 0).toString());
 				}
 				// return complete array
 				return entries;
@@ -1931,14 +1930,14 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	@Action
 	public void removeEntry() {
 		// get selected rows
-		int[] rows = data.getjTableResults().getSelectedRows();
+		int[] rows = jTableResults.getSelectedRows();
 		// if we have any selections, go on
 		if ((rows != null) && (rows.length > 0)) {
 			// get the selected searchrequest
-			int i = data.getjComboBoxSearches().getSelectedIndex();
+			int i = jComboBoxSearches.getSelectedIndex();
 			for (int cnt = rows.length - 1; cnt >= 0; cnt--) {
 				// retrieve the values...
-				Object o = data.getjTableResults().getValueAt(rows[cnt], 0);
+				Object o = jTableResults.getValueAt(rows[cnt], 0);
 				// ...and try to convert it to an integer value
 				int selection = Integer.parseInt(o.toString());
 				// delete the entry from the search request
@@ -1983,10 +1982,10 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 
 	private void displayEntryInMainframe() {
 		// get selected entry
-		int row = data.getjTableResults().getSelectedRow();
+		int row = jTableResults.getSelectedRow();
 		// when we have a valid selection, go on
 		if (row != -1)
-			data.getMainframe().setNewActivatedEntryAndUpdateDisplay(Integer.parseInt(data.getjTableResults().getValueAt(row, 0).toString()));
+			data.getMainframe().setNewActivatedEntryAndUpdateDisplay(Integer.parseInt(jTableResults.getValueAt(row, 0).toString()));
 	}
 
 	/**
@@ -2000,7 +1999,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		// if the user wants to proceed, copy the image now
 		if (JOptionPane.YES_OPTION == msgOption) {
 			// get the selected searchrequest
-			int i = data.getjComboBoxSearches().getSelectedIndex();
+			int i = jComboBoxSearches.getSelectedIndex();
 			// delete complete search request
 			data.getSearchrequest().deleteSearchRequest(i);
 			// update combo box
@@ -2052,7 +2051,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			// dispose frame, so we can remove the decoration when setting full screen mode
 			data.getSearchframe().dispose();
 			// hide menubar
-			data.getSearchMenuBar().setVisible(false);
+			searchMenuBar.setVisible(false);
 			// set frame non-resizable
 			data.getSearchframe().setResizable(false);
 			try {
@@ -2079,7 +2078,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			// disable fullscreen-mode
 			data.getGraphicdevice().setFullScreenWindow(null);
 			// hide menubar
-			data.getSearchMenuBar().setVisible(true);
+			searchMenuBar.setVisible(true);
 			// make frame resizable again
 			data.getSearchframe().setResizable(true);
 			// dispose frame, so we can restore the decoration
@@ -2135,8 +2134,8 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		if (typ == HyperlinkEvent.EventType.ACTIVATED) {
 			// call method that handles the hyperlink-click
 			String returnValue = Tools.openHyperlink(linktype, this, Constants.FRAME_SEARCH, data.getDataObj(), data.getBibtexObj(),
-					data.getSettingsObj(), data.getjEditorPaneSearchEntry(),
-					Integer.parseInt(data.getjTableResults().getValueAt(data.getjTableResults().getSelectedRow(), 0).toString()));
+					data.getSettingsObj(), jEditorPaneSearchEntry,
+					Integer.parseInt(jTableResults.getValueAt(jTableResults.getSelectedRow(), 0).toString()));
 			// check whether we have a return value. this might be the case either when the
 			// user clicked on
 			// a footnote, or on the rating-stars
@@ -2204,7 +2203,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 			// set value-adjusting to true, so we don't fire multiple value-changed
 			// events...
 			lsm.setValueIsAdjusting(true);
-			if (data.getjTableResults() == table)
+			if (jTableResults == table)
 				updateDisplay();
 		}
 	}
@@ -2248,220 +2247,220 @@ public class SearchResultsFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        data.setSearchToolbar(new javax.swing.JToolBar());
-        data.setTb_copy(new javax.swing.JButton());
-        data.setTb_selectall(new javax.swing.JButton());
-        data.setjSeparator12(new javax.swing.JToolBar.Separator());
-        data.setTb_editentry(new javax.swing.JButton());
-        data.setTb_remove(new javax.swing.JButton());
-        data.setjSeparator3(new javax.swing.JToolBar.Separator());
-        data.setTb_manlinks(new javax.swing.JButton());
-        data.setTb_luhmann(new javax.swing.JButton());
-        data.setTb_bookmark(new javax.swing.JButton());
-        data.setTb_desktop(new javax.swing.JButton());
-        data.setjSeparator5(new javax.swing.JToolBar.Separator());
-        data.setTb_highlight(new javax.swing.JButton());
-        data.setSearchMainPanel(new javax.swing.JPanel());
-        data.setjSplitPaneSearch1(new javax.swing.JSplitPane());
-        data.setjPanel1(new javax.swing.JPanel());
-        data.setjScrollPane1(new javax.swing.JScrollPane());
-        data.setjTableResults((data.getSettingsObj().isMacStyle()) ? com.explodingpixels.macwidgets.MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable());
-        data.setjTextFieldFilterList(new javax.swing.JTextField());
-        data.setjButtonResetList(new javax.swing.JButton());
-        data.setjPanel2(new javax.swing.JPanel());
-        data.setjSplitPaneSearch2(new javax.swing.JSplitPane());
-        data.setjPanel3(new javax.swing.JPanel());
-        data.setjScrollPane2(new javax.swing.JScrollPane());
-        data.setjEditorPaneSearchEntry(new javax.swing.JEditorPane());
-        data.setjPanel4(new javax.swing.JPanel());
-        data.setjScrollPane4(new javax.swing.JScrollPane());
-        data.setjListKeywords(MacSourceList.createMacSourceList());
-        data.setSearchStatusPanel(new javax.swing.JPanel());
-        data.setjPanel9(new javax.swing.JPanel());
-        data.setjLabel1(new javax.swing.JLabel());
-        data.setjComboBoxSearches(new javax.swing.JComboBox());
-        data.setjLabelHits(new javax.swing.JLabel());
-        data.setjButtonDeleteSearch(new javax.swing.JButton());
-        data.setSearchMenuBar(new javax.swing.JMenuBar());
-        data.setSearchFileMenu(new javax.swing.JMenu());
-        data.setFileMenuLongDesc(new javax.swing.JMenuItem());
-        data.setjSeparator2(new javax.swing.JSeparator());
-        data.setFileMenuDuplicateSearch(new javax.swing.JMenuItem());
-        data.setjSeparator22(new javax.swing.JSeparator());
-        data.setFileMenuDeleteSearch(new javax.swing.JMenuItem());
-        data.setFileMenuDeleteAll(new javax.swing.JMenuItem());
-        data.setjSeparator20(new javax.swing.JSeparator());
-        data.setFileMenuExport(new javax.swing.JMenuItem());
-        data.setjSeparator13(new javax.swing.JSeparator());
-        data.setFileMenuClose(new javax.swing.JMenuItem());
-        data.setSearchEditMenu(new javax.swing.JMenu());
-        data.setEditMenuCopy(new javax.swing.JMenuItem());
-        data.setEditMenuSelectAll(new javax.swing.JMenuItem());
-        data.setjSeparator10(new javax.swing.JSeparator());
-        data.setEditMenuDelete(new javax.swing.JMenuItem());
-        data.setjSeparator16(new javax.swing.JSeparator());
-        data.setEditMenuEditEntry(new javax.swing.JMenuItem());
-        data.setEditMenuDuplicateEntry(new javax.swing.JMenuItem());
-        data.setEditMenuFindReplace(new javax.swing.JMenuItem());
-        data.setjSeparator4(new javax.swing.JSeparator());
-        data.setEditMenuDeleteEntry(new javax.swing.JMenuItem());
-        data.setjSeparator21(new javax.swing.JSeparator());
-        data.setEditMenuAddKeywordsToSelection(new javax.swing.JMenuItem());
-        data.setEditMenuAddAuthorsToSelection(new javax.swing.JMenuItem());
-        data.setjSeparator1(new javax.swing.JSeparator());
-        data.setEditMenuManLinks(new javax.swing.JMenuItem());
-        data.setEditMenuLuhmann(new javax.swing.JMenuItem());
-        data.setEditMenuBookmarks(new javax.swing.JMenuItem());
-        data.setjSeparator6(new javax.swing.JSeparator());
-        data.setEditMenuDesktop(new javax.swing.JMenuItem());
-        data.setSearchFilterMenu(new javax.swing.JMenu());
-        data.setFilterSearch(new javax.swing.JMenuItem());
-        data.setjSeparator14(new javax.swing.JSeparator());
-        data.setFilterKeywords(new javax.swing.JMenuItem());
-        data.setjSeparator15(new javax.swing.JSeparator());
-        data.setFilterAuthors(new javax.swing.JMenuItem());
-        data.setjSeparator23(new javax.swing.JPopupMenu.Separator());
-        data.setFilterTopLevelLuhmann(new javax.swing.JMenuItem());
-        data.setSearchSearchMenu(new javax.swing.JMenu());
-        data.setSearchMenuSelectionContent(new javax.swing.JMenuItem());
-        data.setjSeparator19(new javax.swing.JSeparator());
-        data.setSearchMenuKeywordLogOr(new javax.swing.JMenuItem());
-        data.setSearchMenuKeywordLogAnd(new javax.swing.JMenuItem());
-        data.setSearchMenuKeywordLogNot(new javax.swing.JMenuItem());
-        data.setSearchViewMenu(new javax.swing.JMenu());
-        data.setViewMenuShowOnDesktop(new javax.swing.JMenuItem());
-        data.setjSeparator11(new javax.swing.JSeparator());
-        data.setViewMenuHighlight(new javax.swing.JCheckBoxMenuItem());
-        data.setViewMenuHighlightSettings(new javax.swing.JMenuItem());
-        data.setjSeparator9(new javax.swing.JSeparator());
-        data.setViewMenuShowEntry(new javax.swing.JCheckBoxMenuItem());
-        data.setjSeparator7(new javax.swing.JPopupMenu.Separator());
-        data.setjMenuItemSwitchLayout(new javax.swing.JMenuItem());
-        data.setjSeparator8(new javax.swing.JPopupMenu.Separator());
-        data.setViewMenuFullScreen(new javax.swing.JMenuItem());
+        searchToolbar = new javax.swing.JToolBar();
+        tb_copy = new javax.swing.JButton();
+        tb_selectall = new javax.swing.JButton();
+        jSeparator12 = new javax.swing.JToolBar.Separator();
+        tb_editentry = new javax.swing.JButton();
+        tb_remove = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
+        tb_manlinks = new javax.swing.JButton();
+        tb_luhmann = new javax.swing.JButton();
+        tb_bookmark = new javax.swing.JButton();
+        tb_desktop = new javax.swing.JButton();
+        jSeparator5 = new javax.swing.JToolBar.Separator();
+        tb_highlight = new javax.swing.JButton();
+        searchMainPanel = new javax.swing.JPanel();
+        jSplitPaneSearch1 = new javax.swing.JSplitPane();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTableResults = (data.getSettingsObj().isMacStyle()) ? com.explodingpixels.macwidgets.MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
+        jTextFieldFilterList = new javax.swing.JTextField();
+        jButtonResetList = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jSplitPaneSearch2 = new javax.swing.JSplitPane();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jEditorPaneSearchEntry = new javax.swing.JEditorPane();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jListKeywords = MacSourceList.createMacSourceList();
+        searchStatusPanel = new javax.swing.JPanel();
+        jPanel9 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jComboBoxSearches = new javax.swing.JComboBox();
+        jLabelHits = new javax.swing.JLabel();
+        jButtonDeleteSearch = new javax.swing.JButton();
+        searchMenuBar = new javax.swing.JMenuBar();
+        searchFileMenu = new javax.swing.JMenu();
+        fileMenuLongDesc = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JSeparator();
+        fileMenuDuplicateSearch = new javax.swing.JMenuItem();
+        jSeparator22 = new javax.swing.JSeparator();
+        fileMenuDeleteSearch = new javax.swing.JMenuItem();
+        fileMenuDeleteAll = new javax.swing.JMenuItem();
+        jSeparator20 = new javax.swing.JSeparator();
+        fileMenuExport = new javax.swing.JMenuItem();
+        jSeparator13 = new javax.swing.JSeparator();
+        fileMenuClose = new javax.swing.JMenuItem();
+        searchEditMenu = new javax.swing.JMenu();
+        editMenuCopy = new javax.swing.JMenuItem();
+        editMenuSelectAll = new javax.swing.JMenuItem();
+        jSeparator10 = new javax.swing.JSeparator();
+        editMenuDelete = new javax.swing.JMenuItem();
+        jSeparator16 = new javax.swing.JSeparator();
+        editMenuEditEntry = new javax.swing.JMenuItem();
+        editMenuDuplicateEntry = new javax.swing.JMenuItem();
+        editMenuFindReplace = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JSeparator();
+        editMenuDeleteEntry = new javax.swing.JMenuItem();
+        jSeparator21 = new javax.swing.JSeparator();
+        editMenuAddKeywordsToSelection = new javax.swing.JMenuItem();
+        editMenuAddAuthorsToSelection = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JSeparator();
+        editMenuManLinks = new javax.swing.JMenuItem();
+        editMenuLuhmann = new javax.swing.JMenuItem();
+        editMenuBookmarks = new javax.swing.JMenuItem();
+        jSeparator6 = new javax.swing.JSeparator();
+        editMenuDesktop = new javax.swing.JMenuItem();
+        searchFilterMenu = new javax.swing.JMenu();
+        filterSearch = new javax.swing.JMenuItem();
+        jSeparator14 = new javax.swing.JSeparator();
+        filterKeywords = new javax.swing.JMenuItem();
+        jSeparator15 = new javax.swing.JSeparator();
+        filterAuthors = new javax.swing.JMenuItem();
+        jSeparator23 = new javax.swing.JPopupMenu.Separator();
+        filterTopLevelLuhmann = new javax.swing.JMenuItem();
+        searchSearchMenu = new javax.swing.JMenu();
+        searchMenuSelectionContent = new javax.swing.JMenuItem();
+        jSeparator19 = new javax.swing.JSeparator();
+        searchMenuKeywordLogOr = new javax.swing.JMenuItem();
+        searchMenuKeywordLogAnd = new javax.swing.JMenuItem();
+        searchMenuKeywordLogNot = new javax.swing.JMenuItem();
+        searchViewMenu = new javax.swing.JMenu();
+        viewMenuShowOnDesktop = new javax.swing.JMenuItem();
+        jSeparator11 = new javax.swing.JSeparator();
+        viewMenuHighlight = new javax.swing.JCheckBoxMenuItem();
+        viewMenuHighlightSettings = new javax.swing.JMenuItem();
+        jSeparator9 = new javax.swing.JSeparator();
+        viewMenuShowEntry = new javax.swing.JCheckBoxMenuItem();
+        jSeparator7 = new javax.swing.JPopupMenu.Separator();
+        jMenuItemSwitchLayout = new javax.swing.JMenuItem();
+        jSeparator8 = new javax.swing.JPopupMenu.Separator();
+        viewMenuFullScreen = new javax.swing.JMenuItem();
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(SearchResultsFrame.class);
         setTitle(resourceMap.getString("FormSearchResults.title")); // NOI18N
         setName("FormSearchResults"); // NOI18N
 
-        data.getSearchToolbar().setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, resourceMap.getColor("searchToolbar.border.matteColor"))); // NOI18N
-        data.getSearchToolbar().setRollover(true);
-        data.getSearchToolbar().setName("searchToolbar"); // NOI18N
+        searchToolbar.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, resourceMap.getColor("searchToolbar.border.matteColor"))); // NOI18N
+        searchToolbar.setRollover(true);
+        searchToolbar.setName("searchToolbar"); // NOI18N
 
-        data.getTb_copy().setAction(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(SearchResultsFrame.class, this).get("copy"));
-        data.getTb_copy().setText(resourceMap.getString("tb_copy.text")); // NOI18N
-        data.getTb_copy().setBorderPainted(false);
-        data.getTb_copy().setFocusPainted(false);
-        data.getTb_copy().setFocusable(false);
-        data.getTb_copy().setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        data.getTb_copy().setName("tb_copy"); // NOI18N
-        data.getTb_copy().setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        data.getSearchToolbar().add(data.getTb_copy());
+        tb_copy.setAction(org.jdesktop.application.Application.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext().getActionMap(SearchResultsFrame.class, this).get("copy"));
+        tb_copy.setText(resourceMap.getString("tb_copy.text")); // NOI18N
+        tb_copy.setBorderPainted(false);
+        tb_copy.setFocusPainted(false);
+        tb_copy.setFocusable(false);
+        tb_copy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        tb_copy.setName("tb_copy"); // NOI18N
+        tb_copy.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        searchToolbar.add(tb_copy);
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance().getContext().getActionMap(SearchResultsFrame.class, this);
-        data.getTb_selectall().setAction(actionMap.get("selectAll")); // NOI18N
-        data.getTb_selectall().setText(resourceMap.getString("tb_selectall.text")); // NOI18N
-        data.getTb_selectall().setBorderPainted(false);
-        data.getTb_selectall().setFocusPainted(false);
-        data.getTb_selectall().setFocusable(false);
-        data.getTb_selectall().setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        data.getTb_selectall().setName("tb_selectall"); // NOI18N
-        data.getTb_selectall().setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        data.getSearchToolbar().add(data.getTb_selectall());
+        tb_selectall.setAction(actionMap.get("selectAll")); // NOI18N
+        tb_selectall.setText(resourceMap.getString("tb_selectall.text")); // NOI18N
+        tb_selectall.setBorderPainted(false);
+        tb_selectall.setFocusPainted(false);
+        tb_selectall.setFocusable(false);
+        tb_selectall.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        tb_selectall.setName("tb_selectall"); // NOI18N
+        tb_selectall.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        searchToolbar.add(tb_selectall);
 
-        data.getjSeparator12().setName("jSeparator12"); // NOI18N
-        data.getSearchToolbar().add(data.getjSeparator12());
+        jSeparator12.setName("jSeparator12"); // NOI18N
+        searchToolbar.add(jSeparator12);
 
-        data.getTb_editentry().setAction(actionMap.get("editEntry")); // NOI18N
-        data.getTb_editentry().setText(resourceMap.getString("tb_editentry.text")); // NOI18N
-        data.getTb_editentry().setBorderPainted(false);
-        data.getTb_editentry().setFocusPainted(false);
-        data.getTb_editentry().setFocusable(false);
-        data.getTb_editentry().setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        data.getTb_editentry().setName("tb_editentry"); // NOI18N
-        data.getTb_editentry().setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        data.getSearchToolbar().add(data.getTb_editentry());
+        tb_editentry.setAction(actionMap.get("editEntry")); // NOI18N
+        tb_editentry.setText(resourceMap.getString("tb_editentry.text")); // NOI18N
+        tb_editentry.setBorderPainted(false);
+        tb_editentry.setFocusPainted(false);
+        tb_editentry.setFocusable(false);
+        tb_editentry.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        tb_editentry.setName("tb_editentry"); // NOI18N
+        tb_editentry.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        searchToolbar.add(tb_editentry);
 
-        data.getTb_remove().setAction(actionMap.get("removeEntry")); // NOI18N
-        data.getTb_remove().setText(resourceMap.getString("tb_remove.text")); // NOI18N
-        data.getTb_remove().setBorderPainted(false);
-        data.getTb_remove().setFocusPainted(false);
-        data.getTb_remove().setFocusable(false);
-        data.getTb_remove().setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        data.getTb_remove().setName("tb_remove"); // NOI18N
-        data.getTb_remove().setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        data.getSearchToolbar().add(data.getTb_remove());
+        tb_remove.setAction(actionMap.get("removeEntry")); // NOI18N
+        tb_remove.setText(resourceMap.getString("tb_remove.text")); // NOI18N
+        tb_remove.setBorderPainted(false);
+        tb_remove.setFocusPainted(false);
+        tb_remove.setFocusable(false);
+        tb_remove.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        tb_remove.setName("tb_remove"); // NOI18N
+        tb_remove.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        searchToolbar.add(tb_remove);
 
-        data.getjSeparator3().setName("jSeparator3"); // NOI18N
-        data.getSearchToolbar().add(data.getjSeparator3());
+        jSeparator3.setName("jSeparator3"); // NOI18N
+        searchToolbar.add(jSeparator3);
 
-        data.getTb_manlinks().setAction(actionMap.get("addToManLinks")); // NOI18N
-        data.getTb_manlinks().setText(resourceMap.getString("tb_manlinks.text")); // NOI18N
-        data.getTb_manlinks().setBorderPainted(false);
-        data.getTb_manlinks().setFocusPainted(false);
-        data.getTb_manlinks().setFocusable(false);
-        data.getTb_manlinks().setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        data.getTb_manlinks().setName("tb_manlinks"); // NOI18N
-        data.getTb_manlinks().setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        data.getSearchToolbar().add(data.getTb_manlinks());
+        tb_manlinks.setAction(actionMap.get("addToManLinks")); // NOI18N
+        tb_manlinks.setText(resourceMap.getString("tb_manlinks.text")); // NOI18N
+        tb_manlinks.setBorderPainted(false);
+        tb_manlinks.setFocusPainted(false);
+        tb_manlinks.setFocusable(false);
+        tb_manlinks.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        tb_manlinks.setName("tb_manlinks"); // NOI18N
+        tb_manlinks.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        searchToolbar.add(tb_manlinks);
 
-        data.getTb_luhmann().setAction(actionMap.get("addToLuhmann")); // NOI18N
-        data.getTb_luhmann().setText(resourceMap.getString("tb_luhmann.text")); // NOI18N
-        data.getTb_luhmann().setBorderPainted(false);
-        data.getTb_luhmann().setFocusPainted(false);
-        data.getTb_luhmann().setFocusable(false);
-        data.getTb_luhmann().setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        data.getTb_luhmann().setName("tb_luhmann"); // NOI18N
-        data.getTb_luhmann().setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        data.getSearchToolbar().add(data.getTb_luhmann());
+        tb_luhmann.setAction(actionMap.get("addToLuhmann")); // NOI18N
+        tb_luhmann.setText(resourceMap.getString("tb_luhmann.text")); // NOI18N
+        tb_luhmann.setBorderPainted(false);
+        tb_luhmann.setFocusPainted(false);
+        tb_luhmann.setFocusable(false);
+        tb_luhmann.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        tb_luhmann.setName("tb_luhmann"); // NOI18N
+        tb_luhmann.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        searchToolbar.add(tb_luhmann);
 
-        data.getTb_bookmark().setAction(actionMap.get("addToBookmarks")); // NOI18N
-        data.getTb_bookmark().setText(resourceMap.getString("tb_bookmark.text")); // NOI18N
-        data.getTb_bookmark().setBorderPainted(false);
-        data.getTb_bookmark().setFocusPainted(false);
-        data.getTb_bookmark().setFocusable(false);
-        data.getTb_bookmark().setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        data.getTb_bookmark().setName("tb_bookmark"); // NOI18N
-        data.getTb_bookmark().setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        data.getSearchToolbar().add(data.getTb_bookmark());
+        tb_bookmark.setAction(actionMap.get("addToBookmarks")); // NOI18N
+        tb_bookmark.setText(resourceMap.getString("tb_bookmark.text")); // NOI18N
+        tb_bookmark.setBorderPainted(false);
+        tb_bookmark.setFocusPainted(false);
+        tb_bookmark.setFocusable(false);
+        tb_bookmark.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        tb_bookmark.setName("tb_bookmark"); // NOI18N
+        tb_bookmark.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        searchToolbar.add(tb_bookmark);
 
-        data.getTb_desktop().setAction(actionMap.get("addToDesktop")); // NOI18N
-        data.getTb_desktop().setText(resourceMap.getString("tb_desktop.text")); // NOI18N
-        data.getTb_desktop().setBorderPainted(false);
-        data.getTb_desktop().setFocusPainted(false);
-        data.getTb_desktop().setFocusable(false);
-        data.getTb_desktop().setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        data.getTb_desktop().setName("tb_desktop"); // NOI18N
-        data.getTb_desktop().setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        data.getSearchToolbar().add(data.getTb_desktop());
+        tb_desktop.setAction(actionMap.get("addToDesktop")); // NOI18N
+        tb_desktop.setText(resourceMap.getString("tb_desktop.text")); // NOI18N
+        tb_desktop.setBorderPainted(false);
+        tb_desktop.setFocusPainted(false);
+        tb_desktop.setFocusable(false);
+        tb_desktop.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        tb_desktop.setName("tb_desktop"); // NOI18N
+        tb_desktop.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        searchToolbar.add(tb_desktop);
 
-        data.getjSeparator5().setName("jSeparator5"); // NOI18N
-        data.getSearchToolbar().add(data.getjSeparator5());
+        jSeparator5.setName("jSeparator5"); // NOI18N
+        searchToolbar.add(jSeparator5);
 
-        data.getTb_highlight().setAction(actionMap.get("toggleHighlightResults")); // NOI18N
-        data.getTb_highlight().setText(resourceMap.getString("tb_highlight.text")); // NOI18N
-        data.getTb_highlight().setBorderPainted(false);
-        data.getTb_highlight().setFocusPainted(false);
-        data.getTb_highlight().setFocusable(false);
-        data.getTb_highlight().setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        data.getTb_highlight().setName("tb_highlight"); // NOI18N
-        data.getTb_highlight().setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        data.getSearchToolbar().add(data.getTb_highlight());
+        tb_highlight.setAction(actionMap.get("toggleHighlightResults")); // NOI18N
+        tb_highlight.setText(resourceMap.getString("tb_highlight.text")); // NOI18N
+        tb_highlight.setBorderPainted(false);
+        tb_highlight.setFocusPainted(false);
+        tb_highlight.setFocusable(false);
+        tb_highlight.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        tb_highlight.setName("tb_highlight"); // NOI18N
+        tb_highlight.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        searchToolbar.add(tb_highlight);
 
-        data.getSearchMainPanel().setName("searchMainPanel"); // NOI18N
-        data.getSearchMainPanel().setLayout(new java.awt.BorderLayout());
+        searchMainPanel.setName("searchMainPanel"); // NOI18N
+        searchMainPanel.setLayout(new java.awt.BorderLayout());
 
-        data.getjSplitPaneSearch1().setDividerLocation(240);
-        data.getjSplitPaneSearch1().setOrientation(data.getSettingsObj().getSearchFrameSplitLayout());
-        data.getjSplitPaneSearch1().setName("jSplitPaneSearch1"); // NOI18N
-        data.getjSplitPaneSearch1().setOneTouchExpandable(true);
+        jSplitPaneSearch1.setDividerLocation(240);
+        jSplitPaneSearch1.setOrientation(data.getSettingsObj().getSearchFrameSplitLayout());
+        jSplitPaneSearch1.setName("jSplitPaneSearch1"); // NOI18N
+        jSplitPaneSearch1.setOneTouchExpandable(true);
 
-        data.getjPanel1().setName("jPanel1"); // NOI18N
+        jPanel1.setName("jPanel1"); // NOI18N
 
-        data.getjScrollPane1().setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        data.getjScrollPane1().setName("jScrollPane1"); // NOI18N
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        data.getjTableResults().setModel(new javax.swing.table.DefaultTableModel(
+        jTableResults.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -2484,156 +2483,156 @@ public class SearchResultsFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        data.getjTableResults().setDragEnabled(true);
-        data.getjTableResults().setName("jTableResults"); // NOI18N
-        data.getjTableResults().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        data.getjTableResults().getTableHeader().setReorderingAllowed(false);
-        data.getjScrollPane1().setViewportView(data.getjTableResults());
-        if (data.getjTableResults().getColumnModel().getColumnCount() > 0) {
-            data.getjTableResults().getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title0")); // NOI18N
-            data.getjTableResults().getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title1")); // NOI18N
-            data.getjTableResults().getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title2")); // NOI18N
-            data.getjTableResults().getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title3")); // NOI18N
-            data.getjTableResults().getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title4")); // NOI18N
-            data.getjTableResults().getColumnModel().getColumn(5).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title5")); // NOI18N
+        jTableResults.setDragEnabled(true);
+        jTableResults.setName("jTableResults"); // NOI18N
+        jTableResults.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        jTableResults.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(jTableResults);
+        if (jTableResults.getColumnModel().getColumnCount() > 0) {
+            jTableResults.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title0")); // NOI18N
+            jTableResults.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title1")); // NOI18N
+            jTableResults.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title2")); // NOI18N
+            jTableResults.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title3")); // NOI18N
+            jTableResults.getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title4")); // NOI18N
+            jTableResults.getColumnModel().getColumn(5).setHeaderValue(resourceMap.getString("jTableResults.columnModel.title5")); // NOI18N
         }
 
-        data.getjTextFieldFilterList().setName("jTextFieldFilterList"); // NOI18N
+        jTextFieldFilterList.setName("jTextFieldFilterList"); // NOI18N
 
-        data.getjButtonResetList().setAction(actionMap.get("resetResultslist")); // NOI18N
-        data.getjButtonResetList().setIcon(resourceMap.getIcon("jButtonResetList.icon")); // NOI18N
-        data.getjButtonResetList().setBorderPainted(false);
-        data.getjButtonResetList().setContentAreaFilled(false);
-        data.getjButtonResetList().setFocusable(false);
-        data.getjButtonResetList().setName("jButtonResetList"); // NOI18N
+        jButtonResetList.setAction(actionMap.get("resetResultslist")); // NOI18N
+        jButtonResetList.setIcon(resourceMap.getIcon("jButtonResetList.icon")); // NOI18N
+        jButtonResetList.setBorderPainted(false);
+        jButtonResetList.setContentAreaFilled(false);
+        jButtonResetList.setFocusable(false);
+        jButtonResetList.setName("jButtonResetList"); // NOI18N
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(data.getjPanel1());
-        data.getjPanel1().setLayout(jPanel1Layout);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(data.getjScrollPane1(), javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(data.getjTextFieldFilterList())
+                .addComponent(jTextFieldFilterList)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(data.getjButtonResetList(), javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonResetList, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(data.getjScrollPane1(), javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(data.getjTextFieldFilterList(), javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(data.getjButtonResetList()))
+                    .addComponent(jTextFieldFilterList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonResetList))
                 .addGap(3, 3, 3))
         );
 
-        data.getjSplitPaneSearch1().setLeftComponent(data.getjPanel1());
+        jSplitPaneSearch1.setLeftComponent(jPanel1);
 
-        data.getjPanel2().setName("jPanel2"); // NOI18N
+        jPanel2.setName("jPanel2"); // NOI18N
 
-        data.getjSplitPaneSearch2().setDividerLocation(280);
-        data.getjSplitPaneSearch2().setName("jSplitPaneSearch2"); // NOI18N
-        data.getjSplitPaneSearch2().setOneTouchExpandable(true);
+        jSplitPaneSearch2.setDividerLocation(280);
+        jSplitPaneSearch2.setName("jSplitPaneSearch2"); // NOI18N
+        jSplitPaneSearch2.setOneTouchExpandable(true);
 
-        data.getjPanel3().setName("jPanel3"); // NOI18N
+        jPanel3.setName("jPanel3"); // NOI18N
 
-        data.getjScrollPane2().setBorder(null);
-        data.getjScrollPane2().setName("jScrollPane2"); // NOI18N
+        jScrollPane2.setBorder(null);
+        jScrollPane2.setName("jScrollPane2"); // NOI18N
 
-        data.getjEditorPaneSearchEntry().setEditable(false);
-        data.getjEditorPaneSearchEntry().setBorder(null);
-        data.getjEditorPaneSearchEntry().setContentType(resourceMap.getString("jEditorPaneSearchEntry.contentType")); // NOI18N
-        data.getjEditorPaneSearchEntry().setName("jEditorPaneSearchEntry"); // NOI18N
-        data.getjScrollPane2().setViewportView(data.getjEditorPaneSearchEntry());
+        jEditorPaneSearchEntry.setEditable(false);
+        jEditorPaneSearchEntry.setBorder(null);
+        jEditorPaneSearchEntry.setContentType(resourceMap.getString("jEditorPaneSearchEntry.contentType")); // NOI18N
+        jEditorPaneSearchEntry.setName("jEditorPaneSearchEntry"); // NOI18N
+        jScrollPane2.setViewportView(jEditorPaneSearchEntry);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(data.getjPanel3());
-        data.getjPanel3().setLayout(jPanel3Layout);
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(data.getjScrollPane2())
+            .addComponent(jScrollPane2)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(data.getjScrollPane2(), javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
-        data.getjSplitPaneSearch2().setLeftComponent(data.getjPanel3());
+        jSplitPaneSearch2.setLeftComponent(jPanel3);
 
-        data.getjPanel4().setName("jPanel4"); // NOI18N
+        jPanel4.setName("jPanel4"); // NOI18N
 
-        data.getjScrollPane4().setName("jScrollPane4"); // NOI18N
+        jScrollPane4.setName("jScrollPane4"); // NOI18N
 
-        data.getjListKeywords().setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jListKeywords.border.title"))); // NOI18N
-        data.getjListKeywords().setModel(data.getKeywordListModel());
-        data.getjListKeywords().setName("jListKeywords"); // NOI18N
-        data.getjScrollPane4().setViewportView(data.getjListKeywords());
+        jListKeywords.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jListKeywords.border.title"))); // NOI18N
+        jListKeywords.setModel(data.getKeywordListModel());
+        jListKeywords.setName("jListKeywords"); // NOI18N
+        jScrollPane4.setViewportView(jListKeywords);
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(data.getjPanel4());
-        data.getjPanel4().setLayout(jPanel4Layout);
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(data.getjScrollPane4(), javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(data.getjScrollPane4(), javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
         );
 
-        data.getjSplitPaneSearch2().setRightComponent(data.getjPanel4());
+        jSplitPaneSearch2.setRightComponent(jPanel4);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(data.getjPanel2());
-        data.getjPanel2().setLayout(jPanel2Layout);
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(data.getjSplitPaneSearch2())
+            .addComponent(jSplitPaneSearch2)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(data.getjSplitPaneSearch2())
+            .addComponent(jSplitPaneSearch2)
         );
 
-        data.getjSplitPaneSearch1().setRightComponent(data.getjPanel2());
+        jSplitPaneSearch1.setRightComponent(jPanel2);
 
-        data.getSearchMainPanel().add(data.getjSplitPaneSearch1(), java.awt.BorderLayout.CENTER);
+        searchMainPanel.add(jSplitPaneSearch1, java.awt.BorderLayout.CENTER);
 
-        data.getSearchStatusPanel().setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, resourceMap.getColor("searchStatusPanel.border.matteColor"))); // NOI18N
-        data.getSearchStatusPanel().setMinimumSize(new java.awt.Dimension(200, 16));
-        data.getSearchStatusPanel().setName("searchStatusPanel"); // NOI18N
+        searchStatusPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, resourceMap.getColor("searchStatusPanel.border.matteColor"))); // NOI18N
+        searchStatusPanel.setMinimumSize(new java.awt.Dimension(200, 16));
+        searchStatusPanel.setName("searchStatusPanel"); // NOI18N
 
-        data.getjPanel9().setName("jPanel9"); // NOI18N
+        jPanel9.setName("jPanel9"); // NOI18N
 
-        data.getjLabel1().setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        data.getjLabel1().setName("jLabel1"); // NOI18N
+        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setName("jLabel1"); // NOI18N
 
-        data.getjComboBoxSearches().setName("jComboBoxSearches"); // NOI18N
+        jComboBoxSearches.setName("jComboBoxSearches"); // NOI18N
 
-        data.getjLabelHits().setText(resourceMap.getString("jLabelHits.text")); // NOI18N
-        data.getjLabelHits().setName("jLabelHits"); // NOI18N
+        jLabelHits.setText(resourceMap.getString("jLabelHits.text")); // NOI18N
+        jLabelHits.setName("jLabelHits"); // NOI18N
 
-        data.getjButtonDeleteSearch().setAction(actionMap.get("removeSearchResult")); // NOI18N
-        data.getjButtonDeleteSearch().setIcon(resourceMap.getIcon("jButtonDeleteSearch.icon")); // NOI18N
-        data.getjButtonDeleteSearch().setText(resourceMap.getString("jButtonDeleteSearch.text")); // NOI18N
-        data.getjButtonDeleteSearch().setBorderPainted(false);
-        data.getjButtonDeleteSearch().setFocusPainted(false);
-        data.getjButtonDeleteSearch().setFocusable(false);
-        data.getjButtonDeleteSearch().setName("jButtonDeleteSearch"); // NOI18N
+        jButtonDeleteSearch.setAction(actionMap.get("removeSearchResult")); // NOI18N
+        jButtonDeleteSearch.setIcon(resourceMap.getIcon("jButtonDeleteSearch.icon")); // NOI18N
+        jButtonDeleteSearch.setText(resourceMap.getString("jButtonDeleteSearch.text")); // NOI18N
+        jButtonDeleteSearch.setBorderPainted(false);
+        jButtonDeleteSearch.setFocusPainted(false);
+        jButtonDeleteSearch.setFocusable(false);
+        jButtonDeleteSearch.setName("jButtonDeleteSearch"); // NOI18N
 
-        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(data.getjPanel9());
-        data.getjPanel9().setLayout(jPanel9Layout);
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
         jPanel9Layout.setHorizontalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(data.getjLabelHits())
+                .addComponent(jLabelHits)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(data.getjLabel1())
+                .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(data.getjComboBoxSearches(), 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jComboBoxSearches, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(data.getjButtonDeleteSearch(), javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonDeleteSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
@@ -2641,258 +2640,258 @@ public class SearchResultsFrame extends javax.swing.JFrame {
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addGap(3, 3, 3)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(data.getjButtonDeleteSearch())
+                    .addComponent(jButtonDeleteSearch)
                     .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(data.getjLabelHits())
-                        .addComponent(data.getjLabel1())
-                        .addComponent(data.getjComboBoxSearches(), javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabelHits)
+                        .addComponent(jLabel1)
+                        .addComponent(jComboBoxSearches, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(3, 3, 3))
         );
 
-        javax.swing.GroupLayout searchStatusPanelLayout = new javax.swing.GroupLayout(data.getSearchStatusPanel());
-        data.getSearchStatusPanel().setLayout(searchStatusPanelLayout);
+        javax.swing.GroupLayout searchStatusPanelLayout = new javax.swing.GroupLayout(searchStatusPanel);
+        searchStatusPanel.setLayout(searchStatusPanelLayout);
         searchStatusPanelLayout.setHorizontalGroup(
             searchStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(data.getjPanel9(), javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         searchStatusPanelLayout.setVerticalGroup(
             searchStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(data.getjPanel9(), javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        data.getSearchMenuBar().setName("searchMenuBar"); // NOI18N
+        searchMenuBar.setName("searchMenuBar"); // NOI18N
 
-        data.getSearchFileMenu().setText(resourceMap.getString("searchFileMenu.text")); // NOI18N
-        data.getSearchFileMenu().setName("searchFileMenu"); // NOI18N
+        searchFileMenu.setText(resourceMap.getString("searchFileMenu.text")); // NOI18N
+        searchFileMenu.setName("searchFileMenu"); // NOI18N
 
-        data.getFileMenuLongDesc().setAction(actionMap.get("showLongDesc")); // NOI18N
-        data.getFileMenuLongDesc().setName("fileMenuLongDesc"); // NOI18N
-        data.getSearchFileMenu().add(data.getFileMenuLongDesc());
+        fileMenuLongDesc.setAction(actionMap.get("showLongDesc")); // NOI18N
+        fileMenuLongDesc.setName("fileMenuLongDesc"); // NOI18N
+        searchFileMenu.add(fileMenuLongDesc);
 
-        data.getjSeparator2().setName("jSeparator2"); // NOI18N
-        data.getSearchFileMenu().add(data.getjSeparator2());
+        jSeparator2.setName("jSeparator2"); // NOI18N
+        searchFileMenu.add(jSeparator2);
 
-        data.getFileMenuDuplicateSearch().setAction(actionMap.get("duplicateSearch")); // NOI18N
-        data.getFileMenuDuplicateSearch().setName("fileMenuDuplicateSearch"); // NOI18N
-        data.getSearchFileMenu().add(data.getFileMenuDuplicateSearch());
+        fileMenuDuplicateSearch.setAction(actionMap.get("duplicateSearch")); // NOI18N
+        fileMenuDuplicateSearch.setName("fileMenuDuplicateSearch"); // NOI18N
+        searchFileMenu.add(fileMenuDuplicateSearch);
 
-        data.getjSeparator22().setName("jSeparator22"); // NOI18N
-        data.getSearchFileMenu().add(data.getjSeparator22());
+        jSeparator22.setName("jSeparator22"); // NOI18N
+        searchFileMenu.add(jSeparator22);
 
-        data.getFileMenuDeleteSearch().setAction(actionMap.get("removeSearchResult")); // NOI18N
-        data.getFileMenuDeleteSearch().setName("fileMenuDeleteSearch"); // NOI18N
-        data.getSearchFileMenu().add(data.getFileMenuDeleteSearch());
+        fileMenuDeleteSearch.setAction(actionMap.get("removeSearchResult")); // NOI18N
+        fileMenuDeleteSearch.setName("fileMenuDeleteSearch"); // NOI18N
+        searchFileMenu.add(fileMenuDeleteSearch);
 
-        data.getFileMenuDeleteAll().setAction(actionMap.get("removeAllSearchResults")); // NOI18N
-        data.getFileMenuDeleteAll().setName("fileMenuDeleteAll"); // NOI18N
-        data.getSearchFileMenu().add(data.getFileMenuDeleteAll());
+        fileMenuDeleteAll.setAction(actionMap.get("removeAllSearchResults")); // NOI18N
+        fileMenuDeleteAll.setName("fileMenuDeleteAll"); // NOI18N
+        searchFileMenu.add(fileMenuDeleteAll);
 
-        data.getjSeparator20().setName("jSeparator20"); // NOI18N
-        data.getSearchFileMenu().add(data.getjSeparator20());
+        jSeparator20.setName("jSeparator20"); // NOI18N
+        searchFileMenu.add(jSeparator20);
 
-        data.getFileMenuExport().setAction(actionMap.get("exportEntries")); // NOI18N
-        data.getFileMenuExport().setName("fileMenuExport"); // NOI18N
-        data.getSearchFileMenu().add(data.getFileMenuExport());
+        fileMenuExport.setAction(actionMap.get("exportEntries")); // NOI18N
+        fileMenuExport.setName("fileMenuExport"); // NOI18N
+        searchFileMenu.add(fileMenuExport);
 
-        data.getjSeparator13().setName("jSeparator13"); // NOI18N
-        data.getSearchFileMenu().add(data.getjSeparator13());
+        jSeparator13.setName("jSeparator13"); // NOI18N
+        searchFileMenu.add(jSeparator13);
 
-        data.getFileMenuClose().setAction(actionMap.get("closeWindow")); // NOI18N
-        data.getFileMenuClose().setName("fileMenuClose"); // NOI18N
-        data.getSearchFileMenu().add(data.getFileMenuClose());
+        fileMenuClose.setAction(actionMap.get("closeWindow")); // NOI18N
+        fileMenuClose.setName("fileMenuClose"); // NOI18N
+        searchFileMenu.add(fileMenuClose);
 
-        data.getSearchMenuBar().add(data.getSearchFileMenu());
+        searchMenuBar.add(searchFileMenu);
 
-        data.getSearchEditMenu().setText(resourceMap.getString("searchEditMenu.text")); // NOI18N
-        data.getSearchEditMenu().setName("searchEditMenu"); // NOI18N
+        searchEditMenu.setText(resourceMap.getString("searchEditMenu.text")); // NOI18N
+        searchEditMenu.setName("searchEditMenu"); // NOI18N
 
-        data.getEditMenuCopy().setAction(actionMap.get("copy"));
-        data.getEditMenuCopy().setName("editMenuCopy"); // NOI18N
-        data.getSearchEditMenu().add(data.getEditMenuCopy());
+        editMenuCopy.setAction(actionMap.get("copy"));
+        editMenuCopy.setName("editMenuCopy"); // NOI18N
+        searchEditMenu.add(editMenuCopy);
 
-        data.getEditMenuSelectAll().setAction(actionMap.get("selectAll")); // NOI18N
-        data.getEditMenuSelectAll().setName("editMenuSelectAll"); // NOI18N
-        data.getSearchEditMenu().add(data.getEditMenuSelectAll());
+        editMenuSelectAll.setAction(actionMap.get("selectAll")); // NOI18N
+        editMenuSelectAll.setName("editMenuSelectAll"); // NOI18N
+        searchEditMenu.add(editMenuSelectAll);
 
-        data.getjSeparator10().setName("jSeparator10"); // NOI18N
-        data.getSearchEditMenu().add(data.getjSeparator10());
+        jSeparator10.setName("jSeparator10"); // NOI18N
+        searchEditMenu.add(jSeparator10);
 
-        data.getEditMenuDelete().setAction(actionMap.get("removeEntry")); // NOI18N
-        data.getEditMenuDelete().setName("editMenuDelete"); // NOI18N
-        data.getSearchEditMenu().add(data.getEditMenuDelete());
+        editMenuDelete.setAction(actionMap.get("removeEntry")); // NOI18N
+        editMenuDelete.setName("editMenuDelete"); // NOI18N
+        searchEditMenu.add(editMenuDelete);
 
-        data.getjSeparator16().setName("jSeparator16"); // NOI18N
-        data.getSearchEditMenu().add(data.getjSeparator16());
+        jSeparator16.setName("jSeparator16"); // NOI18N
+        searchEditMenu.add(jSeparator16);
 
-        data.getEditMenuEditEntry().setAction(actionMap.get("editEntry")); // NOI18N
-        data.getEditMenuEditEntry().setName("editMenuEditEntry"); // NOI18N
-        data.getSearchEditMenu().add(data.getEditMenuEditEntry());
+        editMenuEditEntry.setAction(actionMap.get("editEntry")); // NOI18N
+        editMenuEditEntry.setName("editMenuEditEntry"); // NOI18N
+        searchEditMenu.add(editMenuEditEntry);
 
-        data.getEditMenuDuplicateEntry().setAction(actionMap.get("duplicateEntry")); // NOI18N
-        data.getEditMenuDuplicateEntry().setName("editMenuDuplicateEntry"); // NOI18N
-        data.getSearchEditMenu().add(data.getEditMenuDuplicateEntry());
+        editMenuDuplicateEntry.setAction(actionMap.get("duplicateEntry")); // NOI18N
+        editMenuDuplicateEntry.setName("editMenuDuplicateEntry"); // NOI18N
+        searchEditMenu.add(editMenuDuplicateEntry);
 
-        data.getEditMenuFindReplace().setAction(actionMap.get("findAndReplace")); // NOI18N
-        data.getEditMenuFindReplace().setName("editMenuFindReplace"); // NOI18N
-        data.getSearchEditMenu().add(data.getEditMenuFindReplace());
+        editMenuFindReplace.setAction(actionMap.get("findAndReplace")); // NOI18N
+        editMenuFindReplace.setName("editMenuFindReplace"); // NOI18N
+        searchEditMenu.add(editMenuFindReplace);
 
-        data.getjSeparator4().setName("jSeparator4"); // NOI18N
-        data.getSearchEditMenu().add(data.getjSeparator4());
+        jSeparator4.setName("jSeparator4"); // NOI18N
+        searchEditMenu.add(jSeparator4);
 
-        data.getEditMenuDeleteEntry().setAction(actionMap.get("deleteEntryComplete")); // NOI18N
-        data.getEditMenuDeleteEntry().setName("editMenuDeleteEntry"); // NOI18N
-        data.getSearchEditMenu().add(data.getEditMenuDeleteEntry());
+        editMenuDeleteEntry.setAction(actionMap.get("deleteEntryComplete")); // NOI18N
+        editMenuDeleteEntry.setName("editMenuDeleteEntry"); // NOI18N
+        searchEditMenu.add(editMenuDeleteEntry);
 
-        data.getjSeparator21().setName("jSeparator21"); // NOI18N
-        data.getSearchEditMenu().add(data.getjSeparator21());
+        jSeparator21.setName("jSeparator21"); // NOI18N
+        searchEditMenu.add(jSeparator21);
 
-        data.getEditMenuAddKeywordsToSelection().setAction(actionMap.get("addKeywordsToEntries")); // NOI18N
-        data.getEditMenuAddKeywordsToSelection().setName("editMenuAddKeywordsToSelection"); // NOI18N
-        data.getSearchEditMenu().add(data.getEditMenuAddKeywordsToSelection());
+        editMenuAddKeywordsToSelection.setAction(actionMap.get("addKeywordsToEntries")); // NOI18N
+        editMenuAddKeywordsToSelection.setName("editMenuAddKeywordsToSelection"); // NOI18N
+        searchEditMenu.add(editMenuAddKeywordsToSelection);
 
-        data.getEditMenuAddAuthorsToSelection().setAction(actionMap.get("addAuthorsToEntries")); // NOI18N
-        data.getEditMenuAddAuthorsToSelection().setName("editMenuAddAuthorsToSelection"); // NOI18N
-        data.getSearchEditMenu().add(data.getEditMenuAddAuthorsToSelection());
+        editMenuAddAuthorsToSelection.setAction(actionMap.get("addAuthorsToEntries")); // NOI18N
+        editMenuAddAuthorsToSelection.setName("editMenuAddAuthorsToSelection"); // NOI18N
+        searchEditMenu.add(editMenuAddAuthorsToSelection);
 
-        data.getjSeparator1().setName("jSeparator1"); // NOI18N
-        data.getSearchEditMenu().add(data.getjSeparator1());
+        jSeparator1.setName("jSeparator1"); // NOI18N
+        searchEditMenu.add(jSeparator1);
 
-        data.getEditMenuManLinks().setAction(actionMap.get("addToManLinks")); // NOI18N
-        data.getEditMenuManLinks().setName("editMenuManLinks"); // NOI18N
-        data.getSearchEditMenu().add(data.getEditMenuManLinks());
+        editMenuManLinks.setAction(actionMap.get("addToManLinks")); // NOI18N
+        editMenuManLinks.setName("editMenuManLinks"); // NOI18N
+        searchEditMenu.add(editMenuManLinks);
 
-        data.getEditMenuLuhmann().setAction(actionMap.get("addToLuhmann")); // NOI18N
-        data.getEditMenuLuhmann().setName("editMenuLuhmann"); // NOI18N
-        data.getSearchEditMenu().add(data.getEditMenuLuhmann());
+        editMenuLuhmann.setAction(actionMap.get("addToLuhmann")); // NOI18N
+        editMenuLuhmann.setName("editMenuLuhmann"); // NOI18N
+        searchEditMenu.add(editMenuLuhmann);
 
-        data.getEditMenuBookmarks().setAction(actionMap.get("addToBookmarks")); // NOI18N
-        data.getEditMenuBookmarks().setName("editMenuBookmarks"); // NOI18N
-        data.getSearchEditMenu().add(data.getEditMenuBookmarks());
+        editMenuBookmarks.setAction(actionMap.get("addToBookmarks")); // NOI18N
+        editMenuBookmarks.setName("editMenuBookmarks"); // NOI18N
+        searchEditMenu.add(editMenuBookmarks);
 
-        data.getjSeparator6().setName("jSeparator6"); // NOI18N
-        data.getSearchEditMenu().add(data.getjSeparator6());
+        jSeparator6.setName("jSeparator6"); // NOI18N
+        searchEditMenu.add(jSeparator6);
 
-        data.getEditMenuDesktop().setAction(actionMap.get("addToDesktop")); // NOI18N
-        data.getEditMenuDesktop().setName("editMenuDesktop"); // NOI18N
-        data.getSearchEditMenu().add(data.getEditMenuDesktop());
+        editMenuDesktop.setAction(actionMap.get("addToDesktop")); // NOI18N
+        editMenuDesktop.setName("editMenuDesktop"); // NOI18N
+        searchEditMenu.add(editMenuDesktop);
 
-        data.getSearchMenuBar().add(data.getSearchEditMenu());
+        searchMenuBar.add(searchEditMenu);
 
-        data.getSearchFilterMenu().setText(resourceMap.getString("searchFilterMenu.text")); // NOI18N
-        data.getSearchFilterMenu().setName("searchFilterMenu"); // NOI18N
+        searchFilterMenu.setText(resourceMap.getString("searchFilterMenu.text")); // NOI18N
+        searchFilterMenu.setName("searchFilterMenu"); // NOI18N
 
-        data.getFilterSearch().setAction(actionMap.get("filterSearch")); // NOI18N
-        data.getFilterSearch().setName("filterSearch"); // NOI18N
-        data.getSearchFilterMenu().add(data.getFilterSearch());
+        filterSearch.setAction(actionMap.get("filterSearch")); // NOI18N
+        filterSearch.setName("filterSearch"); // NOI18N
+        searchFilterMenu.add(filterSearch);
 
-        data.getjSeparator14().setName("jSeparator14"); // NOI18N
-        data.getSearchFilterMenu().add(data.getjSeparator14());
+        jSeparator14.setName("jSeparator14"); // NOI18N
+        searchFilterMenu.add(jSeparator14);
 
-        data.getFilterKeywords().setAction(actionMap.get("filterKeywords")); // NOI18N
-        data.getFilterKeywords().setName("filterKeywords"); // NOI18N
-        data.getSearchFilterMenu().add(data.getFilterKeywords());
+        filterKeywords.setAction(actionMap.get("filterKeywords")); // NOI18N
+        filterKeywords.setName("filterKeywords"); // NOI18N
+        searchFilterMenu.add(filterKeywords);
 
-        data.getjSeparator15().setName("jSeparator15"); // NOI18N
-        data.getSearchFilterMenu().add(data.getjSeparator15());
+        jSeparator15.setName("jSeparator15"); // NOI18N
+        searchFilterMenu.add(jSeparator15);
 
-        data.getFilterAuthors().setAction(actionMap.get("filterAuthors")); // NOI18N
-        data.getFilterAuthors().setName("filterAuthors"); // NOI18N
-        data.getSearchFilterMenu().add(data.getFilterAuthors());
+        filterAuthors.setAction(actionMap.get("filterAuthors")); // NOI18N
+        filterAuthors.setName("filterAuthors"); // NOI18N
+        searchFilterMenu.add(filterAuthors);
 
-        data.getjSeparator23().setName("jSeparator23"); // NOI18N
-        data.getSearchFilterMenu().add(data.getjSeparator23());
+        jSeparator23.setName("jSeparator23"); // NOI18N
+        searchFilterMenu.add(jSeparator23);
 
-        data.getFilterTopLevelLuhmann().setAction(actionMap.get("filterTopLevelLuhmann")); // NOI18N
-        data.getFilterTopLevelLuhmann().setName("filterTopLevelLuhmann"); // NOI18N
-        data.getSearchFilterMenu().add(data.getFilterTopLevelLuhmann());
+        filterTopLevelLuhmann.setAction(actionMap.get("filterTopLevelLuhmann")); // NOI18N
+        filterTopLevelLuhmann.setName("filterTopLevelLuhmann"); // NOI18N
+        searchFilterMenu.add(filterTopLevelLuhmann);
 
-        data.getSearchMenuBar().add(data.getSearchFilterMenu());
+        searchMenuBar.add(searchFilterMenu);
 
-        data.getSearchSearchMenu().setText(resourceMap.getString("searchSearchMenu.text")); // NOI18N
-        data.getSearchSearchMenu().setName("searchSearchMenu"); // NOI18N
+        searchSearchMenu.setText(resourceMap.getString("searchSearchMenu.text")); // NOI18N
+        searchSearchMenu.setName("searchSearchMenu"); // NOI18N
 
-        data.getSearchMenuSelectionContent().setAction(actionMap.get("newSearchFromSelection")); // NOI18N
-        data.getSearchMenuSelectionContent().setName("searchMenuSelectionContent"); // NOI18N
-        data.getSearchSearchMenu().add(data.getSearchMenuSelectionContent());
+        searchMenuSelectionContent.setAction(actionMap.get("newSearchFromSelection")); // NOI18N
+        searchMenuSelectionContent.setName("searchMenuSelectionContent"); // NOI18N
+        searchSearchMenu.add(searchMenuSelectionContent);
 
-        data.getjSeparator19().setName("jSeparator19"); // NOI18N
-        data.getSearchSearchMenu().add(data.getjSeparator19());
+        jSeparator19.setName("jSeparator19"); // NOI18N
+        searchSearchMenu.add(jSeparator19);
 
-        data.getSearchMenuKeywordLogOr().setAction(actionMap.get("newSearchFromKeywordsLogOr")); // NOI18N
-        data.getSearchMenuKeywordLogOr().setName("searchMenuKeywordLogOr"); // NOI18N
-        data.getSearchSearchMenu().add(data.getSearchMenuKeywordLogOr());
+        searchMenuKeywordLogOr.setAction(actionMap.get("newSearchFromKeywordsLogOr")); // NOI18N
+        searchMenuKeywordLogOr.setName("searchMenuKeywordLogOr"); // NOI18N
+        searchSearchMenu.add(searchMenuKeywordLogOr);
 
-        data.getSearchMenuKeywordLogAnd().setAction(actionMap.get("newSearchFromKeywordsLogAnd")); // NOI18N
-        data.getSearchMenuKeywordLogAnd().setName("searchMenuKeywordLogAnd"); // NOI18N
-        data.getSearchSearchMenu().add(data.getSearchMenuKeywordLogAnd());
+        searchMenuKeywordLogAnd.setAction(actionMap.get("newSearchFromKeywordsLogAnd")); // NOI18N
+        searchMenuKeywordLogAnd.setName("searchMenuKeywordLogAnd"); // NOI18N
+        searchSearchMenu.add(searchMenuKeywordLogAnd);
 
-        data.getSearchMenuKeywordLogNot().setAction(actionMap.get("newSearchFromKeywordsLogNot")); // NOI18N
-        data.getSearchMenuKeywordLogNot().setName("searchMenuKeywordLogNot"); // NOI18N
-        data.getSearchSearchMenu().add(data.getSearchMenuKeywordLogNot());
+        searchMenuKeywordLogNot.setAction(actionMap.get("newSearchFromKeywordsLogNot")); // NOI18N
+        searchMenuKeywordLogNot.setName("searchMenuKeywordLogNot"); // NOI18N
+        searchSearchMenu.add(searchMenuKeywordLogNot);
 
-        data.getSearchMenuBar().add(data.getSearchSearchMenu());
+        searchMenuBar.add(searchSearchMenu);
 
-        data.getSearchViewMenu().setText(resourceMap.getString("searchViewMenu.text")); // NOI18N
-        data.getSearchViewMenu().setName("searchViewMenu"); // NOI18N
+        searchViewMenu.setText(resourceMap.getString("searchViewMenu.text")); // NOI18N
+        searchViewMenu.setName("searchViewMenu"); // NOI18N
 
-        data.getViewMenuShowOnDesktop().setAction(actionMap.get("showEntryInDesktop")); // NOI18N
-        data.getViewMenuShowOnDesktop().setName("viewMenuShowOnDesktop"); // NOI18N
-        data.getSearchViewMenu().add(data.getViewMenuShowOnDesktop());
+        viewMenuShowOnDesktop.setAction(actionMap.get("showEntryInDesktop")); // NOI18N
+        viewMenuShowOnDesktop.setName("viewMenuShowOnDesktop"); // NOI18N
+        searchViewMenu.add(viewMenuShowOnDesktop);
 
-        data.getjSeparator11().setName("jSeparator11"); // NOI18N
-        data.getSearchViewMenu().add(data.getjSeparator11());
+        jSeparator11.setName("jSeparator11"); // NOI18N
+        searchViewMenu.add(jSeparator11);
 
-        data.getViewMenuHighlight().setAction(actionMap.get("toggleHighlightResults")); // NOI18N
-        data.getViewMenuHighlight().setSelected(true);
-        data.getViewMenuHighlight().setName("viewMenuHighlight"); // NOI18N
-        data.getSearchViewMenu().add(data.getViewMenuHighlight());
+        viewMenuHighlight.setAction(actionMap.get("toggleHighlightResults")); // NOI18N
+        viewMenuHighlight.setSelected(true);
+        viewMenuHighlight.setName("viewMenuHighlight"); // NOI18N
+        searchViewMenu.add(viewMenuHighlight);
 
-        data.getViewMenuHighlightSettings().setAction(actionMap.get("showHighlightSettings")); // NOI18N
-        data.getViewMenuHighlightSettings().setName("viewMenuHighlightSettings"); // NOI18N
-        data.getSearchViewMenu().add(data.getViewMenuHighlightSettings());
+        viewMenuHighlightSettings.setAction(actionMap.get("showHighlightSettings")); // NOI18N
+        viewMenuHighlightSettings.setName("viewMenuHighlightSettings"); // NOI18N
+        searchViewMenu.add(viewMenuHighlightSettings);
 
-        data.getjSeparator9().setName("jSeparator9"); // NOI18N
-        data.getSearchViewMenu().add(data.getjSeparator9());
+        jSeparator9.setName("jSeparator9"); // NOI18N
+        searchViewMenu.add(jSeparator9);
 
-        data.getViewMenuShowEntry().setAction(actionMap.get("showEntryImmediately")); // NOI18N
-        data.getViewMenuShowEntry().setSelected(true);
-        data.getViewMenuShowEntry().setName("viewMenuShowEntry"); // NOI18N
-        data.getSearchViewMenu().add(data.getViewMenuShowEntry());
+        viewMenuShowEntry.setAction(actionMap.get("showEntryImmediately")); // NOI18N
+        viewMenuShowEntry.setSelected(true);
+        viewMenuShowEntry.setName("viewMenuShowEntry"); // NOI18N
+        searchViewMenu.add(viewMenuShowEntry);
 
-        data.getjSeparator7().setName("jSeparator7"); // NOI18N
-        data.getSearchViewMenu().add(data.getjSeparator7());
+        jSeparator7.setName("jSeparator7"); // NOI18N
+        searchViewMenu.add(jSeparator7);
 
-        data.getjMenuItemSwitchLayout().setAction(actionMap.get("switchLayout")); // NOI18N
-        data.getjMenuItemSwitchLayout().setName("jMenuItemSwitchLayout"); // NOI18N
-        data.getSearchViewMenu().add(data.getjMenuItemSwitchLayout());
+        jMenuItemSwitchLayout.setAction(actionMap.get("switchLayout")); // NOI18N
+        jMenuItemSwitchLayout.setName("jMenuItemSwitchLayout"); // NOI18N
+        searchViewMenu.add(jMenuItemSwitchLayout);
 
-        data.getjSeparator8().setName("jSeparator8"); // NOI18N
-        data.getSearchViewMenu().add(data.getjSeparator8());
+        jSeparator8.setName("jSeparator8"); // NOI18N
+        searchViewMenu.add(jSeparator8);
 
-        data.getViewMenuFullScreen().setAction(actionMap.get("viewFullScreen")); // NOI18N
-        data.getViewMenuFullScreen().setName("viewMenuFullScreen"); // NOI18N
-        data.getSearchViewMenu().add(data.getViewMenuFullScreen());
+        viewMenuFullScreen.setAction(actionMap.get("viewFullScreen")); // NOI18N
+        viewMenuFullScreen.setName("viewMenuFullScreen"); // NOI18N
+        searchViewMenu.add(viewMenuFullScreen);
 
-        data.getSearchMenuBar().add(data.getSearchViewMenu());
+        searchMenuBar.add(searchViewMenu);
 
-        setJMenuBar(data.getSearchMenuBar());
+        setJMenuBar(searchMenuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(data.getSearchToolbar(), javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(data.getSearchMainPanel(), javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-            .addComponent(data.getSearchStatusPanel(), javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(searchToolbar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(searchMainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(searchStatusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(data.getSearchToolbar(), javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(searchToolbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(data.getSearchMainPanel(), javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(searchMainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
-                .addComponent(data.getSearchStatusPanel(), javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(searchStatusPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -2908,7 +2907,101 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 		firePropertyChange("fullScreenSupp", old, isFullScreenSupp());
 	}
 
-    private SearchResultsFrameData data = new SearchResultsFrameData(new DefaultListModel<String>(), false, java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment()
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem editMenuAddAuthorsToSelection;
+    private javax.swing.JMenuItem editMenuAddKeywordsToSelection;
+    private javax.swing.JMenuItem editMenuBookmarks;
+    private javax.swing.JMenuItem editMenuCopy;
+    private javax.swing.JMenuItem editMenuDelete;
+    private javax.swing.JMenuItem editMenuDeleteEntry;
+    private javax.swing.JMenuItem editMenuDesktop;
+    private javax.swing.JMenuItem editMenuDuplicateEntry;
+    private javax.swing.JMenuItem editMenuEditEntry;
+    private javax.swing.JMenuItem editMenuFindReplace;
+    private javax.swing.JMenuItem editMenuLuhmann;
+    private javax.swing.JMenuItem editMenuManLinks;
+    private javax.swing.JMenuItem editMenuSelectAll;
+    private javax.swing.JMenuItem fileMenuClose;
+    private javax.swing.JMenuItem fileMenuDeleteAll;
+    private javax.swing.JMenuItem fileMenuDeleteSearch;
+    private javax.swing.JMenuItem fileMenuDuplicateSearch;
+    private javax.swing.JMenuItem fileMenuExport;
+    private javax.swing.JMenuItem fileMenuLongDesc;
+    private javax.swing.JMenuItem filterAuthors;
+    private javax.swing.JMenuItem filterKeywords;
+    private javax.swing.JMenuItem filterSearch;
+    private javax.swing.JMenuItem filterTopLevelLuhmann;
+    private javax.swing.JButton jButtonDeleteSearch;
+    private javax.swing.JButton jButtonResetList;
+    private javax.swing.JComboBox jComboBoxSearches;
+    private javax.swing.JEditorPane jEditorPaneSearchEntry;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabelHits;
+    private javax.swing.JList jListKeywords;
+    private javax.swing.JMenuItem jMenuItemSwitchLayout;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator10;
+    private javax.swing.JSeparator jSeparator11;
+    private javax.swing.JToolBar.Separator jSeparator12;
+    private javax.swing.JSeparator jSeparator13;
+    private javax.swing.JSeparator jSeparator14;
+    private javax.swing.JSeparator jSeparator15;
+    private javax.swing.JSeparator jSeparator16;
+    private javax.swing.JSeparator jSeparator19;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator20;
+    private javax.swing.JSeparator jSeparator21;
+    private javax.swing.JSeparator jSeparator22;
+    private javax.swing.JPopupMenu.Separator jSeparator23;
+    private javax.swing.JToolBar.Separator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JToolBar.Separator jSeparator5;
+    private javax.swing.JSeparator jSeparator6;
+    private javax.swing.JPopupMenu.Separator jSeparator7;
+    private javax.swing.JPopupMenu.Separator jSeparator8;
+    private javax.swing.JSeparator jSeparator9;
+    private javax.swing.JSplitPane jSplitPaneSearch1;
+    private javax.swing.JSplitPane jSplitPaneSearch2;
+    private javax.swing.JTable jTableResults;
+    private javax.swing.JTextField jTextFieldFilterList;
+    private javax.swing.JMenu searchEditMenu;
+    private javax.swing.JMenu searchFileMenu;
+    private javax.swing.JMenu searchFilterMenu;
+    private javax.swing.JPanel searchMainPanel;
+    private javax.swing.JMenuBar searchMenuBar;
+    private javax.swing.JMenuItem searchMenuKeywordLogAnd;
+    private javax.swing.JMenuItem searchMenuKeywordLogNot;
+    private javax.swing.JMenuItem searchMenuKeywordLogOr;
+    private javax.swing.JMenuItem searchMenuSelectionContent;
+    private javax.swing.JMenu searchSearchMenu;
+    private javax.swing.JPanel searchStatusPanel;
+    private javax.swing.JToolBar searchToolbar;
+    private javax.swing.JMenu searchViewMenu;
+    private javax.swing.JButton tb_bookmark;
+    private javax.swing.JButton tb_copy;
+    private javax.swing.JButton tb_desktop;
+    private javax.swing.JButton tb_editentry;
+    private javax.swing.JButton tb_highlight;
+    private javax.swing.JButton tb_luhmann;
+    private javax.swing.JButton tb_manlinks;
+    private javax.swing.JButton tb_remove;
+    private javax.swing.JButton tb_selectall;
+    private javax.swing.JMenuItem viewMenuFullScreen;
+    private javax.swing.JCheckBoxMenuItem viewMenuHighlight;
+    private javax.swing.JMenuItem viewMenuHighlightSettings;
+    private javax.swing.JCheckBoxMenuItem viewMenuShowEntry;
+    private javax.swing.JMenuItem viewMenuShowOnDesktop;
+    // End of variables declaration//GEN-END:variables
+
+	private SearchResultsFrameData data = new SearchResultsFrameData(new DefaultListModel<String>(), false, java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment()
 			.getDefaultScreenDevice(), org.jdesktop.application.Application
 			.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
 			.getResourceMap(SearchResultsFrame.class),
