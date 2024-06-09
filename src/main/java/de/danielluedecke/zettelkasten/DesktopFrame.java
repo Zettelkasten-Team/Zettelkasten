@@ -437,7 +437,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 		};
 		getRootPane().registerKeyboardAction(cancelAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
 		addWindowListener(this);
-		// these codelines add an escape-listener to the dialog. so, when the user
+		// these code lines add an escape-listener to the dialog. so, when the user
 		// presses the escape-key, the same action is performed as if the user
 		// presses the cancel button...
 		stroke = KeyStroke.getKeyStroke(accKeys.getAcceleratorKey(AcceleratorKeys.MAINKEYS, "showSearchResultWindow"));
@@ -448,7 +448,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 			}
 		};
 		getRootPane().registerKeyboardAction(showSearchResultsAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
-		// these codelines add an escape-listener to the dialog. so, when the user
+		// these code lines add an escape-listener to the dialog. so, when the user
 		// presses the escape-key, the same action is performed as if the user
 		// presses the cancel button...
 		stroke = KeyStroke.getKeyStroke(accKeys.getAcceleratorKey(AcceleratorKeys.MAINKEYS, "showNewEntryWindow"));
@@ -459,7 +459,7 @@ public class DesktopFrame extends javax.swing.JFrame implements WindowListener {
 			}
 		};
 		getRootPane().registerKeyboardAction(showNewEntryFrameAction, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
-		// these codelines add an escape-listener to the dialog. so, when the user
+		// these code lines add an escape-listener to the dialog. so, when the user
 		// presses the escape-key, the same action is performed as if the user
 		// presses the cancel button...
 		stroke = KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0);

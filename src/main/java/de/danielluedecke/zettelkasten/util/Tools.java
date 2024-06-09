@@ -1008,7 +1008,7 @@ public class Tools {
 	 * This method sets the locale descriptions for the standard-actions cut, copy
 	 * and paste - which are in English by default.
 	 *
-	 * @param actionMap the class's actionmap
+	 * @param actionMap the class's action map
 	 */
 	public static void initLocaleForDefaultActions(javax.swing.ActionMap actionMap) {
 		String[] actions = new String[] { "cut", "copy", "paste" };

@@ -33,10 +33,34 @@
 
 package de.danielluedecke.zettelkasten;
 
+import de.danielluedecke.zettelkasten.data.SearchResultsFrameData;
+import com.explodingpixels.macwidgets.BottomBar;
+import com.explodingpixels.macwidgets.BottomBarSize;
+import de.danielluedecke.zettelkasten.database.*;
+import de.danielluedecke.zettelkasten.mac.MacSourceList;
+import de.danielluedecke.zettelkasten.util.Tools;
+import de.danielluedecke.zettelkasten.util.Constants;
+import de.danielluedecke.zettelkasten.util.classes.DateComparer;
+import de.danielluedecke.zettelkasten.util.classes.Comparer;
+import com.explodingpixels.macwidgets.MacUtils;
+import com.explodingpixels.macwidgets.MacWidgetFactory;
+import com.explodingpixels.macwidgets.UnifiedToolBar;
+import com.explodingpixels.widgets.TableUtils;
+import com.explodingpixels.widgets.WindowUtils;
+import de.danielluedecke.zettelkasten.database.BibTeX;
+import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
+import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
+import de.danielluedecke.zettelkasten.settings.AcceleratorKeys;
+import de.danielluedecke.zettelkasten.settings.Settings;
+import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
+import de.danielluedecke.zettelkasten.util.ColorUtil;
+import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
+import de.danielluedecke.zettelkasten.util.PlatformUtil;
 import java.awt.AWTKeyStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.IllegalComponentStateException;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
@@ -56,7 +80,6 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -78,36 +101,8 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.html.HTML;
-
 import org.jdesktop.application.Action;
-
-import com.explodingpixels.macwidgets.BottomBar;
-import com.explodingpixels.macwidgets.BottomBarSize;
-import com.explodingpixels.macwidgets.MacUtils;
-import com.explodingpixels.macwidgets.MacWidgetFactory;
-import com.explodingpixels.macwidgets.UnifiedToolBar;
-import com.explodingpixels.widgets.TableUtils;
-import com.explodingpixels.widgets.WindowUtils;
-
-import de.danielluedecke.zettelkasten.data.SearchResultsFrameData;
-import de.danielluedecke.zettelkasten.database.BibTeX;
-import de.danielluedecke.zettelkasten.database.Daten;
-import de.danielluedecke.zettelkasten.database.DesktopData;
-import de.danielluedecke.zettelkasten.database.SearchRequests;
-import de.danielluedecke.zettelkasten.database.Synonyms;
-import de.danielluedecke.zettelkasten.mac.MacSourceList;
-import de.danielluedecke.zettelkasten.mac.MacToolbarButton;
-import de.danielluedecke.zettelkasten.mac.ZknMacWidgetFactory;
-import de.danielluedecke.zettelkasten.settings.AcceleratorKeys;
-import de.danielluedecke.zettelkasten.settings.Settings;
-import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
-import de.danielluedecke.zettelkasten.util.ColorUtil;
-import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
-import de.danielluedecke.zettelkasten.util.PlatformUtil;
-import de.danielluedecke.zettelkasten.util.Tools;
-import de.danielluedecke.zettelkasten.util.classes.Comparer;
-import de.danielluedecke.zettelkasten.util.classes.DateComparer;
+import org.jdesktop.application.Application;
 
 /**
  *
@@ -2186,7 +2181,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	/**
 	 * This class sets up a selection listener for the tables. each table which
 	 * shall react on selections, e.g. by showing an entry, gets this
-	 * selection listener in the method {@link #initSelectionListeners()
+	 * selectionlistener in the method {@link #initSelectionListeners()
 	 * initSelectionListeners()}.
 	 */
 	public class SelectionListener implements ListSelectionListener {
@@ -2194,7 +2189,6 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 
 		// It is necessary to keep the table since it is not possible
 		// to determine the table from the event's source
-		// NB. See TableEventSourceExample
 		SelectionListener(JTable table) {
 			this.table = table;
 		}
