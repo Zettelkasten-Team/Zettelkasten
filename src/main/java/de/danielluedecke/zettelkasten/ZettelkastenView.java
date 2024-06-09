@@ -2783,7 +2783,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			data.addToHistory(inputDisplayedEntry);
 			// Update buttons for navigating through history.
 			buttonHistoryBack.setEnabled(data.canHistoryBack());
-			buttonHistoryForward.setEnabled(data.canHistoryFore());
+			buttonHistoryForward.setEnabled(data.canHistoryForward());
 		}
 
 		updateHighlightingTerms(inputDisplayedEntry);
@@ -2818,9 +2818,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		setSaveEnabled(settings.getSynonyms().isModified() | data.isMetaModified() | bibtex.isModified()
 				| data.isModified() | bookmarks.isModified() | searchRequests.isModified() | desktop.isModified());
 		buttonHistoryBack.setEnabled(data.canHistoryBack());
-		buttonHistoryForward.setEnabled(data.canHistoryFore());
+		buttonHistoryForward.setEnabled(data.canHistoryForward());
 		setHistoryBackAvailable(data.canHistoryBack());
-		setHistoryForeAvailable(data.canHistoryFore());
+		setHistoryForeAvailable(data.canHistoryForward());
 		// desktop and search results available
 		setDesktopAvailable(desktop.getCount() > 0);
 		setSearchResultsAvailable(searchRequests.getCount() > 0);

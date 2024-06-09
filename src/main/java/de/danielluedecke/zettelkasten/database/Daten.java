@@ -4975,8 +4975,8 @@ public class Daten {
         return history.canHistoryBack();
     }
 
-    public boolean canHistoryFore() {
-        return history.canHistoryFore();
+    public boolean canHistoryForward() {
+        return history.canHistoryForward();
     }
 
     public int historyBack() {

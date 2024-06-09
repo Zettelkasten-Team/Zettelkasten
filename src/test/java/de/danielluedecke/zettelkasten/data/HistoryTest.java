@@ -61,13 +61,13 @@ public class HistoryTest {
     }
 
     @Test
-    public void testCanHistoryFore() {
+    public void testCanHistoryForward() {
         historyManager.addToHistory(1);
         historyManager.addToHistory(2);
         historyManager.historyBack();
-        assertTrue(historyManager.canHistoryFore(), "canHistoryFore should be true after going back to the first entry");
+        assertTrue(historyManager.canHistoryForward(), "canHistoryForward should be true after going back to the first entry");
         historyManager.navigateForwardInHistory();
-        assertFalse(historyManager.canHistoryFore(), "canHistoryFore should be false after going forward to the last entry");
+        assertFalse(historyManager.canHistoryForward(), "canHistoryForward should be false after going forward to the last entry");
     }
 
     @Test

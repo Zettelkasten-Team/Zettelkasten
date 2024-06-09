@@ -90,7 +90,7 @@ public class History implements NavigationListener {
 	 * @return {@code true} if history forward navigation is enabled, {@code false}
 	 *         otherwise
 	 */
-	public boolean canHistoryFore() {
+	public boolean canHistoryForward() {
 		return (historyPosition >= 0 && historyPosition < (historyCount - 1));
 	}
 
@@ -112,7 +112,7 @@ public class History implements NavigationListener {
 	 * @return the activated entry number after navigating forward in history
 	 */
 	public int historyFore() {
-		if (canHistoryFore()) {
+		if (canHistoryForward()) {
 			activatedEntryNumber = history[++historyPosition];
 		}
 		return activatedEntryNumber;
