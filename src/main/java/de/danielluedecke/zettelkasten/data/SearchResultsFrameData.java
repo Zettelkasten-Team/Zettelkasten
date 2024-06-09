@@ -23,7 +23,7 @@ import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
 
 public class SearchResultsFrameData {
 	/**
-	 * CDaten object, which contains the XML data of the Zettelkasten
+	 * Daten object, which contains the XML data of the Zettelkasten
 	 */
 	private Daten data;
 	private DesktopData desktopData;
@@ -34,7 +34,7 @@ public class SearchResultsFrameData {
 	 */
 	private SearchRequests searchRequests;
 	/**
-	 * CAccelerator object, which contains the XML data of the accelerator table for
+	 * Accelerator object, which contains the XML data of the accelerator table for
 	 * the menus
 	 */
 	private AcceleratorKeys acceleratorKeys;

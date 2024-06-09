@@ -35,8 +35,9 @@ package de.danielluedecke.zettelkasten;
 import ch.dreyeck.zettelkasten.xml.Zettel;
 import com.explodingpixels.macwidgets.*;
 import com.explodingpixels.widgets.TableUtils;
+
+import de.danielluedecke.zettelkasten.data.History;
 import de.danielluedecke.zettelkasten.database.*;
-import de.danielluedecke.zettelkasten.history.History;
 import de.danielluedecke.zettelkasten.mac.MacSourceList;
 import de.danielluedecke.zettelkasten.mac.MacSourceTree;
 import de.danielluedecke.zettelkasten.mac.MacToolbarButton;

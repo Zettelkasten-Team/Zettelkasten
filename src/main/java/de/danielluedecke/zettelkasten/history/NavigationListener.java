@@ -3,7 +3,7 @@ package de.danielluedecke.zettelkasten.history;
 /**
  * a listener interface for handling history navigation events
  */
-public interface HistoryNavigationListener {
+public interface NavigationListener {
 
 	/**
 	 * This interface defines 2 methods, `navigateForwardInHistory()` and

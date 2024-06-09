@@ -7,7 +7,7 @@ import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import de.danielluedecke.zettelkasten.history.History;
+import de.danielluedecke.zettelkasten.data.History;
 
 public class ZettelkastenViewTest {
 

@@ -1,12 +1,13 @@
-package de.danielluedecke.zettelkasten.history;
+package de.danielluedecke.zettelkasten.data;
 
+import de.danielluedecke.zettelkasten.history.NavigationListener;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.view.Display;
 
 /**
  * Manages the history of entries in the program.
  */
-public class History implements HistoryNavigationListener {
+public class History implements NavigationListener {
 	private static final int HISTORY_MAX = 100; // Adjust as needed
 	private int[] history;
 	private int historyPosition;
