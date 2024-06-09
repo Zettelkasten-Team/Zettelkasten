@@ -9599,6 +9599,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	@Action(enabledProperty = "historyBackAvailable")
 	public void historyBack() {
+		Constants.zknlogger.info("Displayed Zettel: " + displayedZettel);
+		
 		data.historyBack();
 
 		// Reset displayedZettel.
@@ -9609,6 +9611,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
         
 	@Action(enabledProperty = "historyForwardAvailable")
 	public void historyForward() {
+		Constants.zknlogger.info("Displayed Zettel: " + displayedZettel);
+		
 		data.historyForward();
 		displayedZettel = -1;
 		updateDisplay();
