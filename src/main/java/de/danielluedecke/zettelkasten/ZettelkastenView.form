@@ -3377,7 +3377,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="buttonHistoryBack" min="-2" pref="16" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="buttonHistoryFore" min="-2" pref="16" max="-2" attributes="0"/>
+                      <Component id="buttonHistoryForward" min="-2" pref="16" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                       <Component id="statusErrorButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -3400,7 +3400,7 @@
                               <Component id="statusOfEntryLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="buttonHistoryFore" alignment="0" min="0" max="32767" attributes="1"/>
+                              <Component id="buttonHistoryForward" alignment="0" min="0" max="32767" attributes="1"/>
                               <Component id="buttonHistoryBack" alignment="0" min="-2" max="-2" attributes="1"/>
                           </Group>
                           <Component id="statusAnimationLabel" alignment="0" min="-2" max="-2" attributes="1"/>
@@ -3454,19 +3454,19 @@
                 <Property name="name" type="java.lang.String" value="buttonHistoryBack" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="buttonHistoryFore">
+            <Component class="javax.swing.JButton" name="buttonHistoryForward">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="de.danielluedecke.zettelkasten.ZettelkastenView" id="historyForward" methodName="historyForward"/>
                 </Property>
-                <Property name="icon" type="javax.swing.Icon" resourceKey="buttonHistoryFore.icon"/>
+                <Property name="icon" type="javax.swing.Icon" resourceKey="buttonHistoryForward.icon"/>
                 <Property name="borderPainted" type="boolean" value="false"/>
                 <Property name="contentAreaFilled" type="boolean" value="false"/>
                 <Property name="focusPainted" type="boolean" value="false"/>
                 <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
                   <Insets value="[0, 0, 0, 0]"/>
                 </Property>
-                <Property name="name" type="java.lang.String" value="buttonHistoryFore" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="buttonHistoryForward" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="statusMsgLabel">

@@ -2783,7 +2783,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			data.addToHistory(inputDisplayedEntry);
 			// Update buttons for navigating through history.
 			buttonHistoryBack.setEnabled(data.canHistoryBack());
-			buttonHistoryFore.setEnabled(data.canHistoryFore());
+			buttonHistoryForward.setEnabled(data.canHistoryFore());
 		}
 
 		updateHighlightingTerms(inputDisplayedEntry);
@@ -2818,7 +2818,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		setSaveEnabled(settings.getSynonyms().isModified() | data.isMetaModified() | bibtex.isModified()
 				| data.isModified() | bookmarks.isModified() | searchRequests.isModified() | desktop.isModified());
 		buttonHistoryBack.setEnabled(data.canHistoryBack());
-		buttonHistoryFore.setEnabled(data.canHistoryFore());
+		buttonHistoryForward.setEnabled(data.canHistoryFore());
 		setHistoryBackAvailable(data.canHistoryBack());
 		setHistoryForeAvailable(data.canHistoryFore());
 		// desktop and search results available
@@ -2951,18 +2951,18 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		BottomBar macbottombar = new BottomBar(BottomBarSize.LARGE);
 		// history buttons
 		buttonHistoryBack.setBorderPainted(true);
-		buttonHistoryFore.setBorderPainted(true);
+		buttonHistoryForward.setBorderPainted(true);
 		buttonHistoryBack.putClientProperty("JButton.buttonType", "segmentedTextured");
-		buttonHistoryFore.putClientProperty("JButton.buttonType", "segmentedTextured");
+		buttonHistoryForward.putClientProperty("JButton.buttonType", "segmentedTextured");
 		buttonHistoryBack.putClientProperty("JButton.segmentPosition", "only");
-		buttonHistoryFore.putClientProperty("JButton.segmentPosition", "only");
+		buttonHistoryForward.putClientProperty("JButton.segmentPosition", "only");
 		buttonHistoryBack.putClientProperty("JComponent.sizeVariant", "small");
-		buttonHistoryFore.putClientProperty("JComponent.sizeVariant", "small");
+		buttonHistoryForward.putClientProperty("JComponent.sizeVariant", "small");
 		macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(statusEntryLabel), 5);
 		macbottombar.addComponentToLeft(jTextFieldEntryNumber, 5);
 		macbottombar.addComponentToLeft(MacWidgetFactory.makeEmphasizedLabel(statusOfEntryLabel), 10);
 		macbottombar.addComponentToLeft(buttonHistoryBack);
-		macbottombar.addComponentToLeft(buttonHistoryFore, 10);
+		macbottombar.addComponentToLeft(buttonHistoryForward, 10);
 		macbottombar.addComponentToLeft(MacButtonFactory.makeUnifiedToolBarButton(statusErrorButton), 5);
 		macbottombar.addComponentToLeft(MacButtonFactory.makeUnifiedToolBarButton(statusDesktopEntryButton));
 		macbottombar.addComponentToCenter(MacWidgetFactory.makeEmphasizedLabel(jLabelMemory));
@@ -11791,7 +11791,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jTextFieldEntryNumber = new javax.swing.JTextField();
             statusOfEntryLabel = new javax.swing.JLabel();
             buttonHistoryBack = new javax.swing.JButton();
-            buttonHistoryFore = new javax.swing.JButton();
+            buttonHistoryForward = new javax.swing.JButton();
             statusMsgLabel = new javax.swing.JLabel();
             statusErrorButton = new javax.swing.JButton();
             statusDesktopEntryButton = new javax.swing.JButton();
@@ -13818,13 +13818,13 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             buttonHistoryBack.setMargin(new java.awt.Insets(0, 0, 0, 0));
             buttonHistoryBack.setName("buttonHistoryBack"); // NOI18N
 
-            buttonHistoryFore.setAction(actionMap.get("historyForward")); // NOI18N
-            buttonHistoryFore.setIcon(resourceMap.getIcon("buttonHistoryFore.icon")); // NOI18N
-            buttonHistoryFore.setBorderPainted(false);
-            buttonHistoryFore.setContentAreaFilled(false);
-            buttonHistoryFore.setFocusPainted(false);
-            buttonHistoryFore.setMargin(new java.awt.Insets(0, 0, 0, 0));
-            buttonHistoryFore.setName("buttonHistoryFore"); // NOI18N
+            buttonHistoryForward.setAction(actionMap.get("historyForward")); // NOI18N
+            buttonHistoryForward.setIcon(resourceMap.getIcon("buttonHistoryForward.icon")); // NOI18N
+            buttonHistoryForward.setBorderPainted(false);
+            buttonHistoryForward.setContentAreaFilled(false);
+            buttonHistoryForward.setFocusPainted(false);
+            buttonHistoryForward.setMargin(new java.awt.Insets(0, 0, 0, 0));
+            buttonHistoryForward.setName("buttonHistoryForward"); // NOI18N
 
             statusMsgLabel.setText(resourceMap.getString("statusMsgLabel.text")); // NOI18N
             statusMsgLabel.setName("statusMsgLabel"); // NOI18N
@@ -13860,7 +13860,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(buttonHistoryBack, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(buttonHistoryFore, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonHistoryForward, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(6, 6, 6)
                     .addComponent(statusErrorButton)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -13880,7 +13880,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                             .addComponent(jTextFieldEntryNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(statusOfEntryLabel))
                         .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(buttonHistoryFore, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(buttonHistoryForward, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(buttonHistoryBack, javax.swing.GroupLayout.Alignment.LEADING))
                         .addComponent(statusAnimationLabel)
                         .addComponent(statusMsgLabel)
@@ -14628,7 +14628,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JMenuItem addSelectionToTitleMenuItem;
     private javax.swing.JMenuItem addToDesktopMenuItem;
     private javax.swing.JButton buttonHistoryBack;
-    private javax.swing.JButton buttonHistoryFore;
+    private javax.swing.JButton buttonHistoryForward;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem copyPlainMenuItem;
     private javax.swing.JMenuItem deleteKwFromListMenuItem;
