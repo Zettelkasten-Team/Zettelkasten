@@ -12,8 +12,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import de.danielluedecke.zettelkasten.ZettelkastenView;
+import de.danielluedecke.zettelkasten.data.History;
 import ch.dreyeck.zettelkasten.xml.Zettel;
-import de.danielluedecke.zettelkasten.history.History;
 
 public class DisplayTest {
     private Display display;
