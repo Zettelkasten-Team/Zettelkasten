@@ -2917,16 +2917,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	/**
 	 * This variable indicates whether the history-function is available or not.
 	 */
-	private boolean historyForeAvailable = false;
+	private boolean historyForwardAvailable = false;
 
-	public boolean isHistoryForeAvailable() {
-		return historyForeAvailable;
+	public boolean isHistoryForwardAvailable() {
+		return historyForwardAvailable;
 	}
 
 	public void setHistoryForwardAvailable(boolean b) {
-		boolean old = isHistoryForeAvailable();
-		this.historyForeAvailable = b;
-		firePropertyChange("historyForeAvailable", old, isHistoryForeAvailable());
+		boolean old = isHistoryForwardAvailable();
+		this.historyForwardAvailable = b;
+		firePropertyChange("historyForwardAvailable", old, isHistoryForwardAvailable());
 	}
 
 	/**
@@ -9607,12 +9607,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		updateDisplay();
 	}
         
-        @Action(enabledProperty = "historyForeAvailable")
-        public void historyForward() {
-            data.historyForward();
-            displayedZettel = -1;
-            updateDisplay();
-        }
+	@Action(enabledProperty = "historyForwardAvailable")
+	public void historyForward() {
+		data.historyForward();
+		displayedZettel = -1;
+		updateDisplay();
+	}
 
 	/**
 	 * goToFirstParentEntry goes to the first parent entry of the current entry. If
@@ -12791,7 +12791,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 jPanelMainRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGap(0, 529, Short.MAX_VALUE)
                 .addGroup(jPanelMainRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPaneMain, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE))
+                    .addComponent(jTabbedPaneMain, javax.swing.GroupLayout.Alignment.TRAILING))
             );
 
             jSplitPaneMain1.setRightComponent(jPanelMainRight);
