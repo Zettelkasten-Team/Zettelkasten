@@ -2820,7 +2820,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		buttonHistoryBack.setEnabled(data.canHistoryBack());
 		buttonHistoryForward.setEnabled(data.canHistoryForward());
 		setHistoryBackAvailable(data.canHistoryBack());
-		setHistoryForeAvailable(data.canHistoryForward());
+		setHistoryForwardAvailable(data.canHistoryForward());
 		// desktop and search results available
 		setDesktopAvailable(desktop.getCount() > 0);
 		setSearchResultsAvailable(searchRequests.getCount() > 0);
@@ -2923,7 +2923,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		return historyForeAvailable;
 	}
 
-	public void setHistoryForeAvailable(boolean b) {
+	public void setHistoryForwardAvailable(boolean b) {
 		boolean old = isHistoryForeAvailable();
 		this.historyForeAvailable = b;
 		firePropertyChange("historyForeAvailable", old, isHistoryForeAvailable());
