@@ -133,7 +133,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * This list model is used for the JList-component which displays the keywords
 	 * of the current entry.
 	 */
-	private final DefaultListModel<String> keywordListModel = new DefaultListModel<String>();
+	final DefaultListModel<String> keywordListModel = new DefaultListModel<String>();
 
 	/**
 	 * This list model is used for the JList-component which displays the found
@@ -150,7 +150,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	/**
 	 * This variable stores the table data of the keyword-list when this list is
-	 * filtered. All changes to a fitered table-list are also applied to this linked
+	 * filtered. All changes to a filtered table-list are also applied to this linked
 	 * list. When the table-list is being refreshed, we don't need to run the
 	 * time-consuming task; instead we simply iterate this list and set the values
 	 * to the table
@@ -159,7 +159,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	/**
 	 * This variable stores the table data of the author-list when this list is
-	 * filtered. All changes to a fitered table-list are also applied to this linked
+	 * filtered. All changes to a filtered table-list are also applied to this linked
 	 * list. When the table-list is being refreshed, we don't need to run the
 	 * time-consuming task; instead we simply iterate this list and set the values
 	 * to the table
@@ -2762,18 +2762,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 *
 	 * @param inputDisplayedEntry the number of the entry that should be displayed
 	 */
-	private void updateEntryPaneAndKeywordsPane(int inputDisplayedEntry) {
+	void updateEntryPaneAndKeywordsPane(int inputDisplayedEntry) {
 		// If we have an invalid entry, reset panes.
 		if (data.getCount(Daten.ZKNCOUNT) == 0 || inputDisplayedEntry == 0) {
-			jEditorPaneEntry.setText("");
-
-			Color bcol = (settings.isMacStyle()) ? ColorUtil.colorJTreeText : null;
-			jListEntryKeywords.setBorder(ZknMacWidgetFactory
-					.getTitledBorder(getResourceMap().getString("jListEntryKeywords.border.title"), bcol, settings));
-			keywordListModel.clear();
-
-			jTextFieldEntryNumber.setText("");
-			statusOfEntryLabel.setText(getResourceMap().getString("entryOfText"));
+			resetEntryPaneAndKeywordsPane();
 			return;
 		}
 
@@ -2786,12 +2778,28 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			buttonHistoryForward.setEnabled(data.canHistoryForward());
 		}
 
-		updateHighlightingTerms(inputDisplayedEntry);
-		updateSelectedEntryPane(inputDisplayedEntry);
-		updateKeywordsPane(inputDisplayedEntry);
+		displaySelectedEntry(inputDisplayedEntry);
 
 		statusOfEntryLabel.setText(
 				getResourceMap().getString("entryOfText") + " " + String.valueOf(data.getCount(Daten.ZKNCOUNT)));
+	}
+
+	private void displaySelectedEntry(int inputDisplayedEntry) {
+		updateHighlightingTerms(inputDisplayedEntry);
+		updateSelectedEntryPane(inputDisplayedEntry);
+		updateKeywordsPane(inputDisplayedEntry);
+	}
+
+	private void resetEntryPaneAndKeywordsPane() {
+		jEditorPaneEntry.setText("");
+
+		Color bcol = (settings.isMacStyle()) ? ColorUtil.colorJTreeText : null;
+		jListEntryKeywords.setBorder(ZknMacWidgetFactory
+				.getTitledBorder(getResourceMap().getString("jListEntryKeywords.border.title"), bcol, settings));
+		keywordListModel.clear();
+
+		jTextFieldEntryNumber.setText("");
+		statusOfEntryLabel.setText(getResourceMap().getString("entryOfText"));
 	}
 	
 	/**
@@ -14631,8 +14639,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JMenuItem addSelectionToKeywordMenuItem;
     private javax.swing.JMenuItem addSelectionToTitleMenuItem;
     private javax.swing.JMenuItem addToDesktopMenuItem;
-    private javax.swing.JButton buttonHistoryBack;
-    private javax.swing.JButton buttonHistoryForward;
+    javax.swing.JButton buttonHistoryBack;
+    javax.swing.JButton buttonHistoryForward;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem copyPlainMenuItem;
     private javax.swing.JMenuItem deleteKwFromListMenuItem;
@@ -14682,7 +14690,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JEditorPane jEditorPaneBookmarkComment;
     private javax.swing.JEditorPane jEditorPaneClusterEntries;
     private javax.swing.JEditorPane jEditorPaneDispAuthor;
-    private javax.swing.JEditorPane jEditorPaneEntry;
+    javax.swing.JEditorPane jEditorPaneEntry;
     private javax.swing.JEditorPane jEditorPaneIsFollower;
     private javax.swing.JLabel jLabelMemory;
     private javax.swing.JList jListEntryKeywords;
@@ -14864,7 +14872,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JTable jTableLinks;
     private javax.swing.JTable jTableManLinks;
     private javax.swing.JTable jTableTitles;
-    private javax.swing.JTextField jTextFieldEntryNumber;
+    javax.swing.JTextField jTextFieldEntryNumber;
     private javax.swing.JTextField jTextFieldFilterAttachments;
     private javax.swing.JTextField jTextFieldFilterAuthors;
     private javax.swing.JTextField jTextFieldFilterCluster;
@@ -15012,7 +15020,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JLabel statusEntryLabel;
     private javax.swing.JButton statusErrorButton;
     private javax.swing.JLabel statusMsgLabel;
-    private javax.swing.JLabel statusOfEntryLabel;
+    javax.swing.JLabel statusOfEntryLabel;
     private javax.swing.JPanel statusPanel;
     private javax.swing.JButton tb_addbookmark;
     private javax.swing.JButton tb_addluhmann;

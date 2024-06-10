@@ -7622,4 +7622,9 @@ public class Daten {
 		return false;
 	}
 
+	public void addEntry(int validEntryNumber, String string) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
