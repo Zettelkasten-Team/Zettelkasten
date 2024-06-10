@@ -398,7 +398,7 @@ public class AcceleratorKeys {
 			acceleratorKeysMain.getRootElement().addContent(acckey);
 			
 			// Log the key binding configuration
-	        Constants.zknlogger.info("Key binding set for historyForward: " + historykey + " LEFT");
+	        Constants.zknlogger.info("Key binding set for historyForward: " + historykey + " RIGHT");
 
 		}
 		
