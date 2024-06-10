@@ -112,8 +112,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	public SearchRequests searchRequests;
 
-	private Daten data;
-	private History historyManager;
+	public Daten data;
+	private History history;
 	private final TasksData taskinfo;
 	public final Bookmarks bookmarks;
 	private final BibTeX bibtex;
@@ -222,8 +222,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	private boolean isbnc = false;
 	
-	private ApplicationContext context;
-
 	public boolean isBackupNecessary() {
 		return isbnc;
 	}
@@ -244,14 +242,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	/**
 	 * This string contains an added keyword that was added to the jTableKeywords,
-	 * so the new added value can be selected immediatley after adding in to the
+	 * so the new added value can be selected immediately after adding in to the
 	 * table.
 	 */
 	private String newAddedKeyword = null;
 
 	/**
 	 * This string contains an added author that was added to the jTableAuthors, so
-	 * the new added value can be selected immediatley after adding in to the table.
+	 * the new added value can be selected immediately after adding in to the table.
 	 */
 	private String newAddedAuthor = null;
 
@@ -418,7 +416,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			bookmarks = new Bookmarks(this, settings);
 			bibtex = new BibTeX(this, settings);
 			data = new Daten(this, settings, settings.getSynonyms(), bibtex);
-			display = new Display(this, historyManager);
+			display = new Display(this, history);
 		} else {
 			// Handle the case where settings is null
 			bookmarks = null; // or initialize with default value
@@ -2750,7 +2748,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}	
 
 	/**
-	 * This method is used to update the content of the textfields/lists, but not
+	 * This method is used to update the content of the text fields/lists, but not
 	 * the whole display like tabbed pane as well. Usually this method is called
 	 * when a link to another entry or a follower entry or any entry in one of the
 	 * tabbed pane's tables is selected. This selection does just show the content
@@ -2760,26 +2758,31 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * this only occurs, when an entry is <i>activated</i>. e.g. by double-clicking
 	 * on an entry in on of the tabbed pane's tables.
 	 *
-	 * @param inputDisplayedEntry the number of the entry that should be displayed
+	 * @param entryNumber the number of the entry to display
 	 */
-	void updateEntryPaneAndKeywordsPane(int inputDisplayedEntry) {
+	void updateEntryPaneAndKeywordsPane(int entryNumber) {
 		// If we have an invalid entry, reset panes.
-		if (data.getCount(Daten.ZKNCOUNT) == 0 || inputDisplayedEntry == 0) {
+		if (isInvalidEntry(entryNumber)) {
 			resetEntryPaneAndKeywordsPane();
 			return;
 		}
 
 		// If the user wants to add all displayed entries to the history, include new
 		// displayed entry to the history.
-		if (settings.getAddAllToHistory()) {
-			data.addToHistory(inputDisplayedEntry);
-			// Update buttons for navigating through history.
-			buttonHistoryBack.setEnabled(data.canHistoryBack());
-			buttonHistoryForward.setEnabled(data.canHistoryForward());
+		if (settings.getAddAllToHistory() && history != null) {
+			history.updateHistory(this, entryNumber);
 		}
 
-		displaySelectedEntry(inputDisplayedEntry);
+		displaySelectedEntry(entryNumber);
 
+		updateStatus();
+	}
+
+	private boolean isInvalidEntry(int inputDisplayedEntry) {
+		return data.getCount(Daten.ZKNCOUNT) == 0 || inputDisplayedEntry == 0;
+	}
+
+	private void updateStatus() {
 		statusOfEntryLabel.setText(
 				getResourceMap().getString("entryOfText") + " " + String.valueOf(data.getCount(Daten.ZKNCOUNT)));
 	}
@@ -6455,7 +6458,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     }
 
 	public void setContext(ApplicationContext applicationContext) {
-		this.context = applicationContext;
 	}
 
 
@@ -14639,8 +14641,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JMenuItem addSelectionToKeywordMenuItem;
     private javax.swing.JMenuItem addSelectionToTitleMenuItem;
     private javax.swing.JMenuItem addToDesktopMenuItem;
-    javax.swing.JButton buttonHistoryBack;
-    javax.swing.JButton buttonHistoryForward;
+    public javax.swing.JButton buttonHistoryBack;
+    public javax.swing.JButton buttonHistoryForward;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem copyPlainMenuItem;
     private javax.swing.JMenuItem deleteKwFromListMenuItem;
@@ -15173,11 +15175,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	public void setHistoryManager(History historyManager) {
-		this.historyManager = historyManager;
+		this.history = historyManager;
 	}
 
 	public History getHistoryManager() {
-		return historyManager;
+		return history;
 	}
 
 	public void displayHistory(int[] history, int historyCount) {
