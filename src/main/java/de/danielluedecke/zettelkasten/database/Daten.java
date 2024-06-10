@@ -7627,4 +7627,9 @@ public class Daten {
 		
 	}
 
+	public boolean isInHistory(int entryNumber) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

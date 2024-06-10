@@ -1,5 +1,6 @@
 package de.danielluedecke.zettelkasten.data;
 
+import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.history.NavigationListener;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.view.Display;
@@ -126,5 +127,12 @@ public class History implements NavigationListener {
 	@Override
 	public void navigateBackwardInHistory() {
 		historyBack();
+	}
+
+	public void updateHistory(ZettelkastenView zettelkastenView, int inputDisplayedEntry) {
+		zettelkastenView.data.addToHistory(inputDisplayedEntry);
+		// Update buttons for navigating through history.
+		zettelkastenView.buttonHistoryBack.setEnabled(zettelkastenView.data.canHistoryBack());
+		zettelkastenView.buttonHistoryForward.setEnabled(zettelkastenView.data.canHistoryForward());
 	}
 }

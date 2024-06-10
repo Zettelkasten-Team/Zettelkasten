@@ -2291,7 +2291,7 @@ public class HtmlUbbUtil {
      */
     public static String getCommonStyleDefinition(Settings settings, boolean isDesktop, boolean isExport, boolean isPrint) {
         // check whether we have custom css settings
-        if (settings.getUseCustomCSS((isDesktop) ? Settings.CUSTOM_CSS_DESKTOP : Settings.CUSTOM_CSS_ENTRY)) {
+        if (settings != null && settings.getUseCustomCSS((isDesktop) ? Settings.CUSTOM_CSS_DESKTOP : Settings.CUSTOM_CSS_ENTRY)) {
             // retrieve custom style sheet
             String customCss = settings.getCustomCSS((isDesktop) ? Settings.CUSTOM_CSS_DESKTOP : Settings.CUSTOM_CSS_ENTRY);
             // check for valid value
