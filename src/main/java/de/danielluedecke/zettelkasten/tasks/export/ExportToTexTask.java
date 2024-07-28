@@ -60,7 +60,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
      * Reference to the CDaten object, which contains the XML data of the Zettelkasten will be
      * passed as parameter in the constructor, see below
      */
-    private final Daten dataObj;
+    private final Daten data;
     /**
      *
      */
@@ -68,7 +68,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
     /**
      *
      */
-    private final BibTeX bibtexObj;
+    private final BibTeX bibTeX;
     /**
      *
      */
@@ -76,7 +76,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
     /**
      *
      */
-    private final Settings settingsObj;
+    private final Settings settings;
     /**
      * Indicates whether or not a bibtex-file from the exported entries should be created or not
      */
@@ -175,10 +175,10 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                            TasksData td, Daten d, DesktopData dt, Settings s, BibTeX bto, File fp, ArrayList<Object> ee, int type, int part,
                            DefaultMutableTreeNode n, boolean bibtex, boolean ihv, boolean numberprefix, boolean contenttable, boolean sf) {
         super(app);
-        dataObj = d;
-        settingsObj = s;
+        data = d;
+        settings = s;
         desktopObj = dt;
-        bibtexObj = bto;
+        bibTeX = bto;
         filepath = fp;
         exporttype = type;
         exportparts = part;
@@ -200,9 +200,9 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         if (null == exportentries) {
             exportentries = new ArrayList<>();
             // copy all entry-numbers to array. remember that the entrynumbers range from 1 to site of file.
-            for (int cnt = 0; cnt < dataObj.getCount(Daten.ZKNCOUNT); cnt++) {
+            for (int cnt = 0; cnt < data.getCount(Daten.ZKNCOUNT); cnt++) {
                 // only add entries that are not empty
-                if (!dataObj.isEmpty(cnt + 1)) {
+                if (!data.isEmpty(cnt + 1)) {
                     exportentries.add(cnt + 1);
                 }
             }
@@ -264,7 +264,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                         // check whether the user wants to export titles.
                         if ((exportparts & Constants.EXPORT_TITLE) != 0) {
                             // first check whether we have a title or not
-                            zetteltitle = dataObj.getZettelTitle(zettelnummer);
+                            zetteltitle = data.getZettelTitle(zettelnummer);
                             // only prepare a title when we want to have the entry's number as title-prefix,
                             // or if we have a title.
                             if (!zetteltitle.isEmpty() || zettelNumberAsPrefix) {
@@ -290,7 +290,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                         // check whether the user wants to export content
                         if ((exportparts & Constants.EXPORT_CONTENT) != 0) {
                             // get the zettelcontent
-                            String zettelcontent = getConvertedTex(dataObj.getZettelContent(zettelnummer));
+                            String zettelcontent = getConvertedTex(data.getZettelContent(zettelnummer));
                             // if we have content, add it.
                             if (!zettelcontent.isEmpty()) {
                                 // check whether we have form-tags
@@ -299,7 +299,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                                 }
                                 // first, replace all footnotes with bibkeys
                                 // to appropriate cite-tag in latex
-                                zettelcontent = ExportTools.createLatexFootnotes(dataObj, zettelcontent, settingsObj.getLatexExportFootnoteRef());
+                                zettelcontent = ExportTools.createLatexFootnotes(data, zettelcontent, settings.getLatexExportFootnoteRef());
                                 // then add content
                                 exportPage.append(zettelcontent);
                             } else {
@@ -311,7 +311,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                         // if the user wants to export remarks, do this here.
                         if ((exportparts & Constants.EXPORT_REMARKS) != 0) {
                             // get entry's remarks
-                            String remarks = dataObj.getCleanRemarks(zettelnummer);
+                            String remarks = data.getCleanRemarks(zettelnummer);
                             // check whether we have any
                             if (!remarks.isEmpty()) {
                                 // set headline indicating that we have remarks here
@@ -321,31 +321,31 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                             }
                         }
                         // check whether the user wants to export authors
-                        if ((exportparts & Constants.EXPORT_AUTHOR) != 0 && dataObj.hasAuthors(zettelnummer)) {
-                            exportPage.append(ExportTools.createPlainList(dataObj.getAuthors(zettelnummer), resourceMap.getString("NoAuthor"), resourceMap.getString("authorHeader"), "\\subsection{", "}"));
+                        if ((exportparts & Constants.EXPORT_AUTHOR) != 0 && data.hasAuthors(zettelnummer)) {
+                            exportPage.append(ExportTools.createPlainList(data.getAuthors(zettelnummer), resourceMap.getString("NoAuthor"), resourceMap.getString("authorHeader"), "\\subsection{", "}"));
                         }
                         // check whether user wants to export keywords.
-                        if ((exportparts & Constants.EXPORT_KEYWORDS) != 0 && dataObj.hasKeywords(zettelnummer)) {
-                            exportPage.append(ExportTools.createPlainList(dataObj.getKeywords(zettelnummer, true), resourceMap.getString("NoKeyword"), resourceMap.getString("keywordHeader"), "\\subsection{", "}"));
+                        if ((exportparts & Constants.EXPORT_KEYWORDS) != 0 && data.hasKeywords(zettelnummer)) {
+                            exportPage.append(ExportTools.createPlainList(data.getKeywords(zettelnummer, true), resourceMap.getString("NoKeyword"), resourceMap.getString("keywordHeader"), "\\subsection{", "}"));
                         }
-                        if ((exportparts & Constants.EXPORT_LINKS) != 0 && dataObj.hasAttachments(zettelnummer)) {
-                            exportPage.append(ExportTools.createPlainList(dataObj.getAttachmentsAsString(zettelnummer, false), resourceMap.getString("NoAttachment"), resourceMap.getString("attachmentHeader"), "\\subsection{", "}"));
+                        if ((exportparts & Constants.EXPORT_LINKS) != 0 && data.hasAttachments(zettelnummer)) {
+                            exportPage.append(ExportTools.createPlainList(data.getAttachmentsAsString(zettelnummer, false), resourceMap.getString("NoAttachment"), resourceMap.getString("attachmentHeader"), "\\subsection{", "}"));
                         }
-                        if ((exportparts & Constants.EXPORT_MANLINKS) != 0 && dataObj.hasManLinks(zettelnummer)) {
+                        if ((exportparts & Constants.EXPORT_MANLINKS) != 0 && data.hasManLinks(zettelnummer)) {
                             exportPage.append(ExportTools.createPlainCommaList(Daten.getManualLinksAsString(zettelnummer), resourceMap.getString("NoManLinks"), resourceMap.getString("manlinksHeader"), "\\subsection{", "}"));
                         }
-                        if ((exportparts & Constants.EXPORT_LUHMANN) != 0 && dataObj.hasLuhmannNumbers(zettelnummer)) {
-                            exportPage.append(ExportTools.createPlainCommaList(dataObj.getLuhmannNumbersAsString(zettelnummer), resourceMap.getString("NoLuhmann"), resourceMap.getString("luhmannHeader"), "\\subsection{", "}"));
+                        if ((exportparts & Constants.EXPORT_LUHMANN) != 0 && data.hasLuhmannNumbers(zettelnummer)) {
+                            exportPage.append(ExportTools.createPlainCommaList(data.getLuhmannNumbersAsString(zettelnummer), resourceMap.getString("NoLuhmann"), resourceMap.getString("luhmannHeader"), "\\subsection{", "}"));
                         }
                         if ((exportparts & Constants.EXPORT_TIMESTAMP) != 0) {
-                            String timestamp = dataObj.getTimestampCreated(zettelnummer);
+                            String timestamp = data.getTimestampCreated(zettelnummer);
                             // check whether we have a timestamp at all
                             if (timestamp != null && !timestamp.isEmpty()) {
                                 // and add the created-timestamp
                                 exportPage.append(resourceMap.getString("timestampCreated")).append(" ").append(Tools.getProperDate(timestamp, false));
                             }
                             // check whether we have a modified-timestamp
-                            timestamp = dataObj.getTimestampEdited(zettelnummer);
+                            timestamp = data.getTimestampEdited(zettelnummer);
                             // check whether we have a timestamp at all
                             if (timestamp != null && !timestamp.isEmpty()) {
                                 exportPage.append(System.lineSeparator()).append(resourceMap.getString("timestampEdited")).append(" ").append(Tools.getProperDate(timestamp, false));
@@ -355,8 +355,8 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                         }
                         // separate files for each note?
                         if (separateFiles) {
-                            // conver tags to tex
-                            exportPage = new StringBuilder(HtmlUbbUtil.convertUbbToTex(settingsObj, dataObj, bibtexObj, exportPage.toString(), settingsObj.getLatexExportFootnoteRef(), settingsObj.getLatexExportCreateFormTags(), Constants.EXP_TYPE_DESKTOP_TEX == exporttype, settingsObj.getLatexExportRemoveNonStandardTags()));
+                            // Convert tags to tex
+                            exportPage = new StringBuilder(HtmlUbbUtil.convertUbbToTex(settings, data, bibTeX, exportPage.toString(), settings.getLatexExportFootnoteRef(), settings.getLatexExportCreateFormTags(), Constants.EXP_TYPE_DESKTOP_TEX == exporttype, settings.getLatexExportRemoveNonStandardTags()));
                             // get note number and title for filepath
                             String fname = String.valueOf(zettelnummer) + " " + FileOperationsUtil.getCleanFilePath(zetteltitle);
                             // create file path
@@ -383,7 +383,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                 break;
             case Constants.EXP_TYPE_DESKTOP_TEX:
                 // get comment-export-options
-                int commentExport = settingsObj.getDesktopCommentExport();
+                int commentExport = settings.getDesktopCommentExport();
                 switch (commentExport) {
                     case Constants.EXP_COMMENTS_NO:
                         exportEntriesWithComments(treenode, false);
@@ -407,7 +407,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
             // convert all ubb into html...
             // save content that should be exported and written to a file
             // into a string. the write-procedure is done later, see below
-            exportPage = new StringBuilder(HtmlUbbUtil.convertUbbToTex(settingsObj, dataObj, bibtexObj, exportPage.toString(), settingsObj.getLatexExportFootnoteRef(), settingsObj.getLatexExportCreateFormTags(), Constants.EXP_TYPE_DESKTOP_TEX == exporttype, settingsObj.getLatexExportRemoveNonStandardTags()));
+            exportPage = new StringBuilder(HtmlUbbUtil.convertUbbToTex(settings, data, bibTeX, exportPage.toString(), settings.getLatexExportFootnoteRef(), settings.getLatexExportCreateFormTags(), Constants.EXP_TYPE_DESKTOP_TEX == exporttype, settings.getLatexExportRemoveNonStandardTags()));
             // insert document-header
             exportPage.insert(0, exportPageHeader.toString());
             // show status text that file will be written
@@ -419,7 +419,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
                 // show status text
                 msgLabel.setText(resourceMap.getString("msgBibtextExport"));
                 // write bibtex file
-                ExportTools.writeBibTexFile(dataObj, bibtexObj, exportentries, filepath, resourceMap);
+                ExportTools.writeBibTexFile(data, bibTeX, exportentries, filepath, resourceMap);
             }
         }
         return null;  // return your result
@@ -446,13 +446,13 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
      */
     private void createLatexHeader() {
         // check if preamble is requested
-        if (settingsObj.getLatexExportNoPreamble()) {
+        if (settings.getLatexExportNoPreamble()) {
             return;
         }
         // init default document class
         String defaultdocclass = "[12pt,oneside,a4paper]{scrartcl}";
         // check for user defined document class
-        int docclass = settingsObj.getLastUsedLatexDocClass();
+        int docclass = settings.getLastUsedLatexDocClass();
         // check if it differs from default value
         if (docclass != 0 && docclass < Constants.LATEX_DOCUMENT_CLASS.length) {
             // set user defined document class
@@ -500,7 +500,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         exportPageHeader.append("% Standardmäßig kein Einrücken von Absätzen").append(System.lineSeparator());
         exportPageHeader.append("\\parindent 0pt").append(System.lineSeparator()).append(System.lineSeparator());
         // check whether document contains form-tags
-        if (zettelHasForms && settingsObj.getLatexExportCreateFormTags()) {
+        if (zettelHasForms && settings.getLatexExportCreateFormTags()) {
             // if so, append makro to document-header
             doTheSpencerBrown();
         }
@@ -513,14 +513,14 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
             exportPageHeader.append(desktopObj.getCurrentDesktopName());
         } // else, use data file's name as title
         else {
-            settingsObj.getMainDataFileNameWithoutExtension();
+            settings.getMainDataFileNameWithoutExtension();
         }
         exportPageHeader.append("}").append(System.lineSeparator());
         // check whether author-name or email should be set
-        if (settingsObj.getLatexExportShowMail() || settingsObj.getLatexExportShowAuthor()) {
+        if (settings.getLatexExportShowMail() || settings.getLatexExportShowAuthor()) {
             // retrieve author and mail values
-            String doc_author = settingsObj.getLatexExportAuthorValue();
-            String doc_mail = settingsObj.getLatexExportMailValue();
+            String doc_author = settings.getLatexExportAuthorValue();
+            String doc_mail = settings.getLatexExportMailValue();
             // check whether we have values here
             exportPageHeader.append("\\author{");
             if (doc_author != null && !doc_author.isEmpty()) {
@@ -544,12 +544,12 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
      */
     private void createLatexFooter() {
         // check if preamble is requested
-        if (settingsObj.getLatexExportNoPreamble()) {
+        if (settings.getLatexExportNoPreamble()) {
             return;
         }
         // retrieve filename of data file and bibtex file
         String filename = FileOperationsUtil.getFileName(filepath);
-        String bibname = bibtexObj.getFileName();
+        String bibname = bibTeX.getFileName();
         // check whether one is empty or null
         if (null == filename) {
             filename = "";
@@ -563,7 +563,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         // the filename of the default-attached bibtex-file is used.
         exportPage.append("\\bibliography{").append((exportbibtex) ? filename : bibname).append("}").append(System.lineSeparator());
         // create default bibliography style
-        exportPage.append("\\bibliographystyle{").append(Constants.LATEX_BIB_STYLECODE[settingsObj.getLastUsedLatexBibStyle()]).append("} % Auskommentieren, wenn eigener Literatur-Stil eingebunden wird.").append(System.lineSeparator()).append(System.lineSeparator());
+        exportPage.append("\\bibliographystyle{").append(Constants.LATEX_BIB_STYLECODE[settings.getLastUsedLatexBibStyle()]).append("} % Auskommentieren, wenn eigener Literatur-Stil eingebunden wird.").append(System.lineSeparator()).append(System.lineSeparator());
         // print references
         exportPage.append("% kann anstelle der beiden vorigen Zeilen verwendet werden,").append(System.lineSeparator());
         exportPage.append("% um eigene Literatur-Stile zu nutzen.").append(System.lineSeparator());
@@ -678,7 +678,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         // prepare form-paragraph
         String formtag = "\\raisebox{0pt}[\\formabovedist][\\formbelowdist]#1";
         // check whether formtag should be centred
-        if (settingsObj.getLatexExportCenterForm()) {
+        if (settings.getLatexExportCenterForm()) {
             formtag = "\\begin{center}" + formtag + "\\end{center}";
         }
         // enter % for significant empty spaces
@@ -814,7 +814,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         // entry was not modified - thus we retrieve the "original" entry.
         if (null == text || text.isEmpty()) {
             // retrieve regular content
-            text = dataObj.getZettelContent(nr);
+            text = data.getZettelContent(nr);
         }
         // convert special chars and enquote quotes
         text = getConvertedTex(text);
@@ -826,7 +826,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         // check whether the user wants to export titles.
         if (isHeadingVisible) {
             // first check whether we have a title or not
-            String zetteltitle = dataObj.getZettelTitle(nr);
+            String zetteltitle = data.getZettelTitle(nr);
             // only prepare a title when we want to have the entry's number as title-prefix,
             // or if we have a title.
             if (!zetteltitle.isEmpty() || zettelNumberAsPrefix) {
@@ -858,7 +858,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
             }
             // first, replace all footnotes with bibkeys
             // to appropriate cite-tag in latex
-            text = ExportTools.createLatexFootnotes(dataObj, text, settingsObj.getLatexExportFootnoteRef());
+            text = ExportTools.createLatexFootnotes(data, text, settings.getLatexExportFootnoteRef());
             // then append the content
             sb.append(text);
         } else {
@@ -866,9 +866,9 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
             sb.append(resourceMap.getString("deletedEntry"));
         }
         // if the user wants to export remarks, do this here.
-        if ((settingsObj.getDesktopDisplayItems() & Constants.DESKTOP_SHOW_REMARKS) != 0) {
+        if ((settings.getDesktopDisplayItems() & Constants.DESKTOP_SHOW_REMARKS) != 0) {
             // get entry's remarks
-            String remarks = dataObj.getCleanRemarks(nr);
+            String remarks = data.getCleanRemarks(nr);
             // check whether we have any
             if (!remarks.isEmpty()) {
                 // set headline indicating that we have remarks here
@@ -883,7 +883,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         // sb.append(System.lineSeparator()).append("\\end{zettel}").append(System.lineSeparator());
         sb.append(System.lineSeparator()).append(System.lineSeparator());
         // if the user wishes to remove multiple line-breaks, do this here
-        if (settingsObj.getRemoveLinesForDesktopExport()) {
+        if (settings.getRemoveLinesForDesktopExport()) {
             // retrieve current content
             text = sb.toString();
             // remove double line separaters
@@ -960,7 +960,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
             return "";
         }
         // check whether french quotes should be converted
-        if (settingsObj.getLatexExportConvertQuotes()) {
+        if (settings.getLatexExportConvertQuotes()) {
             // convert french quotes into normal quotes
             content = content.replaceAll(Pattern.quote("»"), Matcher.quoteReplacement("\""));
             content = content.replaceAll(Pattern.quote("«"), Matcher.quoteReplacement("\""));
@@ -1015,7 +1015,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         // TODO XXX Hack: ">" should only be converted if Markdown is not enabled, otherwise, it will be
         // taken as a quotation by subsequent components. (fixes bug reproduced by
         // "testBugMarkdownZitatWirdNichtKorrektNachLatexExportiert")  
-        if (!settingsObj.getMarkdownActivated()) {
+        if (!settings.getMarkdownActivated()) {
             dummy = dummy.replaceAll(Pattern.quote(">"), Matcher.quoteReplacement("\\rangle"));
         }
 
@@ -1027,7 +1027,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         dummy = dummy.replaceAll(Pattern.quote("½"), Matcher.quoteReplacement("\\textonehalf"));
         dummy = dummy.replaceAll(Pattern.quote("¾"), Matcher.quoteReplacement("\\textthreequarters"));
         // check whether french quotes should be converted
-        if (!settingsObj.getLatexExportConvertQuotes()) {
+        if (!settings.getLatexExportConvertQuotes()) {
             dummy = dummy.replaceAll(Pattern.quote("»"), Matcher.quoteReplacement("\\guillemotright"));
             dummy = dummy.replaceAll(Pattern.quote("«"), Matcher.quoteReplacement("\\guillemotleft"));
         }
@@ -1036,7 +1036,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
 
     private String convertSpecialChars2(String dummy) {
         // need to convert umlauts?
-        if (null == dummy || dummy.isEmpty() || !settingsObj.getLatexExportConvertUmlaut()) {
+        if (null == dummy || dummy.isEmpty() || !settings.getLatexExportConvertUmlaut()) {
             return dummy;
         }
         // convert signs and special chars

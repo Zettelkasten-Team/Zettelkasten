@@ -3,10 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.danielluedecke</groupId>
     <artifactId>Zettelkasten</artifactId>
-    <version>3.2024.06</version>
+    <version>3.2024.07</version>
     <name>Zettelkasten</name>
     <properties>
         <exec.mainClass>de.danielluedecke.zettelkasten.ZettelkastenApp</exec.mainClass>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <zkn.launch4jVersion>${project.version}.0</zkn.launch4jVersion>
         <zkn.supportsDmg>false</zkn.supportsDmg>
         <zkn.useGenIsoImage>false</zkn.useGenIsoImage>
@@ -101,8 +103,8 @@
                 <configuration>
                     <toolchains>
                         <jdk>
-                            <version>11</version>
-                            <vendor>temurin</vendor>
+                            <version>1.8</version>
+                            <vendor>oracle</vendor>
                         </jdk>
                     </toolchains>
                 </configuration>
@@ -387,11 +389,6 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>11</version>
-        </dependency>
-        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.5.6</version>
@@ -412,18 +409,6 @@
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
             <version>3.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-swing</artifactId>
-            <version>11</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-web</artifactId>
-            <version>11</version>
-            <type>jar</type>
         </dependency>
     </dependencies>
     <repositories>

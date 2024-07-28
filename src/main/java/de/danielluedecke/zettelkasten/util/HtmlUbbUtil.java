@@ -1991,28 +1991,28 @@ public class HtmlUbbUtil {
         return dummy;
     }
 
-    /**
-     * This method converts all ubb-tags of an entry, that are used to indicate
-     * formatting, into html-tags. We use this to set up an html-page with the
-     * entries content that is displayed in a jEditorPane.
-     *
-     * @param settings
-     * @param dataObj
-     * @param bibtexObj
-     * @param c the content of the entry in "raw" format (i.e. as it is stored
-     * in the xml-file)
-     * @param useFootnoteRef
-     * @param createFormTag
-     * @param isDesktop
-     * @param removeNonStandardTags
-     * @return a converted string with html-tags instead of ubb-tags
-     */
-    public static String convertUbbToTex(Settings settings, Daten dataObj, BibTeX bibtexObj, String c, boolean useFootnoteRef, boolean createFormTag, boolean isDesktop, boolean removeNonStandardTags) {
+	/**
+	 * This method converts all ubb tags of an item (or entry) that are used to specify
+	 * formatting into html tags. This way an HTML page with the content of the item
+	 * is created and displayed in a jEditorPane.
+	 *
+	 * @param settings
+	 * @param data
+	 * @param bibTeX
+	 * @param c                     the content of the entry in "raw" format (i.e.
+	 *                              as it is stored in the xml-file)
+	 * @param useFootnoteRef
+	 * @param createFormTag
+	 * @param isDesktop
+	 * @param removeNonStandardTags
+	 * @return a converted string with html-tags instead of ubb-tags
+	 */
+    public static String convertUbbToTex(Settings settings, Daten data, BibTeX bibTeX, String c, boolean useFootnoteRef, boolean createFormTag, boolean isDesktop, boolean removeNonStandardTags) {
         // here we create a path to our image folder. this is needed for
         // converting image tags, since the image ae copied to an own local folder,
         // but the source-information only stores the file name, not the path information.
         // see CNewEntry.java, method "insertImage" for more details
-        String imgpath = settings.getImagePath(dataObj.getUserImagePath(), true);
+        String imgpath = settings.getImagePath(data.getUserImagePath(), true);
         // for latex, we need / instead of \ as separator char
         imgpath = imgpath.replace("\\", "/");
         // if we have a windows operating system, we have to add an additonal
@@ -2083,13 +2083,13 @@ public class HtmlUbbUtil {
         // konvertierung von sonderzeichen
         dummy = dummy.replace("...", "\\dots");
         // here we convert all author-footnotes to latex-cite-tags
-        dummy = ExportTools.createLatexFootnotes(dataObj, dummy, useFootnoteRef);
+        dummy = ExportTools.createLatexFootnotes(data, dummy, useFootnoteRef);
         // replace all remaining footnotes without bibkey: [fn 102] becomes (FN xx)
-        dummy = convertFootnotes(dataObj, bibtexObj, settings, dummy, true, false);
+        dummy = convertFootnotes(data, bibTeX, settings, dummy, true, false);
         // convert tables in tex-format
         dummy = convertTablesToTex(dummy, settings);
         // convert form-tags
-        dummy = convertForms(settings, dataObj, dummy, Constants.EXP_TYPE_TEX, createFormTag, true);
+        dummy = convertForms(settings, data, dummy, Constants.EXP_TYPE_TEX, createFormTag, true);
 
         // Convert [qm] ("inline quotes") to \enquote{} (fixes bug reproduced by "testBugMarkdownZitatWirdNichtKorrektNachLatexExportiert")
         dummy = dummy.replaceAll("\\[qm\\](.*?)\\[/qm\\]", Matcher.quoteReplacement("\\enquote{") + "$1" + "}");
