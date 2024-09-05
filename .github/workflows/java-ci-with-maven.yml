@@ -19,7 +19,7 @@ jobs:
       - name: Set up
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
+          distribution: 'zulu' # See 'Supported distributions' for available options
           java-version: 8
       - name: Show Toolchain
         run: cat ~/.m2/toolchains.xml
@@ -40,7 +40,7 @@ jobs:
       - name: Set up
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
+          distribution: 'zulu' # See 'Supported distributions' for available options
           java-version: 8
       - name: Show Toolchain
         run: cat ~/.m2/toolchains.xml
