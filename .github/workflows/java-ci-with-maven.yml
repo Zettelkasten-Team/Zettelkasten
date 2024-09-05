@@ -19,7 +19,8 @@ jobs:
       - name: Set up
         uses: actions/setup-java@v4
         with:
-          java-version: 1.8
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: 8
       - name: Show Toolchain
         run: cat ~/.m2/toolchains.xml
       - name: Build with Maven
@@ -39,7 +40,8 @@ jobs:
       - name: Set up
         uses: actions/setup-java@v4
         with:
-          java-version: 1.8
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: 8
       - name: Show Toolchain
         run: cat ~/.m2/toolchains.xml
       - name: Build with Maven
