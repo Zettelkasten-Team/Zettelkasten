@@ -93,19 +93,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-toolchains-plugin</artifactId>
                 <version>3.2.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>toolchain</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
-                    <toolchains>
-                        <jdk>
-                            <version>18.0.2+101</version>
-                        </jdk>
-                    </toolchains>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>

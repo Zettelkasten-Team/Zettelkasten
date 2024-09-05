@@ -20,7 +20,6 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: 1.8
-          distribution: oracle
       - name: Show Toolchain
         run: cat ~/.m2/toolchains.xml
       - name: Build with Maven
@@ -41,7 +40,6 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: 1.8
-          distribution: oracle
       - name: Show Toolchain
         run: cat ~/.m2/toolchains.xml
       - name: Build with Maven
