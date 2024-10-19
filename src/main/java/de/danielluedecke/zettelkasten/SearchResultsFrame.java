@@ -736,6 +736,7 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	 */
 	@Action
 	public void showEntryImmediately() {
+		Constants.zknlogger.info(data.toString());
 		data.getSettings().setShowSearchEntry(!data.getSettings().getShowSearchEntry());
 	}
 
@@ -1269,74 +1270,91 @@ public class SearchResultsFrame extends javax.swing.JFrame {
 	}
 
 	/**
-	 * This method updates the display, i.e. it retrieves the selected entry from
-	 * the jTableResults and fills the textfields with content (displaying the
-	 * entry).
-	 */
-	private void updateDisplay() {
-		// get selected row
-		int row = jTableResults.getSelectedRow();
-		// if we have any selections, go on
-		if (row != -1) {
-			// retrieve the value...
-			Object o = jTableResults.getValueAt(row, 0);
-			try {
-				// ...and try to convert it to an integer value
-				int selection = Integer.parseInt(o.toString());
-				// prepare array for search terms which might be highlighted
-				String[] sts = getHighlightSearchterms();
-				displayZettelContent(selection, sts);
-				//
-				// Here we set up the keywordlist for the JList
-				//
-				// retrieve the keywords of the selected entry
-				String[] kws = data.getData().getKeywords(selection);
-				// prepare the JList which will display the keywords
-				data.getKeywordListModel().clear();
-				// check whether any keywords have been found
-				if (kws != null) {
-					// Sort the array
-					if (kws.length > 0)
-						Arrays.sort(kws);
-					// iterate the string array and add its content to the list model
-					for (String kw : kws)
-						data.getKeywordListModel().addElement(kw);
-				}
-				// if we have any search terms, we want to select the related keywords...
-				if (sts != null) {
-					// create an integer list
-					LinkedList<Integer> l = new LinkedList<>();
-					// iterate all search terms
-					for (String s : sts) {
-						// try to find the keyword in the jList
-						for (int cnt = 0; cnt < data.getKeywordListModel().getSize(); cnt++)
-							if (s.equalsIgnoreCase(data.getKeywordListModel().get(cnt).toString()))
-								l.add(cnt);
-					}
-					// create int-array
-					int[] selections = new int[l.size()];
-					// copy all elements of the list to the array
-					for (int cnt = 0; cnt < l.size(); cnt++)
-						selections[cnt] = l.get(cnt);
-					// Set selected indices for the jList
-					jListKeywords.setSelectedIndices(selections);
-				}
-				// if we don't have highlighting, clear selection
-				else
-					jListKeywords.clearSelection();
-				// if we want to update the entry immediately, show entry in mainframe as well
-				if (data.getSettings().getShowSearchEntry())
-					data.getMainFrame().setNewActivatedEntryAndUpdateDisplay(selection);
-				// finally, set desktop selected
-				// setDesktopEntrySelected(desktopObj.isEntryInAnyDesktop(selection));
-			} catch (NumberFormatException e) {
-				Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
-			}
-		} else {
-			jEditorPaneSearchEntry.setText("");
-			data.getKeywordListModel().clear();
-		}
-	}
+ * Updates the display with content from the selected entry in jTableResults
+ * and updates the related keyword list and highlights.
+ */
+private void updateDisplay() {
+    int row = jTableResults.getSelectedRow();
+    
+    // If a row is selected, proceed with display update
+    if (row != -1) {
+        Object selectedObject = jTableResults.getValueAt(row, 0);
+		Constants.zknlogger.info("Selected object: " + selectedObject);
+
+        try {
+            int selection = parseSelection(selectedObject);
+            updateZettelContent(selection);
+            updateKeywordList(selection);
+            highlightKeywords(selection);
+            updateMainFrameDisplay(selection);
+        } catch (NumberFormatException e) {
+            Constants.zknlogger.log(Level.WARNING, e.getLocalizedMessage());
+        }
+    } else {
+        clearDisplay();
+    }
+}
+
+// Helper method to parse the selected object into an integer
+private int parseSelection(Object selectedObject) throws NumberFormatException {
+    return Integer.parseInt(selectedObject.toString());
+}
+
+// Updates the main Zettel content display
+private void updateZettelContent(int selection) {
+    String[] searchTerms = getHighlightSearchterms();
+    displayZettelContent(selection, searchTerms);
+}
+
+// Updates the keyword list with the keywords from the selected Zettel
+private void updateKeywordList(int selection) {
+    String[] keywords = data.getData().getKeywords(selection);
+    data.getKeywordListModel().clear();
+
+    if (keywords != null && keywords.length > 0) {
+        Arrays.sort(keywords);
+        for (String keyword : keywords) {
+            data.getKeywordListModel().addElement(keyword);
+        }
+    }
+}
+
+// Highlights the search terms in the keyword list, if any
+private void highlightKeywords(int selection) {
+    String[] searchTerms = getHighlightSearchterms();
+
+    if (searchTerms != null) {
+        List<Integer> selectedIndices = new LinkedList<>();
+
+        for (String searchTerm : searchTerms) {
+            for (int i = 0; i < data.getKeywordListModel().getSize(); i++) {
+                if (searchTerm.equalsIgnoreCase(data.getKeywordListModel().get(i).toString())) {
+                    selectedIndices.add(i);
+                }
+            }
+        }
+
+        // Convert list to int[] and set selected indices
+        int[] selections = selectedIndices.stream().mapToInt(Integer::intValue).toArray();
+        jListKeywords.setSelectedIndices(selections);
+    } else {
+        jListKeywords.clearSelection();
+    }
+}
+
+// Updates the main frame display if necessary
+private void updateMainFrameDisplay(int selection) {
+    if (data.getSettings().getShowSearchEntry()) {
+        data.getMainFrame().setNewActivatedEntryAndUpdateDisplay(selection);
+    }
+}
+
+// Clears the display fields and keyword list when no row is selected
+private void clearDisplay() {
+    jEditorPaneSearchEntry.setText("");
+    data.getKeywordListModel().clear();
+}
+
 
 	public void updateDisplayAfterEditing() {
 		// get selected row

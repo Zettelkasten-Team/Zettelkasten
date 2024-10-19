@@ -100,6 +100,8 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import static de.danielluedecke.zettelkasten.data.History.*;
+
 /**
  * The application's main frame.
  */
@@ -2722,14 +2724,28 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	public final void updateDisplay(UpdateDisplayOptions options) {
-		if (!data.hasZettelID(displayedZettel)) {
+		if (data == null) {
+			throw new IllegalStateException("Data cannot be null.");
+		}
+
+		// Ensure the currently displayed Zettel is valid, otherwise use the activated entry.
+		if (!isValidDisplayedZettel()) {
 			displayedZettel = data.getActivatedEntryNumber();
+			Constants.zknlogger.info("Displayed Zettel: " + displayedZettel);
 		}
 
 		updateFrameTitle();
 		updateEntryPaneAndKeywordsPane(displayedZettel);
 		updateToolbarAndMenu();
-		updateTabbedPane(options);
+
+		if (options != null) {
+			updateTabbedPane(options);
+		}
+	}
+
+	// Helper method to encapsulate the logic for checking displayed Zettel validity
+	private boolean isValidDisplayedZettel() {
+		return data.hasZettelID(displayedZettel);
 	}
 	
 	/**
@@ -8553,12 +8569,14 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	public void setNewActivatedEntryAndUpdateDisplay(int entryNumber, UpdateDisplayOptions options) {
 		if (data.activateEntry(entryNumber)) {
+			Constants.zknlogger.info("Update display with Zettel: " + String.valueOf(entryNumber));
 			updateDisplay(options);
 		} else {
 			// Log a warning if the entry number is invalid
 			Constants.zknlogger.log(Level.WARNING,
 					"setNewActivatedEntryAndUpdateDisplay was called with invalid entry number: {0}", entryNumber);
 		}
+		History.logCurrentHistory();
 	}
 
 	/**
@@ -10660,7 +10678,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	private void updateDisplayAfterOpen() {
 		// this is the typical stuff we need to do when a file is opened
 		// or imported. first of all, all the views of the tabbed pane are not
-		// uptodate, because we have new data. thus, we set all values to false,
+		// up-to-date, because we have new data. thus, we set all values to false,
 		// indicating that all lists ar <b>not</b> up to date and all tables need
 		// to be re-filled.
 		data.setKeywordlistUpToDate(false);

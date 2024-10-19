@@ -4980,6 +4980,7 @@ public class Daten {
     }
 
     public int historyBack() {
+		Constants.zknlogger.info(String.valueOf(history.historyBack()));
         return history.historyBack();
     }
 
@@ -5530,6 +5531,7 @@ public class Daten {
 	 * @return number of the currently <i>activated</i> entry
 	 */
 	public int getActivatedEntryNumber() {
+		Constants.zknlogger.info("Activated entry number: " + activatedEntryNumber);
 		return activatedEntryNumber;
 	}
 

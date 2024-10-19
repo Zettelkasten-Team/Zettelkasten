@@ -5,13 +5,15 @@ import de.danielluedecke.zettelkasten.history.NavigationListener;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.view.Display;
 
+import java.util.logging.Level;
+
 /**
  * Manages the history of entries in the program.
  */
 public class History implements NavigationListener {
 	private static final int HISTORY_MAX = 100; // Adjust as needed
-	private int[] history;
-	private int historyPosition;
+	private static int[] history;
+	private static int historyPosition;
 	private int historyCount;
 	private int activatedEntryNumber;
 	private int[] displayedEntries;
@@ -62,7 +64,7 @@ public class History implements NavigationListener {
 	/**
 	 * Logs the current history.
 	 */
-	private void logCurrentHistory() {
+	public static void logCurrentHistory() {
 	    StringBuilder historyBuilder = new StringBuilder("Current history: [");
 	    for (int i = 0; i <= historyPosition; i++) {
 	        historyBuilder.append(history[i]);
@@ -101,9 +103,11 @@ public class History implements NavigationListener {
 	 * @return the activated entry number after navigating back in history
 	 */
 	public int historyBack() {
+		logCurrentHistory();
 		if (canHistoryBack()) {
 			activatedEntryNumber = history[--historyPosition];
 		}
+		Constants.zknlogger.log(Level.INFO, "Activated entry number:", String.valueOf(activatedEntryNumber));
 		return activatedEntryNumber;
 	}
 
@@ -112,16 +116,18 @@ public class History implements NavigationListener {
 	 * 
 	 * @return the activated entry number after navigating forward in history
 	 */
-	public int historyFore() {
+	public int historyForward() {
+		logCurrentHistory();
 		if (canHistoryForward()) {
 			activatedEntryNumber = history[++historyPosition];
 		}
+		Constants.zknlogger.log(Level.INFO, "Activated entry number:", String.valueOf(activatedEntryNumber));
 		return activatedEntryNumber;
 	}
 
 	@Override
 	public int navigateForwardInHistory() {
-		return historyFore();
+		return historyForward();
 	}
 
 	@Override
