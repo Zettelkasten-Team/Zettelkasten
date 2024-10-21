@@ -2724,15 +2724,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	public final void updateDisplay(UpdateDisplayOptions options) {
-		if (data == null) {
-			throw new IllegalStateException("Data cannot be null.");
-		}
-
-		// Ensure the currently displayed Zettel is valid, otherwise use the activated entry.
-		if (!isValidDisplayedZettel()) {
-			displayedZettel = data.getActivatedEntryNumber();
-			Constants.zknlogger.info("Displayed Zettel: " + displayedZettel);
-		}
+		displayedZettel = data.getActivatedEntryNumber();
+		Constants.zknlogger.info("Displayed Zettel: " + displayedZettel);
 
 		updateFrameTitle();
 		updateEntryPaneAndKeywordsPane(displayedZettel);
@@ -2743,10 +2736,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 	}
 
-	// Helper method to encapsulate the logic for checking displayed Zettel validity
-	private boolean isValidDisplayedZettel() {
-		return data.hasZettelID(displayedZettel);
-	}
 	
 	/**
 	 * Changes the text in the application's title bar, by adding the filename of the
@@ -6506,51 +6495,58 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		@Override
 		protected Object doInBackground() {
-			// Your Task's code here. This method runs
-			// on a background thread, so don't reference
-			// the Swing GUI from here.
+			// This method runs on a background thread
 
-			// tell program that this thread is running...
+			// Tell the program that this thread is running
 			createLinksIsRunning = true;
-			// variable that indicates whether a match of keywords was found
+
+			// Variable indicating whether a match of keywords was found
 			boolean found;
 			int cnt;
-			// get the length of the data file, i.e. the amount of entrys
+
+			// Get the length of the data file (the number of entries)
 			final int len = data.getCount(Daten.ZKNCOUNT);
-			// get the keyword index numbers of the current entry
+
+			// Get the keyword index numbers of the current entry
 			String[] kws = data.getKeywordsOfActivatedEntry();
-			// if we have any keywords, go on
+
+			// Store activated entry number in a local variable to avoid multiple method calls
+			int activatedEntryNumber = data.getActivatedEntryNumber();
+
+			// If we have any keywords, continue
 			if (kws != null) {
-				// create new instance of that variable
+				// Create a new instance of the list
 				linkedlinkslist = new ArrayList<>();
-				// iterate all entrys of the zettelkasten
+
+				// Iterate over all entries in the Zettelkasten
 				for (cnt = 1; cnt <= len; cnt++) {
-					// leave out the comparison of the current entry with itself
-					if (cnt == data.getActivatedEntryNumber()) {
+					// Skip comparison with the activated entry itself
+					if (cnt == activatedEntryNumber) {
 						continue;
 					}
-					// init the found indicator
+
+					// Initialize the found indicator
 					found = false;
-					// iterate all keywords of current entry
+
+					// Iterate through all keywords of the current entry
 					for (String k : kws) {
-						// look for occurences of any of the current keywords
+						// Check for occurrences of any of the current keywords in other entries
 						if (data.existsInKeywords(k, cnt, false)) {
-							// set found-indicator
+							// Set found indicator
 							found = true;
 							break;
 						}
 					}
-					// if we have a match, connect entries, i.e. display the number and title of
-					// the linked entries in the table of the tabbed pane
+
+					// If a match is found, add linked entry information to the list
 					if (found) {
-						// create a new object
 						Object[] ob = new Object[4];
-						// store the information in that object
 						ob[0] = cnt;
 						ob[1] = data.getZettelTitle(cnt);
-						ob[2] = data.getLinkStrength(data.getActivatedEntryNumber(), cnt);
+						ob[2] = data.getLinkStrength(activatedEntryNumber, cnt);  // Use local variable here
 						ob[3] = data.getZettelRating(cnt);
-						// and add that content as a new row to the table
+
+						// Add this entry as a new row to the linked links list
 						linkedlinkslist.add(ob);
 					}
 				}
@@ -6558,6 +6554,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			return null;
 		}
+
 
 		@Override
 		protected void succeeded(Object result) {
@@ -8576,7 +8573,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			Constants.zknlogger.log(Level.WARNING,
 					"setNewActivatedEntryAndUpdateDisplay was called with invalid entry number: {0}", entryNumber);
 		}
-		History.logCurrentHistory();
 	}
 
 	/**

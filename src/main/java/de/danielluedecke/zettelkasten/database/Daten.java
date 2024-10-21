@@ -5536,7 +5536,7 @@ public class Daten {
 	}
 
 	/**
-	 * This method calcualtes the relevance or strength of the connection of two
+	 * This method calculates the relevance or strength of the connection of two
 	 * entries, given by their keywords. the more keywords of the
 	 * {@code sourceentry} also are keywords of the {@code destentry}, the higher
 	 * the strength of the connection is. The maximum value is 100%, i.e. each
