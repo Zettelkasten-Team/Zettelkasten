@@ -254,15 +254,19 @@ public class HtmlUbbUtil {
         StringBuilder heading = new StringBuilder();
         heading.append(resourceMap.getString("zettelDesc")).append(" ");
 
-        if (entrynr != dataObj.getActivatedEntryNumber() && sourceframe != Constants.FRAME_SEARCH) {
+        // Store the result of getActivatedEntryNumber to avoid multiple calls
+        int activatedEntryNumber = dataObj.getActivatedEntryNumber();
+        Constants.zknlogger.info("Activated entry number: " + activatedEntryNumber);
+
+        if (entrynr != activatedEntryNumber && sourceframe != Constants.FRAME_SEARCH) {
             heading.append("<a class=\"elink\" href=\"#activatedEntry\">")
-                   .append(" ").append(dataObj.getActivatedEntryNumber()).append("&nbsp;</a>&raquo;&nbsp;")
-                   .append("<a class=\"elink\" href=\"#cr_").append(entrynr).append("\">")
-                   .append(entrynr).append("&nbsp;</a>(").append(wordCount).append(" ")
-                   .append(resourceMap.getString("activatedZettelWordCount")).append(")");
+                    .append(" ").append(activatedEntryNumber).append("&nbsp;</a>&raquo;&nbsp;")
+                    .append("<a class=\"elink\" href=\"#cr_").append(entrynr).append("\">")
+                    .append(entrynr).append("&nbsp;</a>(").append(wordCount).append(" ")
+                    .append(resourceMap.getString("activatedZettelWordCount")).append(")");
         } else {
             heading.append(entrynr).append(" (").append(wordCount).append(" ")
-                   .append(resourceMap.getString("activatedZettelWordCount")).append(")");
+                    .append(resourceMap.getString("activatedZettelWordCount")).append(")");
         }
 
         return heading.toString();
