@@ -6771,16 +6771,21 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	private EntryID getRootEntryForLuhmannTree() {
+		int activatedEntryNumber = data.getActivatedEntryNumber();
+		Constants.zknlogger.info("Activated entry number: " + activatedEntryNumber);
 		int rootEntry = -1;
-		if (settings.getShowAllLuhmann()) {
-			rootEntry = data.findParentLuhmann(data.getActivatedEntryNumber(), /* firstParent= */false);
 
+		if (settings.getShowAllLuhmann()) {
+			rootEntry = data.findParentLuhmann(activatedEntryNumber, /* firstParent= */ false);
 		}
+
 		if (rootEntry == -1) {
-			rootEntry = data.getActivatedEntryNumber();
+			rootEntry = activatedEntryNumber;
 		}
+
 		return new EntryID(rootEntry);
 	}
+
 
 	private void prepareNoteSequencesJTreePane() {
 		DefaultTreeModel dtm = (DefaultTreeModel) jTreeLuhmann.getModel();
