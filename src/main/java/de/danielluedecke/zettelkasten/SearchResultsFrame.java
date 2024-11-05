@@ -2563,6 +2563,7 @@ private void clearDisplay() {
         jEditorPaneSearchEntry.setEditable(false);
         jEditorPaneSearchEntry.setBorder(null);
         jEditorPaneSearchEntry.setContentType(resourceMap.getString("jEditorPaneSearchEntry.contentType")); // NOI18N
+        jEditorPaneSearchEntry.setAlignmentX(0.75F);
         jEditorPaneSearchEntry.setName("jEditorPaneSearchEntry"); // NOI18N
         jScrollPane2.setViewportView(jEditorPaneSearchEntry);
 
@@ -2584,7 +2585,7 @@ private void clearDisplay() {
         jScrollPane4.setName("jScrollPane4"); // NOI18N
 
         jListKeywords.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jListKeywords.border.title"))); // NOI18N
-        jListKeywords.setModel(data.getKeywordListModel());
+        jListKeywords.setAlignmentX(0.75F);
         jListKeywords.setName("jListKeywords"); // NOI18N
         jScrollPane4.setViewportView(jListKeywords);
 
