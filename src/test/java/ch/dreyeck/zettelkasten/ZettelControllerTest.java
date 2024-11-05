@@ -1,13 +1,12 @@
-package de.danielluedecke.zettelkasten.service;
+package ch.dreyeck.zettelkasten;
 
-import ch.dreyeck.zettelkasten.box.ZettelController;
+import ch.dreyeck.zettelkasten.ZettelController;
 import ch.dreyeck.zettelkasten.xml.Zettel;
 import ch.dreyeck.zettelkasten.xml.Links;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class ZettelControllerTest {

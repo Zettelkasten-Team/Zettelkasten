@@ -1,4 +1,4 @@
-package ch.dreyeck.zettelkasten.box;
+package ch.dreyeck.zettelkasten;
 
 import ch.dreyeck.zettelkasten.attachments.AttachmentsView;
 import ch.dreyeck.zettelkasten.service.ZettelService;
