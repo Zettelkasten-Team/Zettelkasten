@@ -212,32 +212,32 @@ public class HtmlUbbUtil {
      * HTML-snippet as a string which can be inserted anywhere inside a
      * {@code body}-element.
      *
-     * @param dataObj a reference to the {@code CDaten}-class, needed for
+     * @param data a reference to the {@code CDaten}-class, needed for
      * accessing the methods that retrieve the rating-values from entries.
-     * @param entrynr the entry-number of the requested entry which rating
+     * @param entryNr the entry-number of the requested entry which rating
      * should be created.
-     * @param sourceframe a reference to the frame from where this function call
+     * @param sourceFrame a reference to the frame from where this function call
      * came. needed for the html-formatting, since entries are differently
      * formatted in the search window.
      * @return a HTML-snippet as string which can be inserted anywhere inside a
      * {@code body}-element.
      */
-    private static String getEntryHeadline(Daten dataObj, int entrynr, int sourceframe) {
-        float ratingValue = dataObj.getZettelRating(entrynr);
+    private static String getEntryHeadline(Daten data, int entryNr, int sourceFrame) {
+        float ratingValue = data.getZettelRating(entryNr);
         StringBuilder htmlRating = new StringBuilder();
-        int wordCount = calculateWordCount(dataObj, entrynr);
+        int wordCount = calculateWordCount(data, entryNr);
 
         htmlRating.append(System.lineSeparator()).append("<div class=\"entryrating\">")
                   .append("<table ").append(getTableAttributes()).append("class=\"tabentryrating\"><tr>")
                   .append(System.lineSeparator())
                   .append("<td colspan=\"2\" class=\"leftcellentryrating\">")
-                  .append(getEntryHeading(dataObj, entrynr, sourceframe, wordCount))
+                  .append(getEntryHeading(data, entryNr, sourceFrame, wordCount))
                   .append("</td><td class=\"midcellentryrating\">")
-                  .append(getEntryTimestamp(dataObj, entrynr))
+                  .append(getEntryTimestamp(data, entryNr))
                   .append("</td><td class=\"rightcellentryrating\">")
-                  .append(getRatingHtml(entrynr, ratingValue))
+                  .append(getRatingHtml(entryNr, ratingValue))
                   .append("</td></tr>").append(System.lineSeparator())
-                  .append(getManualLinksHtml(dataObj, entrynr))
+                  .append(getManualLinksHtml(data, entryNr))
                   .append("</table></div>").append(System.lineSeparator());
 
         return htmlRating.toString();
@@ -250,22 +250,22 @@ public class HtmlUbbUtil {
         return "";
     }
 
-    private static String getEntryHeading(Daten dataObj, int entrynr, int sourceframe, int wordCount) {
+    private static String getEntryHeading(Daten data, int entryNr, int sourceFrame, int wordCount) {
         StringBuilder heading = new StringBuilder();
         heading.append(resourceMap.getString("zettelDesc")).append(" ");
 
         // Store the result of getActivatedEntryNumber to avoid multiple calls
-        int activatedEntryNumber = dataObj.getActivatedEntryNumber();
+        int activatedEntryNumber = data.getActivatedEntryNumber();
         Constants.zknlogger.info("Activated entry number: " + activatedEntryNumber);
 
-        if (entrynr != activatedEntryNumber && sourceframe != Constants.FRAME_SEARCH) {
+        if (entryNr != activatedEntryNumber && sourceFrame != Constants.FRAME_SEARCH) {
             heading.append("<a class=\"elink\" href=\"#activatedEntry\">")
                     .append(" ").append(activatedEntryNumber).append("&nbsp;</a>&raquo;&nbsp;")
-                    .append("<a class=\"elink\" href=\"#cr_").append(entrynr).append("\">")
-                    .append(entrynr).append("&nbsp;</a>(").append(wordCount).append(" ")
+                    .append("<a class=\"elink\" href=\"#cr_").append(entryNr).append("\">")
+                    .append(entryNr).append("&nbsp;</a>(").append(wordCount).append(" ")
                     .append(resourceMap.getString("activatedZettelWordCount")).append(")");
         } else {
-            heading.append(entrynr).append(" (").append(wordCount).append(" ")
+            heading.append(entryNr).append(" (").append(wordCount).append(" ")
                     .append(resourceMap.getString("activatedZettelWordCount")).append(")");
         }
 
@@ -534,23 +534,23 @@ public class HtmlUbbUtil {
      * being created in a separate class rather than in the Daten class
      *
      * @param settings a reference to the Settings-class
-     * @param dataObj a reference to the Daten-class
+     * @param data a reference to the Daten-class
      * @param bibtexObj
-     * @param entrynr the entry-number of the entry that should be converted
+     * @param entryNr the entry-number of the entry that should be converted
      * into HTML
      * @param segmentKeywords the keywords of the entry, separated at each word,
      * used for highlighting keywords in the content.
-     * @param sourceframe a reference to the frame from where this function call
+     * @param sourceFrame a reference to the frame from where this function call
      * came. needed for the html-formatting, since entries are differently
      * formatted in the search window.
      * @return a string with the html-page-content
      */
     public static String getEntryAsHTML(Settings settings,
-            Daten dataObj,
+            Daten data,
             BibTeX bibtexObj,
-            int entrynr,
+            int entryNr,
             String[] segmentKeywords,
-            int sourceframe) {
+            int sourceFrame) {
         // create an empty string buffer. this buffer contains the html-string
         // which is being display in the main window's "entry textfield"
         StringBuilder retval = new StringBuilder("");
@@ -561,7 +561,7 @@ public class HtmlUbbUtil {
         // first of all, prepare the header and style information of the main content
         retval.append("<style>").append(System.lineSeparator());
         // get the common style definition for the basic-tags
-        retval.append(getCommonStyleDefinition(settings, segmentKeywords, dataObj.getKeywords(entrynr), false, false));
+        retval.append(getCommonStyleDefinition(settings, segmentKeywords, data.getKeywords(entryNr), false, false));
         // close style definition
         retval.append("</style>").append(System.lineSeparator());
         // close header and open body
@@ -570,19 +570,19 @@ public class HtmlUbbUtil {
         // init headline
         // ***********************************************
         if (settings.getShowEntryHeadline()) {
-            retval.append(getEntryHeadline(dataObj, entrynr, sourceframe));
+            retval.append(getEntryHeadline(data, entryNr, sourceFrame));
         }
         // now start with the HTMLªª content itself
         retval.append("<div class=\"content\">");
         // ***********************************************
         // get entry's title
         // ***********************************************
-        String title = dataObj.getZettelTitle(entrynr).replace("<", "&lt;").replace(">", "&gt;");
+        String title = data.getZettelTitle(entryNr).replace("<", "&lt;").replace(">", "&gt;");
         // if the entry has a title, add it surrounded by <h1>-tags
         if (!title.isEmpty()) {
             // if parameters in the string array highlight-terms have been passed, we assume that
             // these terms should be highlighted...
-            if (Constants.FRAME_SEARCH == sourceframe) {
+            if (Constants.FRAME_SEARCH == sourceFrame) {
                 title = highlightSearchTerms(title, HIGHLIGHT_STYLE_SEARCHRESULTS);
             } else {
                 title = highlightSearchTerms(title, HIGHLIGHT_STYLE_LIVESEARCH);
@@ -595,13 +595,13 @@ public class HtmlUbbUtil {
         // ***********************************************
         // get entry's content
         // ***********************************************
-        String content = dataObj.getZettelContent(entrynr);
+        String content = data.getZettelContent(entryNr);
         // if we have content, show it.
         if (!content.isEmpty()) {
             // now copy the content of the entry to a dummy string. here we convert
             // the format codes into html-tags. the format codes are simplified tags
             // for the user to enable simple format editing
-            String dummy = convertUbbToHtml(settings, dataObj, bibtexObj, content, sourceframe, false, false);
+            String dummy = convertUbbToHtml(settings, data, bibtexObj, content, sourceFrame, false, false);
             // after the conversion is done, append the content to the resulting return string
             retval.append(dummy);
         } else {
@@ -610,7 +610,7 @@ public class HtmlUbbUtil {
         // close all tags properly
         retval.append("</div>").append(System.lineSeparator());
         // check whether we need an appendix at all...
-        boolean appendixNeeded = (dataObj.hasAttachments(entrynr) | dataObj.hasAuthors(entrynr) | dataObj.hasRemarks(entrynr));
+        boolean appendixNeeded = (data.hasAttachments(entryNr) | data.hasAuthors(entryNr) | data.hasRemarks(entryNr));
         if (appendixNeeded) {
             // ***********************************************
             // here we start with additional infos that belong to an
@@ -620,15 +620,15 @@ public class HtmlUbbUtil {
             // ***********************************************
             // get remarks
             // ***********************************************
-            retval.append(getEntryRemarks(dataObj, settings, entrynr, sourceframe));
+            retval.append(getEntryRemarks(data, settings, entryNr, sourceFrame));
             // ***********************************************
             // get authors
             // ***********************************************
-            retval.append(getEntryAuthors(dataObj, entrynr, retval.toString(), sourceframe));
+            retval.append(getEntryAuthors(data, entryNr, retval.toString(), sourceFrame));
             // ***********************************************
             // now look for attachments
             // ***********************************************
-            retval.append(getEntryAttachments(dataObj, entrynr, sourceframe));
+            retval.append(getEntryAttachments(data, entryNr, sourceFrame));
             // close body and html-page
             retval.append("</div>").append(System.lineSeparator());
         }

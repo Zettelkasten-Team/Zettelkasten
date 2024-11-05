@@ -1352,14 +1352,14 @@
                         </Container>
                       </SubComponents>
                     </Container>
-                    <Container class="javax.swing.JPanel" name="jPanel13">
+                    <Container class="javax.swing.JPanel" name="jPanelAttachments">
                       <Properties>
-                        <Property name="name" type="java.lang.String" value="jPanel13" noResource="true"/>
+                        <Property name="name" type="java.lang.String" value="jPanelAttachments" noResource="true"/>
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                           <JTabbedPaneConstraints tabName="Anh&#xe4;nge">
-                            <Property name="tabTitle" type="java.lang.String" resourceKey="jPanel13.TabConstraints.tabTitle"/>
+                            <Property name="tabTitle" type="java.lang.String" resourceKey="jPanelAttachments.TabConstraints.tabTitle"/>
                           </JTabbedPaneConstraints>
                         </Constraint>
                       </Constraints>
@@ -1374,13 +1374,13 @@
                                   <Component id="jButtonRefreshAttachments" min="-2" pref="26" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
-                              <Component id="jScrollPane13" alignment="0" pref="458" max="32767" attributes="0"/>
+                              <Component id="jScrollPaneAttachments" alignment="0" pref="580" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="jScrollPane13" pref="459" max="32767" attributes="0"/>
+                                  <Component id="jScrollPaneAttachments" pref="459" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="jTextFieldFilterAttachments" min="-2" max="-2" attributes="0"/>
@@ -1392,13 +1392,13 @@
                         </DimensionLayout>
                       </Layout>
                       <SubComponents>
-                        <Container class="javax.swing.JScrollPane" name="jScrollPane13">
+                        <Container class="javax.swing.JScrollPane" name="jScrollPaneAttachments">
                           <Properties>
                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                               <Border info="null"/>
                             </Property>
                             <Property name="horizontalScrollBarPolicy" type="int" value="31"/>
-                            <Property name="name" type="java.lang.String" value="jScrollPane13" noResource="true"/>
+                            <Property name="name" type="java.lang.String" value="jScrollPaneAttachments" noResource="true"/>
                           </Properties>
                           <AuxValues>
                             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>

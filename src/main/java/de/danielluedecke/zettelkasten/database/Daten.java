@@ -4642,31 +4642,45 @@ public class Daten {
 	 * @param entrynr the number of the entry which attachment should be changed
 	 */
 	public void deleteAttachment(String value, int entrynr) {
-		// get links of entry
+		// Get current attachments for the entry
 		List<Element> oldlinks = getAttachments(entrynr);
-		// if we have any, we can go on...
-		if (oldlinks != null) {
-			// create linked list that will contain the updated attachments
-			List<String> attachments = new ArrayList<>();
-			// iterator for current attachments of the entry
-			Iterator<Element> i = oldlinks.iterator();
-			// go...
-			while (i.hasNext()) {
-				// retrieve each attachment as element
-				Element e = i.next();
-				// get attachment-value
-				String currentattachment = e.getText();
-				// if attachment-value does not equals the delete-value, add attachment-value to
-				// list
-				if (!currentattachment.equals(value)) {
-					attachments.add(currentattachment);
-				}
 
+		// Convert oldlinks to a list of attachment values for logging
+		List<String> attachmentValues = new ArrayList<>();
+		if (oldlinks != null) {
+			for (Element e : oldlinks) {
+				attachmentValues.add(e.getText());
 			}
-			// set links back to the entry
-			setAttachments(entrynr, attachments.toArray(new String[attachments.size()]));
-			// change up-to-date-value
+		}
+
+		// Log the actual attachment values before deletion
+		Constants.zknlogger.info("Original attachments for entry " + entrynr + ": " + attachmentValues);
+
+		if (oldlinks != null) {
+			List<String> attachments = new ArrayList<>();
+
+			// Go through each element and keep those that do not match the value to delete
+			for (Element e : oldlinks) {
+				String currentattachment = e.getText();
+				Constants.zknlogger.info("Checking attachment: " + currentattachment);
+
+				if (!currentattachment.equals(value)) {
+					// Only add attachments that don't match the value to delete
+					attachments.add(currentattachment);
+				} else {
+					Constants.zknlogger.info("Deleted attachment: " + currentattachment);
+				}
+			}
+
+			// Log updated attachments before setting them
+			Constants.zknlogger.info("Updated attachments for entry " + entrynr + ": " + attachments);
+
+			// Update entry with the filtered attachments
+			setAttachments(entrynr, attachments.toArray(new String[0]));
+
+			// Mark attachment list as outdated
 			setAttachmentlistUpToDate(false);
+			Constants.zknlogger.info("Attachment list marked as outdated for entry " + entrynr);
 		}
 	}
 

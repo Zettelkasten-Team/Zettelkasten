@@ -436,7 +436,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		app.addExitListener(new ConfirmExit());
 
 		if (!loadDataDocumentFromSettings()) {
-			// Failed to load. Update display for an empty data document.
+			Constants.zknlogger.info("Failed to load. Update display for an empty data document.");
 			initVariables();
 			updateDisplay();
 		}
@@ -1654,6 +1654,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				if (sel != previousSelectedTab) {
 					// Update displayed entry to activated entry if tab changed.
 					setNewDisplayedEntryAndUpdateDisplay(data.getActivatedEntryNumber());
+					Constants.zknlogger.info("Update displayed entry to activated entry if tab changed.");
 				} else {
 					updateDisplay();
 				}
@@ -4258,42 +4259,52 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	@Action(enabledProperty = "tableEntriesSelected")
 	public void deleteAttachment() {
-		// get the amount of selected keywords.
+		// Get the amount of selected keywords
 		int rowcount = jTableAttachments.getSelectedRowCount();
-		// if nothing is selected, leave
+		Constants.zknlogger.info("rowcount = " + rowcount);
+
 		if (rowcount < 1) {
+			Constants.zknlogger.info("No rows selected, exiting.");
 			return;
 		}
-		// prepare the msg-string
-		String msg;
-		// if we have just a single selection, use phrasing for that message
-		msg = (1 == rowcount) ? getResourceMap().getString("askForDeleteAttachmentMsgSingle")
-				// else if we have multiple selectios, use phrasing with appropriate wording
+
+		// Prepare the message string
+		String msg = (rowcount == 1) ? getResourceMap().getString("askForDeleteAttachmentMsgSingle")
 				: getResourceMap().getString("askForDeleteAttachmentMsgMultiple", String.valueOf(rowcount));
-		// ask whether keyword really should be deleted
+		Constants.zknlogger.info("Confirmation message: " + msg);
+
+		// Show confirmation dialog
 		int option = JOptionPane.showConfirmDialog(getFrame(), msg,
 				getResourceMap().getString("askForDeleteAttachmentTitle"), JOptionPane.YES_NO_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
-		// if yes, go on
-		if (JOptionPane.YES_OPTION == option) {
-			// get selected keywords
-			String[] selectedattachments = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAttachments, 0);
-			// if now row is selected, leave...
-			if (null == selectedattachments) {
-				return;
-			}
-			// retrieve the selected enty-numbers
-			int[] entrynumbers = ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableAttachments, 2);
-			// check for valid values
-			if (entrynumbers != null && entrynumbers.length > 0) {
-				// go through all selected keywords
-				for (int cnt = 0; cnt < selectedattachments.length; cnt++) {
-					data.deleteAttachment(selectedattachments[cnt], entrynumbers[cnt]);
-				}
-			}
-			// update display
-			updateDisplay();
+
+		if (JOptionPane.YES_OPTION != option) {
+			Constants.zknlogger.info("User canceled deletion.");
+			return;
 		}
+
+		// Retrieve selected attachments and entry numbers
+		String[] selectedattachments = ZettelkastenViewUtil.retrieveSelectedValuesFromTable(jTableAttachments, 0);
+		int[] entrynumbers = ZettelkastenViewUtil.retrieveSelectedEntriesFromTable(data, jTableAttachments, 2);
+
+		// Log retrieved data
+		Constants.zknlogger.info("Selected attachments: " + Arrays.toString(selectedattachments));
+		Constants.zknlogger.info("Entry numbers: " + Arrays.toString(entrynumbers));
+
+		if (selectedattachments == null || entrynumbers == null || entrynumbers.length == 0) {
+			Constants.zknlogger.info("No valid attachments or entry numbers found.");
+			return;
+		}
+
+		// Delete each selected attachment
+		for (int cnt = 0; cnt < selectedattachments.length; cnt++) {
+			Constants.zknlogger.info("Deleting attachment: " + selectedattachments[cnt] + ", Entry number: " + entrynumbers[cnt]);
+			data.deleteAttachment(selectedattachments[cnt], entrynumbers[cnt]);
+		}
+
+		// Refresh display
+		updateDisplay();
+		Constants.zknlogger.info("Display updated after deletion.");
 	}
 
 	/**
@@ -5803,33 +5814,39 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			jEditorPaneDispAuthor.setText("");
 		}
 	}
-
 	/**
-	 * This methods displays the entry which is selected in the bookmarks-table
-	 * (jTableBookmarks). This method is especially called from the mouse-clicked
-	 * and key-released events from the jTableBookmarks.
+	 * Displays the entry selected in the bookmarks-table (jTableBookmarks).
+	 * Called specifically from the mouse-clicked and key-released events in jTableBookmarks.
 	 */
 	void showEntryFromBookmarks() {
-		// if no data available, do nothing.
-		if (data.getCount(Daten.ZKNCOUNT) == 0) {
-			return;
-		}
-		// get the entry number from selected bookmark
-		int nr = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableBookmarks, 0);
-		// if no entry is selected, show current entry
-		if (-1 == nr) {
-			// clear textfield content
-			jEditorPaneBookmarkComment.setText("");
-			setNewDisplayedEntryAndUpdateDisplay(data.getActivatedEntryNumber());
-		} else {
-			// get the selected row
-			int row = jTableBookmarks.getSelectedRow();
-			// show comment of bookmark
-			String comment = (row != -1) ? bookmarks.getCommentAsHtml(row) : "";
-			// show comment
-			jEditorPaneBookmarkComment.setText(comment);
-			setNewDisplayedEntryAndUpdateDisplay(nr);
-		}
+	    // If no data is available, do nothing.
+	    if (data.getCount(Daten.ZKNCOUNT) == 0) {
+	        return;
+	    }
+
+	    // Get the entry number from the selected bookmark.
+	    int nr = ZettelkastenViewUtil.retrieveSelectedEntryFromTable(data, jTableBookmarks, 0);
+
+	    // If no entry is selected, show the current entry and clear the comment field.
+	    if (nr == -1) {
+	        jEditorPaneBookmarkComment.setText("");
+	        setNewDisplayedEntryAndUpdateDisplay(data.getActivatedEntryNumber());
+	        jTableBookmarks.clearSelection(); // Clear selection if no row is selected
+	    } else {
+	        // Highlight the selected row in the table.
+	        int row = jTableBookmarks.getSelectedRow();
+	        if (row != -1) {
+	            jTableBookmarks.setRowSelectionInterval(row, row);
+	        }
+	        
+	        // Show the comment of the selected bookmark, if available.
+	        String comment = (row != -1 && bookmarks != null) ? bookmarks.getCommentAsHtml(row) : "";
+	        jEditorPaneBookmarkComment.setText(comment != null ? comment : "");
+	        setNewDisplayedEntryAndUpdateDisplay(nr);
+	    }
+
+	    // Refresh the table display.
+	    jTableBookmarks.repaint();
 	}
 
 	/*
@@ -11547,8 +11564,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jTableBookmarks = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
             jScrollPane14 = new javax.swing.JScrollPane();
             jEditorPaneBookmarkComment = new javax.swing.JEditorPane();
-            jPanel13 = new javax.swing.JPanel();
-            jScrollPane13 = new javax.swing.JScrollPane();
+            jPanelAttachments = new javax.swing.JPanel();
+            jScrollPaneAttachments = new javax.swing.JScrollPane();
             jTableAttachments = (settings.isMacStyle()) ? MacWidgetFactory.createITunesTable(null) : new javax.swing.JTable();
             jTextFieldFilterAttachments = new javax.swing.JTextField();
             jButtonRefreshAttachments = new javax.swing.JButton();
@@ -12124,7 +12141,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jPanel14.setLayout(jPanel14Layout);
             jPanel14Layout.setHorizontalGroup(
                 jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
             );
             jPanel14Layout.setVerticalGroup(
                 jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -12179,7 +12196,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jPanelManLinks.setLayout(jPanelManLinksLayout);
             jPanelManLinksLayout.setHorizontalGroup(
                 jPanelManLinksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jScrollPane15, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
+                .addComponent(jScrollPane15, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
             );
             jPanelManLinksLayout.setVerticalGroup(
                 jPanelManLinksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -12317,8 +12334,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jPanel16.setLayout(jPanel16Layout);
             jPanel16Layout.setHorizontalGroup(
                 jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jScrollPane17, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
+                .addComponent(jScrollPane17, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
             );
             jPanel16Layout.setVerticalGroup(
                 jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -12337,12 +12354,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                     .addContainerGap()
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                            .addComponent(jTextFieldFilterKeywords, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
+                            .addComponent(jTextFieldFilterKeywords, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jButtonRefreshKeywords, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel2Layout.createSequentialGroup()
                             .addComponent(jCheckBoxShowSynonyms)
-                            .addGap(0, 307, Short.MAX_VALUE)))
+                            .addGap(0, 429, Short.MAX_VALUE)))
                     .addContainerGap())
             );
             jPanel2Layout.setVerticalGroup(
@@ -12415,8 +12432,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jPanel15.setLayout(jPanel15Layout);
             jPanel15Layout.setHorizontalGroup(
                 jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jComboBoxAuthorType, 0, 458, Short.MAX_VALUE)
-                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
+                .addComponent(jComboBoxAuthorType, 0, 580, Short.MAX_VALUE)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
             );
             jPanel15Layout.setVerticalGroup(
                 jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -12444,7 +12461,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jPanelDispAuthor.setLayout(jPanelDispAuthorLayout);
             jPanelDispAuthorLayout.setHorizontalGroup(
                 jPanelDispAuthorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
+                .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
             );
             jPanelDispAuthorLayout.setVerticalGroup(
                 jPanelDispAuthorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -12543,11 +12560,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jTextFieldFilterTitles, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
+                    .addComponent(jTextFieldFilterTitles, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(jButtonRefreshTitles, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap())
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
             );
             jPanel8Layout.setVerticalGroup(
                 jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -12628,7 +12645,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                             .addComponent(jButtonRefreshCluster, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel11Layout.createSequentialGroup()
                             .addComponent(jCheckBoxCluster)
-                            .addGap(0, 245, Short.MAX_VALUE)))
+                            .addGap(0, 367, Short.MAX_VALUE)))
                     .addContainerGap())
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             );
@@ -12715,7 +12732,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
                 jPanelBookmarksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelBookmarksLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jComboBoxBookmarkCategory, 0, 446, Short.MAX_VALUE)
+                    .addComponent(jComboBoxBookmarkCategory, 0, 568, Short.MAX_VALUE)
                     .addContainerGap())
                 .addComponent(jSplitPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             );
@@ -12730,11 +12747,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
             jTabbedPaneMain.addTab(resourceMap.getString("jPanelBookmarks.TabConstraints.tabTitle"), jPanelBookmarks); // NOI18N
 
-            jPanel13.setName("jPanel13"); // NOI18N
+            jPanelAttachments.setName("jPanelAttachments"); // NOI18N
 
-            jScrollPane13.setBorder(null);
-            jScrollPane13.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-            jScrollPane13.setName("jScrollPane13"); // NOI18N
+            jScrollPaneAttachments.setBorder(null);
+            jScrollPaneAttachments.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            jScrollPaneAttachments.setName("jScrollPaneAttachments"); // NOI18N
 
             jTableAttachments.setModel(new javax.swing.table.DefaultTableModel(
                 new Object [][] {
@@ -12764,7 +12781,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             });
             jTableAttachments.setDragEnabled(true);
             jTableAttachments.setName("jTableAttachments"); // NOI18N
-            jScrollPane13.setViewportView(jTableAttachments);
+            jScrollPaneAttachments.setViewportView(jTableAttachments);
             if (jTableAttachments.getColumnModel().getColumnCount() > 0) {
                 jTableAttachments.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTableAttachments.columnModel.title0")); // NOI18N
                 jTableAttachments.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTableAttachments.columnModel.title1")); // NOI18N
@@ -12782,30 +12799,30 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jButtonRefreshAttachments.setFocusPainted(false);
             jButtonRefreshAttachments.setName("jButtonRefreshAttachments"); // NOI18N
 
-            javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
-            jPanel13.setLayout(jPanel13Layout);
-            jPanel13Layout.setHorizontalGroup(
-                jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
+            javax.swing.GroupLayout jPanelAttachmentsLayout = new javax.swing.GroupLayout(jPanelAttachments);
+            jPanelAttachments.setLayout(jPanelAttachmentsLayout);
+            jPanelAttachmentsLayout.setHorizontalGroup(
+                jPanelAttachmentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelAttachmentsLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jTextFieldFilterAttachments, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
+                    .addComponent(jTextFieldFilterAttachments, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(jButtonRefreshAttachments, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap())
-                .addComponent(jScrollPane13, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
+                .addComponent(jScrollPaneAttachments, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
             );
-            jPanel13Layout.setVerticalGroup(
-                jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
-                    .addComponent(jScrollPane13, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
+            jPanelAttachmentsLayout.setVerticalGroup(
+                jPanelAttachmentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelAttachmentsLayout.createSequentialGroup()
+                    .addComponent(jScrollPaneAttachments, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanelAttachmentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jTextFieldFilterAttachments, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButtonRefreshAttachments))
                     .addContainerGap())
             );
 
-            jTabbedPaneMain.addTab(resourceMap.getString("jPanel13.TabConstraints.tabTitle"), jPanel13); // NOI18N
+            jTabbedPaneMain.addTab(resourceMap.getString("jPanelAttachments.TabConstraints.tabTitle"), jPanelAttachments); // NOI18N
 
             javax.swing.GroupLayout jPanelMainRightLayout = new javax.swing.GroupLayout(jPanelMainRight);
             jPanelMainRight.setLayout(jPanelMainRightLayout);
@@ -14706,7 +14723,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JEditorPane jEditorPaneBookmarkComment;
     private javax.swing.JEditorPane jEditorPaneClusterEntries;
     private javax.swing.JEditorPane jEditorPaneDispAuthor;
-    javax.swing.JEditorPane jEditorPaneEntry;
+    public javax.swing.JEditorPane jEditorPaneEntry;
     private javax.swing.JEditorPane jEditorPaneIsFollower;
     private javax.swing.JLabel jLabelMemory;
     private javax.swing.JList jListEntryKeywords;
@@ -14714,7 +14731,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel16;
@@ -14723,6 +14739,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanelAttachments;
     private javax.swing.JPanel jPanelBookmarks;
     private javax.swing.JPanel jPanelDispAuthor;
     private javax.swing.JPanel jPanelLiveSearch;
@@ -14740,7 +14757,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
-    private javax.swing.JScrollPane jScrollPane13;
     private javax.swing.JScrollPane jScrollPane14;
     private javax.swing.JScrollPane jScrollPane15;
     private javax.swing.JScrollPane jScrollPane16;
@@ -14753,6 +14769,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
+    private javax.swing.JScrollPane jScrollPaneAttachments;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator10;
     private javax.swing.JSeparator jSeparator100;
@@ -14888,7 +14905,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JTable jTableLinks;
     private javax.swing.JTable jTableManLinks;
     private javax.swing.JTable jTableTitles;
-    javax.swing.JTextField jTextFieldEntryNumber;
+    public javax.swing.JTextField jTextFieldEntryNumber;
     private javax.swing.JTextField jTextFieldFilterAttachments;
     private javax.swing.JTextField jTextFieldFilterAuthors;
     private javax.swing.JTextField jTextFieldFilterCluster;
@@ -15036,7 +15053,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
     private javax.swing.JLabel statusEntryLabel;
     private javax.swing.JButton statusErrorButton;
     private javax.swing.JLabel statusMsgLabel;
-    javax.swing.JLabel statusOfEntryLabel;
+    public javax.swing.JLabel statusOfEntryLabel;
     private javax.swing.JPanel statusPanel;
     private javax.swing.JButton tb_addbookmark;
     private javax.swing.JButton tb_addluhmann;
