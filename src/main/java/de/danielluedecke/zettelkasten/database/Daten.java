@@ -44,10 +44,12 @@ import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.Tools;
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -4519,43 +4521,65 @@ public class Daten {
 	}
 
 	/**
-	 * This method sets the links of an entry.
+	 * This method sets the links (attachments) of an entry.
 	 *
-	 * @param pos         the entry from which we want to set/change the hyperlinks
-	 *                    and attachments
-	 * @param attachments a string-array containing the hyperlinks, attachmentspaths
-	 *                    etc.
+	 * @param pos         the entry from which we want to set/change the hyperlinks and attachments
+	 * @param attachments a string-array containing the hyperlinks, attachment paths, etc.
 	 */
 	public void setAttachments(int pos, String[] attachments) {
-		// retrieve the entry
+		// Retrieve the entry
 		Element entry = retrieveElement(zknFile, pos);
-		// if no element exists, return empty array
-		if (null == entry || null == attachments || attachments.length < 1) {
+
+		// Check if entry or attachments are invalid
+		if (entry == null) {
+			Constants.zknlogger.warning("Entry not found for position: " + pos);
 			return;
 		}
-		// remove all existing links from that entry
-		entry.getChild(ELEMENT_ATTACHMENTS).removeChildren(ELEMENT_ATTCHILD);
-		// save modification-stata
+		if (attachments == null || attachments.length < 1) {
+			Constants.zknlogger.info("No attachments provided for entry " + pos);
+			return;
+		}
+
+		// Retrieve the existing attachments element
+		Element attachmentsElement = entry.getChild(ELEMENT_ATTACHMENTS);
+
+		// If no existing attachments element, create one
+		if (attachmentsElement == null) {
+			attachmentsElement = new Element(ELEMENT_ATTACHMENTS);
+			entry.addContent(attachmentsElement); // Ensure the element is part of the entry
+		}
+
+		// Log current attachments before making changes
+		List<String> existingAttachments = new ArrayList<>();
+		for (Element existing : attachmentsElement.getChildren(ELEMENT_ATTCHILD)) {
+			existingAttachments.add(existing.getText());
+		}
+		Constants.zknlogger.info("Current attachments for entry " + pos + ": " + existingAttachments);
+
+		// Remove all existing attachments (optional, depends on the use case)
+		attachmentsElement.removeChildren(ELEMENT_ATTCHILD);
+
+		// Variable to track modification
 		boolean mod = false;
-		// add each hyperlink string
-		// therefor, iterate the array
-		for (String a : attachments) {
+
+		// Add new attachments from the array
+		for (String attachment : attachments) {
 			try {
-				// create a new subchuld-element
 				Element sublink = new Element(ELEMENT_ATTCHILD);
-				// add the link-string from the array
-				sublink.setText(a);
-				// and add sublink-element to entry's child's content
-				entry.getChild(ELEMENT_ATTACHMENTS).addContent(sublink);
-				// change modification state
+				sublink.setText(attachment);
+				attachmentsElement.addContent(sublink);
 				mod = true;
 			} catch (IllegalDataException | IllegalAddException ex) {
-				Constants.zknlogger.log(Level.WARNING, ex.getLocalizedMessage());
+				Constants.zknlogger.log(Level.WARNING, "Error adding attachment to entry " + pos + ": " + ex.getLocalizedMessage());
 			}
 		}
-		// change modified state
+
+		// If modifications were made, set the entry as modified
 		if (mod) {
 			setModified(true);
+			Constants.zknlogger.info("Attachments updated for entry " + pos);
+		} else {
+			Constants.zknlogger.info("No attachments were added to entry " + pos);
 		}
 	}
 
@@ -4635,11 +4659,11 @@ public class Daten {
 	}
 
 	/**
-	 * This method deletes an attachment-value of an entry.
+	 * This method deletes an attachment-value from an entry.
 	 *
 	 * @param value   the attachment-value that should be removed from the entry
 	 *                {@code entrynr}
-	 * @param entrynr the number of the entry which attachment should be changed
+	 * @param entrynr the number of the entry whose attachment should be deleted
 	 */
 	public void deleteAttachment(String value, int entrynr) {
 		// Get current attachments for the entry
@@ -4657,26 +4681,26 @@ public class Daten {
 		Constants.zknlogger.info("Original attachments for entry " + entrynr + ": " + attachmentValues);
 
 		if (oldlinks != null) {
-			List<String> attachments = new ArrayList<>();
+			// We need to keep track of how many times we've removed a matching value
+			final AtomicInteger deleteCount = new AtomicInteger(0);
 
-			// Go through each element and keep those that do not match the value to delete
-			for (Element e : oldlinks) {
-				String currentattachment = e.getText();
-				Constants.zknlogger.info("Checking attachment: " + currentattachment);
+			// Filter attachments, keeping only one instance of the value to delete
+			List<String> updatedAttachments = oldlinks.stream()
+					.map(Element::getText)
+					.filter(attachment -> {
+						// If the attachment matches the value to delete, only delete the first instance
+						if (attachment.equals(value) && deleteCount.getAndIncrement() == 0) {
+							return true; // Keep the first occurrence
+						}
+						return !attachment.equals(value); // Remove subsequent duplicates
+					})
+					.collect(Collectors.toList());
 
-				if (!currentattachment.equals(value)) {
-					// Only add attachments that don't match the value to delete
-					attachments.add(currentattachment);
-				} else {
-					Constants.zknlogger.info("Deleted attachment: " + currentattachment);
-				}
-			}
-
-			// Log updated attachments before setting them
-			Constants.zknlogger.info("Updated attachments for entry " + entrynr + ": " + attachments);
+			// Log the updated attachments before setting them
+			Constants.zknlogger.info("Updated attachments for entry " + entrynr + ": " + updatedAttachments);
 
 			// Update entry with the filtered attachments
-			setAttachments(entrynr, attachments.toArray(new String[0]));
+			setAttachments(entrynr, updatedAttachments.toArray(new String[0]));
 
 			// Mark attachment list as outdated
 			setAttachmentlistUpToDate(false);
