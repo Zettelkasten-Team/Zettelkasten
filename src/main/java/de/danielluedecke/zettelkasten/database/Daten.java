@@ -4564,7 +4564,7 @@ public class Daten {
 	 *
 	 * @param pos         the entry from which we want to set/change the hyperlinks
 	 *                    and attachments
-	 * @param attachments a string-array containing the hyperlinks, attachmentspaths
+	 * @param attachments a string-array containing the hyperlinks, attachments paths
 	 *                    etc.
 	 */
 	public void addAttachments(int pos, String[] attachments) {
@@ -4574,10 +4574,10 @@ public class Daten {
 		if (null == entry || null == attachments || attachments.length < 1) {
 			return;
 		}
-		// save modification-stata
+		// save modification-state
 		boolean mod = false;
 		// add each hyperlink string
-		// therefor, iterate the array
+		// therefore, iterate the array
 		for (String a : attachments) {
 			try {
 				// create a new subchuld-element
