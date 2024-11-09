@@ -299,6 +299,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>ch.unibe</groupId>
+            <artifactId>jexample</artifactId>
+            <version>4.5-391</version>
+            <scope>test</scope> <!-- Since JExample is used for testing -->
+        </dependency>
+        <dependency>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <version>3.13.0</version>

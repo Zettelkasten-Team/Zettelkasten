@@ -1,0 +1,145 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>net.sf.jexample</groupId>
+  <artifactId>jexample</artifactId>
+  <version>4.4-${env.SVNVERSION}-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.3</version>
+    </dependency>
+  </dependencies>
+
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>ssh-haddock</id>
+      <url>scpexe://haddock.unibe.ch/home/scg/download/jexample/maven</url>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>true</uniqueVersion>
+      <id>ssh-jexample-snapshot</id>
+      <url>scpexe://web.sourceforge.net/home/groups/j/je/jexample/htdocs/maven2-snapshot</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <build>
+    <sourceDirectory>src/main</sourceDirectory>
+    <testSourceDirectory>src/test</testSourceDirectory>
+    <resources>
+      <resource>
+        <directory>${project.build.sourceDirectory}</directory>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${jdk.version}</source>
+          <target>${jdk.version}</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <includes>
+            <include>**/AllTests.java</include>
+          </includes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <index>true</index>
+            <manifest>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <properties>
+    <jdk.version>1.5</jdk.version>
+  </properties>
+
+  <!-- meta information -->
+
+  <name>JExample</name>
+  <url>http://www.iam.unibe.ch/~scg/Research/JExample</url>
+  <inceptionYear>2007</inceptionYear>
+  <description>
+    JExample is an extensions of JUnit that improves defect localizaton by
+    changing the way you structure your tests. It introduces first-class
+    dependencies. If test B depends on A, the return value of A can be used as
+    B's fixture. And if A test fails, B and all other dependees of A are
+    skipped and marked as white. We show in an empirical study that JExample
+    improves performance and defect localization.
+  </description>
+
+  <licenses>
+    <license>
+      <name>Common Public License Version 1.0 (CPL)</name>
+      <url>http://www.eclipse.org/legal/cpl-v10.html</url>
+      <distribution>repo</distribution>
+      <comments>The same license as JUnit.</comments>
+    </license>
+  </licenses>
+  
+  <organization>
+    <name>Software Composition Group</name>
+    <url>http://www.iam.unibe.ch/~scg/</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <id>haense</id>
+      <name>Lea Haensenberger</name>
+      <email>lea.haensenberger@kpm.unibe.ch</email>
+      <url>http://www.kpm.unibe.ch/index.php?bereich=institut&amp;page=mitarbeiter&amp;sub=3&amp;id=1068</url>
+      <organization>Kompetenzzentrum fuer Public Management der Universitaet Bern</organization>
+      <organizationUrl>http://www.kpm.unibe.ch/</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <id>adriankuhn</id>
+      <name>Adrian Kuhn</name>
+      <email>akuhn@gmx.ch</email>
+      <url>http://www.iam.unibe.ch/~akuhn/blog/</url>
+      <organization>Software Composition Group</organization>
+      <organizationUrl>http://www.iam.unibe.ch/~scg/</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
+
+  <issueManagement>
+    <system>Sourceforge</system>
+    <url>http://sourceforge.net/tracker/?group_id=221132&amp;atid=1051552</url>
+  </issueManagement>
+  
+  <scm>
+    <connection>scm:svn:http://jexample.svn.sourceforge.net/svnroot/jexample/JExample/trunk/</connection>
+    <developerConnection>scm:svn:https://jexample.svn.sourceforge.net/svnroot/jexample/JExample/trunk/</developerConnection>
+    <url>http://jexample.svn.sourceforge.net/viewvc/jexample/</url>
+  </scm>
+
+</project>
+
