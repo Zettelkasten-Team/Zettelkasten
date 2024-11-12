@@ -79,7 +79,7 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
 	 */
 	private final SearchRequests searchrequestsObj;
 
-	private boolean saveOk = true;
+	boolean saveOk = true;
 
 	private final javax.swing.JDialog parentDialog;
 	private final javax.swing.JLabel msgLabel;
