@@ -119,7 +119,7 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
 		File filepath = settingsObj.getMainDataFile();
 		if (filepath == null) {
 			saveOk = false;
-			Constants.zknlogger.log(Level.SEVERE, "Failed to save main data file: filepath is null.");
+			Constants.zknlogger.log(Level.SEVERE, "Failed to save main data file: file path is null.");
 			return null;
 		}
 
