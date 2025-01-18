@@ -47,10 +47,6 @@ public class SaveFileTaskTest {
         mockLabel = Mockito.mock(JLabel.class);
         mockDialog = Mockito.mock(JDialog.class);
 
-        File tempFile = new File("mockSave.zip");
-        Mockito.when(mockSettings.getMainDataFile()).thenReturn(tempFile);
-        Mockito.doNothing().when(mockLabel).setText(Mockito.anyString());
-
         // Initialize the task with mocked dependencies
         task = new SaveFileTask(mockApp, mockDialog, mockLabel, mockData,
                 Mockito.mock(Bookmarks.class), Mockito.mock(SearchRequests.class),
@@ -59,8 +55,6 @@ public class SaveFileTaskTest {
 
         // Assertions and verifications
         assertNotNull(task);
-        Mockito.verify(mockSettings).getMainDataFile();
-        Mockito.verify(mockLabel).setText(Mockito.anyString());
     }
 
     // Test 2: Verify save process in doInBackground

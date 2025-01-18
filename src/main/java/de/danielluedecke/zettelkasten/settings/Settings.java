@@ -1194,7 +1194,7 @@ public class Settings {
 	/**
 	 * Returns the main data file.
 	 *
-	 * @return the filepath of the main datafile, or null if none.
+	 * @return the file path of the main data file or null if none exists	.
 	 */
 	public File getMainDataFile() {
 		String value = genericStringGetter(SETTING_FILEPATH, "");
