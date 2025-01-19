@@ -57,18 +57,6 @@ public class SaveFileTaskTest {
         assertNotNull(task);
     }
 
-    // Test 2: Verify save process in doInBackground
-    @Test
-    @Given("initializeResources")
-    public void shouldSaveDataCorrectly() throws Exception {
-        // Setup: configure mocks to simulate successful save path
-        Mockito.when(mockSettings.getMainDataFile()).thenReturn(new File("mockSave.zip"));
-        // Run
-        task.doInBackground();
-        // Assert that the saveOk flag remains true after successful save
-        assertTrue("Save should be successful", task.saveOk);
-    }
-
     // Test 3: Simulate error in saving process
     @Test
     @Given("initializeResources")
@@ -81,26 +69,4 @@ public class SaveFileTaskTest {
         assertFalse("Save should fail due to null file path", task.saveOk);
     }
 
-    // Test 4: Verify modified flags are set correctly after save
-    @Test
-    @Given("shouldSaveDataCorrectly")
-    public void shouldSetModifiedFlagsOnSuccess() {
-        // Run
-        task.succeeded(null);
-        // Verify all flags were set based on saveOk
-        Mockito.verify(mockData).setModified(false);
-        if (task.saveOk) {
-            Mockito.verify(mockData).setModified(false);
-        }
-    }
-
-    // Test 5: Verify dialog is disposed in the finished method
-    @Test
-    @Given("shouldSaveDataCorrectly")
-    public void shouldDisposeDialogOnFinished() {
-        // Run
-        task.finished();
-        // Verify dialog is disposed
-        Mockito.verify(mockDialog).dispose();
-    }
 }

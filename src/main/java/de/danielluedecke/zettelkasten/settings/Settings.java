@@ -564,6 +564,10 @@ public class Settings {
 		commandLineInitialEntryNumber = nr;
 	}
 
+	public Integer getInitialParamZettel() {
+		return commandLineInitialEntryNumber;
+	}
+
 	/**
 	 * Create all the used XML elements in settingsFile,
 	 * setting them to the default value if missing.
