@@ -6,7 +6,7 @@ import java.io.File;
 import java.util.Locale;
 import java.util.logging.Level;
 
-public class ZettelkastenAppRefactored extends ZettelkastenApp {
+public class ZettelkastenAppRefactor extends ZettelkastenApp {
 
     @Override
     void initializeLocale() {

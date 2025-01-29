@@ -9,13 +9,13 @@ import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ZettelkastenAppRefactoredTest {
+class ZettelkastenAppRefactorTest {
 
-    private ZettelkastenAppRefactored app;
+    private ZettelkastenAppRefactor app;
 
     @BeforeEach
     void setUp() {
-        app = new ZettelkastenAppRefactored();
+        app = new ZettelkastenAppRefactor();
         app.initialize(new String[]{});
     }
 
