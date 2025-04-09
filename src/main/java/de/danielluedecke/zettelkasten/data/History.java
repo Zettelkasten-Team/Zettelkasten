@@ -57,6 +57,9 @@ public class History implements NavigationListener {
 	    }
 	    historyCount = Math.min(historyCount + 1, HISTORY_MAX);
 
+		// Update the activated entry to the newly added entry
+		activatedEntryNumber = entryNr; 
+
 	    // Log the added entry to history
 	    Constants.zknlogger.info("Added to history: " + entryNr);
 	}
