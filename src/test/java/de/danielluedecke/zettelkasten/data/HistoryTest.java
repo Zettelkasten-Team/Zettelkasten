@@ -1,80 +1,51 @@
 package de.danielluedecke.zettelkasten.data;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import ch.unibe.jexample.Given;
+import ch.unibe.jexample.JExample;
+import static org.junit.Assert.*;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
-import ch.dreyeck.zettelkasten.xml.Zettel;
-import de.danielluedecke.zettelkasten.view.Display;
-
+@RunWith(JExample.class)
 public class HistoryTest {
-    private History historyManager;
-    private Display mockDisplay;
-    private Zettel mockZettel;
-
-    @BeforeMethod
-    public void setUp() {
-        mockDisplay = mock(Display.class);
-        mockZettel = mock(Zettel.class);
-        when(mockDisplay.getDisplayedZettel()).thenReturn(mockZettel); // Ensure a Zettel is displayed
-        historyManager = new History(mockDisplay);
-    }
 
     @Test
-    public void testAddToHistory() {
-        assertFalse(historyManager.canHistoryBack(), "Initially, canHistoryBack should be false");
-
-        historyManager.addToHistory(1);
-        assertFalse(historyManager.canHistoryBack(), "After adding the first entry, canHistoryBack should still be false");
-
-        historyManager.addToHistory(2);
-        assertTrue(historyManager.canHistoryBack(), "After adding the second entry, canHistoryBack should be true");
+    public History newHistoryShouldHaveNoNavigation() {
+        History history = new History();
+        assertFalse("Fresh history should not allow back", history.canHistoryBack());
+        assertFalse("Fresh history should not allow forward", history.canHistoryForward());
+        assertEquals("Initial activated entry should be -1", -1, history.historyBack());
+        return history;
     }
 
-    @Test
-    public void testHistoryBack() {
-        historyManager.addToHistory(1);
-        historyManager.addToHistory(2);
-        assertEquals(historyManager.historyBack(), 1, "historyBack should return the previous entry");
+    @Given("newHistoryShouldHaveNoNavigation")
+    public History shouldTrackFirstEntry(History history) {
+        history.addToHistory(1);
+        assertFalse("Still can't go back after first entry", history.canHistoryBack());
+        assertFalse("Still can't go forward after first entry", history.canHistoryForward());
+        assertEquals("Current entry should be 1", 1, history.historyBack());
+        return history;
     }
 
-    @Test
-    public void testHistoryFore() {
-        historyManager.addToHistory(1);
-        historyManager.addToHistory(2);
-        historyManager.historyBack();
-        assertEquals(historyManager.navigateForwardInHistory(), 2, "historyForward should return the next entry");
+    @Given("shouldTrackFirstEntry")
+    public History shouldHandleBasicNavigation(History history) {
+        history.addToHistory(2);
+        assertTrue("Should allow back after second entry", history.canHistoryBack());
+        assertFalse("Should not allow forward yet", history.canHistoryForward());
+
+        int backEntry = history.historyBack();
+        assertEquals("Back navigation should return previous entry", 1, backEntry);
+        assertTrue("Should now allow forward", history.canHistoryForward());
+
+        int forwardEntry = history.historyForward();
+        assertEquals("Forward navigation should return next entry", 2, forwardEntry);
+        return history;
     }
 
-    @Test
-    public void testCanHistoryBack() {
-        historyManager.addToHistory(1);
-        historyManager.addToHistory(2);
-        assertTrue(historyManager.canHistoryBack(), "canHistoryBack should be true after adding two entries");
-        historyManager.historyBack();
-        assertFalse(historyManager.canHistoryBack(), "canHistoryBack should be false after going back to the first entry");
-    }
-
-    @Test
-    public void testCanHistoryForward() {
-        historyManager.addToHistory(1);
-        historyManager.addToHistory(2);
-        historyManager.historyBack();
-        assertTrue(historyManager.canHistoryForward(), "canHistoryForward should be true after going back to the first entry");
-        historyManager.navigateForwardInHistory();
-        assertFalse(historyManager.canHistoryForward(), "canHistoryForward should be false after going forward to the last entry");
-    }
-
-    @Test
-    public void testNavigateForwardInHistory() {
-        historyManager.addToHistory(1);
-        historyManager.addToHistory(2);
-        historyManager.historyBack();
-        assertEquals(historyManager.navigateForwardInHistory(), 2, "navigateForwardInHistory should call historyForward and return the next entry");
+    @Given("shouldHandleBasicNavigation")
+    public void shouldClearForwardOnNewEntry(History history) {
+        history.addToHistory(3);
+        assertTrue("Should allow back", history.canHistoryBack());
+        assertFalse("New entry should clear forward history", history.canHistoryForward());
     }
 }

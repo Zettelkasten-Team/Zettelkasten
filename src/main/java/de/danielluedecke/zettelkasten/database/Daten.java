@@ -116,7 +116,7 @@ public class Daten {
 	/**
 	 * Stores the index number of the currently displayed entry
 	 */
-	private int activatedEntryNumber;
+	private int activatedEntryNumber = -1; // Explicitly initialized to -1;
 	/**
 	 * state variable that tracks changes to the data file
 	 */

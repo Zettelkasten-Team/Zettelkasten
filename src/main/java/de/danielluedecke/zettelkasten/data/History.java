@@ -15,7 +15,7 @@ public class History implements NavigationListener {
 	private static int[] history;
 	private static int historyPosition;
 	private int historyCount;
-	private int activatedEntryNumber;
+	private int activatedEntryNumber = -1; // Sentinel for "no active entry"
 	private int[] displayedEntries;
 	private int displayedCount;
 
