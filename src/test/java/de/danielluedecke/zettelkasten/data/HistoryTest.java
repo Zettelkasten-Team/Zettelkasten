@@ -3,15 +3,27 @@ package de.danielluedecke.zettelkasten.data;
 import ch.unibe.jexample.Given;
 import ch.unibe.jexample.JExample;
 import static org.junit.Assert.*;
+
+import de.danielluedecke.zettelkasten.ZettelkastenView;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 @RunWith(JExample.class)
 public class HistoryTest {
 
+    @Mock
+    private ZettelkastenView mockView; // Mocked view for dependency
+
+    public HistoryTest() {
+        // Initialize mocks
+        MockitoAnnotations.openMocks(this);
+    }
+
     @Test
     public History newHistoryShouldHaveNoNavigation() {
-        History history = new History();
+        History history = new History(mockView);
         assertFalse("Fresh history should not allow back", history.canHistoryBack());
         assertFalse("Fresh history should not allow forward", history.canHistoryForward());
         assertEquals("Initial activated entry should be -1", -1, history.historyBack());

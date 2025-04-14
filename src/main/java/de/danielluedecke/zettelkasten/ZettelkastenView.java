@@ -108,19 +108,23 @@ import static de.danielluedecke.zettelkasten.data.History.*;
 public class ZettelkastenView extends FrameView implements WindowListener, DropTargetListener {
 
 	// <editor-fold defaultstate="collapsed" desc="Variablendeklaration">
+	private final Settings settings;
+	private final TasksData taskinfo;
+
+	public Daten data;
+
 	/**
 	 * searchRequests manages all searches and search results for the loaded
 	 * data file.
 	 */
 	public SearchRequests searchRequests;
 
-	public Daten data;
 	private History history;
-	private final TasksData taskinfo;
+	private Display display;
+
 	public final Bookmarks bookmarks;
 	private final BibTeX bibtex;
 	public DesktopData desktop;
-	private final Settings settings;
 
 	/**
 	 * This variables stores the currently displayed Zettel. The currently
@@ -129,7 +133,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * activate it by double-clicking it.
 	 */
 	public int displayedZettel = -1;
-
 
 	/**
 	 * This list model is used for the JList-component which displays the keywords
@@ -402,8 +405,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			.getResourceMap(ToolbarIcons.class);
 	
 	private boolean isAcceleratorTableInitialized = false;
-
-	private Display display;
 	
 	//Constructor
 	public ZettelkastenView(SingleFrameApplication app, Settings st, TasksData td) throws ClassNotFoundException,
@@ -3673,7 +3674,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	/**
 	 * When a keywordlist is filtered, the original table data is temporarily stored
-	 * in a linked list. when the user perfoms the refresh-method, the original
+	 * in a linked list. when the user performs the refresh-method, the original
 	 * table data is restored by clearing the table's content and setting back all
 	 * data from the linked list to the table.
 	 */
@@ -5333,9 +5334,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 			// add keywords to entry... all relevant stuff like checking for multiple
 			// keywords,
 			// synonyms or their related index-words etc. is done in this mehtod. an array
-			// of those
-			// keywords that have been added is returned.
-			kws = data.addKeywordsToEntry(kws, displayedZettel, 1);
+			// of those keywords that have been added is returned.
+			kws = data.addKeywordsToEntry(kws, data.getActivatedEntryNumber(), 1);
 			// iterate array and update table-frequencies.
 			if (kws != null && kws.length > 0) {
 				// update table with linked list. when "comesFromTextSelection" is true, we have
@@ -5368,7 +5368,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 							for (int cnt = 0; cnt < jTableKeywords.getRowCount(); cnt++) {
 								// get each value
 								String val = jTableKeywords.getValueAt(cnt, 0).toString();
-								// if table-value starts with the entered text in the textfield...
+								// if table-value starts with the entered text in the text field...
 								if (val.equals(k)) {
 									// ...select that value
 									jTableKeywords.getSelectionModel().setSelectionInterval(cnt, cnt);
@@ -8527,23 +8527,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showFirstEntry() {
 		data.firstEntry();
-
-		// Reset displayedZettel.
-		displayedZettel = -1;
-
 		updateDisplay();
 	}
 
 	/**
-	 * Displays the last entry in the zettelkasten.
+	 * Navigates to the previous entry in the Zettelkasten.
 	 */
 	@Action(enabledProperty = "moreEntriesAvailable")
-	public void showLastEntry() {
-		data.lastEntry();
-
-		// Reset displayedZettel.
-		displayedZettel = -1;
-
+	public void showPrevEntry() {
+		data.prevEntry();
 		updateDisplay();
 	}
 
@@ -8553,10 +8545,15 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showNextEntry() {
 		data.nextEntry();
+		updateDisplay();
+	}
 
-		// Reset displayedZettel.
-		displayedZettel = -1;
-
+	/**
+	 * Displays the last entry in the zettelkasten.
+	 */
+	@Action(enabledProperty = "moreEntriesAvailable")
+	public void showLastEntry() {
+		data.lastEntry();
 		updateDisplay();
 	}
 
@@ -8616,19 +8613,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 		// show that entry
 		setNewActivatedEntryAndUpdateDisplay(randomnumber);
-	}
-
-	/**
-	 * Displays the first entry in the Zettelkasten
-	 */
-	@Action(enabledProperty = "moreEntriesAvailable")
-	public void showPrevEntry() {
-		data.prevEntry();
-
-		// Reset displayedZettel.
-		displayedZettel = -1;
-
-		updateDisplay();
 	}
 
 	/**

@@ -11,6 +11,7 @@ import java.util.logging.Level;
  * Manages the history of entries in the program.
  */
 public class History implements NavigationListener {
+	private final ZettelkastenView view; // Neue Referenz
 	private static final int HISTORY_MAX = 100; // Adjust as needed
 	private static int[] history;
 	private static int historyPosition;
@@ -19,8 +20,9 @@ public class History implements NavigationListener {
 	private int[] displayedEntries;
 	private int displayedCount;
 
-	// Constructor without parameters
-	public History() {
+	// Constructor with view reference
+	public History(ZettelkastenView view) {
+		this.view = view;
 		this.history = new int[HISTORY_MAX];
 		this.displayedEntries = new int[HISTORY_MAX]; // Initialize displayedEntries array
 		this.historyPosition = -1;
@@ -28,15 +30,16 @@ public class History implements NavigationListener {
 		this.displayedCount = 0; // Initialize displayedCount
 	}
 
-	public History(Display display) {
-		this.history = new int[HISTORY_MAX];
+	public History(Display display, ZettelkastenView view) {
+        this.view = view;
+        this.history = new int[HISTORY_MAX];
 		this.historyPosition = -1; // Initialize to -1 to indicate no history yet
 		this.historyCount = 0;
 	}
 
 	/**
 	 * Adds the given entry number to the history.
-	 * 
+	 *
 	 * @param entryNr the number of the entry to be added to the history
 	 */
 	public void addToHistory(int entryNr) {
@@ -58,7 +61,7 @@ public class History implements NavigationListener {
 	    historyCount = Math.min(historyCount + 1, HISTORY_MAX);
 
 		// Update the activated entry to the newly added entry
-		activatedEntryNumber = entryNr; 
+		activatedEntryNumber = entryNr;
 
 	    // Log the added entry to history
 	    Constants.zknlogger.info("Added to history: " + entryNr);
@@ -82,7 +85,7 @@ public class History implements NavigationListener {
 
 	/**
 	 * Checks if history back navigation is possible.
-	 * 
+	 *
 	 * @return {@code true} if history back navigation is enabled, {@code false}
 	 *         otherwise
 	 */
@@ -92,7 +95,7 @@ public class History implements NavigationListener {
 
 	/**
 	 * Checks if history forward navigation is possible.
-	 * 
+	 *
 	 * @return {@code true} if history forward navigation is enabled, {@code false}
 	 *         otherwise
 	 */
@@ -102,13 +105,14 @@ public class History implements NavigationListener {
 
 	/**
 	 * Moves back through the history and returns the activated entry number.
-	 * 
+	 *
 	 * @return the activated entry number after navigating back in history
 	 */
 	public int historyBack() {
 		logCurrentHistory();
 		if (canHistoryBack()) {
 			activatedEntryNumber = history[--historyPosition];
+			view.updateDisplay(); // UI-Aktualisierung
 		}
 		Constants.zknlogger.log(Level.INFO, "Activated entry number:", String.valueOf(activatedEntryNumber));
 		return activatedEntryNumber;
@@ -116,13 +120,14 @@ public class History implements NavigationListener {
 
 	/**
 	 * Moves forward through the history and returns the activated entry number.
-	 * 
+	 *
 	 * @return the activated entry number after navigating forward in history
 	 */
 	public int historyForward() {
 		logCurrentHistory();
 		if (canHistoryForward()) {
 			activatedEntryNumber = history[++historyPosition];
+			view.updateDisplay(); // UI-Aktualisierung
 		}
 		Constants.zknlogger.log(Level.INFO, "Activated entry number:", String.valueOf(activatedEntryNumber));
 		return activatedEntryNumber;

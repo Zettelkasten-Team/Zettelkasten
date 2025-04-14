@@ -38,7 +38,6 @@ import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.data.History;
 import de.danielluedecke.zettelkasten.settings.Settings;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
-import de.danielluedecke.zettelkasten.view.Display;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.HtmlUbbUtil;
 import de.danielluedecke.zettelkasten.util.Tools;
@@ -79,7 +78,20 @@ public class Daten {
 	 */
 	private static final String currentVersion = "3.8";
 	public static final String backwardCompatibleVersion = "3.4";
-	
+
+	/**
+	 * Reference to the main frame.
+	 */
+	public final ZettelkastenView view;
+
+	/**
+	 * This array stores all watched entries in the order the user "surfed" through
+	 * the entries, so we have a history-function. The user can then go back to
+	 * previously accessed entries and so on...
+	 */
+	//private int[] history;
+	private final History history;
+
 	/**
 	 * A reference to the settings class
 	 */
@@ -129,14 +141,6 @@ public class Daten {
 	 * Indicates whether saving the data file was OK, or whether an error occurred.
 	 */
 	private boolean saveOk;
-	
-	/**
-	 * This array stores all watched entries in the order the user "surfed" through
-	 * the entries, so we have a history-function. The user can then go back to
-	 * previously accessed entries and so on...
-	 */
-	//private int[] history;
-	private History history = new History();
 
 	/**
 	 * Stores the files which we want to retrieve from the main data file
@@ -246,10 +250,6 @@ public class Daten {
 	 * Indicates the maximum amount of saved history steps
 	 */
 	final int HISTORY_MAX = 50;
-	/**
-	 * Reference to the main frame.
-	 */
-	public final ZettelkastenView zknframe;
 
 	public static final String DOCUMENT_ZETTELKASTEN = "zettelkasten";
 	public static final String DOCUMENT_AUTHORS = "authors";
@@ -380,13 +380,14 @@ public class Daten {
 	 * @param syn
 	 * @param bib
 	 */
-	public Daten(ZettelkastenView zkn, Settings s, Synonyms syn, BibTeX bib) {
+	public Daten(ZettelkastenView view, Settings s, Synonyms syn, BibTeX bib) {
 		// Initiate the JDOM files and all other data, thus
 		// creating an empty "Zettelkasten".
-		zknframe = zkn;
-		settings = s;
-		synonymsObj = syn;
-		bibtexObj = bib;
+		this.view = view;
+		this.history = new History(view); // View-Referenz übergeben
+		this.settings = s;
+		this.synonymsObj = syn;
+		this.bibtexObj = bib;
 		activatedEntryNumber = 1;
 		reset();
 	}
@@ -395,7 +396,8 @@ public class Daten {
 	 * Simple constructor for tests.
 	 */
 	public Daten(Document zettelkastenDocument) {
-		zknframe = null;
+		view = null;
+		this.history = new History(view); // View-Referenz übergeben
 		settings = null;
 		synonymsObj = null;
 		bibtexObj = null;
@@ -414,8 +416,8 @@ public class Daten {
 		// reset all global variables
 		modified = false;
 		// zknframe can be null in tests.
-		if (zknframe != null) {
-			zknframe.resetBackupNecessary();
+		if (view != null) {
+			view.resetBackupNecessary();
 		}
 		zknFile = null;
 		authorFile = null;
@@ -616,7 +618,7 @@ public class Daten {
 	 */
 	public void setMetaModified(boolean m) {
 		metamodified = m;
-		zknframe.setBackupNecessary();
+		view.setBackupNecessary();
 	}
 
 	/**
@@ -635,8 +637,8 @@ public class Daten {
 	 */
 	public void setModified(boolean m) {
 		modified = m;
-		if (zknframe != null) {
-			zknframe.setBackupNecessary();
+		if (view != null) {
+			view.setBackupNecessary();
 		}
 	}
 
@@ -1588,9 +1590,9 @@ public class Daten {
 				// if we found a synonym, ask the user whether it also should be replaced
 				if (synpos != -1) {
 					// create a JOptionPane with yes/no/cancel options
-					int option = JOptionPane.showConfirmDialog(zknframe.getFrame(),
-							zknframe.getResourceMap().getString("replaceKeywordsInSynonymsMsg", oldkeyword, kw),
-							zknframe.getResourceMap().getString("replaceKeywordsInSynonymsTitle"),
+					int option = JOptionPane.showConfirmDialog(view.getFrame(),
+							view.getResourceMap().getString("replaceKeywordsInSynonymsMsg", oldkeyword, kw),
+							view.getResourceMap().getString("replaceKeywordsInSynonymsTitle"),
 							JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
 					// when the user applied to yes, we also change the synonym
 					if (JOptionPane.YES_OPTION == option) {
@@ -2389,7 +2391,7 @@ public class Daten {
 			if (null == el || null == el.getChild(ELEMENT_KEYWORD)) {
 				return null;
 			}
-			// create empty stringbuffer
+			// create empty string buffer
 			StringBuilder sb = new StringBuilder();
 			// append keywords
 			sb.append(el.getChild(ELEMENT_KEYWORD).getText());
@@ -5027,8 +5029,8 @@ public class Daten {
     }
     
     public void displayHistory(int[] history, int historyCount) {
-        if (zknframe != null) {
-            zknframe.displayHistory(history, historyCount);
+        if (view != null) {
+            view.displayHistory(history, historyCount);
         }
     }
     
@@ -5055,15 +5057,12 @@ public class Daten {
 	}
 
 	/**
-	 * This methods increases the counter of the currently displayed entry
+	 * This methods sets the counter of the currently displayed entry to the first
+	 * entry
 	 */
-	public void nextEntry() {
-		// increase counter for currently display entry
-		activatedEntryNumber++;
-		// check whether it's out of bounds
-		if (activatedEntryNumber > getCount(ZKNCOUNT) || -1 == activatedEntryNumber) {
-			activatedEntryNumber = 1;
-		}
+	public void firstEntry() {
+		// set counter for currently display entry to 1
+		activatedEntryNumber = 1;
 		// update History
 		addToHistory(activatedEntryNumber);
 	}
@@ -5083,12 +5082,15 @@ public class Daten {
 	}
 
 	/**
-	 * This methods sets the counter of the currently displayed entry to the first
-	 * entry
+	 * This methods increases the counter of the currently displayed entry
 	 */
-	public void firstEntry() {
-		// set counter for currently display entry to 1
-		activatedEntryNumber = 1;
+	public void nextEntry() {
+		// increase counter for currently display entry
+		activatedEntryNumber++;
+		// check whether it's out of bounds
+		if (activatedEntryNumber > getCount(ZKNCOUNT) || -1 == activatedEntryNumber) {
+			activatedEntryNumber = 1;
+		}
 		// update History
 		addToHistory(activatedEntryNumber);
 	}
@@ -7097,7 +7099,7 @@ public class Daten {
 			newFormImage.createFormImage();
 			// check for errors
 			if (!newFormImage.isSaveImgOk()) {
-				zknframe.showErrorIcon();
+				view.showErrorIcon();
 			}
 		}
 	}
