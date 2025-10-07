@@ -17,6 +17,7 @@ jobs:
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
+          skip_add_build_users: true  # Add this line
 
       - name: Cache Maven repo
         uses: actions/cache@v4
