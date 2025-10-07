@@ -348,7 +348,8 @@
                         <CFBundleIconFile>src/main/resources/logo/zkn3_2.icns</CFBundleIconFile>
                     </plist>
                     <dmg>
-                        <generate>${zkn.supportsDmg}</generate>
+                        <!-- was: <generate>${zkn.supportsDmg}</generate> -->
+                        <generate>${macosappbundler.dmg.enabled}</generate>
                         <useGenIsoImage>${zkn.useGenIsoImage}</useGenIsoImage>
                     </dmg>
                 </configuration>
