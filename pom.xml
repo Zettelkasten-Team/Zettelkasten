@@ -199,7 +199,6 @@
                     <useIncrementalCompilation>false</useIncrementalCompilation>
                     <jdkToolchain>
                         <version>1.8</version>
-                        <vendor>Temurin</vendor>
                     </jdkToolchain>
                 </configuration>
             </plugin>
@@ -254,7 +253,6 @@
 
                     <jdkToolchain>
                         <version>1.8</version>
-                        <vendor>Temurin</vendor>
                     </jdkToolchain>
                 </configuration>
             </plugin>

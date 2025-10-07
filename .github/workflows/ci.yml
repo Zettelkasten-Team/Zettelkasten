@@ -23,7 +23,7 @@ jobs:
             experimental-features = nix-command flakes
 
       # macOS: Java 8 directly
-      - name: Setup Java 8 (Temurin) on macOS
+      - name: Setup Java 8 (Zulu) on macOS
         if: runner.os == 'macOS'
         uses: actions/setup-java@v4
         with:
@@ -61,7 +61,6 @@ jobs:
               <type>jdk</type>
               <provides>
                 <version>1.8</version>
-                <vendor>Temurin</vendor>
               </provides>
               <configuration>
                 <jdkHome>${JAVA_HOME}</jdkHome>
@@ -103,7 +102,6 @@ jobs:
               <type>jdk</type>
               <provides>
                 <version>1.8</version>
-                <vendor>Temurin</vendor>
               </provides>
               <configuration>
                 <jdkHome>${env:JAVA_HOME}</jdkHome>
@@ -113,4 +111,4 @@ jobs:
           "@ | Set-Content .mvn/toolchains.xml -Encoding UTF8
 
       - name: Build
-        run: mvn -B clean package -Dmaven.toolchains.file=.mvn/toolchains.xml
+        run: mvn -B clean package
