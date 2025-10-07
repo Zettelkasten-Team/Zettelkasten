@@ -12,21 +12,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-
-      # Linux: normal install
-      - name: Install Nix (Linux)
-        if: runner.os == 'Linux'
-        uses: cachix/install-nix-action@v27
+      
+      - uses: cachix/install-nix-action@v27
         with:
-          extra_nix_config: |
-            experimental-features = nix-command flakes
-
-      # macOS: avoid creating build users to fix DS Error -14135
-      - name: Install Nix (macOS, no daemon)
-        if: runner.os == 'macOS'
-        uses: cachix/install-nix-action@v27
-        with:
-          install_options: --no-daemon
           extra_nix_config: |
             experimental-features = nix-command flakes
 
