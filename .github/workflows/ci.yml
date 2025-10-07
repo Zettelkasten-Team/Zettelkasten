@@ -107,4 +107,4 @@ jobs:
           "@ | Set-Content .mvn/toolchains.xml -Encoding UTF8
 
       - name: Build
-        run: mvn -B clean package
+        run: mvn -B clean package -Dmaven.toolchains.file=.mvn/toolchains.xml
