@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toolchains>
+  <toolchain>
+    <type>jdk</type>
+    <provides>
+      <version>1.8</version>
+    </provides>
+    <configuration>
+      <jdkHome>/nix/store/zqpgm1lbvp3ik941xn6wfg2hxq911lrn-temurin-bin-8.0.392</jdkHome>
+    </configuration>
+  </toolchain>
+</toolchains>

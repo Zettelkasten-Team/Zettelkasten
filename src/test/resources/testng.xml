@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Zettelkasten TestNG Suite" verbose="1" parallel="false">
+    <test name="all">
+        <packages>
+            <!-- Adjust to your actual TestNG packages -->
+            <package name="de.danielluedecke.zettelkasten.*"/>
+        </packages>
+    </test>
+</suite>

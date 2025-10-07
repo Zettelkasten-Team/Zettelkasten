@@ -1,38 +1,66 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>de.danielluedecke</groupId>
     <artifactId>Zettelkasten</artifactId>
-    <version>3.2025.07</version>
+    <version>3.2025.10</version>
     <name>Zettelkasten</name>
+
     <properties>
         <exec.mainClass>de.danielluedecke.zettelkasten.ZettelkastenApp</exec.mainClass>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <zkn.launch4jVersion>${project.version}.0</zkn.launch4jVersion>
         <zkn.supportsDmg>false</zkn.supportsDmg>
         <zkn.useGenIsoImage>false</zkn.useGenIsoImage>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <slf4j.version>2.0.13</slf4j.version>
     </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.glassfish.jaxb</groupId>
-                <artifactId>jaxb-bom</artifactId>
-                <version>2.2.8</version>
-                <type>pom</type>
-            </dependency>
-            <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>5.11.0-M1</version>
+                <version>5.12.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <profiles>
+        <profile>
+            <id>local-repo</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>local.file</id>
+                    <url>file://${project.basedir}/local-repository</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>local.file.plugins</id>
+                    <url>file://${project.basedir}/local-repository</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
         <profile>
             <id>linux</id>
             <activation>
@@ -46,6 +74,7 @@
                 <zkn.useGenIsoImage>false</zkn.useGenIsoImage>
             </properties>
         </profile>
+
         <profile>
             <id>mac</id>
             <activation>
@@ -58,10 +87,58 @@
                 <zkn.useGenIsoImage>false</zkn.useGenIsoImage>
             </properties>
         </profile>
+
+        <!-- Add JAXB libs automatically when building/running on JDK >= 9 -->
+        <profile>
+            <id>jdk9plus-jaxb</id>
+            <activation>
+                <jdk>[9,)</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                    <version>2.3.1</version>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.jaxb</groupId>
+                    <artifactId>jaxb-runtime</artifactId>
+                    <version>2.3.1</version>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>javax.activation-api</artifactId>
+                    <version>1.2.0</version>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
     </profiles>
+
+    <!-- Keep local file repo always-on (as you had originally) -->
+    <repositories>
+        <repository>
+            <id>local.file</id>
+            <name>Project-local file repo</name>
+            <url>file://${project.basedir}/local-repository</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+
     <build>
+        <finalName>Zettelkasten</finalName>
+
         <sourceDirectory>src/main/java</sourceDirectory>
         <testSourceDirectory>src/test/java</testSourceDirectory>
+
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -72,52 +149,91 @@
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
-                <!--Filterung der properties Dateien, damit die Placeholder ersetzt werden-->
                 <filtering>true</filtering>
                 <includes>
                     <include>**/*.properties</include>
                 </includes>
             </resource>
         </resources>
+
         <testResources>
             <testResource>
                 <directory>src/test/resources</directory>
             </testResource>
         </testResources>
+
         <plugins>
+            <!-- Enforce Java/Maven -->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>[1.8,1.9)</version>
+                                </requireJavaVersion>
+                                <requireMavenVersion>
+                                    <version>[3.9.0,)</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Compile -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <release>8</release>
+                    <useIncrementalCompilation>false</useIncrementalCompilation>
+                    <jdkToolchain>
+                        <version>1.8</version>
+                        <vendor>Temurin</vendor>
+                    </jdkToolchain>
+                </configuration>
             </plugin>
+
+            <!-- Toolchains: prefer Java 8 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-toolchains-plugin</artifactId>
                 <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>toolchain</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <toolchains>
+                        <jdk>
+                            <version>[1.8,1.9)</version>
+                        </jdk>
+                    </toolchains>
                 </configuration>
             </plugin>
+
+            <!-- Tests: JUnit Platform (Vintage only for now) + TestNG -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
-                <configuration>
-                    <forkCount>3</forkCount>
-                    <reuseForks>true</reuseForks>
-                    <argLine>-Xmx1024m</argLine>
-                    <properties>
-                        <property>
-                            <name>junit</name>
-                            <value>false</value>
-                        </property>
-                    </properties>
-                    <threadCount>1</threadCount>
-                </configuration>
                 <dependencies>
                     <dependency>
                         <groupId>org.apache.maven.surefire</groupId>
-                        <artifactId>surefire-junit47</artifactId>
+                        <artifactId>surefire-junit-platform</artifactId>
                         <version>3.2.5</version>
                     </dependency>
                     <dependency>
@@ -126,7 +242,24 @@
                         <version>3.2.5</version>
                     </dependency>
                 </dependencies>
+                <configuration>
+                    <useModulePath>false</useModulePath>
+
+                    <!-- Force only Vintage so Jupiter engine doesn't try to discover -->
+                    <properties>
+                        <configurationParameters>
+                            junit.platform.discovery.includeEngines=vintage
+                        </configurationParameters>
+                    </properties>
+
+                    <jdkToolchain>
+                        <version>1.8</version>
+                        <vendor>Temurin</vendor>
+                    </jdkToolchain>
+                </configuration>
             </plugin>
+
+            <!-- Git metadata -->
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
@@ -145,6 +278,58 @@
                     <offline>true</offline>
                 </configuration>
             </plugin>
+
+            <!-- Reproducible JAR + manifest -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                        <!-- Do NOT set <reproducible> here; use project.build.outputTimestamp property instead -->
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <!-- Shade -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <configuration>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                    <transformers>
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                            <mainClass>${exec.mainClass}</mainClass>
+                        </transformer>
+                    </transformers>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- macOS app bundle -->
             <plugin>
                 <groupId>de.perdian.maven.plugins</groupId>
                 <artifactId>macosappbundler-maven-plugin</artifactId>
@@ -152,11 +337,10 @@
                 <configuration>
                     <jdk>
                         <include>false</include>
-                        <!--  <location>target/jre</location> maybe an option for later-->
                     </jdk>
                     <plist>
                         <CFBundleDisplayName>${project.name}</CFBundleDisplayName>
-                        <JVMMainClassName>de.danielluedecke.zettelkasten.ZettelkastenApp</JVMMainClassName>
+                        <JVMMainClassName>${exec.mainClass}</JVMMainClassName>
                         <JVMVersion>8+</JVMVersion>
                         <CFBundleDevelopmentRegion>German</CFBundleDevelopmentRegion>
                         <CFBundleName>${project.name}</CFBundleName>
@@ -179,28 +363,8 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <transformers>
-                                <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>de.danielluedecke.zettelkasten.ZettelkastenApp</mainClass>
-                                </transformer>
-                            </transformers>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+
+            <!-- Windows launcher -->
             <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
                 <artifactId>launch4j-maven-plugin</artifactId>
@@ -225,7 +389,7 @@
                             <manifest/>
                             <icon>src/main/resources/logo/zkn2.ico</icon>
                             <jre>
-                                <minVersion>1.7.0</minVersion>
+                                <minVersion>1.8.0</minVersion>
                                 <bundledJre64Bit>false</bundledJre64Bit>
                                 <bundledJreAsFallback>false</bundledJreAsFallback>
                                 <jdkPreference>preferJre</jdkPreference>
@@ -254,11 +418,12 @@
             </plugin>
         </plugins>
     </build>
+
     <dependencies>
+        <!-- Tests: JUnit 5 (API/engine via BOM) + Vintage + JUnit 4 + TestNG -->
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>7.5.1</version>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -268,37 +433,25 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.5.1</version>
             <scope>test</scope>
         </dependency>
-        <!--Optional: Supports running Junit4 along with Junit5 -->
-        <dependency>
-            <groupId>org.junit.vintage</groupId>
-            <artifactId>junit-vintage-engine</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+
+        <!-- Mockito / PowerMock -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-inline</artifactId>
             <version>4.11.0</version>
             <scope>test</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
             <version>4.11.0</version>
             <scope>test</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.powermock/powermock-module-junit4 -->
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
@@ -309,14 +462,10 @@
             <groupId>ch.unibe</groupId>
             <artifactId>jexample</artifactId>
             <version>4.5-391</version>
-            <scope>test</scope> <!-- Since JExample is used for testing -->
+            <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.13.0</version>
-            <type>maven-plugin</type>
-        </dependency>
+
+        <!-- Runtime deps -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -327,7 +476,6 @@
             <artifactId>opencsv</artifactId>
             <version>5.9</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -378,7 +526,6 @@
             <artifactId>AppleJavaExtensions</artifactId>
             <version>1.4</version>
         </dependency>
-        <!-- https://www.formdev.com/flatlaf/#download -->
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
@@ -395,28 +542,17 @@
             <artifactId>logback-classic</artifactId>
             <version>1.5.6</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>1.17.2</version>
         </dependency>
+
+        <!-- Stay on javax for Java 8 -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>2.2.8</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>3.0.1</version>
         </dependency>
     </dependencies>
-    <repositories>
-        <repository>
-            <id>my-local-repo</id>  
-            <url>file://${basedir}/local-repository</url>
-        </repository>
-    </repositories>
 </project>

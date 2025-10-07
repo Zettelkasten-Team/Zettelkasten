@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-unix:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Cache Maven repo
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: m2-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            m2-${{ runner.os }}-
+
+      - name: Build (Nix dev shell)
+        run: |
+          nix develop -c bash -lc 'mvn -B clean verify'
+
+      - name: Package macOS app (optional)
+        if: matrix.os == 'macos-latest'
+        run: |
+          nix develop -c bash -lc 'mvn -B -Pmac -DskipTests package'
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java 8 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
+
+      - name: Cache Maven repo
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: m2-windows-${{ hashFiles('**/pom.xml') }}
+          restore-keys: m2-windows-
+
+      - name: Write toolchains.xml from JAVA_HOME
+        run: |
+          New-Item -ItemType Directory -Force -Path .mvn | Out-Null
+          @"
+          <?xml version="1.0" encoding="UTF-8"?>
+          <toolchains>
+            <toolchain>
+              <type>jdk</type>
+              <provides>
+                <version>1.8</version>
+              </provides>
+              <configuration>
+                <jdkHome>${env:JAVA_HOME}</jdkHome>
+              </configuration>
+            </toolchain>
+          </toolchains>
+          "@ | Set-Content .mvn/toolchains.xml -Encoding UTF8
+
+      - name: Build
+        run: mvn -B -Dmaven.toolchains.file=.mvn/toolchains.xml clean package
