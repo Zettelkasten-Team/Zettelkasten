@@ -30,6 +30,7 @@ jobs:
           distribution: zulu
           java-version: '8'
           cache: maven
+          toolchain: true
 
       - name: Cache Maven repo
         if: runner.os != 'macOS'
@@ -49,25 +50,6 @@ jobs:
         if: runner.os == 'Linux'
         timeout-minutes: 30
         run: nix develop -L --accept-flake-config -c bash -lc 'mvn -B clean verify'
-
-      - name: Write toolchains.xml (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          mkdir -p .mvn
-          cat > .mvn/toolchains.xml <<EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <toolchains>
-            <toolchain>
-              <type>jdk</type>
-              <provides>
-                <version>1.8</version>
-              </provides>
-              <configuration>
-                <jdkHome>${JAVA_HOME}</jdkHome>
-              </configuration>
-            </toolchain>
-          </toolchains>
-          EOF
 
       - name: Build (macOS without Nix)
         if: runner.os == 'macOS'
@@ -90,25 +72,7 @@ jobs:
           distribution: zulu
           java-version: '8'
           cache: maven
-
-      - name: Write toolchains.xml from JAVA_HOME
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Force -Path .mvn | Out-Null
-          @"
-          <?xml version="1.0" encoding="UTF-8"?>
-          <toolchains>
-            <toolchain>
-              <type>jdk</type>
-              <provides>
-                <version>1.8</version>
-              </provides>
-              <configuration>
-                <jdkHome>${env:JAVA_HOME}</jdkHome>
-              </configuration>
-            </toolchain>
-          </toolchains>
-          "@ | Set-Content .mvn/toolchains.xml -Encoding UTF8
+          toolchain: true
 
       - name: Build
         run: mvn -B clean package
