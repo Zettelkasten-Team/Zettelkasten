@@ -28,7 +28,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '8'
+          java-version: '8.0.392+8'
           cache: maven
 
       - name: Cache Maven repo
@@ -89,7 +89,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '8'
+          java-version: '8.0.392+8'
           cache: maven
 
       - name: Write toolchains.xml from JAVA_HOME
