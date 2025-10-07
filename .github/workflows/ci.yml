@@ -27,8 +27,8 @@ jobs:
         if: runner.os == 'macOS'
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: '8.0.392+8'
+          distribution: zulu
+          java-version: '8'
           cache: maven
 
       - name: Cache Maven repo
@@ -85,11 +85,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Java 8 (Temurin)
+      - name: Setup Java 8 (Zulu)
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: '8.0.392+8'
+          distribution: zulu
+          java-version: '8'
           cache: maven
 
       - name: Write toolchains.xml from JAVA_HOME
