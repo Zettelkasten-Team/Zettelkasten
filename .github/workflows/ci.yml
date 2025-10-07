@@ -30,7 +30,26 @@ jobs:
           distribution: zulu
           java-version: '8'
           cache: maven
-          toolchain: true
+
+      # Write toolchains.xml to ~/.m2 (Maven default)
+      - name: Write toolchains.xml (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          mkdir -p "$HOME/.m2"
+          cat > "$HOME/.m2/toolchains.xml" <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <toolchains>
+            <toolchain>
+              <type>jdk</type>
+              <provides>
+                <version>1.8</version>
+              </provides>
+              <configuration>
+                <jdkHome>${JAVA_HOME}</jdkHome>
+              </configuration>
+            </toolchain>
+          </toolchains>
+          EOF
 
       - name: Cache Maven repo
         if: runner.os != 'macOS'
@@ -72,7 +91,26 @@ jobs:
           distribution: zulu
           java-version: '8'
           cache: maven
-          toolchain: true
+
+      # Write toolchains.xml to %USERPROFILE%\.m2 (Maven default)
+      - name: Write toolchains.xml from JAVA_HOME
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.m2" | Out-Null
+          @"
+          <?xml version="1.0" encoding="UTF-8"?>
+          <toolchains>
+            <toolchain>
+              <type>jdk</type>
+              <provides>
+                <version>1.8</version>
+              </provides>
+              <configuration>
+                <jdkHome>${env:JAVA_HOME}</jdkHome>
+              </configuration>
+            </toolchain>
+          </toolchains>
+          "@ | Set-Content "$env:USERPROFILE\.m2\toolchains.xml" -Encoding UTF8
 
       - name: Build
         run: mvn -B clean package
