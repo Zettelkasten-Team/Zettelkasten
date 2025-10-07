@@ -10,7 +10,7 @@
     <a href="https://github.com/Zettelkasten-Team/Zettelkasten/graphs/contributors" alt="Contributors">
         <img src="https://img.shields.io/github/contributors/Zettelkasten-Team/Zettelkasten" />
     </a>
-    <img src="https://github.com/Zettelkasten-Team/Zettelkasten/workflows/Java%20CI%20with%20Maven/badge.svg" alt="build status"/>
+    <img src="https://github.com/Zettelkasten-Team/Zettelkasten/workflows/CI/badge.svg" alt="build status"/>
 </p>
 Zettelkasten is a knowledge management tool. It is inspired by Niklas Luhmann's note-taking system (Zettelkasten is German for slip box).
 
