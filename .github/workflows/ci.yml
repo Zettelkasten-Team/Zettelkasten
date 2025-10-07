@@ -7,6 +7,7 @@ on:
 jobs:
   build-unix:
     strategy:
+      fail-fast: false            # <— keep Linux running even if macOS fails
       matrix:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
@@ -21,7 +22,7 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
 
-      # macOS: skip Nix, use Java 8 directly
+      # macOS: Java 8 directly
       - name: Setup Java 8 (Temurin) on macOS
         if: runner.os == 'macOS'
         uses: actions/setup-java@v4
@@ -31,7 +32,7 @@ jobs:
           cache: maven
 
       - name: Cache Maven repo
-        if: runner.os != 'macOS'  # setup-java already caches on macOS above
+        if: runner.os != 'macOS'
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
@@ -39,7 +40,16 @@ jobs:
           restore-keys: |
             m2-${{ runner.os }}-
 
-      # macOS: write toolchains.xml with the actual JAVA_HOME path (no quotes on EOF!)
+      # Optional: warm the dev shell so we see Nix errors early
+      - name: Warm Nix dev shell (Linux)
+        if: runner.os == 'Linux'
+        run: nix develop -L --accept-flake-config -c true
+
+      - name: Build (Linux via Nix dev shell)
+        if: runner.os == 'Linux'
+        timeout-minutes: 30
+        run: nix develop -L --accept-flake-config -c bash -lc 'mvn -B clean verify'
+
       - name: Write toolchains.xml (macOS)
         if: runner.os == 'macOS'
         run: |
@@ -59,10 +69,6 @@ jobs:
             </toolchain>
           </toolchains>
           EOF
-
-      - name: Build (Linux via Nix dev shell)
-        if: runner.os == 'Linux'
-        run: nix develop -c bash -lc 'mvn -B clean verify'
 
       - name: Build (macOS without Nix)
         if: runner.os == 'macOS'
