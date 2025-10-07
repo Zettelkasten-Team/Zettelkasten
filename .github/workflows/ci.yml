@@ -78,7 +78,13 @@ jobs:
 
       - name: Package macOS app
         if: runner.os == 'macOS'
-        run: mvn -B -Pmac -DskipTests package
+        run: mvn -B -Pmac -DskipTests -Dmacosappbundler.dmg.enabled=false package
+
+      - name: Create distributable ZIP
+        if: runner.os == 'macOS'
+        run: |
+          cd target
+          ditto -c -k --sequesterRsrc --keepParent "Zettelkasten.app" "Zettelkasten-macOS.zip"
 
   build-windows:
     runs-on: windows-latest
