@@ -384,7 +384,7 @@ public class Daten {
 		// Initiate the JDOM files and all other data, thus
 		// creating an empty "Zettelkasten".
 		this.view = view;
-		this.history = new History(view); // View-Referenz übergeben
+		this.history = new History(); // View-Referenz übergeben
 		this.settings = s;
 		this.synonymsObj = syn;
 		this.bibtexObj = bib;
@@ -397,7 +397,7 @@ public class Daten {
 	 */
 	public Daten(Document zettelkastenDocument) {
 		view = null;
-		this.history = new History(view); // View-Referenz übergeben
+		this.history = new History(); // View-Referenz übergeben
 		settings = null;
 		synonymsObj = null;
 		bibtexObj = null;

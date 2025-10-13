@@ -23,7 +23,7 @@ public class HistoryTest {
 
     @Test
     public History newHistoryShouldHaveNoNavigation() {
-        History history = new History(mockView);
+        History history = new History();
         assertFalse("Fresh history should not allow back", history.canHistoryBack());
         assertFalse("Fresh history should not allow forward", history.canHistoryForward());
         assertEquals("Initial activated entry should be -1", -1, history.historyBack());

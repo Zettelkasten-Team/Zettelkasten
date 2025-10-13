@@ -1,152 +1,201 @@
 package de.danielluedecke.zettelkasten.data;
 
-import de.danielluedecke.zettelkasten.ZettelkastenView;
-import de.danielluedecke.zettelkasten.history.NavigationListener;
+import de.danielluedecke.zettelkasten.history.HistoryEvent;
+import de.danielluedecke.zettelkasten.history.HistoryListener;
 import de.danielluedecke.zettelkasten.util.Constants;
-import de.danielluedecke.zettelkasten.view.Display;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 
 /**
- * Manages the history of entries in the program.
+ * Pure model for managing entry-number history.
+ * - No Swing/UI references
+ * - Notifies listeners on activation changes
+ * - Includes deprecated shims for legacy call sites (to be removed)
  */
-public class History implements NavigationListener {
-	private final ZettelkastenView view; // Neue Referenz
-	private static final int HISTORY_MAX = 100; // Adjust as needed
-	private static int[] history;
-	private static int historyPosition;
-	private int historyCount;
-	private int activatedEntryNumber = -1; // Sentinel for "no active entry"
-	private int[] displayedEntries;
-	private int displayedCount;
+public class History {
 
-	// Constructor with view reference
-	public History(ZettelkastenView view) {
-		this.view = view;
-		this.history = new int[HISTORY_MAX];
-		this.displayedEntries = new int[HISTORY_MAX]; // Initialize displayedEntries array
-		this.historyPosition = -1;
-		this.historyCount = 0;
-		this.displayedCount = 0; // Initialize displayedCount
-	}
+    private static final int DEFAULT_HISTORY_MAX = 100;
 
-	public History(Display display, ZettelkastenView view) {
-        this.view = view;
-        this.history = new int[HISTORY_MAX];
-		this.historyPosition = -1; // Initialize to -1 to indicate no history yet
-		this.historyCount = 0;
-	}
+    private final int[] history;
+    private int historyPosition = -1;   // index of active entry in history[], -1 = none
+    private int historyCount = 0;       // number of valid items in history[]
+    private int activatedEntryNumber = -1; // currently active entry number, -1 = none
 
-	/**
-	 * Adds the given entry number to the history.
-	 *
-	 * @param entryNr the number of the entry to be added to the history
-	 */
-	public void addToHistory(int entryNr) {
-	    // Log the current history before adding the new entry
-	    logCurrentHistory();
+    private final List<HistoryListener> listeners = new CopyOnWriteArrayList<>();
 
-	    // Avoid duplicates in history
-	    if (historyPosition >= 0 && history[historyPosition] == entryNr) {
-	        return;
-	    }
+    public History() { this(DEFAULT_HISTORY_MAX); }
 
-	    if (historyPosition < HISTORY_MAX - 1) {
-	        history[++historyPosition] = entryNr;
-	    } else {
-	        System.arraycopy(history, 1, history, 0, HISTORY_MAX - 1);
-	        history[HISTORY_MAX - 1] = entryNr;
-	        historyPosition = HISTORY_MAX - 1;
-	    }
-	    historyCount = Math.min(historyCount + 1, HISTORY_MAX);
+    public History(int capacity) {
+        int cap = Math.max(1, capacity);
+        this.history = new int[cap];
+    }
 
-		// Update the activated entry to the newly added entry
-		activatedEntryNumber = entryNr;
+    // ---------------- Listener API ----------------
 
-	    // Log the added entry to history
-	    Constants.zknlogger.info("Added to history: " + entryNr);
-	}
+    public void addListener(HistoryListener l) {
+        if (l != null) listeners.add(l);
+    }
 
-	/**
-	 * Logs the current history.
-	 */
-	public static void logCurrentHistory() {
-	    StringBuilder historyBuilder = new StringBuilder("Current history: [");
-	    for (int i = 0; i <= historyPosition; i++) {
-	        historyBuilder.append(history[i]);
-	        if (i < historyPosition) {
-	            historyBuilder.append(", ");
-	        }
-	    }
-	    historyBuilder.append("]");
-	    Constants.zknlogger.info(historyBuilder.toString());
-	}
+    public void removeListener(HistoryListener l) {
+        listeners.remove(l);
+    }
 
+    private void notifyActivated(int oldIdx, int newIdx, int oldEntry, int newEntry) {
+        if (oldIdx == newIdx && oldEntry == newEntry) return; // no change
+        HistoryEvent ev = new HistoryEvent(oldIdx, newIdx, oldEntry, newEntry);
+        for (HistoryListener l : listeners) {
+            l.onActivated(ev);
+        }
+    }
 
-	/**
-	 * Checks if history back navigation is possible.
-	 *
-	 * @return {@code true} if history back navigation is enabled, {@code false}
-	 *         otherwise
-	 */
-	public boolean canHistoryBack() {
-		return (historyPosition > 0);
-	}
+    // ---------------- Public API ----------------
 
-	/**
-	 * Checks if history forward navigation is possible.
-	 *
-	 * @return {@code true} if history forward navigation is enabled, {@code false}
-	 *         otherwise
-	 */
-	public boolean canHistoryForward() {
-		return (historyPosition >= 0 && historyPosition < (historyCount - 1));
-	}
+    /** Adds the given entry number to history and activates it. */
+    public void addToHistory(int entryNr) {
+        logCurrentHistory("before addToHistory(" + entryNr + ")");
 
-	/**
-	 * Moves back through the history and returns the activated entry number.
-	 *
-	 * @return the activated entry number after navigating back in history
-	 */
-	public int historyBack() {
-		logCurrentHistory();
-		if (canHistoryBack()) {
-			activatedEntryNumber = history[--historyPosition];
-			view.updateDisplay(); // UI-Aktualisierung
-		}
-		Constants.zknlogger.log(Level.INFO, "Activated entry number:", String.valueOf(activatedEntryNumber));
-		return activatedEntryNumber;
-	}
+        // Avoid duplicate append if already the active one
+        if (historyPosition >= 0 && historyPosition < historyCount && history[historyPosition] == entryNr) {
+            Constants.zknlogger.info("Skipped addToHistory: same as current active " + entryNr);
+            return;
+        }
 
-	/**
-	 * Moves forward through the history and returns the activated entry number.
-	 *
-	 * @return the activated entry number after navigating forward in history
-	 */
-	public int historyForward() {
-		logCurrentHistory();
-		if (canHistoryForward()) {
-			activatedEntryNumber = history[++historyPosition];
-			view.updateDisplay(); // UI-Aktualisierung
-		}
-		Constants.zknlogger.log(Level.INFO, "Activated entry number:", String.valueOf(activatedEntryNumber));
-		return activatedEntryNumber;
-	}
+        int oldIdx   = historyPosition;
+        int oldEntry = activatedEntryNumber;
 
-	@Override
-	public int navigateForwardInHistory() {
-		return historyForward();
-	}
+        // If we are not at the end, truncate the "forward" branch
+        if (historyPosition < historyCount - 1) {
+            historyCount = historyPosition + 1;
+        }
 
-	@Override
-	public void navigateBackwardInHistory() {
-		historyBack();
-	}
+        if (historyCount < history.length) {
+            // Append normally
+            historyPosition = historyCount;
+            history[historyPosition] = entryNr;
+            historyCount++;
+        } else {
+            // Buffer full: shift left and put at the end
+            System.arraycopy(history, 1, history, 0, history.length - 1);
+            history[history.length - 1] = entryNr;
+            historyPosition = history.length - 1;
+            // historyCount stays at capacity
+        }
 
-	public void updateHistory(ZettelkastenView zettelkastenView, int inputDisplayedEntry) {
-		zettelkastenView.data.addToHistory(inputDisplayedEntry);
-		// Update buttons for navigating through history.
-		zettelkastenView.buttonHistoryBack.setEnabled(zettelkastenView.data.canHistoryBack());
-		zettelkastenView.buttonHistoryForward.setEnabled(zettelkastenView.data.canHistoryForward());
-	}
+        activatedEntryNumber = entryNr;
+
+        Constants.zknlogger.info("Added to history: " + entryNr);
+        logCurrentHistory("after addToHistory(" + entryNr + ")");
+
+        notifyActivated(oldIdx, historyPosition, oldEntry, activatedEntryNumber);
+    }
+
+    /** @return true if a back navigation is possible. */
+    public boolean canHistoryBack() {
+        return historyPosition > 0;
+    }
+
+    /** @return true if a forward navigation is possible. */
+    public boolean canHistoryForward() {
+        return (historyPosition >= 0) && (historyPosition < (historyCount - 1));
+    }
+
+    /**
+     * Move back in history; activates the previous entry if possible.
+     * @return the activated entry number (or unchanged if no-op)
+     */
+    public int historyBack() {
+        logCurrentHistory("before historyBack()");
+        int oldIdx   = historyPosition;
+        int oldEntry = activatedEntryNumber;
+
+        if (canHistoryBack()) {
+            historyPosition--;
+            activatedEntryNumber = history[historyPosition];
+            notifyActivated(oldIdx, historyPosition, oldEntry, activatedEntryNumber);
+        }
+
+        Constants.zknlogger.log(Level.INFO, "Activated entry number: {0}", activatedEntryNumber);
+        logCurrentHistory("after historyBack()");
+        return activatedEntryNumber;
+    }
+
+    /**
+     * Move forward in history; activates the next entry if possible.
+     * @return the activated entry number (or unchanged if no-op)
+     */
+    public int historyForward() {
+        logCurrentHistory("before historyForward()");
+        int oldIdx   = historyPosition;
+        int oldEntry = activatedEntryNumber;
+
+        if (canHistoryForward()) {
+            historyPosition++;
+            activatedEntryNumber = history[historyPosition];
+            notifyActivated(oldIdx, historyPosition, oldEntry, activatedEntryNumber);
+        }
+
+        Constants.zknlogger.log(Level.INFO, "Activated entry number: {0}", activatedEntryNumber);
+        logCurrentHistory("after historyForward()");
+        return activatedEntryNumber;
+    }
+
+    /** Clears the entire history and deactivates any entry. */
+    public void clear() {
+        int oldIdx   = historyPosition;
+        int oldEntry = activatedEntryNumber;
+
+        historyPosition = -1;
+        historyCount = 0;
+        activatedEntryNumber = -1;
+
+        Constants.zknlogger.info("History cleared.");
+        notifyActivated(oldIdx, -1, oldEntry, -1);
+    }
+
+    // ---------------- Accessors ----------------
+
+    public int getActivatedEntryNumber() { return activatedEntryNumber; }
+    public int getActiveIndex()          { return historyPosition; }
+    public int size()                    { return historyCount; }
+
+    // ---------------- Logging ----------------
+
+    private void logCurrentHistory(String context) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("History ").append(context).append(" | size=").append(historyCount)
+                .append(", pos=").append(historyPosition).append(", active=").append(activatedEntryNumber)
+                .append(" | [");
+        for (int i = 0; i < historyCount; i++) {
+            if (i > 0) sb.append(", ");
+            sb.append(history[i]);
+            if (i == historyPosition) sb.append("*"); // mark active
+        }
+        sb.append("]");
+        Constants.zknlogger.info(sb.toString());
+    }
+
+    // ---------------- Legacy shims (temporary) ----------------
+
+    /**
+     * TEMPORARY: accept any first arg to keep old calls like updateHistory(view, nr) compiling.
+     * Does not depend on UI types and will be removed after call sites are migrated.
+     */
+    @Deprecated
+    public void updateHistory(Object ignored, int inputDisplayedEntry) {
+        addToHistory(inputDisplayedEntry);
+    }
+
+    /** TEMPORARY: bridge for old code calling navigateForwardInHistory(). */
+    @Deprecated
+    public int navigateForwardInHistory() {
+        return historyForward();
+    }
+
+    /** TEMPORARY: bridge for old code calling navigateBackwardInHistory(). */
+    @Deprecated
+    public void navigateBackwardInHistory() {
+        historyBack();
+    }
 }
