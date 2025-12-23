@@ -4,6 +4,7 @@ import de.danielluedecke.zettelkasten.history.HistoryEvent;
 import de.danielluedecke.zettelkasten.history.HistoryListener;
 import de.danielluedecke.zettelkasten.util.Constants;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
@@ -159,6 +160,13 @@ public class History {
     public int getActivatedEntryNumber() { return activatedEntryNumber; }
     public int getActiveIndex()          { return historyPosition; }
     public int size()                    { return historyCount; }
+    public int getHistoryPosition()      { return historyPosition; }
+    public int getHistoryCount()         { return historyCount; }
+
+    /** Returns a trimmed snapshot of the history entries (indices 0..historyCount-1). */
+    public int[] snapshot() {
+        return Arrays.copyOf(history, historyCount);
+    }
 
     // ---------------- Logging ----------------
 
