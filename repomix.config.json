@@ -1,0 +1,89 @@
+{
+  "$schema": "https://repomix.dev/schema.json",
+  "projectName": "zettelkasten",
+  "description": "Narrative walks, claim templates, joins, and conceptual scaffolding for the Zettelkasten project",
+
+  "output": {
+    "filePath": "zettelkasten-repomix-output.md",
+    "format": "markdown",
+    "includeTableOfContents": true,
+    "includeFileTree": true,
+    "groupBy": "directory",
+    "sortFiles": "path"
+  },
+
+  "include": [
+    "**/*.md",
+    "**/*.markdown",
+    "**/*.txt",
+    "**/*.rst",
+
+    "**/*.json",
+    "**/*.yaml",
+    "**/*.yml",
+
+    "**/*.js",
+    "**/*.ts",
+    "**/*.py",
+    "**/*.java",
+    "**/*.pharo",
+    "**/*.st"
+  ],
+
+  "exclude": [
+    "**/.git/**",
+    "**/.github/**",
+    "**/.idea/**",
+    "**/.vscode/**",
+
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/target/**",
+    "**/out/**",
+
+    "**/.direnv/**",
+    "**/.nix/**",
+    "**/result/**",
+
+    "**/cache/**",
+    "**/.cache/**",
+    "**/.repomix/**",
+    "**/vendor/**",
+
+    "**/repomix-output.md",
+    "**/repomix.config.json",
+
+    "**/*.pdf",
+    "**/*.epub",
+    "**/*.docx",
+
+    "**/*.png",
+    "**/*.jpg",
+    "**/*.jpeg",
+    "**/*.gif",
+    "**/*.svg",
+
+    "**/*.zip",
+    "**/*.tar",
+    "**/*.gz",
+
+    "**/*.log"
+  ],
+
+  "markdown": {
+    "collapseLongCodeBlocks": true,
+    "maxCodeBlockLines": 200,
+    "preserveFrontMatter": true
+  },
+
+  "limits": {
+    "maxFileSizeKB": 1024,
+    "maxTotalSizeMB": 25
+  },
+
+  "annotations": {
+    "includeFileHeaders": true,
+    "includeRelativePaths": true
+  }
+}

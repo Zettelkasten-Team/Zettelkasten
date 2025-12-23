@@ -15194,6 +15194,10 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		return null;
 	}
 
+	public int getDisplayedEntryNumber() {
+		return displayedZettel;
+	}
+
 	public void setHistoryManager(History historyManager) {
 		this.history = historyManager;
 	}

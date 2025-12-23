@@ -39,7 +39,8 @@ public class DisplayTest {
         Zettel zettel = new Zettel();
         zettel.setContent("Test content");
         zettel.setKeywords(Arrays.asList("keyword1", "keyword2").toString());
-        when(zettelkastenViewMock.getDisplayedZettel()).thenReturn(new Zettel());
+        when(zettelkastenViewMock.getDisplayedEntryNumber()).thenReturn(entryNr);
+        when(zettelkastenViewMock.getDisplayedZettel()).thenReturn(zettel);
 
         display.getDisplayedZettel();
 

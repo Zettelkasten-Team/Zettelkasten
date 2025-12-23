@@ -16,7 +16,8 @@ public class Display {
     public Zettel getDisplayedZettel() {
         Zettel zettel = zettelkastenView.getDisplayedZettel();
         if (zettel != null) {
-            history.addToHistory(123); // Assuming 123 is the entryNr
+            int entryNr = zettelkastenView.getDisplayedEntryNumber();
+            history.addToHistory(entryNr);
         }
 		return zettel;
     }
