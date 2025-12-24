@@ -2723,13 +2723,16 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 */
 	@Action
 	public final void updateDisplay() {
-		updateDisplay(UpdateDisplayOptions.defaultOptions());
+		updateDisplay(UpdateDisplayOptions.defaultOptions(), false);
 	}
 
 	public final void updateDisplay(UpdateDisplayOptions options) {
-		if (displayedZettel == -1) {
+		updateDisplay(options, false);
+	}
+
+	private void updateDisplay(UpdateDisplayOptions options, boolean syncDisplayedToActivated) {
+		if (syncDisplayedToActivated) {
 			displayedZettel = data.getActivatedEntryNumber();
-			Constants.zknlogger.info("Displayed Zettel reset to activated entry: " + displayedZettel);
 		}
 		Constants.zknlogger.info("Displayed Zettel: " + displayedZettel);
 
@@ -8618,7 +8621,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	public void setNewActivatedEntryAndUpdateDisplay(int entryNumber, UpdateDisplayOptions options) {
 		if (data.activateEntry(entryNumber)) {
 			Constants.zknlogger.info("Update display with Zettel: " + String.valueOf(entryNumber));
-			updateDisplay(options);
+			updateDisplay(options, true);
 		} else {
 			// Log a warning if the entry number is invalid
 			Constants.zknlogger.log(Level.WARNING,
@@ -9669,7 +9672,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// Reset displayedZettel.
 		displayedZettel = -1;
 
-		updateDisplay();
+		updateDisplay(UpdateDisplayOptions.defaultOptions(), true);
 	}
         
 	@Action(enabledProperty = "historyForwardAvailable")
@@ -9679,7 +9682,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		data.historyForward();
 		logHistoryNavigationState("after historyForward");
 		displayedZettel = -1;
-		updateDisplay();
+		updateDisplay(UpdateDisplayOptions.defaultOptions(), true);
 	}
 
 	/**
@@ -9694,7 +9697,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// Reset displayedZettel.
 		displayedZettel = -1;
 
-		updateDisplay();
+		updateDisplay(UpdateDisplayOptions.defaultOptions(), true);
 	}
 
 	/**
