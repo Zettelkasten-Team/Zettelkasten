@@ -1345,6 +1345,10 @@ private void highlightKeywords(int selection) {
 // Updates the main frame display if necessary
 private void updateMainFrameDisplay(int selection) {
     if (data.getSettings().getShowSearchEntry()) {
+        if (selection == data.getData().getActivatedEntryNumber()) {
+            Constants.zknlogger.info("SearchResults selection unchanged, skipping activation: " + selection);
+            return;
+        }
         data.getMainFrame().setNewActivatedEntryAndUpdateDisplay(selection);
     }
 }
