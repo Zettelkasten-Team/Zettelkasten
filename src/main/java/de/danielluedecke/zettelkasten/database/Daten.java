@@ -5020,12 +5020,14 @@ public class Daten {
     }
 
     public int historyBack() {
-		Constants.zknlogger.info(String.valueOf(history.historyBack()));
-        return history.historyBack();
+        activatedEntryNumber = history.historyBack();
+		Constants.zknlogger.info(String.valueOf(activatedEntryNumber));
+        return activatedEntryNumber;
     }
 
     public int historyForward() {
-        return history.navigateForwardInHistory();
+        activatedEntryNumber = history.historyForward();
+        return activatedEntryNumber;
     }
     
     public void displayHistory(int[] history, int historyCount) {
