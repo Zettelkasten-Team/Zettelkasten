@@ -2731,7 +2731,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	private void updateDisplay(UpdateDisplayOptions options, boolean syncDisplayedToActivated) {
-		if (syncDisplayedToActivated) {
+		if (syncDisplayedToActivated && data != null) {
 			displayedZettel = data.getActivatedEntryNumber();
 		}
 		Constants.zknlogger.info("Displayed Zettel: " + displayedZettel);
