@@ -2980,23 +2980,6 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		}
 	}
 
-	private void logHistoryNavigationState(String context) {
-		if (data != null) {
-			Constants.zknlogger.info("History nav [" + context + "]: active=" + data.getActivatedEntryNumber()
-					+ ", canBack=" + data.canHistoryBack()
-					+ ", canForward=" + data.canHistoryForward());
-			return;
-		}
-		if (history != null) {
-			Constants.zknlogger.info("History nav [" + context + "]: index=" + history.getHistoryPosition()
-					+ ", active=" + history.getActivatedEntryNumber()
-					+ ", canBack=" + history.canHistoryBack()
-					+ ", canForward=" + history.canHistoryForward());
-			return;
-		}
-		Constants.zknlogger.info("History nav [" + context + "]: history unavailable");
-	}
-	
 	/**
 	 */
 	private void makeMacBottomBar() {
@@ -9665,9 +9648,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "historyBackAvailable")
 	public void historyBack() {
 		Constants.zknlogger.info("Displayed Zettel: " + displayedZettel);
-		logHistoryNavigationState("before historyBack");
 		data.historyBack();
-		logHistoryNavigationState("after historyBack");
 
 		// Reset displayedZettel.
 		displayedZettel = -1;
@@ -9678,9 +9659,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "historyForwardAvailable")
 	public void historyForward() {
 		Constants.zknlogger.info("Displayed Zettel: " + displayedZettel);
-		logHistoryNavigationState("before historyForward");
 		data.historyForward();
-		logHistoryNavigationState("after historyForward");
 		displayedZettel = -1;
 		updateDisplay(UpdateDisplayOptions.defaultOptions(), true);
 	}
