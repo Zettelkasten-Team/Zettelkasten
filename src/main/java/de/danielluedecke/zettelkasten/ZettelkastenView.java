@@ -2671,6 +2671,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		clearTabbedPaneModels();
 
 		displayedZettel = -1;
+		updateHistoryAvailability();
 		// hide panels for live-search and is-follower-numbers
 		jPanelLiveSearch.setVisible(false);
 		/* jPanelManLinks.setVisible(false); */
@@ -2778,6 +2779,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// displayed entry to the history.
 		if (settings.getAddAllToHistory() && history != null) {
 			history.updateHistory(this, entryNumber);
+			updateHistoryAvailability();
 		}
 
 		displaySelectedEntry(entryNumber);
@@ -2835,10 +2837,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		// retrieve modified data-files
 		setSaveEnabled(settings.getSynonyms().isModified() | data.isMetaModified() | bibtex.isModified()
 				| data.isModified() | bookmarks.isModified() | searchRequests.isModified() | desktop.isModified());
-		buttonHistoryBack.setEnabled(data.canHistoryBack());
-		buttonHistoryForward.setEnabled(data.canHistoryForward());
-		setHistoryBackAvailable(data.canHistoryBack());
-		setHistoryForwardAvailable(data.canHistoryForward());
+		updateHistoryAvailability();
 		// desktop and search results available
 		setDesktopAvailable(desktop.getCount() > 0);
 		setSearchResultsAvailable(searchRequests.getCount() > 0);
@@ -2960,6 +2959,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		boolean old = isHistoryBackAvailable();
 		this.historyBackAvailable = b;
 		firePropertyChange("historyBackAvailable", old, isHistoryBackAvailable());
+	}
+
+	private void updateHistoryAvailability() {
+		boolean canBack = history != null ? history.canHistoryBack() : data != null && data.canHistoryBack();
+		boolean canForward = history != null ? history.canHistoryForward() : data != null && data.canHistoryForward();
+		setHistoryBackAvailable(canBack);
+		setHistoryForwardAvailable(canForward);
+		if (buttonHistoryBack != null) {
+			buttonHistoryBack.setEnabled(canBack);
+		}
+		if (buttonHistoryForward != null) {
+			buttonHistoryForward.setEnabled(canForward);
+		}
 	}
 	
 	/**
@@ -13178,12 +13190,12 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
             jSeparator111.setName("jSeparator111"); // NOI18N
             findMenu.add(jSeparator111);
 
-            historyForMenuItem.setAction(actionMap.get("historyBack")); // NOI18N
+            historyForMenuItem.setAction(actionMap.get("historyForward")); // NOI18N
             historyForMenuItem.setText(resourceMap.getString("historyForMenuItem.text")); // NOI18N
             historyForMenuItem.setName("historyForMenuItem"); // NOI18N
             findMenu.add(historyForMenuItem);
 
-            histroyBackMenuItem.setAction(actionMap.get("historyForward")); // NOI18N
+            histroyBackMenuItem.setAction(actionMap.get("historyBack")); // NOI18N
             histroyBackMenuItem.setText(resourceMap.getString("histroyBackMenuItem.text")); // NOI18N
             histroyBackMenuItem.setName("histroyBackMenuItem"); // NOI18N
             findMenu.add(histroyBackMenuItem);
@@ -15200,6 +15212,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	public void setHistoryManager(History historyManager) {
 		this.history = historyManager;
+		updateHistoryAvailability();
 	}
 
 	public History getHistoryManager() {
