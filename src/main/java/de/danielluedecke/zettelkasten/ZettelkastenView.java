@@ -2979,8 +2979,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	private void logHistoryNavigationState(String context) {
 		if (data != null) {
-			Constants.zknlogger.info("History nav [" + context + "]: index=" + data.getHistoryPosition()
-					+ ", active=" + data.getActivatedEntryNumber()
+			Constants.zknlogger.info("History nav [" + context + "]: active=" + data.getActivatedEntryNumber()
 					+ ", canBack=" + data.canHistoryBack()
 					+ ", canForward=" + data.canHistoryForward());
 			return;
