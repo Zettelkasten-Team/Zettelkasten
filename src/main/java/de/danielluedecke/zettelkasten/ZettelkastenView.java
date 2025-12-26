@@ -2731,6 +2731,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	private void updateDisplay(UpdateDisplayOptions options, boolean syncDisplayedToActivated) {
+		Constants.zknlogger.info("EDIT_TRACE updateDisplay sync=" + syncDisplayedToActivated
+				+ ", displayed=" + displayedZettel
+				+ ", activated=" + (data != null ? data.getActivatedEntryNumber() : -1));
 		if (syncDisplayedToActivated && data != null) {
 			displayedZettel = data.getActivatedEntryNumber();
 		}
@@ -2809,6 +2812,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	}
 
 	private void resetEntryPaneAndKeywordsPane() {
+		Constants.zknlogger.info("EDIT_TRACE resetEntryPaneAndKeywordsPane displayed="
+				+ displayedZettel
+				+ ", activated=" + (data != null ? data.getActivatedEntryNumber() : -1));
 		jEditorPaneEntry.setText("");
 
 		Color bcol = (settings.isMacStyle()) ? ColorUtil.colorJTreeText : null;
@@ -8132,6 +8138,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * @param changed whether any change happened.
 	 */
 	public void editFinishedEvent(boolean changed, boolean editMode, int entryNumber) {
+		Constants.zknlogger.info("EDIT_TRACE editFinishedEvent start changed=" + changed
+				+ ", editMode=" + editMode
+				+ ", entry=" + entryNumber
+				+ ", displayed=" + displayedZettel
+				+ ", activated=" + (data != null ? data.getActivatedEntryNumber() : -1));
 		if (changed) {
 			// Maybe update desktop window.
 			if (editMode && desktopDlg != null
@@ -8173,6 +8184,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		editEntryFromDesktop = false;
 		editEntryFromSearchWindow = false;
 		isEditModeActive = false;
+		Constants.zknlogger.info("EDIT_TRACE editFinishedEvent end displayed=" + displayedZettel
+				+ ", activated=" + (data != null ? data.getActivatedEntryNumber() : -1));
 	}
 
 	/**

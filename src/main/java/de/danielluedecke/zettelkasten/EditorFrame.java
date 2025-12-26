@@ -3887,6 +3887,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	 */
 	@Action
 	public void closeWindow() {
+		logEditTrace("closeWindow start");
 		if (modified) {
 			// Open a confirm dialog.
 			String confirmExitTitle = resourceMap.getString("msgSaveChangesOnExitTitle");
@@ -3922,11 +3923,13 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 			}
 		}
 
+		logEditTrace("closeWindow exit");
 		exit();
 	}
 
 	@Action
 	public void cancel() {
+		logEditTrace("cancel");
 		closeWindow();
 	}
 
@@ -3937,10 +3940,12 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	 */
 	@Action(enabledProperty = "textfieldFilled")
 	public void applyChanges() {
+		logEditTrace("applyChanges start");
 		if (!saveEntry()) {
 			// If save failed, leave the edit window open.
 			return;
 		}
+		logEditTrace("applyChanges exit");
 		exit();
 	}
 
@@ -3948,11 +3953,21 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	 * Close this window and notify mainframe.
 	 */
 	private void exit() {
+		logEditTrace("exit");
 		// Close window.
 		dispose();
 		setVisible(false);
 
 		mainframe.editFinishedEvent(isModified(), isEditMode(), entryNumber);
+	}
+
+	private void logEditTrace(String context) {
+		Constants.zknlogger.info("EDIT_TRACE " + context
+				+ ", modified=" + modified
+				+ ", editMode=" + isEditMode()
+				+ ", entry=" + entryNumber
+				+ ", displayed=" + mainframe.displayedZettel
+				+ ", activated=" + mainframe.getData().getActivatedEntryNumber());
 	}
 
 	/**
