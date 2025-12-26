@@ -260,7 +260,9 @@ public class ZettelkastenApp extends SingleFrameApplication {
 
     void createMainWindow() {
         try {
-            show(new ZettelkastenView(this, settings, taskData));
+            ZettelkastenView mainView = new ZettelkastenView(this, settings, taskData);
+            show(mainView);
+            mainView.updateDisplaySyncToActivated(UpdateDisplayOptions.defaultOptions());
         } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException | IllegalAccessException | IOException e) {
             handleMainWindowException(e);
         }
