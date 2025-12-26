@@ -2734,6 +2734,11 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		Constants.zknlogger.info("EDIT_TRACE updateDisplay sync=" + syncDisplayedToActivated
 				+ ", displayed=" + displayedZettel
 				+ ", activated=" + (data != null ? data.getActivatedEntryNumber() : -1));
+		if (!syncDisplayedToActivated && data != null && displayedZettel != data.getActivatedEntryNumber()) {
+			StackTraceElement caller = findNonUpdateDisplayCaller();
+			Constants.zknlogger.info("EDIT_TRACE postEditCaller sync=false displayed!=activated caller="
+					+ (caller != null ? caller.toString() : "unknown"));
+		}
 		if (syncDisplayedToActivated && data != null) {
 			displayedZettel = data.getActivatedEntryNumber();
 		}
@@ -2984,6 +2989,30 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (buttonHistoryForward != null) {
 			buttonHistoryForward.setEnabled(canForward);
 		}
+	}
+
+	private StackTraceElement findNonUpdateDisplayCaller() {
+		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+		String self = getClass().getName();
+
+		for (StackTraceElement element : stack) {
+			String cls = element.getClassName();
+			String mth = element.getMethodName();
+
+			// Skip stack machinery
+			if ("java.lang.Thread".equals(cls) && "getStackTrace".equals(mth)) {
+				continue;
+			}
+
+			// Skip our own frames (updateDisplay + this helper + any other internal methods)
+			if (self.equals(cls)) {
+				continue;
+			}
+
+			// First external frame is the caller we want
+			return element;
+		}
+		return null;
 	}
 
 	/**

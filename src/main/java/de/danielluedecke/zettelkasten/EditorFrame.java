@@ -4904,12 +4904,15 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
+			if (e.getValueIsAdjusting()) {
+				return;
+			}
 			// when we filter or refresh JLists, don't call value-changed event
 			if (listUpdateActive) {
 				return;
 			}
 			// get list selection model
-			ListSelectionModel lsm = ((JList<?>) e.getSource()).getSelectionModel();
+			ListSelectionModel lsm = list.getSelectionModel();
 			// set value-adjusting to true, so we don't fire multiple value-changed
 			// events...
 			lsm.setValueIsAdjusting(true);
