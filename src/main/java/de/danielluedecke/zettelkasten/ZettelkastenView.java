@@ -3386,7 +3386,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 			// Reset displayedZettel and updateDisplay.
 			displayedZettel = -1;
-			updateDisplay();
+			updateDisplay(UpdateDisplayOptions.defaultOptions(), true);
 		}
 	}
 
