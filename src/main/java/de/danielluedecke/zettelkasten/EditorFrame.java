@@ -3962,12 +3962,13 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	}
 
 	private void logEditTrace(String context) {
+		int activatedEntry = mainframe.data != null ? mainframe.data.getActivatedEntryNumber() : -1;
 		Constants.zknlogger.info("EDIT_TRACE " + context
 				+ ", modified=" + modified
 				+ ", editMode=" + isEditMode()
 				+ ", entry=" + entryNumber
 				+ ", displayed=" + mainframe.displayedZettel
-				+ ", activated=" + mainframe.getData().getActivatedEntryNumber());
+				+ ", activated=" + activatedEntry);
 	}
 
 	/**
