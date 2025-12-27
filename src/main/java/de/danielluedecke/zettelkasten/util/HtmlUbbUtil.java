@@ -968,7 +968,6 @@ public class HtmlUbbUtil {
         String dummy = replaceUbbToHtml(normalized, markdownActivated,
                 (Constants.FRAME_DESKTOP == sourceframe), isExport, applyNormalization);
         if (applyNormalization) {
-            dummy = sanitizeBrokenAnchorQuotes(dummy);
             dummy = fixBrokenTags(dummy, "<img[^>]*>");
             dummy = fixBrokenTags(dummy, "<a href=[^>]*>");
             dummy = normalizeEmphasisNesting(dummy);
@@ -1069,6 +1068,9 @@ public class HtmlUbbUtil {
                     pos += Constants.footnoteHtmlTag.length();
                 }
             }
+        }
+        if (applyNormalization) {
+            dummy = sanitizeBrokenAnchorQuotes(dummy);
         }
         return dummy;
     }

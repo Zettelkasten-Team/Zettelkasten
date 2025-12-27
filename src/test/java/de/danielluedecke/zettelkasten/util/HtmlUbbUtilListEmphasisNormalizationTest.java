@@ -48,7 +48,7 @@ public class HtmlUbbUtilListEmphasisNormalizationTest {
 
         String content = "[l][*][f][f]time as ordering device[k][/*]"
                 + "[*][/f]time as experienced flow[/k][/*][/l]\n"
-                + "![Image](https://example.com/STM.png)";
+                + "![Image](https://example.com/STM_file.png)";
 
         data.addEntry("Test", content, new String[0], new String[0], "", null, "2025-01-01", -1, false, -1);
         int entryNr = data.getActivatedEntryNumber();
