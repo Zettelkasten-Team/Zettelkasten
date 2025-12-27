@@ -41,6 +41,7 @@ import de.danielluedecke.zettelkasten.mac.MacSourceList;
 import de.danielluedecke.zettelkasten.util.HtmlValidator;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.Constants;
+import de.danielluedecke.zettelkasten.util.UbbNestingNormalizer;
 import de.danielluedecke.zettelkasten.util.classes.DateComparer;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import com.explodingpixels.macwidgets.MacUtils;
@@ -1434,20 +1435,58 @@ private void clearDisplay() {
 		}
 		// else show error message box to user and tell him what to do
 		else {
-			StringBuilder cleanedContent = new StringBuilder("");
-			cleanedContent
-					.append("<body><div style=\"margin:5px;padding:5px;background-color:#dddddd;color:#800000;\">");
-			URL imgURL = org.jdesktop.application.Application
-					.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass()
-					.getResource("/de/danielluedecke/zettelkasten/resources/icons/error.png");
-			cleanedContent.append("<img border=\"0\" src=\"").append(imgURL).append("\">&#8195;");
-			cleanedContent.append(data.getResourceMap().getString("incorrectNestedTagsText"));
-			cleanedContent.append("</div>").append(data.getData().getCleanZettelContent(nr)).append("</body>");
-			// and display clean content instead
-			jEditorPaneSearchEntry.setText(cleanedContent.toString());
+			String normalizedDisp = getEntryAsHtmlNormalized(nr);
+			if (HtmlValidator.isValidHTML(normalizedDisp, nr, rawContent)) {
+				jEditorPaneSearchEntry.setText(normalizedDisp);
+			} else {
+				String normalizedRaw = UbbNestingNormalizer.normalize(rawContent);
+				logValidationFailure(nr, data.getSettings().getMarkdownActivated(), rawContent, normalizedRaw, disp,
+						normalizedDisp);
+				showInvalidHtmlContent(nr);
+			}
 		}
 		// place caret, so content scrolls to top
 		jEditorPaneSearchEntry.setCaretPosition(0);
+	}
+
+	private String getEntryAsHtmlNormalized(int nr) {
+		return HtmlUbbUtil.getEntryAsHTMLNormalized(
+				data.getSettings(),
+				data.getData(),
+				data.getData().bibtexObj,
+				nr,
+				(data.getSettings().getHighlightSegments()) ? getSelectedKeywordsFromList() : null,
+				Constants.FRAME_SEARCH);
+	}
+
+	private void logValidationFailure(int entryNr, boolean markdownEnabled, String rawContent, String normalizedRaw,
+			String html, String normalizedHtml) {
+		Constants.zknlogger.log(Level.WARNING,
+				"Invalid HTML after render (entry={0}, markdown={1}). raw=\"{2}\" normalizedRaw=\"{3}\" html=\"{4}\" normalizedHtml=\"{5}\"",
+				new Object[] { entryNr, markdownEnabled, excerptForLog(rawContent), excerptForLog(normalizedRaw),
+						excerptForLog(html), excerptForLog(normalizedHtml) });
+	}
+
+	private static String excerptForLog(String value) {
+		if (value == null) {
+			return "";
+		}
+		String trimmed = value.replace('\n', ' ').replace('\r', ' ').trim();
+		int max = 160;
+		return (trimmed.length() <= max) ? trimmed : trimmed.substring(0, max) + "...";
+	}
+
+	private void showInvalidHtmlContent(int nr) {
+		StringBuilder cleanedContent = new StringBuilder("");
+		cleanedContent.append("<body><div style=\"margin:5px;padding:5px;background-color:#dddddd;color:#800000;\">");
+		URL imgURL = org.jdesktop.application.Application
+				.getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getClass()
+				.getResource("/de/danielluedecke/zettelkasten/resources/icons/error.png");
+		cleanedContent.append("<img border=\"0\" src=\"").append(imgURL).append("\">&#8195;");
+		cleanedContent.append(data.getResourceMap().getString("incorrectNestedTagsText"));
+		cleanedContent.append("</div>").append(data.getData().getCleanZettelContent(nr)).append("</body>");
+		// and display clean content instead
+		jEditorPaneSearchEntry.setText(cleanedContent.toString());
 	}
 
 	@Action

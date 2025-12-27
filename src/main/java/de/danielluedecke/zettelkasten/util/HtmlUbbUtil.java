@@ -442,7 +442,7 @@ public class HtmlUbbUtil {
             // now copy the content of the entry to a dummy string. here we convert
             // the format codes into html-tags. the format codes are simplified tags
             // for the user to enable simple format editing
-            remarks = replaceUbbToHtml(remarks, settings.getMarkdownActivated(), false, false);
+            remarks = replaceUbbToHtml(remarks, settings.getMarkdownActivated(), false, false, false);
             // autoconvert url's to hyperlinks
             remarks = convertHyperlinks(remarks);
             // if parameters in the string array highlight-terms have been passed, we assume that
@@ -551,6 +551,25 @@ public class HtmlUbbUtil {
             int entryNr,
             String[] segmentKeywords,
             int sourceFrame) {
+        return getEntryAsHTML(settings, data, bibtexObj, entryNr, segmentKeywords, sourceFrame, false);
+    }
+
+    public static String getEntryAsHTMLNormalized(Settings settings,
+            Daten data,
+            BibTeX bibtexObj,
+            int entryNr,
+            String[] segmentKeywords,
+            int sourceFrame) {
+        return getEntryAsHTML(settings, data, bibtexObj, entryNr, segmentKeywords, sourceFrame, true);
+    }
+
+    private static String getEntryAsHTML(Settings settings,
+            Daten data,
+            BibTeX bibtexObj,
+            int entryNr,
+            String[] segmentKeywords,
+            int sourceFrame,
+            boolean applyNormalization) {
         // create an empty string buffer. this buffer contains the html-string
         // which is being display in the main window's "entry textfield"
         StringBuilder retval = new StringBuilder("");
@@ -601,7 +620,7 @@ public class HtmlUbbUtil {
             // now copy the content of the entry to a dummy string. here we convert
             // the format codes into html-tags. the format codes are simplified tags
             // for the user to enable simple format editing
-            String dummy = convertUbbToHtml(settings, data, bibtexObj, content, sourceFrame, false, false);
+            String dummy = convertUbbToHtmlInternal(settings, data, bibtexObj, content, sourceFrame, false, false, applyNormalization);
             // after the conversion is done, append the content to the resulting return string
             retval.append(dummy);
         } else {
@@ -880,10 +899,26 @@ public class HtmlUbbUtil {
      * @return a converted string with html-tags instead of ubb-tags
      */
     public static String convertUbbToHtml(Settings settings, Daten dataObj, BibTeX bibtexObj, String c, int sourceframe, boolean isExport, boolean createHTMLFootnotes) {
-        // create new string
-        // TODO: consider preference toggle for auto-repairing formatting tags on display.
-        String normalized = isExport ? c : UbbNestingNormalizer.normalize(c);
-        String dummy = replaceUbbToHtml(normalized, settings.getMarkdownActivated(), (Constants.FRAME_DESKTOP == sourceframe), isExport);
+        return convertUbbToHtmlInternal(settings, dataObj, bibtexObj, c, sourceframe, isExport, createHTMLFootnotes, false);
+    }
+
+    private static String convertUbbToHtmlInternal(Settings settings, Daten dataObj, BibTeX bibtexObj, String c,
+            int sourceframe, boolean isExport, boolean createHTMLFootnotes, boolean applyNormalization) {
+        String normalized = c;
+        if (applyNormalization && !isExport) {
+            if (Constants.zknlogger.isLoggable(Level.FINE)) {
+                UbbNestingNormalizer.NormalizeResult result = UbbNestingNormalizer.normalizeWithStats(c);
+                normalized = result.text;
+                if (result.changed) {
+                    Constants.zknlogger.log(Level.FINE,
+                            "UBB normalize applied (frame={0}, dropped={1}, autoClosed={2})",
+                            new Object[] { sourceframe, result.droppedStrayCloses, result.autoClosed });
+                }
+            } else {
+                normalized = UbbNestingNormalizer.normalize(c);
+            }
+        }
+        String dummy = replaceUbbToHtml(normalized, settings.getMarkdownActivated(), (Constants.FRAME_DESKTOP == sourceframe), isExport, applyNormalization);
         // add title attributes to manual links
         int pos = 0;
         while (pos != -1) {
@@ -1306,7 +1341,8 @@ public class HtmlUbbUtil {
         return dummy;
     }
 
-    private static String replaceUbbToHtml(String dummy, boolean isMarkdownActivated, boolean isDesktop, boolean isExport) {
+    private static String replaceUbbToHtml(String dummy, boolean isMarkdownActivated, boolean isDesktop, boolean isExport,
+            boolean applyMarkdownNormalization) {
         // replace headlines
         String head1, head2, head3, head4;
         String head1md, head2md, head3md, head4md;
@@ -1333,6 +1369,9 @@ public class HtmlUbbUtil {
         // if yes, replace markdown here
         if (isMarkdownActivated) {
             dummy = dummy.replace("[br]", "\n");
+            if (applyMarkdownNormalization) {
+                dummy = normalizeMarkdownEmphasis(dummy);
+            }
             // quotes
             dummy = dummy.replaceAll("(^|\\n)(\\> )(.*)", "[q]$3[/q]");
             // after quotes have been replaced, replace < and > signs
@@ -1361,12 +1400,9 @@ public class HtmlUbbUtil {
             // strike
             dummy = dummy.replaceAll("---(.*?)---", "<strike>$1</strike>");
             // images
-            // TODO Img tag nach oben, vor kursiv format, und _ im Dateinamen durch "´:`" o.ä. (bevor Matthias meckert, 100-Zeichenfolge!) ersetzen
-            dummy = dummy.replaceAll("[!]{1}\\[([^\\[]+)\\]\\(([^\\)]+)\\)", "[img]$2[/img]");
-            // we need to fix emphasing in image tags. if image file path has
-            // underscores, these have been replaced to italic / bold etc.
-            dummy = fixBrokenTags(dummy, "\\[img\\]([^|]*)(.*?)\\[/img\\]");
-            dummy = fixBrokenTags(dummy, "\\(http://([^\\)]+)\\)");
+            // TODO: consider moving images above italics to avoid underscore interference.
+            dummy = replaceMarkdownImages(dummy);
+            dummy = replaceMarkdownLinks(dummy);
             // replace line breaks
             dummy = dummy.replace("\n", "[br]");
         } else {
@@ -1443,6 +1479,217 @@ public class HtmlUbbUtil {
         // remove all new lines after headlines
         dummy = dummy.replaceAll("\\</h([^\\<]*)\\>\\<br\\>", "</h$1>");
         return dummy;
+    }
+
+    private static String replaceMarkdownImages(String input) {
+        StringBuilder out = new StringBuilder(input.length());
+        int i = 0;
+        while (i < input.length()) {
+            if (input.startsWith("![", i)) {
+                int altEnd = input.indexOf("](", i + 2);
+                if (altEnd != -1) {
+                    int urlStart = altEnd + 2;
+                    int urlEnd = findClosingParen(input, urlStart);
+                    if (urlEnd != -1) {
+                        String url = input.substring(urlStart, urlEnd);
+                        out.append("[img]").append(url).append("[/img]");
+                        i = urlEnd + 1;
+                        continue;
+                    }
+                }
+            }
+            out.append(input.charAt(i));
+            i++;
+        }
+        return out.toString();
+    }
+
+    private static String replaceMarkdownLinks(String input) {
+        StringBuilder out = new StringBuilder(input.length());
+        int i = 0;
+        while (i < input.length()) {
+            if (input.charAt(i) == '[' && (i == 0 || input.charAt(i - 1) != '!')) {
+                int textEnd = input.indexOf("](", i + 1);
+                if (textEnd != -1) {
+                    int urlStart = textEnd + 2;
+                    if (input.startsWith("http", urlStart)) {
+                        int urlEnd = findClosingParen(input, urlStart);
+                        if (urlEnd != -1) {
+                            String label = input.substring(i + 1, textEnd);
+                            String url = input.substring(urlStart, urlEnd);
+                            out.append("<a href=\"")
+                                    .append(escapeHtmlAttribute(url))
+                                    .append("\" title=\"")
+                                    .append(escapeHtmlAttribute(url))
+                                    .append("\">")
+                                    .append(label)
+                                    .append("</a>");
+                            i = urlEnd + 1;
+                            continue;
+                        }
+                    }
+                }
+            }
+            out.append(input.charAt(i));
+            i++;
+        }
+        return out.toString();
+    }
+
+    private static String normalizeMarkdownEmphasis(String input) {
+        StringBuilder out = new StringBuilder(input.length());
+        String[] lines = input.split("\n", -1);
+        for (int idx = 0; idx < lines.length; idx++) {
+            String line = lines[idx];
+            String normalizedLine = normalizeEmphasisInLine(line);
+            out.append(normalizedLine);
+            if (idx < lines.length - 1) {
+                out.append('\n');
+            }
+        }
+        return out.toString();
+    }
+
+    private static String normalizeEmphasisInLine(String line) {
+        if (line.isEmpty()) {
+            return line;
+        }
+        int doubleCount = countNonOverlapping(line, "**");
+        if (doubleCount % 2 != 0) {
+            line = line + "**";
+        }
+        int singleCount = countSingleAsterisks(line);
+        if (singleCount % 2 != 0) {
+            line = line + "*";
+        }
+        return line;
+    }
+
+    private static int countNonOverlapping(String line, String token) {
+        int count = 0;
+        int idx = 0;
+        while (idx != -1) {
+            idx = line.indexOf(token, idx);
+            if (idx != -1) {
+                count++;
+                idx += token.length();
+            }
+        }
+        return count;
+    }
+
+    private static int countSingleAsterisks(String line) {
+        int count = 0;
+        int i = 0;
+        while (i < line.length()) {
+            char ch = line.charAt(i);
+            if (ch == '*') {
+                if (i + 1 < line.length() && line.charAt(i + 1) == '*') {
+                    i += 2;
+                    continue;
+                }
+                count++;
+            }
+            i++;
+        }
+        return count;
+    }
+
+    private static int findClosingParen(String input, int start) {
+        int depth = 0;
+        int i = start;
+        while (i < input.length()) {
+            char ch = input.charAt(i);
+            if (ch == '\\' && i + 1 < input.length() && input.charAt(i + 1) == ')') {
+                i += 2;
+                continue;
+            }
+            if (ch == '(') {
+                depth++;
+            } else if (ch == ')') {
+                if (depth == 0) {
+                    return i;
+                }
+                depth--;
+            }
+            i++;
+        }
+        return -1;
+    }
+
+    private static String escapeHtmlAttribute(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value.replace("&", "&amp;")
+                .replace("\"", "&quot;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;");
+    }
+
+    public static String sanitizeMarkdownHtml(String html) {
+        if (html == null || html.isEmpty()) {
+            return html;
+        }
+        String sanitized = html;
+        // Normalize <img> to self-closing form.
+        sanitized = sanitized.replaceAll("<img([^>]*?)>", "<img$1 />");
+        sanitized = sanitized.replaceAll("<img([^>]*?)\\s*/>", "<img$1 />");
+        // Close open <p> before block starts.
+        sanitized = sanitized.replaceAll("<p>(\\s*)(<(ul|ol|blockquote)\\b)", "</p>$1$2");
+        // Escape stray '<' that does not begin a known tag.
+        sanitized = escapeStrayLt(sanitized);
+        return sanitized;
+    }
+
+    private static String escapeStrayLt(String html) {
+        StringBuilder out = new StringBuilder(html.length());
+        int i = 0;
+        while (i < html.length()) {
+            char ch = html.charAt(i);
+            if (ch == '<') {
+                int end = html.indexOf('>', i + 1);
+                if (end == -1) {
+                    out.append("&lt;");
+                    i++;
+                    continue;
+                }
+                String tag = html.substring(i + 1, end).trim();
+                if (isKnownHtmlTag(tag)) {
+                    out.append(html, i, end + 1);
+                } else {
+                    out.append("&lt;");
+                }
+                i = end + 1;
+                continue;
+            }
+            out.append(ch);
+            i++;
+        }
+        return out.toString();
+    }
+
+    private static boolean isKnownHtmlTag(String tag) {
+        if (tag.isEmpty()) {
+            return false;
+        }
+        String lower = tag.toLowerCase();
+        if (lower.startsWith("/")) {
+            lower = lower.substring(1).trim();
+        }
+        if (lower.startsWith("img") || lower.startsWith("br")) {
+            return true;
+        }
+        int space = lower.indexOf(' ');
+        if (space != -1) {
+            lower = lower.substring(0, space);
+        }
+        return "a".equals(lower) || "b".equals(lower) || "i".equals(lower) || "u".equals(lower)
+                || "p".equals(lower) || "ul".equals(lower) || "ol".equals(lower) || "li".equals(lower)
+                || "blockquote".equals(lower) || "h1".equals(lower) || "h2".equals(lower)
+                || "h3".equals(lower) || "h4".equals(lower) || "h5".equals(lower) || "h6".equals(lower)
+                || "span".equals(lower) || "div".equals(lower) || "code".equals(lower)
+                || "strike".equals(lower);
     }
 
     private static String fixBrokenTags(String content, String regexpattern) {

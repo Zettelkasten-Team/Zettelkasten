@@ -243,6 +243,9 @@
                 </dependencies>
                 <configuration>
                     <useModulePath>false</useModulePath>
+                    <systemPropertyVariables>
+                        <java.awt.headless>true</java.awt.headless>
+                    </systemPropertyVariables>
 
                     <!-- Force only Vintage so Jupiter engine doesn't try to discover -->
                     <properties>

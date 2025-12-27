@@ -3324,11 +3324,20 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	public void updateSelectedEntryPane(int inputDisplayedEntry) {
 	    String dataEntryAsHtml = getDataEntryAsHtml(inputDisplayedEntry);
 	    String rawContent = data.getZettelContent(inputDisplayedEntry);
+	    boolean markdownEnabled = settings.getMarkdownActivated();
 
 	    if (HtmlValidator.isValidHTML(dataEntryAsHtml, inputDisplayedEntry, rawContent)) {
 	        displayHtmlContent(dataEntryAsHtml);
 	    } else {
+	    	String normalizedHtml = getDataEntryAsHtmlNormalized(inputDisplayedEntry);
+	    	if (HtmlValidator.isValidHTML(normalizedHtml, inputDisplayedEntry, rawContent)) {
+	    		displayHtmlContent(normalizedHtml);
+	    	} else {
+	    		String normalizedRaw = UbbNestingNormalizer.normalize(rawContent);
+	    		logValidationFailure(inputDisplayedEntry, markdownEnabled, rawContent, normalizedRaw, dataEntryAsHtml,
+	    				normalizedHtml);
 	        displayErrorContent(inputDisplayedEntry);
+	    	}
 	    }
 
 	    resetCaretPosition();
@@ -3341,6 +3350,34 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	        settings.getHighlightSegments() ? retrieveSelectedKeywordsFromList() : null,
 	        Constants.FRAME_MAIN
 	    );
+	}
+
+	private String getDataEntryAsHtmlNormalized(int inputDisplayedEntry) {
+	    return HtmlUbbUtil.getEntryAsHTMLNormalized(
+	        settings,
+	        data,
+	        data.bibtexObj,
+	        inputDisplayedEntry,
+	        settings.getHighlightSegments() ? retrieveSelectedKeywordsFromList() : null,
+	        Constants.FRAME_MAIN
+	    );
+	}
+
+	private void logValidationFailure(int entryNr, boolean markdownEnabled, String rawContent, String normalizedRaw,
+			String html, String normalizedHtml) {
+		Constants.zknlogger.log(Level.WARNING,
+				"Invalid HTML after render (entry={0}, markdown={1}). raw=\"{2}\" normalizedRaw=\"{3}\" html=\"{4}\" normalizedHtml=\"{5}\"",
+				new Object[] { entryNr, markdownEnabled, excerptForLog(rawContent), excerptForLog(normalizedRaw),
+						excerptForLog(html), excerptForLog(normalizedHtml) });
+	}
+
+	private static String excerptForLog(String value) {
+		if (value == null) {
+			return "";
+		}
+		String trimmed = value.replace('\n', ' ').replace('\r', ' ').trim();
+		int max = 160;
+		return (trimmed.length() <= max) ? trimmed : trimmed.substring(0, max) + "...";
 	}
 
 	private void displayHtmlContent(String htmlContent) {

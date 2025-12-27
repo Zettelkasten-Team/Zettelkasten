@@ -22,12 +22,18 @@ public final class UbbNestingNormalizer {
     private UbbNestingNormalizer() {}
 
     public static String normalize(String rawUbb) {
+        return normalizeWithStats(rawUbb).text;
+    }
+
+    public static NormalizeResult normalizeWithStats(String rawUbb) {
         if (rawUbb == null || rawUbb.isEmpty()) {
-            return rawUbb;
+            return new NormalizeResult(rawUbb, false, 0, 0);
         }
 
         StringBuilder out = new StringBuilder(rawUbb.length());
         Deque<Tag> stack = new ArrayDeque<>();
+        int droppedStrayCloses = 0;
+        int autoClosed = 0;
         int i = 0;
         while (i < rawUbb.length()) {
             char ch = rawUbb.charAt(i);
@@ -40,12 +46,16 @@ public final class UbbNestingNormalizer {
                     continue;
                 }
                 if (rawUbb.startsWith(cSpec.closeToken, i)) {
-                    handleClose(out, stack, "c");
+                    CloseStats stats = handleClose(out, stack, "c");
+                    droppedStrayCloses += stats.droppedStray;
+                    autoClosed += stats.autoClosed;
                     i += cSpec.closeToken.length();
                     continue;
                 }
                 if (rawUbb.startsWith(TAG_M_CLOSE, i)) {
-                    handleClose(out, stack, "m");
+                    CloseStats stats = handleClose(out, stack, "m");
+                    droppedStrayCloses += stats.droppedStray;
+                    autoClosed += stats.autoClosed;
                     i += TAG_M_CLOSE.length();
                     continue;
                 }
@@ -66,28 +76,36 @@ public final class UbbNestingNormalizer {
 
         while (!stack.isEmpty()) {
             out.append(closeTagFor(stack.pop()));
+            autoClosed++;
         }
 
-        return out.toString();
+        boolean changed = droppedStrayCloses > 0 || autoClosed > 0;
+        return new NormalizeResult(out.toString(), changed, droppedStrayCloses, autoClosed);
     }
 
-    private static void handleClose(StringBuilder out, Deque<Tag> stack, String type) {
+    private static CloseStats handleClose(StringBuilder out, Deque<Tag> stack, String type) {
+        int droppedStray = 0;
+        int autoClosed = 0;
         if (stack.isEmpty()) {
             logStrayClose(type);
-            return;
+            droppedStray++;
+            return new CloseStats(droppedStray, autoClosed);
         }
 
         if (!containsType(stack, type)) {
             logStrayClose(type);
-            return;
+            droppedStray++;
+            return new CloseStats(droppedStray, autoClosed);
         }
 
         while (!stack.isEmpty() && !stack.peek().type.equals(type)) {
             out.append(closeTagFor(stack.pop()));
+            autoClosed++;
         }
         if (!stack.isEmpty() && stack.peek().type.equals(type)) {
             out.append(closeTagFor(stack.pop()));
         }
+        return new CloseStats(droppedStray, autoClosed);
     }
 
     private static boolean containsType(Deque<Tag> stack, String type) {
@@ -128,6 +146,30 @@ public final class UbbNestingNormalizer {
         private TagSpec(String openToken, String closeToken) {
             this.openToken = openToken;
             this.closeToken = closeToken;
+        }
+    }
+
+    private static final class CloseStats {
+        private final int droppedStray;
+        private final int autoClosed;
+
+        private CloseStats(int droppedStray, int autoClosed) {
+            this.droppedStray = droppedStray;
+            this.autoClosed = autoClosed;
+        }
+    }
+
+    public static final class NormalizeResult {
+        public final String text;
+        public final boolean changed;
+        public final int droppedStrayCloses;
+        public final int autoClosed;
+
+        private NormalizeResult(String text, boolean changed, int droppedStrayCloses, int autoClosed) {
+            this.text = text;
+            this.changed = changed;
+            this.droppedStrayCloses = droppedStrayCloses;
+            this.autoClosed = autoClosed;
         }
     }
 }
