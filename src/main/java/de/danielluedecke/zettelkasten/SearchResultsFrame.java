@@ -38,6 +38,7 @@ import com.explodingpixels.macwidgets.BottomBar;
 import com.explodingpixels.macwidgets.BottomBarSize;
 import de.danielluedecke.zettelkasten.database.*;
 import de.danielluedecke.zettelkasten.mac.MacSourceList;
+import de.danielluedecke.zettelkasten.util.HtmlValidator;
 import de.danielluedecke.zettelkasten.util.Tools;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.classes.DateComparer;
@@ -1425,8 +1426,9 @@ private void clearDisplay() {
 		// retrieve the string array of the first entry
 		String disp = data.getData().getEntryAsHtml(nr,
 				(data.getSettings().getHighlightSegments()) ? getSelectedKeywordsFromList() : null, Constants.FRAME_SEARCH);
+		String rawContent = data.getData().getZettelContent(nr);
 		// in case parsing was ok, display the entry
-		if (Tools.isValidHTML(disp, nr)) {
+		if (HtmlValidator.isValidHTML(disp, nr, rawContent)) {
 			// Set entry information in the main textfield
 			jEditorPaneSearchEntry.setText(disp);
 		}

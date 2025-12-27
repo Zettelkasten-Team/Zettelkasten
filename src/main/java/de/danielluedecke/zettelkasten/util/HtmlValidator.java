@@ -26,6 +26,19 @@ public class HtmlValidator {
 	 *         false otherwise
 	 */
 	public static boolean isValidHTML(String content, final int zettelNummer) {
+		return isValidHTML(content, zettelNummer, null);
+	}
+
+	/**
+	 * Validates HTML and logs context for parser errors.
+	 *
+	 * @param content      the html-page which should be checked for correctly nested tags
+	 * @param zettelNummer the number of the entry that is checked for valid html-tags
+	 * @param rawContent   the raw entry content (UBB) for context logging
+	 * @return {@code true} when the content could be successfully parsed to HTML,
+	 *         false otherwise
+	 */
+	public static boolean isValidHTML(String content, final int zettelNummer, final String rawContent) {
 		final AtomicBoolean validHtml = new AtomicBoolean(true);
 
 		HTMLEditorKit.ParserCallback callback = new HTMLEditorKit.ParserCallback() {
@@ -34,8 +47,7 @@ public class HtmlValidator {
 				if (!errorMsg.toLowerCase().contains("body") && (errorMsg.toLowerCase().contains("unmatched")
 						|| errorMsg.toLowerCase().contains("missing"))) {
 					validHtml.set(false);
-					String errorMessage = String.format("Error when parsing the entry %d!%n%s%n", zettelNummer,
-							errorMsg);
+					String errorMessage = buildErrorMessage(zettelNummer, errorMsg, pos, rawContent, content);
 					Constants.zknlogger.log(Level.SEVERE, errorMessage);
 				}
 			}
@@ -52,6 +64,31 @@ public class HtmlValidator {
 		}
 
 		return validHtml.get();
+	}
+
+	private static String buildErrorMessage(int zettelNummer, String errorMsg, int pos, String rawContent,
+			String htmlContent) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("HTML parse error for entry ").append(zettelNummer).append(" at pos ").append(pos).append(". ")
+				.append(errorMsg).append(System.lineSeparator());
+		sb.append("Raw content excerpt: ").append(excerpt(rawContent, pos, 60)).append(System.lineSeparator());
+		sb.append("HTML excerpt: ").append(excerpt(htmlContent, pos, 60));
+		return sb.toString();
+	}
+
+	private static String excerpt(String content, int pos, int radius) {
+		if (content == null) {
+			return "<null>";
+		}
+		int length = content.length();
+		if (length == 0) {
+			return "<empty>";
+		}
+		int safePos = Math.max(0, Math.min(pos, length));
+		int start = Math.max(0, safePos - radius);
+		int end = Math.min(length, safePos + radius);
+		String snippet = content.substring(start, end);
+		return snippet.replace("\r", "\\r").replace("\n", "\\n");
 	}
 
 	/**

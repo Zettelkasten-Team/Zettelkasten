@@ -3323,8 +3323,9 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 	public void updateSelectedEntryPane(int inputDisplayedEntry) {
 	    String dataEntryAsHtml = getDataEntryAsHtml(inputDisplayedEntry);
+	    String rawContent = data.getZettelContent(inputDisplayedEntry);
 
-	    if (Tools.isValidHTML(dataEntryAsHtml, inputDisplayedEntry)) {
+	    if (HtmlValidator.isValidHTML(dataEntryAsHtml, inputDisplayedEntry, rawContent)) {
 	        displayHtmlContent(dataEntryAsHtml);
 	    } else {
 	        displayErrorContent(inputDisplayedEntry);
