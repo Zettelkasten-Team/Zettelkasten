@@ -55,6 +55,7 @@ public class HtmlUbbUtilListEmphasisNormalizationTest {
 
         String html = HtmlUbbUtil.getEntryAsHTMLSanitized(settings, data, bib, entryNr, null, Constants.FRAME_DESKTOP);
         assertFalse(html.contains("</a>\">"));
+        assertFalse(html.contains("</a>\""));
         assertTrue(HtmlValidator.isValidHTML(html, entryNr, content));
     }
 }
