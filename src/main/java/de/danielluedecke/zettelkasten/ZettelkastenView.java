@@ -3324,18 +3324,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	public void updateSelectedEntryPane(int inputDisplayedEntry) {
 	    String dataEntryAsHtml = getDataEntryAsHtml(inputDisplayedEntry);
 	    String rawContent = data.getZettelContent(inputDisplayedEntry);
-	    boolean markdownEnabled = settings.getMarkdownActivated();
+	    boolean markdownEnabled = settings != null && Boolean.TRUE.equals(settings.getMarkdownActivated());
 
 	    if (HtmlValidator.isValidHTML(dataEntryAsHtml, inputDisplayedEntry, rawContent)) {
 	        displayHtmlContent(dataEntryAsHtml);
 	    } else {
-	    	String normalizedHtml = getDataEntryAsHtmlNormalized(inputDisplayedEntry);
-	    	if (HtmlValidator.isValidHTML(normalizedHtml, inputDisplayedEntry, rawContent)) {
-	    		displayHtmlContent(normalizedHtml);
+	    	String sanitizedHtml = getDataEntryAsHtmlSanitized(inputDisplayedEntry);
+	    	if (HtmlValidator.isValidHTML(sanitizedHtml, inputDisplayedEntry, rawContent)) {
+	    		Constants.zknlogger.log(Level.INFO, "Auto-sanitized entry {0} before display.", inputDisplayedEntry);
+	    		displayHtmlContent(sanitizedHtml);
 	    	} else {
-	    		String normalizedRaw = UbbNestingNormalizer.normalize(rawContent);
-	    		logValidationFailure(inputDisplayedEntry, markdownEnabled, rawContent, normalizedRaw, dataEntryAsHtml,
-	    				normalizedHtml);
+	    		String sanitizedRaw = HtmlUbbUtil.sanitizeEntryContentForHtml(rawContent);
+	    		logValidationFailure(inputDisplayedEntry, markdownEnabled, rawContent, sanitizedRaw, dataEntryAsHtml,
+	    				sanitizedHtml);
 	        displayErrorContent(inputDisplayedEntry);
 	    	}
 	    }
@@ -3352,8 +3353,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	    );
 	}
 
-	private String getDataEntryAsHtmlNormalized(int inputDisplayedEntry) {
-	    return HtmlUbbUtil.getEntryAsHTMLNormalized(
+	private String getDataEntryAsHtmlSanitized(int inputDisplayedEntry) {
+	    return HtmlUbbUtil.getEntryAsHTMLSanitized(
 	        settings,
 	        data,
 	        data.bibtexObj,

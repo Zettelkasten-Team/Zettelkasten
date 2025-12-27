@@ -1015,7 +1015,7 @@ public class ExportToTexTask extends org.jdesktop.application.Task<Object, Void>
         // TODO XXX Hack: ">" should only be converted if Markdown is not enabled, otherwise, it will be
         // taken as a quotation by subsequent components. (fixes bug reproduced by
         // "testBugMarkdownZitatWirdNichtKorrektNachLatexExportiert")  
-        if (!settings.getMarkdownActivated()) {
+        if (settings == null || !Boolean.TRUE.equals(settings.getMarkdownActivated())) {
             dummy = dummy.replaceAll(Pattern.quote(">"), Matcher.quoteReplacement("\\rangle"));
         }
 

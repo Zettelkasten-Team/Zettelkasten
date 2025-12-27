@@ -2449,6 +2449,13 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	}
 
 	/**
+	 * Returns whether markdown formatting is enabled.
+	 */
+	private boolean isMarkdownActivated() {
+		return settings != null && Boolean.TRUE.equals(settings.getMarkdownActivated());
+	}
+
+	/**
 	 * Retrieves the text selection from the maintextfield and sourrounds it with
 	 * the related format-tags. In this case we have bold-formatting.
 	 */
@@ -2456,7 +2463,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	public void formatBold() {
 		// since we have multiple usage of the folliwing code, we simply
 		// put it in an own method
-		if (settings.getMarkdownActivated()) {
+		if (isMarkdownActivated()) {
 			surroundSelection(Constants.FORMAT_MD_BOLD_OPEN, Constants.FORMAT_MD_BOLD_CLOSE);
 		} else {
 			surroundSelection(Constants.FORMAT_BOLD_OPEN, Constants.FORMAT_BOLD_CLOSE);
@@ -2471,7 +2478,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	public void formatItalic() {
 		// since we have multiple usage of the folliwing code, we simply
 		// put it in an own method
-		if (settings.getMarkdownActivated()) {
+		if (isMarkdownActivated()) {
 			surroundSelection(Constants.FORMAT_MD_ITALIC_OPEN, Constants.FORMAT_MD_ITALIC_CLOSE);
 		} else {
 			surroundSelection(Constants.FORMAT_ITALIC_OPEN, Constants.FORMAT_ITALIC_CLOSE);
@@ -2497,7 +2504,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	public void formatStrikeThrough() {
 		// since we have multiple usage of the folliwing code, we simply
 		// put it in an own method
-		if (settings.getMarkdownActivated()) {
+		if (isMarkdownActivated()) {
 			surroundSelection(Constants.FORMAT_MD_STRIKE_OPEN, Constants.FORMAT_MD_STRIKE_CLOSE);
 		} else {
 			surroundSelection(Constants.FORMAT_STRIKE_OPEN, Constants.FORMAT_STRIKE_CLOSE);
@@ -2512,7 +2519,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	public void formatHeading1() {
 		// since we have multiple usage of the folliwing code, we simply
 		// put it in an own method
-		if (settings.getMarkdownActivated()) {
+		if (isMarkdownActivated()) {
 			surroundSelection(Constants.FORMAT_MD_H1_OPEN, Constants.FORMAT_MD_H1_CLOSE);
 		} else {
 			surroundSelection(Constants.FORMAT_H1_OPEN, Constants.FORMAT_H1_CLOSE);
@@ -2527,7 +2534,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	public void formatHeading2() {
 		// since we have multiple usage of the folliwing code, we simply
 		// put it in an own method
-		if (settings.getMarkdownActivated()) {
+		if (isMarkdownActivated()) {
 			surroundSelection(Constants.FORMAT_MD_H2_OPEN, Constants.FORMAT_MD_H2_CLOSE);
 		} else {
 			surroundSelection(Constants.FORMAT_H2_OPEN, Constants.FORMAT_H2_CLOSE);
@@ -2605,7 +2612,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	public void formatCite() {
 		// since we have multiple usage of the folliwing code, we simply
 		// put it in an own method
-		if (settings.getMarkdownActivated()) {
+		if (isMarkdownActivated()) {
 			surroundSelection(Constants.FORMAT_MD_QUOTE_OPEN, Constants.FORMAT_MD_QUOTE_CLOSE);
 		} else {
 			surroundSelection(Constants.FORMAT_QUOTE_OPEN, Constants.FORMAT_QUOTE_CLOSE);
@@ -2631,7 +2638,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 	public void formatCode() {
 		// since we have multiple usage of the folliwing code, we simply
 		// put it in an own method
-		if (settings.getMarkdownActivated()) {
+		if (isMarkdownActivated()) {
 			surroundSelection(Constants.FORMAT_MD_CODE_OPEN, Constants.FORMAT_MD_CODE_CLOSE);
 		} else {
 			surroundSelection(Constants.FORMAT_CODE_OPEN, Constants.FORMAT_CODE_CLOSE);
@@ -3506,7 +3513,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		// store open and close tags for images
 		String imgopen, imgclose;
 		// check whether markdown is used
-		if (settings.getMarkdownActivated()) {
+		if (isMarkdownActivated()) {
 			imgopen = Constants.FORMAT_MD_IMG_OPEN;
 			imgclose = Constants.FORMAT_MD_IMG_CLOSE;
 		} else {

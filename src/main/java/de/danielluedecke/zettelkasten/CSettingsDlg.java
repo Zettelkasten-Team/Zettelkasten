@@ -326,7 +326,7 @@ public class CSettingsDlg extends javax.swing.JDialog {
 		jCheckBoxCheckNightly.setSelected(settings.getAutoNightlyUpdate());
 		jCheckBoxUseXDGOpen.setSelected(settings.getUseXDGOpen());
 		jCheckBoxAutoCompleteTags.setSelected(settings.getAutoCompleteTags());
-		jCheckBoxUseMarkdown.setSelected(settings.getMarkdownActivated());
+		jCheckBoxUseMarkdown.setSelected(Boolean.TRUE.equals(settings.getMarkdownActivated()));
 		jCheckBoxShowTableBorder.setSelected(settings.getShowTableBorder());
 		jCheckBoxShowEntryHeadline.setSelected(settings.getShowEntryHeadline());
 		jCheckBoxFootnoteBraces.setSelected(settings.getFootnoteBraces());

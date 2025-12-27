@@ -63,6 +63,14 @@ public class HtmlValidator {
 			Constants.zknlogger.log(Level.SEVERE, "Error parsing HTML content", ex);
 		}
 
+		if (validHtml.get() && rawContent != null) {
+			UbbNestingValidator.Result rawResult = UbbNestingValidator.validate(rawContent);
+			if (!rawResult.valid) {
+				String errorMessage = buildRawErrorMessage(zettelNummer, rawResult, rawContent, content);
+				Constants.zknlogger.log(Level.SEVERE, errorMessage);
+			}
+		}
+
 		return validHtml.get();
 	}
 
@@ -83,6 +91,24 @@ public class HtmlValidator {
 		sb.append("Raw tag counts: ").append(rawTagCounts(rawExcerpt)).append(System.lineSeparator());
 		sb.append("HTML excerpt: ").append(htmlExcerpt).append(System.lineSeparator());
 		sb.append("HTML tag context: ").append(htmlTagContext(htmlContent, pos));
+		String crossingHint = ubbCrossingHint(rawExcerpt);
+		if (crossingHint != null) {
+			sb.append(System.lineSeparator()).append(crossingHint);
+		}
+		return sb.toString();
+	}
+
+	private static String buildRawErrorMessage(int zettelNummer, UbbNestingValidator.Result rawResult,
+			String rawContent, String htmlContent) {
+		int rawOffset = rawResult.rawPos;
+		String rawExcerpt = excerpt(rawContent, rawOffset, 60);
+		String htmlExcerpt = excerpt(htmlContent, rawOffset, 60);
+		StringBuilder sb = new StringBuilder();
+		sb.append("Raw UBB parse issue for entry ").append(zettelNummer).append(" at pos ")
+				.append(rawResult.rawPos).append(": ").append(rawResult.message).append(System.lineSeparator());
+		sb.append("Raw content excerpt: ").append(rawExcerpt).append(System.lineSeparator());
+		sb.append("Raw tag counts: ").append(rawTagCounts(rawExcerpt)).append(System.lineSeparator());
+		sb.append("HTML excerpt: ").append(htmlExcerpt);
 		String crossingHint = ubbCrossingHint(rawExcerpt);
 		if (crossingHint != null) {
 			sb.append(System.lineSeparator()).append(crossingHint);

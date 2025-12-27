@@ -41,8 +41,10 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -442,7 +444,8 @@ public class HtmlUbbUtil {
             // now copy the content of the entry to a dummy string. here we convert
             // the format codes into html-tags. the format codes are simplified tags
             // for the user to enable simple format editing
-            remarks = replaceUbbToHtml(remarks, settings.getMarkdownActivated(), false, false, false);
+            boolean markdownActivated = settings != null && Boolean.TRUE.equals(settings.getMarkdownActivated());
+            remarks = replaceUbbToHtml(remarks, markdownActivated, false, false, false);
             // autoconvert url's to hyperlinks
             remarks = convertHyperlinks(remarks);
             // if parameters in the string array highlight-terms have been passed, we assume that
@@ -551,16 +554,16 @@ public class HtmlUbbUtil {
             int entryNr,
             String[] segmentKeywords,
             int sourceFrame) {
-        return getEntryAsHTML(settings, data, bibtexObj, entryNr, segmentKeywords, sourceFrame, false);
+        return getEntryAsHTML(settings, data, bibtexObj, entryNr, segmentKeywords, sourceFrame, false, false);
     }
 
-    public static String getEntryAsHTMLNormalized(Settings settings,
+    public static String getEntryAsHTMLSanitized(Settings settings,
             Daten data,
             BibTeX bibtexObj,
             int entryNr,
             String[] segmentKeywords,
             int sourceFrame) {
-        return getEntryAsHTML(settings, data, bibtexObj, entryNr, segmentKeywords, sourceFrame, true);
+        return getEntryAsHTML(settings, data, bibtexObj, entryNr, segmentKeywords, sourceFrame, true, true);
     }
 
     private static String getEntryAsHTML(Settings settings,
@@ -569,7 +572,8 @@ public class HtmlUbbUtil {
             int entryNr,
             String[] segmentKeywords,
             int sourceFrame,
-            boolean applyNormalization) {
+            boolean applyNormalization,
+            boolean sanitizeRaw) {
         // create an empty string buffer. this buffer contains the html-string
         // which is being display in the main window's "entry textfield"
         StringBuilder retval = new StringBuilder("");
@@ -620,7 +624,8 @@ public class HtmlUbbUtil {
             // now copy the content of the entry to a dummy string. here we convert
             // the format codes into html-tags. the format codes are simplified tags
             // for the user to enable simple format editing
-            String dummy = convertUbbToHtmlInternal(settings, data, bibtexObj, content, sourceFrame, false, false, applyNormalization);
+            String dummy = convertUbbToHtmlInternal(settings, data, bibtexObj, content, sourceFrame, false, false,
+                    applyNormalization, sanitizeRaw);
             // after the conversion is done, append the content to the resulting return string
             retval.append(dummy);
         } else {
@@ -697,18 +702,53 @@ public class HtmlUbbUtil {
      * @return the converted string with link-tags around the url's
      */
     public static String convertHyperlinks(String dummy) {
+        if (dummy == null || dummy.isEmpty()) {
+            return dummy;
+        }
         // check whether we already found links
         if (-1 == dummy.indexOf("<a href=")) {
-            // this group also considered ( and ) as end of hyperlink, but
-            // Wikipedia links e.g. would not be converted correctly.
-            // String groupEndOfURL = "[^ \"\\]\\)\\(\\[\\|\\t\\n\\r<]";
-            // if no hyperlinks have been found yet, do autoconvert
-            String groupEndOfURL = "[^ \"\\[\\]\\|\\t\\n\\r<]";
-            dummy = dummy.replaceAll("([\\w]+?://" + groupEndOfURL + "*)", "<a href=\"$1\">$1</a>");
-            dummy = dummy.replaceAll("([^://])(www\\." + groupEndOfURL + "*)", "$1<a href=\"http://$2\">$2</a>");
-            dummy = dummy.replaceAll("(mailto:)(" + groupEndOfURL + "*)", "$1<a href=\"mailto:$2\">$2</a>");
+            if (dummy.indexOf('<') == -1) {
+                dummy = convertHyperlinksPlain(dummy);
+            } else {
+                dummy = convertHyperlinksOutsideTags(dummy);
+            }
         }
         return dummy;
+    }
+
+    private static String convertHyperlinksPlain(String dummy) {
+        // this group also considered ( and ) as end of hyperlink, but
+        // Wikipedia links e.g. would not be converted correctly.
+        // String groupEndOfURL = "[^ \"\\]\\)\\(\\[\\|\\t\\n\\r<]";
+        // if no hyperlinks have been found yet, do autoconvert
+        String groupEndOfURL = "[^ \"\\[\\]\\|\\t\\n\\r<]";
+        dummy = dummy.replaceAll("([\\w]+?://" + groupEndOfURL + "*)", "<a href=\"$1\">$1</a>");
+        dummy = dummy.replaceAll("([^://])(www\\." + groupEndOfURL + "*)", "$1<a href=\"http://$2\">$2</a>");
+        dummy = dummy.replaceAll("(mailto:)(" + groupEndOfURL + "*)", "$1<a href=\"mailto:$2\">$2</a>");
+        return dummy;
+    }
+
+    private static String convertHyperlinksOutsideTags(String input) {
+        StringBuilder out = new StringBuilder(input.length());
+        int i = 0;
+        while (i < input.length()) {
+            int lt = input.indexOf('<', i);
+            if (lt == -1) {
+                out.append(convertHyperlinksPlain(input.substring(i)));
+                break;
+            }
+            if (lt > i) {
+                out.append(convertHyperlinksPlain(input.substring(i, lt)));
+            }
+            int gt = input.indexOf('>', lt + 1);
+            if (gt == -1) {
+                out.append(input.substring(lt));
+                break;
+            }
+            out.append(input.substring(lt, gt + 1));
+            i = gt + 1;
+        }
+        return out.toString();
     }
 
     /**
@@ -898,16 +938,22 @@ public class HtmlUbbUtil {
      * @param createHTMLFootnotes
      * @return a converted string with html-tags instead of ubb-tags
      */
-    public static String convertUbbToHtml(Settings settings, Daten dataObj, BibTeX bibtexObj, String c, int sourceframe, boolean isExport, boolean createHTMLFootnotes) {
-        return convertUbbToHtmlInternal(settings, dataObj, bibtexObj, c, sourceframe, isExport, createHTMLFootnotes, false);
+    public static String convertUbbToHtml(Settings settings, Daten dataObj, BibTeX bibtexObj, String c, int sourceframe,
+            boolean isExport, boolean createHTMLFootnotes) {
+        return convertUbbToHtmlInternal(settings, dataObj, bibtexObj, c, sourceframe, isExport, createHTMLFootnotes,
+                false, false);
     }
 
     private static String convertUbbToHtmlInternal(Settings settings, Daten dataObj, BibTeX bibtexObj, String c,
-            int sourceframe, boolean isExport, boolean createHTMLFootnotes, boolean applyNormalization) {
+            int sourceframe, boolean isExport, boolean createHTMLFootnotes, boolean applyNormalization,
+            boolean sanitizeRaw) {
         String normalized = c;
+        if (sanitizeRaw) {
+            normalized = sanitizeEntryContentForHtml(normalized);
+        }
         if (applyNormalization && !isExport) {
             if (Constants.zknlogger.isLoggable(Level.FINE)) {
-                UbbNestingNormalizer.NormalizeResult result = UbbNestingNormalizer.normalizeWithStats(c);
+                UbbNestingNormalizer.NormalizeResult result = UbbNestingNormalizer.normalizeWithStats(normalized);
                 normalized = result.text;
                 if (result.changed) {
                     Constants.zknlogger.log(Level.FINE,
@@ -915,40 +961,53 @@ public class HtmlUbbUtil {
                             new Object[] { sourceframe, result.droppedStrayCloses, result.autoClosed });
                 }
             } else {
-                normalized = UbbNestingNormalizer.normalize(c);
+                normalized = UbbNestingNormalizer.normalize(normalized);
             }
         }
-        String dummy = replaceUbbToHtml(normalized, settings.getMarkdownActivated(), (Constants.FRAME_DESKTOP == sourceframe), isExport, applyNormalization);
-        // add title attributes to manual links
-        int pos = 0;
-        while (pos != -1) {
-            // find manual link tag
-            pos = dummy.indexOf("href=\"#z_", pos);
-            if (pos != -1) {
-                try {
-                    // find close
-                    int end = dummy.indexOf("\"", pos + 9);
-                    // get and convert number
-                    int znr = Integer.parseInt(dummy.substring(pos + 9, end));
-                    // retrieve title
-                    String title = dataObj.getZettelTitle(znr);
-                    // if we have title, add it
-                    if (!title.isEmpty()) {
-                        // check if title has quotes, and if so, remove them
-                        title = title.replace("\"", "").replace("'", "");
-                        title = title.trim();
-                        // insert alt text
-                        dummy = dummy.substring(0, end + 1) + " alt=\"" + title + "\"" + " title=\"" + title + "\"" + dummy.substring(end + 1);
+        boolean markdownActivated = settings != null && Boolean.TRUE.equals(settings.getMarkdownActivated());
+        String dummy = replaceUbbToHtml(normalized, markdownActivated,
+                (Constants.FRAME_DESKTOP == sourceframe), isExport, applyNormalization);
+        if (applyNormalization) {
+            dummy = sanitizeBrokenAnchorQuotes(dummy);
+            dummy = fixBrokenTags(dummy, "<img[^>]*>");
+            dummy = fixBrokenTags(dummy, "<a href=[^>]*>");
+            dummy = normalizeEmphasisNesting(dummy);
+            dummy = closeEmphasisBeforeListEnd(dummy);
+        }
+        if (dataObj != null) {
+            // add title attributes to manual links
+            int pos = 0;
+            while (pos != -1) {
+                // find manual link tag
+                pos = dummy.indexOf("href=\"#z_", pos);
+                if (pos != -1) {
+                    try {
+                        // find close
+                        int end = dummy.indexOf("\"", pos + 9);
+                        // get and convert number
+                        int znr = Integer.parseInt(dummy.substring(pos + 9, end));
+                        // retrieve title
+                        String title = dataObj.getZettelTitle(znr);
+                        // if we have title, add it
+                        if (!title.isEmpty()) {
+                            // check if title has quotes, and if so, remove them
+                            title = title.replace("\"", "").replace("'", "");
+                            title = title.trim();
+                            // insert alt text
+                            dummy = dummy.substring(0, end + 1) + " alt=\"" + title + "\"" + " title=\"" + title + "\"" + dummy.substring(end + 1);
+                        }
+                        // increase pos counter
+                        pos = end + 10;
+                    } catch (NumberFormatException ex) {
+                        pos = pos + 10;
                     }
-                    // increase pos counter
-                    pos = end + 10;
-                } catch (NumberFormatException ex) {
-                    pos = pos + 10;
                 }
             }
         }
         // convert footnotes
-        dummy = convertFootnotes(dataObj, bibtexObj, settings, dummy, false, true);
+        if (dataObj != null && settings != null) {
+            dummy = convertFootnotes(dataObj, bibtexObj, settings, dummy, false, true);
+        }
         // convert movie-tags
         // dummy = dummy.replaceAll("\\[mov ([^\\[]*)\\]", "<a href=\"#mov$1\">Film</a>");
         // highlight text segemtns
@@ -959,11 +1018,15 @@ public class HtmlUbbUtil {
         // be recognized as URL (that methods searches for xxxx://).
         dummy = convertHyperlinks(dummy);
         // convert images, including resizing images
-        dummy = convertImages(dataObj, settings, dummy, isExport);
+        if (dataObj != null && settings != null) {
+            dummy = convertImages(dataObj, settings, dummy, isExport);
+        }
         // convert possible table tags to html
         dummy = convertTablesToHTML(dummy);
         // convert possible form tags to html
-        dummy = convertForms(settings, dataObj, dummy, Constants.EXP_TYPE_HTML, false, isExport);
+        if (dataObj != null && settings != null) {
+            dummy = convertForms(settings, dataObj, dummy, Constants.EXP_TYPE_HTML, false, isExport);
+        }
         // if parameters in the string array highlight-terms have been passed, we assume that
         // these terms should be highlighted... but don't highlight search terms on desktop!
         // desktop has its own live search function...
@@ -978,7 +1041,7 @@ public class HtmlUbbUtil {
         // when we export data to HTML-format, we can create tooltips for the footnotes...
         if (isExport && createHTMLFootnotes) {
             // create tooltips for the footnotes.
-            pos = 0;
+            int pos = 0;
             while (pos != -1) {
                 // search for link-tag which has a footnote-ankh
                 pos = dummy.indexOf(Constants.footnoteHtmlTag, pos);
@@ -1627,6 +1690,49 @@ public class HtmlUbbUtil {
                 .replace(">", "&gt;");
     }
 
+    /**
+     * Sanitizes entry content before HTML rendering. This removes or neutralizes
+     * known sources of invalid nesting, especially [c] and [m ...] formatting.
+     */
+    public static String sanitizeEntryContentForHtml(String raw) {
+        if (raw == null || raw.isEmpty()) {
+            return raw;
+        }
+        String sanitized = Tools.cleanHTML(raw);
+        sanitized = neutralizeMarkdownImages(sanitized);
+        sanitized = escapeStrayLt(sanitized);
+        return sanitized;
+    }
+
+    private static String neutralizeMarkdownImages(String input) {
+        StringBuilder out = new StringBuilder(input.length());
+        int i = 0;
+        while (i < input.length()) {
+            if (input.startsWith("![", i)) {
+                int altEnd = input.indexOf("](", i + 2);
+                if (altEnd != -1) {
+                    int urlStart = altEnd + 2;
+                    int urlEnd = findClosingParen(input, urlStart);
+                    if (urlEnd != -1) {
+                        String alt = input.substring(i + 2, altEnd);
+                        String url = input.substring(urlStart, urlEnd);
+                        out.append("[Image: ").append(alt).append("] ")
+                                .append(neutralizeUrlUnderscores(url));
+                        i = urlEnd + 1;
+                        continue;
+                    }
+                }
+            }
+            out.append(input.charAt(i));
+            i++;
+        }
+        return out.toString();
+    }
+
+    private static String neutralizeUrlUnderscores(String url) {
+        return url.replace("_", "&#95;");
+    }
+
     public static String sanitizeMarkdownHtml(String html) {
         if (html == null || html.isEmpty()) {
             return html;
@@ -1727,6 +1833,156 @@ public class HtmlUbbUtil {
         } catch (PatternSyntaxException e) {
         }
         return content;
+    }
+
+    private static String closeEmphasisBeforeListEnd(String html) {
+        if (html == null || html.isEmpty()) {
+            return html;
+        }
+        StringBuilder out = new StringBuilder(html.length());
+        int openB = 0;
+        int openI = 0;
+        int i = 0;
+        while (i < html.length()) {
+            int lt = html.indexOf('<', i);
+            if (lt == -1) {
+                out.append(html.substring(i));
+                break;
+            }
+            if (lt > i) {
+                out.append(html.substring(i, lt));
+            }
+            int gt = html.indexOf('>', lt + 1);
+            if (gt == -1) {
+                out.append(html.substring(lt));
+                break;
+            }
+            String tag = html.substring(lt, gt + 1);
+            String name = extractTagName(tag);
+            boolean closing = tag.startsWith("</");
+
+            if ("b".equals(name)) {
+                if (closing) {
+                    if (openB > 0) {
+                        openB--;
+                        out.append(tag);
+                    }
+                } else {
+                    openB++;
+                    out.append(tag);
+                }
+            } else if ("i".equals(name)) {
+                if (closing) {
+                    if (openI > 0) {
+                        openI--;
+                        out.append(tag);
+                    }
+                } else {
+                    openI++;
+                    out.append(tag);
+                }
+            } else if ("li".equals(name) && closing) {
+                while (openI > 0) {
+                    out.append("</i>");
+                    openI--;
+                }
+                while (openB > 0) {
+                    out.append("</b>");
+                    openB--;
+                }
+                out.append(tag);
+            } else {
+                out.append(tag);
+            }
+            i = gt + 1;
+        }
+        return out.toString();
+    }
+
+    private static String normalizeEmphasisNesting(String html) {
+        if (html == null || html.isEmpty()) {
+            return html;
+        }
+        StringBuilder out = new StringBuilder(html.length());
+        Deque<String> stack = new ArrayDeque<>();
+        int i = 0;
+        while (i < html.length()) {
+            int lt = html.indexOf('<', i);
+            if (lt == -1) {
+                out.append(html.substring(i));
+                break;
+            }
+            if (lt > i) {
+                out.append(html.substring(i, lt));
+            }
+            int gt = html.indexOf('>', lt + 1);
+            if (gt == -1) {
+                out.append(html.substring(lt));
+                break;
+            }
+            String tag = html.substring(lt, gt + 1);
+            String name = extractTagName(tag);
+            boolean closing = tag.startsWith("</");
+
+            if ("b".equals(name) || "i".equals(name)) {
+                if (!closing) {
+                    if (!stack.isEmpty() && stack.peek().equals(name)) {
+                        // collapse duplicate open
+                    } else {
+                        stack.push(name);
+                        out.append(tag);
+                    }
+                } else {
+                    if (stack.isEmpty()) {
+                        // drop stray close
+                    } else if (stack.peek().equals(name)) {
+                        stack.pop();
+                        out.append(tag);
+                    } else if (stack.contains(name)) {
+                        // close intervening tags first to restore nesting
+                        while (!stack.isEmpty() && !stack.peek().equals(name)) {
+                            out.append("</").append(stack.pop()).append(">");
+                        }
+                        if (!stack.isEmpty() && stack.peek().equals(name)) {
+                            stack.pop();
+                            out.append(tag);
+                        }
+                    } else {
+                        // drop stray close
+                    }
+                }
+            } else {
+                out.append(tag);
+            }
+            i = gt + 1;
+        }
+        return out.toString();
+    }
+
+    private static String sanitizeBrokenAnchorQuotes(String html) {
+        if (html == null || html.isEmpty()) {
+            return html;
+        }
+        return html.replace("</a>\">", "\">").replace("</a>\"", "\"");
+    }
+
+    private static String extractTagName(String tag) {
+        if (tag == null || tag.length() < 3 || tag.charAt(0) != '<') {
+            return null;
+        }
+        int start = tag.startsWith("</") ? 2 : 1;
+        int end = start;
+        while (end < tag.length()) {
+            char ch = tag.charAt(end);
+            if (ch == '>' || Character.isWhitespace(ch) || ch == '/') {
+                break;
+            }
+            end++;
+        }
+        if (end <= start) {
+            return null;
+        }
+        return tag.substring(start, end).toLowerCase();
     }
     
     
@@ -2271,7 +2527,8 @@ public class HtmlUbbUtil {
         // if we have a windows operating system, we have to add an additonal
         // separator char, so the link to the image starts with "file:///" instead of only "file://"
         // if (IS_WINDOWS) imgpath = File.separatorChar+imgpath;
-        String dummy = (settings.getMarkdownActivated() ? Tools.convertMarkDown2UBB(c) : c);
+        boolean markdownActivated = settings != null && Boolean.TRUE.equals(settings.getMarkdownActivated());
+        String dummy = (markdownActivated ? Tools.convertMarkDown2UBB(c) : c);
         // new line
         dummy = dummy.replace("[br]", System.lineSeparator());
         // italic formatting: [k] becomes <i>

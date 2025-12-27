@@ -1435,13 +1435,15 @@ private void clearDisplay() {
 		}
 		// else show error message box to user and tell him what to do
 		else {
-			String normalizedDisp = getEntryAsHtmlNormalized(nr);
-			if (HtmlValidator.isValidHTML(normalizedDisp, nr, rawContent)) {
-				jEditorPaneSearchEntry.setText(normalizedDisp);
+			String sanitizedDisp = getEntryAsHtmlSanitized(nr);
+			if (HtmlValidator.isValidHTML(sanitizedDisp, nr, rawContent)) {
+				Constants.zknlogger.log(Level.INFO, "Auto-sanitized entry {0} before display.", nr);
+				jEditorPaneSearchEntry.setText(sanitizedDisp);
 			} else {
-				String normalizedRaw = UbbNestingNormalizer.normalize(rawContent);
-				logValidationFailure(nr, data.getSettings().getMarkdownActivated(), rawContent, normalizedRaw, disp,
-						normalizedDisp);
+				String sanitizedRaw = HtmlUbbUtil.sanitizeEntryContentForHtml(rawContent);
+				boolean markdownEnabled = data != null && data.getSettings() != null
+						&& Boolean.TRUE.equals(data.getSettings().getMarkdownActivated());
+				logValidationFailure(nr, markdownEnabled, rawContent, sanitizedRaw, disp, sanitizedDisp);
 				showInvalidHtmlContent(nr);
 			}
 		}
@@ -1449,8 +1451,8 @@ private void clearDisplay() {
 		jEditorPaneSearchEntry.setCaretPosition(0);
 	}
 
-	private String getEntryAsHtmlNormalized(int nr) {
-		return HtmlUbbUtil.getEntryAsHTMLNormalized(
+	private String getEntryAsHtmlSanitized(int nr) {
+		return HtmlUbbUtil.getEntryAsHTMLSanitized(
 				data.getSettings(),
 				data.getData(),
 				data.getData().bibtexObj,
