@@ -881,7 +881,9 @@ public class HtmlUbbUtil {
      */
     public static String convertUbbToHtml(Settings settings, Daten dataObj, BibTeX bibtexObj, String c, int sourceframe, boolean isExport, boolean createHTMLFootnotes) {
         // create new string
-        String dummy = replaceUbbToHtml(c, settings.getMarkdownActivated(), (Constants.FRAME_DESKTOP == sourceframe), isExport);
+        // TODO: consider preference toggle for auto-repairing formatting tags on display.
+        String normalized = isExport ? c : UbbNestingNormalizer.normalize(c);
+        String dummy = replaceUbbToHtml(normalized, settings.getMarkdownActivated(), (Constants.FRAME_DESKTOP == sourceframe), isExport);
         // add title attributes to manual links
         int pos = 0;
         while (pos != -1) {

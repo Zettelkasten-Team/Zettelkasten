@@ -68,11 +68,25 @@ public class HtmlValidator {
 
 	private static String buildErrorMessage(int zettelNummer, String errorMsg, int pos, String rawContent,
 			String htmlContent) {
+		UbbNestingValidator.Result rawResult = rawContent != null ? UbbNestingValidator.validate(rawContent) : null;
+		int rawOffset = rawResult != null && !rawResult.valid ? rawResult.rawPos : pos;
+		String rawExcerpt = excerpt(rawContent, rawOffset, 60);
+		String htmlExcerpt = excerpt(htmlContent, pos, 60);
 		StringBuilder sb = new StringBuilder();
 		sb.append("HTML parse error for entry ").append(zettelNummer).append(" at pos ").append(pos).append(". ")
 				.append(errorMsg).append(System.lineSeparator());
-		sb.append("Raw content excerpt: ").append(excerpt(rawContent, pos, 60)).append(System.lineSeparator());
-		sb.append("HTML excerpt: ").append(excerpt(htmlContent, pos, 60));
+		if (rawResult != null && !rawResult.valid) {
+			sb.append("Raw UBB parse issue at pos ").append(rawResult.rawPos).append(": ")
+					.append(rawResult.message).append(System.lineSeparator());
+		}
+		sb.append("Raw content excerpt: ").append(rawExcerpt).append(System.lineSeparator());
+		sb.append("Raw tag counts: ").append(rawTagCounts(rawExcerpt)).append(System.lineSeparator());
+		sb.append("HTML excerpt: ").append(htmlExcerpt).append(System.lineSeparator());
+		sb.append("HTML tag context: ").append(htmlTagContext(htmlContent, pos));
+		String crossingHint = ubbCrossingHint(rawExcerpt);
+		if (crossingHint != null) {
+			sb.append(System.lineSeparator()).append(crossingHint);
+		}
 		return sb.toString();
 	}
 
@@ -90,6 +104,66 @@ public class HtmlValidator {
 		String snippet = content.substring(start, end);
 		return snippet.replace("\r", "\\r").replace("\n", "\\n");
 	}
+
+	private static String rawTagCounts(String rawExcerpt) {
+		if (rawExcerpt == null || rawExcerpt.isEmpty()) {
+			return "<empty>";
+		}
+		return " [c]=" + countWithSpan(rawExcerpt, "[c]")
+				+ " [/c]=" + countWithSpan(rawExcerpt, "[/c]")
+				+ " [m]= " + countWithSpan(rawExcerpt, "[m ")
+				+ " [/m]=" + countWithSpan(rawExcerpt, "[/m]");
+	}
+
+	private static String countWithSpan(String text, String token) {
+		int count = 0;
+		int first = -1;
+		int last = -1;
+		int idx = text.indexOf(token);
+		while (idx != -1) {
+			if (first == -1) {
+				first = idx;
+			}
+			last = idx;
+			count++;
+			idx = text.indexOf(token, idx + token.length());
+		}
+		if (count == 0) {
+			return "0";
+		}
+		return count + " (first=" + first + ", last=" + last + ")";
+	}
+
+	private static String htmlTagContext(String html, int pos) {
+		if (html == null || html.isEmpty()) {
+			return "<empty>";
+		}
+		int safePos = Math.max(0, Math.min(pos, html.length()));
+		int prevStart = html.lastIndexOf('<', safePos);
+		int prevEnd = prevStart != -1 ? html.indexOf('>', prevStart + 1) : -1;
+		String prevTag = (prevStart != -1 && prevEnd != -1) ? html.substring(prevStart, prevEnd + 1) : "<none>";
+
+		int nextStart = html.indexOf('<', safePos);
+		int nextEnd = nextStart != -1 ? html.indexOf('>', nextStart + 1) : -1;
+		String nextTag = (nextStart != -1 && nextEnd != -1) ? html.substring(nextStart, nextEnd + 1) : "<none>";
+
+		return "prev=" + prevTag + ", next=" + nextTag;
+	}
+
+	private static String ubbCrossingHint(String rawExcerpt) {
+		if (rawExcerpt == null || rawExcerpt.isEmpty()) {
+			return null;
+		}
+		int openC = rawExcerpt.indexOf("[c]");
+		int openM = rawExcerpt.indexOf("[m ");
+		int closeC = rawExcerpt.indexOf("[/c]");
+		int closeM = rawExcerpt.indexOf("[/m]");
+		if (openC != -1 && openM != -1 && closeC != -1 && closeM != -1 && closeC < closeM) {
+			return "Likely UBB crossing: [c] closes before [/m] in excerpt.";
+		}
+		return null;
+	}
+
 
 	/**
 	 * Checks if the HTML content is well-formed.
