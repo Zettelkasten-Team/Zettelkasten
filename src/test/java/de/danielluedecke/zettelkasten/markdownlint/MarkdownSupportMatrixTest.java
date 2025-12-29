@@ -27,6 +27,14 @@ public class MarkdownSupportMatrixTest {
         }
 
         String actual = new String(Files.readAllBytes(doc), StandardCharsets.UTF_8);
-        assertEquals("docs/markdown-support.md is out of date. Regenerate it.", expected, actual);
+        assertEquals("docs/markdown-support.md is out of date. Regenerate it.",
+                normalize(expected),
+                normalize(actual));
+    }
+
+    private static String normalize(String value) {
+        String normalized = value.replace("\r\n", "\n").replace("\r", "\n");
+        normalized = normalized.replaceAll("\n+$", "");
+        return normalized + "\n";
     }
 }
