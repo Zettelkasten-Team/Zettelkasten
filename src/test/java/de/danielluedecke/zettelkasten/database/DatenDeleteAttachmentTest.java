@@ -1,6 +1,5 @@
 package de.danielluedecke.zettelkasten.database;
 
-import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.settings.Settings;
 import org.jdom2.Element;
 import org.testng.Assert;
@@ -19,13 +18,12 @@ public class DatenDeleteAttachmentTest {
     @BeforeMethod
     public void setUp() {
         // Mock the required dependencies
-        ZettelkastenView view = Mockito.mock(ZettelkastenView.class);
         Settings settings = Mockito.mock(Settings.class);
         Synonyms synonyms = Mockito.mock(Synonyms.class);
         BibTeX bibTeX = Mockito.mock(BibTeX.class);
 
         // Initialize Daten with mocks
-        daten = new Daten(view, settings, synonyms, bibTeX);
+        daten = new Daten(DatenUiCallbacks.NO_OP, settings, synonyms, bibTeX);
         entryNumber = 1;
 
         // Set up multiple duplicate attachments using addAttachments

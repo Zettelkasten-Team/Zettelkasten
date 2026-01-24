@@ -32,9 +32,7 @@
  */
 package de.danielluedecke.zettelkasten.database;
 
-import de.danielluedecke.zettelkasten.CMakeFormImage;
 import de.danielluedecke.zettelkasten.EntryID;
-import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.data.History;
 import de.danielluedecke.zettelkasten.settings.Settings;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
@@ -49,7 +47,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
-import javax.swing.JOptionPane;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.IllegalAddException;
@@ -80,9 +77,9 @@ public class Daten {
 	public static final String backwardCompatibleVersion = "3.4";
 
 	/**
-	 * Reference to the main frame.
+	 * UI callbacks for integration points that live outside the data model.
 	 */
-	public final ZettelkastenView view;
+	private final DatenUiCallbacks uiCallbacks;
 
 	/**
 	 * This array stores all watched entries in the order the user "surfed" through
@@ -380,11 +377,11 @@ public class Daten {
 	 * @param syn
 	 * @param bib
 	 */
-	public Daten(ZettelkastenView view, Settings s, Synonyms syn, BibTeX bib) {
+	public Daten(DatenUiCallbacks uiCallbacks, Settings s, Synonyms syn, BibTeX bib) {
 		// Initiate the JDOM files and all other data, thus
 		// creating an empty "Zettelkasten".
-		this.view = view;
-		this.history = new History(); // View-Referenz übergeben
+		this.uiCallbacks = (uiCallbacks == null) ? DatenUiCallbacks.NO_OP : uiCallbacks;
+		this.history = new History();
 		this.settings = s;
 		this.synonymsObj = syn;
 		this.bibtexObj = bib;
@@ -396,8 +393,8 @@ public class Daten {
 	 * Simple constructor for tests.
 	 */
 	public Daten(Document zettelkastenDocument) {
-		view = null;
-		this.history = new History(); // View-Referenz übergeben
+		uiCallbacks = DatenUiCallbacks.NO_OP;
+		this.history = new History();
 		settings = null;
 		synonymsObj = null;
 		bibtexObj = null;
@@ -415,10 +412,7 @@ public class Daten {
 	public final void reset() {
 		// reset all global variables
 		modified = false;
-		// zknframe can be null in tests.
-		if (view != null) {
-			view.resetBackupNecessary();
-		}
+		uiCallbacks.resetBackupNecessary();
 		zknFile = null;
 		authorFile = null;
 		keywordFile = null;
@@ -618,7 +612,7 @@ public class Daten {
 	 */
 	public void setMetaModified(boolean m) {
 		metamodified = m;
-		view.setBackupNecessary();
+		uiCallbacks.setBackupNecessary();
 	}
 
 	/**
@@ -637,9 +631,7 @@ public class Daten {
 	 */
 	public void setModified(boolean m) {
 		modified = m;
-		if (view != null) {
-			view.setBackupNecessary();
-		}
+		uiCallbacks.setBackupNecessary();
 	}
 
 	/**
@@ -1589,13 +1581,7 @@ public class Daten {
 				int synpos = synonymsObj.findSynonym(oldkeyword, true);
 				// if we found a synonym, ask the user whether it also should be replaced
 				if (synpos != -1) {
-					// create a JOptionPane with yes/no/cancel options
-					int option = JOptionPane.showConfirmDialog(view.getFrame(),
-							view.getResourceMap().getString("replaceKeywordsInSynonymsMsg", oldkeyword, kw),
-							view.getResourceMap().getString("replaceKeywordsInSynonymsTitle"),
-							JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
-					// when the user applied to yes, we also change the synonym
-					if (JOptionPane.YES_OPTION == option) {
+					if (uiCallbacks.confirmReplaceKeywordInSynonyms(oldkeyword, kw)) {
 						// get the synonymline
 						String[] synline = synonymsObj.getSynonymLine(synpos, true);
 						// go through all synonyms...
@@ -5031,9 +5017,7 @@ public class Daten {
     }
     
     public void displayHistory(int[] history, int historyCount) {
-        if (view != null) {
-            view.displayHistory(history, historyCount);
-        }
+        uiCallbacks.displayHistory(history, historyCount);
     }
     
 	/**
@@ -7096,12 +7080,9 @@ public class Daten {
 		// iterate all form-tags
 		for (String formimg : formtags) {
 			// create new instance for creating form images
-			CMakeFormImage newFormImage = new CMakeFormImage(this, settings, formimg);
-			// create form image
-			newFormImage.createFormImage();
-			// check for errors
-			if (!newFormImage.isSaveImgOk()) {
-				view.showErrorIcon();
+			boolean saved = uiCallbacks.createFormImage(this, formimg);
+			if (!saved) {
+				Constants.zknlogger.log(Level.WARNING, "Could not create form image for tag: {0}", formimg);
 			}
 		}
 	}

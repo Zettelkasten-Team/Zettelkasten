@@ -418,7 +418,8 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		if (settings != null) {
 			bookmarks = new Bookmarks(this, settings);
 			bibtex = new BibTeX(this, settings);
-			data = new Daten(this, settings, settings.getSynonyms(), bibtex);
+			DatenUiCallbacks uiCallbacks = createDatenUiCallbacks();
+			data = new Daten(uiCallbacks, settings, settings.getSynonyms(), bibtex);
 			display = new Display(this, history);
 		} else {
 			// Handle the case where settings is null
@@ -445,6 +446,45 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 		makeAutoBackupTimer = new Timer();
 		makeAutoBackupTimer.schedule(new AutoBackupTimer(), Constants.autobackupUpdateStart,
 				Constants.autobackupUpdateInterval);
+	}
+
+	private DatenUiCallbacks createDatenUiCallbacks() {
+		return new DatenUiCallbacks() {
+			@Override
+			public void resetBackupNecessary() {
+				ZettelkastenView.this.resetBackupNecessary();
+			}
+
+			@Override
+			public void setBackupNecessary() {
+				ZettelkastenView.this.setBackupNecessary();
+			}
+
+			@Override
+			public boolean confirmReplaceKeywordInSynonyms(String oldKeyword, String newKeyword) {
+				int option = JOptionPane.showConfirmDialog(getFrame(),
+						getResourceMap().getString("replaceKeywordsInSynonymsMsg", oldKeyword, newKeyword),
+						getResourceMap().getString("replaceKeywordsInSynonymsTitle"),
+						JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+				return JOptionPane.YES_OPTION == option;
+			}
+
+			@Override
+			public void displayHistory(int[] history, int historyCount) {
+				ZettelkastenView.this.displayHistory(history, historyCount);
+			}
+
+			@Override
+			public boolean createFormImage(Daten dataObj, String formTag) {
+				CMakeFormImage newFormImage = new CMakeFormImage(dataObj, settings, formTag);
+				newFormImage.createFormImage();
+				if (!newFormImage.isSaveImgOk()) {
+					ZettelkastenView.this.showErrorIcon();
+					return false;
+				}
+				return true;
+			}
+		};
 	}
         
         // Method to set the search requests

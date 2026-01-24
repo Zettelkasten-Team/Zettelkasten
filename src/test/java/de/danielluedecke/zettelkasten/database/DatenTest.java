@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -118,5 +119,45 @@ public class DatenTest {
 		Daten daten = new Daten(document);
 		assertTrue(daten.addSubEntryToEntryAfterSibling(new EntryID(2), new EntryID(3), new EntryID(1)));
 		assertEquals("1,3", daten.getSubEntriesCsv(2));
+	}
+
+	@Test
+	void testSetKeywordUsesCallbacksForSynonyms() {
+		Synonyms synonyms = new Synonyms();
+		synonyms.addSynonym(new String[] { "old", "old", "alias" });
+
+		final boolean[] confirmCalled = new boolean[1];
+		DatenUiCallbacks callbacks = new DatenUiCallbacks() {
+			@Override
+			public void resetBackupNecessary() {
+			}
+
+			@Override
+			public void setBackupNecessary() {
+			}
+
+			@Override
+			public boolean confirmReplaceKeywordInSynonyms(String oldKeyword, String newKeyword) {
+				confirmCalled[0] = true;
+				return true;
+			}
+
+			@Override
+			public void displayHistory(int[] history, int historyCount) {
+			}
+
+			@Override
+			public boolean createFormImage(Daten dataObj, String formTag) {
+				return true;
+			}
+		};
+
+		Daten daten = new Daten(callbacks, null, synonyms, null);
+		int keywordPos = daten.addKeyword("old", 1);
+		daten.setKeyword(keywordPos, "new");
+
+		assertTrue(confirmCalled[0]);
+		assertNotEquals(-1, synonyms.findSynonym("new", true));
+		assertEquals(-1, synonyms.findSynonym("old", true));
 	}
 }

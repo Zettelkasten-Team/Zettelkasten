@@ -4,6 +4,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import de.danielluedecke.zettelkasten.database.Daten;
+import de.danielluedecke.zettelkasten.database.DatenUiCallbacks;
 import de.danielluedecke.zettelkasten.database.TasksData;
 import de.danielluedecke.zettelkasten.settings.Settings;
 
@@ -30,7 +31,7 @@ public class ZettelkastenViewUpdateDisplayTest {
 
         settings = new Settings();
         tasksData = new TasksData();
-        data = new Daten(zettelkastenView, settings, null, null);
+        data = new Daten(DatenUiCallbacks.NO_OP, settings, null, null);
         SingleFrameApplication app = new SingleFrameApplication() {
             @Override
             protected void startup() {
