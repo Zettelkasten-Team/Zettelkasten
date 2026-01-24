@@ -84,6 +84,63 @@ Notes:
   refactors. Keep changes narrowly scoped to interoperability and decoupling.
 - When in doubt, preserve current behavior and limit changes to moving UI interactions to the edge.
 
+### PR-SCOPE: AC-02 — Constrain formatting (“Ahrens mode”) and reduce markup surface
+
+Intent:
+- Align with Ahrens’ emphasis on simplicity and low distraction: reduce degrees of freedom in note
+  formatting so the default workflow remains stable, uniform, and cognitively lightweight.
+- Treat formatting/rendering as a projection layer; discourage “authoring-by-styling” behaviors.
+
+Allowed changes:
+- Introduce a configuration flag (e.g., “Ahrens mode”) that constrains supported formatting to a small,
+  explicitly defined subset.
+- Implement the constraint primarily in parsing/normalization/projection layers (UBB/HTML/Markdown
+  conversion utilities), not via new UI controls.
+- Extend existing markdown/UBB normalization and lint/test fixtures to enforce the constrained subset.
+- Add/adjust tests (golden files or normalization tests) that prove restricted formatting is stable and
+  deterministic under the new mode.
+
+Forbidden changes:
+- No UI redesign or workflow redesign (no new editors, no new formatting toolbars, no rearranging menus).
+- No feature additions to formatting (no new markup syntax, no new styling capabilities).
+- No persistence format changes (stored note content format must remain backward compatible).
+- No bulk “reformat all notes” migrations. Existing notes must render acceptably; the constraint applies to
+  new edits and/or normalization outputs, not destructive rewrite of stored content.
+
+Acceptance criteria:
+- When Ahrens mode is enabled, only the allowed formatting subset is produced by normalization/projection
+  (unsupported constructs are either stripped, downgraded to plain text, or rendered in a neutral way).
+- When Ahrens mode is disabled, exist
+### PR-SCOPE: AC-02 — Automatic Markdown workspace export on Zettel save (Pandoc)
+
+Intent:
+- When a Zettel is saved/committed, automatically export that Zettel as a `.md` file into a workspace
+  directory for downstream Pandoc processing.
+
+Allowed changes:
+- Add a small headless service/utility that writes `z<ID>.md`.
+- Call the service from the existing “save/commit entry” path.
+- Use existing Pandoc invocation patterns already present in export code (`-f html -t <format>`).
+- Add tests (unit-level) that validate: (a) no crash when disabled/missing workspace, (b) correct filename
+  and that a write attempt occurs when enabled.
+
+Forbidden changes:
+- No UI layout/behaviour changes.
+- No persistence format changes.
+- No new settings dialog controls.
+- No redesign of editor/content model.
+
+Acceptance criteria:
+- Workspace dir resolution:
+  1. `ZETTELKASTEN_WORKSPACE_DIR` env var if present and non-empty
+  2. else `${user.home}/workspace` if it exists
+  3. else: do nothing; log `INFO` once per run.
+- Output filename: `z<entryNumber>.md`
+- Pandoc call: `pandoc -f html -t markdown -o <outfile> <tmpHtmlFile>`
+- If Pandoc missing or fails: do not interrupt save; log `WARNING`.
+- `mvn test` passes.
+
+
 ### PR-SCOPE: AC-06 — Decouple data/model from Swing UI
 
 Intent:

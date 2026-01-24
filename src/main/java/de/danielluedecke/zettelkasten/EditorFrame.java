@@ -58,6 +58,7 @@ import de.danielluedecke.zettelkasten.tasks.TaskProgressDialog;
 import de.danielluedecke.zettelkasten.util.ColorUtil;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
 import de.danielluedecke.zettelkasten.util.ListUtil;
+import de.danielluedecke.zettelkasten.util.MarkdownWorkspaceExporter;
 import de.danielluedecke.zettelkasten.util.NewEntryFrameUtil;
 import de.danielluedecke.zettelkasten.util.PlatformUtil;
 import java.awt.BorderLayout;
@@ -4164,6 +4165,9 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		data.setKeywordlistUpToDate(false);
 		data.setTitlelistUpToDate(false);
 		data.setAttachmentlistUpToDate(false);
+
+		int exportEntryNumber = isEditMode() ? entryNumber : data.getActivatedEntryNumber();
+		MarkdownWorkspaceExporter.exportOnSave(settings, data, exportEntryNumber);
 
 		return true;
 	}
