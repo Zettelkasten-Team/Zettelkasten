@@ -47,6 +47,43 @@ The agent MUST NOT:
 - Introduce UI changes unless explicitly allowed.
 - Change persistence formats unless explicitly allowed.
 
+### PR-SCOPE: AC-01 — Treat BibTeX as bridge, not literature manager (Ahrens-aligned)
+
+Intent:
+- Align with Ahrens’ “four tools” minimal setup: literature management remains external (e.g., Zotero),
+  while Zettelkasten focuses on permanent notes and stable linking.
+- Keep BibTeX support strictly as an interoperability layer (import/export, citation keys), not as a
+  parallel literature database or workflow hub.
+
+Allowed changes:
+- Refactor BibTeX-related code to reduce “manager-like” behavior and UI entanglement where it is not required
+  for interoperability.
+- Introduce small interfaces/callbacks to remove Swing dependencies from non-UI logic (e.g., replace direct
+  `JOptionPane` calls in BibTeX logic with injected notifier/decision hooks).
+- Clarify and tighten naming, documentation strings, and tooltips to frame BibTeX as import/export bridge.
+- Add/adjust tests to validate unchanged import/export behavior and that headless operation is possible
+  for BibTeX parsing/formatting paths.
+
+Forbidden changes:
+- No UI redesign or workflow redesign (no new dialogs, no new screens, no rearranging menus).
+- No feature additions (no new BibTeX fields, no new import sources, no new citation styles).
+- No persistence format changes (no schema changes to `.zkn3` or internal XML structure).
+- No behavioral changes to existing BibTeX import/export outputs except where needed to fix clear bugs
+  uncovered by tests; if such a change is necessary, it must be minimal, explicitly justified, and
+  covered by a regression test.
+
+Acceptance criteria:
+- BibTeX functionality remains available and produces the same outputs for existing test fixtures.
+- BibTeX parsing/formatting core can run without Swing classes on the classpath (UI interactions are
+  isolated behind callbacks/adapters).
+- No new “library management” concepts are introduced (no new entities or state that replicate external
+  reference manager responsibilities).
+
+Notes:
+- Prefer extraction of a small “BibTeXCore” (pure logic) or equivalent internal separation over broad
+  refactors. Keep changes narrowly scoped to interoperability and decoupling.
+- When in doubt, preserve current behavior and limit changes to moving UI interactions to the edge.
+
 ### PR-SCOPE: AC-06 — Decouple data/model from Swing UI
 
 Intent:

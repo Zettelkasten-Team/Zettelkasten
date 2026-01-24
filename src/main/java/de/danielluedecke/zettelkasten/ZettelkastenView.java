@@ -417,7 +417,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 
 		if (settings != null) {
 			bookmarks = new Bookmarks(this, settings);
-			bibtex = new BibTeX(this, settings);
+			bibtex = new BibTeX(createBibTeXUiCallbacks(), settings);
 			DatenUiCallbacks uiCallbacks = createDatenUiCallbacks();
 			data = new Daten(uiCallbacks, settings, settings.getSynonyms(), bibtex);
 			display = new Display(this, history);
@@ -483,6 +483,23 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 					return false;
 				}
 				return true;
+			}
+		};
+	}
+
+	private BibTeXUiCallbacks createBibTeXUiCallbacks() {
+		return new BibTeXUiCallbacks() {
+			@Override
+			public void setBackupNecessary() {
+				ZettelkastenView.this.setBackupNecessary();
+			}
+
+			@Override
+			public void notifyImportSummary(int newEntries, int updatedEntries) {
+				JOptionPane.showMessageDialog(getFrame(),
+						getResourceMap().getString("importMissingBibtexEntriesText", String.valueOf(newEntries),
+								String.valueOf(updatedEntries)),
+						"BibTeX-Import", JOptionPane.PLAIN_MESSAGE);
 			}
 		};
 	}

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import de.danielluedecke.zettelkasten.database.BibTeX;
+import de.danielluedecke.zettelkasten.database.BibTeXUiCallbacks;
 import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.DatenUiCallbacks;
 import de.danielluedecke.zettelkasten.database.Synonyms;
@@ -16,7 +17,7 @@ public class HtmlUbbUtilListEmphasisNormalizationTest {
 
     private static Daten createData(Settings settings) {
         Synonyms syn = new Synonyms();
-        BibTeX bib = new BibTeX(null, settings);
+        BibTeX bib = new BibTeX(BibTeXUiCallbacks.NO_OP, settings);
         return new Daten(DatenUiCallbacks.NO_OP, settings, syn, bib);
     }
 

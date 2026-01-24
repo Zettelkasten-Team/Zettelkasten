@@ -37,8 +37,6 @@ import bibtex.dom.BibtexEntry;
 import bibtex.dom.BibtexFile;
 import bibtex.parser.BibtexParser;
 import bibtex.parser.ParseException;
-import de.danielluedecke.zettelkasten.ZettelkastenApp;
-import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.settings.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
 import de.danielluedecke.zettelkasten.util.FileOperationsUtil;
@@ -61,10 +59,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
 
 /**
- * This class is responsible for managing bibtex files.<br>
+ * This class provides BibTeX import/export bridging for external literature tools.<br>
  * <br>
  * Usually, first of all a file must be opened ("attached") using the
  * {@link #openAttachedFile(java.lang.String)
@@ -75,9 +72,9 @@ import javax.swing.JOptionPane;
  * With this class, you can then retrieve single entries, retrieve bibtex
  * entries (i.e. author values) in a certain citation style etc. <br>
  * <br>
- * This class is mainly used for importing literature values from a bibtex file
- * (see <b>CImportBibTex</b>) or changing bibkey values from entry's author
- * values (see <b>CSetBibKey</b>).
+ * This class is mainly used for importing literature values from a BibTeX file
+ * (see <b>CImportBibTex</b>) or mapping BibTeX keys onto author values
+ * (see <b>CSetBibKey</b>).
  *
  * @author danielludecke
  */
@@ -149,17 +146,12 @@ public class BibTeX {
 	private boolean modified;
 	private final String editorToken = "°###°";
 	/**
-	 * Reference to the main frame.
+	 * UI callbacks to keep BibTeX logic headless.
 	 */
-	private final ZettelkastenView zknframe;
-	/**
-	 * get the strings for file descriptions from the resource map
-	 */
-	private final static org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application
-			.getInstance(ZettelkastenApp.class).getContext().getResourceMap(ZettelkastenView.class);
+	private final BibTeXUiCallbacks uiCallbacks;
 
-	public BibTeX(ZettelkastenView zkn, Settings s) {
-		zknframe = zkn;
+	public BibTeX(BibTeXUiCallbacks uiCallbacks, Settings s) {
+		this.uiCallbacks = uiCallbacks == null ? BibTeXUiCallbacks.NO_OP : uiCallbacks;
 		settingsObj = s;
 		modified = false;
 		initStyles();
@@ -174,7 +166,7 @@ public class BibTeX {
 	 */
 	public void setModified(boolean m) {
 		modified = m;
-		zknframe.setBackupNecessary();
+		uiCallbacks.setBackupNecessary();
 	}
 
 	/**
@@ -666,9 +658,7 @@ public class BibTeX {
 	private void tellUser(int newentries) {
 		// tell user
 		if (newentries > 0) {
-			JOptionPane.showMessageDialog(null,
-					resourceMap.getString("importMissingBibtexEntriesText", String.valueOf(newentries), 0 + ""),
-					"BibTeX-Import", JOptionPane.PLAIN_MESSAGE);
+			uiCallbacks.notifyImportSummary(newentries, 0);
 		}
 	}
 
