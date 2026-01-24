@@ -20,6 +20,7 @@
 ## Testing Guidelines
 - Unit and integration tests belong in `src/test/java` with names ending in `*Test` or `*TestNG`. Co-locate test data in `src/test/resources` and keep them deterministic (no network or filesystem writes outside `target/`).
 - Use JUnit 4/Vintage for legacy tests and Mockito/PowerMock for isolation; TestNG is available for data-driven cases. Verify new behavior with `mvn test` before opening a PR.
+- Known JVM font availability warning on some systems; does not affect tests.
 
 ## Commit & Pull Request Guidelines
 - Follow the existing conventional commits style seen in history (`feat(scope): ...`, `fix(build): ...`, `docs(readme): ...`), using a short imperative subject (<72 chars) and optional body for context.
