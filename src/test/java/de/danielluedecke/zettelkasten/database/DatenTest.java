@@ -160,4 +160,9 @@ public class DatenTest {
 		assertNotEquals(-1, synonyms.findSynonym("new", true));
 		assertEquals(-1, synonyms.findSynonym("old", true));
 	}
+
+	@Test
+	void testNoOpCreateFormImageReturnsFalse() {
+		assertFalse(DatenUiCallbacks.NO_OP.createFormImage(null, "form"));
+	}
 }

@@ -67,7 +67,7 @@ public interface DatenUiCallbacks {
 
 		@Override
 		public boolean createFormImage(Daten dataObj, String formTag) {
-			return true;
+			return false;
 		}
 	};
 }
