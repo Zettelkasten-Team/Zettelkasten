@@ -1,26 +1,42 @@
 {
-  description = "Zettelkasten (Swing) dev shell with JDK 8 + Maven + IntelliJ IDEA CE";
+  description = "Zettelkasten (Swing) dev shell with JDK 8 + Maven + IntelliJ IDEA CE + repomix-md";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, nixpkgs-unstable, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
+        pkgsUnstable = import nixpkgs-unstable { inherit system; };
 
-        # Pick a JDK 8 available in this nixpkgs; prefer Temurin, then Zulu, then jdk8 if present.
+        # --- JDK 8 selection (unchanged logic) ---
         jdk =
           if builtins.hasAttr "temurin-bin-8" pkgs then pkgs.temurin-bin-8
           else if builtins.hasAttr "zulu8" pkgs then pkgs.zulu8
           else if builtins.hasAttr "jdk8" pkgs then pkgs.jdk8
-          else throw "This nixpkgs does not provide a JDK 8; please switch to a channel that includes temurin-bin-8 or zulu8.";
+          else throw "No JDK 8 available in this nixpkgs.";
 
         maven = pkgs.maven;
 
-        # macOS launcher so IntelliJ inherits the devShell env
+        # --- repomix: disable failing test suite (macOS / sysctl issue) ---
+        repomix =
+          (pkgsUnstable.repomix or (throw "repomix not found in nixpkgs-unstable"))
+            .overrideAttrs (_: {
+              doCheck = false;
+            });
+
+        # --- repomix-md wrapper ---
+        repomixMd = pkgs.writeShellScriptBin "repomix-md" ''
+          set -euo pipefail
+          OUT="''${REPOMIX_MD_OUT:-zettelkasten-repomix-output.md}"
+          exec ${repomix}/bin/repomix --style markdown -o "$OUT" "$@"
+        '';
+
+        # --- macOS IntelliJ launcher ---
         ideaMacWrapper = pkgs.writeShellScriptBin "idea-community" ''
           set -euo pipefail
           for CAND in \
@@ -33,22 +49,21 @@
             FOUND=$(mdfind 'kMDItemCFBundleIdentifier == "com.jetbrains.intellij.ce"' | head -n1)
             if [ -n "$FOUND" ]; then exec "$FOUND/Contents/MacOS/idea" "$@"; fi
           fi
-          echo "IntelliJ IDEA CE app not found. Install it, then run: idea-community ."
+          echo "IntelliJ IDEA CE app not found."
           exit 1
         '';
       in {
         devShells.default = pkgs.mkShell {
           packages =
-            [ jdk maven ]
-            ++ (if pkgs.stdenv.isLinux then [ pkgs.jetbrains.idea-community ] else [ ideaMacWrapper ]);
+            [ jdk maven repomixMd ]
+            ++ (if pkgs.stdenv.isLinux
+                then [ pkgs.jetbrains.idea-community ]
+                else [ ideaMacWrapper ]);
 
           shellHook = ''
             export JAVA_HOME=${jdk}
             export MAVEN_OPTS="-Djava.awt.headless=true"
-            # If you want IntelliJ itself to run on JDK 8 (usually not needed), uncomment:
-            # export IDEA_JDK="$JAVA_HOME"
 
-            # Ensure Maven uses JDK 8 toolchain (required by enforcer [1.8,1.9))
             mkdir -p "$HOME/.m2"
             cat > "$HOME/.m2/toolchains.xml" <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -65,12 +80,12 @@
 </toolchains>
 EOF
 
-            echo "▶ Zettelkasten (Swing) dev shell"
-            echo "   Java:  $(java -version 2>&1 | head -n1)"
-            echo "   Maven: $(mvn -v | head -n1)"
+            echo "▶ Zettelkasten dev shell"
+            echo "   Java:    $(java -version 2>&1 | head -n1)"
+            echo "   Maven:  $(mvn -v | head -n1)"
+            echo "   Repomix: repomix-md → zettelkasten-repomix-output.md"
             echo
-            echo "IDEA:  idea-community .   (or: nix run .#idea-ce .)"
-            echo "Build: mvn -q -DskipTests package"
+            echo "IDEA:  idea-community ."
           '';
         };
 
@@ -80,6 +95,11 @@ EOF
             if pkgs.stdenv.isLinux
             then "${pkgs.jetbrains.idea-community}/bin/idea-community"
             else "${ideaMacWrapper}/bin/idea-community";
+        };
+
+        apps.repomix-md = {
+          type = "app";
+          program = "${repomixMd}/bin/repomix-md";
         };
       }
     );
