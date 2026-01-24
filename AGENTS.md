@@ -24,3 +24,48 @@
 ## Commit & Pull Request Guidelines
 - Follow the existing conventional commits style seen in history (`feat(scope): ...`, `fix(build): ...`, `docs(readme): ...`), using a short imperative subject (<72 chars) and optional body for context.
 - PRs should describe the change, risks, and how to verify; link issues, and include screenshots or GIFs for UI-facing work. Note which Maven commands you ran (at least `mvn test`) and call out any platform-specific steps (e.g., macOS bundling).
+
+## Change Scopes & Agent Protocol (Codex)
+
+This repository uses *explicit change scopes* for PR-sized work.
+Each PR MUST implement exactly one scope defined below.
+Codex agents MUST follow this protocol strictly.
+
+### Agent Protocol (One Prompt = One PR)
+
+For each PR, the agent MUST:
+
+1. Declare the active PR-SCOPE identifier.
+2. Change only files permitted by that scope.
+3. Avoid feature expansion beyond scope.
+4. Add or update tests where invariants are affected.
+5. Ensure `mvn test` passes.
+
+The agent MUST NOT:
+- Combine multiple scopes in one PR.
+- Introduce UI changes unless explicitly allowed.
+- Change persistence formats unless explicitly allowed.
+
+### PR-SCOPE: AC-06 — Decouple data/model from Swing UI
+
+Intent:
+- Align with Ahrens’ longevity principle: the Zettelkasten core must outlive UI technology.
+
+Allowed changes:
+- Remove Swing/UI references from data and model classes.
+- Introduce interfaces, events, or observer abstractions if needed.
+- Update tasks/services to use abstractions instead of UI types.
+
+Forbidden changes:
+- UI behavior or layout changes.
+- Persistence format changes.
+- Feature additions unrelated to decoupling.
+
+Acceptance criteria:
+- Core classes (e.g. `Daten`) can be instantiated without Swing.
+- Core operations can run headlessly in tests.
+- Existing UI continues to function unchanged.
+
+Notes:
+- Prefer minimal interfaces over event buses unless necessary.
+
