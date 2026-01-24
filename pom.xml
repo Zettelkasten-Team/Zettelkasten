@@ -5,7 +5,7 @@
 
     <groupId>de.danielluedecke</groupId>
     <artifactId>Zettelkasten</artifactId>
-    <version>3.2025.12</version>
+    <version>3.2026.01</version>
     <name>Zettelkasten</name>
 
     <properties>
@@ -241,18 +241,54 @@
                         <version>3.2.5</version>
                     </dependency>
                 </dependencies>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>junit-tests</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Force only Vintage so Jupiter engine doesn't try to discover -->
+                            <properties>
+                                <configurationParameters>
+                                    junit.platform.discovery.includeEngines=vintage
+                                </configurationParameters>
+                                <junit>false</junit>
+                            </properties>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>testng-tests</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <properties>
+                                <junit>false</junit>
+                            </properties>
+                        </configuration>
+                    </execution>
+                </executions>
                 <configuration>
                     <useModulePath>false</useModulePath>
                     <systemPropertyVariables>
                         <java.awt.headless>true</java.awt.headless>
                     </systemPropertyVariables>
-
-                    <!-- Force only Vintage so Jupiter engine doesn't try to discover -->
-                    <properties>
-                        <configurationParameters>
-                            junit.platform.discovery.includeEngines=vintage
-                        </configurationParameters>
-                    </properties>
 
                     <jdkToolchain>
                         <version>1.8</version>

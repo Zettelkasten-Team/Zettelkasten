@@ -69,3 +69,21 @@ Acceptance criteria:
 Notes:
 - Prefer minimal interfaces over event buses unless necessary.
 
+### PR-SCOPE: AC-07 — Test-runner hygiene (isolate JExample from TestNG JUnit-mode)
+
+Intent:
+- Stop TestNG from running JExample/JUnit tests in JUnit-mode.
+
+Allowed changes:
+- Maven Surefire/TestNG suite configuration changes.
+- Test-only changes required to keep JExample tests running under JUnit.
+
+Forbidden changes:
+- Production code changes.
+- UI behavior or layout changes.
+- Persistence format changes.
+
+Acceptance criteria:
+- JExample-dependent tests run via JUnit provider.
+- TestNG tests still run via TestNG provider.
+- `mvn test` completes without the JExample/TestNG JUnit-mode warning.
