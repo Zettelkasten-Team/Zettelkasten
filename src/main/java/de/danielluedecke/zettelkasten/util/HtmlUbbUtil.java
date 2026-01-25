@@ -1434,6 +1434,8 @@ public class HtmlUbbUtil {
         // if yes, replace markdown here
         if (isMarkdownActivated) {
             dummy = dummy.replace("[br]", "\n");
+            CodeSpanExtraction codeSpans = protectMarkdownCodeSpans(dummy);
+            dummy = codeSpans.text;
             if (applyMarkdownNormalization) {
                 dummy = normalizeMarkdownEmphasis(dummy);
             }
@@ -1470,6 +1472,7 @@ public class HtmlUbbUtil {
             dummy = replaceMarkdownLinks(dummy);
             // replace line breaks
             dummy = dummy.replace("\n", "[br]");
+            dummy = restoreMarkdownCodeSpans(dummy, codeSpans);
         } else {
             // if we don't have markdown, and thus no quotes-syntax with "> ...",
             // we need to replace non-tag-< and > here
@@ -1544,6 +1547,69 @@ public class HtmlUbbUtil {
         // remove all new lines after headlines
         dummy = dummy.replaceAll("\\</h([^\\<]*)\\>\\<br\\>", "</h$1>");
         return dummy;
+    }
+
+    private static CodeSpanExtraction protectMarkdownCodeSpans(String input) {
+        if (input == null || input.indexOf('`') == -1) {
+            return new CodeSpanExtraction(input, java.util.Collections.emptyList());
+        }
+        java.util.List<String> spans = new java.util.ArrayList<>();
+        StringBuilder out = new StringBuilder(input.length());
+        int i = 0;
+        while (i < input.length()) {
+            char ch = input.charAt(i);
+            if (ch == '`' && (i == 0 || input.charAt(i - 1) != '\\')) {
+                int end = findClosingBacktick(input, i + 1);
+                if (end != -1) {
+                    String code = input.substring(i + 1, end);
+                    String token = codeToken(spans.size());
+                    spans.add(code);
+                    out.append(token);
+                    i = end + 1;
+                    continue;
+                }
+            }
+            out.append(ch);
+            i++;
+        }
+        return new CodeSpanExtraction(out.toString(), spans);
+    }
+
+    private static int findClosingBacktick(String input, int start) {
+        int i = start;
+        while (i < input.length()) {
+            if (input.charAt(i) == '`' && input.charAt(i - 1) != '\\') {
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
+
+    private static String restoreMarkdownCodeSpans(String input, CodeSpanExtraction extraction) {
+        if (extraction.spans.isEmpty()) {
+            return input;
+        }
+        String restored = input;
+        for (int i = 0; i < extraction.spans.size(); i++) {
+            String token = codeToken(i);
+            restored = restored.replace(token, "<code>" + extraction.spans.get(i) + "</code>");
+        }
+        return restored;
+    }
+
+    private static String codeToken(int index) {
+        return "@@MDCODE" + index + "@@";
+    }
+
+    private static final class CodeSpanExtraction {
+        private final String text;
+        private final java.util.List<String> spans;
+
+        private CodeSpanExtraction(String text, java.util.List<String> spans) {
+            this.text = text;
+            this.spans = spans;
+        }
     }
 
     private static String replaceMarkdownImages(String input) {

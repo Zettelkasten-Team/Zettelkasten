@@ -143,6 +143,28 @@ Acceptance criteria:
 - `mvn test` passes.
 
 
+### PR-SCOPE: AC-09 — Markdown HTML correctness (prevent emphasis inside code spans)
+
+Intent:
+- Ensure Markdown inline code spans render as literal text and do not receive emphasis parsing.
+- Prevent invalid HTML produced by Markdown/UBB conversion when code spans contain underscores.
+
+Allowed changes:
+- Add or adjust Markdown/UBB-to-HTML conversion logic to treat code spans as literal content.
+- Add/adjust HTML validation tests covering the conversion and validator output.
+
+Forbidden changes:
+- No UI layout/behaviour changes.
+- No persistence format changes.
+- No new formatting features beyond correcting parsing inside code spans.
+
+Acceptance criteria:
+- Inline code containing underscores (e.g., `ZETTELKASTEN_WORKSPACE_DIR`) renders without emphasis tags.
+- HTML validation passes for entries with inline code, bold markers, and list content.
+- When Markdown is disabled, behavior is unchanged.
+- `mvn test` passes.
+
+
 ### PR-SCOPE: AC-06 — Decouple data/model from Swing UI
 
 Intent:
