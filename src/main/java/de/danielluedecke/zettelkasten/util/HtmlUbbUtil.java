@@ -1593,13 +1593,23 @@ public class HtmlUbbUtil {
         String restored = input;
         for (int i = 0; i < extraction.spans.size(); i++) {
             String token = codeToken(i);
-            restored = restored.replace(token, "<code>" + extraction.spans.get(i) + "</code>");
+            String escaped = escapeCodeSpanContent(extraction.spans.get(i));
+            restored = restored.replace(token, "<code>" + escaped + "</code>");
         }
         return restored;
     }
 
     private static String codeToken(int index) {
         return "@@MDCODE" + index + "@@";
+    }
+
+    private static String escapeCodeSpanContent(String value) {
+        if (value == null || value.isEmpty()) {
+            return "";
+        }
+        return value.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;");
     }
 
     private static final class CodeSpanExtraction {

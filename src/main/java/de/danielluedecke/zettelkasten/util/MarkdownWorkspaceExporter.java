@@ -61,6 +61,8 @@ public final class MarkdownWorkspaceExporter {
 		if (settings == null || data == null || entryNumber < 1) {
 			return;
 		}
+		Constants.zknlogger.log(Level.WARNING, "Markdown export attempt for entry {0} (markdown={1}).",
+				new Object[] { entryNumber, Boolean.TRUE.equals(settings.getMarkdownActivated()) });
 		String pandocPath = settings.getPandocPath();
 		if (pandocPath == null || pandocPath.trim().isEmpty()) {
 			Constants.zknlogger.log(Level.WARNING, "Pandoc path is not configured; skipping Markdown export.");
@@ -69,7 +71,7 @@ public final class MarkdownWorkspaceExporter {
 		Path workspaceDir = resolveWorkspaceDir();
 		if (workspaceDir == null) {
 			if (!loggedMissingWorkspace.getAndSet(true)) {
-				Constants.zknlogger.log(Level.INFO,
+				Constants.zknlogger.log(Level.WARNING,
 						"No workspace directory found for Markdown export. Set {0} or create ~/workspace.",
 						WORKSPACE_ENV);
 			}
@@ -107,7 +109,7 @@ public final class MarkdownWorkspaceExporter {
 				Constants.zknlogger.log(Level.WARNING, "Pandoc export failed for entry {0} (exit code {1}).",
 						new Object[] { entryNumber, exitCode });
 			} else {
-				Constants.zknlogger.log(Level.INFO, "Markdown export created: {0}",
+				Constants.zknlogger.log(Level.WARNING, "Markdown export created: {0}",
 						outFile.toAbsolutePath().toString());
 			}
 		} catch (InterruptedException ex) {

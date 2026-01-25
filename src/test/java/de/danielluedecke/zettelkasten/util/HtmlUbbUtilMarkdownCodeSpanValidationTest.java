@@ -8,6 +8,7 @@ import de.danielluedecke.zettelkasten.database.Synonyms;
 import de.danielluedecke.zettelkasten.settings.Settings;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HtmlUbbUtilMarkdownCodeSpanValidationTest {
@@ -19,7 +20,7 @@ class HtmlUbbUtilMarkdownCodeSpanValidationTest {
 		Daten data = createData(settings);
 
 		String content = "Check `EditorFrame.saveEntry` and `ZETTELKASTEN_WORKSPACE_DIR` in code spans.\n"
-				+ "Also `~/workspace` should stay literal.\n\n"
+				+ "Also `~/workspace` and `<code>` should stay literal.\n\n"
 				+ "* **Bold** list item with `ZETTELKASTEN_WORKSPACE_DIR`\n"
 				+ "* Another item with `EditorFrame.saveEntry` and underscores.\n";
 		data.addEntry("Title", content, new String[0], new String[0], "", new String[0], "2025-01-01", -1);
@@ -27,8 +28,11 @@ class HtmlUbbUtilMarkdownCodeSpanValidationTest {
 
 		String html = data.getEntryAsHtml(entryNumber, null, Constants.FRAME_DESKTOP);
 
+		assertFalse(html.matches("(?s)<code>.*?</?(i|b|em|strong)>.*?</code>"),
+				"HTML must not contain emphasis tags inside <code> spans");
 		assertTrue(html.contains("<code>EditorFrame.saveEntry</code>"));
 		assertTrue(html.contains("<code>ZETTELKASTEN_WORKSPACE_DIR</code>"));
+		assertTrue(html.contains("<code>&lt;code&gt;</code>"));
 		assertTrue(HtmlValidator.isValidHTML(html, entryNumber, content));
 	}
 
