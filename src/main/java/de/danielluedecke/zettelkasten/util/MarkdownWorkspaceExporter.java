@@ -106,6 +106,9 @@ public final class MarkdownWorkspaceExporter {
 			if (exitCode != 0) {
 				Constants.zknlogger.log(Level.WARNING, "Pandoc export failed for entry {0} (exit code {1}).",
 						new Object[] { entryNumber, exitCode });
+			} else {
+				Constants.zknlogger.log(Level.INFO, "Markdown export created: {0}",
+						outFile.toAbsolutePath().toString());
 			}
 		} catch (InterruptedException ex) {
 			Constants.zknlogger.log(Level.WARNING, "Pandoc export interrupted for entry {0}.",

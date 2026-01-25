@@ -4166,10 +4166,17 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 		data.setTitlelistUpToDate(false);
 		data.setAttachmentlistUpToDate(false);
 
-		int exportEntryNumber = isEditMode() ? entryNumber : data.getActivatedEntryNumber();
-		MarkdownWorkspaceExporter.exportOnSave(settings, data, exportEntryNumber);
+		exportMarkdownOnSave(settings, data, entryNumber, isEditMode());
 
 		return true;
+	}
+
+	static void exportMarkdownOnSave(Settings settings, Daten data, int entryNumber, boolean editMode) {
+		if (data == null) {
+			return;
+		}
+		int exportEntryNumber = editMode ? entryNumber : data.getActivatedEntryNumber();
+		MarkdownWorkspaceExporter.exportOnSave(settings, data, exportEntryNumber);
 	}
 
 	@Action(enabledProperty = "focus")
