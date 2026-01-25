@@ -35,6 +35,7 @@ package de.danielluedecke.zettelkasten.tasks;
 import de.danielluedecke.zettelkasten.database.*;
 import de.danielluedecke.zettelkasten.settings.Settings;
 import de.danielluedecke.zettelkasten.util.Constants;
+import de.danielluedecke.zettelkasten.util.MarkdownWorkspaceExporter;
 import org.jdom2.output.XMLOutputter;
 
 import javax.swing.*;
@@ -80,9 +81,7 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
     /**
      * get the strings for file descriptions from the resource map
      */
-    private final org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application
-            .getInstance(de.danielluedecke.zettelkasten.ZettelkastenApp.class).getContext()
-            .getResourceMap(SaveFileTask.class);
+    private final org.jdesktop.application.ResourceMap resourceMap;
     boolean saveOk = true;
 
     /**
@@ -117,6 +116,7 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
         settingsObj = s;
         parentDialog = parent;
         msgLabel = label;
+        resourceMap = app.getContext().getResourceMap(SaveFileTask.class);
         // show status text
         msgLabel.setText(resourceMap.getString("msg1"));
     }
@@ -242,6 +242,9 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
         bookmarkObj.setModified(!saveOk);
         synonymsObj.setModified(!saveOk);
         bibtexObj.setModified(!saveOk);
+        if (saveOk) {
+            triggerMarkdownExport();
+        }
     }
 
     @Override
@@ -252,5 +255,13 @@ public class SaveFileTask extends org.jdesktop.application.Task<Object, Void> {
         // Close window.
         parentDialog.dispose();
         parentDialog.setVisible(false);
+    }
+
+    private void triggerMarkdownExport() {
+        int entryNumber = dataObj.getActivatedEntryNumber();
+        Thread exportThread = new Thread(() -> MarkdownWorkspaceExporter.exportOnSave(settingsObj, dataObj, entryNumber),
+                "markdown-export-on-save");
+        exportThread.setDaemon(true);
+        exportThread.start();
     }
 }
