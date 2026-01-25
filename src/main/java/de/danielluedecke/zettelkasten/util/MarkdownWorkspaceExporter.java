@@ -83,6 +83,7 @@ public final class MarkdownWorkspaceExporter {
 					entryNumber);
 			return;
 		}
+		html = replaceHeadingForExport(html, data, entryNumber);
 		Path tempHtml = null;
 		try {
 			tempHtml = Files.createTempFile(workspaceDir, "zkn-", ".html");
@@ -166,5 +167,26 @@ public final class MarkdownWorkspaceExporter {
 		} catch (IOException ex) {
 			Constants.zknlogger.log(Level.FINE, "Could not delete temporary HTML export file.", ex);
 		}
+	}
+
+	private static String replaceHeadingForExport(String html, Daten data, int entryNumber) {
+		String title = data.getZettelTitle(entryNumber);
+		String headingText = "Zettel " + entryNumber;
+		if (title != null && !title.isEmpty()) {
+			headingText += " \u2013 " + title;
+		}
+		String headingHtml = "<h1>" + escapeHtml(headingText) + "</h1>";
+		String withoutHeadline = html.replaceFirst("(?s)<div class=\"entryrating\">.*?</div>", "");
+		return withoutHeadline.replaceFirst("(?s)<h1>.*?</h1>",
+				java.util.regex.Matcher.quoteReplacement(headingHtml));
+	}
+
+	private static String escapeHtml(String value) {
+		if (value == null) {
+			return "";
+		}
+		return value.replace("&", "&amp;")
+				.replace("<", "&lt;")
+				.replace(">", "&gt;");
 	}
 }

@@ -137,6 +137,7 @@ Acceptance criteria:
   1. `ZETTELKASTEN_WORKSPACE_DIR` env var if present and non-empty
   2. else `${user.home}/workspace` if it exists
   3. else: do nothing; log `INFO` once per run.
+- Exported Markdown starts with a minimal heading line: `# Zettel <entryNumber> – <title>` (no word count, timestamps, or ratings).
 - Output filename: `z<entryNumber>.md`
 - Pandoc call: `pandoc -f html -t markdown -o <outfile> <tmpHtmlFile>`
 - If Pandoc missing or fails: do not interrupt save; log `WARNING`.

@@ -61,6 +61,34 @@ public class MarkdownWorkspaceExporterTest {
 		assertTrue(new String(Files.readAllBytes(outFile), StandardCharsets.UTF_8).contains("# exported"));
 	}
 
+	@Test
+	void exportUsesMinimalHeadingForMarkdown(@TempDir Path tempDir) throws IOException {
+		Assumptions.assumeTrue(!isWindows(), "Mock pandoc script uses /bin/sh.");
+		setHome(tempDir);
+		Path workspace = tempDir.resolve("workspace");
+		Files.createDirectories(workspace);
+
+		Settings settings = new Settings();
+		Path pandocScript = createPandocHeadingScript(tempDir);
+		settings.setPandocPath(pandocScript.toString());
+
+		Daten data = createData(settings);
+		String title = "Minimal Export Title";
+		data.addEntry(title, "Content", new String[0], new String[0], "", new String[0], "2025-01-01", -1);
+		int entryNumber = data.getActivatedEntryNumber();
+
+		MarkdownWorkspaceExporter.exportOnSave(settings, data, entryNumber);
+
+		Path outFile = workspace.resolve("z" + entryNumber + ".md");
+		assertTrue(Files.exists(outFile));
+		String output = new String(Files.readAllBytes(outFile), StandardCharsets.UTF_8);
+		assertTrue(output.startsWith("# Zettel " + entryNumber + " \u2013 " + title));
+		assertTrue(!output.contains("W\u00f6rter"));
+		assertTrue(!output.contains("Erstellt"));
+		assertTrue(!output.contains("Aktualisiert"));
+		assertTrue(!output.contains("Bewertung"));
+	}
+
 	private void setHome(Path tempDir) {
 		originalHome = System.getProperty("user.home");
 		System.setProperty("user.home", tempDir.toString());
@@ -86,6 +114,29 @@ public class MarkdownWorkspaceExporterTest {
 				+ "done\n"
 				+ "if [ -n \"$out\" ]; then\n"
 				+ "  echo \"# exported\" > \"$out\"\n"
+				+ "fi\n"
+				+ "exit 0\n";
+		Files.write(script, content.getBytes(StandardCharsets.UTF_8));
+		script.toFile().setExecutable(true);
+		return script;
+	}
+
+	private Path createPandocHeadingScript(Path tempDir) throws IOException {
+		Path script = tempDir.resolve("pandoc-heading.sh");
+		String content = "#!/bin/sh\n"
+				+ "out=\"\"\n"
+				+ "prev=\"\"\n"
+				+ "input=\"\"\n"
+				+ "for arg in \"$@\"; do\n"
+				+ "  if [ \"$prev\" = \"-o\" ]; then\n"
+				+ "    out=\"$arg\"\n"
+				+ "  fi\n"
+				+ "  prev=\"$arg\"\n"
+				+ "  input=\"$arg\"\n"
+				+ "done\n"
+				+ "if [ -n \"$out\" ] && [ -n \"$input\" ]; then\n"
+				+ "  heading=$(sed -n 's/.*<h1>\\(.*\\)<\\/h1>.*/\\1/p' \"$input\" | head -n 1)\n"
+				+ "  echo \"# $heading\" > \"$out\"\n"
 				+ "fi\n"
 				+ "exit 0\n";
 		Files.write(script, content.getBytes(StandardCharsets.UTF_8));
