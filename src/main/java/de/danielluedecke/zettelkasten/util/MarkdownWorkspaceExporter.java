@@ -61,6 +61,11 @@ public final class MarkdownWorkspaceExporter {
 		if (settings == null || data == null || entryNumber < 1) {
 			return;
 		}
+		String pandocPath = settings.getPandocPath();
+		if (pandocPath == null || pandocPath.trim().isEmpty()) {
+			Constants.zknlogger.log(Level.WARNING, "Pandoc path is not configured; skipping Markdown export.");
+			return;
+		}
 		Path workspaceDir = resolveWorkspaceDir();
 		if (workspaceDir == null) {
 			if (!loggedMissingWorkspace.getAndSet(true)) {
@@ -80,7 +85,7 @@ public final class MarkdownWorkspaceExporter {
 		try {
 			tempHtml = Files.createTempFile(workspaceDir, "zkn-", ".html");
 		} catch (IOException ex) {
-			Constants.zknlogger.log(Level.WARNING, "Could not create temporary HTML file for Markdown export.");
+			Constants.zknlogger.log(Level.WARNING, "Could not create temporary HTML file for Markdown export.", ex);
 			return;
 		}
 		if (!ExportTools.writeExportData(html, tempHtml.toFile())) {
@@ -89,21 +94,26 @@ public final class MarkdownWorkspaceExporter {
 			return;
 		}
 		Path outFile = workspaceDir.resolve("z" + entryNumber + ".md");
-		List<String> args = Arrays.asList(settings.getPandocPath(), "-f", "html", "-t", "markdown", "-o",
+		List<String> args = Arrays.asList(pandocPath, "-f", "html", "-t", "markdown", "-o",
 				outFile.toAbsolutePath().toString(), tempHtml.toAbsolutePath().toString());
 		ProcessBuilder pb = new ProcessBuilder(args);
 		pb.directory(workspaceDir.toFile());
+		pb.redirectErrorStream(true);
 		try {
 			Process process = pb.start();
+			consumeProcessOutput(process);
 			int exitCode = process.waitFor();
 			if (exitCode != 0) {
 				Constants.zknlogger.log(Level.WARNING, "Pandoc export failed for entry {0} (exit code {1}).",
 						new Object[] { entryNumber, exitCode });
 			}
-		} catch (IOException | InterruptedException ex) {
+		} catch (InterruptedException ex) {
+			Constants.zknlogger.log(Level.WARNING, "Pandoc export interrupted for entry {0}.",
+					new Object[] { entryNumber });
+			Thread.currentThread().interrupt();
+		} catch (IOException ex) {
 			Constants.zknlogger.log(Level.WARNING, "Pandoc export failed for entry {0}: {1}",
 					new Object[] { entryNumber, ex.getLocalizedMessage() });
-			Thread.currentThread().interrupt();
 		} finally {
 			cleanupTempFile(tempHtml);
 		}
@@ -127,6 +137,21 @@ public final class MarkdownWorkspaceExporter {
 		return Files.isDirectory(fallback) ? fallback : null;
 	}
 
+	private static void consumeProcessOutput(Process process) {
+		Thread reader = new Thread(() -> {
+			try (java.io.InputStream stream = process.getInputStream()) {
+				byte[] buffer = new byte[1024];
+				while (stream.read(buffer) != -1) {
+					// Discard output to avoid process blocking on full buffers.
+				}
+			} catch (IOException ex) {
+				Constants.zknlogger.log(Level.FINE, "Failed to consume Pandoc output.", ex);
+			}
+		}, "pandoc-output-consumer");
+		reader.setDaemon(true);
+		reader.start();
+	}
+
 	private static void cleanupTempFile(Path tempHtml) {
 		if (tempHtml == null) {
 			return;
@@ -134,7 +159,7 @@ public final class MarkdownWorkspaceExporter {
 		try {
 			Files.deleteIfExists(tempHtml);
 		} catch (IOException ex) {
-			Constants.zknlogger.log(Level.FINE, "Could not delete temporary HTML export file.");
+			Constants.zknlogger.log(Level.FINE, "Could not delete temporary HTML export file.", ex);
 		}
 	}
 }

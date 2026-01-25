@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -40,6 +41,7 @@ public class MarkdownWorkspaceExporterTest {
 
 	@Test
 	void exportWritesMarkdownWhenWorkspacePresent(@TempDir Path tempDir) throws IOException {
+		Assumptions.assumeTrue(!isWindows(), "Mock pandoc script uses /bin/sh.");
 		setHome(tempDir);
 		Path workspace = tempDir.resolve("workspace");
 		Files.createDirectories(workspace);
@@ -56,6 +58,7 @@ public class MarkdownWorkspaceExporterTest {
 
 		Path outFile = workspace.resolve("z" + entryNumber + ".md");
 		assertTrue(Files.exists(outFile));
+		assertTrue(new String(Files.readAllBytes(outFile), StandardCharsets.UTF_8).contains("# exported"));
 	}
 
 	private void setHome(Path tempDir) {
@@ -88,5 +91,10 @@ public class MarkdownWorkspaceExporterTest {
 		Files.write(script, content.getBytes(StandardCharsets.UTF_8));
 		script.toFile().setExecutable(true);
 		return script;
+	}
+
+	private boolean isWindows() {
+		String osName = System.getProperty("os.name");
+		return osName != null && osName.toLowerCase().contains("win");
 	}
 }

@@ -84,7 +84,7 @@ Notes:
   refactors. Keep changes narrowly scoped to interoperability and decoupling.
 - When in doubt, preserve current behavior and limit changes to moving UI interactions to the edge.
 
-### PR-SCOPE: AC-02 — Constrain formatting (“Ahrens mode”) and reduce markup surface
+### PR-SCOPE: AC-02 — Constrain formatting (“Constrained Markdown”) and reduce markup surface
 
 Intent:
 - Align with Ahrens’ emphasis on simplicity and low distraction: reduce degrees of freedom in note
@@ -92,8 +92,8 @@ Intent:
 - Treat formatting/rendering as a projection layer; discourage “authoring-by-styling” behaviors.
 
 Allowed changes:
-- Introduce a configuration flag (e.g., “Ahrens mode”) that constrains supported formatting to a small,
-  explicitly defined subset.
+- Introduce a configuration flag (e.g., “Constrained Markdown”) that constrains supported formatting to a
+  small, explicitly defined subset.
 - Implement the constraint primarily in parsing/normalization/projection layers (UBB/HTML/Markdown
   conversion utilities), not via new UI controls.
 - Extend existing markdown/UBB normalization and lint/test fixtures to enforce the constrained subset.
@@ -108,10 +108,12 @@ Forbidden changes:
   new edits and/or normalization outputs, not destructive rewrite of stored content.
 
 Acceptance criteria:
-- When Ahrens mode is enabled, only the allowed formatting subset is produced by normalization/projection
-  (unsupported constructs are either stripped, downgraded to plain text, or rendered in a neutral way).
-- When Ahrens mode is disabled, exist
-### PR-SCOPE: AC-02 — Automatic Markdown workspace export on Zettel save (Pandoc)
+- When Constrained Markdown is enabled, only the allowed formatting subset is produced by
+  normalization/projection (unsupported constructs are either stripped, downgraded to plain text, or
+  rendered in a neutral way).
+- When Constrained Markdown is disabled, formatting behavior remains unchanged.
+
+### PR-SCOPE: AC-08 — Automatic Markdown workspace export on Zettel save (Pandoc)
 
 Intent:
 - When a Zettel is saved/committed, automatically export that Zettel as a `.md` file into a workspace
