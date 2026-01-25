@@ -83,7 +83,7 @@ public final class MarkdownWorkspaceExporter {
 					entryNumber);
 			return;
 		}
-		html = replaceHeadingForExport(html, data, entryNumber);
+		html = sanitizeExportHtml(html, data, entryNumber);
 		Path tempHtml = null;
 		try {
 			tempHtml = Files.createTempFile(workspaceDir, "zkn-", ".html");
@@ -169,16 +169,25 @@ public final class MarkdownWorkspaceExporter {
 		}
 	}
 
-	private static String replaceHeadingForExport(String html, Daten data, int entryNumber) {
+	private static String sanitizeExportHtml(String html, Daten data, int entryNumber) {
 		String title = data.getZettelTitle(entryNumber);
 		String headingText = "Zettel " + entryNumber;
 		if (title != null && !title.isEmpty()) {
 			headingText += " \u2013 " + title;
 		}
 		String headingHtml = "<h1>" + escapeHtml(headingText) + "</h1>";
-		String withoutHeadline = html.replaceFirst("(?s)<div class=\"entryrating\">.*?</div>", "");
-		return withoutHeadline.replaceFirst("(?s)<h1>.*?</h1>",
+		String sanitized = html.replaceFirst("(?s)<div class=\"entryrating\">.*?</div>", "");
+		sanitized = sanitized.replaceFirst("(?s)<h1>.*?</h1>",
 				java.util.regex.Matcher.quoteReplacement(headingHtml));
+		sanitized = sanitized.replaceAll("(?is)<img[^>]*src=['\"]jar:[^'\"]*['\"][^>]*>", "");
+		sanitized = sanitized.replaceAll("(?is)<a[^>]*class=['\"](?:tslink|rlink)['\"][^>]*>(.*?)</a>", "$1");
+		sanitized = sanitized.replaceAll(
+				"(?is)<a[^>]*(?:name|id|href)=['\"][^'\"]*(?:tstamp|rateentry)[^'\"]*['\"][^>]*>(.*?)</a>",
+				"$1");
+		sanitized = sanitized.replaceAll(
+				"(?is)<a[^>]*(?:name|id)=['\"][^'\"]*(?:tstamp|rateentry)[^'\"]*['\"][^>]*></a>",
+				"");
+		return sanitized;
 	}
 
 	private static String escapeHtml(String value) {

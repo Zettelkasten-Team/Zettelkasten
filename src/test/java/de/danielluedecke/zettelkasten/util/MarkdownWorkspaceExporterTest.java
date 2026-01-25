@@ -74,7 +74,8 @@ public class MarkdownWorkspaceExporterTest {
 
 		Daten data = createData(settings);
 		String title = "Minimal Export Title";
-		data.addEntry(title, "Content", new String[0], new String[0], "", new String[0], "2025-01-01", -1);
+		String content = "Export body content.";
+		data.addEntry(title, content, new String[0], new String[0], "", new String[0], "2025-01-01", -1);
 		int entryNumber = data.getActivatedEntryNumber();
 
 		MarkdownWorkspaceExporter.exportOnSave(settings, data, entryNumber);
@@ -83,6 +84,11 @@ public class MarkdownWorkspaceExporterTest {
 		assertTrue(Files.exists(outFile));
 		String output = new String(Files.readAllBytes(outFile), StandardCharsets.UTF_8);
 		assertTrue(output.startsWith("# Zettel " + entryNumber + " \u2013 " + title));
+		assertTrue(output.contains(content));
+		assertTrue(!output.contains("jar:file:"));
+		assertTrue(!output.contains("bullet_black.png"));
+		assertTrue(!output.contains("tstamp"));
+		assertTrue(!output.contains("rateentry"));
 		assertTrue(!output.contains("W\u00f6rter"));
 		assertTrue(!output.contains("Erstellt"));
 		assertTrue(!output.contains("Aktualisiert"));
@@ -137,6 +143,7 @@ public class MarkdownWorkspaceExporterTest {
 				+ "if [ -n \"$out\" ] && [ -n \"$input\" ]; then\n"
 				+ "  heading=$(sed -n 's/.*<h1>\\(.*\\)<\\/h1>.*/\\1/p' \"$input\" | head -n 1)\n"
 				+ "  echo \"# $heading\" > \"$out\"\n"
+				+ "  cat \"$input\" >> \"$out\"\n"
 				+ "fi\n"
 				+ "exit 0\n";
 		Files.write(script, content.getBytes(StandardCharsets.UTF_8));
