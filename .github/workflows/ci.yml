@@ -53,7 +53,7 @@ jobs:
 
       - name: Cache Maven repo
         if: runner.os != 'macOS'
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.m2/repository
           key: m2-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
