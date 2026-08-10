@@ -12,7 +12,7 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Linux: install Nix normally
       - name: Install Nix (Linux)
@@ -25,7 +25,7 @@ jobs:
       # macOS: Java 8 directly
       - name: Setup Java 8 (Zulu) on macOS
         if: runner.os == 'macOS'
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: zulu
           java-version: '8'
@@ -89,10 +89,10 @@ jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup Java 8 (Zulu)
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: zulu
           java-version: '8'
