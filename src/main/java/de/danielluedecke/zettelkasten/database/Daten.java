@@ -2757,7 +2757,8 @@ public class Daten {
 		// check whether user wants to edit an already deleted entry and insert a new
 		// one at
 		// that position
-		if (editDeletedEntry || (emptypos != -1 && settings.getInsertNewEntryAtEmpty())) {
+		boolean reuseExistingEntry = editDeletedEntry || (emptypos != -1 && settings.getInsertNewEntryAtEmpty());
+		if (reuseExistingEntry) {
 			// retrieve empty element
 			zettel = retrieveElement(zknFile, emptypos);
 			// and remove former content, so we can add new content
@@ -2917,7 +2918,7 @@ public class Daten {
 			// complete datafile
 			//
 			// if we have any empty elements, go on here
-			int targetEntryNumber = attachEntryIfNeededAndGetTargetEntryNumber(zettel, emptypos);
+			int targetEntryNumber = attachEntryIfNeededAndGetTargetEntryNumber(zettel, emptypos, reuseExistingEntry);
 			// and add the new position to the history...
 			this.activatedEntryNumber = targetEntryNumber;
 			addToHistory(activatedEntryNumber);
@@ -2949,10 +2950,11 @@ public class Daten {
 
 	private int attachEntryIfNeededAndGetTargetEntryNumber(
 	    Element zettel,
-	    int emptypos)
+	    int emptypos,
+	    boolean reuseExistingEntry)
 	    throws IllegalAddException, IllegalDataException {
 
-	    if (emptypos != -1 && settings.getInsertNewEntryAtEmpty()) {
+	    if (reuseExistingEntry) {
 	        return emptypos;
 	    }
 
