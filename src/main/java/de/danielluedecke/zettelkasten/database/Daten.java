@@ -2917,16 +2917,18 @@ public class Daten {
 			// complete datafile
 			//
 			// if we have any empty elements, go on here
+			int targetEntryNumber;
 			if (emptypos != -1 && settings.getInsertNewEntryAtEmpty()) {
 				// return the empty-position, which is now filled with the new author-value
-				this.activatedEntryNumber = emptypos;
+				targetEntryNumber = emptypos;
 			} else {
 				// finally, add the whole element to the data file
 				attachEntryElement(zettel);
 				// set the zettel-position to the new entry
-				this.activatedEntryNumber = getCount(ZKNCOUNT);
+				targetEntryNumber = getCount(ZKNCOUNT);
 			}
 			// and add the new position to the history...
+			this.activatedEntryNumber = targetEntryNumber;
 			addToHistory(activatedEntryNumber);
 			// set modified state
 			setModified(true);
