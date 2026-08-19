@@ -2917,16 +2917,7 @@ public class Daten {
 			// complete datafile
 			//
 			// if we have any empty elements, go on here
-			int targetEntryNumber;
-			if (emptypos != -1 && settings.getInsertNewEntryAtEmpty()) {
-				// return the empty-position, which is now filled with the new author-value
-				targetEntryNumber = emptypos;
-			} else {
-				// finally, add the whole element to the data file
-				attachEntryElement(zettel);
-				// set the zettel-position to the new entry
-				targetEntryNumber = getCount(ZKNCOUNT);
-			}
+			int targetEntryNumber = attachEntryIfNeededAndGetTargetEntryNumber(zettel, emptypos);
 			// and add the new position to the history...
 			this.activatedEntryNumber = targetEntryNumber;
 			addToHistory(activatedEntryNumber);
@@ -2954,6 +2945,19 @@ public class Daten {
 		addManualLink(manlinks, this.activatedEntryNumber);
 		// entry successfully added
 		return retval;
+	}
+
+	private int attachEntryIfNeededAndGetTargetEntryNumber(
+	    Element zettel,
+	    int emptypos)
+	    throws IllegalAddException, IllegalDataException {
+
+	    if (emptypos != -1 && settings.getInsertNewEntryAtEmpty()) {
+	        return emptypos;
+	    }
+
+	    attachEntryElement(zettel);
+	    return getCount(ZKNCOUNT);
 	}
 
 	/**
