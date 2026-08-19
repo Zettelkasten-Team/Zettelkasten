@@ -740,6 +740,19 @@ public class Daten {
 	}
 
 	/**
+	 * Attaches an already prepared entry element to the Zettelkasten root.
+	 *
+	 * <p>This operation deliberately performs only the root attachment.
+	 * Navigation state, history, modified-state bookkeeping, reference
+	 * restoration, and batch orchestration remain responsibilities of
+	 * the calling operation.</p>
+	 */
+	private void attachEntryElement(Element zettel)
+			throws IllegalAddException, IllegalDataException {
+		zknFile.getRootElement().addContent(zettel);
+	}
+
+	/**
 	 * This method appends a document with zettelkasten-data to an existing
 	 * document.<br>
 	 * <br>
@@ -766,7 +779,7 @@ public class Daten {
 				// check whether the imported entry is empty or not
 				if (zettel.getChild(ELEMENT_CONTENT) != null && !zettel.getChild(ELEMENT_CONTENT).getText().isEmpty()) {
 					try {
-						zknFile.getRootElement().addContent(zettel);
+						attachEntryElement(zettel);
 						// set modified flag
 						mod = true;
 					} catch (IllegalDataException | IllegalAddException ex) {
@@ -2909,7 +2922,7 @@ public class Daten {
 				this.activatedEntryNumber = emptypos;
 			} else {
 				// finally, add the whole element to the data file
-				zknFile.getRootElement().addContent(zettel);
+				attachEntryElement(zettel);
 				// set the zettel-position to the new entry
 				this.activatedEntryNumber = getCount(ZKNCOUNT);
 			}
