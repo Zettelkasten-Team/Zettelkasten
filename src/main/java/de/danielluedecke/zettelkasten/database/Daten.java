@@ -1,33 +1,33 @@
 /*
  * Zettelkasten - nach Luhmann
  * Copyright (C) 2001-2015 by Daniel Lüdecke (http://www.danielluedecke.de)
- * 
+ *
  * Homepage: http://zettelkasten.danielluedecke.de
- * 
- * 
+ *
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License as published by the Free Software Foundation; either version 3 of 
+ * GNU General Public License as published by the Free Software Foundation; either version 3 of
  * the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses/>.
- * 
- * 
+ *
+ *
  * Dieses Programm ist freie Software. Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation veröffentlicht, weitergeben
  * und/oder modifizieren, entweder gemäß Version 3 der Lizenz oder (wenn Sie möchten)
  * jeder späteren Version.
- * 
- * Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein 
- * wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder 
- * der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der 
+ *
+ * Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein
+ * wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder
+ * der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der
  * GNU General Public License.
- * 
- * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm 
+ *
+ * Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm
  * erhalten haben. Falls nicht, siehe <http://www.gnu.org/licenses/>.
  */
 package de.danielluedecke.zettelkasten.database;
@@ -418,19 +418,19 @@ public class Daten {
 		keywordFile = null;
 		metainfFile = null;
 		zknFileExport = null;
-			
+
 		// no update to the tabbed panes in the main window when nothing is loaded
 		keywordlistUpToDate = true;
 		authorlistUpToDate = true;
 		titlelistUpToDate = true;
 		clusterlistUpToDate = true;
 		attachmentlistUpToDate = true;
-		
+
 		// Create "empty" XML JDOM objects
 		zknFile = new Document(new Element(DOCUMENT_ZETTELKASTEN));
 		authorFile = new Document(new Element(DOCUMENT_AUTHORS));
 		keywordFile = new Document(new Element(DOCUMENT_KEYWORDS));
-		
+
 		// prepare the metainformation-file
 		metainfFile = new Document(new Element("metainformation"));
 		// first create an attribute for the fileversion-number
@@ -447,10 +447,10 @@ public class Daten {
 		// then create an empty atachment-path and add it
 		Element imgpath = new Element(ELEMENT_IMAGE_PATH);
 		metainfFile.getRootElement().addContent(imgpath);
-		
+
 		// init zettel-position-index
 		activatedEntryNumber = 1;
-		
+
 		// here we add all files which are stored in the zipped data-file in a
 		// list-array
 		filesToLoad.clear();
@@ -465,7 +465,7 @@ public class Daten {
 		filesToLoad.add(Constants.desktopNotesFileName);
 		filesToLoad.add(Constants.synonymsFileName);
 		filesToLoad.add(Constants.bibTexFileName);
-		
+
 		// reset list
 		allLuhmannNumbers.clear();
 	}
@@ -1702,7 +1702,7 @@ public class Daten {
 	 * removed.
 	 *
 	 * zknfile: the xml-document (either <i>keywordFile</i> or <i>authorFile</i>)
-	 * 
+	 *
 	 * @return the number of the first empty element, or -1 if no empty element was
 	 *         found
 	 */
@@ -2786,7 +2786,7 @@ public class Daten {
 			// set value of the content element
 			c.setText(content);
 			// then, create form-images
-			createFormImagesFromContent(content);
+
 			//
 			// add author
 			//
@@ -3151,7 +3151,7 @@ public class Daten {
 		// increase the frequency although those authors/keywords are not new
 		changeFrequencies(entrynumber, -1);
 		// then, create form-images
-		createFormImagesFromContent(content);
+
 		try {
 			//
 			// change title
@@ -5013,7 +5013,7 @@ public class Daten {
 	/**
 	 * This method adds the new zettel-position to the history, so the user can go
 	 * back and fore to previous selected entries.
-	 */	
+	 */
 	public void addToHistory(int entryNr) {
         history.addToHistory(entryNr);
     }
@@ -5036,11 +5036,11 @@ public class Daten {
         activatedEntryNumber = history.historyForward();
         return activatedEntryNumber;
     }
-    
+
     public void displayHistory(int[] history, int historyCount) {
         uiCallbacks.displayHistory(history, historyCount);
     }
-    
+
 	/**
 	 * Sets the currently activated entry to the given number.
 	 * If the number is invalid, returns false without any change.
@@ -5117,7 +5117,7 @@ public class Daten {
 	 * goToFirstParentEntry sets current entry to be the first parent entry of the
 	 * current entry. If the current entry is invalid or does not have a parent
 	 * entry, it does nothing.
-	 * 
+	 *
 	 * It adds a the new entry (first parent entry) to the history.
 	 */
 	public void goToFirstParentEntry() { // See:  "Inhaltlich-logische Navigation" in https://niklas-luhmann-archiv.de/bestand/zettelkasten/tutorial
@@ -7093,20 +7093,6 @@ public class Daten {
 	 * @param content the content of an entry where the form-tags will be extracted
 	 *                and the form-images will be created.
 	 */
-	private void createFormImagesFromContent(String content) {
-		// retrieve form-tags from content
-		ArrayList<String> dummy = Tools.getFormsFromString(content);
-		// copy them to a string array
-		String[] formtags = dummy.toArray(new String[dummy.size()]);
-		// iterate all form-tags
-		for (String formimg : formtags) {
-			// create new instance for creating form images
-			boolean saved = uiCallbacks.createFormImage(this, formimg);
-			if (!saved) {
-				Constants.zknlogger.log(Level.WARNING, "Could not create form image for tag: {0}", formimg);
-			}
-		}
-	}
 
 	/**
 	 * This method retrieves all notes (resp. their ID) in the Zettelkasten that are
@@ -7353,7 +7339,7 @@ public class Daten {
 	/**
 	 * This method inserts the newSubEntry {@code newSubEntry} as sub-entry at the
 	 * position {@code pos} of the entry's {@code entry} sub-entries.
-	 * 
+	 *
 	 * Sub-entries are stored in the Luhmann-tag as index numbers. <br>
 	 * <br>
 	 * It is similar to a typical tree: we have one parent-entry and several
@@ -7670,7 +7656,7 @@ public class Daten {
 
 	public void addEntry(int validEntryNumber, String string) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public boolean isInHistory(int entryNumber) {

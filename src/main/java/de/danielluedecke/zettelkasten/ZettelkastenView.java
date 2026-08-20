@@ -474,17 +474,20 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				ZettelkastenView.this.displayHistory(history, historyCount);
 			}
 
-			@Override
-			public boolean createFormImage(Daten dataObj, String formTag) {
-				CMakeFormImage newFormImage = new CMakeFormImage(dataObj, settings, formTag);
-				newFormImage.createFormImage();
-				if (!newFormImage.isSaveImgOk()) {
-					ZettelkastenView.this.showErrorIcon();
-					return false;
-				}
-				return true;
-			}
 		};
+	}
+
+	void createFormImagesFromContent(Daten dataObj, String content) {
+		ArrayList<String> dummy = Tools.getFormsFromString(content);
+		String[] formtags = dummy.toArray(new String[dummy.size()]);
+		for (String formTag : formtags) {
+			CMakeFormImage newFormImage = new CMakeFormImage(dataObj, settings, formTag);
+			newFormImage.createFormImage();
+			if (!newFormImage.isSaveImgOk()) {
+				showErrorIcon();
+				Constants.zknlogger.log(Level.WARNING, "Could not create form image for tag: {0}", formTag);
+			}
+		}
 	}
 
 	private BibTeXUiCallbacks createBibTeXUiCallbacks() {
@@ -6320,6 +6323,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				}
 				// add text as new entry
 				data.addEntry("", text, null, null, "", null, Tools.getTimeStamp(), -1);
+				createFormImagesFromContent(data, text);
 				// and titles might be out of date now as well...
 				data.setTitlelistUpToDate(false);
 				// Tell about success
@@ -6394,6 +6398,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 //                }
 				// add text as new entry
 				data.addEntry(title, text, null, null, "", null, Tools.getTimeStamp(), -1);
+				createFormImagesFromContent(data, text);
 				// and titles might be out of date now as well...
 				data.setTitlelistUpToDate(false);
 				// Tell about success

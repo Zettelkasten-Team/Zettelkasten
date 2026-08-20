@@ -4098,8 +4098,10 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 
 		if (isEditMode()) {
 			// change entry and fetch result
-			if (!data.changeEntry(title, content, authors.toArray(new String[authors.size()]), keywords, remarks,
-					links, Tools.getTimeStamp(), entryNumber)) {
+			boolean entryChanged = data.changeEntry(title, content, authors.toArray(new String[authors.size()]), keywords, remarks,
+					links, Tools.getTimeStamp(), entryNumber);
+			mainframe.createFormImagesFromContent(data, content);
+			if (!entryChanged) {
 				JOptionPane.showMessageDialog(this, resourceMap.getString("errMsgChangeEntry"),
 						resourceMap.getString("errMsgChangeEntryTitle"), JOptionPane.PLAIN_MESSAGE);
 			} else {
@@ -4115,6 +4117,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 				// add entry, and fetch result
 				int result = data.addEntry(title, content, authors.toArray(new String[authors.size()]), keywords,
 						remarks, links, Tools.getTimeStamp(), -1, true, entryNumber);
+				mainframe.createFormImagesFromContent(data, content);
 				// check whether result was an error when adding a follower-entry (trailing
 				// entry(
 				if (result == Daten.ADD_LUHMANNENTRY_ERR) {
@@ -4145,6 +4148,7 @@ public class EditorFrame extends javax.swing.JFrame implements WindowListener, D
 				// sub-entrties).
 				int result = data.addEntry(title, content, authors.toArray(new String[authors.size()]), keywords,
 						remarks, links, Tools.getTimeStamp(), entryNumber);
+				mainframe.createFormImagesFromContent(data, content);
 				// check whether result was an error when adding a follower-entry (trailing
 				// entry(
 				if (result == Daten.ADD_LUHMANNENTRY_ERR) {

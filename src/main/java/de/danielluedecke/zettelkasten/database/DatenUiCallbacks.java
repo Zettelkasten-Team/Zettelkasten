@@ -45,7 +45,7 @@ public interface DatenUiCallbacks {
 
 	void displayHistory(int[] history, int historyCount);
 
-	boolean createFormImage(Daten dataObj, String formTag);
+
 
 	DatenUiCallbacks NO_OP = new DatenUiCallbacks() {
 		@Override
@@ -65,9 +65,5 @@ public interface DatenUiCallbacks {
 		public void displayHistory(int[] history, int historyCount) {
 		}
 
-		@Override
-		public boolean createFormImage(Daten dataObj, String formTag) {
-			return false;
-		}
 	};
 }

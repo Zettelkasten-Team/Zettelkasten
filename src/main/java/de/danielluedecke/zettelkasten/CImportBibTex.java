@@ -740,6 +740,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                                     if (content != null && !content.isEmpty()) {
                                         // finally, add entry to dataset
                                         dataObj.addEntryFromBibTeX("", content, new String[]{au.toString()}, keywords, Tools.getTimeStamp());
+                                        mainframe.createFormImagesFromContent(dataObj, content);
                                         // and increase entry counter
                                         newEntries++;
                                     } // if nothing found, add at least the keywords
@@ -817,6 +818,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                                                         }
                                                         // finally, add entry to dataset
                                                         dataObj.addEntryFromBibTeX("", content, new String[]{au.toString()}, keywords, Tools.getTimeStamp());
+                                                        mainframe.createFormImagesFromContent(dataObj, content);
                                                         // and delete BibTeX attribute from the *old* entry...
                                                         dataObj.setContentFromBibTexRemark(counter, false);
                                                         // update found-variable
@@ -878,6 +880,7 @@ public class CImportBibTex extends javax.swing.JDialog {
                                     }
                                     // finally, add entry to dataset
                                     dataObj.addEntryFromBibTeX("", content, new String[]{au.toString()}, keywords, Tools.getTimeStamp());
+                                    mainframe.createFormImagesFromContent(dataObj, content);
                                     // and increase entry counter
                                     newEntries++;
                                 }
