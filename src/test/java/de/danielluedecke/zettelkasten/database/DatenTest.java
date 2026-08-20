@@ -146,10 +146,7 @@ public class DatenTest {
 			public void displayHistory(int[] history, int historyCount) {
 			}
 
-			@Override
-			public boolean createFormImage(Daten dataObj, String formTag) {
-				return true;
-			}
+
 		};
 
 		Daten daten = new Daten(callbacks, null, synonyms, null);
@@ -161,8 +158,5 @@ public class DatenTest {
 		assertEquals(-1, synonyms.findSynonym("old", true));
 	}
 
-	@Test
-	void testNoOpCreateFormImageReturnsFalse() {
-		assertFalse(DatenUiCallbacks.NO_OP.createFormImage(null, "form"));
-	}
+
 }
