@@ -2764,6 +2764,7 @@ public class Daten {
 			// and remove former content, so we can add new content
 			Objects.requireNonNull(zettel).removeContent();
 		}
+		int targetEntryNumber;
 		try {
 			// add unique ID
 			setZettelID(zettel);
@@ -2918,7 +2919,7 @@ public class Daten {
 			// complete datafile
 			//
 			// if we have any empty elements, go on here
-			int targetEntryNumber = attachEntryIfNeededAndGetTargetEntryNumber(zettel, emptypos, reuseExistingEntry);
+			targetEntryNumber = attachEntryIfNeededAndGetTargetEntryNumber(zettel, emptypos, reuseExistingEntry);
 			// and add the new position to the history...
 			this.activatedEntryNumber = targetEntryNumber;
 			addToHistory(activatedEntryNumber);
@@ -2932,7 +2933,7 @@ public class Daten {
 		// tag
 		// of the related entry (which number is passed in the luhmann variable)
 		if (luhmann != -1) {
-			if (appendSubEntryToEntry(new EntryID(luhmann), new EntryID(this.activatedEntryNumber))) {
+			if (appendSubEntryToEntry(new EntryID(luhmann), new EntryID(targetEntryNumber))) {
 				retval = ADD_LUHMANNENTRY_OK;
 			} else {
 				retval = ADD_LUHMANNENTRY_ERR;
@@ -2943,7 +2944,7 @@ public class Daten {
 		// create back-references for manual links
 		// we can do this here first, because we need
 		// "zettelPos" as reference, which is not available earlier
-		addManualLink(manlinks, this.activatedEntryNumber);
+		addManualLink(manlinks, targetEntryNumber);
 		// entry successfully added
 		return retval;
 	}
