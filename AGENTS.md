@@ -1,7 +1,7 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- Core Java 8 sources live in `src/main/java`, UI assets and properties in `src/main/resources`, and XML/FXML assets alongside their packages. Tests sit in `src/test/java` with fixtures in `src/test/resources`.
+- Core Java 25 sources live in `src/main/java`, UI assets and properties in `src/main/resources`, and XML/FXML assets alongside their packages. Tests sit in `src/test/java` with fixtures in `src/test/resources`.
 - Build outputs land in `target/` (fat JAR, Windows EXE, macOS bundle when enabled). `local-repository/` hosts vendored artifacts referenced by the Maven profile. Keep assets small; binaries or sample zettels (e.g., `validFile.zkn`) belong in `target/` or Git LFS, not under version control.
 - The main entry point is `de.danielluedecke.zettelkasten.ZettelkastenApp`; keep new packages under `de.danielluedecke.zettelkasten` or `ch.dreyeck.zettelkasten` to stay consistent.
 
@@ -13,7 +13,7 @@
 - Run the app locally with `java -jar target/Zettelkasten.jar` after packaging.
 
 ## Coding Style & Naming Conventions
-- Java 8, 4-space indentation, K&R braces, and one public class per file. Keep package and class names lowerCamel/UpperCamel following existing patterns (e.g., `TasksData`, `ListSelectionFixTest`).
+- Java 25, 4-space indentation, K&R braces, and one public class per file. Keep package and class names lowerCamel/UpperCamel following existing patterns (e.g., `TasksData`, `ListSelectionFixTest`).
 - Prefer `final` for fields that should not change, and favor explicit types over raw collections. Keep UI strings and icons in `resources`; avoid hard-coded absolute paths.
 - Logging: stay with the existing `java.util.logging` logger wiring via `Constants.zknlogger`; avoid mixing logging frameworks unless coordinated in `pom.xml`.
 

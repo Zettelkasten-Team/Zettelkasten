@@ -11,8 +11,7 @@
     <properties>
         <exec.mainClass>de.danielluedecke.zettelkasten.ZettelkastenApp</exec.mainClass>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.release>25</maven.compiler.release>
         <zkn.supportsDmg>false</zkn.supportsDmg>
         <zkn.useGenIsoImage>false</zkn.useGenIsoImage>
     </properties>
@@ -85,34 +84,6 @@
                 <zkn.supportsDmg>true</zkn.supportsDmg>
                 <zkn.useGenIsoImage>false</zkn.useGenIsoImage>
             </properties>
-        </profile>
-
-        <!-- Add JAXB libs automatically when building/running on JDK >= 9 -->
-        <profile>
-            <id>jdk9plus-jaxb</id>
-            <activation>
-                <jdk>[9,)</jdk>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>javax.xml.bind</groupId>
-                    <artifactId>jaxb-api</artifactId>
-                    <version>2.3.1</version>
-                    <scope>runtime</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.glassfish.jaxb</groupId>
-                    <artifactId>jaxb-runtime</artifactId>
-                    <version>2.3.1</version>
-                    <scope>runtime</scope>
-                </dependency>
-                <dependency>
-                    <groupId>javax.activation</groupId>
-                    <artifactId>javax.activation-api</artifactId>
-                    <version>1.2.0</version>
-                    <scope>runtime</scope>
-                </dependency>
-            </dependencies>
         </profile>
     </profiles>
 
@@ -191,7 +162,7 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>[1.8,1.9)</version>
+                                    <version>[25,)</version>
                                 </requireJavaVersion>
                                 <requireMavenVersion>
                                     <version>[3.9.0,)</version>
@@ -208,34 +179,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <release>8</release>
+                    <release>25</release>
                     <useIncrementalCompilation>false</useIncrementalCompilation>
-                    <jdkToolchain>
-                        <version>1.8</version>
-                    </jdkToolchain>
-                </configuration>
-            </plugin>
-
-            <!-- Toolchains: prefer Java 8 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-toolchains-plugin</artifactId>
-                <version>3.2.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>toolchain</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <toolchains>
-                        <jdk>
-                            <version>[1.8,1.9)</version>
-                        </jdk>
-                    </toolchains>
                 </configuration>
             </plugin>
 
@@ -301,13 +246,12 @@
                 </executions>
                 <configuration>
                     <useModulePath>false</useModulePath>
+                    <!-- JExample clones test fixtures via Object.clone() reflection -->
+                    <argLine>--add-opens java.base/java.lang=ALL-UNNAMED</argLine>
                     <systemPropertyVariables>
                         <java.awt.headless>true</java.awt.headless>
                     </systemPropertyVariables>
 
-                    <jdkToolchain>
-                        <version>1.8</version>
-                    </jdkToolchain>
                 </configuration>
             </plugin>
 
@@ -393,7 +337,7 @@
                     <plist>
                         <CFBundleDisplayName>${project.name}</CFBundleDisplayName>
                         <JVMMainClassName>${exec.mainClass}</JVMMainClassName>
-                        <JVMVersion>8+</JVMVersion>
+                        <JVMVersion>25+</JVMVersion>
                         <CFBundleDevelopmentRegion>German</CFBundleDevelopmentRegion>
                         <CFBundleName>${project.name}</CFBundleName>
                         <CFBundleDisplayName>${project.name}</CFBundleDisplayName>
@@ -442,11 +386,11 @@
                             <manifest/>
                             <icon>src/main/resources/logo/zkn2.ico</icon>
                             <jre>
-                                <minVersion>1.8.0</minVersion>
+                                <minVersion>25</minVersion>
                                 <bundledJre64Bit>false</bundledJre64Bit>
                                 <bundledJreAsFallback>false</bundledJreAsFallback>
                                 <jdkPreference>preferJre</jdkPreference>
-                                <runtimeBits>32/64</runtimeBits>
+                                <runtimeBits>64</runtimeBits>
                             </jre>
                             <splash>
                                 <file>src/main/resources/logo/splash.bmp</file>
@@ -601,11 +545,17 @@
             <version>1.23.1</version>
         </dependency>
 
-        <!-- Stay on javax for Java 8 -->
+        <!-- JAXB was removed from the JDK in Java 11; use Jakarta XML Binding -->
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.2.8</version>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>4.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>4.0.5</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 </project>

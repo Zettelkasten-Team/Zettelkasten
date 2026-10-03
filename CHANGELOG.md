@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org/) for commit guidelines.
 
 # [Unreleased]
+#### Changes
+
+- Java 25 is now required to build and run Zettelkasten (previously Java 8).
+- JAXB (`javax.xml.bind`, removed from the JDK in Java 11) was replaced by Jakarta XML Binding 4.
+- The macOS About/Preferences/Quit menu items use `java.awt.Desktop` instead of the removed `com.apple.eawt` API.
+
 #### 🩹 Bug fixes
 
 - askUserAndMaybeSaveChanges (within ZettelkastenView), ensure that settings.getMainDataFile() does not return null before calling toString() on it.

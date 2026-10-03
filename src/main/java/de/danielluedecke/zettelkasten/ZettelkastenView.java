@@ -81,10 +81,6 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.awt.event.*;
 import java.io.*;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -11097,74 +11093,28 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	 * which provides own about, preferences and quit-menu-items.
 	 */
 	private void setupMacOSXApplicationListener() {
-		// <editor-fold defaultstate="collapsed" desc="Application-listener initiating
-		// the stuff for the Apple-menu.">
-		try {
-			// get mac os-x application class
-			Class<?> appc = Class.forName("com.apple.eawt.Application");
-			// create a new instance for it.
-			Object app = appc.newInstance();
-			// get the application-listener class. here we can set our action to the apple
-			// menu
-			Class<?> lc = Class.forName("com.apple.eawt.ApplicationListener");
-			Object listener = Proxy.newProxyInstance(lc.getClassLoader(), new Class<?>[] { lc },
-					new InvocationHandler() {
-						@Override
-						public Object invoke(Object proxy, Method method, Object[] args) {
-							if (method.getName().equals("handleQuit")) {
-								// call the general exit-handler from the desktop-application-api
-								// here we do all the stuff we need when exiting the application
-								ZettelkastenApp.getApplication().exit();
-							}
-							if (method.getName().equals("handlePreferences")) {
-								// show settings window
-								settingsWindow();
-							}
-							if (method.getName().equals("handleAbout")) {
-								// show own aboutbox
-								showAboutBox();
-								try {
-									// set handled to true, so other actions won't take place any more.
-									// if we leave this out, a second, system-own aboutbox would be displayed
-									setHandled(args[0], Boolean.TRUE);
-								} catch (NoSuchMethodException | IllegalAccessException
-										| InvocationTargetException ex) {
-									Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
-								}
-							}
-							return null;
-						}
-
-						private void setHandled(Object event, Boolean val)
-								throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-							Method handleMethod = event.getClass().getMethod("setHandled",
-									new Class<?>[] { boolean.class });
-							handleMethod.invoke(event, new Object[] { val });
-						}
-					});
-			// tell about success
-			Constants.zknlogger.log(Level.INFO, "Apple Class Loader successfully initiated.");
-			try {
-				// add application listener that listens to actions on the apple menu items
-				Method m = appc.getMethod("addApplicationListener", lc);
-				m.invoke(app, listener);
-				// register that we want that Preferences menu. by default, only the about box
-				// is shown
-				// but no pref-menu-item
-				Method enablePreferenceMethod = appc.getMethod("setEnabledPreferencesMenu",
-						new Class<?>[] { boolean.class });
-				enablePreferenceMethod.invoke(app, new Object[] { Boolean.TRUE });
-				// tell about success
-				Constants.zknlogger.log(Level.INFO, "Apple Preference Menu successfully initiated.");
-			} catch (NoSuchMethodException | SecurityException | InvocationTargetException ex) {
-				Constants.zknlogger.log(Level.SEVERE, ex.getLocalizedMessage());
-			}
-		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-			Constants.zknlogger.log(Level.SEVERE, e.getLocalizedMessage());
+		// com.apple.eawt was removed in Java 9; java.awt.Desktop provides the
+		// handlers for the about, preferences and quit items of the apple menu.
+		if (!Desktop.isDesktopSupported()) {
+			return;
 		}
-		// </editor-fold>
-
-		// </editor-fold>
+		Desktop desktop = Desktop.getDesktop();
+		if (desktop.isSupported(Desktop.Action.APP_ABOUT)) {
+			desktop.setAboutHandler(e -> showAboutBox());
+		}
+		if (desktop.isSupported(Desktop.Action.APP_PREFERENCES)) {
+			desktop.setPreferencesHandler(e -> settingsWindow());
+		}
+		if (desktop.isSupported(Desktop.Action.APP_QUIT_HANDLER)) {
+			desktop.setQuitHandler((e, response) -> {
+				// call the general exit-handler from the desktop-application-api
+				// here we do all the stuff we need when exiting the application.
+				// if the user cancels exiting, the quit request must be cancelled too.
+				ZettelkastenApp.getApplication().exit();
+				response.cancelQuit();
+			});
+		}
+		Constants.zknlogger.log(Level.INFO, "Apple menu handlers successfully initiated.");
 	}
 
 	/**

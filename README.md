@@ -22,7 +22,7 @@ Here you can download the latest version of Zettelkasten: [Releases](https://git
 
 **Note** to users:
 > This information is relevant to users of Zettelkasten.
-> To run Zettelkasten you need a Java Runtime Environment for Java 8. See [page](https://www.java.com/de/download/manual.jsp).
+> To run Zettelkasten you need a Java Runtime Environment for Java 25 or newer, e.g. [Eclipse Temurin](https://adoptium.net/) (on macOS: `brew install openjdk@25`).
 
 ## Wiki
 Here you can find and add content about Zettelkasten in a [Wiki](https://github.com/Zettelkasten-Team/Zettelkasten/wiki).
@@ -30,7 +30,7 @@ Here you can find and add content about Zettelkasten in a [Wiki](https://github.
 ## Zettelkasten Build
 **Note** to software developers:
 > This information is only relevant to software developers.
-> To build the Zettelkasten, you need a Java Development Kit (JDK) for Java 8 and Maven 3.
+> To build the Zettelkasten, you need a Java Development Kit (JDK) for Java 25 or newer and Maven 3.9+.
 
 To get a local repository, use Git:
 
