@@ -1,5 +1,5 @@
 {
-  description = "Zettelkasten (Swing) dev shell with JDK 8 + Maven + IntelliJ IDEA CE + repomix-md";
+  description = "Zettelkasten (Swing) dev shell with JDK 25 + Maven + IntelliJ IDEA CE + repomix-md";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
@@ -13,12 +13,11 @@
         pkgs = import nixpkgs { inherit system; };
         pkgsUnstable = import nixpkgs-unstable { inherit system; };
 
-        # --- JDK 8 selection (unchanged logic) ---
+        # --- JDK 25 (not in nixos-24.05, so take it from unstable) ---
         jdk =
-          if builtins.hasAttr "temurin-bin-8" pkgs then pkgs.temurin-bin-8
-          else if builtins.hasAttr "zulu8" pkgs then pkgs.zulu8
-          else if builtins.hasAttr "jdk8" pkgs then pkgs.jdk8
-          else throw "No JDK 8 available in this nixpkgs.";
+          if builtins.hasAttr "temurin-bin-25" pkgsUnstable then pkgsUnstable.temurin-bin-25
+          else if builtins.hasAttr "jdk25" pkgsUnstable then pkgsUnstable.jdk25
+          else throw "No JDK 25 available in nixpkgs-unstable.";
 
         maven = pkgs.maven;
 
@@ -63,22 +62,6 @@
           shellHook = ''
             export JAVA_HOME=${jdk}
             export MAVEN_OPTS="-Djava.awt.headless=true"
-
-            mkdir -p "$HOME/.m2"
-            cat > "$HOME/.m2/toolchains.xml" <<'EOF'
-<?xml version="1.0" encoding="UTF-8"?>
-<toolchains>
-  <toolchain>
-    <type>jdk</type>
-    <provides>
-      <version>1.8</version>
-    </provides>
-    <configuration>
-      <jdkHome>${jdk}</jdkHome>
-    </configuration>
-  </toolchain>
-</toolchains>
-EOF
 
             echo "▶ Zettelkasten dev shell"
             echo "   Java:    $(java -version 2>&1 | head -n1)"
