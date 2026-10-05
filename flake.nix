@@ -1,5 +1,5 @@
 {
-  description = "Zettelkasten (Swing) dev shell with JDK 8 + Maven + IntelliJ IDEA CE + repomix-md";
+  description = "Zettelkasten (Swing) dev shell with JDK 25 + Maven + IntelliJ IDEA CE + repomix-md";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
