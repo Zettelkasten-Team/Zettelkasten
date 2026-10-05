@@ -9,6 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org/) for commit guidelin
 - Java 25 is now required to build and run Zettelkasten (previously Java 8).
 - JAXB (`javax.xml.bind`, removed from the JDK in Java 11) was replaced by Jakarta XML Binding 4.
 - The macOS About/Preferences/Quit menu items use `java.awt.Desktop` instead of the removed `com.apple.eawt` API.
+- On a Java version older than 25, Zettelkasten now shows a message asking for a newer Java instead of failing to start.
 
 #### 🩹 Bug fixes
 

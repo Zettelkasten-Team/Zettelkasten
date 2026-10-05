@@ -9,7 +9,7 @@
     <name>Zettelkasten</name>
 
     <properties>
-        <exec.mainClass>de.danielluedecke.zettelkasten.ZettelkastenApp</exec.mainClass>
+        <exec.mainClass>de.danielluedecke.zettelkasten.ZettelkastenLauncher</exec.mainClass>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>25</maven.compiler.release>
         <zkn.supportsDmg>false</zkn.supportsDmg>
@@ -182,6 +182,33 @@
                     <release>25</release>
                     <useIncrementalCompilation>false</useIncrementalCompilation>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <configuration>
+                            <excludes>
+                                <exclude>de/danielluedecke/zettelkasten/ZettelkastenLauncher.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                    <!-- The launcher checks the Java version, so it must still load on old runtimes -->
+                    <execution>
+                        <id>compile-launcher</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <release>8</release>
+                            <includes>
+                                <include>de/danielluedecke/zettelkasten/ZettelkastenLauncher.java</include>
+                            </includes>
+                            <compilerArgs>
+                                <arg>-Xlint:-options</arg>
+                            </compilerArgs>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Tests: JUnit Platform (Vintage only for now) + TestNG -->
