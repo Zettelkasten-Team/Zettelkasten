@@ -207,3 +207,30 @@ Acceptance criteria:
 - JExample-dependent tests run via JUnit provider.
 - TestNG tests still run via TestNG provider.
 - `mvn test` completes without the JExample/TestNG JUnit-mode warning.
+
+### PR-SCOPE: AC-10 — Dependency hygiene and removal of unused dependencies
+
+Intent:
+- Keep the runtime and packaged dependency surface limited to
+  dependencies required by observable application behaviour.
+- Prefer removal of unused dependencies over version maintenance
+  or compensating machinery.
+
+Allowed changes:
+- Remove dependencies with no remaining production or test use.
+- Remove dead code whose sole purpose was to use such dependencies.
+- Adjust pom.xml accordingly.
+- Add or adjust tests where observable behaviour is affected.
+
+Forbidden changes:
+- No feature changes.
+- No UI behaviour or layout changes.
+- No persistence format changes.
+- No replacement dependency unless required by an existing behaviour.
+- No unrelated dependency upgrades.
+
+Acceptance criteria:
+- Existing behaviour and tests remain unchanged.
+- mvn test passes.
+- Removed dependencies are absent from Maven dependency tree.
+- Removed runtime libraries are absent from the shaded artifact.

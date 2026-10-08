@@ -556,20 +556,9 @@
             <version>3.4.1</version>
         </dependency>
         <dependency>
-            <groupId>io.github.furstenheim</groupId>
-            <artifactId>copy_down</artifactId>
-            <version>1.1</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.5.6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.23.1</version>
         </dependency>
 
         <!-- JAXB was removed from the JDK in Java 11; use Jakarta XML Binding -->

@@ -9,8 +9,6 @@ import java.util.logging.Level;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.parser.ParserDelegator;
 
-import org.jsoup.Jsoup;
-
 public class HtmlValidator {
 
 	/**
@@ -190,21 +188,4 @@ public class HtmlValidator {
 		return null;
 	}
 
-
-	/**
-	 * Checks if the HTML content is well-formed.
-	 *
-	 * @param htmlContent the HTML content to be checked
-	 * @return true if the HTML content is well-formed, false otherwise
-	 */
-	public static boolean isWellFormed(String htmlContent) {
-        try {
-            org.jsoup.nodes.Document doc = Jsoup.parse(htmlContent);
-            // If parsing is successful, the HTML is well-formed
-            return true;
-        } catch (Exception e) {
-            // If parsing fails, the HTML is not well-formed
-            return false;
-        }
-    }
 }
