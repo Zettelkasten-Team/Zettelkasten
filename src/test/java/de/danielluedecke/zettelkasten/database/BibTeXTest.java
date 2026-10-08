@@ -6,11 +6,19 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BibTeXTest {
+
+	/**
+	 * Managed by JUnit Jupiter and deleted after each test, also when the test
+	 * fails.
+	 */
+	@TempDir
+	Path tempDir;
 
 	@Test
 	void openAttachedFileNotifiesImportSummary() throws IOException {
@@ -28,7 +36,7 @@ public class BibTeXTest {
 			}
 		};
 		BibTeX bibTeX = new BibTeX(callbacks, settings);
-		Path bibFile = Files.createTempFile("zettelkasten-bibtex", ".bib");
+		Path bibFile = Files.createFile(tempDir.resolve("zettelkasten-bibtex.bib"));
 		Files.write(bibFile,
 				"@article{key, author={Doe, John}, title={Title}, year={2020}}".getBytes(StandardCharsets.UTF_8));
 		bibTeX.setFilePath(bibFile.toFile());
