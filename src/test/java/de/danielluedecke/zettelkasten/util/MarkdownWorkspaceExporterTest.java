@@ -20,11 +20,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class MarkdownWorkspaceExporterTest {
 
 	private String originalHome;
+	private String originalUserDir;
 
 	@AfterEach
 	void restoreHome() {
 		if (originalHome != null) {
 			System.setProperty("user.home", originalHome);
+		}
+		if (originalUserDir != null) {
+			System.setProperty("user.dir", originalUserDir);
 		}
 	}
 
@@ -98,6 +102,9 @@ public class MarkdownWorkspaceExporterTest {
 	private void setHome(Path tempDir) {
 		originalHome = System.getProperty("user.home");
 		System.setProperty("user.home", tempDir.toString());
+		// Settings looks for a settings file in user.dir before user.home.
+		originalUserDir = System.getProperty("user.dir");
+		System.setProperty("user.dir", tempDir.toString());
 	}
 
 	private Daten createData(Settings settings) {

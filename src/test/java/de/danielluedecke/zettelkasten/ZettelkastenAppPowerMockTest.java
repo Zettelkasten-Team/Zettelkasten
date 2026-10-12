@@ -1,10 +1,13 @@
 package de.danielluedecke.zettelkasten;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.powermock.reflect.Whitebox;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -13,11 +16,40 @@ class ZettelkastenAppPowerMockTest {
 
     private ZettelkastenApp app;
 
+    /**
+     * Used as user.dir and user.home, so new Settings() neither reads nor creates
+     * real Zettelkasten settings. Deleted by JUnit Jupiter after each test.
+     */
+    @TempDir
+    Path settingsDir;
+
+    private String originalUserDir;
+    private String originalUserHome;
+
     @BeforeEach
     void setUp() {
+        originalUserDir = System.getProperty("user.dir");
+        originalUserHome = System.getProperty("user.home");
+        System.setProperty("user.dir", settingsDir.toString());
+        System.setProperty("user.home", settingsDir.toString());
         app = new ZettelkastenApp();
         app.initialize(new String[]{});  // Initialize the app
         app.initializeSettings();       // Ensure settings is initialized
+    }
+
+    @AfterEach
+    void restoreSettingsLocation() {
+        // Runs also when a test fails.
+        restoreProperty("user.dir", originalUserDir);
+        restoreProperty("user.home", originalUserHome);
+    }
+
+    private static void restoreProperty(String key, String value) {
+        if (value == null) {
+            System.clearProperty(key);
+        } else {
+            System.setProperty(key, value);
+        }
     }
 
     @Test

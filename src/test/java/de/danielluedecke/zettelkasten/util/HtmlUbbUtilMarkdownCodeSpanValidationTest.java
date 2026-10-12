@@ -6,12 +6,50 @@ import de.danielluedecke.zettelkasten.database.Daten;
 import de.danielluedecke.zettelkasten.database.DatenUiCallbacks;
 import de.danielluedecke.zettelkasten.database.Synonyms;
 import de.danielluedecke.zettelkasten.settings.Settings;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HtmlUbbUtilMarkdownCodeSpanValidationTest {
+
+	/**
+	 * Used as user.dir and user.home, so new Settings() neither reads nor creates
+	 * real Zettelkasten settings. Deleted by JUnit Jupiter after each test.
+	 */
+	@TempDir
+	Path settingsDir;
+
+	private String originalUserDir;
+	private String originalUserHome;
+
+	@BeforeEach
+	void isolateSettings() {
+		originalUserDir = System.getProperty("user.dir");
+		originalUserHome = System.getProperty("user.home");
+		System.setProperty("user.dir", settingsDir.toString());
+		System.setProperty("user.home", settingsDir.toString());
+	}
+
+	@AfterEach
+	void restoreSettingsLocation() {
+		// Runs also when a test fails.
+		restoreProperty("user.dir", originalUserDir);
+		restoreProperty("user.home", originalUserHome);
+	}
+
+	private static void restoreProperty(String key, String value) {
+		if (value == null) {
+			System.clearProperty(key);
+		} else {
+			System.setProperty(key, value);
+		}
+	}
 
 	@Test
 	void markdownInlineCodeWithUnderscoresProducesValidHtml() {
