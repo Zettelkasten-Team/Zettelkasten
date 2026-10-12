@@ -2,9 +2,11 @@ package de.danielluedecke.zettelkasten;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.powermock.reflect.Whitebox;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,6 +14,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class ZettelkastenAppRefactorTest {
 
     private ZettelkastenAppRefactor app;
+
+    /**
+     * Managed by JUnit Jupiter and deleted after each test, also when the test
+     * fails.
+     */
+    @TempDir
+    Path tempDir;
 
     @BeforeEach
     void setUp() {
@@ -47,7 +56,7 @@ class ZettelkastenAppRefactorTest {
 
     @Test
     void testProcessDataFileValidFileUsingPowerMock() throws Exception {
-        File validFile = new File("validFile.zkn");
+        File validFile = tempDir.resolve("validFile.zkn").toFile();
         validFile.createNewFile(); // Create a valid file for the test
 
         // Use PowerMock's Whitebox to invoke the private method
@@ -55,9 +64,6 @@ class ZettelkastenAppRefactorTest {
 
         // Verify that the valid file is set in settings
         assertEquals(validFile, app.getSettings().getMainDataFile());
-
-        // Clean up
-        validFile.delete();
     }
 
     @Test

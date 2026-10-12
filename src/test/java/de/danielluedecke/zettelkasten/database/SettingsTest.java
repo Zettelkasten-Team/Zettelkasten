@@ -11,10 +11,10 @@ import org.hamcrest.MatcherAssert;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.output.XMLOutputter;
-import org.junit.Rule;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -22,20 +22,51 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class SettingsTest {
 
-	@Rule
-	public TemporaryFolder tempFolder = new TemporaryFolder();
+	/**
+	 * Managed by JUnit Jupiter and deleted after each test, also when the test
+	 * fails.
+	 */
+	@TempDir
+	Path tempDir;
+
+	/**
+	 * Directory used as user.dir and user.home during a test. It lives inside
+	 * {@link #tempDir}, so a test can delete it to simulate a missing directory.
+	 */
+	private File settingsRoot;
+
+	private String originalUserDir;
+	private String originalUserHome;
 
 	@BeforeEach
 	public void setUp() throws JDOMException, IOException {
+		originalUserDir = System.getProperty("user.dir");
+		originalUserHome = System.getProperty("user.home");
 		// Prepare temporary folder for test.
-		tempFolder.create();
-		System.setProperty("user.dir", tempFolder.getRoot().getPath());
-		System.setProperty("user.home", tempFolder.getRoot().getPath());
+		settingsRoot = Files.createDirectory(tempDir.resolve("settings-root")).toFile();
+		System.setProperty("user.dir", settingsRoot.getPath());
+		System.setProperty("user.home", settingsRoot.getPath());
+	}
+
+	@AfterEach
+	public void tearDown() {
+		// Runs also when a test fails, so later tests see the original values.
+		restoreProperty("user.dir", originalUserDir);
+		restoreProperty("user.home", originalUserHome);
+	}
+
+	private static void restoreProperty(String key, String value) {
+		if (value == null) {
+			System.clearProperty(key);
+		} else {
+			System.setProperty(key, value);
+		}
 	}
 
 	@Test
@@ -60,7 +91,7 @@ public class SettingsTest {
 	@Test
 	void saveSettings_MissingDir_Fails() {
 		Settings settings = new Settings();
-		tempFolder.delete();
+		FileUtils.deleteQuietly(settingsRoot);
 
 		// Run save. Should fail due to missing directory.
 		boolean ok = settings.saveSettingsToFiles();
@@ -119,7 +150,7 @@ public class SettingsTest {
 	void MainDataFile_setMainDataFile_Success() throws IOException {
 		Settings settings = new Settings();
 
-		Path testPath = Paths.get(tempFolder.getRoot().getPath(), "ANY_VALUE.zkn3");
+		Path testPath = Paths.get(settingsRoot.getPath(), "ANY_VALUE.zkn3");
 		settings.setMainDataFile(testPath.toFile());
 
 		assertEquals(testPath.toString(), settings.getMainDataFile().toString());

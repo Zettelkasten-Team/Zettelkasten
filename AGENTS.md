@@ -234,3 +234,36 @@ Acceptance criteria:
 - mvn test passes.
 - Removed dependencies are absent from Maven dependency tree.
 - Removed runtime libraries are absent from the shaded artifact.
+
+### PR-SCOPE: AC-11 — Test fixture isolation
+
+Intent:
+- Make test outcomes independent of the developer's machine, of other tests and of
+  execution order, and keep test runs from leaving state behind.
+- Treat fixture setup and teardown as test infrastructure, not as a place to change
+  what a test asserts.
+
+Allowed changes:
+- Replace ineffective or framework-mismatched fixture mechanisms in existing tests
+  (e.g., a JUnit 4 `@Rule` inside a JUnit Jupiter class) with ones the running framework
+  applies, such as JUnit Jupiter `@TempDir`.
+- Save and restore global JVM state that a test modifies (system properties, default
+  locale, static configuration).
+- Move files a test creates out of the working directory into managed temporary
+  directories, with cleanup that runs even when a test fails.
+
+Forbidden changes:
+- Production code changes.
+- Changing assertions, expected values or domain expectations; renaming, removing,
+  disabling or skipping tests.
+- Test-runner or Maven configuration changes (AC-07).
+- UI behavior or layout changes.
+- Persistence format changes.
+
+Acceptance criteria:
+- Test setup is deterministic and does not depend on execution order.
+- Global state modified by a test is restored afterwards, also when the test fails.
+- Files created by tests are cleaned up, also when assertions fail; nothing is written
+  to the repository root or left in the temporary directory.
+- Test identities and existing assertions are unchanged.
+- `mvn test` results are unchanged apart from the removed side effects.
