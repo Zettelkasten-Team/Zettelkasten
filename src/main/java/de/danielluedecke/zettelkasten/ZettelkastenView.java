@@ -406,7 +406,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	public ZettelkastenView(SingleFrameApplication app, Settings st, TasksData td) throws ClassNotFoundException,
 			UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException {
 		super(app);
-		this.searchRequests = new SearchRequests(this); // Initialize searchRequests
+		this.searchRequests = new SearchRequests(createSearchRequestsUiCallbacks()); // Initialize searchRequests
         this.desktop = new DesktopData(this);
         this.settings = st;
 		this.taskinfo = td;
@@ -484,6 +484,19 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 				Constants.zknlogger.log(Level.WARNING, "Could not create form image for tag: {0}", formTag);
 			}
 		}
+	}
+
+	/**
+	 * Connects the search requests' modification notifications to the backup
+	 * indicator. Package-private for tests.
+	 */
+	SearchRequestsUiCallbacks createSearchRequestsUiCallbacks() {
+		return new SearchRequestsUiCallbacks() {
+			@Override
+			public void setBackupNecessary() {
+				ZettelkastenView.this.setBackupNecessary();
+			}
+		};
 	}
 
 	private BibTeXUiCallbacks createBibTeXUiCallbacks() {

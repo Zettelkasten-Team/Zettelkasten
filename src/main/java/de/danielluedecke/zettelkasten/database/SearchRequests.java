@@ -33,7 +33,6 @@
 
 package de.danielluedecke.zettelkasten.database;
 
-import de.danielluedecke.zettelkasten.ZettelkastenView;
 import de.danielluedecke.zettelkasten.util.classes.Comparer;
 import de.danielluedecke.zettelkasten.util.Constants;
 import java.text.DateFormat;
@@ -80,16 +79,16 @@ public class SearchRequests {
 	 */
 	private static final int searchTermsHistoryMax = 20;
 	/**
-	 * Reference to the main frame.
+	 * Receives notifications about changes of the modified state.
 	 */
-	private final ZettelkastenView zknframe;
+	private final SearchRequestsUiCallbacks uiCallbacks;
 	/**
 	 *
 	 */
 	private int[] searchresults;
 
-	public SearchRequests(ZettelkastenView zkn) {
-		zknframe = zkn;
+	public SearchRequests(SearchRequestsUiCallbacks uiCallbacks) {
+		this.uiCallbacks = uiCallbacks == null ? SearchRequestsUiCallbacks.NO_OP : uiCallbacks;
 		clear();
 	}
 
@@ -730,7 +729,7 @@ public class SearchRequests {
 	public void setModified(boolean m) {
 		modified = m;
 		// update indicator for autobackup
-		zknframe.setBackupNecessary();
+		uiCallbacks.setBackupNecessary();
 	}
 
 	/**
