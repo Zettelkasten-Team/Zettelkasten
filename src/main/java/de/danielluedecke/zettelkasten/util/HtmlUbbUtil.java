@@ -1430,6 +1430,7 @@ public class HtmlUbbUtil {
             head3md = "$1<h4>$2</h4>";
             head4md = "$1<h5>$2</h5>";
         }
+        CodeSpanExtraction markdownCodeSpans = null;
         // check whether markdown is activated
         // if yes, replace markdown here
         if (isMarkdownActivated) {
@@ -1472,7 +1473,8 @@ public class HtmlUbbUtil {
             dummy = replaceMarkdownLinks(dummy);
             // replace line breaks
             dummy = dummy.replace("\n", "[br]");
-            dummy = restoreMarkdownCodeSpans(dummy, codeSpans);
+            // Restore after all inline-code replacements below.
+            markdownCodeSpans = codeSpans;
         } else {
             // if we don't have markdown, and thus no quotes-syntax with "> ...",
             // we need to replace non-tag-< and > here
@@ -1546,6 +1548,9 @@ public class HtmlUbbUtil {
         dummy = dummy.replaceAll("\\[z ([^\\[]*)\\](.*?)\\[/z\\]", "<a class=\"manlink\" href=\"#z_$1\">$2</a>");
         // remove all new lines after headlines
         dummy = dummy.replaceAll("\\</h([^\\<]*)\\>\\<br\\>", "</h$1>");
+        if (markdownCodeSpans != null) {
+            dummy = restoreMarkdownCodeSpans(dummy, markdownCodeSpans);
+        }
         return dummy;
     }
 
@@ -1558,12 +1563,23 @@ public class HtmlUbbUtil {
         int i = 0;
         while (i < input.length()) {
             char ch = input.charAt(i);
+            // Escaped backticks are literal text, but must also be protected
+            // from emphasis and the legacy inline-code replacement below.
+            if (ch == '\\' && input.startsWith("\\`", i)) {
+                int end = input.indexOf("\\`", i + 2);
+                if (end != -1) {
+                    out.append(codeToken(spans.size()));
+                    spans.add(escapeCodeSpanContent(input.substring(i, end + 2)));
+                    i = end + 2;
+                    continue;
+                }
+            }
             if (ch == '`' && (i == 0 || input.charAt(i - 1) != '\\')) {
                 int end = findClosingBacktick(input, i + 1);
                 if (end != -1) {
                     String code = input.substring(i + 1, end);
                     String token = codeToken(spans.size());
-                    spans.add(code);
+                    spans.add("<code>" + escapeCodeSpanContent(code) + "</code>");
                     out.append(token);
                     i = end + 1;
                     continue;
@@ -1593,8 +1609,7 @@ public class HtmlUbbUtil {
         String restored = input;
         for (int i = 0; i < extraction.spans.size(); i++) {
             String token = codeToken(i);
-            String escaped = escapeCodeSpanContent(extraction.spans.get(i));
-            restored = restored.replace(token, "<code>" + escaped + "</code>");
+            restored = restored.replace(token, extraction.spans.get(i));
         }
         return restored;
     }
