@@ -1431,12 +1431,15 @@ public class HtmlUbbUtil {
             head4md = "$1<h5>$2</h5>";
         }
         CodeSpanExtraction markdownCodeSpans = null;
+        List<String> markdownLinkTargets = null;
         // check whether markdown is activated
         // if yes, replace markdown here
         if (isMarkdownActivated) {
             dummy = dummy.replace("[br]", "\n");
             CodeSpanExtraction codeSpans = protectMarkdownCodeSpans(dummy);
             dummy = codeSpans.text;
+            markdownLinkTargets = new ArrayList<>();
+            dummy = replaceMarkdownLinks(dummy, markdownLinkTargets);
             if (applyMarkdownNormalization) {
                 dummy = normalizeMarkdownEmphasis(dummy);
             }
@@ -1551,6 +1554,11 @@ public class HtmlUbbUtil {
         if (markdownCodeSpans != null) {
             dummy = restoreMarkdownCodeSpans(dummy, markdownCodeSpans);
         }
+        if (markdownLinkTargets != null) {
+            for (int i = 0; i < markdownLinkTargets.size(); i++) {
+                dummy = dummy.replace(linkTargetToken(i), escapeHtmlAttribute(markdownLinkTargets.get(i)));
+            }
+        }
         return dummy;
     }
 
@@ -1660,7 +1668,17 @@ public class HtmlUbbUtil {
         return out.toString();
     }
 
+    private static String linkTargetToken(int index) {
+        return "httpMDLINKTARGET" + index + "END";
+    }
+
     private static String replaceMarkdownLinks(String input) {
+        return replaceMarkdownLinks(input, null);
+    }
+
+    // Reuse link recognition before formatting; protect destinations only so
+    // labels retain their existing Markdown formatting.
+    private static String replaceMarkdownLinks(String input, List<String> protectedTargets) {
         StringBuilder out = new StringBuilder(input.length());
         int i = 0;
         while (i < input.length()) {
@@ -1675,6 +1693,13 @@ public class HtmlUbbUtil {
                         if (urlEnd != -1) {
                             String label = input.substring(i + 1, textEnd);
                             String url = input.substring(urlStart, urlEnd);
+                            if (protectedTargets != null) {
+                                String token = linkTargetToken(protectedTargets.size());
+                                protectedTargets.add(url);
+                                out.append('[').append(label).append("](").append(token).append(')');
+                                i = urlEnd + 1;
+                                continue;
+                            }
                             out.append("<a href=\"")
                                     .append(escapeHtmlAttribute(url))
                                     .append("\" title=\"")
