@@ -1282,6 +1282,10 @@ public class HtmlUbbUtil {
                 if (pos2 != -1) {
                     try {
                         String path = dummy.substring(pos + 5, pos2);
+                        if (path.startsWith("https://") || path.startsWith("http://")) {
+                            pos = pos2;
+                            continue;
+                        }
                         File imgfile = new File(path.substring(0, path.indexOf("|")));
                         if (!imgfile.exists()) {
                             // image tag: [img]img/gfx.png[/img] becomes <img src="/img/gfx.png">
@@ -1336,6 +1340,11 @@ public class HtmlUbbUtil {
                     int end = dummy.indexOf("\"", pos + 10);
                     // check for valid value
                     if (end != -1) {
+                        String source = dummy.substring(pos + 10, end);
+                        if (source.startsWith("https://") || source.startsWith("http://")) {
+                            pos = end + 1;
+                            continue;
+                        }
                         try {
                             int width, height, rw, rh;
                             // create a new file from the imagepath
@@ -1439,6 +1448,7 @@ public class HtmlUbbUtil {
             CodeSpanExtraction codeSpans = protectMarkdownCodeSpans(dummy);
             dummy = codeSpans.text;
             markdownLinkTargets = new ArrayList<>();
+            dummy = replaceMarkdownImages(dummy, markdownLinkTargets);
             dummy = replaceMarkdownLinks(dummy, markdownLinkTargets);
             if (applyMarkdownNormalization) {
                 dummy = normalizeMarkdownEmphasis(dummy);
@@ -1646,6 +1656,10 @@ public class HtmlUbbUtil {
     }
 
     private static String replaceMarkdownImages(String input) {
+        return replaceMarkdownImages(input, null);
+    }
+
+    private static String replaceMarkdownImages(String input, List<String> protectedTargets) {
         StringBuilder out = new StringBuilder(input.length());
         int i = 0;
         while (i < input.length()) {
@@ -1656,7 +1670,13 @@ public class HtmlUbbUtil {
                     int urlEnd = findClosingParen(input, urlStart);
                     if (urlEnd != -1) {
                         String url = input.substring(urlStart, urlEnd);
-                        out.append("[img]").append(url).append("[/img]");
+                        if (protectedTargets != null) {
+                            String token = linkTargetToken(protectedTargets.size());
+                            protectedTargets.add(url);
+                            out.append(input, i, urlStart).append(token).append(')');
+                        } else {
+                            out.append("[img]").append(url).append("[/img]");
+                        }
                         i = urlEnd + 1;
                         continue;
                     }
@@ -1683,9 +1703,9 @@ public class HtmlUbbUtil {
         int i = 0;
         while (i < input.length()) {
             if (input.charAt(i) == '[' && (i == 0 || input.charAt(i - 1) != '!')) {
-                // A link label must end at its first closing bracket. Otherwise a
-                // preceding UBB image tag can be swallowed by a later Markdown link.
-                int textEnd = input.indexOf(']', i + 1);
+                // Match the label's own closing bracket, including nested labels
+                // and image markup, without searching into a later unrelated link.
+                int textEnd = findClosingBracket(input, i);
                 if (textEnd != -1 && input.startsWith("](", textEnd)) {
                     int urlStart = textEnd + 2;
                     if (input.startsWith("http", urlStart)) {
@@ -1776,6 +1796,21 @@ public class HtmlUbbUtil {
             i++;
         }
         return count;
+    }
+
+    private static int findClosingBracket(String input, int start) {
+        int depth = 0;
+        for (int i = start; i < input.length(); i++) {
+            char ch = input.charAt(i);
+            if (ch == '\\' && i + 1 < input.length()) {
+                i++;
+            } else if (ch == '[') {
+                depth++;
+            } else if (ch == ']' && --depth == 0) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private static int findClosingParen(String input, int start) {
