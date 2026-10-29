@@ -1650,8 +1650,10 @@ public class HtmlUbbUtil {
         int i = 0;
         while (i < input.length()) {
             if (input.charAt(i) == '[' && (i == 0 || input.charAt(i - 1) != '!')) {
-                int textEnd = input.indexOf("](", i + 1);
-                if (textEnd != -1) {
+                // A link label must end at its first closing bracket. Otherwise a
+                // preceding UBB image tag can be swallowed by a later Markdown link.
+                int textEnd = input.indexOf(']', i + 1);
+                if (textEnd != -1 && input.startsWith("](", textEnd)) {
                     int urlStart = textEnd + 2;
                     if (input.startsWith("http", urlStart)) {
                         int urlEnd = findClosingParen(input, urlStart);

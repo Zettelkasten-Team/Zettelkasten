@@ -1,7 +1,12 @@
 package de.danielluedecke.zettelkasten.util;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -63,4 +68,38 @@ public class HtmlUbbUtilMarkdownImagesTest {
         assertFalse(html.contains("</a>\">"));
         assertTrue(HtmlValidator.isValidHTML(html, 1, content));
     }
+    @Test
+    public void localMarkdownImageBeforeSourceLinkRemainsAnImage() throws Exception {
+        File image = settingsFolder.newFile("11401-mermaid-diagram.png");
+        ImageIO.write(new BufferedImage(2, 2, BufferedImage.TYPE_INT_RGB), "png", image);
+        assertLocalImageBeforeSourceLink(image.getName());
+    }
+
+    @Test
+    public void missingMarkdownImageBeforeSourceLinkKeepsItsResolvedSource() {
+        assertLocalImageBeforeSourceLink("missing.png");
+    }
+
+    private void assertLocalImageBeforeSourceLink(String filename) {
+        Settings settings = new Settings();
+        settings.setMarkdownActivated(true);
+        settings.setImageResize(true);
+        Daten data = new Daten(new Document(new Element("zettelkasten")));
+        data.setUserImagePath(settingsFolder.getRoot().getPath());
+        String imageMarkup = "![Bild](" + filename + ")";
+        assertEquals("[img]" + filename + "[/img]", Tools.convertMarkDown2UBB(imageMarkup));
+        String content = "## Die tatsächliche Abhängigkeitsstruktur[br][br]"
+                + imageMarkup + "[br][br]**Erhalten**[br]* Liste[br]"
+                + "Quellen: [ASDF-Systemdefinitionen](https://example.com/dreyeck.asd)";
+        String html = HtmlUbbUtil.convertUbbToHtml(settings, data, null, content,
+                Constants.FRAME_DESKTOP, false, false);
+        assertTrue(html, html.contains("<img src=\"file://" + settingsFolder.getRoot().getPath()
+                + File.separator + filename + "\""));
+        assertFalse(html, html.contains("img]"));
+        assertTrue(html, html.contains(">ASDF-Systemdefinitionen</a>"));
+        assertTrue(html, html.contains("<b>Erhalten</b>"));
+        assertTrue(html, html.contains("<li>Liste</li>"));
+        assertTrue(HtmlValidator.isValidHTML(html, 11401, content));
+    }
+
 }
