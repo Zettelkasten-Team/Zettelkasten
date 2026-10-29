@@ -8672,7 +8672,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showFirstEntry() {
 		data.firstEntry();
-		updateDisplay();
+		updateDisplay(UpdateDisplayOptions.defaultOptions(), true);
 	}
 
 	/**
@@ -8681,7 +8681,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showPrevEntry() {
 		data.prevEntry();
-		updateDisplay();
+		updateDisplay(UpdateDisplayOptions.defaultOptions(), true);
 	}
 
 	/**
@@ -8690,7 +8690,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showNextEntry() {
 		data.nextEntry();
-		updateDisplay();
+		updateDisplay(UpdateDisplayOptions.defaultOptions(), true);
 	}
 
 	/**
@@ -8699,7 +8699,7 @@ public class ZettelkastenView extends FrameView implements WindowListener, DropT
 	@Action(enabledProperty = "moreEntriesAvailable")
 	public void showLastEntry() {
 		data.lastEntry();
-		updateDisplay();
+		updateDisplay(UpdateDisplayOptions.defaultOptions(), true);
 	}
 
 	/**
