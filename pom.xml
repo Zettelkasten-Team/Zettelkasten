@@ -85,6 +85,74 @@
                 <zkn.useGenIsoImage>false</zkn.useGenIsoImage>
             </properties>
         </profile>
+        <!-- Native Windows packaging; also opt in explicitly for cross-builds. -->
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <!-- Windows launcher -->
+                    <plugin>
+                        <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                        <artifactId>launch4j-maven-plugin</artifactId>
+                        <version>2.5.0</version>
+                        <executions>
+                            <execution>
+                                <id>launch4j</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>launch4j</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- All version metadata below is explicit; do not invent defaults. -->
+                                    <disableVersionInfoDefaults>true</disableVersionInfoDefaults>
+                                    <saveConfig>true</saveConfig>
+                                    <dontWrapJar>false</dontWrapJar>
+                                    <headerType>gui</headerType>
+                                    <jar>target/${project.build.finalName}.jar</jar>
+                                    <outfile>target/${project.build.finalName}.exe</outfile>
+                                    <chdir>.</chdir>
+                                    <priority>normal</priority>
+                                    <downloadUrl>http://java.com/download</downloadUrl>
+                                    <stayAlive>false</stayAlive>
+                                    <restartOnCrash>false</restartOnCrash>
+                                    <manifest/>
+                                    <icon>src/main/resources/logo/zkn2.ico</icon>
+                                    <jre>
+                                        <minVersion>25</minVersion>
+                                        <!-- Expanded on the target Windows machine, not by Maven. -->
+                                        <path>%JAVA_HOME%;%PATH%</path>
+                                        <requires64Bit>true</requires64Bit>
+                                        <requiresJdk>false</requiresJdk>
+                                    </jre>
+                                    <splash>
+                                        <file>src/main/resources/logo/splash.bmp</file>
+                                        <waitForWindow>true</waitForWindow>
+                                        <timeout>60</timeout>
+                                        <timeoutErr>true</timeoutErr>
+                                    </splash>
+                                    <versionInfo>
+                                        <fileVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.0</fileVersion>
+                                        <txtFileVersion>Zettelkasten 3</txtFileVersion>
+                                        <fileDescription>Zettelkasten - nach Niklas Luhmann</fileDescription>
+                                        <copyright>Daniel Luedecke</copyright>
+                                        <productVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.0</productVersion>
+                                        <txtProductVersion>${project.version}</txtProductVersion>
+                                        <productName>${project.build.finalName}</productName>
+                                        <internalName>zkn</internalName>
+                                        <originalFilename>${project.build.finalName}.exe</originalFilename>
+                                    </versionInfo>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <!-- Keep local file repo always-on (as you had originally) -->
@@ -388,58 +456,6 @@
                 </executions>
             </plugin>
 
-            <!-- Windows launcher -->
-            <plugin>
-                <groupId>com.akathist.maven.plugins.launch4j</groupId>
-                <artifactId>launch4j-maven-plugin</artifactId>
-                <version>2.5.0</version>
-                <executions>
-                    <execution>
-                        <id>launch4j</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>launch4j</goal>
-                        </goals>
-                        <configuration>
-                            <dontWrapJar>false</dontWrapJar>
-                            <headerType>gui</headerType>
-                            <jar>target/${project.build.finalName}.jar</jar>
-                            <outfile>target/${project.build.finalName}.exe</outfile>
-                            <chdir>.</chdir>
-                            <priority>normal</priority>
-                            <downloadUrl>http://java.com/download</downloadUrl>
-                            <stayAlive>false</stayAlive>
-                            <restartOnCrash>false</restartOnCrash>
-                            <manifest/>
-                            <icon>src/main/resources/logo/zkn2.ico</icon>
-                            <jre>
-                                <minVersion>25</minVersion>
-                                <bundledJre64Bit>false</bundledJre64Bit>
-                                <bundledJreAsFallback>false</bundledJreAsFallback>
-                                <jdkPreference>preferJre</jdkPreference>
-                                <runtimeBits>64</runtimeBits>
-                            </jre>
-                            <splash>
-                                <file>src/main/resources/logo/splash.bmp</file>
-                                <waitForWindow>true</waitForWindow>
-                                <timeout>60</timeout>
-                                <timeoutErr>true</timeoutErr>
-                            </splash>
-                            <versionInfo>
-                                <fileVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.0</fileVersion>
-                                <txtFileVersion>Zettelkasten 3</txtFileVersion>
-                                <fileDescription>Zettelkasten - nach Niklas Luhmann</fileDescription>
-                                <copyright>Daniel Luedecke</copyright>
-                                <productVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.0</productVersion>
-                                <txtProductVersion>${project.version}</txtProductVersion>
-                                <productName>${project.build.finalName}</productName>
-                                <internalName>zkn</internalName>
-                                <originalFilename>${project.build.finalName}.exe</originalFilename>
-                            </versionInfo>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 

@@ -66,6 +66,35 @@ Note: `mvn` is [Apache Maven](https://maven.apache.org/install.html). Confirm wi
 
 Find the build result in your `target` directory.
 
+### Windows executable packaging
+
+Launch4j runs automatically during `mvn package` on Windows. It is inactive
+in the normal macOS/Linux build; macOS still produces the JAR and app bundle.
+For an explicit cross-build on macOS or Linux, run:
+
+```shell
+mvn -Pwindows -DskipTests package
+```
+
+The executable is `target/Zettelkasten.exe`. Its launcher looks for Java on the
+**target Windows machine** through `%JAVA_HOME%` and `%PATH%`, then the Windows
+registry. Launch4j checks for Java 25 or newer and a 64-bit runtime in both search
+stages. A JRE is sufficient; no JDK or bundled runtime is required. If Java is
+installed without environment variables or recognized registry entries, configure
+`JAVA_HOME` or add its `bin` directory to `PATH`. No build-host/Nix path is embedded.
+
+The generated Launch4j configuration is retained in `target/launch4j-config.xml`.
+Version resources use the explicit project name, description and existing
+copyright attribution from `pom.xml`. Automatic metadata defaults are disabled:
+no synthetic company name or inception year is supplied. The executable is
+unsigned; release signing requires a separately managed certificate and process.
+
+Packaging and runtime lookup are separate checks: a successful cross-build does
+not validate startup on Windows. Native Windows startup remains a release check.
+An old EXE in `target` may survive a later macOS-only incremental build; use a
+fresh output directory to verify which artifacts the active profiles generate.
+
+
 
 ## License
 
