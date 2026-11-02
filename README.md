@@ -32,6 +32,25 @@ Here you can find and add content about Zettelkasten in a [Wiki](https://github.
 > This information is only relevant to software developers.
 > To build the Zettelkasten, you need a Java Development Kit (JDK) for Java 25 or newer and Maven 3.9+.
 
+The Nix/direnv development environment pins **Eclipse Temurin 25.0.5+8**
+using versioned upstream archives and SHA-256 hashes for macOS and Linux
+(x86_64 and aarch64). `flake.lock` continues to pin all other dependencies.
+No fallback to another JDK distribution is used.
+
+From the repository root, enter it with `nix develop` (or `direnv allow`
+when using direnv), then verify:
+
+```shell
+java -version
+javac -version
+mvn -version
+```
+
+All three commands should report Java 25.0.5; Maven should use the pinned
+Temurin JDK. The JDK can also be built independently with
+`nix build .#temurin --no-link`. When updating it, update the release,
+archive names and all four checksums in `flake.nix` together.
+
 To get a local repository, use Git:
 
 ```shell

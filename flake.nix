@@ -13,13 +13,37 @@
         pkgs = import nixpkgs { inherit system; };
         pkgsUnstable = import nixpkgs-unstable { inherit system; };
 
-        # --- JDK 25 (not in nixos-24.05, so take it from unstable) ---
-        jdk =
-          if builtins.hasAttr "temurin-bin-25" pkgsUnstable then pkgsUnstable.temurin-bin-25
-          else if builtins.hasAttr "jdk25" pkgsUnstable then pkgsUnstable.jdk25
-          else throw "No JDK 25 available in nixpkgs-unstable.";
+        # Pin the official Temurin release independently of other nixpkgs updates.
+        # https://github.com/adoptium/temurin25-binaries/releases/tag/jdk-25.0.5%2B8
+        temurinRelease = "25.0.5+8";
+        temurinArchives = {
+          x86_64-darwin = {
+            platform = "x64_mac";
+            sha256 = "32cd4d2151c91aa00d0fc911edfd05245ed40fa6b1aa894d5f35c928cd67a59d";
+          };
+          aarch64-darwin = {
+            platform = "aarch64_mac";
+            sha256 = "36dc14d797aaff6d89aab302cd053fdba6207dfdcf772052fa7b023a94b0e857";
+          };
+          x86_64-linux = {
+            platform = "x64_linux";
+            sha256 = "68982529869257d0ee6b824ec5aa270ff8b118bb438670da0b97ebdab178d7fb";
+          };
+          aarch64-linux = {
+            platform = "aarch64_linux";
+            sha256 = "bb5b2ded252f21c6090cf780b0a408ad0d83bbb557e702955643557f13231880";
+          };
+        };
+        archive = temurinArchives.${system};
+        jdk = pkgsUnstable.temurin-bin-25.overrideAttrs (_: {
+          version = "25.0.5";
+          src = pkgsUnstable.fetchurl {
+            url = "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-${temurinRelease}/OpenJDK25U-jdk_${archive.platform}_hotspot_25.0.5_8.tar.gz";
+            inherit (archive) sha256;
+          };
+        });
 
-        maven = pkgs.maven;
+        maven = pkgs.maven.override { inherit jdk; };
 
         # --- repomix: disable failing test suite (macOS / sysctl issue) ---
         repomix =
@@ -52,6 +76,7 @@
           exit 1
         '';
       in {
+        packages.temurin = jdk;
         devShells.default = pkgs.mkShell {
           packages =
             [ jdk maven repomixMd ]
