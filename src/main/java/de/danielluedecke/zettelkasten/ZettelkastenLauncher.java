@@ -54,6 +54,10 @@ public final class ZettelkastenLauncher {
 	}
 
 	public static void main(String[] args) throws Throwable {
+		// AWT captures the native application name on first initialization.
+		if (System.getProperty("os.name", "").startsWith("Mac")) {
+			System.setProperty("apple.awt.application.name", "Zettelkasten");
+		}
 		String specVersion = System.getProperty("java.specification.version", "");
 		if (parseFeatureVersion(specVersion) < REQUIRED_JAVA_VERSION) {
 			reportUnsupportedJava(specVersion);
