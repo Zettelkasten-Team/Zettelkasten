@@ -705,48 +705,86 @@ public class HtmlUbbUtil {
         if (dummy == null || dummy.isEmpty()) {
             return dummy;
         }
-        // check whether we already found links
-        if (-1 == dummy.indexOf("<a href=")) {
-            if (dummy.indexOf('<') == -1) {
-                dummy = convertHyperlinksPlain(dummy);
-            } else {
-                dummy = convertHyperlinksOutsideTags(dummy);
-            }
-        }
-        return dummy;
+        return convertHyperlinksOutsideTags(dummy);
     }
 
-    private static String convertHyperlinksPlain(String dummy) {
-        // this group also considered ( and ) as end of hyperlink, but
-        // Wikipedia links e.g. would not be converted correctly.
-        // String groupEndOfURL = "[^ \"\\]\\)\\(\\[\\|\\t\\n\\r<]";
-        // if no hyperlinks have been found yet, do autoconvert
-        String groupEndOfURL = "[^ \"\\[\\]\\|\\t\\n\\r<]";
-        dummy = dummy.replaceAll("([\\w]+?://" + groupEndOfURL + "*)", "<a href=\"$1\">$1</a>");
-        dummy = dummy.replaceAll("([^://])(www\\." + groupEndOfURL + "*)", "$1<a href=\"http://$2\">$2</a>");
-        dummy = dummy.replaceAll("(mailto:)(" + groupEndOfURL + "*)", "$1<a href=\"mailto:$2\">$2</a>");
-        return dummy;
+    private static String convertHyperlinksPlain(String input) {
+        // Image destinations are rendered later and must not become anchors.
+        Pattern urls = Pattern.compile("\\[img\\].*?\\[/img\\]|(?:[\\w]+?://|www\\.|mailto:)[^\\s\"'<>\\[\\]\\|]+", Pattern.DOTALL);
+        Matcher matcher = urls.matcher(input);
+        StringBuffer out = new StringBuffer();
+        while (matcher.find()) {
+            String match = matcher.group();
+            if (match.startsWith("[img]")) {
+                matcher.appendReplacement(out, Matcher.quoteReplacement(match));
+                continue;
+            }
+            int end = match.length();
+            while (end > 0) {
+                char last = match.charAt(end - 1);
+                if (".,;:!?".indexOf(last) >= 0) {
+                    end--;
+                } else if (last == ')' && match.substring(0, end).chars().filter(c -> c == ')').count()
+                        > match.substring(0, end).chars().filter(c -> c == '(').count()) {
+                    end--;
+                } else {
+                    break;
+                }
+            }
+            String label = match.substring(0, end);
+            String target = label.startsWith("www.") ? "http://" + label : label;
+            // Text is already HTML: preserve entities while escaping bare ampersands.
+            target = target.replaceAll("&(?!(?:#[0-9]+|#x[0-9a-fA-F]+|[a-zA-Z][a-zA-Z0-9]+);)", "&amp;");
+            String anchor = "<a href=\"" + target + "\">" + label + "</a>" + match.substring(end);
+            matcher.appendReplacement(out, Matcher.quoteReplacement(anchor));
+        }
+        matcher.appendTail(out);
+        return out.toString();
     }
 
     private static String convertHyperlinksOutsideTags(String input) {
         StringBuilder out = new StringBuilder(input.length());
+        java.util.Deque<String> protectedTags = new java.util.ArrayDeque<>();
+        Pattern tagName = Pattern.compile("^<\\s*(/?)\\s*([a-zA-Z][a-zA-Z0-9:-]*)\\b");
         int i = 0;
         while (i < input.length()) {
             int lt = input.indexOf('<', i);
+            int textEnd = lt == -1 ? input.length() : lt;
+            String text = input.substring(i, textEnd);
+            out.append(protectedTags.isEmpty() ? convertHyperlinksPlain(text) : text);
             if (lt == -1) {
-                out.append(convertHyperlinksPlain(input.substring(i)));
                 break;
             }
-            if (lt > i) {
-                out.append(convertHyperlinksPlain(input.substring(i, lt)));
+            int end = lt + 1;
+            char quote = 0;
+            if (input.startsWith("<!--", lt)) {
+                int commentEnd = input.indexOf("-->", lt + 4);
+                end = commentEnd == -1 ? input.length() : commentEnd + 3;
+            } else {
+                while (end < input.length()) {
+                    char ch = input.charAt(end++);
+                    if (quote != 0) {
+                        if (ch == quote) quote = 0;
+                    } else if (ch == '\"' || ch == '\'') {
+                        quote = ch;
+                    } else if (ch == '>') {
+                        break;
+                    }
+                }
             }
-            int gt = input.indexOf('>', lt + 1);
-            if (gt == -1) {
-                out.append(input.substring(lt));
-                break;
+            String tag = input.substring(lt, end);
+            out.append(tag);
+            Matcher name = tagName.matcher(tag);
+            if (name.find()) {
+                String type = name.group(2).toLowerCase(java.util.Locale.ROOT);
+                if (name.group(1).equals("/")) {
+                    if (!protectedTags.isEmpty() && protectedTags.peek().equals(type)) protectedTags.pop();
+                } else if (java.util.Set.of("a", "code", "pre", "script", "style").contains(type)
+                        && !tag.endsWith("/>")) {
+                    protectedTags.push(type);
+                }
             }
-            out.append(input.substring(lt, gt + 1));
-            i = gt + 1;
+            i = end;
         }
         return out.toString();
     }
