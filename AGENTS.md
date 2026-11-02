@@ -1,269 +1,96 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
+## Permanent Repository and Architecture Rules
+
+### Project Structure & Module Organization
 - Core Java 25 sources live in `src/main/java`, UI assets and properties in `src/main/resources`, and XML/FXML assets alongside their packages. Tests sit in `src/test/java` with fixtures in `src/test/resources`.
 - Build outputs land in `target/` (fat JAR, Windows EXE, macOS bundle when enabled). `local-repository/` hosts vendored artifacts referenced by the Maven profile. Keep assets small; binaries or sample zettels (e.g., `validFile.zkn`) belong in `target/` or Git LFS, not under version control.
-- The main entry point is `de.danielluedecke.zettelkasten.ZettelkastenApp`; keep new packages under `de.danielluedecke.zettelkasten` or `ch.dreyeck.zettelkasten` to stay consistent.
+- The executable entry point is `de.danielluedecke.zettelkasten.ZettelkastenLauncher`, which checks the runtime before loading `ZettelkastenApp`; keep new packages under `de.danielluedecke.zettelkasten` or `ch.dreyeck.zettelkasten` to stay consistent.
 
-## Build, Test, and Development Commands
+### Build, Test, and Development Commands
 - `mvn clean package` — full build; produces the shaded runnable JAR in `target/Zettelkasten.jar` plus platform launchers when configured.
 - `mvn test` — run JUnit 4 (Vintage) and TestNG suites.
 - `mvn -DskipTests package` — iterate faster when tests are unchanged.
 - `mvn -Plocal-repo clean package` — use the bundled `local-repository/` artifacts when external mirrors are unavailable.
 - Run the app locally with `java -jar target/Zettelkasten.jar` after packaging.
 
-## Coding Style & Naming Conventions
-- Java 25, 4-space indentation, K&R braces, and one public class per file. Keep package and class names lowerCamel/UpperCamel following existing patterns (e.g., `TasksData`, `ListSelectionFixTest`).
+### Coding Style & Naming Conventions
+- Java 25 (the compatibility launcher remains Java 8 bytecode), 4-space indentation, K&R braces, and one public class per file. Keep package and class names lowerCamel/UpperCamel following existing patterns (e.g., `TasksData`, `ListSelectionFixTest`).
 - Prefer `final` for fields that should not change, and favor explicit types over raw collections. Keep UI strings and icons in `resources`; avoid hard-coded absolute paths.
 - Logging: stay with the existing `java.util.logging` logger wiring via `Constants.zknlogger`; avoid mixing logging frameworks unless coordinated in `pom.xml`.
 
-## Testing Guidelines
-- Unit and integration tests belong in `src/test/java` with names ending in `*Test` or `*TestNG`. Co-locate test data in `src/test/resources` and keep them deterministic (no network or filesystem writes outside `target/`).
-- Use JUnit 4/Vintage for legacy tests and Mockito/PowerMock for isolation; TestNG is available for data-driven cases. Verify new behavior with `mvn test` before opening a PR.
+### Testing Guidelines
+- Unit and integration tests belong in `src/test/java` with names ending in `*Test` or `*TestNG`. Co-locate test data in `src/test/resources` and keep them deterministic (no network or personal-file access; writes only in `target/` or framework-managed temporary directories).
+- Use JUnit 4/Vintage for legacy tests and Mockito/PowerMock for isolation; TestNG is available for data-driven cases. Verify changed behavior with `mvn test` before opening an implementation PR, unless the agreed task explicitly narrows validation. For documentation-only work, check content, references and `git diff --check`; report that Java tests were not rerun.
 - Known JVM font availability warning on some systems; does not affect tests.
 
-## Commit & Pull Request Guidelines
+### Commit & Pull Request Guidelines
 - Follow the existing conventional commits style seen in history (`feat(scope): ...`, `fix(build): ...`, `docs(readme): ...`), using a short imperative subject (<72 chars) and optional body for context.
-- PRs should describe the change, risks, and how to verify; link issues, and include screenshots or GIFs for UI-facing work. Note which Maven commands you ran (at least `mvn test`) and call out any platform-specific steps (e.g., macOS bundling).
+- PRs should describe the change, risks, and how to verify; link issues, and include screenshots or GIFs for UI-facing work. Report the applicable checks and their results, including tests not rerun, and call out any platform-specific steps (e.g., macOS bundling).
 
-## Change Scopes & Agent Protocol (Codex)
+### Architecture and Data Boundaries
+- Keep BibTeX an interoperability bridge for external literature management, not a parallel library manager.
+- Move data/model dependencies on Swing toward small callbacks or interfaces. Existing coupling is a
+  migration constraint, not evidence that complete separation has already been achieved.
+- Treat rendering as a projection: do not rewrite stored notes to repair display issues. Changes to
+  persistence formats, user data, settings, or UI behavior require an explicitly agreed scope.
+- Keep runtime dependencies limited to observable application needs; prefer removing unused libraries.
+- Isolate tests from personal settings and data. Use framework-managed temporary fixtures and restore
+  modified JVM globals even on failure. Changes to test assertions and to test infrastructure are distinct.
 
-This repository uses *explicit change scopes* for PR-sized work.
-Each PR MUST implement exactly one scope defined below.
-Codex agents MUST follow this protocol strictly.
+### Baseline and Constrained Markdown
+- Baseline Markdown is the regularly supported syntax and HTML projection. It may be corrected or
+  extended in its own explicitly agreed scope, with compatibility tests and documented limitations.
+- Constrained Markdown denotes a separate, optional mode with an explicitly defined allowed subset.
+  The ordinary Markdown on/off setting is not that mode. No separate mode implementation was found
+  in the scope review; do not assume one exists.
+- AC-02's ban on adding formatting features applies to that restriction-mode task. It is not a blanket
+  ban on baseline renderer development. The pipe-table extension in
+  `a58f8f71100b5b58567ebece8afefa924cecd260` is baseline functionality, not an AC-02 violation;
+  see [table behavior](docs/markdown-pipe-tables.md).
+- Every new baseline syntax scope must state its effect on Constrained Markdown. If that optional mode
+  is implemented, new syntax must not silently enlarge its subset: specify and test neutral fallback,
+  exclusion, or an explicitly agreed subset change. Until then, record that applicability is pending.
+- Neither baseline additions nor a restriction mode authorize bulk note rewrites or enabling Markdown
+  for users without their instruction.
 
-### Agent Protocol (One Prompt = One PR)
+## Agent Protocol for Changes
+- Declare the agreed task scope before implementation, including goal, permitted files/components,
+  exclusions and validation. Declare analysis/documentation boundaries as such, without inventing an
+  implementation AC assignment.
+- A PR implements exactly one scope explicitly agreed in advance. New scopes may be defined when
+  needed; do not force them into a historical AC identifier or silently expand an existing scope.
+- A prompt is an instruction; a scope is the agreed change boundary; a commit is a local history unit;
+  a PR is a review unit. They are not interchangeable. One scope may need several commits, and an
+  analysis or documentation prompt does not automatically create an implementation PR.
+- Keep changes small, reviewable and independent. Preserve unrelated working-tree changes. If work
+  cannot be isolated within the agreed boundary, report the conflict before including it.
+- Add or adjust tests when behavior/invariants change, and perform the applicable validation above.
+  A historical test source or successful build is not proof that every test is currently discovered.
+- Do not commit, push, open a PR, or alter earlier commits unless authorized by the task. Scope
+  agreement alone does not authorize those separate actions.
 
-For each PR, the agent MUST:
+## Scope Management and Lifecycle
+- For a new scope, record its goal/intent, allowed and forbidden changes, acceptance criteria and
+  validation. Use an unambiguous identifier or descriptive name; historical AC numbers are not required.
+- Record evidence and unresolved criteria when assessing status. Use:
+  - `active`: explicitly agreed unfinished work that remains assigned/relevant;
+  - `completed`: the bounded task's acceptance criteria are supported by implementation and validation;
+  - `partially implemented`: concrete implementation exists, but criteria remain unmet or not fully demonstrated;
+  - `superseded`: an identified later decision replaces the task; link that decision;
+  - `unclear`: available repository evidence cannot establish the task's implementation or disposition.
+- Do not infer status from inactivity, a matching commit title, or the absence of recent changes alone.
+  A partial/unclear historical scope is not an instruction to resume implementation.
+- Retain completed/replaced scopes and their evidence as historical references. Their task-specific
+  file limits and prohibitions do not automatically restrict new scopes; permanent project rules do.
+- Overlapping components do not merge scopes. For example, AC-01/AC-06 share UI decoupling concerns,
+  while AC-07 changes test execution and AC-11 changes fixtures. Agree the actual boundary explicitly.
 
-1. Declare the active PR-SCOPE identifier.
-2. Change only files permitted by that scope.
-3. Avoid feature expansion beyond scope.
-4. Add or update tests where invariants are affected.
-5. Ensure `mvn test` passes.
+## Historical AC Scope Catalogue
+The [catalogue](docs/agent-scopes.md) preserves the eight existing scope definitions, their intent,
+allowed/forbidden changes and acceptance criteria, with status evidence and unresolved questions.
+Read the relevant catalogue section when explicitly undertaking that historical scope.
 
-The agent MUST NOT:
-- Combine multiple scopes in one PR.
-- Introduce UI changes unless explicitly allowed.
-- Change persistence formats unless explicitly allowed.
-
-### PR-SCOPE: AC-01 — Treat BibTeX as bridge, not literature manager (Ahrens-aligned)
-
-Intent:
-- Align with Ahrens’ “four tools” minimal setup: literature management remains external (e.g., Zotero),
-  while Zettelkasten focuses on permanent notes and stable linking.
-- Keep BibTeX support strictly as an interoperability layer (import/export, citation keys), not as a
-  parallel literature database or workflow hub.
-
-Allowed changes:
-- Refactor BibTeX-related code to reduce “manager-like” behavior and UI entanglement where it is not required
-  for interoperability.
-- Introduce small interfaces/callbacks to remove Swing dependencies from non-UI logic (e.g., replace direct
-  `JOptionPane` calls in BibTeX logic with injected notifier/decision hooks).
-- Clarify and tighten naming, documentation strings, and tooltips to frame BibTeX as import/export bridge.
-- Add/adjust tests to validate unchanged import/export behavior and that headless operation is possible
-  for BibTeX parsing/formatting paths.
-
-Forbidden changes:
-- No UI redesign or workflow redesign (no new dialogs, no new screens, no rearranging menus).
-- No feature additions (no new BibTeX fields, no new import sources, no new citation styles).
-- No persistence format changes (no schema changes to `.zkn3` or internal XML structure).
-- No behavioral changes to existing BibTeX import/export outputs except where needed to fix clear bugs
-  uncovered by tests; if such a change is necessary, it must be minimal, explicitly justified, and
-  covered by a regression test.
-
-Acceptance criteria:
-- BibTeX functionality remains available and produces the same outputs for existing test fixtures.
-- BibTeX parsing/formatting core can run without Swing classes on the classpath (UI interactions are
-  isolated behind callbacks/adapters).
-- No new “library management” concepts are introduced (no new entities or state that replicate external
-  reference manager responsibilities).
-
-Notes:
-- Prefer extraction of a small “BibTeXCore” (pure logic) or equivalent internal separation over broad
-  refactors. Keep changes narrowly scoped to interoperability and decoupling.
-- When in doubt, preserve current behavior and limit changes to moving UI interactions to the edge.
-
-### PR-SCOPE: AC-02 — Constrain formatting (“Constrained Markdown”) and reduce markup surface
-
-Intent:
-- Align with Ahrens’ emphasis on simplicity and low distraction: reduce degrees of freedom in note
-  formatting so the default workflow remains stable, uniform, and cognitively lightweight.
-- Treat formatting/rendering as a projection layer; discourage “authoring-by-styling” behaviors.
-
-Allowed changes:
-- Introduce a configuration flag (e.g., “Constrained Markdown”) that constrains supported formatting to a
-  small, explicitly defined subset.
-- Implement the constraint primarily in parsing/normalization/projection layers (UBB/HTML/Markdown
-  conversion utilities), not via new UI controls.
-- Extend existing markdown/UBB normalization and lint/test fixtures to enforce the constrained subset.
-- Add/adjust tests (golden files or normalization tests) that prove restricted formatting is stable and
-  deterministic under the new mode.
-
-Forbidden changes:
-- No UI redesign or workflow redesign (no new editors, no new formatting toolbars, no rearranging menus).
-- No feature additions to formatting (no new markup syntax, no new styling capabilities).
-- No persistence format changes (stored note content format must remain backward compatible).
-- No bulk “reformat all notes” migrations. Existing notes must render acceptably; the constraint applies to
-  new edits and/or normalization outputs, not destructive rewrite of stored content.
-
-Acceptance criteria:
-- When Constrained Markdown is enabled, only the allowed formatting subset is produced by
-  normalization/projection (unsupported constructs are either stripped, downgraded to plain text, or
-  rendered in a neutral way).
-- When Constrained Markdown is disabled, formatting behavior remains unchanged.
-
-### PR-SCOPE: AC-08 — Automatic Markdown workspace export on Zettel save (Pandoc)
-
-Intent:
-- When a Zettel is saved/committed, automatically export that Zettel as a `.md` file into a workspace
-  directory for downstream Pandoc processing.
-
-Allowed changes:
-- Add a small headless service/utility that writes `z<ID>.md`.
-- Call the service from the existing “save/commit entry” path.
-- Use existing Pandoc invocation patterns already present in export code (`-f html -t <format>`).
-- Add tests (unit-level) that validate: (a) no crash when disabled/missing workspace, (b) correct filename
-  and that a write attempt occurs when enabled.
-
-Forbidden changes:
-- No UI layout/behaviour changes.
-- No persistence format changes.
-- No new settings dialog controls.
-- No redesign of editor/content model.
-
-Acceptance criteria:
-- Workspace dir resolution:
-  1. `ZETTELKASTEN_WORKSPACE_DIR` env var if present and non-empty
-  2. else `${user.home}/workspace` if it exists
-  3. else: do nothing; log `INFO` once per run.
-- Exported Markdown starts with a minimal heading line: `# Zettel <entryNumber> – <title>` (no word count, timestamps, or ratings).
-- Output filename: `z<entryNumber>.md`
-- Pandoc call: `pandoc -f html -t markdown -o <outfile> <tmpHtmlFile>`
-- If Pandoc missing or fails: do not interrupt save; log `WARNING`.
-- `mvn test` passes.
-
-
-### PR-SCOPE: AC-09 — Markdown HTML correctness (prevent emphasis inside code spans)
-
-Intent:
-- Ensure Markdown inline code spans render as literal text and do not receive emphasis parsing.
-- Prevent invalid HTML produced by Markdown/UBB conversion when code spans contain underscores.
-
-Allowed changes:
-- Add or adjust Markdown/UBB-to-HTML conversion logic to treat code spans as literal content.
-- Add/adjust HTML validation tests covering the conversion and validator output.
-
-Forbidden changes:
-- No UI layout/behaviour changes.
-- No persistence format changes.
-- No new formatting features beyond correcting parsing inside code spans.
-
-Acceptance criteria:
-- Inline code containing underscores (e.g., `ZETTELKASTEN_WORKSPACE_DIR`) renders without emphasis tags.
-- HTML validation passes for entries with inline code, bold markers, and list content.
-- When Markdown is disabled, behavior is unchanged.
-- `mvn test` passes.
-
-
-### PR-SCOPE: AC-06 — Decouple data/model from Swing UI
-
-Intent:
-- Align with Ahrens’ longevity principle: the Zettelkasten core must outlive UI technology.
-
-Allowed changes:
-- Remove Swing/UI references from data and model classes.
-- Introduce interfaces, events, or observer abstractions if needed.
-- Update tasks/services to use abstractions instead of UI types.
-
-Forbidden changes:
-- UI behavior or layout changes.
-- Persistence format changes.
-- Feature additions unrelated to decoupling.
-
-Acceptance criteria:
-- Core classes (e.g. `Daten`) can be instantiated without Swing.
-- Core operations can run headlessly in tests.
-- Existing UI continues to function unchanged.
-
-Notes:
-- Prefer minimal interfaces over event buses unless necessary.
-
-### PR-SCOPE: AC-07 — Test-runner hygiene (isolate JExample from TestNG JUnit-mode)
-
-Intent:
-- Stop TestNG from running JExample/JUnit tests in JUnit-mode.
-
-Allowed changes:
-- Maven Surefire/TestNG suite configuration changes.
-- Test-only changes required to keep JExample tests running under JUnit.
-
-Forbidden changes:
-- Production code changes.
-- UI behavior or layout changes.
-- Persistence format changes.
-
-Acceptance criteria:
-- JExample-dependent tests run via JUnit provider.
-- TestNG tests still run via TestNG provider.
-- `mvn test` completes without the JExample/TestNG JUnit-mode warning.
-
-### PR-SCOPE: AC-10 — Dependency hygiene and removal of unused dependencies
-
-Intent:
-- Keep the runtime and packaged dependency surface limited to
-  dependencies required by observable application behaviour.
-- Prefer removal of unused dependencies over version maintenance
-  or compensating machinery.
-
-Allowed changes:
-- Remove dependencies with no remaining production or test use.
-- Remove dead code whose sole purpose was to use such dependencies.
-- Adjust pom.xml accordingly.
-- Add or adjust tests where observable behaviour is affected.
-
-Forbidden changes:
-- No feature changes.
-- No UI behaviour or layout changes.
-- No persistence format changes.
-- No replacement dependency unless required by an existing behaviour.
-- No unrelated dependency upgrades.
-
-Acceptance criteria:
-- Existing behaviour and tests remain unchanged.
-- mvn test passes.
-- Removed dependencies are absent from Maven dependency tree.
-- Removed runtime libraries are absent from the shaded artifact.
-
-### PR-SCOPE: AC-11 — Test fixture isolation
-
-Intent:
-- Make test outcomes independent of the developer's machine, of other tests and of
-  execution order, and keep test runs from leaving state behind.
-- Treat fixture setup and teardown as test infrastructure, not as a place to change
-  what a test asserts.
-
-Allowed changes:
-- Replace ineffective or framework-mismatched fixture mechanisms in existing tests
-  (e.g., a JUnit 4 `@Rule` inside a JUnit Jupiter class) with ones the running framework
-  applies, such as JUnit Jupiter `@TempDir`.
-- Save and restore global JVM state that a test modifies (system properties, default
-  locale, static configuration).
-- Move files a test creates out of the working directory into managed temporary
-  directories, with cleanup that runs even when a test fails.
-
-Forbidden changes:
-- Production code changes.
-- Changing assertions, expected values or domain expectations; renaming, removing,
-  disabling or skipping tests.
-- Test-runner or Maven configuration changes (AC-07).
-- UI behavior or layout changes.
-- Persistence format changes.
-
-Acceptance criteria:
-- Test setup is deterministic and does not depend on execution order.
-- Global state modified by a test is restored afterwards, also when the test fails.
-- Files created by tests are cleaned up, also when assertions fail; nothing is written
-  to the repository root or left in the temporary directory.
-- Test identities and existing assertions are unchanged.
-- `mvn test` results are unchanged apart from the removed side effects.
+`AC` is a historically used identifier scheme. No binding expansion of the abbreviation was found
+in tracked documentation or the available scope history. Do not invent one or reuse an identifier
+for a different task. No definitions of AC-03 through AC-05 were found; the catalogue records that gap.
