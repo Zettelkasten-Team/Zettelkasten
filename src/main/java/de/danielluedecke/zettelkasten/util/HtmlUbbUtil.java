@@ -1492,11 +1492,12 @@ public class HtmlUbbUtil {
                 dummy = normalizeMarkdownEmphasis(dummy);
             }
             // quotes
-            dummy = dummy.replaceAll("(^|\\n)(\\> )(.*)", "[q]$3[/q]");
+            dummy = dummy.replaceAll("(^|\\n)(\\> )(.*)", "$1[q]$3[/q]");
             // after quotes have been replaced, replace < and > signs
             if (!isExport) {
                 dummy = dummy.replace(">", "&gt;").replace("<", "&lt;");
             }
+            dummy = convertMarkdownPipeTables(dummy);
             // bullets
             dummy = dummy.replaceAll("(^|\\n)(\\d\\. )(.*)", "<ol><li>$3</li></ol>");
             dummy = dummy.replace("</ol><ol>", "");
@@ -1608,6 +1609,52 @@ public class HtmlUbbUtil {
             }
         }
         return dummy;
+    }
+
+    /** Simple pipe tables only; code spans and link targets are already protected. */
+    private static String convertMarkdownPipeTables(String input) {
+        String[] lines = input.split("\n", -1);
+        List<String> output = new ArrayList<>();
+        for (int i = 0; i < lines.length; i++) {
+            String[] header = pipeTableCells(lines[i]);
+            String[] separator = i + 1 < lines.length ? pipeTableCells(lines[i + 1]) : null;
+            String[] firstRow = i + 2 < lines.length ? pipeTableCells(lines[i + 2]) : null;
+            boolean table = header != null && separator != null && firstRow != null
+                    && header.length == separator.length && header.length == firstRow.length;
+            if (table) {
+                for (String cell : separator) {
+                    if (!cell.matches(":?-{3,}:?")) table = false;
+                }
+            }
+            if (!table) {
+                output.add(lines[i]);
+                continue;
+            }
+            StringBuilder html = new StringBuilder("<table><tr>");
+            for (String cell : header) html.append("<th>").append(cell).append("</th>");
+            html.append("</tr>");
+            i += 2;
+            while (i < lines.length) {
+                String[] row = pipeTableCells(lines[i]);
+                if (row == null || row.length != header.length) break;
+                html.append("<tr>");
+                for (String cell : row) html.append("<td>").append(cell).append("</td>");
+                html.append("</tr>");
+                i++;
+            }
+            output.add(html.append("</table>").toString());
+            i--;
+        }
+        return String.join("\n", output);
+    }
+
+    private static String[] pipeTableCells(String line) {
+        String trimmed = line.trim();
+        if (trimmed.length() < 3 || !trimmed.startsWith("|") || !trimmed.endsWith("|")
+                || trimmed.contains("\\|")) return null;
+        String[] cells = trimmed.substring(1, trimmed.length() - 1).split("\\|", -1);
+        for (int i = 0; i < cells.length; i++) cells[i] = cells[i].trim();
+        return cells;
     }
 
     private static CodeSpanExtraction protectMarkdownCodeSpans(String input) {
