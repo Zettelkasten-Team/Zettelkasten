@@ -66,6 +66,30 @@ Note: `mvn` is [Apache Maven](https://maven.apache.org/install.html). Confirm wi
 
 Find the build result in your `target` directory.
 
+### macOS app bundle
+
+On macOS, check that `mvn -v` reports Java 25, then run `mvn clean package`.
+The automatically activated `mac` profile copies Maven's JDK into
+`target/Zettelkasten.app/Contents/Java/jdk`. The launcher loads that copy.
+The standalone artifact remains `target/Zettelkasten.jar`. On macOS,
+`mvn -P '!mac' clean package` disables JDK embedding when building for
+standalone JAR use.
+
+The embedded JDK must match the target Mac's native architecture.
+The launcher has both Intel and Apple Silicon slices, but each build
+embeds a single JDK. Build separately for `x86_64` and `arm64` and use
+the same JDK distribution, patch version and architecture when rebuilding
+a release. The Intel bundle was tested with Temurin 25.0.5. An Apple
+Silicon build and launch test are still pending.
+
+The Intel smoke test used a local ZIP and launched isolated copies of the
+extracted bundle directly and via macOS Launch Services (`open`). Both
+loaded the bundled JDK and showed one main window. The tested app bundle
+was unsigned. Developer ID signing and Apple notarization are unverified.
+The test also leaves open the distribution flow for a downloaded,
+quarantined ZIP opened through Finder and Gatekeeper. The optional DMG
+path was outside the test.
+
 ### Windows executable packaging
 
 Launch4j runs automatically during `mvn package` on Windows. It is inactive

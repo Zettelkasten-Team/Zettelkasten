@@ -60,6 +60,17 @@ jobs:
         if: runner.os == 'macOS'
         run: mvn -B -Pmac -DskipTests -Dmacosappbundler.dmg.enabled=false package
 
+      - name: Verify embedded macOS Java
+        if: runner.os == 'macOS'
+        run: |
+          app=target/Zettelkasten.app/Contents
+          jdk="$app/Java/jdk"
+          test -x "$jdk/lib/jspawnhelper"
+          lipo "$app/MacOS/JavaLauncher" -verify_arch "$(uname -m)"
+          lipo "$jdk/lib/libjli.dylib" -verify_arch "$(uname -m)"
+          "$jdk/bin/java" -XshowSettings:properties -version 2>&1 |
+            grep -E '^[[:space:]]*java.specification.version = 25$'
+
       - name: Create distributable ZIP
         if: runner.os == 'macOS'
         run: |
