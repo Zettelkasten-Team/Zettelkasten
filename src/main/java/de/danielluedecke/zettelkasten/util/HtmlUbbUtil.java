@@ -1498,6 +1498,11 @@ public class HtmlUbbUtil {
                 dummy = dummy.replace(">", "&gt;").replace("<", "&lt;");
             }
             dummy = convertMarkdownPipeTables(dummy);
+            // Close headings before list conversion consumes the preceding line break.
+            dummy = dummy.replaceAll("(^|\\n)#{4} (.*)", head4md);
+            dummy = dummy.replaceAll("(^|\\n)#{3} (.*)", head3md);
+            dummy = dummy.replaceAll("(^|\\n)#{2} (.*)", head2md);
+            dummy = dummy.replaceAll("(^|\\n)#{1} (.*)", head1md);
             // bullets
             dummy = dummy.replaceAll("(^|\\n)(\\d\\. )(.*)", "<ol><li>$3</li></ol>");
             dummy = dummy.replace("</ol><ol>", "");
@@ -1512,11 +1517,6 @@ public class HtmlUbbUtil {
             // italic formatting
             dummy = dummy.replaceAll("_(.*?)_", "<i>$1</i>");
             dummy = dummy.replaceAll("\\*(.*?)\\*", "<i>$1</i>");
-            // headlines
-            dummy = dummy.replaceAll("(^|\\n)#{4} (.*)", head4md);
-            dummy = dummy.replaceAll("(^|\\n)#{3} (.*)", head3md);
-            dummy = dummy.replaceAll("(^|\\n)#{2} (.*)", head2md);
-            dummy = dummy.replaceAll("(^|\\n)#{1} (.*)", head1md);
             // strike
             dummy = dummy.replaceAll("---(.*?)---", "<strike>$1</strike>");
             // images

@@ -90,6 +90,20 @@ public class HtmlUbbUtilMarkdownProjectionTest {
         assertTrue(HtmlValidator.isValidHTML(html, 1, raw));
     }
 
+    @Test public void orderedListImmediatelyAfterHeadingStaysOutsideHeading() {
+        String raw = "## H[br]1. A";
+        String html = render(raw, true);
+        assertTrue(HtmlValidator.isValidHTML(html, 1, raw));
+        assertTrue(html, html.contains("<h3>H</h3><ol><li>A</li></ol>"));
+    }
+
+    @Test public void bulletListImmediatelyAfterHeadingStaysOutsideHeadingAndMergesItems() {
+        String raw = "## H[br]* `<p>`[br]* **B**";
+        String html = render(raw, true);
+        assertTrue(HtmlValidator.isValidHTML(html, 1, raw));
+        assertTrue(html, html.contains("<h3>H</h3><ul><li><code>&lt;p&gt;</code></li><li><b>B</b></li></ul>"));
+    }
+
     @Test public void existingUbbTablesStillRenderWithMarkdownDisabled() {
         String raw = "[table]A^B[br]One|Two[/table]";
         String html = render(raw, false);
